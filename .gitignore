@@ -118,3 +118,4 @@ compile_commands.json
 
 # Include mod-dungeon-scale module
 !/modules/mod-dungeon-scale
+*.zip
