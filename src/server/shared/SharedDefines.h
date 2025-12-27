@@ -76,38 +76,23 @@ enum Races
     RACE_TAUREN             = 6,  // TITLE Tauren
     RACE_GNOME              = 7,  // TITLE Gnome
     RACE_TROLL              = 8,  // TITLE Troll
-    RACE_GOBLIN             = 9,  // TITLE Goblin
+    RACE_GOBLIN             = 9,  // TITLE Goblin (not playable in 3.3.5)
     RACE_BLOODELF           = 10, // TITLE Blood Elf
-    RACE_DRAENEI            = 11, // TITLE Draenei
-    RACE_FEL_ORC            = 12, // TITLE Void Elf
-    RACE_NAGA               = 13, // TITLE Vulpera
-    RACE_BROKEN             = 14, // TITLE Nightborne
-    RACE_SKELETON           = 15, // TITLE Pandaren Horde
-    RACE_VRYKUL             = 16, // TITLE Worgen
-    RACE_TUSKARR            = 17, // TITLE Pandaren Alliance
-    RACE_FOREST_TROLL       = 18, // TITLE Troll Zandalari
-    RACE_TAUNKA             = 19, // TITLE Lightforged Draenei
-    RACE_NORTHREND_SKELETON = 20, // TITLE Demon Hunter Alliance
-    RACE_ICE_TROLL          = 21  // TITLE Demon Hunter Horde
+    RACE_DRAENEI            = 11  // TITLE Draenei
 };
 
 // max+1 for player race
-#define MAX_RACES         22
+#define MAX_RACES         12
 
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))   |(1<<(RACE_ORC-1))          |(1<<(RACE_DWARF-1))   | \
      (1<<(RACE_NIGHTELF-1))|(1<<(RACE_UNDEAD_PLAYER-1))|(1<<(RACE_TAUREN-1))  | \
-     (1<<(RACE_GNOME-1))   |(1<<(RACE_TROLL-1))        |(1<<(RACE_GOBLIN-1))| \
-     (1<<(RACE_BLOODELF-1))|(1<<(RACE_DRAENEI-1))      |(1<<(RACE_FEL_ORC-1))| \
-     (1<<(RACE_NAGA-1))    |(1<<(RACE_BROKEN-1))       |(1<<(RACE_SKELETON-1))| \
-     (1<<(RACE_VRYKUL-1))  |(1<<(RACE_TUSKARR-1))      |(1<<(RACE_FOREST_TROLL-1))| \
-     (1<<(RACE_TAUNKA-1))  |(1<<(RACE_NORTHREND_SKELETON-1))|(1<<(RACE_ICE_TROLL-1)))
+     (1<<(RACE_GNOME-1))   |(1<<(RACE_TROLL-1))        | \
+     (1<<(RACE_BLOODELF-1))|(1<<(RACE_DRAENEI-1)))
 
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1))  | (1<<(RACE_NIGHTELF-1)) | \
-     (1<<(RACE_GNOME-1)) | (1<<(RACE_DRAENEI-1))| (1<<(RACE_FEL_ORC-1)) | \
-     (1<<(RACE_VRYKUL-1))| (1<<(RACE_TUSKARR-1))| (1<<(RACE_TAUNKA-1)) | \
-     (1<<(RACE_NORTHREND_SKELETON-1)))
+     (1<<(RACE_GNOME-1)) | (1<<(RACE_DRAENEI-1)))
 
 #define RACEMASK_HORDE RACEMASK_ALL_PLAYABLE & ~RACEMASK_ALLIANCE
 
@@ -125,17 +110,7 @@ enum class DisplayRace : uint8
     Troll             = 8,
     Goblin            = 9,
     BloodElf          = 10,
-    Draenei           = 11,
-    FelOrc            = 12,
-    Naga              = 13,
-    Broken            = 14,
-    Skeleton          = 15,
-    Vrykul            = 16,
-    Tuskarr           = 17,
-    ForestTroll       = 18,
-    Taunka            = 19,
-    NorthrendSkeleton = 20,
-    IceTroll          = 21
+    Draenei           = 11
 };
 
 // Class value is index in ChrClasses.dbc
