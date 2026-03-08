@@ -68,6 +68,7 @@ enum Gender
 enum Races
 {
     RACE_NONE               = 0,  // SKIP
+<<<<<<< HEAD
     RACE_HUMAN              = 1,  // TITLE Human
     RACE_ORC                = 2,  // TITLE Orc
     RACE_DWARF              = 3,  // TITLE Dwarf
@@ -79,6 +80,29 @@ enum Races
     RACE_GOBLIN             = 9,  // TITLE Goblin (not playable in 3.3.5)
     RACE_BLOODELF           = 10, // TITLE Blood Elf
     RACE_DRAENEI            = 11  // TITLE Draenei
+=======
+    RACE_HUMAN              = 1,  // TITLE 人类
+    RACE_ORC                = 2,  // TITLE 兽人
+    RACE_DWARF              = 3,  // TITLE 矮人
+    RACE_NIGHTELF           = 4,  // TITLE 暗夜精灵
+    RACE_UNDEAD_PLAYER      = 5,  // TITLE 亡灵
+    RACE_TAUREN             = 6,  // TITLE 牛头人
+    RACE_GNOME              = 7,  // TITLE 侏儒
+    RACE_TROLL              = 8,  // TITLE 巨魔
+    RACE_GOBLIN             = 9,  // TITLE 地精
+    RACE_BLOODELF           = 10, // TITLE 血精灵
+    RACE_DRAENEI            = 11, // TITLE 德莱尼
+    RACE_VOIDELF            = 12, // TITLE 虚空精灵 VoidElf
+    RACE_VULPERA            = 13, // TITLE 狐人 Vulpera
+    RACE_HIGH_ELF           = 14, // TITLE 高等精灵 High Elf
+    RACE_PANDAREN           = 15, // TITLE 熊猫人|cffc41f3b|r   Pandaren
+    RACE_WOLGEN             = 16, // TITLE 狼人
+    RACE_EREDAR             = 17, // TITLE 曼阿里·艾瑞达 Man'ari Eredar
+    RACE_FOREST_TROLL       = 18, // TITLE 赞达拉巨魔 Zandalari Troll
+    RACE_LIGHTFORGED        = 19, // TITLE 光铸德莱尼  Lightforged
+    RACE_DH_A               = 20, // TITLE 恶魔猎手|cff0070de|r   联盟  Deme
+    RACE_DH_H               = 21  // TITLE 恶魔猎手|cffc41f3b|r   部落
+>>>>>>> newreborn
 };
 
 // max+1 for player race
@@ -87,14 +111,30 @@ enum Races
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))   |(1<<(RACE_ORC-1))          |(1<<(RACE_DWARF-1))   | \
      (1<<(RACE_NIGHTELF-1))|(1<<(RACE_UNDEAD_PLAYER-1))|(1<<(RACE_TAUREN-1))  | \
+<<<<<<< HEAD
      (1<<(RACE_GNOME-1))   |(1<<(RACE_TROLL-1))        | \
      (1<<(RACE_BLOODELF-1))|(1<<(RACE_DRAENEI-1)))
+=======
+     (1<<(RACE_GNOME-1))   |(1<<(RACE_TROLL-1))        |(1<<(RACE_GOBLIN-1))| \
+     (1<<(RACE_BLOODELF-1))|(1<<(RACE_DRAENEI-1))      |(1<<(RACE_VOIDELF-1))| \
+     (1<<(RACE_VULPERA-1)) |(1<<(RACE_HIGH_ELF-1))     |(1<<(RACE_PANDAREN-1))| \
+     (1<<(RACE_WOLGEN-1))  |(1<<(RACE_EREDAR-1))      |(1<<(RACE_FOREST_TROLL-1))| \
+     (1<<(RACE_LIGHTFORGED-1))  |(1<<(RACE_DH_A-1))|(1<<(RACE_DH_H-1)))
+>>>>>>> newreborn
 
+// Added (1<<(RACE_HIGH_ELF-1)) to RACEMASK_ALLIANCE
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1))  | (1<<(RACE_NIGHTELF-1)) | \
+<<<<<<< HEAD
      (1<<(RACE_GNOME-1)) | (1<<(RACE_DRAENEI-1)))
+=======
+     (1<<(RACE_GNOME-1)) | (1<<(RACE_DRAENEI-1))| (1<<(RACE_VOIDELF-1))  | \
+     (1<<(RACE_WOLGEN-1))| (1<<(RACE_LIGHTFORGED-1)) | (1<<(RACE_DH_A-1)) | \
+     (1<<(RACE_HIGH_ELF-1)))
+>>>>>>> newreborn
 
 #define RACEMASK_HORDE RACEMASK_ALL_PLAYABLE & ~RACEMASK_ALLIANCE
+
 
 // DisplayRace values from CreatureDisplayInfoExtra.dbc
 enum class DisplayRace : uint8
@@ -141,21 +181,7 @@ enum Classes
     (1<<(CLASS_DEATH_KNIGHT-1)))
 
 // valid classes for creature_template.unit_class
-enum UnitClass
-{
-    UNIT_CLASS_WARRIOR                  = 1,
-    UNIT_CLASS_PALADIN                  = 2,
-    UNIT_CLASS_ROGUE                    = 4,
-    UNIT_CLASS_MAGE                     = 8,
-};
-
-#ifdef MOD_NPCERBOTS
-//npcbot
 #define CLASSMASK_ALL_CREATURES CLASSMASK_ALL_PLAYABLE
-//end npcbot#else
-#else
-#define CLASSMASK_ALL_CREATURES ((1<<(UNIT_CLASS_WARRIOR-1)) | (1<<(UNIT_CLASS_PALADIN-1)) | (1<<(UNIT_CLASS_ROGUE-1)) | (1<<(UNIT_CLASS_MAGE-1)))
-#endif
 
 #define CLASSMASK_WAND_USERS ((1<<(CLASS_PRIEST-1))|(1<<(CLASS_MAGE-1))|(1<<(CLASS_WARLOCK-1)))
 
@@ -376,7 +402,7 @@ uint32 constexpr QuestDifficultyColors[MAX_QUEST_DIFFICULTY] =
 // EnumUtils: DESCRIBE THIS
 enum SpellAttr0 : uint32
 {
-    SPELL_ATTR0_PROC_FAILURE_BURNS_CHARGE        = 0x00000001, // TITLE Unknown attribute 0@Attr0
+    SPELL_ATTR0_PROC_FAILURE_BURNS_CHARGE        = 0x00000001, // TITLE Proc Failure Burns Charge
     SPELL_ATTR0_USES_RANGED_SLOT                 = 0x00000002, // TITLE Treat as ranged attack DESCRIPTION Use ammo, ranged attack range modifiers, ranged haste, etc.
     SPELL_ATTR0_ON_NEXT_SWING_NO_DAMAGE          = 0x00000004, // TITLE On next melee (type 1) DESCRIPTION Both "on next swing" attributes have identical handling in server & client
     SPELL_ATTR0_DO_NOT_LOG_IMMUNE_MISSES         = 0x00000008, // TITLE Replenishment (client only)
@@ -473,7 +499,7 @@ enum SpellAttr2 : uint32
     SPELL_ATTR2_INITIATE_COMBAT_POST_CAST            = 0x00100000, // TITLE (Enables Auto-Attack)
     SPELL_ATTR2_FAIL_ON_ALL_TARGETS_IMMUNE           = 0x00200000, // TITLE Damage reduction ability DESCRIPTION Causes BG flags to be dropped if combined with ATTR1_DISPEL_AURAS_ON_IMMUNITY
     SPELL_ATTR2_NO_INITIAL_THREAD                    = 0x00400000, // TITLE Unknown attribute 22@Attr2 DESCRIPTION Ambush, Backstab, Cheap Shot, Death Grip, Garrote, Judgements, Mutilate, Pounce, Ravage, Shiv, Shred
-    SPELL_ATTR2_PROC_COOLDOWN_ON_FAILURE             = 0x00800000, // TITLE Arcane Concentration
+    SPELL_ATTR2_PROC_COOLDOWN_ON_FAILURE             = 0x00800000, // TITLE Proc Cooldown On Failure
     SPELL_ATTR2_ITEM_CAST_WITH_OWNER_SKILL           = 0x01000000, // TITLE Unknown attribute 24@Attr2
     SPELL_ATTR2_DONT_BLOCK_MANA_REGEN                = 0x02000000, // TITLE Unknown attribute 25@Attr2
     SPELL_ATTR2_NO_SCHOOL_IMMUNITIES                 = 0x04000000, // TITLE Pierce aura application immunities DESCRIPTION Allow aura to be applied despite target being immune to new aura applications
@@ -2643,7 +2669,7 @@ enum CreatureFamily
     CREATURE_FAMILY_CARRION_BIRD   = 7,
     CREATURE_FAMILY_CRAB           = 8,
     CREATURE_FAMILY_GORILLA        = 9,
-    CREATURE_FAMILY_HORSE_CUSTOM   = 10,                    // not exist in DBC but used for horse like beasts in DB
+    CREATURE_FAMILY_NOT_SPECIFIED  = 10, // Doesn't exist in DBC, but used by many creatures
     CREATURE_FAMILY_RAPTOR         = 11,
     CREATURE_FAMILY_TALLSTRIDER    = 12,
     CREATURE_FAMILY_FELHUNTER      = 15,
@@ -3684,6 +3710,13 @@ enum PvPTeamId
     PVP_TEAM_NEUTRAL     = 2  // Battleground: Neutral,  Arena: None
 };
 
+enum AllianceId
+{
+    ALLIANCE_ALLIANCE = 0,
+    ALLIANCE_HORDE    = 1,
+    ALLIANCE_NEUTRAL  = 2
+};
+
 uint8 constexpr PVP_TEAMS_COUNT = 2;
 
 inline PvPTeamId GetPvPTeamId(TeamId teamId)
@@ -3798,7 +3831,7 @@ enum TradeStatus
     TRADE_STATUS_NO_TARGET      = 6,
     TRADE_STATUS_BACK_TO_TRADE  = 7,
     TRADE_STATUS_TRADE_COMPLETE = 8,
-    // 9?
+    TRADE_STATUS_TRADE_REJECTED = 9,
     TRADE_STATUS_TARGET_TO_FAR  = 10,
     TRADE_STATUS_WRONG_FACTION  = 11,
     TRADE_STATUS_CLOSE_WINDOW   = 12,
@@ -3811,8 +3844,8 @@ enum TradeStatus
     TRADE_STATUS_YOU_LOGOUT     = 19,
     TRADE_STATUS_TARGET_LOGOUT  = 20,
     TRADE_STATUS_TRIAL_ACCOUNT  = 21,                       // Trial accounts can not perform that action
-    TRADE_STATUS_ONLY_CONJURED  = 22,                       // You can only trade conjured items... (cross realm BG related).
-    TRADE_STATUS_NOT_ELIGIBLE   = 23                        // Related to trading soulbound loot items
+    TRADE_STATUS_WRONG_REALM    = 22,                       // You can only trade conjured items... (cross realm BG related).
+    TRADE_STATUS_NOT_ON_TAPLIST = 23                        // Related to trading soulbound loot items
 };
 
 enum XPColorChar : uint8

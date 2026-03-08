@@ -716,13 +716,6 @@ void SpellMgr::LoadSpellInfoCorrections()
         spellInfo->AttributesEx3 |= SPELL_ATTR3_ALWAYS_HIT;
     });
 
-    // Cobra Strikes
-    ApplySpellFix({ 53257 }, [](SpellInfo* spellInfo)
-    {
-        spellInfo->ProcCharges = 2;
-        spellInfo->StackAmount = 0;
-    });
-
     // Kill Command
     // Kill Command, Overpower
     ApplySpellFix({ 34027, 37529 }, [](SpellInfo* spellInfo)
@@ -775,12 +768,6 @@ void SpellMgr::LoadSpellInfoCorrections()
         }, [](SpellInfo* spellInfo)
     {
         spellInfo->Effects[EFFECT_0].Effect = SPELL_EFFECT_SCRIPT_EFFECT;
-    });
-
-    // Honor Among Thieves
-    ApplySpellFix({ 51698, 51700, 51701 }, [](SpellInfo* spellInfo)
-    {
-        spellInfo->Effects[EFFECT_0].TriggerSpell = 51699;
     });
 
     ApplySpellFix({
@@ -1298,15 +1285,6 @@ void SpellMgr::LoadSpellInfoCorrections()
         }, [](SpellInfo* spellInfo)
     {
         spellInfo->Effects[EFFECT_0].SpellClassMask[1] |= 0x20; // prayer of mending
-    });
-
-    // Power Infusion
-    ApplySpellFix({ 10060 }, [](SpellInfo* spellInfo)
-    {
-        // hack to fix stacking with arcane power
-        spellInfo->Effects[EFFECT_2].Effect = SPELL_EFFECT_APPLY_AURA;
-        spellInfo->Effects[EFFECT_2].ApplyAuraName = SPELL_AURA_ADD_PCT_MODIFIER;
-        spellInfo->Effects[EFFECT_2].TargetA = SpellImplicitTargetInfo(TARGET_UNIT_TARGET_ALLY);
     });
 
     // Lifebloom final bloom
@@ -1963,12 +1941,6 @@ void SpellMgr::LoadSpellInfoCorrections()
     ApplySpellFix({ 61028 }, [](SpellInfo* spellInfo)
     {
         spellInfo->Effects[EFFECT_0].TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
-    });
-
-    // Vortex (freeze anim)
-    ApplySpellFix({ 55883 }, [](SpellInfo* spellInfo)
-    {
-        spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_CHANGE_MAP;
     });
 
     // Hurl Pyrite
@@ -3759,13 +3731,6 @@ void SpellMgr::LoadSpellInfoCorrections()
         spellInfo->Effects[EFFECT_0].ApplyAuraName = SPELL_AURA_MOD_CHARM;
     });
 
-    // Persistent Shield
-    ApplySpellFix({ 26467 }, [](SpellInfo* spellInfo)
-    {
-        spellInfo->Effects[EFFECT_0].ApplyAuraName = SPELL_AURA_PROC_TRIGGER_SPELL_WITH_VALUE;
-        spellInfo->Effects[EFFECT_0].TriggerSpell = 26470;
-    });
-
     // Deadly Swiftness
     ApplySpellFix({ 31255 }, [](SpellInfo* spellInfo)
     {
@@ -4472,6 +4437,12 @@ void SpellMgr::LoadSpellInfoCorrections()
     ApplySpellFix({ 18278 }, [](SpellInfo* spellInfo)
     {
         spellInfo->AttributesEx4 |= SPELL_ATTR4_NOT_IN_ARENA_OR_RATED_BATTLEGROUND;
+    });
+
+    // Honor Among Thieves - allow area aura from different casters to coexist
+    ApplySpellFix({ 51698, 51700, 51701 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->AttributesEx3 |= SPELL_ATTR3_DOT_STACKING_RULE;
     });
 
     // Absorb Life
@@ -5252,6 +5223,16 @@ void SpellMgr::LoadSpellInfoCorrections()
         }, [](SpellInfo* spellInfo)
     {
         spellInfo->Effects[EFFECT_0].MiscValueB = 64;
+    });
+
+    ApplySpellFix({
+        57374, // Shadow Bolt (Lady Blaumeux 10m)
+        57464, // Shadow Bolt (Lady Blaumeux 25m)
+        57376, // Holy Bolt (Sir Zeliek 10m)
+        57465, // Holy Bolt (Sir Zeliek 25m)
+        }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->InterruptFlags &= ~SPELL_INTERRUPT_FLAG_INTERRUPT;
     });
 
     for (uint32 i = 0; i < GetSpellInfoStoreSize(); ++i)

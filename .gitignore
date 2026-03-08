@@ -118,4 +118,13 @@ compile_commands.json
 
 # Include mod-dungeon-scale module
 !/modules/mod-dungeon-scale
+<<<<<<< HEAD
 *.zip
+=======
+
+# Ignore Release directory
+Release/
+
+# Ignore RC compiler build log
+rc_head.log
+>>>>>>> newreborn
