@@ -10,3 +10,6 @@
 [submodule "modules/mod-dungeon-scale"]
 	path = modules/mod-dungeon-scale
 	url = https://github.com/NathanHandley/mod-dungeon-scale.git
+[submodule "modules/GObject-Editor-Tool"]
+	path = modules/GObject-Editor-Tool
+	url = https://github.com/norrathreborn/GObject-Editor-Tool.git
