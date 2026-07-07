@@ -157,3 +157,8 @@ void AddBreakingNewsScripts()
     new BreakingNewsWorldScript();
     new BreakingNewsServerScript();
 }
+
+void Addmod_breaking_news_overrideScripts()
+{
+    AddBreakingNewsScripts();
+}
