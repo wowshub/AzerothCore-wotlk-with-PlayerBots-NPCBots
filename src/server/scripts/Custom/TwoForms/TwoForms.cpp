@@ -499,6 +499,14 @@ public:
             RevokeDracthyrFlight(player);
             LOG_INFO("server", "TwoForms: Race27 Dracthyr {} had stale flight cleared after map change", player->GetName());
         }
+
+        // 飞着进副本/战场/竞技场（实例地图）时，强制降落——这些地方禁止飞行，
+        // 跟坐骑进副本会被甩下来一个道理。
+        if (IsDracthyrFlying(player) && player->GetMap() && player->GetMap()->Instanceable())
+        {
+            RevokeDracthyrFlight(player);
+            LOG_INFO("server", "TwoForms: Race27 Dracthyr {} flight revoked on entering an instanceable map", player->GetName());
+        }
     }
 
     void OnPlayerSpellCast(Player* player, Spell* spell, bool /*skipCheck*/) override
@@ -591,6 +599,16 @@ public:
         if (!IsDracthyrDragonDisplay(player->GetDisplayId()) && IsDracthyrFlying(player))
             RevokeDracthyrFlight(player);
 
+        // 跟坐骑完全一致：飞行途中一旦进入室内、或进入副本/战场等实例地图，强制降落。
+        // (只对"正在飞"的龙希尔做检测，短路在前，开销极小；IsOutdoors 判断很准——
+        //  飞在屋顶仍算户外，真钻进建筑内部才算室内，跟骑飞行坐骑进屋掉落一个道理。)
+        if (IsDracthyrFlying(player) &&
+            (!player->IsOutdoors() || (player->GetMap() && player->GetMap()->Instanceable())))
+        {
+            RevokeDracthyrFlight(player);
+            LOG_INFO("server", "TwoForms: Race27 Dracthyr {} flight revoked (entered indoors/instance)", player->GetName());
+        }
+
         if (player->HasAura(SPELL_WARLOCK_METAMORPHOSIS))
             return;
 
@@ -654,6 +672,20 @@ public:
             {
                 caster->GetSession()->SendAreaTriggerMessage("骑乘状态下不能使用这个技能！");
                 return SPELL_FAILED_DONT_REPORT; // 静默拦截，不进CD，不弹官方红字
+            }
+
+            // 跟坐骑一样：副本/战场/竞技场这类实例地图里禁止飞行（御空术）。
+            if (caster->GetMap() && caster->GetMap()->Instanceable())
+            {
+                caster->GetSession()->SendAreaTriggerMessage("这里不能使用御空术（副本/战场内禁止飞行）！");
+                return SPELL_FAILED_DONT_REPORT;
+            }
+
+            // 跟坐骑一样：坐骑法术带"仅户外"属性，室内不能骑。御空术也一样，室内禁飞。
+            if (!caster->IsOutdoors())
+            {
+                caster->GetSession()->SendAreaTriggerMessage("室内不能使用御空术！");
+                return SPELL_FAILED_DONT_REPORT;
             }
 
             if (!IsDracthyrDragonDisplay(caster->GetDisplayId()))

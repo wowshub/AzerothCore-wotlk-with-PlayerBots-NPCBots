@@ -5432,6 +5432,14 @@ void SpellMgr::LoadSpellInfoCorrections()
     LockEntry* key = const_cast<LockEntry*>(sLockStore.LookupEntry(36)); // 3366 Opening, allows to open without proper key
     key->Type[2] = LOCK_KEY_NONE;
 
+    // 龙希尔御空术(100210)：DBC里读条时间已改成1.5秒，但InterruptFlags没勾"移动打断"，
+    // 导致读条期间移动/转向不会像骑乘坐骑一样打断读条。这里补上跟骑乘一致的
+    // SPELL_INTERRUPT_FLAG_MOVEMENT，不用改DBC、不用客户端重新打包patch。
+    ApplySpellFix({ 100210 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_MOVEMENT;
+    });
+
     LOG_INFO("server.loading", ">> Loading spell dbc data corrections  in {} ms", GetMSTimeDiffToNow(oldMSTime));
     LOG_INFO("server.loading", " ");
 }
