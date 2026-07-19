@@ -3835,8 +3835,17 @@ public:
                     case RACE_EREDAR:
                         modelId = (*gender == GENDER_MALE) ? 36399 : 36400;
                         break;
-                    case RACE_FOREST_TROLL:
-                        modelId = (*gender == GENDER_MALE) ? 57658 : 57659;
+                    case RACE_ZANDALARI_TROLL:
+                        modelId = (*gender == GENDER_MALE) ? 50928 : 50929;
+                        break;
+                    case RACE_PANDAREN_ALLIANCE:
+                        modelId = (*gender == GENDER_MALE) ? 32845 : 32846;
+                        break;
+                    case RACE_NIGHTBORNE:
+                        modelId = (*gender == GENDER_MALE) ? 50924 : 50925;
+                        break;
+                    case RACE_DARK_IRON_DWARF:
+                        modelId = (*gender == GENDER_MALE) ? 560873 : 560874;
                         break;
                     case RACE_LIGHTFORGED:
                         modelId = (*gender == GENDER_MALE) ? 57666 : 57667;

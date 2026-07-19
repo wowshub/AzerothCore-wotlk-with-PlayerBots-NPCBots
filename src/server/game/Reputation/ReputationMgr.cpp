@@ -93,7 +93,7 @@ int32 ReputationMgr::GetBaseReputation(FactionEntry const* factionEntry) const
     if (!factionEntry)
         return 0;
 
-    uint32 raceMask = _player->getRaceMask();
+    uint32 raceMask = GetReputationRaceMaskForRace(_player->getRace(true));
     uint32 classMask = _player->getClassMask();
     for (int i = 0; i < 4; i++)
     {
@@ -147,7 +147,7 @@ uint32 ReputationMgr::GetDefaultStateFlags(FactionEntry const* factionEntry) con
     if (!factionEntry)
         return 0;
 
-    uint32 raceMask = _player->getRaceMask();
+    uint32 raceMask = GetReputationRaceMaskForRace(_player->getRace(true));
     uint32 classMask = _player->getClassMask();
     for (int i = 0; i < 4; i++)
     {
@@ -465,7 +465,7 @@ void ReputationMgr::SetVisible(FactionTemplateEntry const* factionTemplateEntry)
 
     if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(factionTemplateEntry->faction))
         // Never show factions of the opposing team
-        if (!(factionEntry->BaseRepRaceMask[1] & _player->getRaceMask() && factionEntry->BaseRepValue[1] == Reputation_Bottom))
+        if (!(factionEntry->BaseRepRaceMask[1] & GetReputationRaceMaskForRace(_player->getRace(true)) && factionEntry->BaseRepValue[1] == Reputation_Bottom))
             SetVisible(factionEntry);
 }
 

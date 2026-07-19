@@ -1860,7 +1860,9 @@ uint32 ObjectMgr::GetModelForTotem(SummonSlot totemSlot, Races race) const
         case RACE_WOLGEN:       // 16
         case RACE_LIGHTFORGED:  // 19
         case RACE_DH_A:         // 20
-        case RACE_DRACTHYR:     // 27
+        case RACE_PANDAREN_ALLIANCE: // 22
+        case RACE_DARK_IRON_DWARF:   // 26
+        case RACE_DRACTHYR:        // 27
             fallbackRace = RACE_DRAENEI;
             break;
         // Horde custom races -> fallback to Orc(2) totems
@@ -1870,7 +1872,8 @@ uint32 ObjectMgr::GetModelForTotem(SummonSlot totemSlot, Races race) const
         case RACE_EREDAR:       // 17
         case RACE_FOREST_TROLL: // 18
         case RACE_DH_H:         // 21
-        case RACE_NAGA:         // 25
+        case RACE_NIGHTBORNE: // 23
+        case RACE_NAGA:            // 25
             fallbackRace = RACE_ORC;
             break;
         default:
@@ -9773,7 +9776,7 @@ int32 ObjectMgr::GetBaseReputationOf(FactionEntry const* factionEntry, uint8 rac
     if (!factionEntry)
         return 0;
 
-    uint32 raceMask = (1 << (race - 1));
+    uint32 raceMask = GetReputationRaceMaskForRace(race);
     uint32 classMask = (1 << (playerClass - 1));
 
     for (int i = 0; i < 4; i++)

@@ -85,11 +85,15 @@ enum Races
     RACE_PANDAREN           = 15, // TITLE 熊猫人|cffc41f3b|r   Pandaren
     RACE_WOLGEN             = 16, // TITLE 狼人
     RACE_EREDAR             = 17, // TITLE 曼阿里·艾瑞达 Man'ari Eredar
-    RACE_FOREST_TROLL       = 18, // TITLE 赞达拉巨魔 Zandalari Troll
+    RACE_ZANDALARI_TROLL    = 18, // TITLE 赞达拉巨魔 Zandalari Troll
+    RACE_FOREST_TROLL       = RACE_ZANDALARI_TROLL, // Deprecated compatibility alias
     RACE_LIGHTFORGED        = 19, // TITLE 光铸德莱尼  Lightforged
     RACE_DH_A               = 20, // TITLE 恶魔猎手|cff0070de|r   联盟  Deme
     RACE_DH_H               = 21, // TITLE 恶魔猎手|cffc41f3b|r   部落
+    RACE_PANDAREN_ALLIANCE  = 22, // TITLE 熊猫人（联盟） Pandaren Alliance
+    RACE_NIGHTBORNE         = 23, // TITLE 夜之子 Nightborne
     RACE_NAGA               = 25, // TITLE 娜迦 Naga
+    RACE_DARK_IRON_DWARF    = 26, // TITLE 黑铁矮人 Dark Iron Dwarf
     RACE_DRACTHYR           = 27, // TITLE 龙希尔 Dracthyr
     RACE_TUSKARR            = 28
 };
@@ -110,6 +114,21 @@ inline constexpr uint32 GetRaceMaskForRace(uint8 race)
     return IsRaceMaskable(race) ? (uint32(1) << (race - 1)) : 0;
 }
 
+// Custom races do not have usable WotLK reputation bits of their own.
+// Reuse the parent faction race only for reputation initialization/checks.
+inline constexpr uint32 GetReputationRaceMaskForRace(uint8 race)
+{
+    switch (race)
+    {
+        case RACE_NAGA:
+            return GetRaceMaskForRace(RACE_ORC);
+        case RACE_DRACTHYR:
+            return GetRaceMaskForRace(RACE_HUMAN);
+        default:
+            return GetRaceMaskForRace(race);
+    }
+}
+
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))   |(1<<(RACE_ORC-1))          |(1<<(RACE_DWARF-1))   | \
      (1<<(RACE_NIGHTELF-1))|(1<<(RACE_UNDEAD_PLAYER-1))|(1<<(RACE_TAUREN-1))  | \
@@ -117,14 +136,14 @@ inline constexpr uint32 GetRaceMaskForRace(uint8 race)
      (1<<(RACE_BLOODELF-1))|(1<<(RACE_DRAENEI-1))      |(1<<(RACE_VOIDELF-1))| \
      (1<<(RACE_VULPERA-1)) |(1<<(RACE_HIGH_ELF-1))     |(1<<(RACE_PANDAREN-1))| \
      (1<<(RACE_WOLGEN-1))  |(1<<(RACE_EREDAR-1))      |(1<<(RACE_FOREST_TROLL-1))| \
-     (1<<(RACE_LIGHTFORGED-1))  |(1<<(RACE_DH_A-1))|(1<<(RACE_DH_H-1))|(1<<(RACE_NAGA-1))|(1<<(RACE_DRACTHYR-1)))
+     (1<<(RACE_LIGHTFORGED-1))  |(1<<(RACE_DH_A-1))|(1<<(RACE_DH_H-1))|(1<<(RACE_PANDAREN_ALLIANCE-1))|(1<<(RACE_NIGHTBORNE-1))|(1<<(RACE_NAGA-1))|(1<<(RACE_DARK_IRON_DWARF-1))|(1<<(RACE_DRACTHYR-1)))
 
 // Added (1<<(RACE_HIGH_ELF-1)) to RACEMASK_ALLIANCE
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1))  | (1<<(RACE_NIGHTELF-1)) | \
      (1<<(RACE_GNOME-1)) | (1<<(RACE_DRAENEI-1))| (1<<(RACE_VOIDELF-1))  | \
      (1<<(RACE_WOLGEN-1))| (1<<(RACE_LIGHTFORGED-1)) | (1<<(RACE_DH_A-1)) | \
-     (1<<(RACE_HIGH_ELF-1)) | (1<<(RACE_DRACTHYR-1)))
+     (1<<(RACE_HIGH_ELF-1)) | (1<<(RACE_PANDAREN_ALLIANCE-1)) | (1<<(RACE_DARK_IRON_DWARF-1)) | (1<<(RACE_DRACTHYR-1)))
 
 #define RACEMASK_HORDE RACEMASK_ALL_PLAYABLE & ~RACEMASK_ALLIANCE
 
