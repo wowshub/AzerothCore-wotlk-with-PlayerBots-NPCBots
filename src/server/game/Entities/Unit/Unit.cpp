@@ -12234,6 +12234,10 @@ void Unit::UpdateSpeed(UnitMoveType mtype, bool forced)
                         main_speed_mod = (*itr)->GetAmount();
                     }
                 }
+                // Naga (race 25) passive: use +150% as the minimum swim-speed modifier.
+                // This server-side fallback does not stack with a stronger swim-speed aura.
+                if (IsPlayer() && getRace() == RACE_NAGA && main_speed_mod < 150)
+                    main_speed_mod = 150;
                 break;
             }
         case MOVE_FLIGHT:

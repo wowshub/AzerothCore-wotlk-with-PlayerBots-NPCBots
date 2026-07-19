@@ -18,11 +18,13 @@ namespace
     constexpr uint32 SPELL_WORGEN_TWO_FORMS_FEMALE = 97710;
     constexpr uint32 SPELL_DRACTHYR_DRAGON_FORM = 320555;
     constexpr uint32 SPELL_WARLOCK_METAMORPHOSIS = 47241;
-    // 官方现成的被动版"水下呼吸"(5227)：Attributes=0x50(被动) + DurationIndex=0(永久)，
-    // 只有一个Effect(Mod Water Breathing)，没有变形/姿态前置条件，客户端服务端DBC里都已经有，
-    // 不用新建/改spell_dbc。跟131号(有读条+限时的那个)不是一回事，学会后自动一直生效，
-    // 会出现在法术书里(灰色被动图标)。
-    constexpr uint32 SPELL_NAGA_WATER_BREATHING = 5227;
+    // 娜迦两个自定义种族被动(克隆5227模板做的，客户端+服务端Spell.dbc都已加)：
+    //  100301 水下呼吸：被动+永久，说明改成"永久在水中呼吸永不淹死"(真正"无呼吸条"由
+    //          Player::getMaxTimer里的娜迦种族判断实现，这个技能主要是法术书里的图标+说明)。
+    //  100302 游泳加速：被动+永久，aura=58(MOD_INCREASE_SWIM_SPEED)+150%。实际生效同时也有
+    //          Unit::UpdateSpeed里的娜迦代码兜底，两者取max不会叠加。
+    constexpr uint32 SPELL_NAGA_WATER_BREATHING = 100301;
+    constexpr uint32 SPELL_NAGA_SWIM_SPEED      = 100302;
 
     // 龙希尔"御空术"技能：100210(原名音爆/Skyburst，客户端显示名字+说明文字+
     // 冲刺特效都通过单独的DBC补丁清掉、改名了)，"龙形态限定的起飞技能"——
@@ -406,15 +408,21 @@ namespace
         }
     }
 
-    // 娜迦种族出生技能：全程水下呼吸。5227是被动+永久的官方技能，
-    // 跟双形态(learnSpell)同一个套路——学一次，spellbook里常驻一个被动图标，
-    // 效果自动一直生效，不需要像限时buff那样反复补。
+    // 娜迦种族出生技能：水下呼吸(100301)+游泳加速(100302)，都是自定义的被动+永久技能
+    // (克隆5227模板做的)。跟双形态(learnSpell)同一个套路——学一次，spellbook里常驻一个
+    // 被动图标，效果自动一直生效，不需要像限时buff那样反复补。
     void TeachNagaWaterBreathing(Player* player, char const* reason)
     {
         if (!player->HasSpell(SPELL_NAGA_WATER_BREATHING))
         {
             player->learnSpell(SPELL_NAGA_WATER_BREATHING, false);
             LOG_INFO("server", "TwoForms: Race25 Naga learns Water Breathing ({}) on {}", SPELL_NAGA_WATER_BREATHING, reason);
+        }
+
+        if (!player->HasSpell(SPELL_NAGA_SWIM_SPEED))
+        {
+            player->learnSpell(SPELL_NAGA_SWIM_SPEED, false);
+            LOG_INFO("server", "TwoForms: Race25 Naga learns Swim Speed ({}) on {}", SPELL_NAGA_SWIM_SPEED, reason);
         }
     }
 }
@@ -462,7 +470,11 @@ public:
     void OnPlayerLogin(Player* player) override
     {
         if (player->getRace() == RACE_NAGA_CUSTOM)
+        {
             TeachNagaWaterBreathing(player, "login");
+            // 立刻套用娜迦种族游泳加速(+150%)，不用等下水时的某个事件触发重算。
+            player->UpdateSpeed(MOVE_SWIM, true);
+        }
 
         if (player->getRace() != RACE_DRACTHYR_CUSTOM)
             return;

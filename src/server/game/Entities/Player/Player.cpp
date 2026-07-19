@@ -880,6 +880,11 @@ int32 Player::getMaxTimer(MirrorTimerType timer)
             return MINUTE * IN_MILLISECONDS;
         case BREATH_TIMER:
             {
+                // 娜迦(25)天生无限水下呼吸：直接禁用呼吸条(不再是"延长时间"，而是根本不憋气)。
+                // 5227那个被动是"延长233%"(MOD_WATER_BREATHING，条还在)，达不到"无条"效果，
+                // 所以这里按种族直接放行，跟拥有真正的水下呼吸光环等效。
+                if (getRace() == RACE_NAGA)
+                    return DISABLED_MIRROR_TIMER;
                 if (!IsAlive() || HasWaterBreathingAura() || GetSession()->GetSecurity() >= AccountTypes(sWorld->getIntConfig(CONFIG_DISABLE_BREATHING)))
                     return DISABLED_MIRROR_TIMER;
                 int32 UnderWaterTime = sWorld->getIntConfig(CONFIG_WATER_BREATH_TIMER);
