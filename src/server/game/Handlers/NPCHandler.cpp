@@ -625,7 +625,19 @@ void WorldSession::HandleBuyStableSlot(WorldPacket& recvData)
     PetStable& petStable = GetPlayer()->GetOrInitPetStable();
     if (petStable.MaxStabledPets < MAX_PET_STABLES)
     {
+        // 改回纯查DBC(StableSlotPrices.dbc)，不再用公式算——因为客户端购买确认框
+        // 显示的价格也是查同一张DBC得来的(不经过服务端)，如果服务端自己用公式、
+        // 客户端还是只查老的4条DBC记录，会导致"确认框金额显示空白+点确定没反应"。
+        // 所以第5格开始的价格已经用脚本按同样的公式补进DBC了，这里跟客户端保持
+        // 完全一致，两边都查同一张表。
         StableSlotPricesEntry const* SlotPrice = sStableSlotPricesStore.LookupEntry(petStable.MaxStabledPets + 1);
+        if (!SlotPrice)
+        {
+            LOG_ERROR("network", "CMSG_BUY_STABLE_SLOT: StableSlotPrices.dbc has no entry for slot {}", petStable.MaxStabledPets + 1);
+            SendStableResult(STABLE_ERR_STABLE);
+            return;
+        }
+
         if (_player->HasEnoughMoney(SlotPrice->Price))
         {
             ++petStable.MaxStabledPets;

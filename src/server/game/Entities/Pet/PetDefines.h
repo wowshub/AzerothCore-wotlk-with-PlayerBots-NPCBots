@@ -34,7 +34,9 @@ enum PetType : uint8
     MAX_PET_TYPE                = 4
 };
 
-constexpr auto MAX_PET_STABLES = 4;
+// 兽栏格子上限：从4改成99(体验上等同"无限")，不能设到100——100这个值被
+// PET_SAVE_NOT_IN_SLOT 用作哨兵值(character_pet.slot里"不在栏位中"的标记)。
+constexpr auto MAX_PET_STABLES = 99;
 
 // stored in character_pet.slot
 enum PetSaveMode : int8
