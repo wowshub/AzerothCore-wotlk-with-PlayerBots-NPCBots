@@ -64,6 +64,26 @@ bool ScriptMgr::CanAccountCreateCharacter(uint32 accountId, uint8 charRace, uint
     CALL_ENABLED_BOOLEAN_HOOKS(AccountScript, ACCOUNTHOOK_CAN_ACCOUNT_CREATE_CHARACTER, !script->CanAccountCreateCharacter(accountId, charRace, charClass));
 }
 
+void ScriptMgr::OnBeforeAccountCharacterEnum(WorldSession* session)
+{
+    CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_BEFORE_ACCOUNT_CHARACTER_ENUM, script->OnBeforeAccountCharacterEnum(session));
+}
+
+bool ScriptMgr::CanAccountListCharacter(uint32 accountId, uint32 guidLow)
+{
+    CALL_ENABLED_BOOLEAN_HOOKS(AccountScript, ACCOUNTHOOK_CAN_ACCOUNT_LIST_CHARACTER, !script->CanAccountListCharacter(accountId, guidLow));
+}
+
+void ScriptMgr::OnAccountRealmCharacterCount(uint32 accountId, uint64& count)
+{
+    CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_ACCOUNT_REALM_CHARACTER_COUNT, script->OnAccountRealmCharacterCount(accountId, count));
+}
+
+bool ScriptMgr::CanAccountDeleteCharacter(uint32 accountId, uint32 guidLow)
+{
+    CALL_ENABLED_BOOLEAN_HOOKS(AccountScript, ACCOUNTHOOK_CAN_ACCOUNT_DELETE_CHARACTER, !script->CanAccountDeleteCharacter(accountId, guidLow));
+}
+
 AccountScript::AccountScript(char const* name, std::vector<uint16> enabledHooks) :
     ScriptObject(name, ACCOUNTHOOK_END)
 {

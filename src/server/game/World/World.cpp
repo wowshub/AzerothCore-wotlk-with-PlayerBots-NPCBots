@@ -1584,17 +1584,19 @@ void World::UpdateRealmCharCount(uint32 accountId)
 
 void World::_UpdateRealmCharCount(PreparedQueryResult resultCharCount,uint32 accountId)
 {
-    uint8 charCount{0};
+    uint64 charCount{0};
     if (resultCharCount)
     {
         Field* fields = resultCharCount->Fetch();
-        charCount = uint8(fields[1].Get<uint64>());
+        charCount = fields[1].Get<uint64>();
     }
+
+    sScriptMgr->OnAccountRealmCharacterCount(accountId, charCount);
 
     LoginDatabaseTransaction trans = LoginDatabase.BeginTransaction();
 
     LoginDatabasePreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_REP_REALM_CHARACTERS);
-    stmt->SetData(0, charCount);
+    stmt->SetData(0, uint8(charCount > 255 ? 255 : charCount));
     stmt->SetData(1, accountId);
     stmt->SetData(2, realm.Id.Realm);
     trans->Append(stmt);

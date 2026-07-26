@@ -1,0 +1,62 @@
+[worldserver]
+
+###################################################################################################
+# RebornWOW stage S.4 automatic carrier and hidden CharacterEnum prototype
+#
+# S.4 keeps the S.3 account/request/6277 path and adds opt-in automatic carrier creation plus an
+# opt-in CharacterEnum filter. Glue/DLL direct login is not implemented yet, so both new switches
+# default to OFF for safe staged testing.
+###################################################################################################
+
+# Enable the spectator module and commands.
+# Default: 1
+RebornSpectator.Enable = 1
+
+# How often the pending 6277 viewpoint is retried after the observer reaches the target map.
+# Range enforced by code: 100..2000 milliseconds.
+# Default: 250
+RebornSpectator.BindRetryMs = 250
+
+# Give up and restore the observer if the target never becomes visible to the observer client.
+# Range enforced by code: 1000..30000 milliseconds.
+# Default: 7000
+RebornSpectator.BindTimeoutMs = 7000
+
+# Restore the observer's original map and coordinates when the prototype stops.
+# Keep enabled for normal testing.
+# Default: 1
+RebornSpectator.ReturnOnStop = 1
+
+# Enable consuming an account-bound, one-time request when the registered carrier logs in.
+# Default: 1
+RebornSpectator.CarrierLoginEnable = 1
+
+# Wait after OnPlayerLogin before starting the 6277 viewpoint so the carrier is fully in world.
+# Range enforced by code: 500..10000 milliseconds.
+# Default: 1500
+RebornSpectator.CarrierLoginDelayMs = 1500
+
+# Lifetime of a request queued by the S.3 GM test command. The future authenticated DLL/API must
+# write a request with an equally short expiry.
+# Range enforced by code: 30..600 seconds.
+# Default: 120
+RebornSpectator.RequestTtlSeconds = 120
+
+# Automatically create and bind one dedicated carrier when an authenticated non-bot account opens
+# its character list and has no carrier row. Keep OFF until the S.4 SQL and patched core are loaded,
+# then enable only during a controlled test window.
+# Default: 0
+RebornSpectator.AutoCarrierProvisionEnable = 0
+
+# Hide only S.4 auto-created carriers from SMSG_CHAR_ENUM while retaining their GUID in the
+# authenticated session's legitimate-character set. Do not enable permanently before the future
+# Glue/DLL direct-login path exists, or the player will have no UI button that enters the carrier.
+# Default: 0
+RebornSpectator.AutoCarrierHideFromCharacterEnum = 0
+
+# Safe original 3.3.5 carrier template. The selected race/class must exist in current server DBC and
+# playercreateinfo. Gender: 0 male, 1 female.
+# Defaults: human warrior male
+RebornSpectator.AutoCarrierRace = 1
+RebornSpectator.AutoCarrierClass = 1
+RebornSpectator.AutoCarrierGender = 0

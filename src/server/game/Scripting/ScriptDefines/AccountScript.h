@@ -21,6 +21,8 @@
 #include "ScriptObject.h"
 #include <vector>
 
+class WorldSession;
+
 enum AccountHook
 {
     ACCOUNTHOOK_ON_ACCOUNT_LOGIN,
@@ -32,6 +34,10 @@ enum AccountHook
     ACCOUNTHOOK_ON_PASSWORD_CHANGE,
     ACCOUNTHOOK_ON_FAILED_PASSWORD_CHANGE,
     ACCOUNTHOOK_CAN_ACCOUNT_CREATE_CHARACTER,
+    ACCOUNTHOOK_ON_BEFORE_ACCOUNT_CHARACTER_ENUM,
+    ACCOUNTHOOK_CAN_ACCOUNT_LIST_CHARACTER,
+    ACCOUNTHOOK_ON_ACCOUNT_REALM_CHARACTER_COUNT,
+    ACCOUNTHOOK_CAN_ACCOUNT_DELETE_CHARACTER,
     ACCOUNTHOOK_END
 };
 
@@ -67,6 +73,19 @@ public:
 
     // Called when creating a character on the Account
     [[nodiscard]] virtual bool CanAccountCreateCharacter(uint32 /*accountId*/, uint8 /*charRace*/, uint8 /*charClass*/) { return true;}
+
+    // Called immediately before the authenticated session requests its character list.
+    virtual void OnBeforeAccountCharacterEnum(WorldSession* /*session*/) { }
+
+    // Return false to keep a character out of SMSG_CHAR_ENUM while retaining it as a legitimate
+    // character that the authenticated session may log in by GUID.
+    [[nodiscard]] virtual bool CanAccountListCharacter(uint32 /*accountId*/, uint32 /*guidLow*/) { return true; }
+
+    // Adjust the visible character count stored or checked for this realm.
+    virtual void OnAccountRealmCharacterCount(uint32 /*accountId*/, uint64& /*count*/) { }
+
+    // Return false to reject a client-side character-delete request.
+    [[nodiscard]] virtual bool CanAccountDeleteCharacter(uint32 /*accountId*/, uint32 /*guidLow*/) { return true; }
 };
 
 #endif

@@ -231,6 +231,16 @@ void WorldSession::HandleCharEnum(PreparedQueryResult result)
         {
             ObjectGuid guid = ObjectGuid::Create<HighGuid::Player>((*result)[0].Get<uint32>());
             LOG_DEBUG("network.opcode", "Loading char {} from account {}.", guid.ToString(), GetAccountId());
+
+            if (!sScriptMgr->CanAccountListCharacter(GetAccountId(), guid.GetCounter()))
+            {
+                // Hidden service characters remain legitimate for a later authenticated
+                // CMSG_PLAYER_LOGIN by GUID, but are not serialized into SMSG_CHAR_ENUM.
+                _legitCharacters.insert(guid);
+                LOG_DEBUG("network.opcode", "Character {} is hidden from account {} enumeration by AccountScript.", guid.ToString(), GetAccountId());
+                continue;
+            }
+
             if (Player::BuildEnumData(result, &data))
             {
                 _legitCharacters.insert(guid);
@@ -246,6 +256,8 @@ void WorldSession::HandleCharEnum(PreparedQueryResult result)
 
 void WorldSession::HandleCharEnumOpcode(WorldPacket& /*recvData*/)
 {
+    sScriptMgr->OnBeforeAccountCharacterEnum(this);
+
     CharacterDatabasePreparedStatement* stmt = nullptr;
 
     /// get all the data necessary for loading all characters (along with their pets) on the account
@@ -416,7 +428,9 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
                 if (result)
                 {
                     Field* fields = result->Fetch();
-                    createInfo->CharCount = uint8(fields[0].Get<uint64>()); // SQL's COUNT() returns uint64 but it will always be less than uint8.Max
+                    uint64 visibleCharCount = fields[0].Get<uint64>();
+                    sScriptMgr->OnAccountRealmCharacterCount(GetAccountId(), visibleCharCount);
+                    createInfo->CharCount = uint8(visibleCharCount > 255 ? 255 : visibleCharCount);
 
                     if (createInfo->CharCount >= sWorld->getIntConfig(CONFIG_CHARACTERS_PER_REALM))
                     {
@@ -442,17 +456,39 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
                         uint32 skipCinematics = sWorld->getIntConfig(CONFIG_SKIP_CINEMATICS);
                         bool checkDeathKnightReqs = !HasPermission(rbac::RBAC_PERM_SKIP_CHECK_CHARACTER_CREATION_DEATH_KNIGHT) && createInfo->Class == CLASS_DEATH_KNIGHT;
 
+                        struct ExistingVisibleCharacter
+                        {
+                            uint8 Level;
+                            uint8 Race;
+                            uint8 Class;
+                        };
+
+                        std::vector<ExistingVisibleCharacter> visibleCharacters;
                         if (result)
+                        {
+                            do
+                            {
+                                Field* field = result->Fetch();
+                                uint32 guidLow = field[0].Get<uint32>();
+                                if (!sScriptMgr->CanAccountListCharacter(GetAccountId(), guidLow))
+                                    continue;
+
+                                visibleCharacters.push_back(
+                                    { field[1].Get<uint8>(), field[2].Get<uint8>(), field[3].Get<uint8>() });
+                            } while (result->NextRow());
+                        }
+
+                        if (!visibleCharacters.empty())
                         {
                             TeamId teamId = Player::TeamIdForRace(createInfo->Race);
                             uint32 freeDeathKnightSlots = sWorld->getIntConfig(CONFIG_HEROIC_CHARACTERS_PER_REALM);
 
-                            Field* field = result->Fetch();
-                            uint8 accRace = field[1].Get<uint8>();
+                            ExistingVisibleCharacter const& firstCharacter = visibleCharacters.front();
+                            uint8 accRace = firstCharacter.Race;
 
                             if (checkDeathKnightReqs)
                             {
-                                uint8 accClass = field[2].Get<uint8>();
+                                uint8 accClass = firstCharacter.Class;
                                 if (accClass == CLASS_DEATH_KNIGHT)
                                 {
                                     if (freeDeathKnightSlots > 0)
@@ -467,7 +503,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
 
                                 if (!hasHeroicReqLevel)
                                 {
-                                    uint8 accLevel = field[0].Get<uint8>();
+                                    uint8 accLevel = firstCharacter.Level;
                                     if (accLevel >= heroicReqLevel)
                                         hasHeroicReqLevel = true;
                                 }
@@ -490,20 +526,20 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
 
                             // search same race for cinematic or same class if need
                             /// @todo check if cinematic already shown? (already logged in?; cinematic field)
-                            while ((skipCinematics == 1 && !haveSameRace) || createInfo->Class == CLASS_DEATH_KNIGHT)
+                            for (std::size_t index = 1;
+                                 index < visibleCharacters.size() &&
+                                     ((skipCinematics == 1 && !haveSameRace) || createInfo->Class == CLASS_DEATH_KNIGHT);
+                                 ++index)
                             {
-                                if (!result->NextRow())
-                                    break;
-
-                                field = result->Fetch();
-                                accRace = field[1].Get<uint8>();
+                                ExistingVisibleCharacter const& existingCharacter = visibleCharacters[index];
+                                accRace = existingCharacter.Race;
 
                                 if (!haveSameRace)
                                     haveSameRace = createInfo->Race == accRace;
 
                                 if (checkDeathKnightReqs)
                                 {
-                                    uint8 acc_class = field[2].Get<uint8>();
+                                    uint8 acc_class = existingCharacter.Class;
                                     if (acc_class == CLASS_DEATH_KNIGHT)
                                     {
                                         if (freeDeathKnightSlots > 0)
@@ -518,7 +554,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
 
                                     if (!hasHeroicReqLevel)
                                     {
-                                        uint8 acc_level = field[0].Get<uint8>();
+                                        uint8 acc_level = existingCharacter.Level;
                                         if (acc_level >= heroicReqLevel)
                                             hasHeroicReqLevel = true;
                                     }
@@ -604,7 +640,6 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
 
                 CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_CREATE_INFO);
                 stmt->SetData(0, GetAccountId());
-                stmt->SetData(1, (skipCinematics == 1 || createInfo->Class == CLASS_DEATH_KNIGHT) ? 10 : 1);
                 queryCallback.WithPreparedCallback(std::move(finalizeCharacterCreation)).SetNextQuery(CharacterDatabase.AsyncQuery(stmt));
             }));
 }
@@ -616,6 +651,13 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket& recvData)
 
     // Initiating
     uint32 initAccountId = GetAccountId();
+
+    if (!sScriptMgr->CanAccountDeleteCharacter(initAccountId, guid.GetCounter()))
+    {
+        sScriptMgr->OnPlayerFailedDelete(guid, initAccountId);
+        SendCharDelete(CHAR_DELETE_FAILED);
+        return;
+    }
 
     // can't delete loaded character
     if (ObjectAccessor::FindConnectedPlayer(guid) || sWorldSessionMgr->FindOfflineSessionForCharacterGUID(guid.GetCounter()))
