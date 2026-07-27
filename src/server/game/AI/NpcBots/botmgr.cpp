@@ -1519,6 +1519,7 @@ Creature* BotMgr::GetBotByName(std::string_view name) const
     if (Utf8toWStr(name, wname))
     {
         wstrToLower(wname);
+        Creature* normalizedMatch = nullptr;
         for (BotMap::const_iterator itr = _bots.begin(); itr != _bots.end(); ++itr)
         {
             if (!itr->second)
@@ -1539,7 +1540,18 @@ Creature* BotMgr::GetBotByName(std::string_view name) const
             wstrToLower(wbname);
             if (wbname == wname)
                 return itr->second;
+
+            // Chat commands encode spaces as underscores. Keep literal
+            // underscores intact, so a displayed name such as
+            // "DH_Horde Druid" can be addressed as "DH_Horde_Druid".
+            for (wchar_t& character : wbname)
+                if (character == L' ')
+                    character = L'_';
+            if (!normalizedMatch && wbname == wname)
+                normalizedMatch = itr->second;
         }
+
+        return normalizedMatch;
     }
 
     return nullptr;

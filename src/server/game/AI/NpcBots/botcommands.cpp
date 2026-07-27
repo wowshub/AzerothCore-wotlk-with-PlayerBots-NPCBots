@@ -2845,10 +2845,6 @@ public:
         uint32 count = 0;
         for (decltype(names)::value_type::value_type name : *names)
         {
-            for (decltype(name)::size_type i = 0u; i < name.size(); ++i)
-                if (name[i] == '_')
-                    name[i] = ' ';
-
             Creature const* bot = owner->GetBotMgr()->GetBotByName(name);
             if (bot && bot->IsAlive() && !bot->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP))
             {
@@ -2906,10 +2902,6 @@ public:
         uint32 count = 0;
         for (decltype(names)::value_type::value_type name : *names)
         {
-            for (decltype(name)::size_type i = 0u; i < name.size(); ++i)
-                if (name[i] == '_')
-                    name[i] = ' ';
-
             Creature const* bot = owner->GetBotMgr()->GetBotByName(name);
             if (bot && bot->IsAlive() && !bot->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP))
             {
@@ -2966,10 +2958,6 @@ public:
         uint32 count = 0;
         for (decltype(names)::value_type::value_type name : *names)
         {
-            for (decltype(name)::size_type i = 0u; i < name.size(); ++i)
-                if (name[i] == '_')
-                    name[i] = ' ';
-
             Creature const* bot = owner->GetBotMgr()->GetBotByName(name);
             if (bot && bot->IsAlive())
             {
@@ -3027,10 +3015,6 @@ public:
         uint32 count = 0;
         for (decltype(names)::value_type::value_type name : *names)
         {
-            for (decltype(name)::size_type i = 0u; i < name.size(); ++i)
-                if (name[i] == '_')
-                    name[i] = ' ';
-
             Creature const* bot = owner->GetBotMgr()->GetBotByName(name);
             if (bot && bot->IsAlive() && !bot->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP))
             {
