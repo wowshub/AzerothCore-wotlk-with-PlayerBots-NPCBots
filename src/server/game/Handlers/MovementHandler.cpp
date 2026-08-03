@@ -349,6 +349,22 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recvData)
 
     ASSERT(mover);                      // there must always be a mover
 
+    // A Player can temporarily delegate this mover to another authenticated
+    // Player session (for example RebornSpectator native assistance). The
+    // original target client may still emit periodic movement heartbeats even
+    // after SMSG_CLIENT_CONTROL_UPDATE disabled its input. Accepting those
+    // stale packets races the delegated controller and causes periodic
+    // position corrections plus stuck turn/strafe flags.
+    //
+    // m_movedByPlayer is the server-authoritative movement owner maintained by
+    // Player::SetMover. Only that owner may update this mover while delegation
+    // is active. Normal self movement and non-delegated movers are unchanged.
+    if (mover->m_movedByPlayer && mover->m_movedByPlayer != _player)
+    {
+        recvData.rfinish();
+        return;
+    }
+
     Player* plrMover = mover->ToPlayer();
 
     // ignore, waiting processing in WorldSession::HandleMoveWorldportAckOpcode and WorldSession::HandleMoveTeleportAck

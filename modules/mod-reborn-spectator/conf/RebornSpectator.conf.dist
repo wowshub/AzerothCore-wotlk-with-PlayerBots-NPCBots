@@ -31,6 +31,37 @@ RebornSpectator.ReturnOnStop = 1
 # Default: 1
 RebornSpectator.CarrierLoginEnable = 1
 
+# A dead/ghost observer carrier is never moved or automatically resurrected. The authenticated
+# target remains queued while the character completes the normal resurrection flow at its original
+# location; observation then continues automatically. Enforced range: 30..1800 seconds.
+# Default: 600
+RebornSpectator.CarrierAliveWaitSeconds = 600
+
+# S.7.8.4 always enables temporary anti-fall flight before moving an alive observer to a target.
+# This security invariant prevents a flying/high-altitude target from becoming a corpse/revival
+# teleport path. The carrier's original flight state is restored after confirmed return.
+
+# If a character selected as an authenticated spectator carrier still belongs to a normal party,
+# leave that party before starting the login-screen observation request. This applies only to the
+# authenticated carrier path; manual GM starts still require the observer to leave its group first.
+# Default: 1
+RebornSpectator.AutoLeaveGroupAuthenticatedCarrier = 1
+
+# Enable the S.5.10 authenticated CharacterSelect control request, hidden-carrier GUID redirect,
+# and target-map preparation before the first SMSG_LOGIN_VERIFY_WORLD.
+# Default: 0
+RebornSpectator.PreloginBridgeEnable = 0
+
+# Lifetime of the in-memory authenticated CharacterSelect request.
+# Enforced range: 5000..60000 milliseconds.
+# Default: 15000
+RebornSpectator.PreloginRequestTtlMs = 15000
+
+# Keep the hidden carrier near enough to receive the target create object, but do not place its
+# translucent local model directly on top of the target. Enforced range: 5..30 yards.
+# Default: 12
+RebornSpectator.PreloginCarrierOffset = 12
+
 # Wait after OnPlayerLogin before starting the 6277 viewpoint so the carrier is fully in world.
 # Range enforced by code: 500..10000 milliseconds.
 # Default: 1500
@@ -47,6 +78,12 @@ RebornSpectator.RequestTtlSeconds = 120
 # then enable only during a controlled test window.
 # Default: 0
 RebornSpectator.AutoCarrierProvisionEnable = 0
+
+# When automatic provisioning is enabled, create an Rsp carrier only if the authenticated account
+# owns zero characters. Accounts with one or more characters stay on CharacterSelect and can use
+# any selected character as the observer. Keep enabled for the supported S.7.8 hybrid flow.
+# Default: 1
+RebornSpectator.AutoCarrierOnlyForEmptyAccount = 1
 
 # Hide only S.4 auto-created carriers from SMSG_CHAR_ENUM while retaining their GUID in the
 # authenticated session's legitimate-character set. Do not enable permanently before the future

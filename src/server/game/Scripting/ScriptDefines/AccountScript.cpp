@@ -64,6 +64,16 @@ bool ScriptMgr::CanAccountCreateCharacter(uint32 accountId, uint8 charRace, uint
     CALL_ENABLED_BOOLEAN_HOOKS(AccountScript, ACCOUNTHOOK_CAN_ACCOUNT_CREATE_CHARACTER, !script->CanAccountCreateCharacter(accountId, charRace, charClass));
 }
 
+void ScriptMgr::OnAccountCharacterCreateRequest(WorldSession* session, std::string const& name, bool& consumed)
+{
+    CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_ACCOUNT_CHARACTER_CREATE_REQUEST, script->OnAccountCharacterCreateRequest(session, name, consumed));
+}
+
+void ScriptMgr::OnAccountSelectCharacter(WorldSession* session, ObjectGuid& guid)
+{
+    CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_ACCOUNT_SELECT_CHARACTER, script->OnAccountSelectCharacter(session, guid));
+}
+
 void ScriptMgr::OnBeforeAccountCharacterEnum(WorldSession* session)
 {
     CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_BEFORE_ACCOUNT_CHARACTER_ENUM, script->OnBeforeAccountCharacterEnum(session));
@@ -82,6 +92,16 @@ void ScriptMgr::OnAccountRealmCharacterCount(uint32 accountId, uint64& count)
 bool ScriptMgr::CanAccountDeleteCharacter(uint32 accountId, uint32 guidLow)
 {
     CALL_ENABLED_BOOLEAN_HOOKS(AccountScript, ACCOUNTHOOK_CAN_ACCOUNT_DELETE_CHARACTER, !script->CanAccountDeleteCharacter(accountId, guidLow));
+}
+
+void ScriptMgr::OnAccountCharacterCreatePrepared(WorldSession* session, std::string const& name, uint32 slotNumber, bool& allowed)
+{
+    CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_ACCOUNT_CHARACTER_CREATE_PREPARED, script->OnAccountCharacterCreatePrepared(session, name, slotNumber, allowed));
+}
+
+void ScriptMgr::OnAccountCharacterCreateResult(WorldSession* session, std::string const& name, bool success)
+{
+    CALL_ENABLED_HOOKS(AccountScript, ACCOUNTHOOK_ON_ACCOUNT_CHARACTER_CREATE_RESULT, script->OnAccountCharacterCreateResult(session, name, success));
 }
 
 AccountScript::AccountScript(char const* name, std::vector<uint16> enabledHooks) :

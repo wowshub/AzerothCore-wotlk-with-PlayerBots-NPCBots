@@ -320,6 +320,29 @@ ResultSet* MySQLConnection::Query(std::string_view sql)
     if (!_Query(sql, &result, &fields, &rowCount, &fieldCount))
         return nullptr;
 
+    // CALL statements can return the selected row set followed by one or more
+    // protocol-level result sets. The first result is already fully buffered by
+    // mysql_store_result(), so it is safe and necessary to drain the trailing
+    // results before this synchronous connection is returned to the pool.
+    // Otherwise the next statement on the same connection fails with
+    // CR_COMMANDS_OUT_OF_SYNC even though the stored procedure itself succeeded.
+    while (mysql_more_results(m_Mysql))
+    {
+        int nextResult = mysql_next_result(m_Mysql);
+        if (nextResult > 0)
+        {
+            LOG_ERROR("sql.sql", "[{}] Failed to advance to the next MySQL result: {}",
+                mysql_errno(m_Mysql), mysql_error(m_Mysql));
+            break;
+        }
+
+        if (nextResult == 0)
+        {
+            if (MySQLResult* extraResult = reinterpret_cast<MySQLResult*>(mysql_store_result(m_Mysql)))
+                mysql_free_result(extraResult);
+        }
+    }
+
     return new ResultSet(result, fields, rowCount, fieldCount);
 }
 

@@ -537,10 +537,24 @@ void WorldSession::HandleSetSelectionOpcode(WorldPacket& recv_data)
     ObjectGuid guid;
     recv_data >> guid;
 
-    _player->SetSelection(guid);
+    Player* selectionOwner = _player;
+    Unit* mover = _player->m_mover;
+    bool const authorizedRemotePlayerMover =
+        mover && mover != _player && mover->IsPlayer() &&
+        mover->m_movedByPlayer == _player &&
+        _player->GetCharmGUID() == mover->GetGUID() &&
+        mover->GetCharmerGUID() == _player->GetGUID() &&
+        mover->HasUnitState(UNIT_STATE_CHARMED);
+
+    if (authorizedRemotePlayerMover)
+        selectionOwner = mover->ToPlayer();
+
+    selectionOwner->SetSelection(guid);
 
     // Change target of current autoshoot spell
-    if (guid)
+    // Remote spectator control only mirrors target selection. It must not redirect
+    // or start the observer's auto-repeat spell on the controlled player.
+    if (guid && !authorizedRemotePlayerMover)
     {
         if (Spell* autoReapeatSpell = _player->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
         {

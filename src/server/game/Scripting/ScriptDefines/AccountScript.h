@@ -21,6 +21,7 @@
 #include "ScriptObject.h"
 #include <vector>
 
+class ObjectGuid;
 class WorldSession;
 
 enum AccountHook
@@ -34,10 +35,14 @@ enum AccountHook
     ACCOUNTHOOK_ON_PASSWORD_CHANGE,
     ACCOUNTHOOK_ON_FAILED_PASSWORD_CHANGE,
     ACCOUNTHOOK_CAN_ACCOUNT_CREATE_CHARACTER,
+    ACCOUNTHOOK_ON_ACCOUNT_CHARACTER_CREATE_REQUEST,
+    ACCOUNTHOOK_ON_ACCOUNT_SELECT_CHARACTER,
     ACCOUNTHOOK_ON_BEFORE_ACCOUNT_CHARACTER_ENUM,
     ACCOUNTHOOK_CAN_ACCOUNT_LIST_CHARACTER,
     ACCOUNTHOOK_ON_ACCOUNT_REALM_CHARACTER_COUNT,
     ACCOUNTHOOK_CAN_ACCOUNT_DELETE_CHARACTER,
+    ACCOUNTHOOK_ON_ACCOUNT_CHARACTER_CREATE_PREPARED,
+    ACCOUNTHOOK_ON_ACCOUNT_CHARACTER_CREATE_RESULT,
     ACCOUNTHOOK_END
 };
 
@@ -74,6 +79,15 @@ public:
     // Called when creating a character on the Account
     [[nodiscard]] virtual bool CanAccountCreateCharacter(uint32 /*accountId*/, uint8 /*charRace*/, uint8 /*charClass*/) { return true;}
 
+    // Called immediately after an authenticated CMSG_CHAR_CREATE has been decoded and before any
+    // normal character-creation validation. Set consumed=true only for a complete custom request.
+    virtual void OnAccountCharacterCreateRequest(WorldSession* /*session*/, std::string const& /*name*/, bool& /*consumed*/) { }
+
+    // Called after the client-selected GUID has passed the normal ownership check. A script may
+    // replace it with another GUID owned by the same authenticated account; the core checks the
+    // replacement against the legitimate-character set again before loading it.
+    virtual void OnAccountSelectCharacter(WorldSession* /*session*/, ObjectGuid& /*guid*/) { }
+
     // Called immediately before the authenticated session requests its character list.
     virtual void OnBeforeAccountCharacterEnum(WorldSession* /*session*/) { }
 
@@ -86,6 +100,15 @@ public:
 
     // Return false to reject a client-side character-delete request.
     [[nodiscard]] virtual bool CanAccountDeleteCharacter(uint32 /*accountId*/, uint32 /*guidLow*/) { return true; }
+
+    // Called after all normal creation validation and the final name-cache check, immediately
+    // before Player::Create. Set allowed=false to reject the request. This is the safe point for
+    // an external module to reserve account-level currency.
+    virtual void OnAccountCharacterCreatePrepared(WorldSession* /*session*/, std::string const& /*name*/, uint32 /*slotNumber*/, bool& /*allowed*/) { }
+
+    // Completes a request that previously reached OnAccountCharacterCreatePrepared. A payment
+    // module can settle the reservation on success or refund it on any create/database failure.
+    virtual void OnAccountCharacterCreateResult(WorldSession* /*session*/, std::string const& /*name*/, bool /*success*/) { }
 };
 
 #endif

@@ -517,10 +517,14 @@ public: /* AccountScript */
     void OnPasswordChange(uint32 accountId);
     void OnFailedPasswordChange(uint32 accountId);
     bool CanAccountCreateCharacter(uint32 accountId, uint8 charRace, uint8 charClass);
+    void OnAccountCharacterCreateRequest(WorldSession* session, std::string const& name, bool& consumed);
+    void OnAccountSelectCharacter(WorldSession* session, ObjectGuid& guid);
     void OnBeforeAccountCharacterEnum(WorldSession* session);
     bool CanAccountListCharacter(uint32 accountId, uint32 guidLow);
     void OnAccountRealmCharacterCount(uint32 accountId, uint64& count);
     bool CanAccountDeleteCharacter(uint32 accountId, uint32 guidLow);
+    void OnAccountCharacterCreatePrepared(WorldSession* session, std::string const& name, uint32 slotNumber, bool& allowed);
+    void OnAccountCharacterCreateResult(WorldSession* session, std::string const& name, bool success);
 
 public: /* GuildScript */
     void OnGuildAddMember(Guild* guild, Player* player, uint8& plRank);

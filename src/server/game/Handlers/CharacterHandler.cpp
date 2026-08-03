@@ -288,6 +288,11 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
         >> createInfo->FacialHair
         >> createInfo->OutfitId;
 
+    bool customCreateRequestConsumed = false;
+    sScriptMgr->OnAccountCharacterCreateRequest(this, createInfo->Name, customCreateRequestConsumed);
+    if (customCreateRequestConsumed)
+        return;
+
     if (!HasPermission(rbac::RBAC_PERM_SKIP_CHECK_CHARACTER_CREATION_TEAMMASK))
     {
         if (uint32 mask = sWorld->getIntConfig(CONFIG_CHARACTER_CREATING_DISABLED))
@@ -575,6 +580,15 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
                             return;
                         }
 
+                        bool createPreparedAllowed = true;
+                        sScriptMgr->OnAccountCharacterCreatePrepared(this, createInfo->Name,
+                            uint32(createInfo->CharCount) + 1, createPreparedAllowed);
+                        if (!createPreparedAllowed)
+                        {
+                            SendCharCreate(CHAR_CREATE_ERROR);
+                            return;
+                        }
+
                         std::shared_ptr<Player> newChar(new Player(this), [](Player* ptr)
                             {
                                 // Only when player is created correctly do clean
@@ -589,6 +603,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
                         if (!newChar->Create(sObjectMgr->GetGenerator<HighGuid::Player>().Generate(), createInfo.get()))
                         {
                             // Player not create (race/class/etc problem?)
+                            sScriptMgr->OnAccountCharacterCreateResult(this, createInfo->Name, false);
                             SendCharCreate(CHAR_CREATE_ERROR);
                             return;
                         }
@@ -618,8 +633,9 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
 
                         LoginDatabase.CommitTransaction(trans);
 
-                        AddTransactionCallback(CharacterDatabase.AsyncCommitTransaction(characterTransaction)).AfterComplete([this, newChar = std::move(newChar)](bool success)
+                        AddTransactionCallback(CharacterDatabase.AsyncCommitTransaction(characterTransaction)).AfterComplete([this, createInfo, newChar = std::move(newChar)](bool success)
                             {
+                                sScriptMgr->OnAccountCharacterCreateResult(this, createInfo->Name, success);
                                 if (success)
                                 {
                                     LOG_INFO("entities.player.character", "Account: {} (IP: {}) Create Character: {} {}", GetAccountId(), GetRemoteAddress(), newChar->GetName(), newChar->GetGUID().ToString());
@@ -735,6 +751,30 @@ void WorldSession::HandlePlayerLoginOpcode(WorldPacket& recvData)
         LOG_ERROR("network", "Account ({}) can't login with that character ({}).", GetAccountId(), playerGuid.ToString());
         KickPlayer("Account can't login with this character");
         return;
+    }
+
+    ObjectGuid const requestedPlayerGuid = playerGuid;
+    sScriptMgr->OnAccountSelectCharacter(this, playerGuid);
+    if (playerGuid != requestedPlayerGuid)
+    {
+        if (!IsLegitCharacterForAccount(playerGuid))
+        {
+            LOG_ERROR(
+                "network",
+                "Account ({}) script replaced login character {} with non-legitimate character {}.",
+                GetAccountId(),
+                requestedPlayerGuid.ToString(),
+                playerGuid.ToString());
+            KickPlayer("Account script selected a non-legitimate character");
+            return;
+        }
+
+        LOG_INFO(
+            "network",
+            "Account ({}) authenticated login character {} was replaced by account script with {}.",
+            GetAccountId(),
+            requestedPlayerGuid.ToString(),
+            playerGuid.ToString());
     }
 
     // pussywizard:
