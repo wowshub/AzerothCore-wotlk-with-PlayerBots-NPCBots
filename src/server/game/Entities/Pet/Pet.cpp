@@ -561,10 +561,29 @@ void Pet::SavePetToDB(PetSaveMode mode)
         // save pet
         std::string actionBar = GenerateActionBarData();
 
-        if (owner->GetPetStable()->CurrentPet && owner->GetPetStable()->CurrentPet->PetNumber == m_charmInfo->GetPetNumber())
+        // A character that learns hunter pet abilities through SpellDraft can tame its
+        // first pet after login without having had any pet rows (or purchased stable
+        // slots) when Player::_LoadPetStable ran.  In that case m_petStable is null, or
+        // it exists with an empty CurrentPet.  The old code only refreshed an already
+        // existing CurrentPet and therefore wrote the new pet to character_pet while
+        // leaving the live stable cache empty.  The stable UI then received zero pets,
+        // showed no model and could not move the summoned pet into a stable slot until
+        // the character logged in again.
+        //
+        // Initialise the cache when saving a newly tamed current pet and populate the
+        // same PetInfo structure that a later login would load from character_pet.
+        // Other save modes keep the existing behaviour: they only refresh CurrentPet
+        // when it already represents this pet, before the stable handler moves it.
+        PetStable* petStable = owner->GetPetStable();
+        if (mode == PET_SAVE_AS_CURRENT &&
+            (!petStable || !petStable->CurrentPet || petStable->CurrentPet->PetNumber != m_charmInfo->GetPetNumber()))
         {
-            FillPetInfo(&owner->GetPetStable()->CurrentPet.value());
+            petStable = &owner->GetOrInitPetStable();
+            petStable->CurrentPet.emplace();
+            FillPetInfo(&petStable->CurrentPet.value());
         }
+        else if (petStable && petStable->CurrentPet && petStable->CurrentPet->PetNumber == m_charmInfo->GetPetNumber())
+            FillPetInfo(&petStable->CurrentPet.value());
 
         stmt = CharacterDatabase.GetPreparedStatement(CHAR_REP_CHAR_PET);
         stmt->SetData(0, m_charmInfo->GetPetNumber());

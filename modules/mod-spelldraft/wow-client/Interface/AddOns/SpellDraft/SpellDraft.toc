@@ -1,0 +1,21 @@
+## Interface: 30300
+## Title: SpellDraft
+## Title-zhCN: SpellDraft 抽卡系统
+## Notes: Classless randomized spell drafting AddOn
+## Notes-zhCN: 无职业随机技能抽取与角色成长界面
+## Author: bdodroid
+## Version: 1.0
+## SavedVariables: SpellDraftDB
+Localization.lua
+SpellChoice.xml
+SpellData.lua
+SpellData_Talents.lua
+SpellChoice.lua
+SpellBook.lua
+PrestigeShop.lua
+PrestigeNameplates.lua
+ComboPoints.lua
+AmmoFix.lua
+TotemBarFix.lua
+RETooltip.lua
+REServices.lua

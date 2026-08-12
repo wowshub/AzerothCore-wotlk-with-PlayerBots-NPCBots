@@ -120,6 +120,11 @@ inline constexpr uint32 GetReputationRaceMaskForRace(uint8 race)
 {
     switch (race)
     {
+        // Alliance Pandaren has no BaseRepRaceMask entry in this client's
+        // Faction.dbc. Reuse Human only for reputation initialization/checks.
+        // Other custom races keep their own working DBC reputation masks.
+        case RACE_PANDAREN_ALLIANCE:
+            return GetRaceMaskForRace(RACE_HUMAN);
         case RACE_NAGA:
             return GetRaceMaskForRace(RACE_ORC);
         case RACE_DRACTHYR:

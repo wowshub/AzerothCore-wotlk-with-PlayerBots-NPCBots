@@ -40,9 +40,26 @@ bool IsCustomRaceCompatibleQuestRace(Player const* player, uint32 reqraces)
 
     switch (player->getRace())
     {
+        // Custom races can start in any same-faction starting zone. When the
+        // quest's direct race bit did not match, fall back to the complete
+        // same-faction mask instead of a single parent race.
+        case RACE_VOIDELF:
+        case RACE_HIGH_ELF:
+        case RACE_WOLGEN:
+        case RACE_LIGHTFORGED:
+        case RACE_DH_A:
+        case RACE_PANDAREN_ALLIANCE:
+        case RACE_DARK_IRON_DWARF:
         case RACE_DRACTHYR:
             compatibleRaceMask = RACEMASK_ALLIANCE;
             break;
+        case RACE_GOBLIN:
+        case RACE_VULPERA:
+        case RACE_PANDAREN:
+        case RACE_EREDAR:
+        case RACE_ZANDALARI_TROLL:
+        case RACE_DH_H:
+        case RACE_NIGHTBORNE:
         case RACE_NAGA:
             compatibleRaceMask = RACEMASK_HORDE;
             break;

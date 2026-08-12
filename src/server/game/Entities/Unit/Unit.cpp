@@ -8926,7 +8926,7 @@ void Unit::EnergizeBySpell(Unit* victim, uint32 spellID, uint32 damage, Powers p
 {
     victim->ModifyPower(powerType, damage, false);
 
-    // Happiness is internal hunter pet state, not combat assistance ¡ª energizing it must not generate threat
+    // Happiness is internal hunter pet state, not combat assistance; energizing it must not generate threat.
     if (powerType != POWER_HAPPINESS)
         if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellID))
             victim->GetThreatMgr().ForwardThreatForAssistingMe(this, float(damage) / 2.0f, spellInfo, true);
@@ -12600,7 +12600,7 @@ Unit* Creature::SelectVictim()
         return target;
     }
 
-    // Don't evade if another unit has us on their threat list ¡ª evading would
+    // Don't evade if another unit has us on their threat list; evading would
     // end the bidirectional combat reference and remove us from their threat list,
     // causing them to lose their target (e.g. an NPC fighting a guardian whose
     // CanAIAttack rejects the NPC).
@@ -14534,6 +14534,22 @@ void Unit::SendComboPoints()
         data << packGUID;
         data << uint8(m_comboPoints);
         playerMe->SendDirectMessage(&data);
+
+        // [beascend/spelldraft] Send custom SpellDraft addon message for custom combo point rendering
+        std::string prefix = "SpellDraftCP";
+        std::string message = std::to_string(m_comboPoints);
+        std::string fullmsg = prefix + "\t" + message;
+
+        WorldPacket addonData(SMSG_MESSAGECHAT, 100);
+        addonData << uint8(0); // CHAT_MSG_ADDON (Whisper/Normal channel context)
+        addonData << int32(LANG_ADDON);
+        addonData << playerMe->GetGUID();
+        addonData << uint32(0);
+        addonData << playerMe->GetGUID();
+        addonData << uint32(fullmsg.length() + 1);
+        addonData << fullmsg;
+        addonData << uint8(0);
+        playerMe->GetSession()->SendPacket(&addonData);
     }
 
     ObjectGuid ownerGuid = GetCharmerOrOwnerGUID();

@@ -1165,8 +1165,8 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
     //    characters.hairColor, characters.facialStyle, character.level, characters.zone, characters.map, characters.position_x, characters.position_y, characters.position_z,
     //    16                    17                      18                   19                   20                     21                   22               23
     //    guild_member.guildid, characters.playerFlags, characters.at_login, character_pet.entry, character_pet.modelid, character_pet.level, characters.equipmentCache, character_banned.guid,
-    //    24                      25
-    //    characters.extra_flags, character_declinedname.genitive
+    //    24                      25                                26
+    //    characters.extra_flags, spelldraft_character_mode.mode, character_declinedname.genitive
 
     Field* fields = result->Fetch();
 
@@ -1238,7 +1238,7 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
         charFlags |= CHARACTER_FLAG_LOCKED_BY_BILLING;
     if (sWorld->getBoolConfig(CONFIG_DECLINED_NAMES_USED))
     {
-        if (!fields[25].Get<std::string>().empty())
+        if (!fields[26].Get<std::string>().empty())
             charFlags |= CHARACTER_FLAG_DECLINED;
     }
     else
@@ -1246,15 +1246,25 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
 
     *data << uint32(charFlags);                              // character flags
 
-    // character customize flags
+    // Character customization flags normally contain exactly one service bit.
+    // When no paid-service operation is pending, unused multi-bit combinations
+    // transport SpellDraft's per-character progression mode to GlueXML without
+    // changing the fixed SMSG_CHAR_ENUM packet layout.
+    uint32 progressionMode = fields[25].Get<uint8>();
     if (atLoginFlags & AT_LOGIN_CUSTOMIZE)
         *data << uint32(CHAR_CUSTOMIZE_FLAG_CUSTOMIZE);
     else if (atLoginFlags & AT_LOGIN_CHANGE_FACTION)
         *data << uint32(CHAR_CUSTOMIZE_FLAG_FACTION);
     else if (atLoginFlags & AT_LOGIN_CHANGE_RACE)
         *data << uint32(CHAR_CUSTOMIZE_FLAG_RACE);
+    else if (progressionMode == 1) // Classic: customize + faction
+        *data << uint32(CHAR_CUSTOMIZE_FLAG_CUSTOMIZE | CHAR_CUSTOMIZE_FLAG_FACTION);
+    else if (progressionMode == 2) // Random Draft: customize + race
+        *data << uint32(CHAR_CUSTOMIZE_FLAG_CUSTOMIZE | CHAR_CUSTOMIZE_FLAG_RACE);
+    else if (progressionMode == 3) // Free Pick: faction + race
+        *data << uint32(CHAR_CUSTOMIZE_FLAG_FACTION | CHAR_CUSTOMIZE_FLAG_RACE);
     else
-        *data << uint32(CHAR_CUSTOMIZE_FLAG_NONE);
+        *data << uint32(CHAR_CUSTOMIZE_FLAG_CUSTOMIZE | CHAR_CUSTOMIZE_FLAG_FACTION | CHAR_CUSTOMIZE_FLAG_RACE); // Pending
 
     // First login
     *data << uint8(atLoginFlags & AT_LOGIN_FIRST ? 1 : 0);
@@ -1554,7 +1564,11 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
     }
     else
     {
-        if (IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_TELEPORT) && GetMapId() == MAP_EBON_HOLD && !IsGameMaster() && !HasSpell(50977))
+        // SpellDraft: a level-one Random Draft DK has deliberately skipped the
+        // stock Acherus quest chain and therefore cannot own Death Gate (50977).
+        // Classic DKs still start at level 55, so they remain protected by the
+        // original quest-completion gate below.
+        if (IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_TELEPORT) && GetLevel() > 1 && GetMapId() == MAP_EBON_HOLD && !IsGameMaster() && !HasSpell(50977))
         {
             SendTransferAborted(mapid, TRANSFER_ABORT_UNIQUE_MESSAGE, 1);
             return false;

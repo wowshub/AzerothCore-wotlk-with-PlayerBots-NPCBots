@@ -16,6 +16,7 @@
  */
 
 #include "Trainer.h"
+#include "Config.h"
 #include "Creature.h"
 #include "NPCPackets.h"
 #include "Player.h"
@@ -214,8 +215,12 @@ namespace Trainer
         switch (GetTrainerType())
         {
             case Type::Class:
-            case Type::Pet:
                 // check class for class trainers
+                return player->getClass() == GetTrainerRequirement();
+            case Type::Pet:
+                // [beascend/spelldraft] allow any class to use pet trainers when SpellDraft is enabled
+                if (sConfigMgr->GetOption<bool>("SpellDraft.Enable", true))
+                    return true;
                 return player->getClass() == GetTrainerRequirement();
             case Type::Mount:
                 // check race for mount trainers

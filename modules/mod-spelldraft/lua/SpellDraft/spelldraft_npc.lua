@@ -1,0 +1,1043 @@
+local scriptPath = debug.getinfo(1).source:sub(2)
+local parentPath = scriptPath:match("(.+[/\\])") or ""
+local rootPath = parentPath:match("(.+[/\\])[^/\\]+[/\\]$") or parentPath
+dofile(rootPath .. "spelldraft_config.lua")
+local NPC_ID = CONFIG.NPC_ID
+local MAX_LEVEL = CONFIG.MAX_LEVEL
+local DRAFT_MODE_REROLLS = CONFIG.DRAFT_MODE_REROLLS 
+local DRAFT_MODE_SPELLS = CONFIG.DRAFT_MODE_SPELLS
+local DRAFT_BANS_START = CONFIG.DRAFT_BANS_START
+local prestigeDescription = CONFIG.prestigeDescription
+local prestigeBlockedMessage = CONFIG.prestigeBlockedMessage
+local prestigeLossList = CONFIG.prestigeLossList
+
+
+local LOGOUT_TIMER = 10 -- time in seconds to wait after sending back to start before logging out to finish process.
+local LOGOUT_AFTER_PRESTIGE_TIMER = LOGOUT_TIMER * 1000
+local EQUIP_SLOT_START = 0
+local EQUIP_SLOT_END = 18
+local MAIL_SUBJECT = "Your Returned Gear [Prestige]"
+local MAIL_BODY = "Your equipped gear has been returned to you after prestiging."
+local RED = "|cffff0000"
+local YELLOW = "|cffffff00"
+local WHITE = "|cffffffff"
+local startingGear = CONFIG.startingGear
+
+local function IsRandomDraftMode(player)
+    if type(SpellDraft_IsRandomMode) == "function" then
+        return SpellDraft_IsRandomMode(player)
+    end
+    return true
+end
+
+local function IsPrestigeProgressionMode(player)
+    if IsRandomDraftMode(player) then return true end
+    if type(SpellDraft_IsFreePickMode) == "function" and SpellDraft_IsFreePickMode(player) then
+        return true
+    end
+    if type(SpellDraft_IsClassicMode) == "function" and SpellDraft_IsClassicMode(player) then
+        return CONFIG.PRESTIGE_ALLOW_CLASSIC == true
+    end
+    return false
+end
+
+
+
+local function ResetPlayerQuests(guid, class)
+    local dkQuests = {}
+    local dkQuestQ = WorldDBQuery("SELECT ID FROM quest_template WHERE QuestSortID = -372 AND ID NOT IN (13188, 13189)")
+    if dkQuestQ then
+        repeat
+            table.insert(dkQuests, dkQuestQ:GetUInt32(0))
+        until not dkQuestQ:NextRow()
+    end
+
+    local dkQuestStr = table.concat(dkQuests, ",")
+
+    if class == 6 and #dkQuests > 0 then
+        CharDBExecute("DELETE FROM character_queststatus WHERE guid = " .. guid .. " AND quest NOT IN (" .. dkQuestStr .. ")")
+        CharDBExecute("DELETE FROM character_queststatus_rewarded WHERE guid = " .. guid .. " AND quest NOT IN (" .. dkQuestStr .. ")")
+    else
+        CharDBExecute("DELETE FROM character_queststatus WHERE guid = " .. guid)
+        CharDBExecute("DELETE FROM character_queststatus_rewarded WHERE guid = " .. guid)
+    end
+    CharDBExecute("DELETE FROM character_queststatus_daily WHERE guid = " .. guid)
+    CharDBExecute("DELETE FROM character_queststatus_weekly WHERE guid = " .. guid)
+    CharDBExecute("DELETE FROM character_queststatus_seasonal WHERE guid = " .. guid)
+    CharDBExecute("DELETE FROM character_queststatus_monthly WHERE guid = " .. guid)
+end
+
+
+local function UpdateClassAfterLogout(guid, newClass)
+    local ticks = 0
+    local maxTicks = 150
+    local eventId
+
+    eventId = CreateLuaEvent(function(evId)
+        local actualEvId = evId or eventId
+        ticks = ticks + 1
+
+        local online = 1
+        local q = CharDBQuery("SELECT online FROM characters WHERE guid = " .. guid)
+        if q then
+            online = q:GetUInt32(0)
+        end
+
+        local p = GetPlayerByGUID(guid)
+
+        if (p == nil and online == 0) or ticks >= maxTicks then
+            if ticks >= maxTicks and (p ~= nil or online ~= 0) then
+                print(string.format("[Prestige] WARNING: UpdateClassAfterLogout safety cap hit for player guid %d. Re-kicking and rescheduling to perform safe offline cleanup.", guid))
+                if p then
+                    p:KickPlayer()
+                end
+                UpdateClassAfterLogout(guid, newClass)
+                if actualEvId then
+                    RemoveEventById(actualEvId)
+                end
+                return
+            end
+
+            -- Update class
+            CharDBExecute(string.format("UPDATE characters SET class = %d WHERE guid = %d", newClass, guid))
+
+            -- Wipe quests cleanly after they are offline!
+            local dkQuests = {}
+            local dkQuestQ = WorldDBQuery("SELECT ID FROM quest_template WHERE QuestSortID = -372 AND ID NOT IN (13188, 13189)")
+            if dkQuestQ then
+                repeat
+                    table.insert(dkQuests, dkQuestQ:GetUInt32(0))
+                until not dkQuestQ:NextRow()
+            end
+            local dkQuestStr = table.concat(dkQuests, ",")
+
+            if newClass == 6 and #dkQuests > 0 then
+                CharDBExecute("DELETE FROM character_queststatus WHERE guid = " .. guid .. " AND quest NOT IN (" .. dkQuestStr .. ")")
+                CharDBExecute("DELETE FROM character_queststatus_rewarded WHERE guid = " .. guid .. " AND quest NOT IN (" .. dkQuestStr .. ")")
+            else
+                CharDBExecute("DELETE FROM character_queststatus WHERE guid = " .. guid)
+                CharDBExecute("DELETE FROM character_queststatus_rewarded WHERE guid = " .. guid)
+            end
+            CharDBExecute("DELETE FROM character_queststatus_daily WHERE guid = " .. guid)
+            CharDBExecute("DELETE FROM character_queststatus_weekly WHERE guid = " .. guid)
+            CharDBExecute("DELETE FROM character_queststatus_seasonal WHERE guid = " .. guid)
+            CharDBExecute("DELETE FROM character_queststatus_monthly WHERE guid = " .. guid)
+
+            -- Wipe spells and actions safely while offline
+            CharDBExecute("DELETE FROM character_spell WHERE guid = " .. guid)
+            CharDBExecute("DELETE FROM character_action WHERE guid = " .. guid)
+
+            if actualEvId then
+                RemoveEventById(actualEvId)
+            end
+        end
+    end, 200, 0)
+end
+
+
+
+
+local function GetStoredClass(player)
+    local guid = player:GetGUIDLow()
+    local result = CharDBQuery("SELECT stored_class FROM prestige_stats WHERE player_id = " .. guid)
+    if result then
+        local storedClass = result:GetUInt8(0)
+        return storedClass
+    else
+        return nil -- not found
+    end
+end
+
+local function GiveStartingGear(player)
+    local race = player:GetRace()
+    local class = GetStoredClass(player)
+
+    local raceNames = {
+        [1] = "HUMAN",
+        [2] = "ORC",
+        [3] = "DWARF",
+        [4] = "NIGHTELF",
+        [5] = "UNDEAD",
+        [6] = "TAUREN",
+        [7] = "GNOME",
+        [8] = "TROLL",
+        [10] = "BLOODELF",
+        [11] = "DRAENEI",
+    }
+
+    local classNames = {
+        [1]  = "WARRIOR",
+        [2]  = "PALADIN",
+        [3]  = "HUNTER",
+        [4]  = "ROGUE",
+        [5]  = "PRIEST",
+        [6]  = "DEATHKNIGHT",
+        [7]  = "SHAMAN",
+        [8]  = "MAGE",
+        [9]  = "WARLOCK",
+        [11] = "DRUID",
+    }
+
+    local raceName = raceNames[race]
+    local className = classNames[class]
+
+    local key
+    if class == 6 then -- Death Knight
+        key = "DEATHKNIGHT"
+    elseif raceName and className then
+        key = raceName .. "_" .. className
+    end
+
+    local items = key and startingGear[key]
+    if not items and className then
+        -- Fall back to another race of the same faction with the same class
+        local isAlliance = (race == 1 or race == 3 or race == 4 or race == 7 or race == 11)
+        local fallbackRaces
+        if isAlliance then
+            fallbackRaces = {"HUMAN", "DWARF", "NIGHTELF", "GNOME", "DRAENEI"}
+        else
+            fallbackRaces = {"ORC", "TROLL", "TAUREN", "UNDEAD", "BLOODELF"}
+        end
+        for _, rName in ipairs(fallbackRaces) do
+            local fbKey = rName .. "_" .. className
+            if startingGear[fbKey] then
+                key = fbKey
+                items = startingGear[fbKey]
+                break
+            end
+        end
+    end
+
+    if not items then
+        player:SendBroadcastMessage("Starting gear not found for your race and class.")
+        return
+    end
+
+    for slotID, itemID in pairs(items) do
+        local count = 1
+        if itemID == 2512 or itemID == 2516 then
+            count = 200
+        end
+
+        if not player:HasItem(itemID) then
+            local item = player:AddItem(itemID, count)
+            if item and count == 1 then
+                player:EquipItem(item, slotID)
+            end
+        end
+    end
+    player:SendBroadcastMessage("Your starting gear has been equipped.")
+end
+
+
+
+
+
+
+local function GetLossListText()
+    return "The following will be removed when you prestige:\n\n" .. table.concat(prestigeLossList, "\n")
+end
+
+local EQUIPPED_SLOTS = {
+    0,  -- HEAD
+    1,  -- NECK
+    2,  -- SHOULDERS
+    3,  -- BODY (shirt)
+    4,  -- CHEST
+    5,  -- WAIST
+    6,  -- LEGS
+    7,  -- FEET
+    8,  -- WRISTS
+    9,  -- HANDS
+    10, -- FINGER1
+    11, -- FINGER2
+    12, -- TRINKET1
+    13, -- TRINKET2
+    14, -- BACK
+    15, -- MAIN HAND
+    16, -- OFF HAND
+    17, -- RANGED/RELIC
+    18, -- TABARD
+}
+
+local function RemoveAndMailEquippedItems(player)
+    local itemsSent = false
+    local receiverGuid = player:GetGUIDLow()
+    local senderGuid = player:GetGUIDLow()
+
+    for _, slot in ipairs(EQUIPPED_SLOTS) do
+        local item = player:GetEquippedItemBySlot(slot)
+        if item then
+            local entry = item:GetEntry()
+            local count = item:GetCount()
+            if type(SendMail) == "function" then
+                SendMail(MAIL_SUBJECT, MAIL_BODY, senderGuid, receiverGuid, 61, 0, 0, 0, entry, count)
+            end
+            player:RemoveItem(entry, count)
+            itemsSent = true
+        end
+    end
+
+    if itemsSent then
+        player:SendBroadcastMessage("Your equipped items have been mailed to you.")
+    end
+end
+
+
+-- Menus
+local function ShowMainMenu(player, creature)
+    player:GossipClearMenu()
+    player:GossipMenuAddItem(0, "What is Prestige?", 1, 1)
+    player:GossipMenuAddItem(0, "I would like to Prestige!", 1, 2)
+    local guid = player:GetGUIDLow()
+    local result = CharDBQuery("SELECT draft_state FROM prestige_stats WHERE player_id = " .. guid)
+    if result and result:GetUInt32(0) == 1 then
+        player:GossipMenuAddItem(0, "Show My Draft Stats", 1, 300)
+    end
+
+    -- Exit
+    player:GossipMenuAddItem(0, "Goodbye", 1, 999)
+
+    player:GossipSendMenu(100301, creature)
+end
+
+local function ShowPrestigeInfo(player, creature)
+    player:GossipClearMenu()
+    player:GossipMenuAddItem(0, "Back", 1, 0)
+    player:GossipSendMenu(100302, creature)
+end
+
+local function ShowPrestigeOptions(player, creature)
+    player:GossipClearMenu()
+    local guid = player:GetGUIDLow()
+    if not IsPrestigeProgressionMode(player) then
+        player:GossipMenuAddItem(0, "Back", 1, 0)
+        player:GossipSendMenu(100308, creature)
+    elseif player:GetLevel() < MAX_LEVEL then
+        player:GossipMenuAddItem(0, "Back", 1, 0)
+        player:GossipSendMenu(100308, creature)
+    else
+        player:GossipMenuAddItem(0, "Prestige", 1, 4)
+        player:GossipMenuAddItem(0, "Back", 1, 0)
+        player:GossipSendMenu(100303, creature)
+    end
+end
+
+local function ShowConfirmation(player, creature)
+    player:GossipClearMenu()
+    player:GossipMenuAddItem(0, "I am sure I want to Prestige!", 1, 100)
+    player:GossipMenuAddItem(0, "Back", 1, 2)
+    player:GossipSendMenu(100304, creature)
+end
+
+local function ShowDraftConfirmation(player, creature)
+    player:GossipClearMenu()
+    player:GossipMenuAddItem(0, "I am sure I want to Prestige into Draft Mode!", 1, 101)
+    player:GossipMenuAddItem(0, "Back", 1, 2)
+    player:GossipSendMenu(100305, creature)
+end
+
+local function ShowEndDraftConfirmation(player, creature)
+    player:GossipClearMenu()
+    player:GossipMenuAddItem(0, "I am sure I want to end Drafting.", 1, 201)
+    player:GossipMenuAddItem(0, "Back", 1, 0)
+    player:GossipSendMenu(100307, creature)
+end
+
+local function ShowDraftStatsMenu(player, creature)
+    local guid = player:GetGUIDLow()
+    player:GossipClearMenu()
+    player:GossipMenuAddItem(0, "Show My Drafted Spells", 1, 301)
+    player:GossipMenuAddItem(0, "Show My Banned Spells", 1, 302)
+
+    -- Show reroll count
+    local statsQuery = CharDBQuery("SELECT rerolls FROM prestige_stats WHERE player_id = " .. guid)
+    local rerolls = statsQuery and statsQuery:GetUInt32(0) or 0
+    player:GossipMenuAddItem(0, "Rerolls Remaining: " .. rerolls, 1, 998)
+
+    -- Show ban count
+    local bansQuery = CharDBQuery("SELECT bans FROM prestige_stats WHERE player_id = " .. guid)
+    local banCount = bansQuery and bansQuery:GetUInt32(0) or 0
+    player:GossipMenuAddItem(0, "Bans Remaining: " .. banCount, 1, 998)
+
+    player:GossipMenuAddItem(0, "Back", 1, 0)
+    player:GossipSendMenu(100306, creature)
+end
+
+-- Gossip handler
+local function OnGossipHello(event, player, creature)
+    ShowMainMenu(player, creature)
+end
+
+local function DeleteAllPlayerPets(playerGUID)
+    local petResults = CharDBQuery("SELECT id FROM character_pet WHERE owner = " .. playerGUID)
+    if not petResults then
+        return
+    end
+
+    repeat
+        local petGuid = petResults:GetUInt32(0)
+        CharDBExecute("DELETE FROM pet_spell WHERE guid = " .. petGuid)
+        CharDBExecute("DELETE FROM character_pet WHERE id = " .. petGuid)
+        CharDBExecute("DELETE FROM pet_aura WHERE guid = " .. petGuid)
+        CharDBExecute("DELETE FROM pet_spell_cooldown WHERE guid = " .. petGuid)
+    until not petResults:NextRow()
+end
+
+
+local function DoPrestige(player, draftMode)
+    if not IsPrestigeProgressionMode(player) then
+        player:SendBroadcastMessage("|cffff4040Prestige is disabled for this character's progression mode.|r")
+        player:GossipComplete()
+        return
+    end
+    if draftMode and not IsRandomDraftMode(player) then
+        player:SendBroadcastMessage("|cffff4040This character is locked to a non-random progression mode.|r")
+        return
+    end
+    local guid = player:GetGUIDLow()
+    local requiredSlots = 10
+    local freeSlots = 0
+    local foundEnough = false
+
+
+            for bag = 0, 4 do
+                local bagSize = 16
+                local skipBag = false
+                local container = 255  -- Use 255 for virtual inventory (backpack, equipment, etc.)
+
+                if bag == 0 then
+                    -- Backpack occupies slot 23–38 in container 255
+                    bagSize = 16
+
+                else
+                    local bagItem = player:GetItemByPos(255, 18 + bag)
+                    if not bagItem then
+
+                        skipBag = true
+                    else
+                        local entry = bagItem:GetEntry()
+                        local result = WorldDBQuery("SELECT class, subclass FROM item_template WHERE entry = " .. entry)
+                        if not result then
+
+                            skipBag = true
+                        else
+                            local class = result:GetUInt8(0)
+                            local subclass = result:GetUInt8(1)
+
+
+                            if (class == 1 and (subclass == 2 or subclass == 3)) or class == 11 then
+
+                                skipBag = true
+                            else
+                                bagSize = bagItem:GetBagSize()
+                                container = 18 + bag  -- Use slot index, NOT GUID
+
+                            end
+                        end
+                    end
+                end
+
+                if not skipBag then
+                    for slot = 0, bagSize - 1 do
+                        local item
+
+                        if bag == 0 then
+                            -- Backpack check: actual slots are 23–38
+                            item = player:GetItemByPos(255, 23 + slot)
+                        else
+                            -- Normal bag check
+                            item = player:GetItemByPos(container, slot)
+                        end
+
+
+
+                        if not item then
+                            freeSlots = freeSlots + 1
+
+                            if freeSlots >= requiredSlots then
+                                foundEnough = true
+
+                                break
+                            end
+                        end
+                    end
+                end
+
+                if foundEnough then break end
+            end
+
+            -- Final evaluation
+            if freeSlots < requiredSlots then
+                player:SendBroadcastMessage("You need at least " .. requiredSlots .. " free bag slots to Prestige.")
+                return
+            end
+
+
+    -- Draft mode only:
+    if draftMode then
+        player:SendBroadcastMessage("Draft Mode: Enabled for next run.")
+
+
+        -- Recalculate current prestige level after increment (safe fallback)
+        local prestigeLevel = 1
+        local q = CharDBQuery("SELECT prestige_level FROM prestige_stats WHERE player_id = " .. guid)
+        if q then
+            prestigeLevel = q:GetUInt32(0)
+        end
+
+        -- Calculate rerolls for this prestige level:
+        -- Prestige 1: PRESTIGE1_REROLLS (5)
+        -- Prestige 2+: +PRESTIGE_REROLL_SCALING (2) per level beyond 1
+        local bonusRerolls
+        if prestigeLevel <= 0 then
+            bonusRerolls = DRAFT_MODE_REROLLS -- fallback (shouldn't happen during prestige)
+        else
+            bonusRerolls = CONFIG.PRESTIGE1_REROLLS + CONFIG.PRESTIGE_REROLL_SCALING * (prestigeLevel - 1)
+        end
+
+        -- Determine original class safely
+        local storedClass = player:GetClass()
+        local storedQuery = CharDBQuery("SELECT stored_class FROM prestige_stats WHERE player_id = " .. guid)
+        if storedQuery and storedQuery:GetUInt8(0) > 0 then
+            storedClass = storedQuery:GetUInt8(0)  -- Keep existing non-zero value
+        end
+
+        local startingDrafts = (storedClass == 6) and 5 or DRAFT_MODE_SPELLS
+        local startingPoints = (storedClass == 6) and 54 or 0
+        local updateStatsQuery = string.format([[
+            UPDATE prestige_stats
+            SET draft_state = 1,
+                successful_drafts = 0,
+                total_expected_drafts = %d,
+                rerolls = %d,
+                stored_class = %d,
+                bans = %d,
+                bonus_drafts = 0,
+                offered_spell_1 = 0,
+                offered_spell_2 = 0,
+                offered_spell_3 = 0,
+                talent_points = %d
+            WHERE player_id = %d
+        ]], startingDrafts, bonusRerolls, storedClass, DRAFT_BANS_START, startingPoints, guid)
+
+        CharDBExecute(updateStatsQuery)
+        if type(SpellDraft_SetDraftStateCache) == "function" then
+            SpellDraft_SetDraftStateCache(guid, 1)
+        end
+
+        local perLevel = CONFIG.PRESTIGE1_REROLLS_PER_LEVEL + CONFIG.PRESTIGE_REROLL_SCALING * (prestigeLevel - 1)
+        player:SendBroadcastMessage("Draft rerolls granted: " .. bonusRerolls .. " (+" .. perLevel .. " per level)")
+    else
+        -- Normal Mode: Reset stats in DB
+        local storedClass = player:GetClass()
+        local storedQuery = CharDBQuery("SELECT stored_class FROM prestige_stats WHERE player_id = " .. guid)
+        if storedQuery and storedQuery:GetUInt8(0) > 0 then
+            storedClass = storedQuery:GetUInt8(0)
+        end
+        local updateStatsQuery = string.format([[
+            UPDATE prestige_stats
+            SET draft_state = 0,
+                successful_drafts = 0,
+                total_expected_drafts = 0,
+                rerolls = 0,
+                stored_class = %d,
+                bans = 0,
+                bonus_drafts = 0,
+                offered_spell_1 = 0,
+                offered_spell_2 = 0,
+                offered_spell_3 = 0,
+                talent_points = 0
+            WHERE player_id = %d
+        ]], storedClass, guid)
+        CharDBExecute(updateStatsQuery)
+        if type(SpellDraft_SetDraftStateCache) == "function" then
+            SpellDraft_SetDraftStateCache(guid, 0)
+        end
+    end
+
+    -- Determine storedClass for general use
+    local storedClass = player:GetClass()
+    local storedQuery = CharDBQuery("SELECT stored_class FROM prestige_stats WHERE player_id = " .. guid)
+    if storedQuery and storedQuery:GetUInt8(0) > 0 then
+        storedClass = storedQuery:GetUInt8(0)
+    end
+
+    RemoveAndMailEquippedItems(player)
+    player:SetLevel(storedClass == 6 and 55 or 1)
+    GiveStartingGear(player)
+
+    local name = player:GetName()
+    local newPrestige = 1
+    local q = CharDBQuery("SELECT prestige_level FROM prestige_stats WHERE player_id = " .. guid)
+    if q then
+        local currentPrestige = q:GetUInt32(0)
+        newPrestige = currentPrestige + 1
+        CharDBExecute("UPDATE prestige_stats SET prestige_level = " .. newPrestige .. ", prestige_tokens = prestige_tokens + 10 WHERE player_id = " .. guid)
+    else
+        CharDBExecute("INSERT INTO prestige_stats (player_id, prestige_level, prestige_tokens) VALUES (" .. guid .. ", 1, 10)")
+    end
+
+    if type(SpellDraft_SetPrestigeCache) == "function" then
+        SpellDraft_SetPrestigeCache(guid, newPrestige)
+    end
+
+    SendWorldMessage("|cffff8800[Prestige]|r Player |cffffff00" .. name .. "|r has prestiged! New Prestige Level: |cff00ff00" .. newPrestige .. "|r")
+    local resetLevel = storedClass == 6 and 55 or 1
+    player:SendBroadcastMessage("|cffff0000You have prestiged!|r Your level has been reset to " .. resetLevel .. ".")
+    player:SendBroadcastMessage("You will be logged out in " .. LOGOUT_TIMER ..  " seconds to complete the prestige process.")
+    player:GossipComplete()
+
+    -- Actionbar, spell, quest wipes (Custom tables and pets done online, standard core tables done offline)
+    CharDBExecute("DELETE FROM drafted_spells WHERE player_guid = " .. guid)
+    CharDBExecute("DELETE FROM manually_acquired_talents WHERE player_guid = " .. guid)
+    DeleteAllPlayerPets(guid)
+
+    -- Teleport and logout
+    CreateLuaEvent(function()
+        local plr = GetPlayerByGUID(guid)
+        if not plr then return end
+
+        local raceStartLocations = {
+            [1]  = {map = 0,   x = -8949.95,  y = -132.493, z = 83.5312,   o = 3.142},
+            [2]  = {map = 1,   x = -618.518,  y = -4251.67, z = 38.718,    o = 6.2},
+            [3]  = {map = 0,   x = -6240.32,  y = 331.033,  z = 382.757,   o = 5.2},
+            [4]  = {map = 1,   x = 10311.3,   y = 832.463,  z = 1326.41,   o = 5.7},
+            [5]  = {map = 0,   x = 1676.35,   y = 1678.68,  z = 121.67,    o = 1.6},
+            [6]  = {map = 1,   x = -2917.58,  y = -257.98,  z = 52.9968,   o = 0.0},
+            [7]  = {map = 0,   x = -6240.95,  y = 331.493, z = 382.5312,   o = 5.2},
+            [8]  = {map = 1,   x = -618.518,  y = -4251.67, z = 38.718,    o = 6.2},
+            [10] = {map = 530, x = 10349.6,   y = -6357.29, z = 33.4026,   o = 5.3},
+            [11] = {map = 530, x = -3961.64,  y = -13931.2, z = 100.615,   o = 2.08},
+        }
+
+        local dkAllianceStart = {map = 0, x = -8354.2, y = 334.3, z = 121.0, o = 3.6} -- Stormwind Gates
+        local dkHordeStart = {map = 1, x = 1672.4, y = -4344.1, z = 24.3, o = 2.4}   -- Orgrimmar Gates
+        local loc
+        if plr:GetClass() == 6 then
+            loc = (plr:GetTeam() == 0) and dkAllianceStart or dkHordeStart
+        else
+            loc = raceStartLocations[plr:GetRace()]
+        end
+
+        if loc then
+            plr:Teleport(loc.map, loc.x, loc.y, loc.z, loc.o)
+            if plr:GetClass() == 6 then
+                local finalQuest = (plr:GetTeam() == 0) and 13188 or 13189
+                plr:AddQuest(finalQuest)
+
+                -- Re-grant the EXACT core starting spells + starting zone quest rewards a DK should have
+                local dkStartSpells = {
+                    47541, 49576, 45477, 45462, 45902, 48266, 48263, -- Death Coil, Death Grip, Icy Touch, Plague Strike, Blood Strike, Blood Presence, Frost Presence
+                    50977, 53428, 48778                              -- Death Gate, Runeforging, Acherus Deathcharger mount
+                }
+                for _, sid in ipairs(dkStartSpells) do
+                    if not plr:HasSpell(sid) then
+                        plr:LearnSpell(sid)
+                    end
+                end
+            end
+        else
+            plr:SendBroadcastMessage("Unknown race/class start location.")
+        end
+        -- Always schedule delayed logout if not drafting
+        if not draftMode then
+            CreateLuaEvent(function()
+                local p = GetPlayerByGUID(guid)
+                if p then p:LogoutPlayer(true) end
+            end, LOGOUT_AFTER_PRESTIGE_TIMER, 1)
+        end
+        -- If draftMode, immediately kick and schedule class change
+        if draftMode then
+            local guidLow = plr:GetGUIDLow()  -- Cache the GUID before logout
+            plr:KickPlayer()
+            UpdateClassAfterLogout(guidLow, storedClass)
+        end
+    end, 500, 1)
+end
+local function DoDraftEnd(player)
+    local guid = player:GetGUIDLow()
+
+    -- Fetch stored class
+    local q = CharDBQuery("SELECT stored_class FROM prestige_stats WHERE player_id = " .. guid)
+    if not q then
+        player:SendBroadcastMessage("Could not end Draft Mode: missing stored_class.")
+        return
+    end
+
+    local originalClass = q:GetUInt8(0)
+    if not originalClass or originalClass == 0 then
+        player:SendBroadcastMessage("Stored class is invalid.")
+        return
+    end
+
+    -- Reset draft state
+    local currentPrestige = 0
+    local qPrestige = CharDBQuery("SELECT prestige_level FROM prestige_stats WHERE player_id = " .. guid)
+    if qPrestige then
+        currentPrestige = qPrestige:GetUInt32(0)
+    end
+
+    if player:GetLevel() >= CONFIG.MAX_LEVEL then
+        currentPrestige = currentPrestige + 1
+        CharDBExecute("UPDATE prestige_stats SET draft_state = 0, prestige_level = " .. currentPrestige .. ", talent_points = 0 WHERE player_id = " .. guid)
+    else
+        CharDBExecute("UPDATE prestige_stats SET draft_state = 0, talent_points = 0 WHERE player_id = " .. guid)
+    end
+
+    if type(SpellDraft_SetDraftStateCache) == "function" then
+        SpellDraft_SetDraftStateCache(guid, 0)
+    end
+
+    if type(SpellDraft_SetPrestigeCache) == "function" then
+        SpellDraft_SetPrestigeCache(guid, currentPrestige)
+    end
+
+    RemoveAndMailEquippedItems(player)
+    player:SetLevel(originalClass == 6 and 55 or 1)
+    GiveStartingGear(player)
+
+    player:SendBroadcastMessage("|cffff0000You have exited Draft Mode.|r Your class will be restored.")
+    player:SendBroadcastMessage("You will be kicked to finalize your class change.")
+    player:GossipComplete()
+    local draftedSpellsQuery = CharDBQuery("SELECT spell_id FROM drafted_spells WHERE player_guid = " .. guid)
+    if draftedSpellsQuery then
+        repeat
+            local spellId = draftedSpellsQuery:GetUInt32(0)
+            if player:HasSpell(spellId) then
+                player:RemoveSpell(spellId)
+            end
+        until not draftedSpellsQuery:NextRow()
+    end
+    -- Clean up data
+    CharDBExecute("DELETE FROM character_action WHERE guid = " .. guid)
+    CharDBExecute("DELETE FROM character_spell WHERE guid = " .. guid)
+    CharDBExecute("DELETE FROM draft_bans WHERE player_id = " .. guid)
+    CharDBExecute("DELETE FROM drafted_spells WHERE player_guid = " .. guid)
+    CharDBExecute("DELETE FROM manually_acquired_talents WHERE player_guid = " .. guid)
+    ResetPlayerQuests(guid, originalClass)
+    DeleteAllPlayerPets(guid)
+
+    -- Teleport, then logout and restore original class
+    CreateLuaEvent(function()
+        local plr = GetPlayerByGUID(guid)
+        if not plr then return end
+
+        local raceStartLocations = {
+            [1]  = {map = 0,   x = -8949.95,  y = -132.493, z = 83.5312,   o = 3.142},
+            [2]  = {map = 1,   x = -618.518,  y = -4251.67, z = 38.718,    o = 6.2},
+            [3]  = {map = 0,   x = -6240.32,  y = 331.033,  z = 382.757,   o = 5.2},
+            [4]  = {map = 1,   x = 10311.3,   y = 832.463,  z = 1326.41,   o = 5.7},
+            [5]  = {map = 0,   x = 1676.35,   y = 1678.68,  z = 121.67,    o = 1.6},
+            [6]  = {map = 1,   x = -2917.58,  y = -257.98,  z = 52.9968,   o = 0.0},
+            [7]  = {map = 0,   x = -6240.95,  y = 331.493,  z = 382.5312,  o = 5.2},
+            [8]  = {map = 1,   x = -618.518,  y = -4251.67, z = 38.718,    o = 6.2},
+            [10] = {map = 530, x = 10349.6,   y = -6357.29, z = 33.4026,   o = 5.3},
+            [11] = {map = 530, x = -3961.64,  y = -13931.2, z = 100.615,   o = 2.08},
+        }
+
+        local dkAllianceStart = {map = 0, x = -8354.2, y = 334.3, z = 121.0, o = 3.6} -- Stormwind Gates
+        local dkHordeStart = {map = 1, x = 1672.4, y = -4344.1, z = 24.3, o = 2.4}   -- Orgrimmar Gates
+        local loc = (originalClass == 6) and ((plr:GetTeam() == 0) and dkAllianceStart or dkHordeStart) or raceStartLocations[plr:GetRace()]
+        if loc then
+            plr:Teleport(loc.map, loc.x, loc.y, loc.z, loc.o)
+            if originalClass == 6 then
+                local finalQuest = (plr:GetTeam() == 0) and 13188 or 13189
+                plr:AddQuest(finalQuest)
+
+                -- Re-grant the EXACT core starting spells + starting zone quest rewards a DK should have
+                local dkStartSpells = {
+                    47541, 49576, 45477, 45462, 45902, 48266, 48263, -- Death Coil, Death Grip, Icy Touch, Plague Strike, Blood Strike, Blood Presence, Frost Presence
+                    50977, 53428, 48778                              -- Death Gate, Runeforging, Acherus Deathcharger mount
+                }
+                for _, sid in ipairs(dkStartSpells) do
+                    if not plr:HasSpell(sid) then
+                        plr:LearnSpell(sid)
+                    end
+                end
+            end
+        end
+
+        -- Schedule logout + class restore
+        local guidLow = plr:GetGUIDLow()
+        plr:KickPlayer()
+        UpdateClassAfterLogout(guidLow, originalClass)
+    end, 500, 1)
+end
+
+local function HasActivePetBlockPrestige(player)
+    local petGUID = tostring(player:GetPetGUID())
+    if not petGUID or petGUID == "0" or petGUID == nil then
+        return false
+    end
+    player:SendBroadcastMessage("You must dismiss your pet before prestiging!")
+    player:SendBroadcastMessage("Also make sure you've got 10 free inven. slots!")
+    return true
+end
+
+
+local function OnGossipSelect(event, player, creature, sender, intid)
+    local guid = player:GetGUIDLow()
+
+    if intid == 0 then
+        ShowMainMenu(player, creature)
+    elseif intid == 1 then
+        ShowPrestigeInfo(player, creature)
+    elseif intid == 2 then
+        ShowPrestigeOptions(player, creature)
+    elseif intid == 3 then
+        ShowConfirmation(player, creature)
+    elseif intid == 998 then
+        player:GossipComplete()
+    elseif intid == 999 then
+        player:GossipComplete()
+    elseif intid == 4 then
+        ShowDraftConfirmation(player, creature)
+    elseif intid == 100 then
+        if HasActivePetBlockPrestige(player) then return end
+    local q = CharDBQuery("SELECT draft_state, stored_class FROM prestige_stats WHERE player_id = " .. guid)
+        if q then
+            local draftState = q:GetUInt32(0)
+            if draftState == 1 then
+                DoDraftEnd(player)
+                return
+            end
+        end
+      DoPrestige(player, false)
+    elseif intid == 101 then
+        if HasActivePetBlockPrestige(player) then return end
+        DoPrestige(player, true)
+    elseif intid == 200 then
+        ShowEndDraftConfirmation(player, creature) 
+    elseif intid == 201 then
+        if HasActivePetBlockPrestige(player) then return end
+        DoDraftEnd(player) 
+    elseif intid == 300 then
+        ShowDraftStatsMenu(player, creature)
+
+    elseif intid == 301 then
+        local q = CharDBQuery("SELECT spell_id FROM drafted_spells WHERE player_guid = " .. guid)
+        player:GossipClearMenu()
+        player:GossipMenuAddItem(0, "Your Drafted Spells:", 1, 998)
+        local seenNames = {}
+
+        if q then
+            repeat
+                local spellId = q:GetUInt32(0)
+                local nameResult = WorldDBQuery("SELECT Name_Lang_enUS FROM dbc_spells WHERE ID = " .. spellId)
+                local name = nameResult and nameResult:GetString(0) or ("Unknown Spell [" .. spellId .. "]")
+
+                if not seenNames[name] then
+                    seenNames[name] = true
+                    player:GossipMenuAddItem(0, name, 1, 998)
+                end
+            until not q:NextRow()
+        else
+            player:GossipMenuAddItem(0, "No drafted spells found.", 1, 998)
+        end
+
+        player:GossipMenuAddItem(0, "Back", 1, 300)
+        player:GossipSendMenu(100306, creature)
+
+    elseif intid == 302 then
+        local q = CharDBQuery("SELECT spell_id FROM draft_bans WHERE player_id = " .. guid)
+        player:GossipClearMenu()
+        player:GossipMenuAddItem(0, "Clicking on a spell here will remove it from your ban list", 1, 998)
+        player:GossipMenuAddItem(0, "Your Banned Spells:", 1, 998)
+
+        if q then
+            repeat
+                local spellId = q:GetUInt32(0)
+                local nameResult = WorldDBQuery("SELECT Name_Lang_enUS FROM dbc_spells WHERE ID = " .. spellId)
+                local name = nameResult and nameResult:GetString(0) or ("Unknown Spell [" .. spellId .. "]")
+
+                player:GossipMenuAddItem(0, name .. " (" .. spellId .. ")", 1, 100000 + spellId)
+            until not q:NextRow()
+        else
+            player:GossipMenuAddItem(0, "No banned spells found.", 1, 998)
+        end
+        player:GossipMenuAddItem(0, "Back", 1, 300)
+        player:GossipSendMenu(100306, creature) 
+  elseif intid >= 100000 then
+    local spellId = intid - 100000
+    CharDBExecute("DELETE FROM draft_bans WHERE player_id = " .. guid .. " AND spell_id = " .. spellId)
+    player:SendBroadcastMessage("Removed banned spell ID: " .. spellId)
+
+    -- Go back to the Draft Stats submenu (intid 300)
+    ShowDraftStatsMenu(player, creature)
+  end
+end
+
+RegisterCreatureGossipEvent(NPC_ID, 1, OnGossipHello)
+RegisterCreatureGossipEvent(NPC_ID, 2, OnGossipSelect)
+
+-- Local helpers (each Eluna file is its own chunk; core's copies are file-local)
+local function IsBotPlayer(player)
+    return player.IsBot ~= nil and player:IsBot()
+end
+
+local function IsPlayerInDraft(player)
+    local query = CharDBQuery("SELECT draft_state FROM prestige_stats WHERE player_id = " .. player:GetGUIDLow())
+    return (query and query:GetUInt32(0) == 1) or false
+end
+
+local NIBBS_NPC_ID = 99000
+
+local NIBBS_TEXT = {
+    enUS = {
+        buy = "I need to purchase reagents and bags.",
+        enchant = "Open Mystic Enchant services",
+        reset = "I want to reset my custom talents (Free)",
+        talents = "Tell me about custom talents and respecs.",
+        grimoire = "How do I use the SpellDraft menu and Grimoire?",
+        levelCap = "What happens when I reach level %d?",
+        yesReset = "Yes, reset my talents (Free)",
+        noReset = "No, keep my current build",
+        back = "Back",
+        resetDone = "|cff00ff00Reset complete! Refunded %d custom Talent Points.|r",
+        language = "Language: English — switch to Chinese",
+    },
+    zhCN = {
+        buy = "我想购买施法材料和背包。",
+        enchant = "打开神秘附魔服务",
+        reset = "我想免费重置自定义天赋。",
+        talents = "请介绍自定义天赋和洗点规则。",
+        grimoire = "SpellDraft 菜单和魔典该怎么使用？",
+        levelCap = "升到%d级之后会发生什么？",
+        yesReset = "确定，免费重置我的天赋",
+        noReset = "不了，保留当前配置",
+        back = "返回",
+        resetDone = "|cff00ff00重置完成！已返还 %d 点自定义天赋点。|r",
+        language = "语言：中文——点击切换到 English",
+    },
+}
+
+local function GetNibbsLanguage(player)
+    if type(SpellDraft_GetPlayerLanguage) == "function" then
+        local language = SpellDraft_GetPlayerLanguage(player)
+        if NIBBS_TEXT[language] then return language end
+    end
+    if player.GetDbLocaleIndex ~= nil then
+        local locale = player:GetDbLocaleIndex()
+        if locale == 4 or locale == 5 then return "zhCN" end
+    end
+    return "enUS"
+end
+
+local function GetNibbsText(player)
+    return NIBBS_TEXT[GetNibbsLanguage(player)]
+end
+
+local function GetNibbsNpcTextId(player, englishId)
+    return GetNibbsLanguage(player) == "zhCN" and (englishId + 100) or englishId
+end
+
+local function GetNibbsLevelCapTextId(player)
+    local englishId = CONFIG.MAX_LEVEL == 255 and 99005 or 99002
+    return GetNibbsNpcTextId(player, englishId)
+end
+
+local function OnNibbsGossipHello(event, player, creature)
+    if IsBotPlayer(player) then return false end
+    
+    local inDraft = IsPlayerInDraft(player)
+    local text = GetNibbsText(player)
+    
+    player:GossipClearMenu()
+
+    -- A language switch lives inside the conversation as well as on the mode
+    -- picker, so an established character can change custom NPC text anytime.
+    player:GossipMenuAddItem(0, text.language, 1, 1099)
+    
+    -- Option 1: Reagent merchant (vendor) - Use icon ID 1 (Vendor bag)
+    player:GossipMenuAddItem(1, text.buy, 1, 1001)
+
+    -- Mystic Enchant services (handled by spelldraft_re.lua via SpellDraftRE)
+    if SpellDraftRE then
+        player:GossipMenuAddItem(6, text.enchant, 1, 3000)
+    end
+
+    if inDraft then
+        -- Option 2: Reset Custom Talents - Use icon ID 0 (Speech bubble)
+        player:GossipMenuAddItem(0, text.reset, 1, 1002)
+        -- Option 3: Explanation - Use icon ID 0 (Speech bubble)
+        player:GossipMenuAddItem(0, text.talents, 1, 1003)
+    end
+    
+    -- Option 4: General Spelldraft Info - Use icon ID 0 (Speech bubble)
+    player:GossipMenuAddItem(0, text.grimoire, 1, 1004)
+    -- Option 5: configured level-cap info - Use icon ID 0 (Speech bubble)
+    player:GossipMenuAddItem(0, string.format(text.levelCap, CONFIG.MAX_LEVEL), 1, 1005)
+    
+    player:GossipSendMenu(GetNibbsNpcTextId(player, 99000), creature)
+    return true
+end
+
+local function OnNibbsGossipSelect(event, player, creature, sender, intid, code)
+    if IsBotPlayer(player) then return false end
+    local guid = player:GetGUIDLow()
+    local text = GetNibbsText(player)
+
+    -- Mystic Enchant services live in spelldraft_re.lua
+    if intid >= 3000 and intid < 4000 then
+        if SpellDraftRE then
+            SpellDraftRE.HandleGossip(player, creature, intid)
+        else
+            player:GossipComplete()
+        end
+        return true
+    end
+
+    if intid == 1099 then
+        local nextLanguage = GetNibbsLanguage(player) == "zhCN" and "enUS" or "zhCN"
+        if type(SpellDraft_SetPlayerLanguage) == "function" then
+            SpellDraft_SetPlayerLanguage(player, nextLanguage, true)
+        end
+        OnNibbsGossipHello(event, player, creature)
+        return true
+    end
+
+    if intid == 1001 then
+        player:GossipComplete()
+        player:SendListInventory(creature)
+        
+    elseif intid == 1002 then
+        -- Confirm talent reset
+        player:GossipClearMenu()
+        player:GossipMenuAddItem(0, text.yesReset, 1, 2002)
+        player:GossipMenuAddItem(0, text.noReset, 1, 1000)
+        player:GossipSendMenu(GetNibbsNpcTextId(player, 99004), creature)
+        
+    elseif intid == 2002 then
+        -- Perform the actual reset!
+        local count = ResetCustomTalents(player)
+        player:SendBroadcastMessage(string.format(text.resetDone, count))
+        player:GossipComplete()
+        
+    elseif intid == 1003 then
+        -- Detailed custom talent explanation
+        player:GossipClearMenu()
+        player:GossipMenuAddItem(0, text.back, 1, 1000)
+        player:GossipSendMenu(GetNibbsNpcTextId(player, 99003), creature)
+        
+    elseif intid == 1004 then
+        -- Gossip Menu 99001 info
+        player:GossipClearMenu()
+        player:GossipMenuAddItem(0, text.back, 1, 1000)
+        player:GossipSendMenu(GetNibbsNpcTextId(player, 99001), creature)
+        
+    elseif intid == 1005 then
+        -- Gossip Menu 99002 info
+        player:GossipClearMenu()
+        player:GossipMenuAddItem(0, text.back, 1, 1000)
+        player:GossipSendMenu(GetNibbsLevelCapTextId(player), creature)
+        
+    elseif intid == 1000 then
+        -- Back to hello
+        OnNibbsGossipHello(event, player, creature)
+    end
+    return true
+end
+
+RegisterCreatureGossipEvent(NIBBS_NPC_ID, 1, OnNibbsGossipHello)
+RegisterCreatureGossipEvent(NIBBS_NPC_ID, 2, OnNibbsGossipSelect)
