@@ -6,6 +6,19 @@ local handlers = AIO.AddHandlers("SpellDraftModeServer", {})
 -- Keep only an in-memory per-session value; the client SavedVariables sends it
 -- again after every login, so no character database migration is required.
 local playerLanguages = {}
+local introReadyGUIDs = {}
+local StartModeActivation
+
+CharDBQuery([[
+    CREATE TABLE IF NOT EXISTS `spelldraft_mode_intro_seen` (
+        `guid` INT UNSIGNED NOT NULL,
+        `mode` TINYINT UNSIGNED NOT NULL,
+        `seen_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`guid`),
+        CONSTRAINT `fk_spelldraft_intro_character`
+            FOREIGN KEY (`guid`) REFERENCES `characters` (`guid`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+]])
 
 local function DefaultPlayerLanguage(player)
     if player and player.GetDbLocaleIndex ~= nil then
@@ -39,7 +52,25 @@ local function IsBotPlayer(player)
     return player and player.IsBot ~= nil and player:IsBot()
 end
 
-local function SetPickerLock(player, apply)
+local SetPickerLock
+
+function handlers.FinishIntroduction(player, modeName)
+    if not player or IsBotPlayer(player) then return false end
+    local guid = player:GetGUIDLow()
+    local expectedMode = introReadyGUIDs[guid]
+    if expectedMode and expectedMode == tostring(modeName or ""):lower() then
+        local modeId = expectedMode == "classic" and 1 or (expectedMode == "draft" and 2 or 3)
+        CharDBQuery(string.format(
+            "INSERT INTO spelldraft_mode_intro_seen (guid, mode) VALUES (%d, %d) " ..
+            "ON DUPLICATE KEY UPDATE mode = VALUES(mode), seen_at = CURRENT_TIMESTAMP",
+            guid, modeId))
+        introReadyGUIDs[guid] = nil
+        SetPickerLock(player, false)
+    end
+    return false
+end
+
+SetPickerLock = function(player, apply)
     if player and player.SetPlayerLock ~= nil then
         player:SetPlayerLock(apply == true)
     end
@@ -50,7 +81,21 @@ local function SendPicker(player)
     if type(SpellDraft_GetCharacterModeName) ~= "function" then return end
     local modeName = SpellDraft_GetCharacterModeName(player)
     AIO.Handle(player, "SpellDraftModeClient", "ApplyMode", modeName)
-    if modeName ~= "pending" then return end
+    if modeName ~= "pending" then
+        local seen = CharDBQuery(
+            "SELECT 1 FROM spelldraft_mode_intro_seen WHERE guid = " ..
+            player:GetGUIDLow() .. " LIMIT 1")
+        if seen then return end
+
+        -- Recover characters whose permanent choice was saved before the
+        -- welcome page completed (disconnect, server restart, or A.31's early
+        -- choice_not_created race). They resume the same idempotent activation
+        -- and see the welcome page once; no mode selection is repeated.
+        SetPickerLock(player, true)
+        AIO.Handle(player, "SpellDraftModeClient", "ShowModeIntroduction", modeName)
+        StartModeActivation(player, modeName)
+        return
+    end
 
     -- Pending is not a playable fourth mode. Stop movement and casting until
     -- the server has permanently accepted Classic or Random Draft.
@@ -71,10 +116,39 @@ local function SendPicker(player)
     })
 end
 
+-- PLAYER_EVENT_ON_LOGIN does not fire for /reload. Let the reloaded AIO client
+-- request the authoritative per-character mode again so its micro buttons do
+-- not remain hidden in the temporary "pending" state.
+function handlers.RequestMode(player)
+    SendPicker(player)
+    return false
+end
+
+StartModeActivation = function(player, modeName)
+    local guid = player:GetGUIDLow()
+    SpellDraft_ActivateSelectedMode(player, modeName, function(activationOk, activationResult)
+        local current = GetPlayerByGUID(guid)
+        if not current or not current:IsInWorld() then return end
+        if activationOk then
+            introReadyGUIDs[guid] = tostring(modeName):lower()
+            AIO.Handle(current, "SpellDraftModeClient", "ApplyMode", tostring(modeName):lower())
+            AIO.Handle(current, "SpellDraftModeClient", "ActivationResult", true, activationResult)
+            current:SendBroadcastMessage("|cff00ff00[Three Modes]|r Progression mode activated without relogging.")
+        else
+            AIO.Handle(current, "SpellDraftModeClient", "ActivationResult", false, activationResult)
+            current:SendBroadcastMessage("|cffff3333[Three Modes]|r Activation failed; your character remains locked for safe recovery.")
+        end
+    end)
+end
+
 function handlers.SelectMode(player, modeName)
     if not player or IsBotPlayer(player) then return false end
     if type(SpellDraft_SelectCharacterMode) ~= "function" then
         AIO.Handle(player, "SpellDraftModeClient", "SelectionResult", false, "server_not_ready")
+        return false
+    end
+    if type(SpellDraft_ActivateSelectedMode) ~= "function" then
+        AIO.Handle(player, "SpellDraftModeClient", "SelectionResult", false, "activation_not_ready")
         return false
     end
 
@@ -84,25 +158,22 @@ function handlers.SelectMode(player, modeName)
         return false
     end
 
-    SetPickerLock(player, false)
-    player:SendBroadcastMessage("|cff00ff00[Three Modes]|r Your mode has been saved and locked. Re-entering the world will activate it.")
-    local guid = player:GetGUIDLow()
-    CreateLuaEvent(function()
-        local current = GetPlayerByGUID(guid)
-        if current and current:IsInWorld() then
-            current:KickPlayer()
-        end
-    end, 3500, 1)
+    StartModeActivation(player, modeName)
     return false
 end
 
 local function OnLogin(_, player)
     if IsBotPlayer(player) then return end
-    if type(SpellDraft_GetCharacterModeName) == "function"
-        and SpellDraft_GetCharacterModeName(player) == "pending" then
+    if type(SpellDraft_GetCharacterModeName) == "function" then
+        local modeName = SpellDraft_GetCharacterModeName(player)
+        local needsIntro = modeName ~= "pending" and not CharDBQuery(
+            "SELECT 1 FROM spelldraft_mode_intro_seen WHERE guid = " ..
+            player:GetGUIDLow() .. " LIMIT 1")
+        if modeName == "pending" or needsIntro then
         -- Lock immediately; the UI is sent after a short delay so AIO has time
-        -- to initialize, but the character must not move or gain progress first.
-        SetPickerLock(player, true)
+            -- to initialize, but the character must not move or gain progress first.
+            SetPickerLock(player, true)
+        end
     end
     local guid = player:GetGUIDLow()
     CreateLuaEvent(function()
@@ -114,7 +185,11 @@ end
 RegisterPlayerEvent(3, OnLogin)
 
 local function OnLogout(_, player)
-    if player then playerLanguages[player:GetGUIDLow()] = nil end
+    if player then
+        local guid = player:GetGUIDLow()
+        playerLanguages[guid] = nil
+        introReadyGUIDs[guid] = nil
+    end
 end
 
 RegisterPlayerEvent(4, OnLogout)

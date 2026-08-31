@@ -14,6 +14,7 @@
 -- numbers are always accurate); the server tooltip string is a fallback.
 
 local L = SpellDraft.L
+SpellDraft.MYSTIC_FORMULA_VERSION = "B0.9.19.1-formula-v1"
 local QUALITY_COLOR = {
     [2] = "|cff1eff00",
     [3] = "|cff0070dd",
@@ -48,15 +49,32 @@ end
 
 local function AppendEnchantLines(tooltip, data)
     local color = QUALITY_COLOR[data.quality] or "|cff1eff00"
-    tooltip:AddLine(" ")
-    tooltip:AddLine(color .. L("Mystic Enchant") .. ": " .. data.name .. "|r")
-    local desc = nil
+    local nativeName = nil
+    local nativeDesc = nil
     if data.spell and data.spell > 0 then
-        desc = GetSpellDescription(data.spell)
+        nativeName = GetSpellInfo(data.spell)
+        nativeDesc = GetSpellDescription(data.spell)
     end
-    desc = desc or data.tooltip
+
+    local name, desc, secondaryName, secondaryDesc = data.name, nativeDesc or data.tooltip, nil, nil
+    if SpellDraft.GetMysticEnchantText then
+        name, desc, secondaryName, secondaryDesc = SpellDraft.GetMysticEnchantText(
+            data.name, data.tooltip, nativeName, nativeDesc)
+    end
+
+    tooltip:AddLine(" ")
+    tooltip:AddLine(color .. L("Mystic Enchant") .. ": " .. name .. "|r")
+    if secondaryName then
+        tooltip:AddLine("|cffaaaaaa" .. secondaryName .. "|r", 0.67, 0.67, 0.67, true)
+    end
     if desc and desc ~= "" then
         tooltip:AddLine(desc, 0.9, 0.9, 0.9, true)
+    end
+    if secondaryDesc and secondaryDesc ~= "" then
+        tooltip:AddLine("|cff80c0ff" .. secondaryDesc .. "|r", 0.5, 0.75, 1.0, true)
+    end
+    if (desc and desc:find("%$")) or (secondaryDesc and secondaryDesc:find("%$")) then
+        tooltip:AddLine("|cffff4040[Formula unresolved / 公式未解析] /sdmysticver|r", 1, 0.25, 0.25, true)
     end
     tooltip:Show()
 end

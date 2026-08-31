@@ -98,6 +98,29 @@ local TBMENU=5
 local SYMENU=6
 local TPDRMENU=8 --副本传送菜单
 local BUYMENU=7
+local TESTMENU=0x7000 --阶段48：GM前期测试工具，使用独立大菜单号避免与旧菜单冲突
+local TESTFACILITYMENU=0x7001 --阶段49：无数据库批量测试设施
+local STAGE58MENU=0x7100 --阶段58：GM3全功能测试主菜单
+local STAGE58LEVELMENU=0x7101
+local STAGE58SKILLMENU=0x7102
+local STAGE58COLLECTIONMENU=0x7103
+local STAGE58GEARMENU=0x7104
+local STAGE58GEAR60MENU=0x7110
+local STAGE58GEAR70MENU=0x7111
+local STAGE58GEAR80MENU=0x7112
+local PERSONALPOINTMENU=0x7200 --阶段59：个人传送分页独立编号，避开原副本/商人菜单
+
+-- 大型坐骑、伴生宠物和装备数据单独存放，避免stone.lua主逻辑被巨型ID表淹没。
+-- pcall保证用户忘记复制数据文件时，原炉石其他功能仍然可以加载。
+local Stage58Data={mounts={},pets={},gear={}}
+do
+	local ok,data=pcall(require,"stone_stage58_data")
+	if ok and type(data)=="table" then
+		Stage58Data=data
+	else
+		print(">>Stage58 Warning: stone_stage58_data.lua load failed: "..tostring(data))
+	end
+end
 --菜单类型
 local FUNC=1
 local MENU=2
@@ -371,6 +394,9 @@ local Instances={--副本表
 --随身NPC
 local ST={
 	TIME=30,
+	NPC_TIME=300,--随身NPC存在5分钟；不要与物件存在时间共用
+	NPC_COOLDOWN=5,--召唤冷却独立计算，避免5分钟内无法切换其他商人
+	FRIENDLY_FACTION=35,--仅修改临时召唤实例，联盟与部落均可交互
 	NPCID501=28703,--商业技能训练师
 	NPCID501A=33630,--商业技能训练师
 	NPCID502=28694,--商业技能训练师
@@ -391,7 +417,11 @@ local ST={
     --{guid,npc,time},
 	NPCID601=35364,--部落锁定经验
 	NPCID601A=35365,--联盟锁定经验
-	NPCID602=90003,--幻化大师
+	NPCID602=190010,--幻化大师；90003实际是Rogue Bot，临时召唤会进入NPCBot AI并崩溃
+	NPCID603=12246,--综合杂货商（原生中立商人）
+	NPCID604=5139,--施法材料与常用毒药商；纯商人模板，避免特殊Gossip拦截商店
+	NPCID605=9548,--猎人弓箭与枪弹商
+	NPCID606=28347,--全等级毒药商；纯商人模板，包含完整毒药商品
 }
 function ST.SummonNPCblsd(player)--经验锁定NPC
 	ST.SummonNPC(player, ST.NPCID601)
@@ -401,6 +431,18 @@ function ST.SummonNPClmsd(player)--经验锁定NPC
 end
 function ST.SummonNPCds(player)--幻化大师
 	ST.SummonNPC(player, ST.NPCID602)
+end
+function ST.SummonNPCGeneralVendor(player)--综合杂货商
+	ST.SummonNPC(player, ST.NPCID603)
+end
+function ST.SummonNPCWarlockVendor(player)--术士与施法材料商
+	ST.SummonNPC(player, ST.NPCID604)
+end
+function ST.SummonNPCHunterAmmoVendor(player)--猎人弹药商
+	ST.SummonNPC(player, ST.NPCID605)
+end
+function ST.SummonNPCPoisonVendor(player)--全等级毒药商
+	ST.SummonNPC(player, ST.NPCID606)
 end
 function ST.SummonNPC(player, entry)
 	local guid=player:GetGUIDLow()
@@ -418,12 +460,13 @@ function ST.SummonNPC(player, entry)
 				if(nz>z and nz<(z+5))then
 					z=nz
 				end
-				local NPC=player:SpawnCreature(entry,x,y,z,0, 3,ST.TIME*1000)
+				local NPC=player:SpawnCreature(entry,x,y,z,0, 3,ST.NPC_TIME*1000)
 				if(NPC)then
 					player:SendAreaTriggerMessage("召唤成功。")
+					NPC:SetFaction(ST.FRIENDLY_FACTION)
 					NPC:SetFacingToObject(player)
 					NPC:SendUnitSay(string.format("%s,我响应你的召唤，从远方来到你的身边。请问你需要什么？",player:GetName()),0)
-					lastTime=os.time()+ST.TIME
+					lastTime=os.time()+ST.NPC_COOLDOWN
 				else
 					player:SendAreaTriggerMessage("召唤失败。")
 				end
@@ -950,6 +993,55 @@ local function ResetPlayer(player, flag, text)
 	player:SetAtLoginFlag(flag)
 	player:SendAreaTriggerMessage("你现在返回角色选择或者重新登录角色，即可进行修改"..text.."。")
 	--player:SendAreaTriggerMessage("正在返回选择角色菜单")
+end
+
+-- 阶段48：把老外综合NPC的“25个绑定点”思路移植到现有tp表。
+-- 1~5号仍由旧菜单调用；6~25号使用下面的通用实现，不改变已有角色的数据。
+local function IsPersonalPointRestricted(player)
+	local mapId=player:GetMapId()
+	return mapId==533 or mapId==489 or mapId==529 or mapId==30
+end
+
+local function SavePersonalPoint(player, positionId)
+	if IsPersonalPointRestricted(player) then
+		player:SendBroadcastMessage("当前副本或战场禁止记录个人传送点。")
+		return false
+	end
+
+	local guid=player:GetGUIDLow()
+	local x,y,z,o=player:GetX(),player:GetY(),player:GetZ(),player:GetO()
+	local mapId=player:GetMapId()
+	local exists=CharDBQuery("SELECT 1 FROM `tp` WHERE `guid`="..guid.." AND `positionid`="..positionId.." LIMIT 1")
+	if exists then
+		CharDBExecute("UPDATE `tp` SET `position_x`="..x..",`position_y`="..y..",`position_z`="..z..",`position_o`="..o..",`map`="..mapId.." WHERE `guid`="..guid.." AND `positionid`="..positionId)
+	else
+		CharDBExecute("INSERT INTO `tp` (`guid`,`positionid`,`position_x`,`position_y`,`position_z`,`position_o`,`map`) VALUES ("..guid..","..positionId..","..x..","..y..","..z..","..o..","..mapId..")")
+	end
+	player:SendBroadcastMessage("个人传送点"..positionId.."已保存。")
+	return true
+end
+
+local function TeleportPersonalPoint(player, positionId)
+	if IsPersonalPointRestricted(player) then
+		player:SendBroadcastMessage("当前副本或战场禁止使用个人传送点。")
+		return false
+	end
+
+	local guid=player:GetGUIDLow()
+	local pos=CharDBQuery("SELECT `position_x`,`position_y`,`position_z`,`position_o`,`map` FROM `tp` WHERE `guid`="..guid.." AND `positionid`="..positionId.." LIMIT 1")
+	if not pos then
+		player:SendBroadcastMessage("你还没有记录个人传送点"..positionId.."。")
+		return false
+	end
+
+	local x,y,z,o=pos:GetFloat(0),pos:GetFloat(1),pos:GetFloat(2),pos:GetFloat(3)
+	local mapId=pos:GetInt32(4)
+	if player:Teleport(mapId,x,y,z,o,TELE_TO_GM_MODE) then
+		player:SendBroadcastMessage("已经到达个人传送点"..positionId.."。")
+		return true
+	end
+	player:SendBroadcastMessage("个人传送点"..positionId.."传送失败，请检查该地图是否可用。")
+	return false
 end
 
 local Stone={
@@ -1615,6 +1707,406 @@ DkQuest=function(player)
 end,
 	}
 
+-- 阶段48：为1~25号点生成统一的保存/传送函数。1~5号仍使用原菜单和原价格，
+-- 但改用精确的guid+positionid查询，修复旧代码可能查到其他角色槽位的缺陷。
+for slot=1,25 do
+	local pointId=slot
+	Stone["TBPoint"..pointId]=function(player)
+		SavePersonalPoint(player,pointId)
+	end
+	Stone["TTPoint"..pointId]=function(player)
+		local success=TeleportPersonalPoint(player,pointId)
+		if not success and pointId<=5 then
+			player:ModifyMoney(pointId*10000)--旧菜单先扣费；失败时退还1~5号点费用
+		end
+	end
+end
+
+local function RequireStage48GM(player)
+	if player:GetGMRank()<3 then
+		player:SendBroadcastMessage("该前期测试功能仅限管理员GM等级3使用。")
+		return false
+	end
+	return true
+end
+
+-- 阶段58：高风险测试功能统一使用GM3权限。
+-- 菜单隐藏只是界面保护，每个函数内部仍要再检查一次。
+local function RequireStage58GM(player)
+	if player:GetGMRank()<3 then
+		player:SendBroadcastMessage("|cFFFF2020阶段58全功能测试面板仅限GM等级3。|r")
+		return false
+	end
+	return true
+end
+
+local Stage58GMSpells={
+	265,39258,35182,25565,26368,27258,27261,8295,10073,11821,18389,
+	19901,27254,27255,36356,6560,35912,38734,45659,45650,45646,45645,
+	45648,45813,45647,45649,38505,23789,18209,18210,1908,35886,
+}
+
+local Stage58Reputations={
+	1106,1090,1098,1156,1073,1105,1119,1050,1085,1091,1037,1052,
+	932,934,935,941,942,946,947,967,970,978,989,990,1011,1012,1015,1031,1038,
+	529,1077,270,910,510,
+}
+
+local function Stage58LearnSpellList(player,list,label)
+	if not RequireStage58GM(player) then return end
+	local learned,known,failed=0,0,0
+	for _,spellId in ipairs(list or {}) do
+		if player:HasSpell(spellId) then
+			known=known+1
+		else
+			local ok=pcall(function() player:LearnSpell(spellId) end)
+			if ok and player:HasSpell(spellId) then learned=learned+1 else failed=failed+1 end
+		end
+	end
+	player:SendBroadcastMessage(label.."：新学"..learned.."个，已会"..known.."个，失败"..failed.."个。")
+end
+
+Stone.Stage58LearnAllMounts=function(player)
+	Stage58LearnSpellList(player,Stage58Data.mounts or {},"全部坐骑")
+end
+
+Stone.Stage58LearnAllPets=function(player)
+	Stage58LearnSpellList(player,Stage58Data.pets or {},"全部伴生宠物")
+end
+
+
+Stone.Stage58LearnGMSpells=function(player)
+	Stage58LearnSpellList(player,Stage58GMSpells,"GM测试法术")
+end
+
+Stone.Stage58RemoveGMSpells=function(player)
+	if not RequireStage58GM(player) then return end
+	local removed=0
+	for _,spellId in ipairs(Stage58GMSpells) do
+		if player:HasSpell(spellId) then player:RemoveSpell(spellId); removed=removed+1 end
+	end
+	player:SendBroadcastMessage("已移除"..removed.."个GM测试法术。")
+end
+
+Stone.Stage58TrainClassSkills=function(player)
+	if not RequireStage58GM(player) then return end
+	local classId=player:GetClass()
+	local level=player:GetLevel()
+	-- 只读trainer/trainer_spell；不建表、不UPDATE、不INSERT。
+	-- 这样会自动跟随本项目已扩展到255级的真实训练师数据。
+	local sql="SELECT DISTINCT ts.SpellId FROM trainer t JOIN trainer_spell ts ON ts.TrainerId=t.Id "..
+		"WHERE t.Type=0 AND t.Requirement="..classId.." AND ts.ReqLevel<="..level.." ORDER BY ts.ReqLevel,ts.SpellId"
+	local result=WorldDBQuery(sql)
+	if not result then
+		player:SendBroadcastMessage("|cFFFF2020没有找到本职业的训练师法术数据。|r")
+		return
+	end
+	local learned,known,failed=0,0,0
+	repeat
+		local spellId=result:GetUInt32(0)
+		if spellId>0 then
+			if player:HasSpell(spellId) then known=known+1 else
+				local ok=pcall(function() player:LearnSpell(spellId) end)
+				if ok and player:HasSpell(spellId) then learned=learned+1 else failed=failed+1 end
+			end
+		end
+	until not result:NextRow()
+	player:SendBroadcastMessage("本职业训练师技能：新学"..learned.."个，已会"..known.."个，失败"..failed.."个。")
+end
+
+Stone.Stage58WeaponSkills=function(player)
+	if not RequireStage58GM(player) then return end
+	local skills={43,44,45,46,54,55,95,118,136,160,162,172,173,176,226,228,229}
+	for _,skillId in ipairs(skills) do player:SetSkill(skillId,450,450,450) end
+	player:SendBroadcastMessage("已将武器与防御熟练度设为450。")
+end
+
+Stone.Stage58Riding=function(player)
+	if not RequireStage58GM(player) then return end
+	for _,spellId in ipairs({33388,33391,34090,34091,54197}) do
+		if not player:HasSpell(spellId) then player:LearnSpell(spellId) end
+	end
+	player:SendBroadcastMessage("已学会全部官方骑术和寒冷天气飞行。")
+end
+
+Stone.Stage58MaxReputation=function(player)
+	if not RequireStage58GM(player) then return end
+	for _,factionId in ipairs(Stage58Reputations) do player:SetReputation(factionId,42999) end
+	player:SendBroadcastMessage("已将经典、外域和北裂境主要声望设为崇拜。")
+end
+
+Stone.Stage58GrantGold=function(player)
+	if not RequireStage58GM(player) then return end
+	local cap=2147483646
+	local current=player:GetCoinage() or 0
+	local amount=math.min(300000000,math.max(0,cap-current)) -- 3000金，避免超过核心金币上限
+	if amount>0 then player:ModifyMoney(amount) end
+	player:SendBroadcastMessage("已发放"..math.floor(amount/10000).."金。原脚本文字写“300万金”，实际代码也只是3000金。")
+end
+
+Stone.Stage58ResetTalents=function(player)
+	if RequireStage58GM(player) then Stone.ResetTalents(player) end
+end
+
+Stone.Stage58ResetCooldowns=function(player)
+	if RequireStage58GM(player) then Stone.ResetAllCD(player) end
+end
+
+local function Stage58SetLevel(player,target)
+	if not RequireStage58GM(player) then return end
+	local current=player:GetLevel()
+	if target<=current then
+		player:SendBroadcastMessage("只允许升级：当前"..current.."级，目标"..target.."级。")
+		return
+	end
+	player:SetLevel(target)
+	player:SetHealth(player:GetMaxHealth())
+	player:SendBroadcastMessage("已升到"..target.."级。请再点击“学习当前等级本职业技能”。")
+end
+
+for _,target in ipairs({10,20,30,40,50,60,70,80,100,120,150,180,200,220,255}) do
+	local fixedTarget=target
+	Stone["Stage58Level"..fixedTarget]=function(player) Stage58SetLevel(player,fixedTarget) end
+end
+
+local function Stage58GiveGearSet(player,setData)
+	if not RequireStage58GM(player) then return end
+	local added,failed=0,0
+	for _,itemId in ipairs(setData.items or {}) do
+		local ok,item=pcall(function() return player:AddItem(itemId,1) end)
+		if ok and item then added=added+1 else failed=failed+1 end
+	end
+	player:SendBroadcastMessage(setData.name.."：已放入背包"..added.."件，失败"..failed.."件。不会删除或覆盖原装备。")
+end
+
+Stone.SummonSelectedPlayer=function(player)
+	if not RequireStage48GM(player) or player:IsInCombat() then
+		if player:IsInCombat() then player:SendBroadcastMessage("战斗中不能召唤玩家。") end
+		return
+	end
+	local target=player:GetSelection()
+	if not target or target:GetTypeId()~=player:GetTypeId() or target:GetName()==player:GetName() then
+		player:SendBroadcastMessage("请先选中另一名在线玩家。")
+		return
+	end
+	local ok=pcall(function() target:SummonPlayer(player) end)
+	if ok then
+		player:SendBroadcastMessage("已向"..target:GetName().."发送召唤请求。")
+	else
+		player:SendBroadcastMessage("召唤失败，该玩家可能已离线或所在地图受限。")
+	end
+end
+
+Stone.SummonWholeParty=function(player)
+	if not RequireStage48GM(player) or player:IsInCombat() then
+		if player:IsInCombat() then player:SendBroadcastMessage("战斗中不能召集队伍。") end
+		return
+	end
+	if not player:IsInGroup() then
+		player:SendBroadcastMessage("你当前没有队伍。")
+		return
+	end
+	local group=player:GetGroup()
+	local online=GetPlayersInWorld() or {}
+	local count=0
+	for _,member in pairs(online) do
+		if member and member:GetName()~=player:GetName() and member:IsInGroup() and member:GetGroup()==group then
+			local ok=pcall(function() member:SummonPlayer(player) end)
+			if ok then count=count+1 end
+		end
+	end
+	player:SendBroadcastMessage("已发送"..count.."个队伍召唤请求。")
+end
+
+Stone.TestResetTalents=function(player)
+	if RequireStage48GM(player) then Stone.ResetTalents(player) end
+end
+
+Stone.TestResetAllCD=function(player)
+	if RequireStage48GM(player) then Stone.ResetAllCD(player) end
+end
+
+ST.SummonTestAuctioneer=function(player) if RequireStage48GM(player) then ST.SummonNPC(player,8673) end end
+ST.SummonTestDummy80=function(player) if RequireStage48GM(player) then ST.SummonNPC(player,31146) end end
+ST.SummonTestDummy70=function(player) if RequireStage48GM(player) then ST.SummonNPC(player,32667) end end
+ST.SummonTestDummy60=function(player) if RequireStage48GM(player) then ST.SummonNPC(player,32666) end end
+ST.SummonTestDummy1=function(player) if RequireStage48GM(player) then ST.SummonNPC(player,4952) end end
+
+-- 阶段49：只使用已在当前world库中确认存在的原版模板。
+-- 不创建表、不写数据库，召唤物服务器重启后也不会永久保留。
+local Stage49Spawned={}
+local Stage49NPCGroups={
+	service={8673,28687,29533,35364,28774,11869,11868,2704,11870,19856,28676,31238},
+	class={3408,5115,928,4564,4568,4091,17520,12042,3327,28471},
+	profession={16161,3174,3606,1702,30713,15501,3605,3523,1355,16272,17101,1701,6290,1473},
+	dummy={32667,32666,31146,4952},
+}
+local Stage49GameObjects={187299,184137,191960,192697,190711}
+local Stage49LifetimeSeconds=600
+local Stage49FriendlyFaction=35 --AzerothCore SharedDefines.h: FACTION_FRIENDLY，联盟/部落都可友善交互
+local Stage52HostileFaction=14 --AzerothCore SharedDefines.h: FACTION_MONSTER，联盟/部落都可攻击
+local Stage52DummyEntries={}
+for _,entry in ipairs(Stage49NPCGroups.dummy) do Stage52DummyEntries[entry]=true end
+local Stage49CleanupRange=80
+
+local function Stage49OwnerKey(player)
+	return player:GetGUIDLow()
+end
+
+local function Stage49Track(player,kind,object)
+	if not object then return false end
+	local key=Stage49OwnerKey(player)
+	Stage49Spawned[key]=Stage49Spawned[key] or {}
+	table.insert(Stage49Spawned[key],{kind=kind,object=object,guid=object:GetGUIDLow()})
+	return true
+end
+
+local function Stage49Despawn(record,object)
+	if record.kind=="npc" then
+		return pcall(function() object:DespawnOrUnsummon(1) end)
+	end
+	return pcall(function() object:Despawn() end)
+end
+
+local function Stage49DeleteTracked(player,silent)
+	if not RequireStage48GM(player) then return end
+	local key=Stage49OwnerKey(player)
+	local spawned=Stage49Spawned[key] or {}
+	local npcGuids={}
+	local gameObjectGuids={}
+	for _,record in ipairs(spawned) do
+		if record.kind=="npc" then npcGuids[record.guid]=record else gameObjectGuids[record.guid]=record end
+	end
+	local removedGuids={}
+	local removed=0
+	-- 先通过附近实体+GUID精确匹配，避免Lua userdata引用失效后按钮空操作。
+	for _,creature in ipairs(player:GetCreaturesInRange(Stage49CleanupRange) or {}) do
+		local guid=creature:GetGUIDLow()
+		local record=npcGuids[guid]
+		if record and Stage49Despawn(record,creature) then
+			removed=removed+1
+			removedGuids[guid]=true
+		end
+	end
+	for _,gameObject in ipairs(player:GetGameObjectsInRange(Stage49CleanupRange) or {}) do
+		local guid=gameObject:GetGUIDLow()
+		local record=gameObjectGuids[guid]
+		if record and Stage49Despawn(record,gameObject) then
+			removed=removed+1
+			removedGuids[guid]=true
+		end
+	end
+	-- 玩家离开召唤地时，对未在附近扫描中找到的对象再用原引用回退清理。
+	for _,record in ipairs(spawned) do
+		if not removedGuids[record.guid] and Stage49Despawn(record,record.object) then removed=removed+1 end
+	end
+	Stage49Spawned[key]={}
+	if not silent then
+		if #spawned==0 then
+			player:SendBroadcastMessage("当前跟踪记录为空：可能是旧版召唤物或Lua曾被重载。请在测试空地使用红色的‘应急清理附近测试模板’。")
+		else
+			player:SendBroadcastMessage("已清理本角色批量召唤的测试设施："..removed.."/"..#spawned.."个。")
+		end
+	end
+end
+
+local Stage51NPCEntrySet={}
+for _,group in pairs(Stage49NPCGroups) do
+	for _,entry in ipairs(group) do Stage51NPCEntrySet[entry]=true end
+end
+local Stage51GameObjectEntrySet={}
+for _,entry in ipairs(Stage49GameObjects) do Stage51GameObjectEntrySet[entry]=true end
+
+Stone.Stage51EmergencyCleanup=function(player)
+	if not RequireStage48GM(player) then return end
+	local removed=0
+	for _,creature in ipairs(player:GetCreaturesInRange(Stage49CleanupRange) or {}) do
+		if Stage51NPCEntrySet[creature:GetEntry()] then
+			local ok=pcall(function() creature:DespawnOrUnsummon(1) end)
+			if ok then removed=removed+1 end
+		end
+	end
+	for _,gameObject in ipairs(player:GetGameObjectsInRange(Stage49CleanupRange) or {}) do
+		if Stage51GameObjectEntrySet[gameObject:GetEntry()] then
+			local ok=pcall(function() gameObject:Despawn() end)
+			if ok then removed=removed+1 end
+		end
+	end
+	Stage49Spawned[Stage49OwnerKey(player)]={}
+	player:SendBroadcastMessage("应急清理完成：附近"..Stage49CleanupRange.."码内命中测试模板"..removed.."个。")
+end
+
+local function Stage49Position(player,index,total)
+	local columns=8
+	local row=math.floor((index-1)/columns)
+	local column=(index-1)%columns
+	local right=(column-(columns-1)/2)*3.5
+	local forward=7+row*4
+	local o=player:GetO()
+	local x=player:GetX()+math.cos(o)*forward-math.sin(o)*right
+	local y=player:GetY()+math.sin(o)*forward+math.cos(o)*right
+	local z=player:GetZ()
+	local map=player:GetMap()
+	if map then
+		local height=map:GetHeight(x,y)
+		if height and height>(z-5) and height<(z+5) then z=height end
+	end
+	return x,y,z,o+math.pi
+end
+
+local function Stage49SummonLists(player,npcEntries,gameObjectEntries,label)
+	if not RequireStage48GM(player) then return end
+	if player:IsInCombat() then
+		player:SendBroadcastMessage("战斗中不能批量召唤测试设施。")
+		return
+	end
+	Stage49DeleteTracked(player,true)
+	local total=#npcEntries+#gameObjectEntries
+	local created=0
+	local index=0
+	for _,entry in ipairs(npcEntries) do
+		index=index+1
+		local x,y,z,o=Stage49Position(player,index,total)
+		local npc=player:SpawnCreature(entry,x,y,z,o,3,Stage49LifetimeSeconds*1000)
+		if Stage49Track(player,"npc",npc) then
+			created=created+1
+			if Stage52DummyEntries[entry] then
+				npc:SetFaction(Stage52HostileFaction)--训练假人保持为可攻击敌对目标
+			else
+				npc:SetFaction(Stage49FriendlyFaction)--服务NPC/训练师对联盟和部落均友善
+			end
+			npc:SetFacingToObject(player)
+		end
+	end
+	for _,entry in ipairs(gameObjectEntries) do
+		index=index+1
+		local x,y,z,o=Stage49Position(player,index,total)
+		local object=player:SummonGameObject(entry,x,y,z,o,Stage49LifetimeSeconds)
+		if Stage49Track(player,"gameobject",object) then created=created+1 end
+	end
+	player:SendBroadcastMessage(label.."已召唤："..created.."/"..total.."个，10分钟后自动消失。")
+end
+
+local function Stage49CopyGroup(name)
+	local result={}
+	for _,entry in ipairs(Stage49NPCGroups[name]) do table.insert(result,entry) end
+	return result
+end
+
+Stone.Stage49SummonAll=function(player)
+	local all={}
+	for _,name in ipairs({"service","class","profession","dummy"}) do
+		for _,entry in ipairs(Stage49NPCGroups[name]) do table.insert(all,entry) end
+	end
+	Stage49SummonLists(player,all,Stage49GameObjects,"全部无数据库测试设施")
+end
+Stone.Stage49DeleteAll=function(player) Stage49DeleteTracked(player,false) end
+Stone.Stage49SummonFacilities=function(player) Stage49SummonLists(player,{},Stage49GameObjects,"公共设施") end
+Stone.Stage49SummonServices=function(player) Stage49SummonLists(player,Stage49CopyGroup("service"),{},"服务NPC") end
+Stone.Stage49SummonClassTrainers=function(player) Stage49SummonLists(player,Stage49CopyGroup("class"),{},"职业训练师") end
+Stone.Stage49SummonProfessionTrainers=function(player) Stage49SummonLists(player,Stage49CopyGroup("profession"),{},"专业训练师") end
+Stone.Stage49SummonDummies=function(player) Stage49SummonLists(player,Stage49CopyGroup("dummy"),{},"训练假人") end
+
 
 local Menu={
 	[MMENU]={--主菜单
@@ -1645,6 +2137,7 @@ local Menu={
 		{FUNC, "|TInterface/ICONS/Spell_Arcane_PortalThunderBluff:35:35|t传到4号点 4金/次",	    Stone.TTPoint4,	GOSSIP_ICON_TAXI,	false,"是否穿越回|cFFF0F000记录位置|r ?",40000},
 		{FUNC, "|TInterface/ICONS/Spell_Arcane_TeleportStonard:35:35|t定5号点",		Stone.TBPoint5,	GOSSIP_ICON_TAXI,	false,"是否记录当前|cFFF0F000位置|r 5号点传回5金1次?"},
 		{FUNC, "|TInterface/ICONS/Spell_Arcane_PortalUnderCity:35:35|t传到5号点 5金/次",	    Stone.TTPoint5,	GOSSIP_ICON_TAXI,	false,"是否穿越回|cFFF0F000记录位置|r ?",50000},	--增加收费金额参数,默认情况下失败也会扣金币，因此在失败时返还金币，在游戏里也不会出现减钱再加钱
+		{MENU, "|TInterface/ICONS/INV_Misc_Rune_06:35:35|t下一页：6-10号个人传送点", PERSONALPOINTMENU+0x1,GOSSIP_ICON_TAXI},
 		 {MENU, "上一页", TBMENU,GOSSIP_ICON_BATTLE},
 	},
 	[TBMENU+0x20]={--技能训练
@@ -1700,6 +2193,70 @@ local Menu={
 		{FUNC, "|TInterface/ICONS/Ability_Ambush:35:35|t保存角色", 		Stone.SaveToDB,			GOSSIP_ICON_INTERACT_1},
 		{FUNC, "|TInterface/ICONS/Ability_Ambush:35:35|t返回选择角色", 	Stone.Logout,			GOSSIP_ICON_INTERACT_1,	false,"返回选择角色界面 ?"},
 		{FUNC, "|TInterface/ICONS/Ability_Ambush:35:35|t|cFF800000不保存角色|r",Stone.LogoutNosave,GOSSIP_ICON_INTERACT_1,false,"|cFFFF0000不保存角色，并返回选择角色界面 ?|r"},
+		{MENU, "|TInterface/ICONS/INV_Misc_Gear_01:35:35|t|cFFFFD700前期开发测试工具|r", TESTMENU,GOSSIP_ICON_TRAINER},
+		{MENU, "|TInterface/ICONS/Mail_GMIcon:35:35|t|cFFFF8000GM3全功能测试面板|r", STAGE58MENU,GOSSIP_ICON_TRAINER},
+	},
+
+	[STAGE58MENU]={
+		{MENU, "|TInterface/ICONS/XP_Icon:35:35|t升级到1-255测试档", STAGE58LEVELMENU,GOSSIP_ICON_TRAINER},
+		{MENU, "|TInterface/ICONS/Ability_Priest_InnerLightAndShadow:35:35|t职业技能、武器、声望与骑术", STAGE58SKILLMENU,GOSSIP_ICON_TRAINER},
+		{MENU, "|TInterface/ICONS/Ability_Mount_JungleTiger:35:35|t坐骑、伴生宠物与GM法术", STAGE58COLLECTIONMENU,GOSSIP_ICON_TRAINER},
+		{MENU, "|TInterface/ICONS/INV_Chest_Plate10:35:35|t60/70/80级本职业测试装备", STAGE58GEARMENU,GOSSIP_ICON_VENDOR},
+		{MENU, "|TInterface/ICONS/Trade_BlackSmithing:35:35|t现有专业技能面板", SYMENU,GOSSIP_ICON_TRAINER},
+		{MENU, "|TInterface/ICONS/Trade_Engraving:35:35|t现有装备附魔面板", ENCMENU,GOSSIP_ICON_TABARD},
+		{FUNC, "|TInterface/ICONS/INV_Misc_Coin_01:35:35|t获得3000金", Stone.Stage58GrantGold,GOSSIP_ICON_MONEY_BAG,false,"确认向当前GM角色发放3000金？"},
+		{FUNC, "|TInterface/ICONS/Spell_Shadow_MindTwisting:35:35|t重置自己的天赋", Stone.Stage58ResetTalents,GOSSIP_ICON_TRAINER,false,"确认重置当前角色天赋？"},
+		{FUNC, "|TInterface/ICONS/Spell_Holy_BorrowedTime:35:35|t清除自己的全部冷却", Stone.Stage58ResetCooldowns,GOSSIP_ICON_TRAINER,false,"确认清除全部技能与物品冷却？"},
+	},
+
+	[STAGE58SKILLMENU]={
+		{FUNC, "|TInterface/ICONS/INV_Misc_Book_09:35:35|t|cFF00C0FF学习当前等级本职业训练师技能|r", Stone.Stage58TrainClassSkills,GOSSIP_ICON_TRAINER,false,"会按当前等级读取本服真实trainer_spell数据，确认学习？"},
+		{FUNC, "|TInterface/ICONS/Spell_Holy_WeaponMastery:35:35|t全武器与防御熟练度450", Stone.Stage58WeaponSkills,GOSSIP_ICON_TRAINER,false,"确认设为450？"},
+		{FUNC, "|TInterface/ICONS/Ability_Mount_Gryphon_01:35:35|t学习全部骑术", Stone.Stage58Riding,GOSSIP_ICON_TRAINER,false,"确认学习骑术与寒冷天气飞行？"},
+		{FUNC, "|TInterface/ICONS/Achievement_Reputation_01:35:35|t主要声望全崇拜", Stone.Stage58MaxReputation,GOSSIP_ICON_TRAINER,false,"这会直接改变角色声望，确认？"},
+	},
+
+	[STAGE58COLLECTIONMENU]={
+		{FUNC, "|TInterface/ICONS/Ability_Mount_JungleTiger:35:35|t|cFFFFD700学习本服全部坐骑|r", Stone.Stage58LearnAllMounts,GOSSIP_ICON_TRAINER,false,"将学习当前项目Spell.dbc中的825个坐骑法术，可能卡顿数秒，确认？"},
+		{FUNC, "|TInterface/ICONS/INV_Pet_BabyBlizzardBear:35:35|t|cFFFFD700学习本服全部伴生宠物|r", Stone.Stage58LearnAllPets,GOSSIP_ICON_TRAINER,false,"将学习183个伴生宠物法术，确认？"},
+		{FUNC, "|TInterface/ICONS/Mail_GMIcon:35:35|t|cFFFF2020学习32个GM/QA测试法术|r", Stone.Stage58LearnGMSpells,GOSSIP_ICON_TRAINER,false,"警告：包含区域死亡、清除、调试伤害等高风险法术，仅用于GM测试，确认？"},
+		{FUNC, "|TInterface/ICONS/Spell_Holy_RemoveCurse:35:35|t移除上述32个GM/QA法术", Stone.Stage58RemoveGMSpells,GOSSIP_ICON_TRAINER,false,"确认移除本面板发放的GM/QA法术？"},
+	},
+
+	[STAGE58LEVELMENU]={},
+	[STAGE58GEARMENU]={
+		{MENU, "|TInterface/ICONS/INV_Helmet_74:35:35|t60级本职业团队装", STAGE58GEAR60MENU,GOSSIP_ICON_VENDOR},
+		{MENU, "|TInterface/ICONS/INV_Helmet_110:35:35|t70级本职业团队/PvP装", STAGE58GEAR70MENU,GOSSIP_ICON_VENDOR},
+		{MENU, "|TInterface/ICONS/INV_Helmet_151:35:35|t80级本职业团队/PvP装", STAGE58GEAR80MENU,GOSSIP_ICON_VENDOR},
+	},
+	[STAGE58GEAR60MENU]={},
+	[STAGE58GEAR70MENU]={},
+	[STAGE58GEAR80MENU]={},
+
+	[TESTMENU]={--阶段48：只放不依赖老外自定义数据库和自定义物品的安全测试功能
+		{MENU, "|TInterface/ICONS/INV_Misc_Tool_01:35:35|t|cFFFFD700批量测试设施（无数据库）|r", TESTFACILITYMENU,GOSSIP_ICON_VENDOR},
+		{FUNC, "|TInterface/ICONS/Spell_Arcane_TeleportStormWind:35:35|t瞬移到选中玩家", Stone.GoSelectPlayer,GOSSIP_ICON_TAXI,false,"确认瞬移到当前选中的玩家身边？"},
+		{FUNC, "|TInterface/ICONS/Spell_Shadow_DemonicCircleSummon:35:35|t召唤选中玩家", Stone.SummonSelectedPlayer,GOSSIP_ICON_TAXI,false,"向选中的玩家发送召唤请求？"},
+		{FUNC, "|TInterface/ICONS/Spell_Shadow_Twilight:35:35|t召集当前整支队伍", Stone.SummonWholeParty,GOSSIP_ICON_TAXI,false,"向当前队伍的所有在线成员发送召唤请求？"},
+		{FUNC, "|TInterface/ICONS/Spell_Shadow_MindTwisting:35:35|t重置自己的天赋", Stone.TestResetTalents,GOSSIP_ICON_TRAINER,false,"确认免费重置自己的天赋？"},
+		{FUNC, "|TInterface/ICONS/Spell_Holy_BorrowedTime:35:35|t重置全部技能与物品冷却", Stone.TestResetAllCD,GOSSIP_ICON_TRAINER,false,"确认清除自己的全部冷却时间？"},
+		{FUNC, "|TInterface/ICONS/INV_Misc_Coin_02:35:35|t召唤临时拍卖师", ST.SummonTestAuctioneer,GOSSIP_ICON_VENDOR},
+		{FUNC, "|TInterface/ICONS/Ability_Warrior_OffensiveStance:35:35|t召唤英雄训练假人", ST.SummonTestDummy80,GOSSIP_ICON_BATTLE},
+		{FUNC, "|TInterface/ICONS/Ability_Warrior_DefensiveStance:35:35|t召唤70级训练假人", ST.SummonTestDummy70,GOSSIP_ICON_BATTLE},
+		{FUNC, "|TInterface/ICONS/Ability_Warrior_InnerRage:35:35|t召唤60级训练假人", ST.SummonTestDummy60,GOSSIP_ICON_BATTLE},
+		{FUNC, "|TInterface/ICONS/INV_TrainingDummy:35:35|t召唤1级训练假人", ST.SummonTestDummy1,GOSSIP_ICON_BATTLE},
+	},
+
+	[TESTFACILITYMENU]={--阶段49：原外文综合Lua的Summon All/Delete All安全改造版
+		{FUNC, "|TInterface/ICONS/Spell_Fire_MasterOfElements:35:35|t|cFFFFD700一键召唤全45项|r", Stone.Stage49SummonAll,GOSSIP_ICON_VENDOR,false,"将先清理你上一批召唤物，再召唤40个NPC和5个公共设施，确认吗？"},
+		{FUNC, "|TInterface/ICONS/Spell_Shadow_DeathScream:35:35|t|cFFFF4040清理我召唤的测试设施|r", Stone.Stage49DeleteAll,GOSSIP_ICON_CHAT,false,"只清理本角色本次登录期间通过此菜单召唤的对象，确认吗？"},
+		{FUNC, "|TInterface/ICONS/Spell_Fire_Incinerate:35:35|t|cFFFF2020应急清理附近测试模板|r", Stone.Stage51EmergencyCleanup,GOSSIP_ICON_CHAT,false,"警告：会清理附近80码内与本功能使用相同模板ID的NPC/设施。只应在专用测试空地使用，不要在城市或原生训练师附近使用。继续吗？"},
+		{FUNC, "|TInterface/ICONS/INV_Misc_Bag_10:35:35|t召唤5种公共设施", Stone.Stage49SummonFacilities,GOSSIP_ICON_VENDOR},
+		{FUNC, "|TInterface/ICONS/INV_Misc_Coin_02:35:35|t召唤12个服务NPC", Stone.Stage49SummonServices,GOSSIP_ICON_VENDOR},
+		{FUNC, "|TInterface/ICONS/INV_Misc_Book_11:35:35|t召唤10名职业训练师", Stone.Stage49SummonClassTrainers,GOSSIP_ICON_TRAINER},
+		{FUNC, "|TInterface/ICONS/INV_Misc_Book_09:35:35|t召唤14名专业训练师", Stone.Stage49SummonProfessionTrainers,GOSSIP_ICON_TRAINER},
+		{FUNC, "|TInterface/ICONS/INV_TrainingDummy:35:35|t召唤4种训练假人", Stone.Stage49SummonDummies,GOSSIP_ICON_BATTLE},
+		{MENU, "上一页", TESTMENU,GOSSIP_ICON_TAXI},
 	},
 	
     [MMENU+0x50]={--原神主界面
@@ -1815,6 +2372,20 @@ local Menu={
 			{TP, "|TInterface/ICONS/Achievement_Zone_TirisfalGlades_01:35:35|t亡灵出生地",		0,		1676.71,	1678.31,	121.67,		2.70526,	TEAM_HORDE},
 			{TP, "|TInterface/ICONS/Achievement_Zone_Ghostlands:35:35|t血精灵出生地",	530,	10349.6,	-6357.29,	33.4026,	5.31605,	TEAM_HORDE},
 			{TP, "|cFF006400[中立]|r|TInterface/ICONS/Achievement_Zone_EasternPlaguelands:35:35|t死亡骑士出生地",	609,	2355.84,	-5664.77,	426.028,	3.65997,	TEAM_NONE,	55,	0},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t恶魔猎手（联盟）出生地",	0,		-8881.176,		1059.9805,		105.70616,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t熊猫人（联盟）出生地",	10002,	292.83646,		-936.40204,		102.698044,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t高等精灵出生地",		10010,	5098.649,		-603.823,		18.6165885,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t光铸德莱尼出生地",	10010,	4376.8174,		124.05848,		0.70686644,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t虚空精灵出生地",	10010,	3652.77,		1021.45338,		13.3724165,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t黑铁矮人出生地",	0,		-7402.4277,		291.20493,		286.2949,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t龙希尔出生地",		3,		-282.8949,		-30.559977,		450.49158,		0,	TEAM_ALLIANCE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t恶魔猎手（部落）出生地",	0,		4332.541,		-2881.9714,		0.90824634,		0,	TEAM_HORDE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t熊猫人（部落）出生地",	10002,	-826.33221,		724.07113,		20.017347,		0,	TEAM_HORDE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t娜迦出生地",		10001,	-50.659386,		-396.765338,	-61.372284,		0,	TEAM_HORDE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t地精出生地",		10000,	590.5265,		4807.36,		3.53213,		0,	TEAM_HORDE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t狐人出生地",		10012,	-2151.8108,		-454.82339,		112.88782,		0,	TEAM_HORDE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t赞达拉巨魔出生地",	10012,	-8.498111,		-944.57214,		78.487915,		0,	TEAM_HORDE},
+			{TP, "|TInterface/ICONS/INV_Misc_Map04:35:35|t夜之子出生地",		10000,	1724.2849,		4818.5576,		6.791372,		0,	TEAM_HORDE},
 			 {MENU, "上一页", TPMENU,GOSSIP_ICON_TAXI},
 		},
            
@@ -4012,18 +4583,11 @@ local Menu={
 	 {MENU, "上一页", TBMENU+0x20,GOSSIP_ICON_BATTLE},
 			},
 	[BUYMENU+0x10]={-- 材料商
-        {FUNC, "召唤传家宝商人", 	ST.SummonNPC_4001001,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤兽栏管理员", 	ST.SummonNPC_28690,  GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤盗贼雕文商人", 	ST.SummonNPC_4001002,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤小德雕文商人", 	ST.SummonNPC_4001003,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤法师雕文商人", 	ST.SummonNPC_4001004,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤猎人雕文商人", 	ST.SummonNPC_4001005,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤牧师雕文商人", 	ST.SummonNPC_4001006,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤圣骑雕文商人", 	ST.SummonNPC_4001007,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤萨满雕文商人", 	ST.SummonNPC_4001008,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤术士雕文商人", 	ST.SummonNPC_4001009,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤死骑雕文商人", 	ST.SummonNPC_4001010,	GOSSIP_ICON_TRAINER},
-        {FUNC, "召唤战士雕文商人", 	ST.SummonNPC_4001011,	GOSSIP_ICON_TRAINER},
+		{FUNC, "召唤综合杂货商（双阵营）", ST.SummonNPCGeneralVendor, GOSSIP_ICON_VENDOR},
+		{FUNC, "召唤施法材料与常用毒药商（双阵营）", ST.SummonNPCWarlockVendor, GOSSIP_ICON_VENDOR},
+		{FUNC, "召唤全等级毒药商（双阵营）", ST.SummonNPCPoisonVendor, GOSSIP_ICON_VENDOR},
+		{FUNC, "召唤猎人弓箭与枪弹商（双阵营）", ST.SummonNPCHunterAmmoVendor, GOSSIP_ICON_VENDOR},
+		{FUNC, "召唤兽栏管理员（5分钟）", ST.SummonNPC_28690, GOSSIP_ICON_TRAINER},
 	 {MENU, "上一页", TBMENU+0x20,GOSSIP_ICON_BATTLE},
 			},
 [ENCMENU]={-- Enchanter 附魔
@@ -4511,6 +5075,72 @@ local Menu={
 	},
 }
 
+-- 阶段58：等级按钮和装备按钮由数据生成，避免手写几十个重复函数。
+for _,target in ipairs({10,20,30,40,50,60,70,80,100,120,150,180,200,220,255}) do
+	table.insert(Menu[STAGE58LEVELMENU],{
+		FUNC,
+		"|TInterface/ICONS/Achievement_Level_80:35:35|t升到"..target.."级",
+		Stone["Stage58Level"..target],
+		GOSSIP_ICON_TRAINER,
+		false,
+		"只会向上升级，不降级。确认升到"..target.."级？"
+	})
+end
+
+local Stage58GearMenus={
+	[60]=STAGE58GEAR60MENU,
+	[70]=STAGE58GEAR70MENU,
+	[80]=STAGE58GEAR80MENU,
+}
+local Stage58ClassNames={
+	[1]="战士",[2]="圣骑士",[3]="猎人",[4]="潜行者",[5]="牧师",
+	[6]="死亡骑士",[7]="萨满祭司",[8]="法师",[9]="术士",[11]="德鲁伊",
+}
+for tier,menuId in pairs(Stage58GearMenus) do
+	local tierData=(Stage58Data.gear or {})[tier] or {}
+	for classId,sets in pairs(tierData) do
+		for setIndex,setData in ipairs(sets) do
+			-- 数据来源的英文套装名有部分编码损坏；菜单统一生成稳定中文名。
+			setData.name=tier.."级"..(Stage58ClassNames[classId] or ("职业"..classId)).."测试套装"..setIndex
+			local fixedSet=setData
+			table.insert(Menu[menuId],{
+				FUNC,
+				"|TInterface/ICONS/INV_Chest_Plate10:35:35|t"..fixedSet.name,
+				function(player) Stage58GiveGearSet(player,fixedSet) end,
+				GOSSIP_ICON_VENDOR,
+				false,
+				"装备只放入背包，不删除、不替换当前装备。确认领取"..fixedSet.name.."？",
+				0,
+				classId -- 第8字段：只向这个职业显示
+			})
+		end
+	end
+end
+
+-- 阶段48：6~25号个人传送点采用每页5个槽位，避免单页20组按钮过长。
+-- 这些点沿用现有acore_characters.tp表，不建立老外脚本的ac_eluna.binding_menu表。
+local personalPointPages={
+	{menuId=PERSONALPOINTMENU+0x1,first=6,last=10,previous=TBMENU+0x10,next=PERSONALPOINTMENU+0x2},
+	{menuId=PERSONALPOINTMENU+0x2,first=11,last=15,previous=PERSONALPOINTMENU+0x1,next=PERSONALPOINTMENU+0x3},
+	{menuId=PERSONALPOINTMENU+0x3,first=16,last=20,previous=PERSONALPOINTMENU+0x2,next=PERSONALPOINTMENU+0x4},
+	{menuId=PERSONALPOINTMENU+0x4,first=21,last=25,previous=PERSONALPOINTMENU+0x3},
+}
+
+for _,page in ipairs(personalPointPages) do
+	local rows={}
+	for slot=page.first,page.last do
+		table.insert(rows,{FUNC,"|TInterface/ICONS/Spell_Arcane_TeleportStormWind:35:35|t记录"..slot.."号点",Stone["TBPoint"..slot],GOSSIP_ICON_TAXI,false,"确认用当前位置覆盖个人传送点"..slot.."？"})
+		table.insert(rows,{FUNC,"|TInterface/ICONS/Spell_Arcane_PortalShattrath:35:35|t传到"..slot.."号点（测试免费）",Stone["TTPoint"..slot],GOSSIP_ICON_TAXI,false,"确认传送到个人传送点"..slot.."？"})
+	end
+	if page.previous then
+		table.insert(rows,{MENU,"上一页",page.previous,GOSSIP_ICON_BATTLE})
+	end
+	if page.next then
+		table.insert(rows,{MENU,"下一页",page.next,GOSSIP_ICON_TAXI})
+	end
+	Menu[page.menuId]=rows
+end
+
 local function Enchanting(player, EncSpell, Eid, money) --附魔 (玩家,附魔效果,附魔位置)
 	local ID=Eid
 	local Nowitem = player:GetEquippedItemBySlot(ID)--得到相应位置物品
@@ -4547,6 +5177,21 @@ end
 
 function Stone.AddGossip(player, item, id)
 	player:GossipClearMenu()--清除菜单
+	if (id==TESTMENU or id==TESTFACILITYMENU) and player:GetGMRank()<3 then
+		player:SendBroadcastMessage("前期开发测试工具仅限管理员GM等级3使用。")
+		Stone.AddGossip(player,item,MMENU)
+		return
+	end
+	local Stage58ProtectedMenus={
+		[STAGE58MENU]=true,[STAGE58LEVELMENU]=true,[STAGE58SKILLMENU]=true,
+		[STAGE58COLLECTIONMENU]=true,[STAGE58GEARMENU]=true,
+		[STAGE58GEAR60MENU]=true,[STAGE58GEAR70MENU]=true,[STAGE58GEAR80MENU]=true,
+	}
+	if Stage58ProtectedMenus[id] and player:GetGMRank()<3 then
+		player:SendBroadcastMessage("阶段58全功能测试面板仅限GM等级3。")
+		Stone.AddGossip(player,item,MMENU)
+		return
+	end
 	local Rows=Menu[id] or {}
 
 	local Pteam=player:GetTeam()
@@ -4560,16 +5205,23 @@ function Stone.AddGossip(player, item, id)
 	for k, v in pairs(Rows) do
 		local mtype,text,icon,intid=v[1],( v[2] or "???" ), (v[4] or GOSSIP_ICON_CHAT), (id*0x100+k)
 		if(mtype==MENU)then
-			player:GossipMenuAddItem(icon, text, 0, (v[3] or id )*0x100)
+			local targetMenu=v[3] or id
+			local canOpenStage48=(targetMenu~=TESTMENU and targetMenu~=TESTFACILITYMENU) or player:GetGMRank()>=3
+			local canOpenStage58=(not Stage58ProtectedMenus[targetMenu]) or player:GetGMRank()>=3
+			if canOpenStage48 and canOpenStage58 then
+				player:GossipMenuAddItem(icon, text, 0, targetMenu*0x100)
+			end
 		elseif(mtype==FUNC or mtype==ENC)then
-			local code,msg,money=v[5],(v[6]or ""), (v[7] or 0)
+			local code,msg,money,requiredClass=v[5],(v[6]or ""),(v[7] or 0),v[8]
 			if(mtype==ENC)then
 				icon=GOSSIP_ICON_TABARD
 			end
-			if((code==true or code ==false))then
-				player:GossipMenuAddItem(icon, text, money, intid, code, msg, money)
-			else
-				player:GossipMenuAddItem(icon, text, 0, intid)
+			if not requiredClass or requiredClass==player:GetClass() then
+				if((code==true or code ==false))then
+					player:GossipMenuAddItem(icon, text, money, intid, code, msg, money)
+				else
+					player:GossipMenuAddItem(icon, text, 0, intid)
+				end
 			end
 		elseif(mtype==TP)then
 			local mteam,level,money=(v[8] or TEAM_NONE),(v[9] or 0),(v[10] or 0)
@@ -4589,10 +5241,10 @@ function Stone.AddGossip(player, item, id)
 	if(id ~= MMENU)then--添加返回主菜单
 		player:GossipMenuAddItem(GOSSIP_ICON_CHAT,"主菜单", 0, MMENU*0x100)
 	else
-		if(player:GetGMRank()>=4)then--是GM
+		if(player:GetGMRank()>=3)then--是管理员GM
 			player:GossipMenuAddItem(GOSSIP_ICON_TRAINER,"|TInterface/ICONS/Trade_Engraving:35:35|t双重附魔", 0, ENCMENU*0x100)
         end
-		if(player:GetGMRank()>=4)then--是GM
+		if(player:GetGMRank()>=3)then--是管理员GM
 			player:GossipMenuAddItem(GOSSIP_ICON_CHAT,"|TInterface/ICONS/Mail_GMIcon:35:35|tGM※专用", 0, GMMENU*0x100)
 		end
 

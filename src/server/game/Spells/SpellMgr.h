@@ -467,7 +467,8 @@ public:
         auras.clear();
     }
 
-    PetAura(uint32 petEntry, uint32 aura, bool _removeOnChangePet, int _damage) :
+    PetAura(uint32 sourceSpell, uint8 sourceEffect, uint32 petEntry, uint32 aura, bool _removeOnChangePet, int _damage) :
+        sourceSpellId(sourceSpell), sourceEffectIndex(sourceEffect),
         removeOnChangePet(_removeOnChangePet), damage(_damage)
     {
         auras[petEntry] = aura;
@@ -499,8 +500,13 @@ public:
         return damage;
     }
 
+    [[nodiscard]] uint32 GetSourceSpellId() const { return sourceSpellId; }
+    [[nodiscard]] uint8 GetSourceEffectIndex() const { return sourceEffectIndex; }
+
 private:
     PetAuraMap auras;
+    uint32 sourceSpellId{0};
+    uint8 sourceEffectIndex{0};
     bool removeOnChangePet{false};
     int32 damage{0};
 };

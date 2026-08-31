@@ -172,6 +172,24 @@ class SpellDraftDkMode_PlayerScript : public PlayerScript
 public:
     SpellDraftDkMode_PlayerScript() : PlayerScript("SpellDraftDkMode_PlayerScript") { }
 
+    static void ActivateDraftDeathKnight(Player* player)
+    {
+        if (!player || player->getClass() != CLASS_DEATH_KNIGHT)
+            return;
+
+        uint32 guid = player->GetGUID().GetCounter();
+        QueryResult result = CharacterDatabase.Query(
+            "SELECT mode FROM spelldraft_character_mode WHERE guid = {} LIMIT 1", guid);
+        if (!result || result->Fetch()[0].Get<uint8>() != 2)
+            return;
+
+        {
+            std::lock_guard<std::mutex> guard(DraftDeathKnightsLock);
+            DraftDeathKnights.insert(guid);
+        }
+        EnsureDraftDkStarterOutfit(player);
+    }
+
     void OnPlayerLogin(Player* player) override
     {
         uint32 guid = player->GetGUID().GetCounter();
@@ -179,19 +197,16 @@ public:
             std::lock_guard<std::mutex> guard(DraftDeathKnightsLock);
             DraftDeathKnights.erase(guid);
         }
-        if (player->getClass() != CLASS_DEATH_KNIGHT)
-            return;
+        ActivateDraftDeathKnight(player);
+    }
 
-        QueryResult result = CharacterDatabase.Query(
-            "SELECT mode FROM spelldraft_character_mode WHERE guid = {} LIMIT 1", guid);
-        if (result && result->Fetch()[0].Get<uint8>() == 2)
-        {
-            {
-                std::lock_guard<std::mutex> guard(DraftDeathKnightsLock);
-                DraftDeathKnights.insert(guid);
-            }
-            EnsureDraftDkStarterOutfit(player);
-        }
+    void OnPlayerLevelChanged(Player* player, uint8 /*oldLevel*/) override
+    {
+        // Hot mode selection writes mode=2 before Lua converts the fresh DK
+        // from level 55 to level 1.  The level hook therefore supplies the same
+        // scaling-cache and starter-outfit work that previously required relog.
+        if (player && player->GetLevel() == 1)
+            ActivateDraftDeathKnight(player);
     }
 
     void OnPlayerLogout(Player* player) override

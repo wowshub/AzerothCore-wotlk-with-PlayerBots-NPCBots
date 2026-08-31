@@ -572,7 +572,20 @@ void WorldSession::SendLfgUpdateProposal(lfg::LfgProposal const& proposal)
     for (lfg::LfgProposalPlayerContainer::const_iterator it = proposal.players.begin(); it != proposal.players.end(); ++it)
     {
         lfg::LfgProposalPlayer const& player = it->second;
-        data << uint32(player.role);                       // Role
+        // The 3.3.5 client turns a zero or multi-role proposal value into the
+        // string "UNKNOWN" and its stock LFGFrame then raises a Lua error.
+        // Proposals should already contain one assigned combat role, but bot
+        // replacement/requeue transitions can briefly leave an invalid value.
+        // Normalize only the outgoing packet; keep the leader flag intact.
+        uint8 proposalRole = player.role;
+        uint8 combatRole = proposalRole & (lfg::PLAYER_ROLE_TANK | lfg::PLAYER_ROLE_HEALER | lfg::PLAYER_ROLE_DAMAGE);
+        if (combatRole != lfg::PLAYER_ROLE_TANK && combatRole != lfg::PLAYER_ROLE_HEALER && combatRole != lfg::PLAYER_ROLE_DAMAGE)
+        {
+            LOG_ERROR("lfg", "LFG proposal {} contained invalid role {} for {}; sending DAMAGE fallback",
+                proposal.id, uint32(player.role), it->first.ToString());
+            proposalRole = (proposalRole & lfg::PLAYER_ROLE_LEADER) | lfg::PLAYER_ROLE_DAMAGE;
+        }
+        data << uint32(proposalRole);                      // Role
         data << uint8(it->first == guid);                  // Self player
         if (!player.group)                                 // Player not it a group
         {

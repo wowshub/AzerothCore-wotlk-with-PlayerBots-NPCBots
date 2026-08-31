@@ -34,6 +34,93 @@ local DUPLICATE_RACIAL_GROUPS = {
     [28730] = { 28730, 25046, 50613 }
 }
 
+local STARTER_TOME_ITEM_ID = 25462
+
+-- A.30: The starter Tome must be tied to Random Draft mode, not to a race
+-- whitelist or to whether prestige_stats happened to exist first.  The mode
+-- picker can create prestige_stats before this login handler runs, which made
+-- the old "new prestige row only" grant silently skip custom races.
+--
+-- This durable receipt also prevents relogging, consuming or selling the Tome
+-- from granting another copy.  If the inventory is full, no receipt is written
+-- and the next login safely retries.
+CharDBQuery([[
+    CREATE TABLE IF NOT EXISTS `spelldraft_starter_tome_grant` (
+        `guid` INT UNSIGNED NOT NULL,
+        `item_id` INT UNSIGNED NOT NULL DEFAULT 25462,
+        `granted_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`guid`),
+        CONSTRAINT `fk_spelldraft_starter_tome_character`
+            FOREIGN KEY (`guid`) REFERENCES `characters` (`guid`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+]])
+
+local function SendStarterTomeMessage(player, bagFull)
+    local language = "enUS"
+    if type(SpellDraft_GetPlayerLanguage) == "function" then
+        language = SpellDraft_GetPlayerLanguage(player)
+    elseif player.GetDbLocaleIndex ~= nil then
+        local locale = player:GetDbLocaleIndex()
+        if locale == 4 or locale == 5 then language = "zhCN" end
+    end
+
+    if bagFull then
+        if language == "zhCN" then
+            player:SendBroadcastMessage("|cffff4444背包空间不足，天赋之书尚未发放。清出一个空格后重新登录即可自动补发。|r")
+        else
+            player:SendBroadcastMessage("|cffff4444Your bags are full. Free one slot and log in again to receive the Tome of Talents.|r")
+        end
+        return
+    end
+
+    if language == "zhCN" then
+        player:SendBroadcastMessage("你获得了 |cff00ccff天赋之书|r！保存至10级后使用，可从三项珍贵特殊天赋中选择一项。")
+    else
+        player:SendBroadcastMessage("You have been granted a |cff00ccffTome of Talents|r! Save it until level 10, then choose one of three rare special talents.")
+    end
+end
+
+local function EnsureStarterTomeGrant(player)
+    if not player or not player:IsInWorld() or IsBotPlayer(player) then return end
+    if not IsRandomDraftMode(player) then return end
+
+    local guid = player:GetGUIDLow()
+    local receipt = CharDBQuery("SELECT 1 FROM spelldraft_starter_tome_grant WHERE guid = " .. guid .. " LIMIT 1")
+    if receipt then return end
+
+    -- Characters already holding a Tome are legacy successful grants.  Record
+    -- the receipt without adding a duplicate; include bank storage in the check.
+    if player:HasItem(STARTER_TOME_ITEM_ID, 1, true) then
+        CharDBQuery(string.format(
+            "INSERT IGNORE INTO spelldraft_starter_tome_grant (guid, item_id) VALUES (%d, %d)",
+            guid, STARTER_TOME_ITEM_ID))
+        return
+    end
+
+    local item = player:AddItem(STARTER_TOME_ITEM_ID, 1)
+    if not item then
+        SendStarterTomeMessage(player, true)
+        return
+    end
+
+    -- Write the receipt immediately after AddItem succeeds.  From this point on
+    -- consuming or deleting the book never makes the character eligible again.
+    CharDBQuery(string.format(
+        "INSERT IGNORE INTO spelldraft_starter_tome_grant (guid, item_id) VALUES (%d, %d)",
+        guid, STARTER_TOME_ITEM_ID))
+    SendStarterTomeMessage(player, false)
+end
+
+local function ScheduleStarterTomeGrant(player)
+    local guid = player:GetGUIDLow()
+    CreateLuaEvent(function()
+        local p = GetPlayerByGUID(guid)
+        if p and p:IsInWorld() then
+            EnsureStarterTomeGrant(p)
+        end
+    end, 2500, 1)
+end
+
 local draftStateCache = {}
 
 function SpellDraft_SetDraftStateCache(guid, state)
@@ -71,22 +158,16 @@ end
 local function ApplyDraftPowerTypes(player)
     if not player or not player:IsInWorld() then return end
 
-    player:SetMaxPower(1, 1000) -- Rage (WoW scales Rage by 10, so 1000 = 100 Rage in UI)
-    player:SetMaxPower(3, 100)  -- Energy (1-to-1 scaling)
-    player:SetMaxPower(6, 1000) -- Runic Power (WoW scales Runic Power by 10, so 1000 = 100 RP in UI)
-
-    -- Mana: ensure all characters have at least the baseline custom mana pool
-    local intellect = player:GetStat(3) or 20
-    local level = player:GetLevel() or 1
-    local customMana = 150 + level * 50 + intellect * 15
-    if player:GetMaxPower(0) < customMana then
-        player:SetMaxPower(0, customMana)
-        player:SetPower(customMana, 0) -- Initialize starting mana
-    end
-
-    -- Force Rage display to keep UI clean, letting client show native Health, Rage, and Mana
-    if player:GetPowerType() ~= 1 then
-        player:SetPowerType(1) -- Force Rage display
+    -- B0.9: allocate only resources required by this character's drafted
+    -- spells. Classic mode never reaches this function, and the compatibility
+    -- registry also fails closed outside Random Draft / Free Pick.
+    if type(SpellDraft_SyncResourceCompatibility) == "function" then
+        SpellDraft_SyncResourceCompatibility(player, "core")
+    else
+        -- Safe compatibility fallback for servers that have not installed the
+        -- registry file yet. Do not reintroduce universal Runic Power here.
+        player:SetMaxPower(1, 1000)
+        player:SetMaxPower(3, 100)
     end
 end
 
@@ -105,8 +186,10 @@ local function StartDraftPowerTicker(player)
             return
         end
 
-        if p:GetPowerType() ~= 1 then
-            p:SetPowerType(1)  -- Force Rage display
+        local preferred = type(SpellDraft_GetPreferredPowerType) == "function"
+            and SpellDraft_GetPreferredPowerType(p) or nil
+        if preferred ~= nil and p:GetPowerType() ~= preferred then
+            p:SetPowerType(preferred)
         end
     end, 2000, 0)
 
@@ -380,11 +463,98 @@ local function EnsurePrestigeEntry(_, player)
             ApplyDraftPowerTypes(p)
             StartDraftPowerTicker(p)
 
-            -- Grant Tome of Talents
-            p:AddItem(25462, 1)
-            p:SendBroadcastMessage("You have been granted a |cff00ccffTome of Talents|r! Use it to draft your first passive talent.")
         end, 2000, 1)
     end
+
+    -- Run for every Random Draft login path, including characters whose
+    -- prestige_stats row was created early by the mode-selection handshake.
+    ScheduleStarterTomeGrant(player)
+end
+
+-- A.31: one public runtime entry for both normal login and in-world mode
+-- selection.  The legacy worker above remains the single implementation of
+-- prestige-row creation, class-spell cleanup, proficiencies, racials, powers,
+-- ticker startup and the durable starter-tome grant.
+local draftRuntimeRuns = {}
+local draftRuntimeReady = {}
+
+function SpellDraft_IsDraftRuntimeReady(playerOrGuid)
+    local guid = type(playerOrGuid) == "number" and playerOrGuid
+        or (playerOrGuid and playerOrGuid:GetGUIDLow())
+    return guid and draftRuntimeReady[guid] == true or false
+end
+
+local function FinishDraftRuntime(guid, ok, result)
+    draftRuntimeReady[guid] = ok == true
+    local callbacks = draftRuntimeRuns[guid]
+    draftRuntimeRuns[guid] = nil
+    if not callbacks then return end
+    for _, callback in ipairs(callbacks) do
+        if type(callback) == "function" then
+            local callbackOk, callbackError = pcall(callback, ok, result)
+            if not callbackOk then
+                print("[SpellDraft/A.31] Runtime callback failed for " .. guid .. ": " .. tostring(callbackError))
+            end
+        end
+    end
+end
+
+function SpellDraft_EnsureDraftRuntime(player, options, callback)
+    if not player or not player:IsInWorld() or IsBotPlayer(player) then
+        if type(callback) == "function" then callback(false, "invalid_player") end
+        return false
+    end
+    if not IsRandomDraftMode(player) then
+        draftStateCache[player:GetGUIDLow()] = false
+        if type(callback) == "function" then callback(false, "not_random_draft") end
+        return false
+    end
+
+    local guid = player:GetGUIDLow()
+    if draftRuntimeRuns[guid] then
+        if type(callback) == "function" then table.insert(draftRuntimeRuns[guid], callback) end
+        return true
+    end
+    draftRuntimeRuns[guid] = {}
+    draftRuntimeReady[guid] = false
+    if type(callback) == "function" then table.insert(draftRuntimeRuns[guid], callback) end
+
+    local ok, runtimeError = pcall(EnsurePrestigeEntry, nil, player)
+    if not ok then
+        if type(SpellDraft_SetSystemLearning) == "function" then
+            SpellDraft_SetSystemLearning(guid, false)
+        end
+        print("[SpellDraft/A.31] Runtime start failed for " .. guid .. ": " .. tostring(runtimeError))
+        FinishDraftRuntime(guid, false, "runtime_start_failed")
+        return false
+    end
+
+    -- The existing worker intentionally performs Player-object changes after
+    -- 2-3 seconds.  Verify its authoritative DB state only after that work has
+    -- settled; all concurrent callers share this one completion point.
+    CreateLuaEvent(function()
+        local current = GetPlayerByGUID(guid)
+        if type(SpellDraft_SetSystemLearning) == "function" then
+            SpellDraft_SetSystemLearning(guid, false)
+        end
+        if not current or not current:IsInWorld() then
+            FinishDraftRuntime(guid, false, "player_left_world")
+            return
+        end
+        local state = CharDBQuery(
+            "SELECT draft_state FROM prestige_stats WHERE player_id = " .. guid .. " LIMIT 1")
+        if not state or state:GetUInt32(0) ~= 1 then
+            FinishDraftRuntime(guid, false, "runtime_state_missing")
+            return
+        end
+        draftStateCache[guid] = true
+        FinishDraftRuntime(guid, true, "draft")
+    end, 3400, 1)
+    return true
+end
+
+local function OnDraftRuntimeLogin(_, player)
+    SpellDraft_EnsureDraftRuntime(player, { source = "login" })
 end
 
 
@@ -405,6 +575,7 @@ local function OnPlayerLogout(_, player)
 
 
     draftStateCache[guid] = nil
+    draftRuntimeReady[guid] = nil
 end
 
 local function OnLevelUp(event, player, oldLevel)
@@ -447,7 +618,7 @@ end
 -- Register only valid events
 RegisterPlayerEvent(4, OnPlayerLogout)
 RegisterPlayerEvent(13, OnLevelUp)  -- 13 = PLAYER_EVENT_ON_LEVEL_CHANGE
-RegisterPlayerEvent(3, EnsurePrestigeEntry)   -- On login
+RegisterPlayerEvent(3, OnDraftRuntimeLogin)   -- On login and shared hot runtime
 RegisterPlayerEvent(13, OnRebuildEvent)       -- On level change
 RegisterPlayerEvent(28, OnRebuildEvent)       -- On map change
 RegisterPlayerEvent(35, OnRebuildEvent)       -- On repop

@@ -9,6 +9,7 @@
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "CharmInfo.h"
+#include "Config.h"
 #include "DBCStores.h"
 #include "Map.h"
 #include "MotionMaster.h"
@@ -39,6 +40,51 @@
 
 namespace
 {
+    uint32 MaxActiveSummons = 2;
+    uint32 MasterDemonologistBuffMode = 1;
+
+    struct MasterDemonologistRank
+    {
+        uint32 parent;
+        uint32 imp;
+        uint32 voidwalker;
+        uint32 succubus;
+        uint32 felhunter;
+        uint32 felguard;
+    };
+
+    // Highest rank first.  Mode 0 retains only the primary demon's branch;
+    // mode 1 permits one current-rank branch per active demon.  Lower-rank
+    // leftovers are removed in both modes.
+    static constexpr MasterDemonologistRank MasterDemonologistRanks[] = {
+        { 23825, 23829, 23844, 23836, 23840, 35706 },
+        { 23824, 23828, 23843, 23835, 23839, 35705 },
+        { 23823, 23827, 23842, 23834, 23838, 35704 },
+        { 23822, 23826, 23841, 23833, 23837, 35703 },
+        { 23785, 23759, 23760, 23761, 23762, 35702 }
+    };
+
+    uint32 GetMasterDemonologistAura(MasterDemonologistRank const& rank, uint32 entry)
+    {
+        switch (entry)
+        {
+            case 416:   return rank.imp;
+            case 1860:  return rank.voidwalker;
+            case 1863:  return rank.succubus;
+            case 417:   return rank.felhunter;
+            case 17252: return rank.felguard;
+            default:    return 0;
+        }
+    }
+
+    MasterDemonologistRank const* GetMasterDemonologistRank(Player const* owner)
+    {
+        for (MasterDemonologistRank const& rank : MasterDemonologistRanks)
+            if (owner->HasAura(rank.parent) || owner->HasSpell(rank.parent))
+                return &rank;
+        return nullptr;
+    }
+
     // Summon spells this module intercepts. Keep in sync with
     // data/sql/db-world/base/multiclass_summons.sql.
     bool IsMulticlassSummonSpell(uint32 spellId)
@@ -244,6 +290,7 @@ namespace
 
             PlayerSummons& ps = _players[owner->GetGUID()];
             RemoveEntry(owner, ps, entry);
+            MakeRoomForNewSummon(owner, ps);
 
             bool const primary = owner->GetPetGUID().IsEmpty();
             float const followAngle = FollowAngleForIndex(ps.list.size());
@@ -390,6 +437,80 @@ namespace
                 ps.list.end());
         }
 
+        void MakeRoomForNewSummon(Player* owner, PlayerSummons& ps)
+        {
+            uint32 const limit = std::clamp<uint32>(MaxActiveSummons, 1, 8);
+            while (ps.list.size() >= limit)
+            {
+                // Preserve the visible/pet-bar primary when possible and replace
+                // the oldest side summon.  At limit 1 this naturally restores
+                // classic single-summon replacement behaviour.
+                auto victim = std::find_if(ps.list.begin(), ps.list.end(),
+                    [](ActiveSummon const& summon) { return !summon.primary; });
+                if (victim == ps.list.end())
+                    victim = ps.list.begin();
+                Unsummon(owner, victim->guid);
+                ps.list.erase(victim);
+            }
+        }
+
+        void EnforceSummonLimit(Player* owner, PlayerSummons& ps)
+        {
+            uint32 const limit = std::clamp<uint32>(MaxActiveSummons, 1, 8);
+            while (ps.list.size() > limit)
+            {
+                auto victim = std::find_if(ps.list.begin(), ps.list.end(),
+                    [](ActiveSummon const& summon) { return !summon.primary; });
+                if (victim == ps.list.end())
+                    victim = ps.list.begin();
+                Unsummon(owner, victim->guid);
+                ps.list.erase(victim);
+            }
+        }
+
+        void ApplyMasterDemonologistPolicy(Player* owner, PlayerSummons const& ps)
+        {
+            // Mode 1 deliberately keeps the native aura produced by every
+            // active demon.  Do not periodically delete any branch here:
+            // PetAura will immediately project a valid branch again and the
+            // delete/reapply loop makes the client buff icon flicker forever.
+            // Core rank-chain de-duplication already removes obsolete ranks.
+            if (MasterDemonologistBuffMode == 1)
+                return;
+
+            MasterDemonologistRank const* current = GetMasterDemonologistRank(owner);
+            std::vector<uint32> allowed;
+
+            if (current)
+            {
+                if (MasterDemonologistBuffMode == 0)
+                {
+                    auto primary = std::find_if(ps.list.begin(), ps.list.end(),
+                        [](ActiveSummon const& summon) { return summon.primary; });
+                    if (primary == ps.list.end() && !ps.list.empty())
+                        primary = ps.list.begin();
+                    if (primary != ps.list.end())
+                        if (uint32 aura = GetMasterDemonologistAura(*current, primary->entry))
+                            allowed.push_back(aura);
+                }
+                else
+                {
+                    for (ActiveSummon const& summon : ps.list)
+                        if (uint32 aura = GetMasterDemonologistAura(*current, summon.entry))
+                            if (std::find(allowed.begin(), allowed.end(), aura) == allowed.end())
+                                allowed.push_back(aura);
+                }
+            }
+
+            for (MasterDemonologistRank const& rank : MasterDemonologistRanks)
+            {
+                uint32 const auraIds[] = { rank.imp, rank.voidwalker, rank.succubus, rank.felhunter, rank.felguard };
+                for (uint32 auraId : auraIds)
+                    if (std::find(allowed.begin(), allowed.end(), auraId) == allowed.end())
+                        owner->RemoveAurasDueToSpell(auraId);
+            }
+        }
+
         void Reconcile(Player* owner, PlayerSummons& ps)
         {
             // Drop summons that have died or despawned.
@@ -400,6 +521,9 @@ namespace
                     return !creature || !creature->IsAlive();
                 }),
                 ps.list.end());
+
+            EnforceSummonLimit(owner, ps);
+            ApplyMasterDemonologistPolicy(owner, ps);
 
             // Re-inherit owner gear/stats on every live guardian (~1s). Warlock summons would
             // track on their own; mage/DK ones would freeze at summon-time values without this.
@@ -722,7 +846,21 @@ public:
 class MulticlassSummonWorldScript : public WorldScript
 {
 public:
-    MulticlassSummonWorldScript() : WorldScript("MulticlassSummonWorldScript") { }
+    MulticlassSummonWorldScript() : WorldScript("MulticlassSummonWorldScript", {
+        WORLDHOOK_ON_BEFORE_CONFIG_LOAD,
+        WORLDHOOK_ON_STARTUP
+    }) { }
+
+    void OnBeforeConfigLoad(bool /*reload*/) override
+    {
+        MaxActiveSummons = std::clamp<uint32>(
+            sConfigMgr->GetOption<uint32>("MulticlassSummons.MaxActive", 2), 1, 8);
+        MasterDemonologistBuffMode = std::min<uint32>(
+            sConfigMgr->GetOption<uint32>("MulticlassSummons.MasterDemonologistBuffMode", 1), 1);
+        LOG_INFO("module.multiclass_pet_fix",
+            "Multiclass summons config: MaxActive={}, MasterDemonologistBuffMode={}",
+            MaxActiveSummons, MasterDemonologistBuffMode);
+    }
 
     // Allow these summons to be cast while another pet is already active. Without
     // SPELL_ATTR1_DISMISS_PET_FIRST, Spell::CheckCast rejects a SUMMON_PET (or a

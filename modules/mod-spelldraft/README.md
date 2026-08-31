@@ -301,18 +301,21 @@ The Prestige Shop inventory, item details, and token costs are defined and can b
 
 ---
 
-### Database-Level Loot Tuning
+### Consumable Loot Tuning
 
-Because loot tables are applied once to the database during server startup/migration, drop rates are configured directly within the SQL files rather than the Lua config. 
+Scrolls still use static database loot tables. Lost Grimoire and Tome of Talents
+use personal-drop Lua controllers so mode isolation and level-difference guards can
+be applied before an item is awarded.
 
-To tune these drop rates, edit the `Chance` columns at the bottom of [05_prestige_draft_items.sql](data/sql/db-world/base/05_prestige_draft_items.sql) and the matching update statements in [08_consumable_id_swap.sql](data/sql/db-world/base/08_consumable_id_swap.sql).
+Lost Grimoire rates and level bands are configured in
+`conf/mod_spelldraft.conf` under `SpellDraft.LostGrimoire.*`.
 
 | Item | Default (Normal/Elite) | Default (Bosses) | Location in SQL |
 | :--- | :--- | :--- | :--- |
 | **Scroll of Reroll** (`4427`) | `0.6%` | `10.0%` | `05_prestige_draft_items.sql` / `08_consumable_id_swap.sql` |
 | **Scroll of Ban** (`1078`) | `0.6%` | `10.0%` | `05_prestige_draft_items.sql` / `08_consumable_id_swap.sql` |
-| **Lost Grimoire** (`13149`) | `0.1%` | `5.0%` | `05_prestige_draft_items.sql` |
-| **Tome of Talents** (`25462`) | `1.0%` | `15.0%` | `05_prestige_draft_items.sql` |
+| **Lost Grimoire** (`13149`) | `0.1%` | `5.0%` | `mod_spelldraft.conf` / `spelldraft_grimoire_drops.lua` |
+| **Tome of Talents** (`25462`) | `0.5%` | `5.0%` | `spelldraft_tome_drops.lua` |
 
 
 ## GM Commands for Testing Consumable Items

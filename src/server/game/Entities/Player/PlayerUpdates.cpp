@@ -1859,8 +1859,26 @@ void Player::UpdateTitansGrip()
 {
     // 10% damage reduce if 2x2h weapons are used
     if (!CanTitanGrip())
+    {
         RemoveAurasDueToSpell(49152);
-    else if (Aura* aur = GetAura(49152))
+        return;
+    }
+
+    // Titan's Grip applies its native penalty aura when the talent effect is
+    // first processed. During a cross-class equipment swap the client can
+    // temporarily pass through an invalid hand layout, which removes 49152.
+    // Stock code only recalculated an existing aura, leaving the final valid
+    // dual-wield layout permanently unpenalized. Restore the original aura
+    // entry when the capability is still owned, then let the native amount
+    // calculation decide between 0% and -10% from the equipped weapons.
+    Aura* aur = GetAura(49152);
+    if (!aur)
+    {
+        CastSpell(this, 49152, true);
+        aur = GetAura(49152);
+    }
+
+    if (aur)
         aur->RecalculateAmountOfEffects();
 }
 

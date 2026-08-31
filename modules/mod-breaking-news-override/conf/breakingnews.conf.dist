@@ -1,0 +1,25 @@
+[worldserver]
+
+# Master switch for the complete Breaking News feature.
+BreakingNews.Enable = 1
+
+# Shared display mode. Keep the same value in the client-side
+# Interface/GlueXML/BreakingNewsLoginConfig.lua file:
+# 0 = disabled, 1 = login only, 2 = character selection only, 3 = both.
+BreakingNews.DisplayMode = 3
+
+# Character-selection page title. Single quotes and backslashes are escaped.
+BreakingNews.CharacterTitle = "Newest updates 最新更新"
+
+# Relative paths are resolved from the worldserver.exe directory on Windows.
+BreakingNews.CharacterHtmlPath = "./breakingnews_character.html"
+
+# 1 = load HTML once during startup/reload; 0 = reload before each delivery.
+BreakingNews.Cache = 1
+
+# Log extra information while diagnosing. Keep 0 in production.
+BreakingNews.Verbose = 0
+
+# Retry every 100 ms until Warden is ready, for at most 15 seconds.
+BreakingNews.RetryIntervalMs = 100
+BreakingNews.RetryWindowMs = 15000

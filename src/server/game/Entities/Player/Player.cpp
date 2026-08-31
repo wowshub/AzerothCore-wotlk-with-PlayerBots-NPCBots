@@ -1858,8 +1858,12 @@ void Player::RegenerateAll()
 
     Regenerate(POWER_MANA);
 
-    // Runes act as cooldowns, and they don't need to send any data
-    if (IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY))
+    // Rune slots are native Death Knight state. Classless characters may expose
+    // POWER_RUNIC_POWER through SpellDraft, but they do not own Player::m_runes.
+    // Never use the power-type bridge as proof that native rune storage exists.
+    bool const usesNativeRunes = IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY);
+    bool const usesRunicPower = usesNativeRunes || HasActivePowerType(POWER_RUNIC_POWER);
+    if (usesNativeRunes)
         for (uint8 i = 0; i < MAX_RUNES; ++i)
         {
             // xinef: implement grace
@@ -1889,7 +1893,7 @@ void Player::RegenerateAll()
         }
 
         Regenerate(POWER_RAGE);
-        if (IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY))
+        if (usesRunicPower)
             Regenerate(POWER_RUNIC_POWER);
 
         m_regenTimerCount -= 2000;
@@ -3940,7 +3944,7 @@ bool Player::resetTalents(bool noResetCost)
     }
 
     // xinef: remove titan grip if player had it set
-    if (m_canTitanGrip)
+    if (m_canTitanGrip && !HasSpell(46917))
         SetCanTitanGrip(false);
     // xinef: remove dual wield if player does not have dual wield spell (shamans)
     if (!HasSpell(674) && CanDualWield())
@@ -14334,6 +14338,11 @@ void Player::LearnTalent(uint32 talentId, uint32 talentRank, bool command /*= fa
 {
     uint32 CurTalentPoints = GetFreeTalentPoints();
 
+    // Rank bounds protect the DBC RankID array for both normal purchases and
+    // forced classless calls.  command only bypasses gameplay restrictions.
+    if (talentRank >= MAX_TALENT_RANK)
+        return;
+
     if (!command)
     {
         // xinef: check basic data
@@ -14342,17 +14351,17 @@ void Player::LearnTalent(uint32 talentId, uint32 talentRank, bool command /*= fa
             return;
         }
 
-        if (talentRank >= MAX_TALENT_RANK)
-        {
-            return;
-        }
     }
 
     TalentEntry const* talentInfo = sTalentStore.LookupEntry(talentId);
     if (!talentInfo)
         return;
 
-    if (!sScriptMgr->OnPlayerCanLearnTalent(this, talentInfo, talentRank))
+    // Forced/scripted talents are used by classless systems such as
+    // SpellDraft.  Normal client purchases still pass every stock hook and
+    // class/prerequisite check; command=true deliberately bypasses those
+    // restrictions while retaining the native talent map/stat application.
+    if (!command && !sScriptMgr->OnPlayerCanLearnTalent(this, talentInfo, talentRank))
         return;
 
     TalentTabEntry const* talentTabInfo = sTalentTabStore.LookupEntry(talentInfo->TalentTab);
@@ -14360,7 +14369,7 @@ void Player::LearnTalent(uint32 talentId, uint32 talentRank, bool command /*= fa
         return;
 
     // xinef: prevent learn talent for different class (cheating)
-    if ((getClassMask() & talentTabInfo->ClassMask) == 0)
+    if (!command && (getClassMask() & talentTabInfo->ClassMask) == 0)
         return;
 
     // xinef: find current talent rank
@@ -14389,7 +14398,7 @@ void Player::LearnTalent(uint32 talentId, uint32 talentRank, bool command /*= fa
     }
 
     // xinef: check if talent deponds on another talent
-    if (talentInfo->DependsOn > 0)
+    if (!command && talentInfo->DependsOn > 0)
         if (TalentEntry const* depTalentInfo = sTalentStore.LookupEntry(talentInfo->DependsOn))
         {
             bool hasEnoughRank = false;
@@ -15727,7 +15736,7 @@ void Player::ActivateSpec(uint8 spec)
     SetPower(pw, 0);
 
     // xinef: remove titan grip if player had it set and does not have appropriate talent
-    if (!HasTalent(46917, GetActiveSpec()) && m_canTitanGrip)
+    if (!HasTalent(46917, GetActiveSpec()) && !HasSpell(46917) && m_canTitanGrip)
         SetCanTitanGrip(false);
     // xinef: remove dual wield if player does not have dual wield spell (shamans)
     if (!HasSpell(674) && CanDualWield())

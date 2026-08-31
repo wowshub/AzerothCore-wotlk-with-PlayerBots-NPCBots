@@ -346,6 +346,7 @@ SpellDraftData = {
   [2974] = { rarity = 2, class = "HUNTER", name = "Wing Clip" },
   [2983] = { rarity = 4, class = "ROGUE", name = "Sprint" },
   [3011] = { rarity = 99, class = "GENERAL", name = "Fire Shot" },
+  [3018] = { rarity = 0, class = "GENERAL", name = "Shoot" },
   [3034] = { rarity = 2, class = "HUNTER", name = "Viper Sting" },
   [3043] = { rarity = 1, class = "HUNTER", name = "Scorpid Sting" },
   [3044] = { rarity = 0, class = "HUNTER", name = "Arcane Shot" },

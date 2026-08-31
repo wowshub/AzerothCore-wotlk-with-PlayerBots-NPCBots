@@ -522,6 +522,10 @@ local function DoPrestige(player, draftMode)
         ]], startingDrafts, bonusRerolls, storedClass, DRAFT_BANS_START, startingPoints, guid)
 
         CharDBExecute(updateStatsQuery)
+        -- A prestige run is a new progression journey. Its dynamic curve must
+        -- start from level 1 rather than inherit the previous run's high-water
+        -- mark and anchor.
+        CharDBQuery("DELETE FROM spelldraft_dynamic_progression WHERE guid = " .. guid)
         if type(SpellDraft_SetDraftStateCache) == "function" then
             SpellDraft_SetDraftStateCache(guid, 1)
         end
@@ -887,27 +891,31 @@ local NIBBS_TEXT = {
     enUS = {
         buy = "I need to purchase reagents and bags.",
         enchant = "Open Mystic Enchant services",
-        reset = "I want to reset my custom talents (Free)",
+        reset = "Reset my confirmed custom talents (%d Essence; balance %d)",
         talents = "Tell me about custom talents and respecs.",
         grimoire = "How do I use the SpellDraft menu and Grimoire?",
         levelCap = "What happens when I reach level %d?",
-        yesReset = "Yes, reset my talents (Free)",
+        yesReset = "Yes, spend %d Essence to reset (balance %d)",
         noReset = "No, keep my current build",
         back = "Back",
-        resetDone = "|cff00ff00Reset complete! Refunded %d custom Talent Points.|r",
+        resetDone = "|cff00ff00Reset complete! Refunded %d custom Talent Points; spent %d Essence; %d remains.|r",
+        resetNeedEssence = "|cffff4444Not enough Talent Essence. Need %d; you have %d.|r",
+        resetNone = "|cffffcc00You have no confirmed custom talents to reset. No Essence was spent.|r",
         language = "Language: English — switch to Chinese",
     },
     zhCN = {
         buy = "我想购买施法材料和背包。",
         enchant = "打开神秘附魔服务",
-        reset = "我想免费重置自定义天赋。",
+        reset = "重置已确认的自定义天赋（消耗%d精华，当前%d）",
         talents = "请介绍自定义天赋和洗点规则。",
         grimoire = "SpellDraft 菜单和魔典该怎么使用？",
         levelCap = "升到%d级之后会发生什么？",
-        yesReset = "确定，免费重置我的天赋",
+        yesReset = "确定消耗%d精华重置（当前%d）",
         noReset = "不了，保留当前配置",
         back = "返回",
-        resetDone = "|cff00ff00重置完成！已返还 %d 点自定义天赋点。|r",
+        resetDone = "|cff00ff00重置完成！返还%d点自定义天赋点，消耗%d精华，剩余%d。|r",
+        resetNeedEssence = "|cffff4444天赋精华不足：需要%d，当前只有%d。|r",
+        resetNone = "|cffffcc00你没有已经确认的自定义天赋，无需重置，也没有消耗精华。|r",
         language = "语言：中文——点击切换到 English",
     },
 }
@@ -937,6 +945,15 @@ local function GetNibbsLevelCapTextId(player)
     return GetNibbsNpcTextId(player, englishId)
 end
 
+local function GetTalentResetCost()
+    return math.max(0, math.floor(tonumber(CONFIG.TALENT_RESET_ESSENCE_COST) or 10))
+end
+
+local function GetTalentEssenceBalance(guid)
+    local q = CharDBQuery("SELECT essence FROM spelldraft_talent_essence WHERE guid = " .. guid)
+    return q and q:GetUInt32(0) or 0
+end
+
 local function OnNibbsGossipHello(event, player, creature)
     if IsBotPlayer(player) then return false end
     
@@ -959,7 +976,8 @@ local function OnNibbsGossipHello(event, player, creature)
 
     if inDraft then
         -- Option 2: Reset Custom Talents - Use icon ID 0 (Speech bubble)
-        player:GossipMenuAddItem(0, text.reset, 1, 1002)
+        local resetCost = GetTalentResetCost()
+        player:GossipMenuAddItem(0, string.format(text.reset, resetCost, GetTalentEssenceBalance(player:GetGUIDLow())), 1, 1002)
         -- Option 3: Explanation - Use icon ID 0 (Speech bubble)
         player:GossipMenuAddItem(0, text.talents, 1, 1003)
     end
@@ -1003,15 +1021,37 @@ local function OnNibbsGossipSelect(event, player, creature, sender, intid, code)
         
     elseif intid == 1002 then
         -- Confirm talent reset
+        local resetCost = GetTalentResetCost()
         player:GossipClearMenu()
-        player:GossipMenuAddItem(0, text.yesReset, 1, 2002)
+        player:GossipMenuAddItem(0, string.format(text.yesReset, resetCost, GetTalentEssenceBalance(guid)), 1, 2002)
         player:GossipMenuAddItem(0, text.noReset, 1, 1000)
         player:GossipSendMenu(GetNibbsNpcTextId(player, 99004), creature)
         
     elseif intid == 2002 then
-        -- Perform the actual reset!
+        local manualQ = CharDBQuery("SELECT 1 FROM manually_acquired_talents WHERE player_guid = " .. guid .. " LIMIT 1")
+        if not manualQ then
+            player:SendBroadcastMessage(text.resetNone)
+            player:GossipComplete()
+            return true
+        end
+        local resetCost = GetTalentResetCost()
+        local beforeBalance = GetTalentEssenceBalance(guid)
+        if beforeBalance < resetCost then
+            player:SendBroadcastMessage(string.format(text.resetNeedEssence, resetCost, beforeBalance))
+            player:GossipComplete()
+            return true
+        end
+        if resetCost > 0 then
+            -- MySQL evaluates assignments from left to right.  Clamp the
+            -- sellable portion before reducing the total so the cost is not
+            -- accidentally subtracted twice from the second expression.
+            CharDBExecute(string.format(
+                "UPDATE spelldraft_talent_essence SET sellable_essence = GREATEST(0, LEAST(sellable_essence, essence - %d)), essence = essence - %d WHERE guid = %d AND essence >= %d",
+                resetCost, resetCost, guid, resetCost))
+        end
         local count = ResetCustomTalents(player)
-        player:SendBroadcastMessage(string.format(text.resetDone, count))
+        local afterBalance = GetTalentEssenceBalance(guid)
+        player:SendBroadcastMessage(string.format(text.resetDone, count, resetCost, afterBalance))
         player:GossipComplete()
         
     elseif intid == 1003 then

@@ -1484,6 +1484,12 @@ void BotMgr::_reviveBot(Creature* bot, WorldLocation* dest)
 
     bot->SetDisplayId(bot->GetNativeDisplayId(),1);
     bot->ReplaceAllNpcFlags(NPCFlags(bot->GetCreatureTemplate()->npcflag));
+    // ReplaceAllNpcFlags restores creature_template gossip on every revive.
+    // A bot already assigned to a battleground must remain a combatant, not an
+    // interactable NPC, otherwise the 3.3.5 client switches back to the gossip
+    // cursor after its first death/respawn cycle.
+    if (bot->GetBotAI()->GetBG() && bot->HasNpcFlag(UNIT_NPC_FLAG_GOSSIP))
+        bot->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
     bot->ClearUnitState(uint32(UNIT_STATE_ALL_STATE & ~(UNIT_STATE_IGNORE_PATHFINDING | UNIT_STATE_NO_ENVIRONMENT_UPD)));
     bot->ReplaceAllUnitFlags(UnitFlags(0));
     bot->SetLootRecipient(nullptr);

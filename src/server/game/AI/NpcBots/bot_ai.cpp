@@ -7905,7 +7905,7 @@ bool bot_ai::OnGossipHello(Player* player, uint32 /*option*/)
         SetIsDuringTeleport(false);
 
     if (!BotMgr::IsNpcBotModEnabled() || !(IsWanderer() ? BotMgr::IsWanderingClassEnabled(_botclass) : BotMgr::IsClassEnabled(_botclass)) ||
-        IsTempBot() || me->IsInCombat() || CCed(me) || IsDuringTeleport() ||
+        GetBG() || IsTempBot() || me->IsInCombat() || CCed(me) || IsDuringTeleport() ||
         HasBotCommandState(BOT_COMMAND_ISSUED_ORDER | BOT_COMMAND_NOGOSSIP) ||
         (me->GetVehicle() && me->GetVehicle()->GetBase()->IsInCombat()) ||
         (!player->IsGameMaster() && IsWanderer()))
@@ -18322,6 +18322,14 @@ bool bot_ai::GlobalUpdate(uint32 diff)
 
         //Medium-timed updates
 
+        // Creature resurrection restores npc flags from creature_template.
+        // Battleground NPCBots are combatants, so keep gossip suppressed for
+        // every lifecycle state (alive, dead, teleported and freshly revived).
+        // This is intentionally idempotent and also catches any later code path
+        // that restores template flags while the bot is still assigned to a BG.
+        if (GetBG() && me->HasNpcFlag(UNIT_NPC_FLAG_GOSSIP))
+            me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
+
         //send stats update for group frames
         if (me->IsInWorld() && !IAmFree())
         {
@@ -18791,7 +18799,7 @@ bool bot_ai::GlobalUpdate(uint32 diff)
         Regenerate();
 
     //update flags
-    if (!me->IsInCombat() && ((!_evadeMode && _atHome) || IsWanderer()))
+    if (!GetBG() && !me->IsInCombat() && ((!_evadeMode && _atHome) || IsWanderer()))
     {
         if (!me->HasNpcFlag(UNIT_NPC_FLAG_GOSSIP) && !HasBotCommandState(BOT_COMMAND_NOGOSSIP))
             me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
@@ -20874,6 +20882,15 @@ void bot_ai::OnWanderNodeReached()
 void bot_ai::OnBotEnterBattleground()
 {
     Battleground* bg = ASSERT_NOTNULL(GetBG());
+
+    // A battleground bot is a combatant, not an interactable world NPC.
+    // Keeping UNIT_NPC_FLAG_GOSSIP makes the 3.3.5 client show a speech-bubble
+    // cursor over friendly bots and can steal right-click from auto attack on
+    // hostile bots. OnGossipHello also rejects wandering bots, so advertising
+    // this flag in a battleground is both misleading and internally inconsistent.
+    // The normal out-of-combat update restores gossip after SetBG(nullptr).
+    if (me->HasNpcFlag(UNIT_NPC_FLAG_GOSSIP))
+        me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
 
     if (bg->GetStatus() != STATUS_IN_PROGRESS && IsWanderer())
     {

@@ -1,5 +1,146 @@
 SpellDraft = SpellDraft or {}
 local L = SpellDraft.L
+SpellDraft.CustomTalentProtocolVersion = "A31R4.15.11-B0.1"
+
+-- Confirmed custom talents are server-authoritative, but addon messages are
+-- asynchronous and the 3.3.5 client can reopen SpellCraft before the reply is
+-- delivered.  Keep a per-character last-known snapshot so closing/reopening
+-- or /reload never paints a false 0/5 tree.  Every valid server state replaces
+-- this cache; it is not used to grant talents.
+local talentStateV2Received = false
+local acquiredStateV3Received = false
+
+local function TalentStateCharacterKey()
+  local name = UnitName("player")
+  if not name or name == "" or name == UNKNOWNOBJECT then return nil end
+  local realm = GetRealmName and GetRealmName() or ""
+  return tostring(realm or "") .. ":" .. tostring(name)
+end
+
+local function CopyTalentIDs(source)
+  local copy = {}
+  if type(source) == "table" then
+    for _, id in ipairs(source) do
+      id = tonumber(id)
+      if id and id > 0 then table.insert(copy, id) end
+    end
+  end
+  return copy
+end
+
+local function CopyTalentRanks(source)
+  local copy = {}
+  if type(source) == "table" then
+    for firstRankSpellId, rank in pairs(source) do
+      firstRankSpellId, rank = tonumber(firstRankSpellId), tonumber(rank)
+      if firstRankSpellId and firstRankSpellId > 0 and rank and rank > 0 then
+        copy[firstRankSpellId] = rank
+      end
+    end
+  end
+  return copy
+end
+
+function SpellDraft.SaveTalentStateCache(ids)
+  if not SpellDraftDB then return end
+  local key = TalentStateCharacterKey()
+  if not key then return end
+  SpellDraftDB.confirmedTalentsByCharacter = SpellDraftDB.confirmedTalentsByCharacter or {}
+  SpellDraftDB.confirmedTalentsByCharacter[key] = CopyTalentIDs(ids)
+end
+
+function SpellDraft.SaveTalentRankCache(ranks)
+  if not SpellDraftDB then return end
+  local key = TalentStateCharacterKey()
+  if not key then return end
+  SpellDraftDB.confirmedTalentRanksByCharacter = SpellDraftDB.confirmedTalentRanksByCharacter or {}
+  SpellDraftDB.confirmedTalentRanksByCharacter[key] = CopyTalentRanks(ranks)
+end
+
+function SpellDraft.RestoreTalentStateCache(force)
+  if not SpellDraftDB then return false end
+  local key = TalentStateCharacterKey()
+  local cached = key and SpellDraftDB.confirmedTalentsByCharacter
+      and SpellDraftDB.confirmedTalentsByCharacter[key]
+  local restored = false
+  if type(cached) == "table" then
+    if force or type(SpellDraft.DraftedTalents) ~= "table" or #SpellDraft.DraftedTalents == 0 then
+      SpellDraft.DraftedTalents = CopyTalentIDs(cached)
+    end
+    restored = true
+  end
+  local rankCached = SpellDraftDB.confirmedTalentRanksByCharacter
+      and SpellDraftDB.confirmedTalentRanksByCharacter[key]
+  if type(rankCached) == "table" then
+    if force or type(SpellDraft.ConfirmedTalentRanks) ~= "table" then
+      SpellDraft.ConfirmedTalentRanks = CopyTalentRanks(rankCached)
+    end
+    restored = true
+  end
+  return restored
+end
+
+local function ApplyAuthoritativeTalentState(ids)
+  SpellDraft.DraftedTalents = CopyTalentIDs(ids)
+  SpellDraft.SaveTalentStateCache(SpellDraft.DraftedTalents)
+  if SpellDraft.TryResolveTalentCommitFromSync then
+    SpellDraft.TryResolveTalentCommitFromSync()
+  end
+  if SpellDraft.RefreshTalentsList then
+    SpellDraft.RefreshTalentsList()
+  end
+  -- SCTState also owns the learned state of cross-class active/passive Tome
+  -- abilities. Refresh the left catalog after every authoritative update so a
+  -- learned Titan's Grip does not remain grey until the book is reopened.
+  if SpellDraft.RefreshSpellBook then
+    SpellDraft.RefreshSpellBook()
+  end
+end
+
+local function ApplyAuthoritativeTalentRanks(ranks)
+  SpellDraft.ConfirmedTalentRanks = CopyTalentRanks(ranks)
+  SpellDraft.SaveTalentRankCache(SpellDraft.ConfirmedTalentRanks)
+  -- User-verified B0.10.1 behavior: a saved DB rank consumes any local
+  -- pending point that would exceed the talent's remaining capacity.
+  if SpellDraft.ReconcileStagedTalentRanks then
+    SpellDraft.ReconcileStagedTalentRanks(SpellDraft.ConfirmedTalentRanks)
+  end
+  if SpellDraft.TryResolveTalentCommitFromSync then
+    SpellDraft.TryResolveTalentCommitFromSync()
+  end
+  if SpellDraft.RefreshTalentsList then
+    SpellDraft.RefreshTalentsList()
+  end
+end
+
+-- Expose the same atomic projector to the talent book.  A successful refund
+-- acknowledgement carries the exact server-verified target rank, so the book
+-- can update that one key immediately without inventing per-talent prefixes.
+SpellDraft.ApplyAuthoritativeTalentRanks = ApplyAuthoritativeTalentRanks
+
+-- B0.7 count-framed, tokenized rank stream.  Never expose a partially
+-- received transaction: the previous confirmed table remains visible until
+-- SCTREnd proves the complete set arrived.
+local chunkedTalentRankToken
+local chunkedTalentRankExpected = 0
+local chunkedTalentRankReceived = 0
+
+-- B0.9.15.11 acquired-spell transaction.  This is deliberately independent
+-- from the adjustable talent-rank stream: Tome actives and playstyle passives
+-- belong in the left learned catalog, not in the right refundable panel.
+local chunkedAcquiredToken
+local chunkedAcquiredExpected = 0
+local chunkedAcquiredReceived = 0
+local chunkedAcquiredIds = {}
+local chunkedAcquiredSeen = {}
+local chunkedTalentRanks = {}
+
+local function ResetChunkedTalentRankFrame()
+  chunkedTalentRankToken = nil
+  chunkedTalentRankExpected = 0
+  chunkedTalentRankReceived = 0
+  chunkedTalentRanks = {}
+end
 
 -- Shared single timer frame implementation for Delay/After
 local timerFrame = CreateFrame("Frame")
@@ -33,6 +174,169 @@ end
 
 local Delay = SpellDraft.After
 
+-- The stock 3.3.5 client does not consistently place cross-class or talent
+-- spells on an action bar. The server sends the exact final rank plus all IDs
+-- in its rank chain through SCBar. Never identify a spell by localized name:
+-- different abilities can share the same name (475/2782 are both Remove Curse).
+local actionPlacementSerial = 0
+local actionPlacementBySpell = {}
+local pendingManualPlacements = {}
+local pendingManualBySpell = {}
+local manualPlacementButton
+local manualPlacementCloseButton
+local UpdateManualPlacementButton
+
+local function SpellIDFromLink(link)
+  return link and tonumber(string.match(link, "spell:(%d+)")) or nil
+end
+
+local function FindSpellBookEntryByID(wantedID)
+  for tab = 1, GetNumSpellTabs() do
+    local _, _, offset, numSpells = GetSpellTabInfo(tab)
+    for index = offset + 1, offset + numSpells do
+      local bookID = SpellIDFromLink(GetSpellLink(index, BOOKTYPE_SPELL))
+      if bookID == wantedID then return index end
+    end
+  end
+  return nil
+end
+
+local function ActionBarContainsSpellChain(chainIDs)
+  for slot = 1, 144 do
+    if HasAction(slot) then
+      local linkedID = SpellIDFromLink(GetActionLink and GetActionLink(slot))
+      if not linkedID and GetActionInfo then
+        local actionType, actionID = GetActionInfo(slot)
+        if actionType == "spell" then linkedID = tonumber(actionID) end
+      end
+      if linkedID and chainIDs[linkedID] then return true end
+    end
+  end
+  return false
+end
+
+-- 3.3.5 action slots are not laid out on screen in numeric order. 1-12 is
+-- only the base page; the extra visible bars normally use 61-72, 49-60 and
+-- 25-48. Scan those first, then the remaining pages. This avoids reporting
+-- "main bar full" while the player still has many visible empty slots.
+local ACTION_SLOT_PRIORITY = {}
+local function AddActionSlotRange(firstSlot, lastSlot)
+  for slot = firstSlot, lastSlot do
+    table.insert(ACTION_SLOT_PRIORITY, slot)
+  end
+end
+AddActionSlotRange(1, 12)
+AddActionSlotRange(61, 72)
+AddActionSlotRange(49, 60)
+AddActionSlotRange(25, 48)
+AddActionSlotRange(13, 24)
+AddActionSlotRange(73, 120)
+
+local function ResolveVisibleButtonSlot(button)
+  if not button then return nil end
+  if ActionButton_GetPagedID then
+    local ok, slot = pcall(ActionButton_GetPagedID, button)
+    if ok and tonumber(slot) and tonumber(slot) > 0 then return tonumber(slot) end
+  end
+  if ActionButton_CalculateAction then
+    local ok, slot = pcall(ActionButton_CalculateAction, button)
+    if ok and tonumber(slot) and tonumber(slot) > 0 then return tonumber(slot) end
+  end
+  return tonumber(button.action or button:GetAttribute("action"))
+end
+
+local function FindPreferredEmptyActionSlot()
+  local seen = {}
+  local prefixes = {
+    "ActionButton", "MultiBarBottomLeftButton", "MultiBarBottomRightButton",
+    "MultiBarRightButton", "MultiBarLeftButton"
+  }
+  for _, prefix in ipairs(prefixes) do
+    for index = 1, 12 do
+      local button = _G[prefix .. index]
+      if button and button:IsShown() then
+        local slot = ResolveVisibleButtonSlot(button)
+        if slot and not seen[slot] then
+          seen[slot] = true
+          if not HasAction(slot) then return slot end
+        end
+      end
+    end
+  end
+  for _, slot in ipairs(ACTION_SLOT_PRIORITY) do
+    if not seen[slot] and not HasAction(slot) then return slot end
+  end
+  return nil
+end
+
+local function QueueManualPlacement(spellID, chainIDs)
+  if pendingManualBySpell[spellID] then return end
+  pendingManualBySpell[spellID] = true
+  table.insert(pendingManualPlacements, { spellID = spellID, chainIDs = chainIDs })
+  if UpdateManualPlacementButton then UpdateManualPlacementButton() end
+end
+
+local function PlaceAcceptedSpellOnce(spellID, chainIDs, serial, attempt, hardwareClick)
+  if actionPlacementBySpell[spellID] ~= serial then return end
+  local bookIndex = FindSpellBookEntryByID(spellID)
+  if not bookIndex then
+    if attempt < 6 then
+      Delay(0.5, function() PlaceAcceptedSpellOnce(spellID, chainIDs, serial, attempt + 1) end)
+    end
+    return
+  end
+
+  -- Passive talents belong in the spellbook only and cannot be dragged to a bar.
+  if IsPassiveSpell(bookIndex, BOOKTYPE_SPELL) then return end
+  if ActionBarContainsSpellChain(chainIDs) then return end
+
+  -- Never mutate the protected action bar from the delayed server callback.
+  -- Some 3.3.5 clients place the newly learned spell slightly later than the
+  -- SCBar acknowledgement.  Doing our own PlaceAction here races that native
+  -- placement and produces two identical buttons (ours first, native second).
+  -- Wait for native placement; if it did not happen, preserve a one-click
+  -- hardware-event fallback instead.
+  if not hardwareClick then
+    QueueManualPlacement(spellID, chainIDs)
+    UIErrorsFrame:AddMessage(L("Spell learned; click the placement button to add it to an action bar."), 1, 0.65, 0, 1)
+    return
+  end
+
+  local emptySlot = FindPreferredEmptyActionSlot()
+  if not emptySlot then
+    UIErrorsFrame:AddMessage(L("Spell learned; all action bars are full."), 1, 0.82, 0, 1)
+    return
+  end
+
+  ClearCursor()
+  -- Client forks differ here: some accept the exact spell ID, while others
+  -- expose a spellbook-slot pickup API. Try each safe form and verify the
+  -- cursor instead of assuming that a call succeeded.
+  PickupSpell(spellID)
+  if not GetCursorInfo() and PickupSpellBookItem then
+    PickupSpellBookItem(bookIndex, BOOKTYPE_SPELL)
+  end
+  if not GetCursorInfo() then
+    PickupSpell(bookIndex, BOOKTYPE_SPELL)
+  end
+  if not GetCursorInfo() then
+    UIErrorsFrame:AddMessage(L("Spell learned; automatic action bar placement failed."), 1, 0.45, 0, 1)
+    return
+  end
+
+  PlaceAction(emptySlot)
+  ClearCursor()
+end
+
+local function QueueAcceptedSpellPlacement(spellID, chainIDs)
+  actionPlacementSerial = actionPlacementSerial + 1
+  local serial = actionPlacementSerial
+  actionPlacementBySpell[spellID] = serial
+  -- Native learned/superseded packets and their action placement may arrive
+  -- after SCBar. Give them time to settle before offering the manual fallback.
+  Delay(1.50, function() PlaceAcceptedSpellOnce(spellID, chainIDs, serial, 1) end)
+end
+
 -- Create a hidden tooltip for reading spell descriptions
 local tooltip = CreateFrame("GameTooltip", "SpellDraftHiddenTooltip", UIParent, "GameTooltipTemplate")
 local cacheTooltip = CreateFrame("GameTooltip", "SpellDraftCacheTooltip", UIParent, "GameTooltipTemplate")
@@ -49,11 +353,21 @@ local rarityTextures = {
 }
 
 local lastSpellIDs = {}
+local choiceMessageSerial = 0
 local dismissToggled = false
 local restoringFromDismiss = false
 local isTalentDraftActive = false
+local talentEssence = 0
+local talentRerollCost = 0
+local talentRerollsUsed = 0
+local talentRerollLimit = 3
 local bannedSpells = {}
 local currentSpellRarities = {}
+local pendingSubmittedSpellID = nil
+local pendingSubmitSerial = 0
+local pendingRequestToken = nil
+local pendingChoiceButton
+local ShowSpellChoices
 tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 GameTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 GameTooltip:SetFrameStrata("TOOLTIP")
@@ -71,8 +385,11 @@ local function SpellChoiceWhisperFilter(_, _, msg, sender)
     if msg:match("^SC:%d+$") or
        msg:match("^SC_BAN:%d+$") or
        msg:match("^SC_BUY_TALENT:%d+$") or
+       msg:match("^SC_COMMIT_TALENTS:%-?%d+:.+$") or
+       msg:match("^SC_REFUND_TALENT:%-?%d+:%d+$") or
        msg == "SC_CHECK" or
        msg == "SC_REROLL" or
+       msg:match("^SC_REROLL:%-?%d+:%d+:%d+:%d+$") or
        msg == "SC_REPLACE_BANNED" then
       return true
     end
@@ -93,6 +410,171 @@ GameTooltip:SetClampedToScreen(true)
 local buttons = {SpellChoiceButton1, SpellChoiceButton2, SpellChoiceButton3}
 SpellChoiceRerollButton:SetText(L("Reroll"))
 SpellChoiceDismissButton:SetText(L("Dismiss"))
+
+local TalentEssenceText = SpellChoiceFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+TalentEssenceText:SetPoint("BOTTOM", SpellChoiceRerollButton, "TOP", 0, 7)
+TalentEssenceText:SetText("")
+TalentEssenceText:Hide()
+
+-- A pending draft belongs to the character, not to the lifetime of the large
+-- card frame.  Other panels (including the SpellDraft grimoire) may hide the
+-- card frame, so keep a small independent recovery button on UIParent until a
+-- choice is actually consumed by the server.
+local function UpdatePendingChoiceButton()
+  if not pendingChoiceButton then return end
+  local hasPending = #lastSpellIDs > 0
+  if hasPending and not SpellChoiceFrame:IsShown() then
+    pendingChoiceButton:SetText(isTalentDraftActive and L("Pending Talent Draft") or L("Pending Spell Draft"))
+    pendingChoiceButton:Show()
+  else
+    pendingChoiceButton:Hide()
+  end
+end
+
+local function RestorePendingChoices()
+  dismissToggled = false
+  restoringFromDismiss = true
+  if SpellDraftDB then SpellDraftDB.dismissToggled = false end
+  if #lastSpellIDs > 0 then
+    ShowSpellChoices(lastSpellIDs)
+  else
+    local target = UnitName("player")
+    if target then SendChatMessage("SC_CHECK", "WHISPER", GetFactionLanguage(), target) end
+  end
+  restoringFromDismiss = false
+  UpdatePendingChoiceButton()
+end
+
+pendingChoiceButton = CreateFrame("Button", "SpellDraftPendingChoiceButton", UIParent, "UIPanelButtonTemplate")
+pendingChoiceButton:SetSize(142, 24)
+pendingChoiceButton:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 118)
+pendingChoiceButton:SetFrameStrata("FULLSCREEN_DIALOG")
+pendingChoiceButton:SetClampedToScreen(true)
+pendingChoiceButton:SetScript("OnClick", RestorePendingChoices)
+pendingChoiceButton:SetScript("OnEnter", function(self)
+  GameTooltip:SetOwner(self, "ANCHOR_TOP")
+  GameTooltip:SetText(L("A draft choice is waiting"))
+  GameTooltip:AddLine(L("Click to reopen the same three cards. No tome or draft is consumed."), 1, 1, 1, true)
+  GameTooltip:Show()
+end)
+pendingChoiceButton:SetScript("OnLeave", function() GameTooltip:Hide() end)
+pendingChoiceButton:Hide()
+
+UpdateManualPlacementButton = function()
+  if not manualPlacementButton then return end
+  while #pendingManualPlacements > 0
+      and ActionBarContainsSpellChain(pendingManualPlacements[1].chainIDs) do
+    local completed = table.remove(pendingManualPlacements, 1)
+    pendingManualBySpell[completed.spellID] = nil
+  end
+  if #pendingManualPlacements == 0 then
+    manualPlacementButton:Hide()
+    if manualPlacementCloseButton then manualPlacementCloseButton:Hide() end
+    return
+  end
+  local spellName = GetSpellInfo(pendingManualPlacements[1].spellID) or L("Unknown Spell")
+  manualPlacementButton:SetText(L("Place on action bar: %s", spellName))
+  manualPlacementButton:Show()
+  if manualPlacementCloseButton then manualPlacementCloseButton:Show() end
+end
+
+-- Cursor/action-slot mutation is protected by this client when invoked from a
+-- delayed server acknowledgement. A real mouse click supplies the hardware
+-- event, so preserve every failed placement in this small one-click queue.
+manualPlacementButton = CreateFrame("Button", "SpellDraftManualPlacementButton", UIParent, "UIPanelButtonTemplate")
+manualPlacementButton:SetSize(230, 26)
+local function ManualPlacementPositionKey()
+  return (GetRealmName() or "") .. ":" .. (UnitName("player") or "")
+end
+
+local function RestoreManualPlacementPosition()
+  local key = ManualPlacementPositionKey()
+  local saved = SpellDraftDB and SpellDraftDB.manualPlacementPositions
+      and SpellDraftDB.manualPlacementPositions[key]
+  manualPlacementButton:ClearAllPoints()
+  if saved and saved.point and saved.relativePoint and saved.x and saved.y then
+    manualPlacementButton:SetPoint(saved.point, UIParent, saved.relativePoint, saved.x, saved.y)
+  else
+    manualPlacementButton:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 148)
+  end
+end
+
+local function SaveManualPlacementPosition()
+  local point, _, relativePoint, x, y = manualPlacementButton:GetPoint(1)
+  if not point then return end
+  SpellDraftDB = SpellDraftDB or {}
+  SpellDraftDB.manualPlacementPositions = SpellDraftDB.manualPlacementPositions or {}
+  SpellDraftDB.manualPlacementPositions[ManualPlacementPositionKey()] = {
+    point = point,
+    relativePoint = relativePoint,
+    x = math.floor((x or 0) + 0.5),
+    y = math.floor((y or 0) + 0.5),
+  }
+end
+
+RestoreManualPlacementPosition()
+manualPlacementButton:SetFrameStrata("FULLSCREEN_DIALOG")
+manualPlacementButton:SetClampedToScreen(true)
+manualPlacementButton:SetMovable(true)
+manualPlacementButton:RegisterForDrag("LeftButton")
+manualPlacementButton:SetScript("OnDragStart", function(self)
+  self:StartMoving()
+end)
+manualPlacementButton:SetScript("OnDragStop", function(self)
+  self:StopMovingOrSizing()
+  SaveManualPlacementPosition()
+end)
+manualPlacementButton:SetScript("OnClick", function()
+  local request = pendingManualPlacements[1]
+  if not request then return end
+  local serial = actionPlacementBySpell[request.spellID]
+  PlaceAcceptedSpellOnce(request.spellID, request.chainIDs, serial, 6, true)
+  table.remove(pendingManualPlacements, 1)
+  pendingManualBySpell[request.spellID] = nil
+  UpdateManualPlacementButton()
+end)
+manualPlacementButton:SetScript("OnEnter", function(self)
+  GameTooltip:SetOwner(self, "ANCHOR_TOP")
+  GameTooltip:SetText(L("Action bar placement requires one click"))
+  GameTooltip:AddLine(L("The spell is already learned. Click to place it in the first visible empty action slot."), 1, 1, 1, true)
+  GameTooltip:AddLine(L("Drag this bar to move it. Its position is saved for this character."), 0.35, 0.85, 1, true)
+  GameTooltip:Show()
+end)
+manualPlacementButton:SetScript("OnLeave", function() GameTooltip:Hide() end)
+manualPlacementButton:Hide()
+
+-- The client may already have placed a low-level spell while its protected
+-- action-slot state is still stale to addon code. The close control dismisses
+-- only this fallback request; it never touches the spell or draft state.
+manualPlacementCloseButton = CreateFrame("Button", "SpellDraftManualPlacementCloseButton", UIParent, "UIPanelCloseButton")
+manualPlacementCloseButton:SetSize(26, 26)
+manualPlacementCloseButton:SetPoint("LEFT", manualPlacementButton, "RIGHT", 4, 0)
+manualPlacementCloseButton:SetFrameStrata("FULLSCREEN_DIALOG")
+manualPlacementCloseButton:SetClampedToScreen(true)
+manualPlacementCloseButton:SetScript("OnClick", function()
+  local request = table.remove(pendingManualPlacements, 1)
+  if request then pendingManualBySpell[request.spellID] = nil end
+  UpdateManualPlacementButton()
+end)
+manualPlacementCloseButton:SetScript("OnEnter", function(self)
+  GameTooltip:SetOwner(self, "ANCHOR_TOP")
+  GameTooltip:SetText(L("Dismiss this placement reminder"))
+  GameTooltip:AddLine(L("The learned spell and draft progress are not affected."), 1, 1, 1, true)
+  GameTooltip:Show()
+end)
+manualPlacementCloseButton:SetScript("OnLeave", function() GameTooltip:Hide() end)
+manualPlacementCloseButton:Hide()
+
+local pendingChoiceWatcher = CreateFrame("Frame")
+local pendingChoiceElapsed = 0
+pendingChoiceWatcher:SetScript("OnUpdate", function(_, elapsed)
+  pendingChoiceElapsed = pendingChoiceElapsed + elapsed
+  if pendingChoiceElapsed >= 0.25 then
+    pendingChoiceElapsed = 0
+    UpdatePendingChoiceButton()
+    if UpdateManualPlacementButton then UpdateManualPlacementButton() end
+  end
+end)
 
 -- ============================================================================
 -- Custom SpellDraft Button Skinner
@@ -182,14 +664,22 @@ local function UpdateRerollButton()
   SkinSpellDraftButton(SpellChoiceRerollButton, "reroll")
 
   local label
-  if unlimitedReroll then
+  if isTalentDraftActive then
+    label = talentRerollCost > 0 and L("Reroll (%d Essence)", talentRerollCost) or L("Reroll limit reached")
+    TalentEssenceText:SetText(L("Talent Essence: %d · Rerolls: %d / %d", talentEssence, talentRerollsUsed, talentRerollLimit))
+    TalentEssenceText:Show()
+  elseif unlimitedReroll then
     label = L("Reroll (%s)", "∞")
+    TalentEssenceText:Hide()
   else
     label = L("Reroll (%s)", rerollsLeft)
+    TalentEssenceText:Hide()
   end
   SpellChoiceRerollButton:SetText(label)
 
-  if (rerollsLeft > 0 or unlimitedReroll) and not banMode then
+  local canTalentReroll = isTalentDraftActive and talentRerollCost > 0 and talentEssence >= talentRerollCost
+  local canNormalReroll = not isTalentDraftActive and (rerollsLeft > 0 or unlimitedReroll)
+  if (canTalentReroll or canNormalReroll) and not banMode then
     SpellChoiceRerollButton:Enable()
     SpellChoiceRerollButton:SetAlpha(1.0)
     SpellChoiceRerollButton:SetBackdropColor(0.04, 0.06, 0.12, 0.92)
@@ -244,6 +734,7 @@ end
 local function HandleSpellClick(self)
   local spellID = self:GetID()
   if not spellID or spellID <= 0 then return end
+  if pendingSubmittedSpellID then return end
 
   if bannedSpells[spellID] then
     Debug("[Ban] Blocked click on banned spell ID: " .. spellID)
@@ -261,11 +752,11 @@ local function HandleSpellClick(self)
     return
   end
 
-  -- Selection animation block
-  SpellDraft_LevelUpReward()  -- [beascend] level-up sound + gold flash on pick (replaces white pillar)
+  -- Disable the visible set while waiting for the server. The reward flash is
+  -- deliberately delayed until SpellChoiceAccepted confirms real learning.
   for _, otherBtn in ipairs(buttons) do
+    otherBtn:EnableMouse(false)
     if otherBtn ~= self then
-      otherBtn:EnableMouse(false)
       UIFrameFadeOut(otherBtn, 0.5, 1, 0.1)
     else
       otherBtn:SetScale(1.1)
@@ -275,8 +766,20 @@ local function HandleSpellClick(self)
 
   local target = UnitName("player")
   if target then
-    Delay(0.5, function()
-      SendChatMessage("SC:" .. spellID, "WHISPER", GetFactionLanguage(), target)
+    pendingSubmittedSpellID = spellID
+    pendingSubmitSerial = pendingSubmitSerial + 1
+    local submitSerial = pendingSubmitSerial
+    pendingRequestToken = tostring(math.floor((GetTime() or 0) * 1000)) .. tostring(submitSerial)
+    -- One click sends exactly one request. Repeating SC messages created a race
+    -- where the first request committed while later retries rerolled/reopened it.
+    SendChatMessage("SC:" .. spellID .. ":" .. pendingRequestToken, "WHISPER", GetFactionLanguage(), target)
+    Delay(4.0, function()
+      if pendingSubmittedSpellID == spellID and submitSerial == pendingSubmitSerial then
+        pendingSubmittedSpellID = nil
+        pendingRequestToken = nil
+        UIErrorsFrame:AddMessage(L("No server confirmation. The same choice is still available."), 1.0, 0.25, 0.25, 1)
+        RestorePendingChoices()
+      end
     end)
   end
 end
@@ -284,7 +787,7 @@ end
 
 
 -- Show spell choices to the player
-local function ShowSpellChoices(spellIDs)
+ShowSpellChoices = function(spellIDs)
 
   if UnitAffectingCombat("player") and UnitLevel("player") > 1 then
     dismissToggled = true
@@ -332,6 +835,10 @@ local function ShowSpellChoices(spellIDs)
     SpellChoiceDismissButton:SetPoint("CENTER", SpellChoiceTitle, "TOP", 0, -290)
     SpellChoiceDismissButton:SetFrameStrata("FULLSCREEN_DIALOG")
     SpellChoiceDismissButton:SetText(L("Dismiss"))
+    SpellChoiceDismissButton:SetAlpha(1)
+    SpellChoiceDismissButton:Enable()
+    SpellChoiceDismissButton:EnableMouse(true)
+    SpellChoiceDismissButton:Show()
   end
 
   --print("SpellChoiceTitle is", SpellChoiceTitle and "found" or "MISSING")
@@ -402,7 +909,9 @@ local FALLBACK_SPELLS = {
         cacheTooltip:SetHyperlink("spell:" .. spellID)
         
       btn:SetID(spellID)
-      btn:SetNormalTexture("Interface\\Icons\\" .. icon)
+      -- GetSpellInfo already returns the complete icon path. Prefixing it again
+      -- produces an invalid texture and the bright-green fallback square.
+      btn:SetNormalTexture("")
       btn.icon:SetTexture(icon)
 
       if bannedSpells[spellID] then
@@ -486,7 +995,10 @@ local FALLBACK_SPELLS = {
   end
 
   if isTalentDraftActive then
-    if SpellChoiceRerollButton then SpellChoiceRerollButton:Hide() end
+    if SpellChoiceRerollButton then
+      SpellChoiceRerollButton:Show()
+      UpdateRerollButton()
+    end
     if SpellChoiceBanButton then SpellChoiceBanButton:Hide() end
   else
     if SpellChoiceRerollButton then SpellChoiceRerollButton:Show() end
@@ -494,6 +1006,7 @@ local FALLBACK_SPELLS = {
   end
 
   frame:Show()
+  UpdatePendingChoiceButton()
 end
 
 
@@ -503,6 +1016,7 @@ eventFrame:RegisterEvent("CHAT_MSG_ADDON")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 local enterTime = nil
 local isWorldLoaded = false
@@ -536,6 +1050,7 @@ end
 eventFrame:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4)
   if event == "ADDON_LOADED" and arg1 == "SpellDraft" then
     SpellDraftDB = SpellDraftDB or {}
+    SpellDraft.RestoreTalentStateCache(true)
     if SpellDraftDB.showHUD == nil then
       SpellDraftDB.showHUD = true
     end
@@ -543,25 +1058,15 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4)
       SpellDraftDB.dismissToggled = false
     end
     showHUD = SpellDraftDB.showHUD
-    dismissToggled = SpellDraftDB.dismissToggled
-
-    if dismissToggled then
-      if SpellChoiceTitle then SpellChoiceTitle:Hide() end
-      if SpellChoiceRerollButton then SpellChoiceRerollButton:Hide() end
-      SpellChoiceFrame:EnableMouse(false)
-      SpellChoiceFrame:SetAlpha(0.01)
-
-      if SpellChoiceDismissButton then
-          SpellChoiceDismissButton:SetParent(UIParent)
-          SpellChoiceDismissButton:ClearAllPoints()
-          SpellChoiceDismissButton:SetPoint("CENTER", UIParent, "CENTER", 0, -300)
-          SpellChoiceDismissButton:SetFrameStrata("FULLSCREEN_DIALOG")
-          SpellChoiceDismissButton:EnableMouse(true)
-          SpellChoiceDismissButton:Show()
-      end
-    end
+    -- This SavedVariable is account-wide. Never restore another character's
+    -- minimized Draft UI before this character is confirmed as Random Draft.
+    dismissToggled = false
+    SpellDraftDB.dismissToggled = false
+    SpellChoiceFrame:Hide()
+    if SpellChoiceDismissButton then SpellChoiceDismissButton:Hide() end
 
   elseif event == "PLAYER_ENTERING_WORLD" then
+    SpellDraft.RestoreTalentStateCache(true)
     isWorldLoaded = true
     prestigeRetries = 0
     enterTime = nil
@@ -577,12 +1082,41 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4)
       else
         unlocked = false
         SpellDraft.Unlocked = false
+        dismissToggled = false
+        if SpellDraftDB then SpellDraftDB.dismissToggled = false end
+        choiceMessageSerial = choiceMessageSerial + 1
+        lastSpellIDs = {}
+        SpellChoiceFrame:Hide()
+        if SpellChoiceDismissButton then SpellChoiceDismissButton:Hide() end
         Debug("SpellChoice locked (not prestiged).")
       end
       if SpellDraft.UpdateHUD then SpellDraft.UpdateHUD() end
 
     elseif prefix == "SpellChoiceIsTalent" then
       isTalentDraftActive = (message == "1")
+      UpdateRerollButton()
+
+    elseif prefix == "SpellChoiceTalentEssence" then
+      -- New protocol sends the uncapped balance only. Accept the old
+      -- `current:cap` payload during rolling upgrades for compatibility.
+      local current = string.match(message or "", "^(%d+)")
+      talentEssence = tonumber(current) or 0
+      SpellDraft.TalentEssence = talentEssence
+      SpellDraft.TalentEssenceCap = nil
+      UpdateRerollButton()
+      if SpellDraft.UpdateStatsDisplay then
+        SpellDraft.UpdateStatsDisplay()
+      end
+
+    elseif prefix == "SpellChoiceTalentReroll" then
+      local cost, used, limit = string.match(message or "", "^(%d+):(%d+):(%d+)$")
+      talentRerollCost = tonumber(cost) or 0
+      talentRerollsUsed = tonumber(used) or 0
+      talentRerollLimit = tonumber(limit) or 3
+      UpdateRerollButton()
+
+    elseif prefix == "SCTRefundCost" then
+      SpellDraft.TalentRefundCost = math.max(0, tonumber(message) or 1)
 
     elseif prefix == "SpellChoiceBansLeft" then
       bansLeft = tonumber(message) or 0
@@ -649,32 +1183,282 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4)
 
       -- If we got here, it's a new set
       lastSpellIDs = spellIDs
+      choiceMessageSerial = choiceMessageSerial + 1
+      local messageSerial = choiceMessageSerial
       dismissToggled = false
       if SpellDraftDB then
         SpellDraftDB.dismissToggled = false
       end
       Delay(0.5, function()
-        ShowSpellChoices(spellIDs)
+        -- Only the newest server set may win the delayed cache/display pass.
+        if messageSerial == choiceMessageSerial then
+          ShowSpellChoices(spellIDs)
+        end
       end)
-    elseif prefix == "SpellChoiceClose" then
-      frame:Hide()
+    elseif prefix == "SCBar" then
+      local finalText, chainText = string.match(message or "", "^(%d+):?(.*)$")
+      local finalID = tonumber(finalText)
+      if finalID then
+        local chainIDs = { [finalID] = true }
+        for id in string.gmatch(chainText or "", "%d+") do
+          chainIDs[tonumber(id)] = true
+        end
+        QueueAcceptedSpellPlacement(finalID, chainIDs)
+      end
 
-    elseif prefix == "SpellChoiceTalents" then
-      SpellDraft.DraftedTalents = {}
-      if message and message ~= "" then
-        for id in string.gmatch(message, "%d+") do
-          table.insert(SpellDraft.DraftedTalents, tonumber(id))
+    elseif prefix == "SCResult" then
+      local resultCode, resultSpell, resultToken = string.match(message or "", "^([^:]+):(%d+):?(.*)$")
+      local resultID = tonumber(resultSpell)
+      if resultID and pendingSubmittedSpellID == resultID
+          and (not resultToken or resultToken == "" or resultToken == pendingRequestToken) then
+        pendingSubmittedSpellID = nil
+        pendingRequestToken = nil
+        pendingSubmitSerial = pendingSubmitSerial + 1
+        if resultCode == "OK" then
+          SpellDraft_LevelUpReward()
+        else
+          UIErrorsFrame:AddMessage(L("The spell was not learned. Your draft was not consumed."), 1.0, 0.25, 0.25, 1)
+          RestorePendingChoices()
         end
       end
-      if SpellDraft.RefreshTalentsList then
-        SpellDraft.RefreshTalentsList()
+
+    elseif prefix == "SpellChoiceAccepted" then
+      local acceptedID = tonumber(message)
+      if acceptedID and pendingSubmittedSpellID == acceptedID then
+        pendingSubmittedSpellID = nil
+        pendingRequestToken = nil
+        pendingSubmitSerial = pendingSubmitSerial + 1
+        SpellDraft_LevelUpReward()
       end
 
-    elseif prefix == "SpellChoiceTalentPoints" then
+    elseif prefix == "SpellChoiceFailed" then
+      local failedID = tonumber(message)
+      if not failedID or pendingSubmittedSpellID == failedID then
+        pendingSubmittedSpellID = nil
+        pendingRequestToken = nil
+        pendingSubmitSerial = pendingSubmitSerial + 1
+        UIErrorsFrame:AddMessage(L("The spell was not learned. Your draft was not consumed."), 1.0, 0.25, 0.25, 1)
+        RestorePendingChoices()
+      end
+
+    elseif prefix == "SpellChoiceClose" then
+      -- Invalidate any delayed ShowSpellChoices callback that was queued before
+      -- the server consumed the final entitlement and closed the draft.
+      choiceMessageSerial = choiceMessageSerial + 1
+      lastSpellIDs = {}
+      isTalentDraftActive = false
+      TalentEssenceText:Hide()
+      frame:Hide()
+
+    elseif prefix == "SCABegin" then
+      local token, expectedText = string.match(message or "", "^([^|]+)|(%d+)$")
+      local expected = tonumber(expectedText)
+      if token and expected then
+        chunkedAcquiredToken = token
+        chunkedAcquiredExpected = expected
+        chunkedAcquiredReceived = 0
+        chunkedAcquiredIds = {}
+        chunkedAcquiredSeen = {}
+      end
+
+    elseif prefix == "SCAPart" then
+      local token, spellText = string.match(message or "", "^([^|]+)|(%d+)$")
+      local spellId = tonumber(spellText)
+      if token and token == chunkedAcquiredToken and spellId and spellId > 0
+          and not chunkedAcquiredSeen[spellId] then
+        chunkedAcquiredSeen[spellId] = true
+        chunkedAcquiredReceived = chunkedAcquiredReceived + 1
+        table.insert(chunkedAcquiredIds, spellId)
+      end
+
+    elseif prefix == "SCAEnd" then
+      local token, declaredText = string.match(message or "", "^([^|]+)|(%d+)$")
+      local declared = tonumber(declaredText)
+      if token and token == chunkedAcquiredToken and declared
+          and declared == chunkedAcquiredExpected
+          and chunkedAcquiredReceived == declared then
+        table.sort(chunkedAcquiredIds)
+        acquiredStateV3Received = true
+        talentStateV2Received = true
+        ApplyAuthoritativeTalentState(chunkedAcquiredIds)
+      end
+      if token and token == chunkedAcquiredToken then
+        chunkedAcquiredToken = nil
+        chunkedAcquiredExpected = 0
+        chunkedAcquiredReceived = 0
+        chunkedAcquiredIds = {}
+        chunkedAcquiredSeen = {}
+      end
+
+    elseif prefix == "SCTState" then
+      local declaredText, payload = string.match(message or "", "^(%d+)|(.*)$")
+      local declared = tonumber(declaredText)
+      local ids = {}
+      if declared then
+        for id in string.gmatch(payload or "", "%d+") do
+          table.insert(ids, tonumber(id))
+        end
+      end
+      -- Only a complete count-framed packet may replace confirmed state.
+      if not acquiredStateV3Received and declared and #ids == declared then
+        talentStateV2Received = true
+        ApplyAuthoritativeTalentState(ids)
+      end
+
+    elseif prefix == "SCDI" then
+      local rank = math.max(0, math.min(5, tonumber(message) or 0))
+      local ranks = CopyTalentRanks(SpellDraft.ConfirmedTalentRanks or {})
+      if rank > 0 then
+        ranks[20257] = rank
+      else
+        ranks[20257] = nil
+      end
+      ApplyAuthoritativeTalentRanks(ranks)
+
+    elseif prefix == "SCAK" then
+      -- User-verified B0.10.2 display-only channel for Ancestral Knowledge.
+      -- It projects DB rank 0..5 into the UI and never mutates Aura/stats.
+      local rank = math.max(0, math.min(5, tonumber(message) or 0))
+      local ranks = CopyTalentRanks(SpellDraft.ConfirmedTalentRanks or {})
+      if rank > 0 then
+        ranks[17485] = rank
+      else
+        ranks[17485] = nil
+      end
+      ApplyAuthoritativeTalentRanks(ranks)
+
+    elseif prefix == "SCDS" then
+      -- B0.5.1 display-only DB projection for Divine Strength.  This packet is
+      -- deliberately handled after/copying the current table so it replaces
+      -- only 20262 and cannot erase unrelated confirmed talents.
+      local rank = math.max(0, math.min(5, tonumber(message) or 0))
+      local ranks = CopyTalentRanks(SpellDraft.ConfirmedTalentRanks or {})
+      if rank > 0 then
+        ranks[20262] = rank
+      else
+        ranks[20262] = nil
+      end
+      ApplyAuthoritativeTalentRanks(ranks)
+
+    elseif prefix == "SCSOA" then
+      -- DB-only projection for Strength of Arms, identical in responsibility
+      -- to SCDI/SCAK/SCDS.  Native Aura owns Strength/Stamina/Expertise; this
+      -- packet changes only the confirmed 46865 rank shown by both UI panels.
+      local rank = math.max(0, math.min(2, tonumber(message) or 0))
+      local ranks = CopyTalentRanks(SpellDraft.ConfirmedTalentRanks or {})
+      if rank > 0 then
+        ranks[46865] = rank
+      else
+        ranks[46865] = nil
+      end
+      ApplyAuthoritativeTalentRanks(ranks)
+
+    elseif prefix == "SCTRBegin" then
+      local tokenText, countText = string.match(message or "", "^(%d+)|(%d+)$")
+      local token, count = tonumber(tokenText), tonumber(countText)
+      if token and count and count >= 0 and count <= 512 then
+        chunkedTalentRankToken = token
+        chunkedTalentRankExpected = count
+        chunkedTalentRankReceived = 0
+        chunkedTalentRanks = {}
+      else
+        ResetChunkedTalentRankFrame()
+      end
+
+    elseif prefix == "SCTRPart" then
+      local tokenText, firstText, rankText = string.match(message or "", "^(%d+)|(%d+)=(%d+)$")
+      local token = tonumber(tokenText)
+      local firstRankSpellId, rank = tonumber(firstText), tonumber(rankText)
+      if token and token == chunkedTalentRankToken and firstRankSpellId and rank
+          and rank > 0 and rank <= 9 and not chunkedTalentRanks[firstRankSpellId] then
+        chunkedTalentRanks[firstRankSpellId] = rank
+        chunkedTalentRankReceived = chunkedTalentRankReceived + 1
+      end
+
+    elseif prefix == "SCTREnd" then
+      local tokenText, countText = string.match(message or "", "^(%d+)|(%d+)$")
+      local token, count = tonumber(tokenText), tonumber(countText)
+      if token and token == chunkedTalentRankToken and count == chunkedTalentRankExpected
+          and chunkedTalentRankReceived == chunkedTalentRankExpected then
+        ApplyAuthoritativeTalentRanks(chunkedTalentRanks)
+      end
+      ResetChunkedTalentRankFrame()
+
+    elseif prefix == "SCTRank" or prefix == "SCTReg" then
+      -- Shared authoritative delta/final registry projection for controlled
+      -- spell-backed talents. Copy
+      -- the current table and replace exactly one first-rank key; applying the
+      -- result also reconciles an impossible local Pending point immediately.
+      local firstText, rankText = string.match(message or "", "^(%d+)=(%d+)$")
+      local firstRankSpellId, rank = tonumber(firstText), tonumber(rankText)
+      local talent = firstRankSpellId and SpellDraftTalentDB and SpellDraftTalentDB[firstRankSpellId]
+      local maxRank = talent and tonumber(talent.maxRank) or 9
+      if firstRankSpellId and rank and rank >= 0 and rank <= maxRank then
+        local ranks = CopyTalentRanks(SpellDraft.ConfirmedTalentRanks or {})
+        if rank > 0 then ranks[firstRankSpellId] = rank
+        else ranks[firstRankSpellId] = nil end
+        ApplyAuthoritativeTalentRanks(ranks)
+      end
+
+    elseif prefix == "SCTRanks" then
+      local declaredText, payload = string.match(message or "", "^(%d+)|(.*)$")
+      local declared = tonumber(declaredText)
+      local ranks, received = {}, 0
+      if declared then
+        for firstText, rankText in string.gmatch(payload or "", "(%d+)=(%d+)") do
+          local firstRankSpellId, rank = tonumber(firstText), tonumber(rankText)
+          if firstRankSpellId and rank and rank > 0 and not ranks[firstRankSpellId] then
+            ranks[firstRankSpellId] = rank
+            received = received + 1
+          end
+        end
+      end
+      if declared and received == declared then
+        ApplyAuthoritativeTalentRanks(ranks)
+      end
+
+    elseif prefix == "SCTalents" or prefix == "SpellChoiceTalents" then
+      -- Legacy compatibility. Once count-framed state has arrived, ignore
+      -- later legacy packets. Also do not let an ambiguous empty legacy frame
+      -- erase a non-empty per-character snapshot; SCTState will explicitly
+      -- send 0| when the server really has no talents.
+      if not talentStateV2Received then
+        local ids = {}
+        if message and message ~= "" then
+          for id in string.gmatch(message, "%d+") do
+            table.insert(ids, tonumber(id))
+          end
+        end
+        if #ids > 0 then
+          ApplyAuthoritativeTalentState(ids)
+        else
+          SpellDraft.RestoreTalentStateCache(false)
+        end
+      end
+
+    elseif prefix == "SCTPoints" or prefix == "SpellChoiceTalentPoints" then
       local points = tonumber(message) or 0
       SpellDraft.TalentPoints = points
       if SpellDraft.UpdateStatsDisplay then
         SpellDraft.UpdateStatsDisplay()
+      end
+
+    elseif prefix == "SCTCommit" then
+      local token, status, detail = string.match(message or "", "^([^:]+):([^:]+):?(.*)$")
+      if SpellDraft.HandleTalentCommitResult then
+        SpellDraft.HandleTalentCommitResult(status == "ok", detail, token)
+      end
+
+    elseif prefix == "SCTRefund" then
+      local token, status, detail = string.match(message or "", "^([^:]+):([^:]+):?(.*)$")
+      if SpellDraft.HandleTalentRefundResult then
+        SpellDraft.HandleTalentRefundResult(status == "ok", detail, token)
+      end
+
+    elseif prefix == "SpellChoiceTalentCommit" then
+      local ok, detail = string.match(message or "", "^(%a+):?(.*)$")
+      if SpellDraft.HandleTalentCommitResult then
+        SpellDraft.HandleTalentCommitResult(ok == "ok", detail)
       end
 
     elseif prefix == "SpellChoicePrestigeTokens" then
@@ -784,10 +1568,13 @@ end
 
 
 local rerollCooldown = false
+local rerollRequestSerial = 0
 
 SpellChoiceRerollButton:SetScript("OnClick", function()
   PlaySound("igMainMenuOptionCheckBoxOn")
-  if rerollCooldown or not unlocked or (rerollsLeft <= 0 and not unlimitedReroll) then
+  local canTalentReroll = isTalentDraftActive and talentRerollCost > 0 and talentEssence >= talentRerollCost
+  local canNormalReroll = not isTalentDraftActive and (rerollsLeft > 0 or unlimitedReroll)
+  if rerollCooldown or not unlocked or (not canTalentReroll and not canNormalReroll) then
     UIErrorsFrame:AddMessage(L("Cannot reroll at this time."), 1, 0, 0, 1)
     return
   end
@@ -802,7 +1589,27 @@ SpellChoiceRerollButton:SetScript("OnClick", function()
 
   local target = UnitName("player")
   if target then
-    SendChatMessage("SC_REROLL", "WHISPER", GetFactionLanguage(), target)
+    -- Bind every click to one unique request and to the exact three cards the
+    -- player is looking at.  The server can therefore reject a second event
+    -- handler processing the same click instead of charging another reroll.
+    rerollRequestSerial = rerollRequestSerial + 1
+    -- WoW 3.3.5 string.format("%d") uses a signed 32-bit integer. An
+    -- unbounded millisecond tick eventually becomes -2147483648, which no
+    -- longer matches the server protocol and makes the reroll button inert.
+    local safeTick = math.floor((GetTime() or 0) * 1000) % 10000000
+    local requestToken = safeTick * 100 + (rerollRequestSerial % 100)
+    if #lastSpellIDs == 3 then
+      SendChatMessage(string.format("SC_REROLL:%d:%d:%d:%d",
+        requestToken,
+        tonumber(lastSpellIDs[1]) or 0,
+        tonumber(lastSpellIDs[2]) or 0,
+        tonumber(lastSpellIDs[3]) or 0),
+        "WHISPER", GetFactionLanguage(), target)
+    else
+      -- Compatibility fallback for a draft restored before its cards finished
+      -- loading. Normal visible three-card rerolls always use the guarded form.
+      SendChatMessage("SC_REROLL", "WHISPER", GetFactionLanguage(), target)
+    end
   else
     print("SpellChoice: Failed to send SC_REROLL — player name is nil.")
   end

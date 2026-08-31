@@ -10,6 +10,7 @@ Localization.lua
 SpellChoice.xml
 SpellData.lua
 SpellData_Talents.lua
+SpellCatalogFlags.lua
 SpellChoice.lua
 SpellBook.lua
 PrestigeShop.lua
@@ -17,5 +18,8 @@ PrestigeNameplates.lua
 ComboPoints.lua
 AmmoFix.lua
 TotemBarFix.lua
+REMysticLocale.lua
+REMysticCatalog.lua
+GMCardTooltip.lua
 RETooltip.lua
 REServices.lua

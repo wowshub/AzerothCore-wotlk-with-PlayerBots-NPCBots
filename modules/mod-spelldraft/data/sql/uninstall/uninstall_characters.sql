@@ -9,3 +9,4 @@ DROP TABLE IF EXISTS `drafted_spells`;
 DROP TABLE IF EXISTS `draft_bans`;
 DROP TABLE IF EXISTS `character_item_enchantments`;
 DROP TABLE IF EXISTS `spelldraft_character_mode`;
+DROP TABLE IF EXISTS `spelldraft_starter_tome_grant`;

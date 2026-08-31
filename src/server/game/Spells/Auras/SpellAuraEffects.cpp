@@ -5045,8 +5045,10 @@ void AuraEffect::HandleAuraModRangedAttackPowerOfStatPercent(AuraApplication con
 
     Unit* target = aurApp->GetTarget();
 
-    // Recalculate bonus
-    if (target->IsPlayer() && !(target->getClassMask() & CLASSMASK_WAND_USERS))
+    // Recalculate whenever the player actually owns aura 212. SpellDraft may
+    // grant this native hunter aura to a wand-using base class; filtering by
+    // original class here left the aura saved but the ranged AP field stale.
+    if (target->IsPlayer())
         target->ToPlayer()->UpdateAttackPowerAndDamage(true);
 }
 

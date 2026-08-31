@@ -4952,7 +4952,12 @@ void Spell::SendSpellGo()
         castFlags |= CAST_FLAG_RUNE_LIST;                    // rune cooldowns list
     }
 
-    if (m_spellInfo->HasEffect(SPELL_EFFECT_ACTIVATE_RUNE))
+    // Only a native Death Knight owns Player::m_runes.  A classless
+    // SpellDraft character may know rune-related spells and expose runic
+    // power, but must never serialize a native rune list.
+    if (m_spellInfo->HasEffect(SPELL_EFFECT_ACTIVATE_RUNE) &&
+        m_caster->IsPlayer() &&
+        m_caster->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY))
         castFlags |= CAST_FLAG_RUNE_LIST;                    // rune cooldowns list
 
     if (m_targets.HasTraj())
@@ -5567,6 +5572,9 @@ SpellCastResult Spell::CheckRuneCost(uint32 RuneCostID)
         return SPELL_CAST_OK;
     }
 
+    // Native rune slots only exist for Death Knights.  Classless SpellDraft
+    // characters can use the runic-power fallback, but they have no m_runes
+    // array and therefore bypass the six-slot rune-cost validation.
     if (!player->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY))
         return SPELL_CAST_OK;
 
@@ -5608,7 +5616,7 @@ SpellCastResult Spell::CheckRuneCost(uint32 RuneCostID)
 
 void Spell::TakeRunePower(bool didHit)
 {
-    if (!m_caster->IsPlayer() || !m_caster->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY))
+    if (!m_caster->IsPlayer())
         return;
 
     SpellRuneCostEntry const* runeCostData = sSpellRuneCostStore.LookupEntry(m_spellInfo->RuneCostID);
@@ -5616,6 +5624,19 @@ void Spell::TakeRunePower(bool didHit)
         return;
 
     Player* player = m_caster->ToPlayer();
+
+    // Cross-class users do not own Player::m_runes.  Preserve the useful
+    // runic-power generation of a DK strike without touching native rune
+    // storage.  Ordinary classic characters that do not expose runic power
+    // remain unaffected.
+    if (!player->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_ABILITY))
+    {
+        if (didHit && player->HasActivePowerType(POWER_RUNIC_POWER))
+            if (int32 rp = int32(runeCostData->runePowerGain * sWorld->getRate(RATE_POWER_RUNICPOWER_INCOME)))
+                player->ModifyPower(POWER_RUNIC_POWER, rp);
+        return;
+    }
+
     m_runesState = player->GetRunesState();                 // store previous state
 
     int32 runeCost[NUM_RUNE_TYPES];                         // blood, frost, unholy, death

@@ -24,6 +24,7 @@
 #include "SpellAuraEffects.h"
 #include "SpellMgr.h"
 #include "Unit.h"
+#include <algorithm>
 
 inline bool _ModifyUInt32(bool apply, uint32& baseValue, int32& amount)
 {
@@ -101,7 +102,6 @@ bool Player::UpdateStats(Stats stat)
 
     // value = ((base_value * base_pct) + total_value) * total_pct
     float value  = GetTotalStatValue(stat);
-
     SetStat(stat, int32(value));
 
     switch (stat)
@@ -206,8 +206,9 @@ bool Player::UpdateAllStats()
 {
     for (uint8 i = STAT_STRENGTH; i < MAX_STATS; ++i)
     {
-        float value = GetTotalStatValue(Stats(i));
-        SetStat(Stats(i), int32(value));
+        Stats const stat = Stats(i);
+        float value = GetTotalStatValue(stat);
+        SetStat(stat, int32(value));
     }
 
     UpdateArmor();
@@ -495,12 +496,14 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
     //add dynamic flat mods
     if (ranged)
     {
-        if ((getClassMask() & CLASSMASK_WAND_USERS) == 0)
-        {
-            AuraEffectList const& mRAPbyStat = GetAuraEffectsByType(SPELL_AURA_MOD_RANGED_ATTACK_POWER_OF_STAT_PERCENT);
-            for (AuraEffectList::const_iterator i = mRAPbyStat.begin(); i != mRAPbyStat.end(); ++i)
-                attPowerMod += CalculatePct(GetStat(Stats((*i)->GetMiscValue())), (*i)->GetAmount());
-        }
+        // A.40 / B0.9.22.6.1: SpellDraft can legitimately grant the native
+        // hunter intellect-to-ranged-AP aura to a wand-using base class.  The
+        // aura list itself is the narrow capability gate: Classic characters
+        // without aura 212 still add nothing, while a cross-class owner gets
+        // the exact native amount and rounding.
+        AuraEffectList const& mRAPbyStat = GetAuraEffectsByType(SPELL_AURA_MOD_RANGED_ATTACK_POWER_OF_STAT_PERCENT);
+        for (AuraEffectList::const_iterator i = mRAPbyStat.begin(); i != mRAPbyStat.end(); ++i)
+            attPowerMod += CalculatePct(GetStat(Stats((*i)->GetMiscValue())), (*i)->GetAmount());
     }
     else
     {
@@ -771,18 +774,33 @@ void Player::UpdateParryPercentage()
     float value = 0.0f;
     m_realParry = 0.0f;
     uint32 pclass = getClass() - 1;
-    if (CanParry() && parry_cap[pclass] > 0.0f)
+    float effectiveParryCap = parry_cap[pclass];
+    int32 const parryAuraBonus = GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
+
+    // SpellDraft allows talents from another class. Several original caster classes
+    // deliberately have no WotLK parry curve, so the stock class gate above would
+    // force an otherwise valid cross-class parry aura back to 0%. Unlock a conservative
+    // curve only while a positive parry aura actually grants the capability. Native
+    // class calculations (and ordinary Classic-mode characters) remain unchanged.
+    bool const crossClassParry = effectiveParryCap <= 0.0f && CanParry() && parryAuraBonus > 0;
+    if (crossClassParry)
+        effectiveParryCap = 47.003525f;
+
+    if (CanParry() && effectiveParryCap > 0.0f)
     {
-        float nondiminishing  = 5.0f;
+        // Native parry-capable classes keep their WotLK 5% base chance. A caster
+        // unlocked solely by a cross-class talent receives exactly the aura amount,
+        // rather than gaining an additional free 5% that the talent did not advertise.
+        float nondiminishing = crossClassParry ? 0.0f : 5.0f;
         // Parry from rating
         float diminishing = GetRatingBonusValue(CR_PARRY);
         // Modify value from defense skill (only bonus from defense rating diminishes)
         nondiminishing += (GetSkillValue(SKILL_DEFENSE) - GetMaxSkillValueForLevel()) * 0.04f;
         diminishing += (int32(GetRatingBonusValue(CR_DEFENSE_SKILL))) * 0.04f;
         // Parry from SPELL_AURA_MOD_PARRY_PERCENT aura
-        nondiminishing += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
+        nondiminishing += parryAuraBonus;
         // apply diminishing formula to diminishing parry chance
-        m_realParry = nondiminishing + diminishing * parry_cap[pclass] / (diminishing + parry_cap[pclass] * m_diminishing_k[pclass]);
+        m_realParry = nondiminishing + diminishing * effectiveParryCap / (diminishing + effectiveParryCap * m_diminishing_k[pclass]);
         m_realParry = m_realParry < 0.0f ? 0.0f : m_realParry;
 
         value = std::max(diminishing + nondiminishing, 0.0f);

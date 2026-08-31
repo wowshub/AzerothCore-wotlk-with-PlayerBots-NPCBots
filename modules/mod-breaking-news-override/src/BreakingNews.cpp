@@ -1,157 +1,355 @@
 /*
- * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
+ * HighFork-compatible Breaking News delivery.
+ * Based on wowshub/Breaking-News-Rewrite and adapted to the current
+ * SERVERHOOK_CAN_PACKET_SEND const-packet API.
  */
 
 #include "BreakingNews.h"
 
-bool TryReadFile(std::string& path, std::string& bn_Result)
+#include "Config.h"
+#include "Log.h"
+#include "Player.h"
+#include "ScriptMgr.h"
+#include "StringFormat.h"
+#include "WorldSession.h"
+#include "WorldSessionMgr.h"
+#include "Warden.h"
+#include "WardenPayloadMgr.h"
+
+#include <algorithm>
+#include <atomic>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <mutex>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
+namespace
 {
-    std::ifstream bn_File(path);
+constexpr uint16 PRE_PAYLOAD_ID = 9520;
+constexpr uint16 CHUNK_PAYLOAD_ID = 9521;
+constexpr uint16 POST_PAYLOAD_ID = 9522;
+constexpr std::size_t HEX_CHUNK_SIZE = 160;
 
-    std::string bn_Buffer = "";
-    bn_Result = "";
+std::atomic<bool> g_enabled{ false };
+std::atomic<uint32> g_retryIntervalMs{ 100 };
+std::atomic<uint32> g_retryWindowMs{ 15000 };
 
-    if (!bn_File.is_open())
-        return false;
+std::mutex g_contentMutex;
+std::string g_formattedPayload;
 
-    while (std::getline(bn_File, bn_Buffer))
-        bn_Result = bn_Result + (bn_Buffer);
+std::mutex g_pendingMutex;
+std::unordered_map<uint32, uint32> g_pendingAccounts;
+uint32 g_retryAccumulatorMs = 0;
 
-    bn_Result.erase(std::remove(bn_Result.begin(), bn_Result.end(), '\r'), bn_Result.cend());
-    bn_Result.erase(std::remove(bn_Result.begin(), bn_Result.end(), '\n'), bn_Result.cend());
-
-    return true;
+std::filesystem::path GetExecutableDirectory()
+{
+#ifdef _WIN32
+    std::wstring buffer(32768, L'\0');
+    DWORD const length = GetModuleFileNameW(nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
+    if (length > 0 && length < buffer.size())
+    {
+        buffer.resize(length);
+        return std::filesystem::path(buffer).parent_path();
+    }
+#endif
+    return std::filesystem::current_path();
 }
 
-bool TryReadNews(std::string& bn_Result)
+std::filesystem::path ResolveContentPath(std::string const& configuredPath)
 {
-    std::string path = sConfigMgr->GetOption<std::string>("BreakingNews.HtmlPath", "./Updates.html");
-    bn_Title = sConfigMgr->GetOption<std::string>("BreakingNews.Title", "Breaking News");
+    std::filesystem::path path(configuredPath);
+    if (path.is_absolute())
+        return path;
 
-    if (path == "")
+    return GetExecutableDirectory() / path;
+}
+
+bool ReadHtmlFile(std::filesystem::path const& path, std::string& result)
+{
+    std::ifstream file(path, std::ios::binary);
+    if (!file.is_open())
+        return false;
+
+    std::ostringstream stream;
+    stream << file.rdbuf();
+    result = stream.str();
+
+    result.erase(std::remove(result.begin(), result.end(), '\r'), result.end());
+    result.erase(std::remove(result.begin(), result.end(), '\n'), result.end());
+    return !result.empty();
+}
+
+std::string EscapeLuaSingleQuoted(std::string const& value)
+{
+    std::string escaped;
+    escaped.reserve(value.size() + 32);
+
+    for (char const character : value)
     {
-        LOG_ERROR("module", "Failed to read 'BreakingNews.HtmlPath'.");
+        switch (character)
+        {
+            case '\\': escaped += "\\\\"; break;
+            case '\'': escaped += "\\\'"; break;
+            case '\r': break;
+            case '\n': escaped += "\\n"; break;
+            default: escaped += character; break;
+        }
+    }
+
+    return escaped;
+}
+
+std::string HexEncode(std::string const& value)
+{
+    static constexpr char digits[] = "0123456789ABCDEF";
+    std::string encoded;
+    encoded.reserve(value.size() * 2);
+
+    for (unsigned char const byte : value)
+    {
+        encoded += digits[(byte >> 4) & 0x0F];
+        encoded += digits[byte & 0x0F];
+    }
+
+    return encoded;
+}
+
+void ClearPendingDeliveries()
+{
+    std::lock_guard<std::mutex> lock(g_pendingMutex);
+    g_pendingAccounts.clear();
+}
+
+void QueuePendingDelivery(uint32 accountId)
+{
+    std::lock_guard<std::mutex> lock(g_pendingMutex);
+    g_pendingAccounts[accountId] = 0;
+}
+
+void RemovePendingDelivery(uint32 accountId)
+{
+    std::lock_guard<std::mutex> lock(g_pendingMutex);
+    g_pendingAccounts.erase(accountId);
+}
+
+bool LoadBreakingNewsContent()
+{
+    std::string const configuredPath = sConfigMgr->GetOption<std::string>(
+        "BreakingNews.CharacterHtmlPath", "./breakingnews_character.html");
+    std::string const title = sConfigMgr->GetOption<std::string>(
+        "BreakingNews.CharacterTitle", "Newest updates 最新更新");
+
+    if (configuredPath.empty())
+    {
+        LOG_ERROR("module", "mod-breaking-news: BreakingNews.CharacterHtmlPath is empty.");
         return false;
     }
 
-    if (!TryReadFile(path, bn_Result))
+    std::filesystem::path const resolvedPath = ResolveContentPath(configuredPath);
+    std::string body;
+    if (!ReadHtmlFile(resolvedPath, body))
     {
-        LOG_ERROR("module", "Failed to read file '{}'.", path);
+        LOG_ERROR("module", "mod-breaking-news: failed to read HTML file '{}'.", resolvedPath.string());
+        std::lock_guard<std::mutex> lock(g_contentMutex);
+        g_formattedPayload.clear();
         return false;
     }
 
+    std::string const payload = Acore::StringFormat(
+        "local a,b,c,d=ServerAlertFrame,ServerAlertText,ServerAlertTitle,CharacterSelect;"
+        "if a and b and c and d then "
+        "a:SetParent(d);a:ClearAllPoints();a:SetPoint('TOPLEFT',d,'TOPLEFT',10,-130);"
+        "a:SetFrameStrata('DIALOG');c:SetText('{}');b:SetText('{}');a:Show();"
+        "else message('BreakingNews: required GlueXML frames are missing.') end",
+        EscapeLuaSingleQuoted(title), EscapeLuaSingleQuoted(body));
+
+    {
+        std::lock_guard<std::mutex> lock(g_contentMutex);
+        g_formattedPayload = payload;
+    }
+
+    LOG_INFO("module", "mod-breaking-news: loaded '{}' ({} body bytes).", resolvedPath.string(), body.size());
     return true;
 }
 
-std::vector<std::string> BreakingNewsServerScript::GetChunks(std::string s, uint8_t chunkSize)
+void SendEncodedPayload(Warden* warden, WardenPayloadMgr* payloadMgr, std::string const& payload)
 {
-    std::vector<std::string> chunks;
+    std::string const prePayload = "wlhex='';";
+    std::string const postPayload =
+        "local s=wlhex:gsub('..',function(h)return string.char(tonumber(h,16))end);"
+        "local f,e=loadstring(s);if not f then message(e)else f()end";
+    std::string const encoded = HexEncode(payload);
 
-    for (uint32_t i = 0; i < s.size(); i += chunkSize)
-        chunks.push_back(s.substr(i, chunkSize));
-
-    return chunks;
-}
-
-void BreakingNewsServerScript::SendChunkedPayload(Warden* warden, WardenPayloadMgr* payloadMgr, std::string payload, uint32 chunkSize)
-{
-    bool verbose = sConfigMgr->GetOption<bool>("BreakingNews.Verbose", false);
-
-    auto chunks = GetChunks(payload, chunkSize);
-
-    if (!payloadMgr->GetPayloadById(_prePayloadId))
-        payloadMgr->RegisterPayload(_prePayload, _prePayloadId);
-
-    payloadMgr->QueuePayload(_prePayloadId);
+    payloadMgr->RegisterPayload(prePayload, PRE_PAYLOAD_ID, true);
+    payloadMgr->QueuePayload(PRE_PAYLOAD_ID);
     warden->ForceChecks();
 
-    if (verbose)
-        LOG_INFO("module", "Sent pre-payload '{}'.", _prePayload);
-
-    for (auto const& chunk : chunks)
+    for (std::size_t offset = 0; offset < encoded.size(); offset += HEX_CHUNK_SIZE)
     {
-        auto smallPayload = "wlbuf = wlbuf .. [[" + chunk + "]];";
-    
-        payloadMgr->RegisterPayload(smallPayload, _tmpPayloadId, true);
-        payloadMgr->QueuePayload(_tmpPayloadId);
+        std::string const chunk = encoded.substr(offset, HEX_CHUNK_SIZE);
+        std::string const chunkPayload = "wlhex=wlhex..'" + chunk + "';";
+        payloadMgr->RegisterPayload(chunkPayload, CHUNK_PAYLOAD_ID, true);
+        payloadMgr->QueuePayload(CHUNK_PAYLOAD_ID);
         warden->ForceChecks();
-
-        if (verbose)
-            LOG_INFO("module", "Sent mid-payload '{}'.", smallPayload);
     }
 
-    if (!payloadMgr->GetPayloadById(_postPayloadId))
-        payloadMgr->RegisterPayload(_postPayload, _postPayloadId);
-
-    payloadMgr->QueuePayload(_postPayloadId);
+    payloadMgr->RegisterPayload(postPayload, POST_PAYLOAD_ID, true);
+    payloadMgr->QueuePayload(POST_PAYLOAD_ID);
     warden->ForceChecks();
-
-    if (verbose)
-        LOG_INFO("module", "Sent post-payload '{}'.", _postPayload);
 }
 
-void LoadBreakingNews()
+bool TryDeliver(WorldSession* session, char const* reason)
 {
-    bn_Title = sConfigMgr->GetOption<std::string>("BreakingNews.Title", "Breaking News");
+    if (!session || session->GetPlayer())
+        return false;
 
-    if (!TryReadNews(bn_Body))
+    Warden* warden = session->GetWarden();
+    if (!warden || !warden->IsInitialized())
+        return false;
+
+    WardenPayloadMgr* payloadMgr = warden->GetPayloadMgr();
+    if (!payloadMgr)
+        return false;
+
+    std::string payload;
     {
-        LOG_ERROR("module", "Failed to read breaking news.");
-        return;
+        std::lock_guard<std::mutex> lock(g_contentMutex);
+        payload = g_formattedPayload;
     }
 
-    bn_Formatted = Acore::StringFormat(_midPayloadFmt, bn_Title, bn_Body);
-}
+    if (payload.empty())
+        return false;
 
-bool BreakingNewsServerScript::CanPacketSend(WorldSession* session, WorldPacket const& packet)
-{
-    if (!bn_Enabled)
-        return true;
+    if (!sConfigMgr->GetOption<bool>("BreakingNews.Cache", true) && !LoadBreakingNewsContent())
+        return false;
 
-    if (packet.GetOpcode() == SMSG_CHAR_ENUM)
     {
-        WardenWin* warden = (WardenWin*)session->GetWarden();
-        if (!warden)
-            return true;
-
-        // Trying to use Warden before it has initialized,
-        // so we exit.
-        if (!warden->IsInitialized())
-            return true;
-
-        if (bn_Formatted == "")
-            return true;
-
-
-        auto payloadMgr = warden->GetPayloadMgr();
-        if (!payloadMgr)
-            return true;
-
-        // Just in-case there are some payloads in the queue, we don't want to send the incorrect payload.
-        payloadMgr->ClearQueuedPayloads();
-
-        // Load in the updated news into the cache.
-        if (!sConfigMgr->GetOption<bool>("BreakingNews.Cache", false))
-            LoadBreakingNews();
-
-        // The client truncates warden packets to around 256 and our payload may be larger than that.
-        SendChunkedPayload(warden, payloadMgr, bn_Formatted, 128);
+        std::lock_guard<std::mutex> lock(g_contentMutex);
+        payload = g_formattedPayload;
     }
 
+    SendEncodedPayload(warden, payloadMgr, payload);
+    LOG_INFO("module", "mod-breaking-news: queued panel for account {} via {}.", session->GetAccountId(), reason);
     return true;
 }
 
-void BreakingNewsWorldScript::OnAfterConfigLoad(bool /*reload*/)
+class BreakingNewsServerScript final : public ServerScript
 {
-    bn_Enabled = sConfigMgr->GetOption<bool>("BreakingNews.Enable", false);
+public:
+    BreakingNewsServerScript() : ServerScript("BreakingNewsServerScript", { SERVERHOOK_CAN_PACKET_SEND }) { }
 
-    if (!bn_Enabled)
-        return;
+    bool CanPacketSend(WorldSession* session, WorldPacket const& packet) override
+    {
+        if (!g_enabled.load() || packet.GetOpcode() != SMSG_CHAR_ENUM || !session)
+            return true;
 
-    LoadBreakingNews();
+        uint32 const accountId = session->GetAccountId();
+        QueuePendingDelivery(accountId);
+
+        if (TryDeliver(session, "SMSG_CHAR_ENUM"))
+            RemovePendingDelivery(accountId);
+        else if (sConfigMgr->GetOption<bool>("BreakingNews.Verbose", false))
+            LOG_INFO("module", "mod-breaking-news: account {} is waiting for Warden initialization.", accountId);
+
+        return true;
+    }
+};
+
+class BreakingNewsWorldScript final : public WorldScript
+{
+public:
+    BreakingNewsWorldScript() : WorldScript(
+        "BreakingNewsWorldScript", { WORLDHOOK_ON_AFTER_CONFIG_LOAD, WORLDHOOK_ON_UPDATE }) { }
+
+    void OnAfterConfigLoad(bool /*reload*/) override
+    {
+        bool const masterEnabled = sConfigMgr->GetOption<bool>("BreakingNews.Enable", false);
+        uint32 const displayMode = std::clamp<uint32>(
+            sConfigMgr->GetOption<uint32>("BreakingNews.DisplayMode", 3), 0, 3);
+        bool const characterEnabled = masterEnabled && (displayMode == 2 || displayMode == 3);
+        g_enabled.store(characterEnabled);
+
+        uint32 retryInterval = sConfigMgr->GetOption<uint32>("BreakingNews.RetryIntervalMs", 100);
+        uint32 retryWindow = sConfigMgr->GetOption<uint32>("BreakingNews.RetryWindowMs", 15000);
+        g_retryIntervalMs.store(std::clamp<uint32>(retryInterval, 50, 1000));
+        g_retryWindowMs.store(std::clamp<uint32>(retryWindow, 1000, 60000));
+
+        ClearPendingDeliveries();
+        g_retryAccumulatorMs = 0;
+
+        if (!masterEnabled)
+        {
+            LOG_INFO("module", "mod-breaking-news: disabled.");
+            return;
+        }
+
+        if (!characterEnabled)
+        {
+            LOG_INFO("module", "mod-breaking-news: display mode {} does not include the character-selection page.", displayMode);
+            return;
+        }
+
+        if (LoadBreakingNewsContent())
+            LOG_INFO("module", "mod-breaking-news: enabled for character selection (display mode {}) with reliable Warden retry delivery.", displayMode);
+    }
+
+    void OnUpdate(uint32 diff) override
+    {
+        if (!g_enabled.load())
+            return;
+
+        g_retryAccumulatorMs += diff;
+        uint32 const retryInterval = g_retryIntervalMs.load();
+        if (g_retryAccumulatorMs < retryInterval)
+            return;
+
+        uint32 const elapsed = g_retryAccumulatorMs;
+        g_retryAccumulatorMs = 0;
+
+        std::vector<uint32> pending;
+        std::vector<uint32> expired;
+        {
+            std::lock_guard<std::mutex> lock(g_pendingMutex);
+            for (auto& [accountId, waitedMs] : g_pendingAccounts)
+            {
+                waitedMs += elapsed;
+                if (waitedMs >= g_retryWindowMs.load())
+                    expired.push_back(accountId);
+                else
+                    pending.push_back(accountId);
+            }
+
+            for (uint32 const accountId : expired)
+                g_pendingAccounts.erase(accountId);
+        }
+
+        for (uint32 const accountId : expired)
+            LOG_ERROR("module", "mod-breaking-news: delivery timed out for account {}; Warden never became ready.", accountId);
+
+        for (uint32 const accountId : pending)
+        {
+            WorldSession* session = sWorldSessionMgr->FindSession(accountId);
+            if (!session || session->GetPlayer())
+            {
+                RemovePendingDelivery(accountId);
+                continue;
+            }
+
+            if (TryDeliver(session, "Warden retry"))
+                RemovePendingDelivery(accountId);
+        }
+    }
+};
 }
 
-// Add all scripts in one.
 void AddBreakingNewsScripts()
 {
     new BreakingNewsWorldScript();

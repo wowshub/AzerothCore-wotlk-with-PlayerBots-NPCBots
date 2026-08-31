@@ -8367,6 +8367,15 @@ void Unit::SetMinion(Minion* minion, bool apply)
 
             if (spellInfo && spellInfo->IsCooldownStartedOnEvent())
                 ToPlayer()->AddSpellAndCategoryCooldowns(spellInfo, 0, nullptr, true);
+
+            // A classless summon can be a controlled Minion/Guardian without
+            // ever becoming Player::GetPet().  Project every already-owned
+            // native PetAura when it enters the owner's control set.  This is
+            // the stock path used by Soul Link (19028 -> 25228), Master
+            // Demonologist and the other pet-dependent talents; only the
+            // cross-class ownership lookup is broadened here.
+            for (PetAura const* petAura : m_petAuras)
+                minion->CastPetAura(petAura);
         }
     }
     else
@@ -15035,11 +15044,90 @@ void Unit::AddPetAura(PetAura const* petSpell)
     if (!IsPlayer())
         return;
 
+    // A player can temporarily know several ranks of a classless talent while
+    // SpellDraft reconciles its rank chain.  PetAuraSet stores pointers, so the
+    // native set previously retained both the old and new rank and repeatedly
+    // re-projected both mapped auras.  Keep only the highest registered rank of
+    // the same source-spell chain.  Different effects of the same source spell
+    // remain independent.
+    auto petAuraFamily = [](uint32 spellId)
+    {
+        switch (spellId)
+        {
+            case 23785: case 23822: case 23823: case 23824: case 23825:
+                return uint32(23785); // Master Demonologist ranks 1-5
+            default:
+            {
+                uint32 const first = sSpellMgr->GetFirstSpellInChain(spellId);
+                return first ? first : spellId;
+            }
+        }
+    };
+    auto petAuraRank = [](uint32 spellId)
+    {
+        switch (spellId)
+        {
+            case 23785: return uint8(1);
+            case 23822: return uint8(2);
+            case 23823: return uint8(3);
+            case 23824: return uint8(4);
+            case 23825: return uint8(5);
+            default:
+            {
+                uint8 const rank = sSpellMgr->GetSpellRank(spellId);
+                return rank ? rank : uint8(1);
+            }
+        }
+    };
+
+    uint32 const sourceSpell = petSpell->GetSourceSpellId();
+    uint32 const sourceFirst = petAuraFamily(sourceSpell);
+    uint8 const sourceRank = petAuraRank(sourceSpell);
+    std::vector<PetAura const*> obsolete;
+    for (PetAura const* existing : m_petAuras)
+    {
+        uint32 const existingSpell = existing->GetSourceSpellId();
+        if (!existingSpell || existingSpell == sourceSpell)
+            continue;
+        if (petAuraFamily(existingSpell) != sourceFirst)
+            continue;
+
+        uint8 const existingRank = petAuraRank(existingSpell);
+        if (existingRank > sourceRank)
+            return; // Never let a late lower-rank load replace the higher rank.
+        obsolete.push_back(existing);
+    }
+
+    for (PetAura const* oldAura : obsolete)
+        RemovePetAura(oldAura);
+
     m_petAuras.insert(petSpell);
-    if (Pet* pet = ToPlayer()->GetPet())
+
+    // Classless summons are not always represented by Player::GetPet().
+    // In particular, a non-warlock casting a warlock summon can own a
+    // Guardian/Minion whose GUID is deliberately not typed as a persistent
+    // Pet.  Native PetAura parents (Master Demonologist, Demonic Knowledge,
+    // etc.) must still be projected to that controlled unit.
+    Unit* pet = ToPlayer()->GetPet();
+    Unit* guardian = GetGuardianPet();
+    Unit* minion = GetFirstMinion();
+    Unit* charm = GetCharm();
+
+    if (pet)
         pet->CastPetAura(petSpell);
-    else if (Unit* charm = GetCharm())
+    if (guardian && guardian != pet)
+        guardian->CastPetAura(petSpell);
+    if (minion && minion != pet && minion != guardian)
+        minion->CastPetAura(petSpell);
+    if (charm && charm != pet && charm != guardian && charm != minion)
         charm->CastPetAura(petSpell);
+
+    // m_Controlled is the authoritative collection.  Some classless
+    // TemporarySummons are intentionally absent from all four convenience
+    // getters above.
+    for (Unit* controlled : m_Controlled)
+        if (controlled && controlled != pet && controlled != guardian && controlled != minion && controlled != charm)
+            controlled->CastPetAura(petSpell);
 }
 
 void Unit::RemovePetAura(PetAura const* petSpell)
@@ -15048,10 +15136,29 @@ void Unit::RemovePetAura(PetAura const* petSpell)
         return;
 
     m_petAuras.erase(petSpell);
-    if (Pet* pet = ToPlayer()->GetPet())
-        pet->RemoveAurasDueToSpell(petSpell->GetAura(pet->GetEntry()));
-    if (Unit* charm = GetCharm())
-        charm->RemoveAurasDueToSpell(petSpell->GetAura(charm->GetEntry()));
+
+    Unit* pet = ToPlayer()->GetPet();
+    Unit* guardian = GetGuardianPet();
+    Unit* minion = GetFirstMinion();
+    Unit* charm = GetCharm();
+    auto removeMappedAura = [petSpell](Unit* controlled)
+    {
+        if (uint32 auraId = petSpell->GetAura(controlled->GetEntry()))
+            controlled->RemoveAurasDueToSpell(auraId);
+    };
+
+    if (pet)
+        removeMappedAura(pet);
+    if (guardian && guardian != pet)
+        removeMappedAura(guardian);
+    if (minion && minion != pet && minion != guardian)
+        removeMappedAura(minion);
+    if (charm && charm != pet && charm != guardian && charm != minion)
+        removeMappedAura(charm);
+
+    for (Unit* controlled : m_Controlled)
+        if (controlled && controlled != pet && controlled != guardian && controlled != minion && controlled != charm)
+            removeMappedAura(controlled);
 }
 
 void Unit::CastPetAura(PetAura const* aura)
@@ -16934,6 +17041,17 @@ uint32 Unit::GetCombatRatingDamageReduction(CombatRating cr, float rate, float c
 
 uint32 Unit::GetModelForForm(ShapeshiftForm form, uint32 spellId)
 {
+    // SpellDraft glyph collection keeps the native glyph aura authoritative.
+    // Appearance glyphs must override the ordinary race/hair bear selection.
+    if (IsPlayer() && (form == FORM_BEAR || form == FORM_DIREBEAR) && HasAura(54292))
+        return 29416;
+    if (IsPlayer() && (form == FORM_BEAR || form == FORM_DIREBEAR) && HasAura(58132))
+        return 29414;
+    if (IsPlayer() && form == FORM_CAT && HasAura(54912))
+        return 15593;
+    if (IsPlayer() && form == FORM_CAT && HasAura(58133))
+        return 18167;
+
     // Hardcoded cases
     switch (spellId)
     {

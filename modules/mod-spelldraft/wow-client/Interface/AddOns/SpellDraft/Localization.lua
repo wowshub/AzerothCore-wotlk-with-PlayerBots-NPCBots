@@ -8,11 +8,14 @@ local zhCN = {
     ["Automatic"] = "自动",
     ["Chinese"] = "中文",
     ["English"] = "英文",
+    ["Cancel"] = "取消",
+    ["Confirm"] = "确认",
     ["Language"] = "语言",
     ["SpellDraft language: %s. Reloading UI..."] = "SpellDraft 语言：%s。正在重新载入界面……",
     ["Usage: /sdlang auto, /sdlang zh, or /sdlang en"] = "用法：/sdlang auto、/sdlang zh 或 /sdlang en",
 
-    ["All"] = "全部", ["General"] = "通用",
+    ["All"] = "全部", ["General"] = "通用", ["Universal"] = "通用能力",
+    ["All Skills"] = "全部技能", ["Learned Overview"] = "已学总览",
     ["Warrior"] = "战士", ["Paladin"] = "圣骑士", ["Hunter"] = "猎人", ["Rogue"] = "盗贼",
     ["Priest"] = "牧师", ["Death Knight"] = "死亡骑士", ["Shaman"] = "萨满", ["Mage"] = "法师",
     ["Warlock"] = "术士", ["Druid"] = "德鲁伊",
@@ -27,19 +30,99 @@ local zhCN = {
     ["Affliction"] = "痛苦", ["Demonology"] = "恶魔学识", ["Destruction"] = "毁灭",
     ["Balance"] = "平衡", ["Feral"] = "野性", ["Feral Combat"] = "野性战斗",
     ["Common"] = "普通", ["Uncommon"] = "优秀", ["Rare"] = "稀有",
-    ["Epic"] = "史诗", ["Legendary"] = "传说", ["Broken"] = "损坏",
+    ["Epic"] = "史诗", ["Legendary"] = "传说", ["Restricted"] = "受限",
     ["Innate"] = "固有",
-    ["Character Advancement · SpellDraft"] = "角色成长 · SpellDraft",
+    ["Character Advancement · Skills & Talents"] = "角色成长 · 技能与天赋",
     ["Spells & Abilities"] = "技能与能力", ["Talent Trees"] = "天赋树",
+    ["Skill Catalog"] = "职业技能总览",
+    ["Expand"] = "展开", ["Collapse"] = "收回",
+    ["Expand the skill catalog"] = "展开技能总览",
+    ["Restore the talent tree"] = "恢复天赋树",
+    ["The catalog layout cannot change during combat."] = "战斗中不能切换技能总览布局。",
+    ["All statuses"] = "全部状态", ["Learned only"] = "仅看已学", ["Unlearned only"] = "仅看未学",
+    ["All types"] = "全部类型", ["Active only"] = "仅看主动", ["Passive only"] = "仅看被动",
+    ["Active"] = "主动", ["Passive"] = "被动", ["Learned"] = "已学习", ["Unlearned"] = "未学习",
+    ["Collapsed rank chain: %d ranks"] = "已合并显示%d个技能等级",
+    ["Known skills are bright; unlearned pool skills are grey."] = "已学技能会高亮，尚未获得的抽卡池技能会置灰。",
+    ["SpellDraft Status"] = "SpellDraft 状态",
     ["Moving Character Advancement..."] = "正在移动角色成长面板……",
     ["Search spells..."] = "搜索技能……",
+    ["Search talents..."] = "搜索天赋或ID……",
+    ["No matching talent"] = "没有匹配的天赋",
+    ["Class: %s · Spec: %s · Max rank: %d · SpellID: %d"] = "职业：%s · 专精：%s · 最高%d级 · SpellID：%d",
+    ["Click to locate this talent."] = "点击即可切换职业并定位该天赋。",
     ["Page %d of %d"] = "第 %d / %d 页",
+    ["Spread %d of %d"] = "第 %d / %d 跨页",
+    ["Chapter: %s"] = "章节：%s",
+    ["Learned %d of %d"] = "已学习 %d / %d",
     ["Choose a class above"] = "请从上方选择一个职业",
     ["Its three talent trees will appear here"] = "选择后将在这里显示三系天赋",
     ["Locked talents can only be drafted from a Tome of Talents"] = "带锁天赋只能通过天赋之书抽取",
     ["Talk to Nibbs when you need to reset talents."] = "需要洗点时，请与小鬼 Nibbs 对话。",
+    ["Right-click a talent to refund one rank; Nibbs resets the whole tree."] = "右键天赋可回退一级；小鬼 Nibbs 可重置整棵天赋树。",
+    ["Right-click to cancel one pending point."] = "右键取消一点尚未确认的天赋点。",
+    ["Right-click to refund one confirmed rank (%d Essence)."] = "右键回退一级已确认天赋（消耗%d精华）。",
+    ["Spell learned; the main action bar is full."] = "技能已学会，但主动作条已满。",
+    ["Spell learned; all action bars are full."] = "技能已学会，但所有动作条都已满。",
+    ["Spell learned; automatic action bar placement failed."] = "技能已学会，但自动放入动作条失败，请从技能书手动拖入。",
+    ["Spell learned; click the placement button to add it to an action bar."] = "技能已学会；请点击下方的放入动作条按钮完成摆放。",
+    ["Dismiss this placement reminder"] = "关闭本次动作条提示",
+  ["The learned spell and draft progress are not affected."] = "不会影响已学技能，也不会消耗或撤销抽卡进度。",
+  ["Drag this bar to move it. Its position is saved for this character."] = "按住并拖动此提示条可调整位置；系统会为当前角色保存位置。",
+  ["Talent plan confirmed."] = "天赋方案已经确认并生效。",
+  ["Talent confirmation failed."] = "天赋方案确认失败，临时加点仍然保留。",
+  ["Talent confirmation is in progress."] = "正在确认天赋方案，请等待服务器完成处理。",
+  ["Talent confirmation timed out; your pending plan was retained."] = "天赋确认等待超时，临时加点已保留，请再次确认。",
+  ["Confirmed Custom Talents"] = "已确认的自定义天赋",
+  ["No confirmed custom talents"] = "尚未确认任何自定义天赋",
+  ["No confirmed talents match this search."] = "没有已确认天赋符合当前搜索。",
+  ["Confirmed %d"] = "已确认 %d",
+  ["Pending +%d"] = "待确认 +%d",
+  ["Add one pending rank"] = "增加一级（进入待确认）",
+  ["Remove one rank"] = "回退一级",
+  ["Click the card to locate this talent in its class tree."] = "点击卡片可切换到对应职业并定位这个天赋。",
+  ["Sort: %s"] = "排序：%s",
+  ["First learned"] = "先学习的在前",
+  ["Newest learned"] = "后学习的在前",
+  ["Class and spec"] = "按职业与专精",
+  ["Attribute or effect"] = "按属性与效果",
+  ["Current rank"] = "按当前等级",
+  ["Talent name"] = "按天赋名称",
+  ["Talent card sorting"] = "天赋卡片排序",
+  ["Sorting changes presentation only; ranks and Pending are unchanged."] = "排序只改变卡片显示位置，不会改变已确认等级或待确认点数。",
+  ["Strength"] = "力量", ["Agility"] = "敏捷", ["Stamina"] = "耐力",
+  ["Intellect"] = "智力", ["Spirit"] = "精神", ["Multiple Attributes"] = "多项属性",
+  ["Damage Mechanics"] = "伤害机制", ["Healing Mechanics"] = "治疗机制",
+  ["Defense Mechanics"] = "防御机制", ["Utility Mechanics"] = "辅助机制",
+  ["Other Effects"] = "其他效果",
+  ["Refund one confirmed rank"] = "回退一级已确认天赋",
+  ["Confirm Refund"] = "确定回退",
+  ["Refund one rank of %s?\n\nCurrent rank: %d/%d\nAfter refund: %d/%d\nRefund: 1 Talent Point\nCost: %d Talent Essence\nCurrent Essence: %d"] = "确定回退“%s”一级吗？\n\n当前等级：%d/%d\n回退之后：%d/%d\n返还：1点天赋点\n消耗：%d个天赋精华\n当前精华：%d",
+  ["Waiting for the server..."] = "正在等待服务器确认……",
+  ["Talent refund timed out. Nothing changed."] = "天赋回退等待超时，没有扣除或改变任何内容。",
+  ["Another talent change is in progress."] = "另一个天赋操作正在处理中，请稍候。",
+  ["Confirm or cancel pending talent points first."] = "请先确认或取消当前尚未保存的天赋点。",
+  ["One talent rank was refunded."] = "已成功回退一级天赋。",
+  ["You are not in Draft Mode."] = "当前角色不在随机抽卡模式。",
+  ["You cannot refund talents in combat."] = "战斗中不能回退天赋。",
+  ["The selected talent is invalid."] = "所选天赋无效。",
+  ["Tome of Talents ranks cannot be refunded."] = "通过天赋之书抽到的等级不能单独回退。",
+  ["This talent has no manually purchased rank to refund."] = "该天赋没有可回退的手动购买等级。",
+  ["Refund the dependent talent first."] = "存在依赖该等级的后置天赋，请先回退后置天赋。",
+  ["You do not have enough Talent Essence."] = "你的天赋精华不足。",
+  ["Talent Essence could not be committed. Nothing changed."] = "天赋精华扣除未能保存，没有改变任何内容。",
+  ["Your Talent Point record is unavailable."] = "无法读取你的天赋点记录。",
+  ["The Talent Point refund could not be saved. Nothing changed."] = "返还的天赋点未能保存，没有改变任何内容。",
+  ["The lower talent rank could not be applied. Nothing changed."] = "较低等级的天赋未能正确生效，没有改变任何内容。",
+  ["Talent rank refund failed. Nothing changed."] = "天赋回退失败，没有改变任何内容。",
+    ["Place on action bar: %s"] = "放入动作条：%s",
+    ["Action bar placement requires one click"] = "动作条摆放需要点击确认",
+    ["The spell is already learned. Click to place it in the first visible empty action slot."] = "技能已经学会。点击后将其放入第一个可见的空动作槽。",
+    ["Shoot (Wand)"] = "射击（魔杖）", ["Requires a wand"] = "需要魔杖",
+    ["Shoot (Ranged Weapon)"] = "射击（远程武器）", ["Requires a ranged weapon"] = "需要远程武器",
     ["Prestige"] = "转生", ["None"] = "无", ["Rerolls"] = "重抽", ["Bans"] = "禁用", ["(+50% XP)"] = "（+50% 经验）",
     ["Talent Points: %d"] = "天赋点数：%d",
+    ["Talent Essence: %d"] = "天赋精华：%d",
     ["Locked: Requires Tome of Talents"] = "已锁定：需要天赋之书",
     ["Requires level %d"] = "需要等级 %d",
     ["Requires %d points in %s."] = "需要投入 %d 点到%s。",
@@ -56,7 +139,10 @@ local zhCN = {
     ["Drag with Left Click to reposition."] = "按住鼠标左键拖动可调整位置。",
     ["Grimoire not initialized yet."] = "法术书尚未初始化。",
 
-    ["Reroll"] = "重抽", ["Reroll (%s)"] = "重抽（%s）", ["Dismiss"] = "暂时关闭", ["Ban"] = "禁用",
+    ["Reroll"] = "重抽", ["Reroll (%s)"] = "重抽（%s）", ["Reroll (%d Essence)"] = "重抽（%d精华）",
+    ["Reroll limit reached"] = "已达重抽上限",
+    ["Talent Essence: %d · Rerolls: %d / %d"] = "天赋精华：%d · 本轮重抽：%d / %d",
+    ["Dismiss"] = "暂时不选", ["Ban"] = "禁用",
     ["Ban [ON] (%d)"] = "禁用模式[开启]（%d）", ["Ban (%d)"] = "禁用（%d）",
     ["Ban Mode Activated"] = "禁用模式已开启",
     ["No bans remaining."] = "没有剩余禁用次数。", ["You have no rerolls remaining."] = "没有剩余重抽次数。",
@@ -64,6 +150,10 @@ local zhCN = {
     ["Spell #%d"] = "法术 #%d", ["Spell data not cached."] = "法术数据尚未缓存。",
     ["%d Drafts Remaining"] = "剩余 %d 次抽取", ["%d Draft(s) Left"] = "还剩 %d 次抽取",
     ["Talent Draft"] = "天赋抽取",
+    ["Pending Talent Draft"] = "待选天赋卡",
+    ["Pending Spell Draft"] = "待选技能卡",
+    ["A draft choice is waiting"] = "你还有一组卡牌尚未选择",
+    ["Click to reopen the same three cards. No tome or draft is consumed."] = "点击重新打开原来的三张卡，不会再次消耗天赋之书或抽卡次数。",
     ["Floating HUD enabled."] = "浮动资源栏已启用。", ["Floating HUD disabled."] = "浮动资源栏已禁用。",
     ["Mana"] = "法力", ["Rage"] = "怒气", ["Focus"] = "集中值", ["Energy"] = "能量", ["Runic Power"] = "符文能量",
 
@@ -153,8 +243,8 @@ function SpellDraft.L(key, ...)
 end
 
 function SpellDraft.ClassName(token)
-    if token == "ALL" then return SpellDraft.L("All") end
-    if token == "GENERAL" then return SpellDraft.L("General") end
+    if token == "ALL" then return SpellDraft.L("All Skills") end
+    if token == "GENERAL" then return SpellDraft.L("Learned Overview") end
     local classKeys = {
         WARRIOR = "Warrior", PALADIN = "Paladin", HUNTER = "Hunter", ROGUE = "Rogue",
         PRIEST = "Priest", DEATHKNIGHT = "Death Knight", SHAMAN = "Shaman", MAGE = "Mage",
@@ -193,3 +283,52 @@ SlashCmdList["SPELLDRAFTLANG"] = function(msg)
     end
     SpellDraft.SetLanguage(setting)
 end
+
+-- Item 25462 is an unused retail item repurposed by SpellDraft.  Its normal
+-- tooltip text is supplied by item_template/item_template_locale, which follows
+-- the client's login locale.  This small display-only hook lets the visible
+-- SpellDraft language selector override the title and description too.
+local SPELLDRAFT_LOCALIZED_ITEMS = {
+    [25462] = {
+        enUS = {
+            name = "Tome of Talents",
+            description = "Usable at level 10. Draft one rare special talent from three choices. The tome is not consumed if your level is too low.",
+        },
+        zhCN = {
+            name = "天赋之书",
+            description = "10级后可使用。从三项珍贵特殊天赋中选择一项；等级不足时不会消耗天赋之书。",
+        },
+    },
+}
+
+local function SpellDraftLocalizeItemTooltip(tooltip)
+    local _, link = tooltip:GetItem()
+    local itemId = link and tonumber(link:match("item:(%d+)"))
+    local itemText = itemId and SPELLDRAFT_LOCALIZED_ITEMS[itemId]
+    if not itemText then return end
+
+    local text = itemText[ResolveLanguage()] or itemText.enUS
+    local nameLine = _G[tooltip:GetName() .. "TextLeft1"]
+    if nameLine then nameLine:SetText(text.name) end
+
+    -- Replace only the exact custom description, leaving quality, item class,
+    -- price and ItemID lines created by the game or other addons untouched.
+    for index = 2, tooltip:NumLines() do
+        local line = _G[tooltip:GetName() .. "TextLeft" .. index]
+        if line then
+            local value = line:GetText()
+            local plainValue = value and value:match('^"(.*)"$') or value
+            if plainValue == SPELLDRAFT_LOCALIZED_ITEMS[25462].enUS.description
+                or plainValue == SPELLDRAFT_LOCALIZED_ITEMS[25462].zhCN.description
+                or plainValue == "Consuming this grimoire triggers a passive class talent draft."
+                or plainValue == "使用后立即进行一次职业被动天赋抽取。"
+                or plainValue == "使用後立即進行一次職業被動天賦抽取。" then
+                local quoted = value and value:sub(1, 1) == '"' and value:sub(-1) == '"'
+                line:SetText(quoted and ('"' .. text.description .. '"') or text.description)
+                break
+            end
+        end
+    end
+end
+
+GameTooltip:HookScript("OnTooltipSetItem", SpellDraftLocalizeItemTooltip)

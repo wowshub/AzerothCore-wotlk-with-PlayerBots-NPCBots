@@ -2364,7 +2364,9 @@ void SpellMgr::LoadSpellPetAuras()
                 continue;
             }
 
-            PetAura pa(pet, aura, spellInfo->Effects[eff].TargetA.GetTarget() == TARGET_UNIT_PET, spellInfo->Effects[eff].CalcValue());
+            PetAura pa(spell, eff, pet, aura,
+                spellInfo->Effects[eff].TargetA.GetTarget() == TARGET_UNIT_PET,
+                spellInfo->Effects[eff].CalcValue());
             mSpellPetAuraMap[(spell << 8) + eff] = pa;
         }
 

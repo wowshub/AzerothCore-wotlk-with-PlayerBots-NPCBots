@@ -23,6 +23,16 @@
 
 namespace MMAP
 {
+    namespace
+    {
+        // MMAP_VERSION stayed at 16 when MmapTileRecastConfig was appended to
+        // MmapTileHeader.  Existing v16 tiles therefore have a 20-byte header,
+        // while newly generated v16 tiles have a 56-byte header.  The common
+        // prefix is sufficient for loading; the recast config is generator
+        // metadata and is not consumed by the runtime.
+        constexpr long LegacyMmapTileHeaderSize = 20;
+    }
+
     // ######################## MMapMgr ########################
     std::shared_ptr<dtNavMesh> MMapMgr::LoadNavMesh(uint32 mapId)
     {
@@ -76,9 +86,10 @@ namespace MMAP
             return false;
         }
 
-        // read header
+        // Read the common header prefix. Legacy v16 tiles use a 20-byte header,
+        // current v16 tiles use sizeof(MmapTileHeader) (56 bytes).
         MmapTileHeader fileHeader;
-        if (fread(&fileHeader, sizeof(MmapTileHeader), 1, file) != 1 || fileHeader.mmapMagic != MMAP_MAGIC)
+        if (fread(&fileHeader, LegacyMmapTileHeaderSize, 1, file) != 1 || fileHeader.mmapMagic != MMAP_MAGIC)
         {
             LOG_ERROR("maps", "MMAP:loadMap: Bad header in mmap {:03}{:02}{:02}.mmtile", mapId, x, y);
             fclose(file);
@@ -93,6 +104,40 @@ namespace MMAP
             return false;
         }
 
+        if (fseek(file, 0, SEEK_END) != 0)
+        {
+            LOG_ERROR("maps", "MMAP:loadMap: Could not determine size of mmap {:03}{:02}{:02}.mmtile", mapId, x, y);
+            fclose(file);
+            return false;
+        }
+
+        long const fileSize = ftell(file);
+        long const legacyFileSize = LegacyMmapTileHeaderSize + long(fileHeader.size);
+        long const currentFileSize = long(sizeof(MmapTileHeader)) + long(fileHeader.size);
+        long dataOffset = 0;
+
+        if (fileSize == currentFileSize)
+            dataOffset = long(sizeof(MmapTileHeader));
+        else if (fileSize == legacyFileSize)
+        {
+            dataOffset = LegacyMmapTileHeaderSize;
+            LOG_DEBUG("maps", "MMAP:loadMap: Loading legacy v{} mmtile {:03}{:02}{:02}", fileHeader.mmapVersion, mapId, x, y);
+        }
+        else
+        {
+            LOG_ERROR("maps", "MMAP:loadMap: Invalid size for mmap {:03}{:02}{:02}.mmtile (file {}, payload {})",
+                mapId, x, y, fileSize, fileHeader.size);
+            fclose(file);
+            return false;
+        }
+
+        if (fseek(file, dataOffset, SEEK_SET) != 0)
+        {
+            LOG_ERROR("maps", "MMAP:loadMap: Could not seek to data in mmap {:03}{:02}{:02}.mmtile", mapId, x, y);
+            fclose(file);
+            return false;
+        }
+
         unsigned char* data = (unsigned char*)dtAlloc(fileHeader.size, DT_ALLOC_PERM);
         ASSERT(data);
 
@@ -101,6 +146,7 @@ namespace MMAP
         {
             LOG_ERROR("maps", "MMAP:loadMap: Bad header or data in mmap {:03}{:02}{:02}.mmtile", mapId, x, y);
             fclose(file);
+            dtFree(data);
             return false;
         }
 

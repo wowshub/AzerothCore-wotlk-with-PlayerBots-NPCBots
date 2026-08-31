@@ -54,3 +54,40 @@ SpellDraft.AllowSpellsInDruidForms = 0
 SpellDraft.DraftDkDamageScaleEnable = 1
 SpellDraft.DraftDkDamageScaleFullLevel = 55
 SpellDraft.DraftDkDamageScaleMinMultiplier = 0.10
+
+########################################
+# Lost Grimoire (Item 13149) Drops
+########################################
+# These personal drops are restricted to Random Draft mode characters.
+# Chance values are percentages: 0.10 means 0.10%, not 10%.
+# A value of 0 disables that creature class without disabling the others.
+
+SpellDraft.LostGrimoire.DropEnable = 1
+SpellDraft.LostGrimoire.DropChance.Normal = 0.10
+SpellDraft.LostGrimoire.DropChance.Elite = 0.10
+SpellDraft.LostGrimoire.DropChance.DungeonBoss = 5.00
+SpellDraft.LostGrimoire.DropChance.WorldBoss = 5.00
+
+# Soft level-difference protection. The difference is PlayerLevel-CreatureLevel.
+# Multipliers are applied to the matching base chance.
+# Defaults: <=5 levels 100%, 6-10 levels 25%, 11-20 levels 5%, 21+ levels 1%.
+
+SpellDraft.LostGrimoire.LevelDiff.Full.Max = 5
+SpellDraft.LostGrimoire.LevelDiff.Full.Multiplier = 1.00
+SpellDraft.LostGrimoire.LevelDiff.Low.Max = 10
+SpellDraft.LostGrimoire.LevelDiff.Low.Multiplier = 0.25
+SpellDraft.LostGrimoire.LevelDiff.VeryLow.Max = 20
+SpellDraft.LostGrimoire.LevelDiff.VeryLow.Multiplier = 0.05
+SpellDraft.LostGrimoire.LevelDiff.Trivial.Multiplier = 0.01
+
+# Per-character permanent glyph collection and catalog.
+# A physical glyph is consumed only after the player confirms permanent engraving.
+
+SpellDraft.GlyphCollection.Enable = 1
+
+# Permanent collection application prices, in copper.
+# Defaults: major glyph 3 gold, minor glyph 1 gold.
+# The worldserver validates and charges this amount only after the glyph
+# ownership, slot type, level, combat and uniqueness checks all pass.
+SpellDraft.GlyphCollection.MajorApplyCostCopper = 30000
+SpellDraft.GlyphCollection.MinorApplyCostCopper = 10000

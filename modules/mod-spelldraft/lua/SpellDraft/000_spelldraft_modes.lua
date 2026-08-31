@@ -223,7 +223,9 @@ local function ConvertDeathKnightToLevelOneDraft(player)
     if not start then return false, "start_route_unavailable" end
 
     local guid = player:GetGUIDLow()
-    CharDBExecute(string.format([[
+    -- Synchronous: the C++ level-change hook immediately reads state=1 to
+    -- install the hot-session DK scaling identity and racial starter outfit.
+    CharDBQuery(string.format([[
         UPDATE `spelldraft_dk_bootstrap`
            SET `state` = 1, `selected_zone` = %d
          WHERE `guid` = %d AND `state` = 0
@@ -289,9 +291,12 @@ local function UnlockDkRelocationPlayer(player)
     if player and player.SetPlayerLock then player:SetPlayerLock(false) end
 end
 
-local function OnDkRelocationLogin(_, player)
+function SpellDraft_BeginDkRelocation(player, callback)
     local start = GetPendingDkRelocation(player)
-    if not start then return end
+    if not start then
+        if type(callback) == "function" then callback(false, "dk_relocation_not_pending") end
+        return false
+    end
 
     local guid = player:GetGUIDLow()
     if player.SetPlayerLock then player:SetPlayerLock(true) end
@@ -307,8 +312,8 @@ local function OnDkRelocationLogin(_, player)
 
         local currentStart = SpellDraft_GetDkDefaultStart(current)
         if not currentStart then
-            UnlockDkRelocationPlayer(current)
             current:SendBroadcastMessage("|cffff3333[SpellDraft/DK]|r No racial starting route is configured.")
+            if type(callback) == "function" then callback(false, "start_route_unavailable") end
             return
         end
 
@@ -317,8 +322,8 @@ local function OnDkRelocationLogin(_, player)
         local accepted = current:Teleport(currentStart.map, currentStart.x,
             currentStart.y, currentStart.z, currentStart.o)
         if not accepted then
-            UnlockDkRelocationPlayer(current)
             current:SendBroadcastMessage("|cffff3333[SpellDraft/DK]|r Starting-zone teleport was rejected; it will retry next login.")
+            if type(callback) == "function" then callback(false, "dk_teleport_rejected") end
             return
         end
 
@@ -335,23 +340,37 @@ local function OnDkRelocationLogin(_, player)
                 arrived:SetBindPoint(currentStart.x, currentStart.y, currentStart.z,
                     currentStart.map, arrived:GetZoneId())
                 arrived:SaveToDB()
-                CharDBExecute(string.format([[
+                -- Persist completion before notifying the activation state
+                -- machine; an unlocked player must never still look pending.
+                CharDBQuery(string.format([[
                     UPDATE `spelldraft_dk_bootstrap`
                        SET `state` = 2, `converted_at` = CURRENT_TIMESTAMP
                      WHERE `guid` = %d
                 ]], guid))
-                UnlockDkRelocationPlayer(arrived)
                 arrived:SendBroadcastMessage("|cff33ff66[SpellDraft/DK]|r Level-one racial starting route activated.")
+                if type(callback) == "function" then callback(true, "dk_relocation_complete") end
                 return
             end
 
             if checks >= DK_RELOCATION_VERIFY_COUNT then
                 finished = true
-                UnlockDkRelocationPlayer(arrived)
                 arrived:SendBroadcastMessage("|cffff3333[SpellDraft/DK]|r Teleport was not confirmed; it will retry next login.")
+                if type(callback) == "function" then callback(false, "dk_relocation_timeout") end
             end
         end, DK_RELOCATION_VERIFY_MS, DK_RELOCATION_VERIFY_COUNT)
     end, DK_RELOCATION_DELAY_MS, 1)
+    return true
+end
+
+local function OnDkRelocationLogin(_, player)
+    local start = GetPendingDkRelocation(player)
+    if not start then return end
+    local guid = player:GetGUIDLow()
+    if player.SetPlayerLock then player:SetPlayerLock(true) end
+    SpellDraft_BeginDkRelocation(player, function()
+        local current = GetPlayerByGUID(guid)
+        UnlockDkRelocationPlayer(current)
+    end)
 end
 
 function SpellDraft_SelectCharacterMode(player, requestedMode)
@@ -412,10 +431,11 @@ function SpellDraft_SelectCharacterMode(player, requestedMode)
         and player:GetLevel() > 1 then
         local converted, convertResult = ConvertDeathKnightToLevelOneDraft(player)
         if not converted then
-            -- Do not leave a failed conversion permanently locked as Draft.
-            CharDBExecute("DELETE FROM spelldraft_character_mode WHERE guid = " .. guid)
-            modeCache[guid] = nil
-            return false, convertResult
+            -- Conversion can fail after a partial level/equipment mutation.
+            -- Keep the permanent mode row and bootstrap failure state so an
+            -- administrator can diagnose and safely retry instead of rolling
+            -- the character back into a misleading Pending profile.
+            return true, MODE_ID_TO_NAME[modeId]
         end
         CharDBExecute("UPDATE spelldraft_character_mode SET selected_level = 1 WHERE guid = " .. guid)
     end
@@ -430,6 +450,179 @@ function SpellDraft_SelectCharacterMode(player, requestedMode)
     end
 
     return true, MODE_ID_TO_NAME[modeId]
+end
+
+local modeActivationRuns = {}
+
+local function FinishModeActivation(guid, callback, ok, result)
+    local callbacks = modeActivationRuns[guid]
+    if not callbacks then return end
+    modeActivationRuns[guid] = nil
+    for _, waitingCallback in ipairs(callbacks) do
+        if type(waitingCallback) == "function" then
+            local callbackOk, callbackError = pcall(waitingCallback, ok, result)
+            if not callbackOk then
+                print("[SpellDraft/A.31R2] Mode activation callback failed for " .. guid .. ": " .. tostring(callbackError))
+            end
+        end
+    end
+end
+
+local function WaitForChoiceSessionReady(guid, callback)
+    local attempts = 0
+    local finished = false
+    CreateLuaEvent(function()
+        if finished then return end
+        attempts = attempts + 1
+        local current = GetPlayerByGUID(guid)
+        if not current or not current:IsInWorld() then
+            finished = true
+            FinishModeActivation(guid, callback, false, "player_left_world")
+            return
+        end
+
+        local ready = CharDBQuery(
+            "SELECT successful_drafts, total_expected_drafts, offered_spell_1 " ..
+            "FROM prestige_stats WHERE player_id = " .. guid .. " LIMIT 1")
+        if ready then
+            local successful = ready:GetUInt32(0)
+            local expected = ready:GetUInt32(1)
+            local offered = ready:GetUInt32(2)
+            if successful >= expected or offered > 0 then
+                finished = true
+                FinishModeActivation(guid, callback, true, "draft")
+                return
+            end
+
+            -- The one-shot session start can be skipped by first-login event
+            -- ordering even though runtime is ready and entitlement exists.
+            -- Retry the idempotent entry at bounded intervals; it restores a
+            -- persisted set or creates exactly one synchronously saved set.
+            if successful < expected and offered == 0
+                and (attempts == 1 or attempts == 5 or attempts == 10)
+                and type(SpellDraft_StartOrResumeChoiceSession) == "function" then
+                SpellDraft_StartOrResumeChoiceSession(current, {
+                    source = "activation_ready_retry_" .. attempts
+                })
+            end
+        end
+
+        -- SaveSpellsToDB uses the asynchronous database queue.  The choice
+        -- window can already be visible on the client while offered_spell_1 is
+        -- still zero for a few ticks, so poll the postcondition instead of
+        -- treating that normal queue delay as a permanent activation failure.
+        if attempts >= 20 then
+            finished = true
+            local failure = ready and "choice_not_created" or "choice_state_missing"
+            if ready then
+                failure = string.format("%s(successful=%d,expected=%d,offered=%d)",
+                    failure, ready:GetUInt32(0), ready:GetUInt32(1), ready:GetUInt32(2))
+            end
+            current:SendBroadcastMessage("|cffff3333[Three Modes]|r " .. failure)
+            print("[SpellDraft/A.31R2] Activation failed guid=" .. guid .. " " .. failure)
+            FinishModeActivation(guid, callback, false, failure)
+        end
+    end, 250, 20)
+end
+
+local function ActivateDraftRuntimeAndChoices(player, callback)
+    local guid = player:GetGUIDLow()
+    if type(SpellDraft_EnsureDraftRuntime) ~= "function" then
+        FinishModeActivation(guid, callback, false, "draft_runtime_not_ready")
+        return
+    end
+
+    SpellDraft_EnsureDraftRuntime(player, { source = "mode_activation" }, function(runtimeOk, runtimeResult)
+        local current = GetPlayerByGUID(guid)
+        if not runtimeOk or not current or not current:IsInWorld() then
+            FinishModeActivation(guid, callback, false, runtimeResult or "player_left_world")
+            return
+        end
+
+        if type(SpellDraft_ApplyDraftTalentLock) ~= "function" then
+            FinishModeActivation(guid, callback, false, "talent_runtime_not_ready")
+            return
+        end
+        local talentOk, talentResult = pcall(SpellDraft_ApplyDraftTalentLock, current)
+        if not talentOk or talentResult ~= true then
+            FinishModeActivation(guid, callback, false, "talent_lock_failed")
+            return
+        end
+
+        if type(SpellDraft_StartOrResumeChoiceSession) ~= "function" then
+            FinishModeActivation(guid, callback, false, "choice_runtime_not_ready")
+            return
+        end
+        SpellDraft_StartOrResumeChoiceSession(current, { source = "mode_activation" }, function(choiceOk, choiceResult)
+            if not choiceOk then
+                FinishModeActivation(guid, callback, false, choiceResult or "choice_session_failed")
+                return
+            end
+            WaitForChoiceSessionReady(guid, callback)
+        end)
+    end)
+end
+
+function SpellDraft_ActivateSelectedMode(player, requestedMode, callback)
+    if not player or not player:IsInWorld() or IsBotPlayer(player) then
+        if type(callback) == "function" then callback(false, "invalid_player") end
+        return false
+    end
+
+    local guid = player:GetGUIDLow()
+    local modeName = SpellDraft_GetCharacterModeName(player)
+    if modeName ~= tostring(requestedMode or ""):lower() then
+        if type(callback) == "function" then callback(false, "mode_mismatch") end
+        return false
+    end
+    -- Login recovery and the user's confirmation can reach this function in
+    -- the same 2.5-second window. Join the in-flight activation instead of
+    -- dropping the second callback and leaving its welcome page on Preparing.
+    if modeActivationRuns[guid] then
+        if type(callback) == "function" then
+            table.insert(modeActivationRuns[guid], callback)
+        end
+        return true
+    end
+    modeActivationRuns[guid] = {}
+    if type(callback) == "function" then
+        table.insert(modeActivationRuns[guid], callback)
+    end
+
+    if modeName == "classic" then
+        if type(SpellDraft_SetDraftStateCache) == "function" then
+            SpellDraft_SetDraftStateCache(guid, false)
+        end
+        FinishModeActivation(guid, callback, true, "classic")
+        return true
+    end
+    if modeName ~= "draft" then
+        FinishModeActivation(guid, callback, false, "mode_not_ready")
+        return false
+    end
+
+    if player:GetClass() == DEATH_KNIGHT_CLASS_ID then
+        local bootstrap = CharDBQuery(
+            "SELECT state FROM spelldraft_dk_bootstrap WHERE guid = " .. guid .. " LIMIT 1")
+        local state = bootstrap and bootstrap:GetUInt8(0) or 3
+        if state == 1 then
+            SpellDraft_BeginDkRelocation(player, function(relocationOk, relocationResult)
+                local current = GetPlayerByGUID(guid)
+                if not relocationOk or not current or not current:IsInWorld() then
+                    FinishModeActivation(guid, callback, false, relocationResult or "player_left_world")
+                    return
+                end
+                ActivateDraftRuntimeAndChoices(current, callback)
+            end)
+            return true
+        elseif state ~= 2 then
+            FinishModeActivation(guid, callback, false, "dk_bootstrap_failed")
+            return false
+        end
+    end
+
+    ActivateDraftRuntimeAndChoices(player, callback)
+    return true
 end
 
 local function OnModeCharacterCreate(_, player)
@@ -452,7 +645,11 @@ local function OnModeCharacterCreate(_, player)
 end
 
 local function OnModeLogout(_, player)
-    if player then modeCache[player:GetGUIDLow()] = nil end
+    if player then
+        local guid = player:GetGUIDLow()
+        modeCache[guid] = nil
+        modeActivationRuns[guid] = nil
+    end
 end
 
 local function OnModeCommand(_, player, command)

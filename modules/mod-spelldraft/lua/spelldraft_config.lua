@@ -1,15 +1,19 @@
--- SpellDraft progression preset. Change this value to 80 or 255 and keep it
+-- SpellDraft progression preset. Change this value to any integer from 2 to
+-- 255 and keep it
 -- equal to worldserver.conf -> MaxPlayerLevel. This Lua value controls the
 -- Prestige milestone; the core's real hard level cap is MaxPlayerLevel.
 -- Classic mode is not reset by SpellDraft Prestige unless enabled below.
 local SPELLDRAFT_LEVEL_CAP_PRESET = 255
-if SPELLDRAFT_LEVEL_CAP_PRESET ~= 80 and SPELLDRAFT_LEVEL_CAP_PRESET ~= 255 then
-    print("[SpellDraft] Invalid LEVEL_CAP_PRESET; falling back to 255.")
+if type(SPELLDRAFT_LEVEL_CAP_PRESET) ~= "number"
+    or SPELLDRAFT_LEVEL_CAP_PRESET ~= math.floor(SPELLDRAFT_LEVEL_CAP_PRESET)
+    or SPELLDRAFT_LEVEL_CAP_PRESET < 2
+    or SPELLDRAFT_LEVEL_CAP_PRESET > 255 then
+    print("[SpellDraft] LEVEL_CAP_PRESET must be an integer from 2 to 255; falling back to 255.")
     SPELLDRAFT_LEVEL_CAP_PRESET = 255
 end
 
 CONFIG = {
-    LEVEL_CAP_PRESET = SPELLDRAFT_LEVEL_CAP_PRESET, --Choose exactly 80 or 255
+    LEVEL_CAP_PRESET = SPELLDRAFT_LEVEL_CAP_PRESET, --Choose any integer from 2 to 255
     MAX_LEVEL = SPELLDRAFT_LEVEL_CAP_PRESET,        --Legacy compatibility alias
     PRESTIGE_ALLOW_CLASSIC = false, --Classic characters keep normal class progression
 
@@ -35,6 +39,16 @@ CONFIG = {
     --When true, rerolls are free & unlimited until the very first spell of a draft run
     --is picked (successful_drafts == 0), regardless of class or level.
     UNLIMITED_REROLLS_FIRST_DRAW = false,
+
+    -- Talent Essence economy. Essence has no gameplay cap; the database's
+    -- unsigned integer range is only a technical storage limit.
+    TALENT_ESSENCE_INITIAL_AMOUNT = 10,       -- Test server: 10; live server may use 0
+    TALENT_ESSENCE_INITIAL_SELLABLE = false,  -- Keep false to prevent create/delete gold farming
+    TALENT_ESSENCE_GOLD_EXCHANGE_ENABLED = true,
+    -- Exact value per Essence in COPPER (10000=1 gold, 1000=10 silver/0.1 gold)
+    TALENT_ESSENCE_SELL_VALUE_COPPER = 1000,
+    TALENT_RESET_ESSENCE_COST = 10,          -- Cost charged by Nibbs for a confirmed custom-talent reset
+    TALENT_SINGLE_REFUND_ESSENCE_COST = 1,   -- Cost to refund one manually purchased rank from the talent tree
 
     CROSS_FACTION_PORTALS = false, --When true, all Portal/Teleport spells (both factions) are guaranteed draftable by either faction.
 
@@ -594,7 +608,20 @@ CONFIG = {
     },
 
     -- ══════════════════ Random Enchantment (RE) System ══════════════════
-    RE_ENABLE = true, --Master switch for the Random Enchantment system (spelldraft_re.lua)
+    RE_ENABLE = false, --M2: retire the old item/glyph-aura RE implementation
+
+    -- M2.1 character collection mapped to all 19 paper-doll equipment positions.
+    MYSTIC_SIGIL_ENABLE = true,
+    -- Four physical unidentified stones. Right-clicking one permanently
+    -- unlocks a missing sigil of the matching quality for the current character.
+    MYSTIC_SIGIL_STONE_ENTRY = { [2] = 800201, [3] = 800202, [4] = 800203, [5] = 800204 },
+    MYSTIC_SIGIL_DISCOVERY_CHANCE = { [2] = 8, [3] = 18, [4] = 35, [5] = 65 },
+    MYSTIC_SIGIL_DISCOVERY_PITY = 5,
+    -- Epic and legendary sigils may be placed on any occupied equipment
+    -- position, but the whole character shares these power budgets.
+    MYSTIC_SIGIL_GLOBAL_QUALITY_LIMIT = { [4] = 3, [5] = 1 },
+    MYSTIC_SIGIL_APPLY_COST = { [2] = 100000, [3] = 250000, [4] = 500000, [5] = 1000000 },
+    MYSTIC_SIGIL_CLEAR_COST = 50000,
 
     --Chance (percent) that a freshly acquired item rolls a Random Enchantment,
     --keyed by the ITEM's quality: 2 Uncommon (green), 3 Rare (blue), 4 Epic, 5 Legendary.
@@ -603,6 +630,38 @@ CONFIG = {
         [3] = 25,
         [4] = 50,
         [5] = 100,
+    },
+
+    -- Bad-luck protection: after this many consecutive eligible items roll
+    -- no Mystic Enchant, the next eligible item is guaranteed to roll one.
+    -- Only slot 1 is guaranteed; bonus slots remain independent rarity rolls.
+    -- Set to 0 to disable the pity system.
+    RE_PITY_MISSES = 4,
+
+    -- Balanced slot caps: green/blue stay simple, epic gains one bonus slot,
+    -- legendary gains two. This intentionally does not use upstream's 1/2/3/4.
+    RE_SLOTS_BY_QUALITY = {
+        [2] = 1,
+        [3] = 1,
+        [4] = 2,
+        [5] = 3,
+    },
+
+    -- Independent chance for each slot, in display order.
+    -- Expected affix counts: green .10, blue .25, epic 1.20, legendary 1.45.
+    RE_SLOT_CHANCES_BY_QUALITY = {
+        [2] = { 10 },
+        [3] = { 25 },
+        [4] = { 100, 20 },
+        [5] = { 100, 35, 10 },
+    },
+
+    -- Nibbs service multiplier by zero-based affix slot.
+    -- Later slots are deliberately more expensive to limit power inflation.
+    RE_SLOT_SERVICE_COST_MULTIPLIER = {
+        [0] = 1,
+        [1] = 2,
+        [2] = 4,
     },
 
     RE_BOTS_CAN_ROLL = false, --When false, playerbot loot never rolls REs (saves DB churn)

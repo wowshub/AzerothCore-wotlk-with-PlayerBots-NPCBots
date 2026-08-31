@@ -22,6 +22,7 @@
 local RE_ENABLE = CONFIG.RE_ENABLE
 if RE_ENABLE == nil then RE_ENABLE = true end
 local ROLL_CHANCE = CONFIG.RE_ROLL_CHANCE or { [2] = 10, [3] = 25, [4] = 50, [5] = 100 }
+local PITY_MISSES = tonumber(CONFIG.RE_PITY_MISSES) or 4
 local BOTS_CAN_ROLL = CONFIG.RE_BOTS_CAN_ROLL or false
 local SYNC_INTERVAL = CONFIG.RE_SYNC_INTERVAL_MS or 2000
 
@@ -72,6 +73,7 @@ local QUALITY_COLOR = {
 
 local enchants = {}      -- id -> definition
 local enchantCount = 0
+local pityAvailable = false
 
 do
     -- Probe via information_schema first: a direct query against a missing
@@ -94,6 +96,16 @@ do
         RE_ENABLE = false
         print("[SpellDraft] RE system disabled: table character_item_enchantments is missing."
             .. " Apply data/sql/db-characters/07_random_enchantments.sql and restart.")
+    end
+
+    local pityProbe = CharDBQuery([[
+        SELECT 1 FROM information_schema.tables
+        WHERE table_schema = DATABASE() AND table_name = 'character_re_pity'
+    ]])
+    pityAvailable = pityProbe ~= nil
+    if PITY_MISSES > 0 and not pityAvailable then
+        print("[SpellDraft] Mystic Enchant pity disabled: table character_re_pity is missing."
+            .. " Apply the B0.9.13L characters SQL and restart.")
     end
 
     local q = RE_ENABLE and WorldDBQuery([[
@@ -178,6 +190,134 @@ local BAG_SLOT_START = 19
 local BAG_SLOT_END = 22
 local MAX_BAG_SIZE = 36
 
+-- Resolve Spell.dbc formula tokens before sending the stable English
+-- description to the client.  The numeric source is the core's SpellInfo,
+-- exposed by GetSpellDraftFormulaData; this keeps current-spell and
+-- cross-spell references on the same authoritative path.
+local FORMULA_VERSION = "B0.9.19.1-formula-v1"
+local unresolvedFormulaWarnings = {}
+
+local function GetFormulaField(player, defaultSpellId, spellIdText, field, effectText)
+    if not player.GetSpellDraftFormulaData then return nil end
+    local spellId = tonumber(spellIdText)
+    if not spellId or spellId == 0 then spellId = defaultSpellId end
+    if not spellId or spellId == 0 then return nil end
+
+    local found, s1, s2, s3, durationMs, procChance =
+        player:GetSpellDraftFormulaData(spellId)
+    if not found then return nil end
+
+    field = string.lower(field or "")
+    if field == "d" then return durationMs end
+    if field == "h" then return procChance end
+
+    local effect = tonumber(effectText) or 1
+    if effect == 1 then return s1 end
+    if effect == 2 then return s2 end
+    if effect == 3 then return s3 end
+    return nil
+end
+
+local function FormatNumber(value, precision)
+    if not value then return nil end
+    if precision then
+        return string.format("%." .. precision .. "f", value)
+    end
+    local rounded
+    if value >= 0 then
+        rounded = math.floor(value + 0.5)
+    else
+        rounded = math.ceil(value - 0.5)
+    end
+    if math.abs(value - rounded) < 0.00001 then return tostring(rounded) end
+    return string.format("%.2f", value):gsub("0+$", ""):gsub("%.$", "")
+end
+
+local function EvaluateFormulaExpression(player, defaultSpellId, expression)
+    local missing = false
+    local substituted = expression:gsub("%$(%d*)([sSmMdDhH])([123]?)", function(spellId, field, effect)
+        local value = GetFormulaField(player, defaultSpellId, spellId, field, effect)
+        if value == nil then
+            missing = true
+            return "0"
+        end
+        return tostring(value)
+    end)
+    if missing then return nil end
+
+    local direct = tonumber(substituted:match("^%s*(.-)%s*$"))
+    if direct then return direct end
+
+    local left, operator, right = substituted:match(
+        "^%s*([%d%.%-]+)%s*([%+%-%*/])%s*([%d%.%-]+)%s*$")
+    left, right = tonumber(left), tonumber(right)
+    if not left or not right then return nil end
+    if operator == "+" then return left + right end
+    if operator == "-" then return left - right end
+    if operator == "*" then return left * right end
+    if operator == "/" and right ~= 0 then return left / right end
+    return nil
+end
+
+local function FormatDuration(durationMs)
+    if not durationMs then return nil end
+    local absolute = math.abs(durationMs)
+    if absolute >= 60000 and absolute % 60000 == 0 then
+        return FormatNumber(durationMs / 60000) .. " min"
+    end
+    return FormatNumber(durationMs / 1000) .. " sec"
+end
+
+local function ResolveTooltipFormula(player, defaultSpellId, text)
+    if not text or text == "" then return text end
+    local resolved = text
+
+    -- Client gender tokens cannot be carried through an addon tooltip.
+    resolved = resolved:gsub("%$g[^;]*;", "their")
+    -- Keep extension text but remove the database-only wrapper.
+    resolved = resolved:gsub("@ext:(.-):ext@", "%1")
+
+    -- Legacy division syntax used by a few imported glyph descriptions:
+    -- $/1000;56366s1 and $/1000;S3.
+    resolved = resolved:gsub("%$/([%d%.%-]+);(%d*)([sSmM])([123])", function(divisor, spellId, field, effect)
+        local value = GetFormulaField(player, defaultSpellId, spellId, field, effect)
+        divisor = tonumber(divisor)
+        if value == nil or not divisor or divisor == 0 then return "?" end
+        return FormatNumber(value / divisor)
+    end)
+
+    -- Braced arithmetic, first with the optional WoW precision suffix.
+    resolved = resolved:gsub("%${(.-)}%.(%d+)", function(expression, precision)
+        local value = EvaluateFormulaExpression(player, defaultSpellId, expression)
+        return value and FormatNumber(value, tonumber(precision)) or "?"
+    end)
+    resolved = resolved:gsub("%${(.-)}", function(expression)
+        local value = EvaluateFormulaExpression(player, defaultSpellId, expression)
+        return value and FormatNumber(value) or "?"
+    end)
+
+    -- Direct duration tokens include their unit, matching the native client.
+    resolved = resolved:gsub("%$(%d*)[dD]", function(spellId)
+        local value = GetFormulaField(player, defaultSpellId, spellId, "d", "")
+        return FormatDuration(value) or "?"
+    end)
+    resolved = resolved:gsub("%$(%d*)[hH]", function(spellId)
+        local value = GetFormulaField(player, defaultSpellId, spellId, "h", "")
+        return value and FormatNumber(value) or "?"
+    end)
+    resolved = resolved:gsub("%$(%d*)([sSmM])([123])", function(spellId, field, effect)
+        local value = GetFormulaField(player, defaultSpellId, spellId, field, effect)
+        return value and FormatNumber(value) or "?"
+    end)
+
+    if resolved:find("%$") and not unresolvedFormulaWarnings[text] then
+        unresolvedFormulaWarnings[text] = true
+        print("[SpellDraft Mystic] " .. FORMULA_VERSION
+            .. " unresolved tooltip formula: " .. text)
+    end
+    return resolved
+end
+
 -- Walks equipment + backpack + side bags; returns
 --   positions: { { key = clientKey, guid = itemGuidLow }, ... }
 --   signature: string that changes when any item moves/changes
@@ -235,7 +375,7 @@ local function PushEnchantMap(player, positions)
     for i = 1, #positions do
         local e = byGuid[positions[i].guid]
         if e then
-            local tooltip = e.tooltip
+            local tooltip = ResolveTooltipFormula(player, e.auraSpell, e.tooltip)
             if #tooltip > 150 then
                 tooltip = tooltip:sub(1, 150)
             end
@@ -276,6 +416,24 @@ local function IsEligibleItem(item)
     return INV_TYPE_BIT[item:GetInventoryType()] ~= nil
 end
 
+local function GetPityMisses(playerGuid)
+    if not pityAvailable or PITY_MISSES <= 0 then return 0 end
+    local q = CharDBQuery("SELECT misses FROM character_re_pity WHERE guid = " .. playerGuid)
+    return q and q:GetUInt32(0) or 0
+end
+
+local function AddPityMiss(playerGuid)
+    if not pityAvailable or PITY_MISSES <= 0 then return end
+    CharDBQuery("INSERT INTO character_re_pity (guid, misses) VALUES (" .. playerGuid
+        .. ", 1) ON DUPLICATE KEY UPDATE misses = LEAST(misses + 1, " .. PITY_MISSES .. ")")
+end
+
+local function ResetPity(playerGuid)
+    if not pityAvailable or PITY_MISSES <= 0 then return end
+    CharDBQuery("INSERT INTO character_re_pity (guid, misses) VALUES (" .. playerGuid
+        .. ", 0) ON DUPLICATE KEY UPDATE misses = 0")
+end
+
 -- force = true (GM ".rollre" testing) bypasses the roll chance and re-rolls
 -- items that already have a result.
 local function RollForItem(player, item, force)
@@ -304,9 +462,13 @@ local function RollForItem(player, item, force)
     local existing = CharDBQuery("SELECT 1 FROM character_item_enchantments WHERE item_guid = " .. itemGuid)
     if existing then return end
 
-    local chance = force and 100 or (ROLL_CHANCE[item:GetQuality()] or 0)
+    local playerGuid = player:GetGUIDLow()
+    local pityTriggered = not force and PITY_MISSES > 0
+        and GetPityMisses(playerGuid) >= PITY_MISSES
+    local chance = (force or pityTriggered) and 100 or (ROLL_CHANCE[item:GetQuality()] or 0)
     if math.random(1, 100) > chance then
         CharDBQuery("INSERT IGNORE INTO character_item_enchantments (item_guid, enchantment_id) VALUES (" .. itemGuid .. ", 0)")
+        AddPityMiss(playerGuid)
         return
     end
 
@@ -322,9 +484,11 @@ local function RollForItem(player, item, force)
     end
 
     CharDBQuery("INSERT IGNORE INTO character_item_enchantments (item_guid, enchantment_id) VALUES (" .. itemGuid .. ", " .. e.id .. ")")
+    if not force then ResetPity(playerGuid) end
 
     local color = QUALITY_COLOR[e.quality] or "|cff1eff00"
-    player:SendBroadcastMessage("|cff00ff00[Mystic Enchant]|r " .. color .. "[" .. e.name .. "]|r rolled on " .. item:GetItemLink() .. "!")
+    local pityText = pityTriggered and " |cffffd100(Bad-luck protection)|r" or ""
+    player:SendBroadcastMessage("|cff00ff00[Mystic Enchant]|r " .. color .. "[" .. e.name .. "]|r rolled on " .. item:GetItemLink() .. "!" .. pityText)
     PushEnchantMap(player)
 end
 

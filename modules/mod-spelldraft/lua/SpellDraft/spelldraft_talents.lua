@@ -11,29 +11,39 @@ local function IsInDraftMode(player)
   return result and result:GetUInt32(0) == 1
 end
 
--- On login: Reset talents immediately if in draft
-RegisterPlayerEvent(3, function(_, player)
+-- Public, idempotent entry shared by login and hot mode activation.
+function SpellDraft_ApplyDraftTalentLock(player)
   if IsInDraftMode(player) then
     player:ResetTalents(true)
     player:SetFreeTalentPoints(0)
+    -- Restore from the server-authoritative manual table in the same operation
+    -- that strips native talents.  The old delay-only restore left a 500 ms
+    -- window where another login/UI event could publish a false 0/5 state.
+    if type(SpellDraft_RestoreManualTalents) == "function" then
+      SpellDraft_RestoreManualTalents(player, true)
+    end
+    -- One idempotent reconciliation after world entry protects against cores
+    -- where PLAYER_EVENT_ON_LOGIN fires before IsInWorld becomes true.  Unlike
+    -- the old path this retry never resets talents and never publishes 0/5.
+    local guid = player:GetGUIDLow()
+    CreateLuaEvent(function()
+      local current = GetPlayerByGUID(guid)
+      if current and current:IsInWorld() and type(SpellDraft_RestoreManualTalents) == "function" then
+        SpellDraft_RestoreManualTalents(current, true)
+      end
+    end, 750, 1)
+    return true
   end
+  return false
+end
+
+-- On login: Reset talents immediately if in draft
+RegisterPlayerEvent(3, function(_, player)
+  SpellDraft_ApplyDraftTalentLock(player)
 end)
 
 -- On level up: delay the reset 100ms
 RegisterPlayerEvent(13, function(_, player, oldLevel)
-  if IsInDraftMode(player) then
-    local pGUID = player:GetGUIDLow()
-    CreateLuaEvent(function()
-      local p = GetPlayerByGUID(pGUID)
-      if p then
-        p:SetFreeTalentPoints(0)
-      end
-    end, 100, 1)
-  end
-end)
-
--- On spell learn: extra safety
-RegisterPlayerEvent(44, function(_, player, spellId)
   if IsInDraftMode(player) then
     local pGUID = player:GetGUIDLow()
     CreateLuaEvent(function()

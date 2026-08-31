@@ -3090,6 +3090,7 @@ private:
     bool _expectingChangeTransport;
     uint32 _pendingFlightChangeCounter;
     uint32 _mapChangeOrderCounter;
+
 };
 
 void AddItemsSetItem(Player* player, Item* item);

@@ -4667,6 +4667,10 @@ void Spell::EffectApplyGlyph(SpellEffIndex effIndex)
             player->SendLearnPacket(glyphEntry->SpellId, true); // Send packet to properly handle client-side spell tooltips
             player->CastSpell(m_caster, glyphEntry->SpellId, TriggerCastFlags(TRIGGERED_FULL_MASK & ~(TRIGGERED_IGNORE_SHAPESHIFT | TRIGGERED_IGNORE_CASTER_AURASTATE)));
             player->SetGlyph(m_glyphIndex, glyph, !player->GetSession()->PlayerLoading());
+            // Re-evaluate the current shapeshift model immediately. This keeps
+            // native item glyph application consistent with collection equip,
+            // including custom-race bear and cat model mappings.
+            player->RestoreDisplayId();
             player->SendTalentsInfoData(false);
         }
     }

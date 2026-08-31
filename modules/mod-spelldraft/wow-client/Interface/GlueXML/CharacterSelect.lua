@@ -125,9 +125,15 @@ local RebornCharacterWallet = {
 	pending = false,
 	elapsed = 0,
 	timeout = 0,
+	attempts = 0,
+	retryDelay = nil,
+	lastSuccessAt = nil,
+	lastVpBalance = nil,
+	lastDpBalance = nil,
 };
 
 local RebornCharacterWallet_Request;
+local RebornCharacterWallet_Submit;
 
 local function RebornCharacterWallet_GetAccountName()
 	local account = nil;
@@ -212,6 +218,14 @@ local function RebornCharacterWallet_EnsureFrame()
 	end);
 
 	frame:SetScript("OnUpdate", function(self, elapsed)
+		if ( RebornCharacterWallet.retryDelay ) then
+			RebornCharacterWallet.retryDelay = RebornCharacterWallet.retryDelay - elapsed;
+			if ( RebornCharacterWallet.retryDelay <= 0 ) then
+				RebornCharacterWallet.retryDelay = nil;
+				RebornCharacterWallet_Submit();
+			end
+			return;
+		end
 		if ( not RebornCharacterWallet.pending ) then
 			return;
 		end
@@ -220,7 +234,11 @@ local function RebornCharacterWallet_EnsureFrame()
 		RebornCharacterWallet.timeout = RebornCharacterWallet.timeout + elapsed;
 		if ( RebornCharacterWallet.timeout >= 8 ) then
 			RebornCharacterWallet.pending = false;
-			self.title:SetText("|cffff4040钱包超时 / Timeout|r");
+			if ( RebornCharacterWallet.lastVpBalance ~= nil ) then
+				self.title:SetText("钱包 / Wallet");
+			else
+				self.title:SetText("|cffff4040钱包超时 / Timeout|r");
+			end
 			return;
 		end
 		if ( RebornCharacterWallet.elapsed < 0.10 ) then
@@ -239,12 +257,27 @@ local function RebornCharacterWallet_EnsureFrame()
 			RebornCharacterWallet.pending = false;
 			dpBalance = tonumber(dpBalance) or 0;
 			vpBalance = tonumber(vpBalance) or 0;
+			RebornCharacterWallet.lastVpBalance = vpBalance;
+			RebornCharacterWallet.lastDpBalance = dpBalance;
+			RebornCharacterWallet.lastSuccessAt = GetTime and GetTime() or 0;
 			self.title:SetText("钱包 / Wallet");
 			self.vpText:SetText("VP "..vpBalance);
 			self.dpText:SetText("DP "..dpBalance);
 		elseif ( state == "error" ) then
 			RebornCharacterWallet.pending = false;
-			self.title:SetText("|cffff4040钱包错误 / Error|r");
+			if ( RebornCharacterWallet.attempts < 5 and RebornCharacterWallet.timeout < 7 ) then
+				-- The native bridge can occasionally return HTTP 200 and still fail
+				-- to parse that single response. Retry instead of replacing a valid
+				-- wallet balance with a transient error.
+				RebornCharacterWallet.retryDelay = 0.75;
+				self.title:SetText("钱包重试 / Retry");
+			elseif ( RebornCharacterWallet.lastVpBalance ~= nil ) then
+				self.title:SetText("钱包 / Wallet");
+				self.vpText:SetText("VP "..RebornCharacterWallet.lastVpBalance);
+				self.dpText:SetText("DP "..RebornCharacterWallet.lastDpBalance);
+			else
+				self.title:SetText("|cffff4040钱包错误 / Error|r");
+			end
 		end
 	end);
 
@@ -253,24 +286,17 @@ local function RebornCharacterWallet_EnsureFrame()
 	return frame;
 end
 
-RebornCharacterWallet_Request = function()
+RebornCharacterWallet_Submit = function()
 	local frame = RebornCharacterWallet_EnsureFrame();
 	local account = RebornCharacterWallet_GetAccountName();
 	local requestedSlot = math.max(1, math.min(50, (GetNumCharacters() or 0) + 1));
-
-	frame.title:SetText("刷新中 / Refresh");
-	frame.vpText:SetText("VP …");
-	frame.dpText:SetText("DP …");
-	frame:Show();
-	RebornCharacterWallet.pending = false;
-	RebornCharacterWallet.elapsed = 0;
-	RebornCharacterWallet.timeout = 0;
 
 	if ( account == "" or not RebornSpectator_GetOnlineJson ) then
 		frame.title:SetText("|cffff4040钱包不可用 / N/A|r");
 		return;
 	end
 
+	RebornCharacterWallet.attempts = RebornCharacterWallet.attempts + 1;
 	RebornSpectator_GetOnlineJson(-7400);
 	local index;
 	for index = 1, string.len(account) do
@@ -281,8 +307,45 @@ RebornCharacterWallet_Request = function()
 	if ( submitState == "pending" ) then
 		RebornCharacterWallet.pending = true;
 	else
-		frame.title:SetText("|cffff4040请求无效 / Invalid|r");
+		RebornCharacterWallet.pending = false;
+		if ( RebornCharacterWallet.attempts < 5 ) then
+			RebornCharacterWallet.retryDelay = 0.75;
+			frame.title:SetText("钱包重试 / Retry");
+		elseif ( RebornCharacterWallet.lastVpBalance == nil ) then
+			frame.title:SetText("|cffff4040请求无效 / Invalid|r");
+		end
 	end
+end
+
+RebornCharacterWallet_Request = function()
+	local frame = RebornCharacterWallet_EnsureFrame();
+	local now = GetTime and GetTime() or 0;
+
+	frame:Show();
+	-- Character-list events can fire several times within one second. Do not
+	-- launch parallel native quote requests, and keep a recent successful value.
+	if ( RebornCharacterWallet.pending or RebornCharacterWallet.retryDelay ) then
+		return;
+	end
+	if ( RebornCharacterWallet.lastSuccessAt and
+		 now - RebornCharacterWallet.lastSuccessAt < 10 ) then
+		frame.title:SetText("钱包 / Wallet");
+		frame.vpText:SetText("VP "..RebornCharacterWallet.lastVpBalance);
+		frame.dpText:SetText("DP "..RebornCharacterWallet.lastDpBalance);
+		return;
+	end
+
+	frame.title:SetText("刷新中 / Refresh");
+	if ( RebornCharacterWallet.lastVpBalance == nil ) then
+		frame.vpText:SetText("VP …");
+		frame.dpText:SetText("DP …");
+	end
+	RebornCharacterWallet.pending = false;
+	RebornCharacterWallet.elapsed = 0;
+	RebornCharacterWallet.timeout = 0;
+	RebornCharacterWallet.attempts = 0;
+	RebornCharacterWallet.retryDelay = nil;
+	RebornCharacterWallet_Submit();
 end
 
 function CharacterSelect_OnLoad(self) 
@@ -447,6 +510,7 @@ end
 
 function CharacterSelect_OnHide()
 	RebornCharacterWallet.pending = false;
+	RebornCharacterWallet.retryDelay = nil;
 	if ( RebornCharacterWallet.frame ) then
 		RebornCharacterWallet.frame:Hide();
 	end

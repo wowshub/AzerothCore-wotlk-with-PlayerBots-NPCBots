@@ -1,6 +1,34 @@
 local AIO = AIO or require("AIO")
 if AIO.AddAddon() then return end
 
+-- AIO-injected files do not inherit SpellDraft.lua's local timer helper.
+-- Keep a self-contained 3.3.5-compatible Delay implementation here so
+-- PLAYER_ENTERING_WORLD, DK conversion and activation timeouts cannot abort.
+local delayFrame = CreateFrame("Frame")
+local delayQueue = {}
+delayFrame:Hide()
+delayFrame:SetScript("OnUpdate", function(self)
+    local now = GetTime()
+    local index = 1
+    while index <= #delayQueue do
+        local entry = delayQueue[index]
+        if now >= entry.fireAt then
+            table.remove(delayQueue, index)
+            local ok, err = pcall(entry.callback)
+            if not ok then geterrorhandler()(err) end
+        else
+            index = index + 1
+        end
+    end
+    if #delayQueue == 0 then self:Hide() end
+end)
+
+local function Delay(seconds, callback)
+    if type(callback) ~= "function" then return end
+    table.insert(delayQueue, { fireAt = GetTime() + (tonumber(seconds) or 0), callback = callback })
+    delayFrame:Show()
+end
+
 -- Use the same saved language selection as the visible SpellDraft language
 -- button. Fall back to the client locale if the regular addon is unavailable.
 local function ResolvePickerLanguage()
@@ -22,7 +50,7 @@ local function BuildStrings()
     classic = "经典职业模式",
     classicDesc = "保留原职业技能、训练师和原版天赋树。\n不会进入随机抽卡系统。",
     draft = "随机抽卡模式",
-    draftDesc = "每次升级随机出现技能卡片。\n使用现有 SpellDraft 抽卡与天赋系统。",
+    draftDesc = "技能抽卡随等级前密后稀地出现。\n最高等级变化时会自动调整成长曲线。",
     free = "自由选择模式",
     freeDesc = "升级获得点数，在整合面板自由学习技能与天赋。\n服务器权威点数系统正在下一阶段制作。",
     locked = "下一阶段开放",
@@ -30,7 +58,25 @@ local function BuildStrings()
     confirm = "确认并永久锁定",
     selected = "已选择：",
     saving = "正在保存角色模式……",
-    success = "保存成功，即将重新进入角色选择画面。",
+    activating = "保存成功，正在启用所选成长模式……",
+    activated = "成长模式已启用，祝你游戏愉快！",
+    activationError = "启用失败，角色已保持锁定以便安全恢复：",
+    introLocked = "成长路线已经永久锁定",
+    introPreparing = "正在准备角色数据，请稍候……",
+    introReady = "全部准备完成。阅读介绍后即可开始冒险！",
+    beginAdventure = "开始冒险",
+    classicIntroTitle = "你已进入：经典职业模式",
+    classicIntroLead = "忠于原版职业身份，以训练、装备和天赋构筑属于你的英雄。",
+    classicFeaturesTitle = "经典模式特色",
+    classicFeatures = "• 保留角色原职业与全部职业机制\n• 使用训练师学习职业技能与技能等级\n• 使用巫妖王之怒原版天赋树自由配点\n• 完整体验职业任务、装备定位与团队职责\n• 不进入随机抽卡，不清除原职业出生技能",
+    classicNextTitle = "你的冒险方式",
+    classicNext = "拜访职业训练师学习新能力，按等级解锁技能与天赋。\n\n经典死亡骑士将保留55级、阿彻鲁斯装备和原版任务线。",
+    draftIntroTitle = "你已进入：随机抽卡模式",
+    draftIntroLead = "放下职业边界，每次成长都从未知的法术卡牌中塑造全新流派。",
+    draftFeaturesTitle = "随机抽卡特色",
+    draftFeatures = "• 前期快速成型，后期逐渐降低技能抽取频率\n• 最高等级可设为2至255，成长曲线自动适配\n• 跨越原职业限制组合不同职业法术\n• 天赋之书用于抽取珍贵被动与玩法天赋\n• 已获得普通技能随角色等级自动提升技能等级",
+    draftNextTitle = "你的第一次选择",
+    draftNext = "系统已建立第一组三张技能卡，请从中选择一项作为冒险起点。\n\n抽卡死亡骑士会转为1级，并前往对应种族的新手出生地。",
     error = "保存失败：",
     draftFreshError = "该角色已经升级，不能再转为随机抽卡模式；请选择经典模式，或新建角色选择随机抽卡。",
     dkClassic = "经典英雄死亡骑士",
@@ -50,7 +96,7 @@ local function BuildStrings()
     classic = "Classic Class Mode",
     classicDesc = "Keep your original class, trainers, and native talent trees.\nThe random draft system is disabled.",
     draft = "Random Draft Mode",
-    draftDesc = "Level up and choose from random spell cards.\nUses the existing SpellDraft spell and talent systems.",
+    draftDesc = "Spell drafts are frequent early and gradually become rarer.\nThe curve adapts to the configured maximum level.",
     free = "Free Pick Mode",
     freeDesc = "Earn points and freely choose spells and talents.\nThe authoritative point system arrives in the next phase.",
     locked = "Available next phase",
@@ -58,7 +104,25 @@ local function BuildStrings()
     confirm = "Confirm and permanently lock",
     selected = "Selected: ",
     saving = "Saving character mode...",
-    success = "Saved. Returning to character selection.",
+    activating = "Saved. Activating the selected progression mode...",
+    activated = "Progression mode activated. Enjoy the game!",
+    activationError = "Activation failed. The character remains locked for safe recovery: ",
+    introLocked = "Your progression path is now permanently locked",
+    introPreparing = "Preparing your character data. Please wait...",
+    introReady = "Everything is ready. Review your mode and begin the adventure!",
+    beginAdventure = "Begin Adventure",
+    classicIntroTitle = "You Entered: Classic Class Mode",
+    classicIntroLead = "Honor your original class identity through training, equipment, and native talents.",
+    classicFeaturesTitle = "Classic Mode Features",
+    classicFeatures = "• Keep your original class and all native mechanics\n• Learn ranked class abilities from trainers\n• Spend points in the original Wrath talent trees\n• Experience class quests, gear roles, and group identity\n• No random drafts and no removal of starting class spells",
+    classicNextTitle = "How You Progress",
+    classicNext = "Visit class trainers to learn new abilities as you level and build your native talents.\n\nClassic Death Knights remain level 55 with Acherus gear and the original quest line.",
+    draftIntroTitle = "You Entered: Random Draft Mode",
+    draftIntroLead = "Break class boundaries and shape a new build from unpredictable spell cards as you grow.",
+    draftFeaturesTitle = "Random Draft Features",
+    draftFeatures = "• Build quickly early, then draft less often at higher levels\n• Any maximum level from 2 to 255 is supported dynamically\n• Combine spells from different original classes\n• Use the Tome of Talents for rare passive and playstyle talents\n• Learned normal spells automatically gain level-appropriate ranks",
+    draftNextTitle = "Your First Choice",
+    draftNext = "Your first set of three spell cards is ready. Choose one to begin defining your build.\n\nDraft Death Knights become level 1 and travel to their race's starting zone.",
     error = "Could not save: ",
         draftFreshError = "This character has already progressed. Choose Classic, or create a new character for Random Draft.",
         dkClassic = "Classic Hero Death Knight",
@@ -80,6 +144,8 @@ local frame
 local selectedMode
 local cards = {}
 local choiceCompleted = false
+local activationCompleted = false
+local introMode
 local pickerContext = {}
 
 local MODE_INFO = {
@@ -130,6 +196,59 @@ local function SendLanguageToServer()
     AIO.Handle("SpellDraftModeServer", "SetLanguage", pickerLanguage)
 end
 
+local INTRO_ART = {
+    classic = "Interface\\SpellDraft\\ModeIntroClassic",
+    draft = "Interface\\SpellDraft\\ModeIntroDraft",
+}
+
+local function RefreshIntroductionLanguage()
+    if not frame or not frame.introPanel or not introMode then return end
+    local prefix = introMode == "classic" and "classic" or "draft"
+    frame.introTitle:SetText(L[prefix .. "IntroTitle"])
+    frame.introLead:SetText(L[prefix .. "IntroLead"])
+    frame.introLocked:SetText(L.introLocked)
+    frame.introFeaturesTitle:SetText(L[prefix .. "FeaturesTitle"])
+    frame.introFeatures:SetText(L[prefix .. "Features"])
+    frame.introNextTitle:SetText(L[prefix .. "NextTitle"])
+    frame.introNext:SetText(L[prefix .. "Next"])
+    frame.introBegin:SetText(L.beginAdventure)
+    frame.introLanguage:SetText(L.language)
+    frame.introLanguage.tooltipText = L.languageTip
+    if activationCompleted then
+        frame.introStatus:SetText(L.introReady)
+    end
+end
+
+local function ShowIntroduction(modeName)
+    introMode = modeName == "classic" and "classic" or "draft"
+    activationCompleted = false
+    frame.view = "intro"
+    frame.choicePanel:Hide()
+    frame.introPanel:Show()
+    frame.introArt:SetTexture(INTRO_ART[introMode])
+    frame.introStatus:SetTextColor(1, 0.82, 0.12)
+    frame.introStatus:SetText(L.introPreparing)
+    frame.introBegin:Disable()
+    if frame.introBeginHit then frame.introBeginHit:Disable() end
+    RefreshIntroductionLanguage()
+    if frame.RefreshHitTargets then frame:RefreshHitTargets() end
+    local expectedMode = introMode
+    Delay(15, function()
+        if frame and frame:IsShown() and frame.view == "intro"
+            and introMode == expectedMode and not activationCompleted then
+            frame.introStatus:SetTextColor(1, 0.25, 0.2)
+            frame.introStatus:SetText(L.activationError .. "activation_timeout")
+        end
+    end)
+end
+
+local function FinishIntroduction()
+    if not activationCompleted or not introMode then return end
+    AIO.Handle("SpellDraftModeServer", "FinishIntroduction", introMode)
+    choiceCompleted = true
+    frame:Hide()
+end
+
 local function RefreshPickerLanguage()
     L = BuildStrings()
     if not frame then return end
@@ -158,6 +277,7 @@ local function RefreshPickerLanguage()
     else
         frame.status:SetText(L.choose)
     end
+    RefreshIntroductionLanguage()
 end
 
 local function TogglePickerLanguage()
@@ -218,6 +338,137 @@ local function CreatePicker()
         insets = { left = 11, right = 11, top = 11, bottom = 11 },
     })
     panel:SetBackdropColor(0.24, 0.14, 0.055, 1)
+    frame.choicePanel = panel
+
+    local introPanel = CreateFrame("Frame", nil, frame)
+    introPanel:SetSize(1100, 700)
+    introPanel:SetPoint("CENTER")
+    introPanel:SetFrameLevel(1110)
+    introPanel:EnableMouse(true)
+    introPanel:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = { left = 11, right = 11, top = 11, bottom = 11 },
+    })
+    introPanel:SetBackdropColor(0.10, 0.055, 0.025, 1)
+    introPanel:Hide()
+    frame.introPanel = introPanel
+
+    local introTitle = introPanel:CreateFontString(nil, "OVERLAY")
+    introTitle:SetPoint("TOP", 0, -30)
+    introTitle:SetFont("Fonts\\ARKai_T.ttf", 31, "OUTLINE")
+    introTitle:SetTextColor(1, 0.82, 0.12)
+    frame.introTitle = introTitle
+
+    local introLocked = introPanel:CreateFontString(nil, "OVERLAY")
+    introLocked:SetPoint("TOP", introTitle, "BOTTOM", 0, -7)
+    introLocked:SetFont("Fonts\\ARHei.ttf", 14)
+    introLocked:SetTextColor(0.80, 0.90, 1)
+    frame.introLocked = introLocked
+
+    local introLanguage = CreateFrame("Button", nil, introPanel, "UIPanelButtonTemplate")
+    introLanguage:SetSize(72, 26)
+    introLanguage:SetPoint("TOPRIGHT", -34, -28)
+    introLanguage:SetFrameLevel(1140)
+    introLanguage:SetScript("OnClick", TogglePickerLanguage)
+    introLanguage:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(self.tooltipText or "")
+        GameTooltip:Show()
+    end)
+    introLanguage:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    frame.introLanguage = introLanguage
+
+    local artFrame = CreateFrame("Frame", nil, introPanel)
+    artFrame:SetSize(1000, 320)
+    artFrame:SetPoint("TOP", 0, -88)
+    artFrame:SetBackdrop({ edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 22 })
+    local introArt = artFrame:CreateTexture(nil, "ARTWORK")
+    introArt:SetPoint("TOPLEFT", 8, -8)
+    introArt:SetPoint("BOTTOMRIGHT", -8, 8)
+    introArt:SetTexCoord(0, 1, 0.17, 0.83)
+    frame.introArt = introArt
+
+    local introLead = introPanel:CreateFontString(nil, "OVERLAY")
+    introLead:SetPoint("TOPLEFT", 70, -422)
+    introLead:SetPoint("TOPRIGHT", -70, -422)
+    introLead:SetFont("Fonts\\ARHei.ttf", 15)
+    introLead:SetTextColor(1, 0.92, 0.72)
+    introLead:SetJustifyH("CENTER")
+    frame.introLead = introLead
+
+    local introFeaturesTitle = introPanel:CreateFontString(nil, "OVERLAY")
+    introFeaturesTitle:SetPoint("TOPLEFT", 72, -458)
+    introFeaturesTitle:SetFont("Fonts\\ARKai_T.ttf", 19, "OUTLINE")
+    introFeaturesTitle:SetTextColor(1, 0.76, 0.16)
+    frame.introFeaturesTitle = introFeaturesTitle
+
+    local introFeatures = introPanel:CreateFontString(nil, "OVERLAY")
+    introFeatures:SetPoint("TOPLEFT", 72, -487)
+    introFeatures:SetWidth(590)
+    introFeatures:SetFont("Fonts\\ARHei.ttf", 14)
+    introFeatures:SetTextColor(0.96, 0.91, 0.77)
+    introFeatures:SetJustifyH("LEFT")
+    introFeatures:SetJustifyV("TOP")
+    frame.introFeatures = introFeatures
+
+    local divider = introPanel:CreateTexture(nil, "ARTWORK")
+    divider:SetTexture("Interface\\Buttons\\WHITE8X8")
+    divider:SetVertexColor(0.72, 0.52, 0.18, 0.55)
+    divider:SetSize(1, 128)
+    divider:SetPoint("TOP", 155, -465)
+
+    local introNextTitle = introPanel:CreateFontString(nil, "OVERLAY")
+    introNextTitle:SetPoint("TOPLEFT", 720, -458)
+    introNextTitle:SetFont("Fonts\\ARKai_T.ttf", 19, "OUTLINE")
+    introNextTitle:SetTextColor(1, 0.76, 0.16)
+    frame.introNextTitle = introNextTitle
+
+    local introNext = introPanel:CreateFontString(nil, "OVERLAY")
+    introNext:SetPoint("TOPLEFT", 720, -487)
+    introNext:SetWidth(305)
+    introNext:SetFont("Fonts\\ARHei.ttf", 14)
+    introNext:SetTextColor(0.96, 0.91, 0.77)
+    introNext:SetJustifyH("LEFT")
+    introNext:SetJustifyV("TOP")
+    frame.introNext = introNext
+
+    local introStatus = introPanel:CreateFontString(nil, "OVERLAY")
+    introStatus:SetPoint("BOTTOM", 0, 64)
+    introStatus:SetFont("Fonts\\ARHei.ttf", 15, "OUTLINE")
+    frame.introStatus = introStatus
+
+    local introBegin = CreateFrame("Button", nil, introPanel, "UIPanelButtonTemplate")
+    introBegin:SetSize(260, 38)
+    introBegin:SetPoint("BOTTOM", 0, 20)
+    introBegin:SetFrameLevel(1140)
+    introBegin:RegisterForClicks("LeftButtonUp")
+    introBegin:SetScript("OnClick", FinishIntroduction)
+    introBegin:Disable()
+    frame.introBegin = introBegin
+
+    local introBeginHit = CreateFrame("Button", "SpellDraftModeIntroBeginHit", UIParent)
+    introBeginHit:SetAllPoints(introBegin)
+    introBeginHit:SetFrameStrata("TOOLTIP")
+    introBeginHit:SetFrameLevel(5400)
+    introBeginHit:RegisterForClicks("LeftButtonUp")
+    introBeginHit:SetScript("OnClick", FinishIntroduction)
+    introBeginHit:SetScript("OnMouseDown", function(_, button)
+        if button == "LeftButton" then FinishIntroduction() end
+    end)
+    introBeginHit:Disable()
+    introBeginHit:Hide()
+    frame.introBeginHit = introBeginHit
+
+    local introLanguageHit = CreateFrame("Button", "SpellDraftModeIntroLanguageHit", UIParent)
+    introLanguageHit:SetAllPoints(introLanguage)
+    introLanguageHit:SetFrameStrata("TOOLTIP")
+    introLanguageHit:SetFrameLevel(5410)
+    introLanguageHit:RegisterForClicks("LeftButtonUp")
+    introLanguageHit:SetScript("OnClick", TogglePickerLanguage)
+    introLanguageHit:Hide()
+    frame.introLanguageHit = introLanguageHit
 
     local title = panel:CreateFontString(nil, "OVERLAY")
     title:SetPoint("TOP", 0, -38)
@@ -377,15 +628,30 @@ local function CreatePicker()
 
     -- Mandatory selection: the frame is intentionally not in UISpecialFrames,
     -- so ESC cannot dismiss it. If another addon tries to hide it, restore it.
-    frame:SetScript("OnShow", function()
-        for _, card in ipairs(cards) do card.hitButton:Show() end
-        confirmHit:Show()
-        languageHit:Show()
-    end)
+    function frame:RefreshHitTargets()
+        for _, card in ipairs(cards) do card.hitButton:Hide() end
+        confirmHit:Hide()
+        languageHit:Hide()
+        introBeginHit:Hide()
+        introLanguageHit:Hide()
+        if not self:IsShown() then return end
+        if self.view == "intro" then
+            introBeginHit:Show()
+            introLanguageHit:Show()
+        else
+            for _, card in ipairs(cards) do card.hitButton:Show() end
+            confirmHit:Show()
+            languageHit:Show()
+        end
+    end
+
+    frame:SetScript("OnShow", function(self) self:RefreshHitTargets() end)
     frame:SetScript("OnHide", function()
         for _, card in ipairs(cards) do card.hitButton:Hide() end
         confirmHit:Hide()
         languageHit:Hide()
+        introBeginHit:Hide()
+        introLanguageHit:Hide()
         if not choiceCompleted then frame:Show() end
     end)
 
@@ -397,7 +663,7 @@ local function CreatePicker()
     frame:SetScript("OnUpdate", function(self)
         local leftDown = IsMouseButtonDown("LeftButton") and true or false
         if leftDown and not self.leftMouseWasDown
-            and not choiceCompleted and not self.submitting then
+            and not choiceCompleted and (self.view == "intro" or not self.submitting) then
             local cursorX, cursorY = GetCursorPosition()
             local scale = UIParent:GetEffectiveScale()
             if scale and scale > 0 then
@@ -405,22 +671,33 @@ local function CreatePicker()
                 cursorY = cursorY / scale
             end
 
-            for _, card in ipairs(cards) do
-                if card.modeEnabled and CursorIsInside(card, cursorX, cursorY) then
-                    SelectCard(card)
+            if self.view == "intro" then
+                if activationCompleted and CursorIsInside(self.introBegin, cursorX, cursorY) then
+                    FinishIntroduction()
                     self.leftMouseWasDown = leftDown
                     return
                 end
-            end
+                if CursorIsInside(self.introLanguage, cursorX, cursorY) then
+                    TogglePickerLanguage()
+                end
+            else
+                for _, card in ipairs(cards) do
+                    if card.modeEnabled and CursorIsInside(card, cursorX, cursorY) then
+                        SelectCard(card)
+                        self.leftMouseWasDown = leftDown
+                        return
+                    end
+                end
 
-            if selectedMode and CursorIsInside(self.confirm, cursorX, cursorY) then
-                SubmitSelection()
-                self.leftMouseWasDown = leftDown
-                return
-            end
+                if selectedMode and CursorIsInside(self.confirm, cursorX, cursorY) then
+                    SubmitSelection()
+                    self.leftMouseWasDown = leftDown
+                    return
+                end
 
-            if CursorIsInside(self.languageButton, cursorX, cursorY) then
-                TogglePickerLanguage()
+                if CursorIsInside(self.languageButton, cursorX, cursorY) then
+                    TogglePickerLanguage()
+                end
             end
         end
         self.leftMouseWasDown = leftDown
@@ -436,10 +713,14 @@ local handlers = AIO.AddHandlers("SpellDraftModeClient", {})
 -- ERR_NEED_RANGED_WEAPON instead of starting melee combat.
 --
 -- Keep the ranged spells usable from the action bar. In a classless mode,
--- enable automatic ranged combat only while slot 18 contains a real ranged
--- weapon; relics, idols, librams, totems and sigils use INVTYPE_RELIC and do
--- not count. Restore the player's previous preference in classic mode.
-local function HasUsableRangedWeaponEquipped()
+-- enable the client's native distance-aware melee/ranged switch only while
+-- slot 18 contains a real ranged weapon. Do not duplicate the Hunter ammo
+-- rules here: this client can consume matching ammunition directly from the
+-- bags, and the native attack code already validates distance, ammo and the
+-- correct Auto Shot/Shoot/Throw action. At melee distance it still chooses
+-- Attack; at range it chooses the equipped ranged weapon. Relics never
+-- qualify, and removing the ranged weapon falls back to melee-first combat.
+local function HasRangedWeaponEquipped()
     if type(GetInventoryItemLink) ~= "function" or type(GetItemInfo) ~= "function" then
         return false
     end
@@ -448,9 +729,9 @@ local function HasUsableRangedWeaponEquipped()
     if not itemLink then return false end
 
     local equipLoc = select(9, GetItemInfo(itemLink))
-    return equipLoc == "INVTYPE_RANGED"
+    return equipLoc == "INVTYPE_THROWN"
+        or equipLoc == "INVTYPE_RANGED"
         or equipLoc == "INVTYPE_RANGEDRIGHT"
-        or equipLoc == "INVTYPE_THROWN"
 end
 
 local function ApplyCombatModeCVar(modeName)
@@ -464,7 +745,10 @@ local function ApplyCombatModeCVar(modeName)
         if db.autoRangedCombatBeforeDraft == nil then
             db.autoRangedCombatBeforeDraft = tostring(GetCVar("autoRangedCombat") or "0")
         end
-        SetCVar("autoRangedCombat", HasUsableRangedWeaponEquipped() and "1" or "0")
+        -- This is the same native switch used by a classic Hunter. We only
+        -- decide whether a real ranged weapon exists; the client decides
+        -- melee versus ranged at the moment the player attacks.
+        SetCVar("autoRangedCombat", HasRangedWeaponEquipped() and "1" or "0")
     elseif modeName == "classic" and db.autoRangedCombatBeforeDraft ~= nil then
         SetCVar("autoRangedCombat", db.autoRangedCombatBeforeDraft)
         db.autoRangedCombatBeforeDraft = nil
@@ -476,14 +760,47 @@ end
 local combatModeCVarFrame = CreateFrame("Frame")
 combatModeCVarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 combatModeCVarFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+combatModeCVarFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
+combatModeCVarFrame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
+
+-- 3.3.5 has no global Delay function. A missing Delay aborted the /reload
+-- mode request and left the SpellDraft launcher hidden in "pending" mode.
+local function ModeRunAfter(seconds, callback)
+    local timer = CreateFrame("Frame")
+    local elapsed = 0
+    timer:SetScript("OnUpdate", function(self, delta)
+        elapsed = elapsed + (delta or 0)
+        if elapsed < seconds then return end
+        self:SetScript("OnUpdate", nil)
+        callback()
+    end)
+end
+
 combatModeCVarFrame:SetScript("OnEvent", function(_, event, slot)
     if event == "PLAYER_EQUIPMENT_CHANGED" and tonumber(slot) ~= 18 then return end
+    if event == "UNIT_INVENTORY_CHANGED" and slot ~= "player" then return end
     ApplyCombatModeCVar(tostring(_G.SpellDraftCharacterMode or "pending"))
+    if event == "PLAYER_ENTERING_WORLD" then
+        -- On /reload the Lua globals are rebuilt, but the server login hook is
+        -- not. Ask for the saved mode again after AIO finishes initializing.
+        ModeRunAfter(0.8, function()
+            AIO.Handle("SpellDraftModeServer", "RequestMode")
+        end)
+        ModeRunAfter(2.5, function()
+            if tostring(_G.SpellDraftCharacterMode or "pending") == "pending" then
+                AIO.Handle("SpellDraftModeServer", "RequestMode")
+            end
+        end)
+    end
 end)
 
 function handlers.ApplyMode(player, modeName)
     modeName = tostring(modeName or "pending")
-    _G.SpellDraftCharacterMode = modeName
+    if type(_G.SpellDraft_SetCharacterModeLocal) == "function" then
+        _G.SpellDraft_SetCharacterModeLocal(modeName)
+    else
+        _G.SpellDraftCharacterMode = modeName
+    end
     ApplyCombatModeCVar(modeName)
     if type(_G.SpellDraft_ApplyModeButtons) == "function" then
         _G.SpellDraft_ApplyModeButtons()
@@ -511,6 +828,11 @@ function handlers.ShowPicker(player, enabled)
     }
     RefreshPickerLanguage()
     choiceCompleted = false
+    activationCompleted = false
+    introMode = nil
+    frame.view = "choice"
+    frame.introPanel:Hide()
+    frame.choicePanel:Show()
     frame.submitting = false
     selectedMode = nil
     frame.status:SetTextColor(1, 0.82, 0.12)
@@ -536,12 +858,19 @@ function handlers.ShowPicker(player, enabled)
     frame:Show()
 end
 
+function handlers.ShowModeIntroduction(player, modeName)
+    if not frame then CreatePicker() end
+    choiceCompleted = false
+    activationCompleted = false
+    frame.submitting = true
+    frame:Show()
+    ShowIntroduction(modeName)
+end
+
 function handlers.SelectionResult(player, ok, result)
     if not frame then return end
     if ok then
-        choiceCompleted = true
-        frame.status:SetTextColor(0.2, 1, 0.2)
-        frame.status:SetText(L.success)
+        ShowIntroduction(selectedMode)
         return
     end
 
@@ -566,4 +895,27 @@ function handlers.SelectionResult(player, ok, result)
         frame.confirm:Enable()
         frame.confirmHit:Enable()
     end
+end
+
+function handlers.ActivationResult(player, ok, result)
+    if not frame then return end
+    if not ok then
+        local errorText = L.activationError .. tostring(result or "unknown")
+        frame.status:SetTextColor(1, 0.25, 0.2)
+        frame.status:SetText(errorText)
+        -- SelectionResult has already switched to the intro view, so the old
+        -- choice status is hidden. Put the failure where the player can see it.
+        frame.introStatus:SetTextColor(1, 0.25, 0.2)
+        frame.introStatus:SetText(errorText)
+        -- The permanent choice may already have partially changed the Player.
+        -- Keep the modal and all choice buttons disabled; relog/admin recovery
+        -- can safely resume from the persisted mode and subsystem state.
+        return
+    end
+
+    activationCompleted = true
+    frame.introStatus:SetTextColor(0.25, 1, 0.35)
+    frame.introStatus:SetText(L.introReady)
+    frame.introBegin:Enable()
+    frame.introBeginHit:Enable()
 end
