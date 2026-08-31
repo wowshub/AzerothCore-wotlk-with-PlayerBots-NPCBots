@@ -1930,7 +1930,7 @@ void BotDataMgr::CreateWanderingBotsSortedGear()
             if (c == BOT_CLASS_SPHYNX &&
                 (itt.InventoryType == INVTYPE_FINGER || itt.InventoryType == INVTYPE_TRINKET || itt.InventoryType == INVTYPE_CLOAK || itt.InventoryType == INVTYPE_NECK || itt.InventoryType == INVTYPE_SHIELD))
                 continue;
-            if (!itt.AllowableClass || itt.AllowableClass >= ((1u << MAX_CLASSES) - 1) || !!(itt.AllowableClass & (1 << (c - 1))))
+            if (!itt.AllowableClass || itt.AllowableClass == uint32(-1) || !!(itt.AllowableClass & (uint32(1) << (c - 1))))
                 _botsWanderCreaturesSortedGear[c][slot][lstep].push_back(itt.ItemId);
         }
     };

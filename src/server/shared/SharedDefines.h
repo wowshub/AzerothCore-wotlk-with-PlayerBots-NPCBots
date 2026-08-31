@@ -193,19 +193,23 @@ enum Classes
     CLASS_DEATH_KNIGHT  = 6, // TITLE Death Knight
     CLASS_SHAMAN        = 7, // TITLE Shaman
     CLASS_MAGE          = 8, // TITLE Mage
-    CLASS_WARLOCK       = 9, // TITLE Warlock
-    //CLASS_UNK           = 10,
-    CLASS_DRUID         = 11 // TITLE Druid
+    CLASS_WARLOCK       = 9,  // TITLE Warlock
+    //CLASS_UNK          = 10,
+    CLASS_DRUID         = 11, // TITLE Druid
+    CLASS_MONK          = 14  // TITLE Monk
 };
 
-// max+1 for player class
-#define MAX_CLASSES       12
+// Exclusive upper bound for player class IDs.  The custom-class client data
+// reserves IDs 1..23; individual classes are enabled through ChrClasses.dbc.
+#define MAX_CLASSES       24
+
+static_assert(MAX_CLASSES <= 32, "Player class masks use a 32-bit protocol field");
 
 #define CLASSMASK_ALL_PLAYABLE \
-    ((1<<(CLASS_WARRIOR-1))|(1<<(CLASS_PALADIN-1))|(1<<(CLASS_HUNTER-1))| \
-    (1<<(CLASS_ROGUE-1))  |(1<<(CLASS_PRIEST-1)) |(1<<(CLASS_SHAMAN-1))| \
-    (1<<(CLASS_MAGE-1))   |(1<<(CLASS_WARLOCK-1))|(1<<(CLASS_DRUID-1)) | \
-    (1<<(CLASS_DEATH_KNIGHT-1)))
+    ((uint32(1)<<(CLASS_WARRIOR-1))|(uint32(1)<<(CLASS_PALADIN-1))|(uint32(1)<<(CLASS_HUNTER-1))| \
+    (uint32(1)<<(CLASS_ROGUE-1))  |(uint32(1)<<(CLASS_PRIEST-1)) |(uint32(1)<<(CLASS_SHAMAN-1))| \
+    (uint32(1)<<(CLASS_MAGE-1))   |(uint32(1)<<(CLASS_WARLOCK-1))|(uint32(1)<<(CLASS_DRUID-1)) | \
+    (uint32(1)<<(CLASS_DEATH_KNIGHT-1))|(uint32(1)<<(CLASS_MONK-1)))
 
 // valid classes for creature_template.unit_class
 #define CLASSMASK_ALL_CREATURES CLASSMASK_ALL_PLAYABLE
