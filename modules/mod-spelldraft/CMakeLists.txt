@@ -5,6 +5,7 @@ AC_ADD_SCRIPT("${CMAKE_CURRENT_SOURCE_DIR}/src/SpellDraft.cpp")
 AC_ADD_SCRIPT("${CMAKE_CURRENT_SOURCE_DIR}/src/SpellDraftDkScaling.cpp")
 AC_ADD_SCRIPT("${CMAKE_CURRENT_SOURCE_DIR}/src/SpellDraftNativeAuraDiag.cpp")
 AC_ADD_SCRIPT("${CMAKE_CURRENT_SOURCE_DIR}/src/SpellDraftGlyphCollection.cpp")
+AC_ADD_SCRIPT("${CMAKE_CURRENT_SOURCE_DIR}/src/SpellDraftMonk.cpp")
 AC_ADD_SCRIPT("${CMAKE_CURRENT_SOURCE_DIR}/src/mod_spelldraft_loader.cpp")
 
 AC_ADD_CONFIG_FILE("${CMAKE_CURRENT_SOURCE_DIR}/conf/mod_spelldraft.conf.dist")

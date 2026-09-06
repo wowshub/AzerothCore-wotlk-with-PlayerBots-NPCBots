@@ -5402,6 +5402,15 @@ float Player::OCTRegenHPPerSpirit()
     uint8 level = GetLevel();
     uint32 pclass = getClass();
 
+    // The 3.3.5a client/core GT health-regeneration tables are built around the native class
+    // index range.  Monk is a custom class (14) whose base-stat and Energy model deliberately
+    // follows Rogue in this project.  Looking up the custom tail can still yield no usable ratio
+    // on older DBCStorage/runtime combinations even when the physical DBC was extended, which
+    // makes out-of-combat health regeneration exactly zero.  Resolve Monk through the proven
+    // native Rogue rows at the point of use; keep the original class ID everywhere else.
+    if (pclass == CLASS_MONK)
+        pclass = CLASS_ROGUE;
+
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
 
