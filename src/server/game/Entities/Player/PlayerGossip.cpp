@@ -17,6 +17,9 @@
 
 #include "BattlegroundMgr.h"
 #include "Chat.h"
+#include "Creature.h"
+#include "Trainer.h"
+#include "World.h"
 #include "GossipDef.h"
 #include "Language.h"
 #include "ObjectMgr.h"
@@ -290,6 +293,18 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
     if (!menuItemData)
         return;
 
+    // TRAIN1: revalidate the dedicated Monk trainer even for an old gossip menu.
+    if (source->IsCreature() && source->ToCreature()->GetEntry() == 900188)
+    {
+        Trainer::Trainer const* teacher = sObjectMgr->GetTrainer(900188);
+        if (!teacher || !teacher->IsTrainerValidForPlayer(this) ||
+            (gossipOptionId == GOSSIP_OPTION_LEARNDUALSPEC &&
+             (GetSpecsCount() != 1 || GetLevel() < sWorld->getIntConfig(CONFIG_MIN_DUALSPEC_LEVEL))))
+        {
+            PlayerTalkClass->SendCloseGossip();
+            return;
+        }
+    }
     int32 cost = int32(item->BoxMoney);
     if (!HasEnoughMoney(cost))
     {
@@ -396,6 +411,8 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
     }
 
     ModifyMoney(-cost);
+    if (source->IsCreature() && source->ToCreature()->GetEntry() == 900188 && gossipOptionId == GOSSIP_OPTION_LEARNDUALSPEC)
+        SaveToDB(false, false);
 }
 
 uint32 Player::GetGossipTextId(WorldObject* source)

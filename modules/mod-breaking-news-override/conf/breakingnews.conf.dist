@@ -8,6 +8,10 @@ BreakingNews.Enable = 1
 # 0 = disabled, 1 = login only, 2 = character selection only, 3 = both.
 BreakingNews.DisplayMode = 3
 
+# 0 = character page reads BREAKING_NEWS_CHARACTER_HTML from GlueXML (recommended).
+# 1 = send the server HTML through multi-part Warden payloads (legacy compatibility).
+BreakingNews.CharacterUseWardenDelivery = 0
+
 # Character-selection page title. Single quotes and backslashes are escaped.
 BreakingNews.CharacterTitle = "Newest updates 最新更新"
 
@@ -19,6 +23,12 @@ BreakingNews.Cache = 1
 
 # Log extra information while diagnosing. Keep 0 in production.
 BreakingNews.Verbose = 0
+
+# Delay character-page delivery until the critical SMSG_CHAR_ENUM path has
+# completed. 400 ms keeps the panel responsive without competing with the
+# character list, equipment preview, and first 3D model initialization.
+# Allowed range: 0-5000 ms. Production default: 400.
+BreakingNews.CharacterDeliveryDelayMs = 400
 
 # Retry every 100 ms until Warden is ready, for at most 15 seconds.
 BreakingNews.RetryIntervalMs = 100

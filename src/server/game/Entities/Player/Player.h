@@ -19,6 +19,7 @@
 #define _PLAYER_H
 
 #include "ArenaTeam.h"
+#include "RebornMonkStaggerPool.h"
 #include "Battleground.h"
 #include "CharmInfo.h"
 #include "CharacterCache.h"
@@ -1083,6 +1084,24 @@ class Player : public Unit, public GridObject<Player>
     friend void Item::AddToUpdateQueueOf(Player* player);
     friend void Item::RemoveFromUpdateQueueOf(Player* player);
 public:
+    // MONKBW2: per-player debt is independent of stance and talent auras.
+    void RebornBrewDefer(DamageInfo& info);
+    void RebornBrewUpdate(uint32 diff);
+    uint32 RebornBrewPurify();
+    uint32 RebornBrewRank(uint32 first, uint32 count) const;
+    void RebornBrewArmGuard();
+    uint32 RebornBrewBeginMastery();
+    uint32 RebornBrewDebt() const { return m_rebornBrewPool.Total(); }
+    bool RebornBrewStorageReady() const { return m_rebornBrewStorageReady; }
+private:
+    RebornMonkStaggerPool m_rebornBrewPool;
+    bool m_rebornBrewStorageReady = false;
+    uint32 m_rebornBrewMasteryMs = 0;
+    uint32 m_rebornBrewGuardPct = 0;
+    uint32 m_rebornBrewRhythmMs = 0;
+    uint8 m_rebornBrewMasterySpec = 0;
+    uint8 m_rebornBrewGuardSpec = 0;
+public:
     explicit Player(WorldSession* session);
     ~Player() override;
 
@@ -1754,8 +1773,25 @@ public:
     [[nodiscard]] uint8 GetActiveSpecMask() const { return (1 << m_activeSpec); }
     void SetActiveSpec(uint8 spec) { m_activeSpec = spec; }
     [[nodiscard]] uint8 GetSpecsCount() const { return m_specsCount; }
-    void SetSpecsCount(uint8 count) { m_specsCount = count; }
+    void SetSpecsCount(uint8 count)
+    {
+        // Never let an old dual-spec purchase/script discard an enrolled third build.
+        if (m_specsCount == 3 && getClass() == 14) return;
+        if (count >= 1 && count <= 2) m_specsCount = count;
+    }
+    [[nodiscard]] bool HasMonkThirdSpec() const { return getClass() == 14 && m_specsCount == 3; }
+    void SendMonkSpecState();
+    bool StartMonkSpecCast(uint8 spec);
+    void MarkMonkSpecCastHit(Spell const* spell);
+    void FinishMonkSpecCast(Spell const* spell, bool ok);
+    bool IsMonkSpecCasting() const { return m_monkSpecCast != nullptr; }
+    uint8 GetMonkViewSpec() const { return m_monkViewSpec < m_specsCount ? m_monkViewSpec : m_activeSpec; }
+    bool IsMonkSpecPreview() const { return HasMonkThirdSpec() && GetMonkViewSpec() != GetActiveSpec(); }
+    bool SetMonkViewSpec(uint8 spec);
+    bool EnableBlankMonkThirdSpec();
     void ActivateSpec(uint8 spec);
+    [[nodiscard]] bool IsSpecActionLoading() const { return m_specActionLoading; }
+    void SetSaveAfterSpecActionLoad(bool save) { m_saveAfterSpecActionLoad = save; }
     void LoadActions(PreparedQueryResult result);
     void GetTalentTreePoints(uint8 (&specPoints)[3]) const;
     [[nodiscard]] uint8 GetMostPointsTalentTree() const;
@@ -2769,7 +2805,7 @@ protected:
     /***                   LOAD SYSTEM                     ***/
     /*********************************************************/
 
-    void _LoadActions(PreparedQueryResult result);
+    void _LoadActions(PreparedQueryResult result, bool wideFields = false);
     void _LoadAuras(PreparedQueryResult result, uint32 timediff);
     void _LoadGlyphAuras();
     void _LoadInventory(PreparedQueryResult result, uint32 timeDiff);
@@ -2879,8 +2915,17 @@ protected:
 
     uint8 m_activeSpec;
     uint8 m_specsCount;
+    uint8 m_monkViewSpec = 255; // view selection is session-local, never persisted
+    Spell const* m_monkSpecCast = nullptr; // identity only; owned by native spell events
+    uint8 m_monkCastTarget = 255;
+    uint8 m_monkCastSource = 255;
+    bool m_monkCastHit = false;
+    // SPEC11: protect asynchronous action loads across rapid switches/relog.
+    uint64 m_specActionRequestId = 0;
+    bool m_specActionLoading = false;
+    bool m_saveAfterSpecActionLoad = false;
 
-    uint32 m_Glyphs[MAX_TALENT_SPECS][MAX_GLYPH_SLOT_INDEX];
+    uint32 m_Glyphs[3][MAX_GLYPH_SLOT_INDEX]; // SPEC13: server storage only; wire format remains two groups.
 
     ActionButtonList m_actionButtons;
 

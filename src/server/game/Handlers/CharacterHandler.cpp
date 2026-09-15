@@ -321,6 +321,26 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
         return;
     }
 
+    // MONKRACE2: creation-only policy; existing characters and login stay intact.
+    if (createInfo->Class == CLASS_MONK)
+    {
+        switch (createInfo->Race)
+        {
+            case RACE_HUMAN:
+            case RACE_ORC:
+            case RACE_DWARF:
+            case RACE_NIGHTELF:
+            case RACE_UNDEAD_PLAYER:
+            case RACE_BLOODELF:
+            case RACE_PANDAREN:
+            case RACE_PANDAREN_ALLIANCE:
+                break;
+            default:
+                SendCharCreate(CHAR_CREATE_DISABLED);
+                return;
+        }
+    }
+
     // prevent character creating Expansion race without Expansion account
     if (raceEntry->expansion > Expansion())
     {
@@ -1674,6 +1694,7 @@ void WorldSession::HandleAlterAppearance(WorldPacket& recvData)
 
 void WorldSession::HandleRemoveGlyph(WorldPacket& recvData)
 {
+    if (_player->IsSpecActionLoading() || _player->IsMonkSpecCasting() || _player->IsMonkSpecPreview()) { recvData.rfinish(); return; }
     uint32 slot;
     recvData >> slot;
 

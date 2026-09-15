@@ -2931,6 +2931,11 @@ void Unit::CalcAbsorbResist(DamageInfo& dmgInfo, bool Splited)
             Unit::DealDamage(attacker, caster, splitted, &cleanDamage, DIRECT_DAMAGE, splitSchoolMask, splitSpellInfo, false);
         }
     }
+    // MONKBW2: after normal armor/absorb/split calculations and before combat logs.
+    // Copied/split damage has already been processed and is not staggered again.
+    if (!Splited)
+        if (Player* player = victim->ToPlayer())
+            player->RebornBrewDefer(dmgInfo);
 }
 
 void Unit::CalcHealAbsorb(HealInfo& healInfo)

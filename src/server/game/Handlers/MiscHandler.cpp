@@ -913,6 +913,11 @@ void WorldSession::HandleRequestAccountData(WorldPacket& recv_data)
 
 void WorldSession::HandleSetActionButtonOpcode(WorldPacket& recv_data)
 {
+    if (GetPlayer()->IsSpecActionLoading())
+    {
+        recv_data.rfinish();
+        return;
+    }
     uint8 button;
     uint32 packetData;
     recv_data >> button >> packetData;

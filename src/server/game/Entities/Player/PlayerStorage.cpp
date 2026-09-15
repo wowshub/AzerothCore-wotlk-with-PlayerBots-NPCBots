@@ -2402,6 +2402,12 @@ InventoryResult Player::CanUseItem(ItemTemplate const* proto) const
         return EQUIP_ERR_ITEM_NOT_FOUND;
     }
 
+    // MONKSPEC16: class14 armor rules also apply to GM-trained proficiencies.
+    // Login inventory validation returns previously equipped invalid items by mail.
+    if (getClass() == CLASS_MONK && proto->Class == ITEM_CLASS_ARMOR &&
+        (proto->SubClass == ITEM_SUBCLASS_ARMOR_MAIL || proto->SubClass == ITEM_SUBCLASS_ARMOR_PLATE))
+        return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
+
     if (proto->HasFlag2(ITEM_FLAG2_FACTION_HORDE) && GetTeamId(true) != TEAM_HORDE)
     {
         return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
@@ -5532,6 +5538,10 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
 
     m_specsCount = fields[64].Get<uint8>();
     m_activeSpec = fields[65].Get<uint8>();
+    // Validate before indexing glyphs or calculating a spec mask.
+    uint8 const maxServerSpecs = getClass() == 14 ? 3 : 2;
+    if (!m_specsCount || m_specsCount > maxServerSpecs) m_specsCount = 1;
+    if (m_activeSpec >= m_specsCount) m_activeSpec = 0;
 
     LearnDefaultSkills();
     LearnCustomSpells();
@@ -5732,6 +5742,29 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     _botMgr->LoadData();
     //end npcbots
 #endif
+    // MONKBW2: offline time pauses installments; pool + HP are saved together.
+    if (getClass() == 14)
+    {
+        QueryResult schema = CharacterDatabase.Query("SELECT version FROM reborn_monk_stagger_meta WHERE id=1");
+        m_rebornBrewStorageReady = schema && schema->Fetch()[0].Get<uint32>() == 1;
+        if (m_rebornBrewStorageReady)
+        {
+            QueryResult debt = CharacterDatabase.Query("SELECT next_ms, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 FROM character_reborn_monk_stagger WHERE guid={}", GetGUID().GetCounter());
+            if (debt)
+            {
+                Field* stored = debt->Fetch();
+                m_rebornBrewPool.nextTickMs = stored[0].Get<uint32>();
+                for (uint32 i=0; i<10; ++i) m_rebornBrewPool.slots[i] = stored[i+1].Get<uint32>();
+                if (!m_rebornBrewPool.Valid())
+                {
+                    LOG_ERROR("entities.player", "MONKBW2: corrupt stagger debt for {}; refusing login", GetGUID().GetCounter());
+                    return false;
+                }
+                if (!IsAlive()) m_rebornBrewPool.Clear();
+            }
+        }
+        else LOG_ERROR("entities.player", "MONKBW2: characters migration missing; stagger disabled for {}", GetGUID().GetCounter());
+    }
     return true;
 }
 
@@ -5788,7 +5821,7 @@ bool Player::isAllowedToLoot(Creature const* creature)
     return false;
 }
 
-void Player::_LoadActions(PreparedQueryResult result)
+void Player::_LoadActions(PreparedQueryResult result, bool wideFields)
 {
     m_actionButtons.clear();
 
@@ -5797,10 +5830,12 @@ void Player::_LoadActions(PreparedQueryResult result)
         do
         {
             Field* fields = result->Fetch();
-            uint8 button = fields[0].Get<uint8>();
-            uint32 action = fields[1].Get<uint32>();
-            uint8 type = fields[2].Get<uint8>();
+            uint8 button = wideFields ? uint8(fields[0].Get<uint64>()) : fields[0].Get<uint8>();
+            uint32 action = wideFields ? uint32(fields[1].Get<uint64>()) : fields[1].Get<uint32>();
+            uint8 type = wideFields ? uint8(fields[2].Get<uint64>()) : fields[2].Get<uint8>();
 
+            // Empty-result sentinel from CHAR_SEL_CHARACTER_ACTIONS_SPEC.
+            if (button == 255 && action == 0 && type == 0) continue;
             if (ActionButton* ab = addActionButton(button, action, type))
                 ab->uState = ACTIONBUTTON_UNCHANGED;
             else
@@ -7207,6 +7242,15 @@ void Player::SaveToDB(CharacterDatabaseTransaction trans, bool create, bool logo
         sScriptMgr->OnPlayerSave(this);
 
     _SaveCharacter(create, trans);
+    // MONKBW2: same transaction as character HP, no independent async write.
+    if (getClass() == 14 && m_rebornBrewStorageReady)
+    {
+        if (!IsAlive()) m_rebornBrewPool.Clear();
+        trans->Append("REPLACE INTO character_reborn_monk_stagger (guid,next_ms,s0, s1, s2, s3, s4, s5, s6, s7, s8, s9) VALUES ({},{},{},{},{},{},{},{},{},{},{},{})",
+            GetGUID().GetCounter(), m_rebornBrewPool.nextTickMs,
+            m_rebornBrewPool.slots[0], m_rebornBrewPool.slots[1], m_rebornBrewPool.slots[2], m_rebornBrewPool.slots[3], m_rebornBrewPool.slots[4], m_rebornBrewPool.slots[5], m_rebornBrewPool.slots[6], m_rebornBrewPool.slots[7], m_rebornBrewPool.slots[8], m_rebornBrewPool.slots[9]);
+    }
+
 
     if (m_mailsUpdated)                                     //save mails only when needed
         _SaveMail(trans);
@@ -7266,6 +7310,9 @@ void Player::SaveGoldToDB(CharacterDatabaseTransaction trans)
 
 void Player::_SaveActions(CharacterDatabaseTransaction trans)
 {
+    // Target actions have not arrived; do not persist the old list under its spec.
+    if (m_specActionLoading)
+        return;
     CharacterDatabasePreparedStatement* stmt = nullptr;
 
     for (ActionButtonList::iterator itr = m_actionButtons.begin(); itr != m_actionButtons.end();)

@@ -4623,6 +4623,8 @@ void Spell::finish(bool ok)
     {
         if (m_caster->IsPlayer())
         {
+            m_caster->ToPlayer()->FinishMonkSpecCast(this, false);
+
             // Xinef: Restore spell mods in case of fail cast
             m_caster->ToPlayer()->RestoreSpellMods(this);
 
@@ -4672,6 +4674,9 @@ void Spell::finish(bool ok)
     //end npcbot
 #endif
         m_caster->AttackStop();
+
+    if (Player* player = m_caster->ToPlayer())
+        player->FinishMonkSpecCast(this, true);
 }
 
 void Spell::WriteCastResultInfo(WorldPacket& data, Player* caster, SpellInfo const* spellInfo, uint8 castCount, SpellCastResult result, SpellCustomErrors customError)
@@ -6369,6 +6374,8 @@ SpellCastResult Spell::CheckCast(bool strict, uint32* /*param1*/, uint32* /*para
                 }
             case SPELL_EFFECT_APPLY_GLYPH:
                 {
+                    if (m_caster->IsPlayer() && (m_caster->ToPlayer()->IsSpecActionLoading() || m_caster->ToPlayer()->IsMonkSpecCasting() || m_caster->ToPlayer()->IsMonkSpecPreview()))
+                        return SPELL_FAILED_NOT_READY;
                     uint32 glyphId = m_spellInfo->Effects[i].MiscValue;
                     if (GlyphPropertiesEntry const* gp = sGlyphPropertiesStore.LookupEntry(glyphId))
                         if (m_caster->HasAura(gp->SpellId))
@@ -7101,6 +7108,49 @@ SpellCastResult Spell::CheckCasterAuras(bool preventionOnly) const
     // spells totally immuned to caster auras (wsg flag drop, give marks etc)
     if (m_spellInfo->HasAttribute(SPELL_ATTR6_NOT_AN_ATTACK))
         return SPELL_CAST_OK;
+
+    // M6Z1 Nimble Brew: being usable under control does not mean clearing every CC.
+    // Keep this permission local to the custom spell; all other spells retain their checks.
+    if (m_spellInfo->Id == 9001533 && !preventionOnly)
+    {
+        constexpr uint64 allowed = (1ULL << MECHANIC_ROOT) | (1ULL << MECHANIC_STUN) |
+            (1ULL << MECHANIC_FEAR) | (1ULL << MECHANIC_HORROR) | (1ULL << MECHANIC_TURN);
+        uint32 coveredFlags = 0;
+        for (auto const& entry : m_caster->GetAppliedAuras())
+        {
+            Aura const* aura = entry.second->GetBase();
+            bool supported = (aura->GetSpellInfo()->GetAllEffectsMechanicMask() & allowed) != 0;
+            for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+            {
+                if (!entry.second->HasEffect(i))
+                    continue;
+                AuraEffect const* effect = aura->GetEffect(i);
+                if (!effect)
+                    continue;
+                switch (effect->GetAuraType())
+                {
+                    case SPELL_AURA_MOD_STUN:
+                        if (!supported) return SPELL_FAILED_STUNNED;
+                        coveredFlags |= UNIT_FLAG_STUNNED;
+                        break;
+                    case SPELL_AURA_MOD_CONFUSE:
+                        if (!supported) return SPELL_FAILED_CONFUSED;
+                        coveredFlags |= UNIT_FLAG_CONFUSED;
+                        break;
+                    case SPELL_AURA_MOD_FEAR:
+                        if (!supported) return SPELL_FAILED_FLEEING;
+                        coveredFlags |= UNIT_FLAG_FLEEING;
+                        break;
+                    default: break;
+                }
+            }
+        }
+        uint32 uncoveredFlags = m_caster->GetUnitFlags() & ~coveredFlags;
+        if (uncoveredFlags & UNIT_FLAG_STUNNED) return SPELL_FAILED_STUNNED;
+        if (uncoveredFlags & UNIT_FLAG_CONFUSED) return SPELL_FAILED_CONFUSED;
+        if (uncoveredFlags & UNIT_FLAG_FLEEING) return SPELL_FAILED_FLEEING;
+        return SPELL_CAST_OK; // Physical ability: no silence/pacify prevention type.
+    }
 
     uint8 school_immune = 0;
     uint64 mechanic_immune = 0;

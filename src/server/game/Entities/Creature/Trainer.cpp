@@ -16,6 +16,7 @@
  */
 
 #include "Trainer.h"
+#include "DatabaseEnv.h"
 #include "Config.h"
 #include "Creature.h"
 #include "NPCPackets.h"
@@ -115,6 +116,13 @@ namespace Trainer
         else
             player->learnSpell(trainerSpell->SpellId, false);
 
+        if (_trainerId == 900188 && player->HasSpell(spellId))
+        {
+            CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+            trans->Append("INSERT IGNORE INTO spelldraft_monk_training (guid,spell) VALUES ({},{})", player->GetGUID().GetCounter(), spellId);
+            player->SaveToDB(trans, false, false);
+            CharacterDatabase.CommitTransaction(trans);
+        }
         SendTeachSucceeded(npc, player, spellId);
     }
 
@@ -209,6 +217,13 @@ namespace Trainer
 
     bool Trainer::IsTrainerValidForPlayer(Player const* player) const
     {
+        if (_trainerId == 900188)
+        {
+            if (player->getClass() != 14 || !player->IsAlive() || player->IsInCombat()) return false;
+            QueryResult mode = CharacterDatabase.Query("SELECT mode FROM spelldraft_character_mode WHERE guid = {} LIMIT 1", player->GetGUID().GetCounter());
+            if (!mode || mode->Fetch()[0].Get<uint8>() != 1) return false;
+        }
+
         if (!GetTrainerRequirement())
             return true;
 

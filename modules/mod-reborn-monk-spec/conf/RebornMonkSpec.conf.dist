@@ -1,0 +1,28 @@
+# SPEC2: read-only GM diagnostics. Legacy diagnostics; current purchase settings are at the bottom.
+# Copy these settings to worldserver.conf (or the active module .conf).
+RebornMonkSpec.Diagnostics = 0
+# Existing account wallet. points = VP; tokens = DP. VP purchases debit points; tokens/DP are untouched.
+RebornMonkSpec.WalletDatabase = "sahtout_site"
+
+# SPEC3: GM create-once archive, no activation or purchase.
+RebornMonkSpec.ArchiveTesting = 0
+
+# MONKSPEC7: GM-only empty third archive creation; requires ArchiveTesting too.
+RebornMonkSpec.BlankArchiveTesting = 0
+
+# SPEC9: GM-only append-only working revisions, requires applied SPEC8 backup.
+RebornMonkSpec.WorkingArchiveTesting = 0
+
+# SPEC11: GM first <-> restored third (native slot2), requires applied SPEC8/10 backups.
+RebornMonkSpec.OnlineTesting = 0
+
+# SPEC14: temporary free blank-third enrollment for ordinary test accounts.
+# Keep 0 outside controlled testing; This legacy flag is ignored by MONKSPEC16 enrollment.
+RebornMonkSpec.AllowPlayerTesting = 0
+
+# MONKSPEC16: new unlocks only. Existing third builds are retained.
+RebornMonkSpec.UnlockEnabled = 0
+# gold = character gold; vp = account-shared VP; free = explicit free enrollment.
+RebornMonkSpec.UnlockCurrency = "gold"
+# Gold units (not copper) for gold; VP units for vp; must be 0 for free.
+RebornMonkSpec.UnlockPrice = 1000

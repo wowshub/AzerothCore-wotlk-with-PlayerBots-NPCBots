@@ -5,6 +5,7 @@
 /conf/*
 !/conf/dist
 /modules/*
+!/modules/mod-reborn-monk-spec/
 !/modules/*.md
 !/modules/*.sh
 !/modules/CMakeLists.txt

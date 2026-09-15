@@ -147,7 +147,9 @@ bool CharacterDatabaseCleaner::TalentCheck(uint32 talent_id)
 
 void CharacterDatabaseCleaner::CleanCharacterTalent()
 {
-    CharacterDatabase.DirectExecute("DELETE FROM character_talent WHERE specMask >= {}", 1 << MAX_TALENT_SPECS);
+    // Preserve server bit 4 only for explicitly enrolled Monk characters.
+    CharacterDatabase.DirectExecute("DELETE t FROM character_talent t LEFT JOIN characters c ON c.guid=t.guid "
+        "WHERE t.specMask >= IF(c.class=14 AND c.talentGroupsCount=3,8,4)");
     CheckUnique("spell", "character_talent", &TalentCheck);
 }
 

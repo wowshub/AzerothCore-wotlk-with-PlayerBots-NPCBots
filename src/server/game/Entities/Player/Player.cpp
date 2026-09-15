@@ -16,6 +16,7 @@
  */
 
 #include "Player.h"
+#include <atomic>
 #include "AccountMgr.h"
 #include "AchievementMgr.h"
 #include "AreaDefines.h"
@@ -344,7 +345,7 @@ Player::Player(WorldSession* session): Unit(), m_mover(this), _cinematicMgr(*thi
     m_activeSpec = 0;
     m_specsCount = 1;
 
-    for (uint8 i = 0; i < MAX_TALENT_SPECS; ++i)
+    for (uint8 i = 0; i < 3; ++i)
     {
         for (uint8 g = 0; g < MAX_GLYPH_SLOT_INDEX; ++g)
             m_Glyphs[i][g] = 0;
@@ -1095,6 +1096,10 @@ void Player::setDeathState(DeathState s, bool /*despawn = false*/)
             LOG_ERROR("entities.player", "setDeathState: attempt to kill a dead player {} ({})", GetName(), GetGUID().ToString());
             return;
         }
+
+        // MONKBW2/3: death clears debt and short benefit windows.
+        m_rebornBrewPool.Clear();
+        m_rebornBrewMasteryMs = m_rebornBrewGuardPct = 0;
 
         // clear all pending spell cast requests when dying
         SpellQueue.clear();
@@ -3875,6 +3880,8 @@ uint32 Player::resetTalentsCost() const
 
 bool Player::resetTalents(bool noResetCost)
 {
+    if ((m_specActionLoading || IsMonkSpecCasting() || IsMonkSpecPreview()) && !noResetCost) return false;
+
     sScriptMgr->OnPlayerTalentsReset(this, noResetCost);
 
     // xinef: remove at login flag upon talents reset
@@ -3887,7 +3894,6 @@ bool Player::resetTalents(bool noResetCost)
     // xinef: no talent points are used, return
     if (m_usedTalentCount == 0)
         return false;
-    m_usedTalentCount = 0;
 
     // xinef: check if we have enough money
     uint32 resetCost = 0;
@@ -3900,6 +3906,9 @@ bool Player::resetTalents(bool noResetCost)
             return false;
         }
     }
+
+    // MONKSPEC6: preserve the used-point count when the gold check fails.
+    m_usedTalentCount = 0;
 
     RemovePet(nullptr, PET_SAVE_NOT_IN_SLOT, true);
 
@@ -14345,6 +14354,8 @@ void Player::CompletedAchievement(AchievementEntry const* entry)
 
 void Player::LearnTalent(uint32 talentId, uint32 talentRank, bool command /*= false*/)
 {
+    if (m_specActionLoading || IsMonkSpecCasting() || IsMonkSpecPreview()) return;
+
     uint32 CurTalentPoints = GetFreeTalentPoints();
 
     // Rank bounds protect the DBC RankID array for both normal purchases and
@@ -14816,15 +14827,17 @@ bool Player::CanSeeTrainer(Creature const* creature) const
 
 void Player::BuildPlayerTalentsInfoData(WorldPacket* data)
 {
-    *data << uint32(GetFreeTalentPoints());                 // unspentTalentPoints
-    *data << uint8(m_specsCount);                           // talent group count (0, 1 or 2)
-    *data << uint8(m_activeSpec);                           // talent group index (0 or 1)
-
-    if (m_specsCount > MAX_TALENT_SPECS)
-        m_specsCount = MAX_TALENT_SPECS;
-
-    for (uint32 specIdx = 0; specIdx < m_specsCount; ++specIdx)
+    // 3.3.5 clients must never receive count=3 or active=2.
+    // Enrolled Monks render active data in wire group 0, read-only viewed data in group 1.
+    uint8 const count = std::min<uint8>(m_specsCount, 2);
+    *data << uint32(GetFreeTalentPoints());
+    *data << uint8(count);
+    *data << uint8(HasMonkThirdSpec() ? 0 : m_activeSpec);
+    for (uint8 wireSpec = 0; wireSpec < count; ++wireSpec)
     {
+        uint8 const view = GetMonkViewSpec();
+        uint8 const other = view != m_activeSpec ? view : (m_activeSpec == 0 ? 1 : 0);
+        uint8 const specIdx = HasMonkThirdSpec() ? (wireSpec == 0 ? m_activeSpec : other) : wireSpec;
         uint8 talentIdCount = 0;
         std::size_t pos = data->wpos();
         *data << uint8(talentIdCount);                      // [PH], talentIdCount
@@ -14929,6 +14942,91 @@ void Player::SendTalentsInfoData(bool pet)
     else
         BuildPlayerTalentsInfoData(&data);
     SendDirectMessage(&data);
+    if (!pet) SendMonkSpecState();
+}
+
+bool Player::StartMonkSpecCast(uint8 spec)
+{
+    if (!HasMonkThirdSpec() || spec >= 3 || spec == GetActiveSpec() || IsMonkSpecCasting() ||
+        IsSpecActionLoading() || !IsAlive() || IsInCombat() || IsNonMeleeSpellCast(false) ||
+        IsInFlight() || GetVehicle() || GetTransport()) return false;
+    // Use the existing native animation, cast bar, cost and interruption rules.
+    SpellInfo const* info = sSpellMgr->GetSpellInfo(63645);
+    if (!info || !info->CastTimeEntry || info->CastTimeEntry->CastTime <= 0 ||
+        !info->HasEffect(SPELL_EFFECT_TALENT_SPEC_SELECT)) return false;
+    Spell* spell = new Spell(this, info, TRIGGERED_NONE);
+    m_monkSpecCast = spell;
+    m_monkCastTarget = spec;
+    m_monkCastSource = GetActiveSpec();
+    m_monkCastHit = false;
+    SendMonkSpecState();
+    SpellCastTargets targets;
+    targets.SetUnitTarget(this);
+    return spell->prepare(&targets) == SPELL_CAST_OK;
+}
+
+void Player::MarkMonkSpecCastHit(Spell const* spell)
+{
+    // An unrelated native cast cannot consume a pending logical target.
+    if (spell == m_monkSpecCast && spell->GetCaster() == this)
+        m_monkCastHit = true;
+}
+
+void Player::FinishMonkSpecCast(Spell const* spell, bool ok)
+{
+    if (!spell || spell != m_monkSpecCast) return;
+    uint8 const target = m_monkCastTarget;
+    bool const commit = ok && m_monkCastHit && HasMonkThirdSpec() && target < 3 &&
+        m_monkCastSource == GetActiveSpec() && target != GetActiveSpec() &&
+        !IsSpecActionLoading() && IsAlive() && !IsInCombat() && !IsInFlight() &&
+        !GetVehicle() && !GetTransport();
+    // Release the cast lock before activation; finish() has ended the native cast.
+    m_monkSpecCast = nullptr;
+    m_monkCastTarget = m_monkCastSource = 255;
+    m_monkCastHit = false;
+    if (commit)
+    {
+        SaveToDB(false, false);
+        SetSaveAfterSpecActionLoad(true);
+        ActivateSpec(target);
+    }
+    else if (GetSession())
+        ChatHandler(GetSession()).SendSysMessage("[MONKSPEC15] 切换取消，保留原天赋。 / Switch cancelled; original build retained.");
+    SendMonkSpecState();
+}
+
+void Player::SendMonkSpecState()
+{
+    if (!GetSession() || getClass() != 14) return;
+    uint32 spent = 0;
+    for (auto const& entry : GetTalentMap())
+        if (entry.second->State != PLAYERSPELL_REMOVED && entry.second->IsInSpec(GetMonkViewSpec()))
+            if (TalentSpellPos const* pos = GetTalentSpellPos(entry.first)) spent += pos->rank + 1;
+    uint32 const total = CalculateTalentsPoints();
+    ChatHandler(GetSession()).PSendSysMessage("[MONKSPEC14] ACTIVE={} VIEW={} READY={} ENABLED={} FREE={} CAST={}",
+        uint32(GetActiveSpec()) + 1, uint32(GetMonkViewSpec()) + 1, (m_specActionLoading || IsMonkSpecCasting()) ? 0 : 1,
+        HasMonkThirdSpec() ? 1 : 0, total > spent ? total - spent : 0, IsMonkSpecCasting() ? 1 : 0);
+}
+
+bool Player::SetMonkViewSpec(uint8 spec)
+{
+    if (!HasMonkThirdSpec() || m_specActionLoading || IsMonkSpecCasting() || spec >= 3) return false;
+    m_monkViewSpec = spec;
+    SendTalentsInfoData(false);
+    return true;
+}
+
+bool Player::EnableBlankMonkThirdSpec()
+{
+    if (getClass() != 14 || m_specsCount != 2 || m_specActionLoading) return false;
+    // Command validates absence of persisted third data first. Never clone slot 2.
+    for (uint8 i = 0; i < MAX_GLYPH_SLOT_INDEX; ++i) m_Glyphs[2][i] = 0;
+    m_specsCount = 3;
+    m_monkViewSpec = m_activeSpec;
+    SetNeedToSaveGlyphs(true);
+    SaveToDB(false, false); // normal character persistence; no wallet operation
+    SendTalentsInfoData(false);
+    return true;
 }
 
 void Player::BuildEnchantmentsInfoData(WorldPacket* data)
@@ -15521,6 +15619,19 @@ void Player::_LoadTalents(PreparedQueryResult result)
                 continue;
             }
 
+            // MONKMWR3: older capstone records can exist only in m_talents.
+            // addTalent marks inSpellBook, so SendInitialSpells then omits them.
+            // Restore this active spell using the saved talent's exact spec mask.
+            // No talent points are changed and no spell is cast during login.
+            if ((spellId == 9001800 || spellId == 9001850 || spellId == 9001892) && getClass() == 14)
+            {
+                TalentEntry const* talentInfo = sTalentStore.LookupEntry(talentPos->talent_id);
+                SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId);
+                if (talentInfo && talentInfo->addToSpellBook && spellInfo &&
+                    !spellInfo->IsPassive() && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL))
+                    addSpell(spellId, specMask, true);
+            }
+
         } while (result->NextRow());
     }
 }
@@ -15573,10 +15684,10 @@ void Player::_SaveTalents(CharacterDatabaseTransaction trans)
 void Player::ActivateSpec(uint8 spec)
 {
     // xinef: some basic checks
-    if (GetActiveSpec() == spec)
+    if (m_specActionLoading || IsMonkSpecCasting() || GetActiveSpec() == spec)
         return;
 
-    if (spec > GetSpecsCount())
+    if (spec >= GetSpecsCount() || spec >= (HasMonkThirdSpec() ? 3 : 2))
         return;
 
     // xinef: interrupt currently casted spell just in case
@@ -15587,6 +15698,7 @@ void Player::ActivateSpec(uint8 spec)
     CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
     _SaveActions(trans);
     CharacterDatabase.CommitTransaction(trans);
+    m_specActionLoading = true;
 
     // xinef: remove pet, it will be resummoned later
     if (Pet* pet = GetPet())
@@ -15633,6 +15745,8 @@ void Player::ActivateSpec(uint8 spec)
 
     // xinef: set active spec as new one
     SetActiveSpec(spec);
+    m_monkViewSpec = spec;
+    if (HasMonkThirdSpec()) m_saveAfterSpecActionLoad = true;
     uint32 spentTalents = 0;
 
     // xinef: add talent auras
@@ -15728,13 +15842,34 @@ void Player::ActivateSpec(uint8 spec)
         stmt->SetData(1, m_activeSpec);
 
         WorldSession* mySess = GetSession();
+        static std::atomic<uint64> nextSpecActionRequest{0};
+        uint64 const requestId = ++nextSpecActionRequest;
+        ObjectGuid const characterGuid = GetGUID();
+        m_specActionRequestId = requestId;
         mySess->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(stmt)
-        .WithPreparedCallback([mySess](PreparedQueryResult result)
+        .WithPreparedCallback([mySess, characterGuid, spec, requestId](PreparedQueryResult result)
         {
-            // safe callback, we can't pass this pointer directly
-            // in case player logs out before db response (player would be deleted in that case)
-            if (Player* thisPlayer = mySess->GetPlayer())
-                thisPlayer->LoadActions(result);
+            Player* thisPlayer = mySess->GetPlayer();
+            if (!thisPlayer || thisPlayer->GetGUID() != characterGuid ||
+                thisPlayer->m_specActionRequestId != requestId)
+                return;
+            // SPEC13 action query always returns a sentinel, even for an empty build.
+            // A null result therefore means failure, not an intentionally empty bar.
+            if (!result)
+            {
+                ChatHandler(mySess).SendSysMessage("[MONKSPEC13] 动作条读取失败，已阻止覆盖保存；请重登并检查数据库 / Action load failed; saving blocked. Relog and check database.");
+                return;
+            }
+            thisPlayer->m_specActionLoading = false;
+            bool const saveAfterLoad = thisPlayer->m_saveAfterSpecActionLoad;
+            thisPlayer->m_saveAfterSpecActionLoad = false;
+            if (thisPlayer->GetActiveSpec() != spec)
+                return;
+            thisPlayer->LoadActions(result);
+            // Never save the target spec while the old action list is still in memory.
+            if (saveAfterLoad)
+                thisPlayer->SaveToDB(false, false);
+            thisPlayer->SendTalentsInfoData(false);
         }));
     }
 
@@ -15781,12 +15916,15 @@ void Player::ActivateSpec(uint8 spec)
     }
 
     sScriptMgr->OnPlayerAfterSpecSlotChanged(this, GetActiveSpec());
+    if (HasMonkThirdSpec()) SendTalentsInfoData(false);
 }
 
 void Player::LoadActions(PreparedQueryResult result)
 {
+    // Empty target specs must not inherit the previous spec's buttons.
+    m_actionButtons.clear();
     if (result)
-        _LoadActions(result);
+        _LoadActions(result, true);
 
     SendActionButtons(1);
 }
@@ -16783,4 +16921,157 @@ std::string Player::GetDebugInfo() const
 void Player::SendSystemMessage(std::string_view msg, bool escapeCharacters)
 {
     ChatHandler(GetSession()).SendSysMessage(msg, escapeCharacters);
+}
+
+// MONKBW3: complete Brewmaster tree; native active-build talent ownership.
+uint32 Player::RebornBrewRank(uint32 first, uint32 count) const
+{
+    if (getClass() != 14) return 0;
+    for (uint32 rank = count; rank; --rank)
+        if (HasTalent(first + rank - 1, GetActiveSpec())) return rank;
+    return 0;
+}
+
+void Player::RebornBrewDefer(DamageInfo& info)
+{
+    if (!m_rebornBrewStorageReady || getClass() != 14 || !IsAlive() || IsInFlight() || duel ||
+        GetCommandStatus(CHEAT_GOD) || !HasAura(9001551) || !HasTalent(9001870, GetActiveSpec()) ||
+        !info.GetAttacker() || info.GetAttacker() == this || info.GetSchoolMask() != SPELL_SCHOOL_MASK_NORMAL ||
+        (info.GetDamageType() != DIRECT_DAMAGE && info.GetDamageType() != SPELL_DIRECT_DAMAGE && info.GetDamageType() != DOT))
+        return;
+    if (SpellInfo const* spell = info.GetSpellInfo())
+        for (auto const& effect : spell->Effects)
+            if (effect.Effect == SPELL_EFFECT_INSTAKILL || effect.Effect == SPELL_EFFECT_ENVIRONMENTAL_DAMAGE ||
+                effect.ApplyAuraName == SPELL_AURA_PERIODIC_DAMAGE_PERCENT)
+                return;
+    uint32 percent = 10 + 2 * RebornBrewRank(9001884, 3);
+    uint32 delayed = m_rebornBrewPool.Add(uint32(uint64(info.GetDamage()) * percent / 100));
+    if (delayed) info.ModifyDamage(-int32(delayed));
+}
+
+void Player::RebornBrewUpdate(uint32 diff)
+{
+    if (getClass() != 14) return;
+    m_rebornBrewRhythmMs -= std::min(diff, m_rebornBrewRhythmMs);
+    if (!IsAlive())
+    {
+        m_rebornBrewPool.Clear();
+        m_rebornBrewMasteryMs = m_rebornBrewGuardPct = 0;
+        RemoveAurasDueToSpell(9001873);
+        RemoveAurasDueToSpell(9001894);
+        RemoveAurasDueToSpell(9001896);
+        return;
+    }
+    bool learned = HasTalent(9001870, GetActiveSpec());
+    if (learned && !HasActiveSpell(9001871)) learnSpell(9001871, false);
+    else if (!learned && HasSpell(9001871)) removeSpell(9001871, GetActiveSpecMask(), false);
+    bool masteryLearned = learned && HasTalent(9001892, GetActiveSpec());
+    if (masteryLearned && !HasActiveSpell(9001892)) learnSpell(9001892, false);
+    else if (!masteryLearned && HasSpell(9001892)) removeSpell(9001892, GetActiveSpecMask(), false);
+
+    bool ox = learned && HasAura(9001551);
+    if (!ox || m_rebornBrewGuardSpec != GetActiveSpec() || !HasAura(9001894))
+        m_rebornBrewGuardPct = 0;
+    m_rebornBrewGuardPct = std::min(m_rebornBrewGuardPct, 5 * RebornBrewRank(9001882, 2));
+    if (!m_rebornBrewPool.Total()) m_rebornBrewGuardPct = 0;
+    if (!m_rebornBrewGuardPct) RemoveAurasDueToSpell(9001894);
+
+    // The core clock preserves event ordering even when one update spans several ticks.
+    // An already expired aura may have been removed by Unit::Update(diff); use the
+    // saved window for ticks that fell inside this frame, not for future ticks.
+    if (!ox || !masteryLearned || m_rebornBrewMasterySpec != GetActiveSpec() ||
+        (!HasAura(9001896) && m_rebornBrewMasteryMs > diff))
+        m_rebornBrewMasteryMs = 0;
+    uint32 masteryAtFrameStart = m_rebornBrewMasteryMs;
+    m_rebornBrewMasteryMs -= std::min(diff, m_rebornBrewMasteryMs);
+    if (!m_rebornBrewMasteryMs) RemoveAurasDueToSpell(9001896);
+
+    // Debt pauses but benefit timers do not extend through flight, transfer or duels.
+    if (IsInFlight() || IsBeingTeleportedFar() || duel || GetCommandStatus(CHEAT_GOD)) return;
+    uint32 elapsed = 0;
+    while (m_rebornBrewPool.Total() && diff >= m_rebornBrewPool.nextTickMs)
+    {
+        elapsed += m_rebornBrewPool.nextTickMs;
+        diff -= m_rebornBrewPool.nextTickMs;
+        m_rebornBrewPool.nextTickMs = 1000;
+        uint32 masterPct = masteryAtFrameStart && elapsed <= masteryAtFrameStart ? 20 : 0;
+        auto result = m_rebornBrewPool.SettleTick(masterPct, m_rebornBrewGuardPct);
+        if (!result.scheduled) continue;
+        // One Guard cast grants one next nonzero installment reduction, never a stack.
+        m_rebornBrewGuardPct = 0;
+        RemoveAurasDueToSpell(9001894);
+        LOG_DEBUG("entities.player", "MONKBW3 {} scheduled={} paid={} cleared={}",
+            GetGUID().GetCounter(), result.scheduled, result.damage, result.cleared);
+        uint32 due = result.damage;
+        if (!due) continue;
+        SpellInfo const* tick = sSpellMgr->GetSpellInfo(9001872);
+        if (tick) SendSpellNonMeleeDamageLog(this, tick, due, SPELL_SCHOOL_MASK_NORMAL, 0, 0, true, 0);
+        if (due >= GetHealth())
+        {
+            Unit::Kill(this, this, false, BASE_ATTACK, tick);
+            m_rebornBrewPool.Clear();
+            break;
+        }
+        ModifyHealth(-int32(due));
+    }
+    if (m_rebornBrewPool.Total())
+        m_rebornBrewPool.nextTickMs -= std::min(diff, m_rebornBrewPool.nextTickMs - 1);
+    else
+        m_rebornBrewPool.nextTickMs = 1000;
+    uint32 total = m_rebornBrewPool.Total();
+    if (!total)
+    {
+        m_rebornBrewGuardPct = 0;
+        RemoveAurasDueToSpell(9001894);
+        RemoveAurasDueToSpell(9001873);
+    }
+    else if (AuraEffect* effect = GetAuraEffect(9001873, EFFECT_0))
+    {
+        if (effect->GetAmount() != int32(total)) effect->ChangeAmount(int32(total));
+    }
+    else CastCustomSpell(9001873, SPELLVALUE_BASE_POINT0, int32(total), this, true);
+}
+
+uint32 Player::RebornBrewPurify()
+{
+    if (!m_rebornBrewStorageReady || !IsAlive() || !HasAura(9001551) || !HasTalent(9001870, GetActiveSpec())) return 0;
+    uint32 removed = m_rebornBrewPool.Purify(20 + 5 * RebornBrewRank(9001887, 3));
+    if (!removed) return 0;
+    uint32 shieldRank = RebornBrewRank(9001880, 2);
+    if (shieldRank)
+    {
+        int32 shield = int32(std::min<uint64>(0x7fffffff, uint64(GetMaxHealth()) * shieldRank / 100));
+        if (shield > 0) CastCustomSpell(9001893, SPELLVALUE_BASE_POINT0, shield, this, true);
+    }
+    uint32 rhythmRank = RebornBrewRank(9001890, 2);
+    if (rhythmRank && !m_rebornBrewRhythmMs && !HasAura(9001895))
+    {
+        m_rebornBrewRhythmMs = 10000;
+        CastSpell(this, 9001895, true);
+        EnergizeBySpell(this, 9001889 + rhythmRank, 3 * rhythmRank, POWER_ENERGY);
+    }
+    LOG_DEBUG("entities.player", "MONKBW3 {} purify cleared={}", GetGUID().GetCounter(), removed);
+    return removed;
+}
+
+void Player::RebornBrewArmGuard()
+{
+    uint32 rank = RebornBrewRank(9001882, 2);
+    if (!rank || !IsAlive() || !HasAura(9001551) || !HasTalent(9001870, GetActiveSpec()) || !RebornBrewDebt()) return;
+    m_rebornBrewGuardPct = 5 * rank;
+    m_rebornBrewGuardSpec = GetActiveSpec();
+    CastSpell(this, 9001894, true);
+}
+
+uint32 Player::RebornBrewBeginMastery()
+{
+    if (!m_rebornBrewStorageReady || !IsAlive() || !HasAura(9001551) ||
+        !HasTalent(9001870, GetActiveSpec()) || !HasTalent(9001892, GetActiveSpec())) return 0;
+    // Deliberately not RebornBrewPurify(): no Purifying Training, shield or Energy proc.
+    uint32 removed = m_rebornBrewPool.Purify(30);
+    m_rebornBrewMasterySpec = GetActiveSpec();
+    m_rebornBrewMasteryMs = 6000;
+    CastSpell(this, 9001896, true);
+    LOG_DEBUG("entities.player", "MONKBW3 {} mastery cleared={}", GetGUID().GetCounter(), removed);
+    return removed;
 }

@@ -6,6 +6,7 @@
 
 #include "BreakingNews.h"
 
+#include "ScriptDefines/AccountScript.h"
 #include "Config.h"
 #include "Log.h"
 #include "Player.h"
@@ -25,6 +26,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #ifdef _WIN32
@@ -41,9 +43,10 @@ constexpr std::size_t HEX_CHUNK_SIZE = 160;
 std::atomic<bool> g_enabled{ false };
 std::atomic<uint32> g_retryIntervalMs{ 100 };
 std::atomic<uint32> g_retryWindowMs{ 15000 };
+std::atomic<uint32> g_deliveryDelayMs{ 400 };
 
 std::mutex g_contentMutex;
-std::string g_formattedPayload;
+std::vector<std::string> g_encodedChunkPayloads;
 
 std::mutex g_pendingMutex;
 std::unordered_map<uint32, uint32> g_pendingAccounts;
@@ -159,7 +162,7 @@ bool LoadBreakingNewsContent()
     {
         LOG_ERROR("module", "mod-breaking-news: failed to read HTML file '{}'.", resolvedPath.string());
         std::lock_guard<std::mutex> lock(g_contentMutex);
-        g_formattedPayload.clear();
+        g_encodedChunkPayloads.clear();
         return false;
     }
 
@@ -171,31 +174,39 @@ bool LoadBreakingNewsContent()
         "else message('BreakingNews: required GlueXML frames are missing.') end",
         EscapeLuaSingleQuoted(title), EscapeLuaSingleQuoted(body));
 
+    std::string const encoded = HexEncode(payload);
+    std::vector<std::string> encodedChunkPayloads;
+    encodedChunkPayloads.reserve((encoded.size() + HEX_CHUNK_SIZE - 1) / HEX_CHUNK_SIZE);
+    for (std::size_t offset = 0; offset < encoded.size(); offset += HEX_CHUNK_SIZE)
+    {
+        std::string const chunk = encoded.substr(offset, HEX_CHUNK_SIZE);
+        encodedChunkPayloads.emplace_back("wlhex=wlhex..'" + chunk + "';");
+    }
+
     {
         std::lock_guard<std::mutex> lock(g_contentMutex);
-        g_formattedPayload = payload;
+        g_encodedChunkPayloads = std::move(encodedChunkPayloads);
     }
 
     LOG_INFO("module", "mod-breaking-news: loaded '{}' ({} body bytes).", resolvedPath.string(), body.size());
     return true;
 }
 
-void SendEncodedPayload(Warden* warden, WardenPayloadMgr* payloadMgr, std::string const& payload)
+void SendEncodedPayload(
+    Warden* warden,
+    WardenPayloadMgr* payloadMgr,
+    std::vector<std::string> const& encodedChunkPayloads)
 {
     std::string const prePayload = "wlhex='';";
     std::string const postPayload =
         "local s=wlhex:gsub('..',function(h)return string.char(tonumber(h,16))end);"
         "local f,e=loadstring(s);if not f then message(e)else f()end";
-    std::string const encoded = HexEncode(payload);
-
     payloadMgr->RegisterPayload(prePayload, PRE_PAYLOAD_ID, true);
     payloadMgr->QueuePayload(PRE_PAYLOAD_ID);
     warden->ForceChecks();
 
-    for (std::size_t offset = 0; offset < encoded.size(); offset += HEX_CHUNK_SIZE)
+    for (std::string const& chunkPayload : encodedChunkPayloads)
     {
-        std::string const chunk = encoded.substr(offset, HEX_CHUNK_SIZE);
-        std::string const chunkPayload = "wlhex=wlhex..'" + chunk + "';";
         payloadMgr->RegisterPayload(chunkPayload, CHUNK_PAYLOAD_ID, true);
         payloadMgr->QueuePayload(CHUNK_PAYLOAD_ID);
         warden->ForceChecks();
@@ -219,24 +230,19 @@ bool TryDeliver(WorldSession* session, char const* reason)
     if (!payloadMgr)
         return false;
 
-    std::string payload;
-    {
-        std::lock_guard<std::mutex> lock(g_contentMutex);
-        payload = g_formattedPayload;
-    }
-
-    if (payload.empty())
-        return false;
-
     if (!sConfigMgr->GetOption<bool>("BreakingNews.Cache", true) && !LoadBreakingNewsContent())
         return false;
 
+    std::vector<std::string> encodedChunkPayloads;
     {
         std::lock_guard<std::mutex> lock(g_contentMutex);
-        payload = g_formattedPayload;
+        encodedChunkPayloads = g_encodedChunkPayloads;
     }
 
-    SendEncodedPayload(warden, payloadMgr, payload);
+    if (encodedChunkPayloads.empty())
+        return false;
+
+    SendEncodedPayload(warden, payloadMgr, encodedChunkPayloads);
     LOG_INFO("module", "mod-breaking-news: queued panel for account {} via {}.", session->GetAccountId(), reason);
     return true;
 }
@@ -254,12 +260,26 @@ public:
         uint32 const accountId = session->GetAccountId();
         QueuePendingDelivery(accountId);
 
-        if (TryDeliver(session, "SMSG_CHAR_ENUM"))
-            RemovePendingDelivery(accountId);
-        else if (sConfigMgr->GetOption<bool>("BreakingNews.Verbose", false))
-            LOG_INFO("module", "mod-breaking-news: account {} is waiting for Warden initialization.", accountId);
+        if (sConfigMgr->GetOption<bool>("BreakingNews.Verbose", false))
+            LOG_INFO("module", "mod-breaking-news: account {} queued until the character-selection critical path is complete.", accountId);
 
         return true;
+    }
+};
+
+class BreakingNewsAccountScript final : public AccountScript
+{
+public:
+    BreakingNewsAccountScript() : AccountScript(
+        "BreakingNewsAccountScript", { ACCOUNTHOOK_ON_ACCOUNT_SELECT_CHARACTER }) { }
+
+    void OnAccountSelectCharacter(WorldSession* session, ObjectGuid& /*guid*/) override
+    {
+        if (!session)
+            return;
+
+        // Never carry a not-yet-started GlueXML payload into character login.
+        RemovePendingDelivery(session->GetAccountId());
     }
 };
 
@@ -274,13 +294,18 @@ public:
         bool const masterEnabled = sConfigMgr->GetOption<bool>("BreakingNews.Enable", false);
         uint32 const displayMode = std::clamp<uint32>(
             sConfigMgr->GetOption<uint32>("BreakingNews.DisplayMode", 3), 0, 3);
-        bool const characterEnabled = masterEnabled && (displayMode == 2 || displayMode == 3);
+        bool const useWardenDelivery = sConfigMgr->GetOption<bool>(
+            "BreakingNews.CharacterUseWardenDelivery", false);
+        bool const characterEnabled = masterEnabled && useWardenDelivery &&
+            (displayMode == 2 || displayMode == 3);
         g_enabled.store(characterEnabled);
 
         uint32 retryInterval = sConfigMgr->GetOption<uint32>("BreakingNews.RetryIntervalMs", 100);
         uint32 retryWindow = sConfigMgr->GetOption<uint32>("BreakingNews.RetryWindowMs", 15000);
+        uint32 deliveryDelay = sConfigMgr->GetOption<uint32>("BreakingNews.CharacterDeliveryDelayMs", 400);
         g_retryIntervalMs.store(std::clamp<uint32>(retryInterval, 50, 1000));
         g_retryWindowMs.store(std::clamp<uint32>(retryWindow, 1000, 60000));
+        g_deliveryDelayMs.store(std::clamp<uint32>(deliveryDelay, 0, 5000));
 
         ClearPendingDeliveries();
         g_retryAccumulatorMs = 0;
@@ -293,12 +318,19 @@ public:
 
         if (!characterEnabled)
         {
-            LOG_INFO("module", "mod-breaking-news: display mode {} does not include the character-selection page.", displayMode);
+            if ((displayMode == 2 || displayMode == 3) && !useWardenDelivery)
+                LOG_INFO("module", "mod-breaking-news: character page uses local GlueXML content; Warden delivery disabled.");
+            else
+                LOG_INFO("module", "mod-breaking-news: display mode {} does not include the character-selection page.", displayMode);
             return;
         }
 
         if (LoadBreakingNewsContent())
-            LOG_INFO("module", "mod-breaking-news: enabled for character selection (display mode {}) with reliable Warden retry delivery.", displayMode);
+            LOG_INFO(
+                "module",
+                "mod-breaking-news: enabled for character selection (display mode {}) with a {} ms non-blocking delivery delay.",
+                displayMode,
+                g_deliveryDelayMs.load());
     }
 
     void OnUpdate(uint32 diff) override
@@ -323,7 +355,7 @@ public:
                 waitedMs += elapsed;
                 if (waitedMs >= g_retryWindowMs.load())
                     expired.push_back(accountId);
-                else
+                else if (waitedMs >= g_deliveryDelayMs.load())
                     pending.push_back(accountId);
             }
 
@@ -354,6 +386,7 @@ void AddBreakingNewsScripts()
 {
     new BreakingNewsWorldScript();
     new BreakingNewsServerScript();
+    new BreakingNewsAccountScript();
 }
 
 void Addmod_breaking_news_overrideScripts()

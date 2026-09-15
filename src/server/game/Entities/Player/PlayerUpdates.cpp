@@ -81,6 +81,7 @@ void Player::Update(uint32 p_time)
     SetMustDelayTeleport(true);
     ProcessSpellQueue();
     Unit::Update(p_time);
+    RebornBrewUpdate(p_time);
     SetMustDelayTeleport(false);
 
     time_t now = GameTime::GetGameTime().count();
@@ -2222,6 +2223,8 @@ void Player::UpdateFallInformationIfNeed(MovementInfo const& minfo,
 
 void Player::UpdateSpecCount(uint8 count)
 {
+    // Third enrollment is an explicit migration, never a dual-spec spell effect.
+    if (HasMonkThirdSpec() || IsSpecActionLoading() || count < 1 || count > 2) return;
     uint32 curCount = GetSpecsCount();
     if (curCount == count)
         return;

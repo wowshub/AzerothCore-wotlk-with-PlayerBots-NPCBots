@@ -34,6 +34,10 @@
 
 SpellDraft.Enable = 1
 
+# Heavy database and spell-metadata diagnostics used during talent repair.
+# Keep disabled in production. GM diagnostic commands remain available.
+SpellDraft.Diagnostics.AutoHooks = 0
+
 #
 #    SpellDraft.AllowSpellsInDruidForms
 #        Description: Allow casting spells while in Druid shapeshift forms

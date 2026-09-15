@@ -393,7 +393,9 @@ if (MOD_ALE_FOUND)
   endif()
 
   if (WIN32)
-    if (MSVC)
+    # $(ConfigurationName) is a Visual Studio project macro.  Emitting it into
+    # a single-config Ninja build creates an invalid '$' escape in build.ninja.
+    if (MSVC AND CMAKE_CONFIGURATION_TYPES)
       set(MSVC_CONFIGURATION_NAME $(ConfigurationName)/)
     endif()
 

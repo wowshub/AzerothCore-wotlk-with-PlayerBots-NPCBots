@@ -6456,6 +6456,12 @@ void Spell::EffectActivateSpec(SpellEffIndex /*effIndex*/)
 
     if (Player* player = unitTarget->ToPlayer())
     {
+        // Logical target is bound to this server-created cast, never to a wire index.
+        if (player->HasMonkThirdSpec())
+        {
+            player->MarkMonkSpecCastHit(this);
+            return;
+        }
         player->ActivateSpec(damage - 1); // damage is 1 or 2, spec is 0 or 1
     }
 }
