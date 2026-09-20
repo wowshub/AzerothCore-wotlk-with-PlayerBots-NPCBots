@@ -123,6 +123,13 @@ namespace Trainer
             player->SaveToDB(trans, false, false);
             CharacterDatabase.CommitTransaction(trans);
         }
+        if (_trainerId == 900189 && player->HasSpell(spellId))
+        {
+            CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+            trans->Append("INSERT IGNORE INTO reborn_wd12_training(guid,spell) VALUES ({},{})",player->GetGUID().GetCounter(),spellId);
+            player->SaveToDB(trans,false,false);
+            CharacterDatabase.CommitTransaction(trans);
+        }
         SendTeachSucceeded(npc, player, spellId);
     }
 
@@ -217,6 +224,12 @@ namespace Trainer
 
     bool Trainer::IsTrainerValidForPlayer(Player const* player) const
     {
+        if (_trainerId == 900189)
+        {
+            if (player->getClass()!=13 || player->getRace()!=1 || !player->IsAlive() || player->IsInCombat()) return false;
+            QueryResult ledger = CharacterDatabase.Query("SELECT COUNT(*) FROM reborn_wd12_training WHERE guid={}",player->GetGUID().GetCounter());
+            if (!ledger) return false;
+        }
         if (_trainerId == 900188)
         {
             if (player->getClass() != 14 || !player->IsAlive() || player->IsInCombat()) return false;

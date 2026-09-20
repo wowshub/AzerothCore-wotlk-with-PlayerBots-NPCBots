@@ -239,6 +239,13 @@ public:
     [[nodiscard]] bool IsBoundByEnchant() const;
     [[nodiscard]] bool IsBoundByTempEnchant() const;
     virtual void SaveToDB(CharacterDatabaseTransaction trans);
+    void AppendVaultSnapshot(CharacterDatabaseTransaction trans);
+    int VaultWriteStatus() { return m_vaultWriteWatch.Status(); }
+    bool LoadVaultOriginal(ObjectGuid::LowType guid, ObjectGuid owner, Field* fields, uint32 entry)
+    {
+        m_vaultReadOnlyLoad = true;
+        return Item::LoadFromDB(guid, owner, fields, entry);
+    }
     virtual bool LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fields, uint32 entry);
     static void DeleteFromDB(CharacterDatabaseTransaction trans, ObjectGuid::LowType itemGuid);
     virtual void DeleteFromDB(CharacterDatabaseTransaction trans);
@@ -368,6 +375,9 @@ private:
     std::string m_text;
     uint8 m_slot;
     Bag* m_container;
+    TransactionWriteWatch m_vaultWriteWatch;
+    bool m_vaultSnapshot = false;
+    bool m_vaultReadOnlyLoad = false;
     ItemUpdateState uState;
     int32 uQueuePos;
     bool mb_in_trade;                                   // true if item is currently in trade-window

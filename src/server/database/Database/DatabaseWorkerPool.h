@@ -18,6 +18,7 @@
 #ifndef _DATABASEWORKERPOOL_H
 #define _DATABASEWORKERPOOL_H
 
+#include <future>
 #include "DatabaseEnvFwd.h"
 #include "Define.h"
 #include "StringFormat.h"
@@ -177,9 +178,14 @@ public:
     //! were appended to the transaction will be respected during execution.
     TransactionCallback AsyncCommitTransaction(SQLTransaction<T> transaction);
 
+    // Nonblocking result: 0 committed, -2 unknown (reconcile), other not committed.
+    // Consume on the owner thread; never capture a raw Player* in worker code.
+    std::future<int> AsyncCommitTransactionWithStatus(SQLTransaction<T> transaction);
+
     //! Directly executes a collection of one-way SQL operations (can be both adhoc and prepared). The order in which these operations
     //! were appended to the transaction will be respected during execution.
     void DirectCommitTransaction(SQLTransaction<T>& transaction);
+    int DirectCommitTransactionWithStatus(SQLTransaction<T>& transaction);
 
     //! Method used to execute ad-hoc statements in a diverse context.
     //! Will be wrapped in a transaction if valid object is present, otherwise executed standalone.

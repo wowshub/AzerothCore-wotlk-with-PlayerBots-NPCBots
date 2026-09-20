@@ -749,7 +749,7 @@ float Player::GetMissPercentageFromDefence() const
     diminishing += (int32(GetRatingBonusValue(CR_DEFENSE_SKILL))) * 0.04f;
 
     // apply diminishing formula to diminishing miss chance
-    uint32 pclass = getClass() - 1;
+    uint32 pclass = (getClass() == CLASS_WITCH_DOCTOR ? CLASS_SHAMAN : getClass()) - 1; // WD2
     return nondiminishing + (diminishing * miss_cap[pclass] / (diminishing + miss_cap[pclass] * m_diminishing_k[pclass]));
 }
 
@@ -773,7 +773,7 @@ void Player::UpdateParryPercentage()
     // No parry
     float value = 0.0f;
     m_realParry = 0.0f;
-    uint32 pclass = getClass() - 1;
+    uint32 pclass = (getClass() == CLASS_WITCH_DOCTOR ? CLASS_SHAMAN : getClass()) - 1; // WD2
     float effectiveParryCap = parry_cap[pclass];
     int32 const parryAuraBonus = GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
 
@@ -841,7 +841,7 @@ void Player::UpdateDodgePercentage()
     // Dodge from rating
     diminishing += GetRatingBonusValue(CR_DODGE);
     // apply diminishing formula to diminishing dodge chance
-    uint32 pclass = getClass() - 1;
+    uint32 pclass = (getClass() == CLASS_WITCH_DOCTOR ? CLASS_SHAMAN : getClass()) - 1; // WD2
     m_realDodge = nondiminishing + (diminishing * dodge_cap[pclass] / (diminishing + dodge_cap[pclass] * m_diminishing_k[pclass]));
 
     m_realDodge = m_realDodge < 0.0f ? 0.0f : m_realDodge;

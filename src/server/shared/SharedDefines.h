@@ -196,6 +196,7 @@ enum Classes
     CLASS_WARLOCK       = 9,  // TITLE Warlock
     //CLASS_UNK          = 10,
     CLASS_DRUID         = 11, // TITLE Druid
+    CLASS_WITCH_DOCTOR  = 13, // TITLE Witch Doctor
     CLASS_MONK          = 14  // TITLE Monk
 };
 
@@ -209,10 +210,10 @@ static_assert(MAX_CLASSES <= 32, "Player class masks use a 32-bit protocol field
     ((uint32(1)<<(CLASS_WARRIOR-1))|(uint32(1)<<(CLASS_PALADIN-1))|(uint32(1)<<(CLASS_HUNTER-1))| \
     (uint32(1)<<(CLASS_ROGUE-1))  |(uint32(1)<<(CLASS_PRIEST-1)) |(uint32(1)<<(CLASS_SHAMAN-1))| \
     (uint32(1)<<(CLASS_MAGE-1))   |(uint32(1)<<(CLASS_WARLOCK-1))|(uint32(1)<<(CLASS_DRUID-1)) | \
-    (uint32(1)<<(CLASS_DEATH_KNIGHT-1))|(uint32(1)<<(CLASS_MONK-1)))
+    (uint32(1)<<(CLASS_DEATH_KNIGHT-1))|(uint32(1)<<(CLASS_MONK-1))|(uint32(1)<<(CLASS_WITCH_DOCTOR-1)))
 
 // valid classes for creature_template.unit_class
-#define CLASSMASK_ALL_CREATURES CLASSMASK_ALL_PLAYABLE
+#define CLASSMASK_ALL_CREATURES (CLASSMASK_ALL_PLAYABLE & ~(uint32(1) << (CLASS_WITCH_DOCTOR - 1)))
 
 #define CLASSMASK_WAND_USERS ((1<<(CLASS_PRIEST-1))|(1<<(CLASS_MAGE-1))|(1<<(CLASS_WARLOCK-1)))
 

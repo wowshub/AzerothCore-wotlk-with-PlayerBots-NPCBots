@@ -222,7 +222,7 @@ bool MySQLConnection::Execute(PreparedStatementBase* stmt)
     if (mysql_stmt_bind_param(msql_STMT, msql_BIND))
 #endif
     {
-        uint32 lErrno = mysql_errno(m_Mysql);
+        uint32 lErrno = mysql_stmt_errno(msql_STMT);
         LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
         if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
@@ -234,7 +234,7 @@ bool MySQLConnection::Execute(PreparedStatementBase* stmt)
 
     if (mysql_stmt_execute(msql_STMT))
     {
-        uint32 lErrno = mysql_errno(m_Mysql);
+        uint32 lErrno = mysql_stmt_errno(msql_STMT);
         LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
         if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
@@ -274,7 +274,7 @@ bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement
     if (mysql_stmt_bind_param(msql_STMT, msql_BIND))
 #endif
     {
-        uint32 lErrno = mysql_errno(m_Mysql);
+        uint32 lErrno = mysql_stmt_errno(msql_STMT);
         LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
         if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
@@ -286,7 +286,7 @@ bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement
 
     if (mysql_stmt_execute(msql_STMT))
     {
-        uint32 lErrno = mysql_errno(m_Mysql);
+        uint32 lErrno = mysql_stmt_errno(msql_STMT);
         LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
         if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
@@ -408,12 +408,48 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
     if (queries.empty())
         return -1;
 
-    BeginTransaction();
+    ASSERT(!m_transactionActive);
+    struct TransactionScope
+    {
+        explicit TransactionScope(bool& active) : state(active) { state = true; }
+        ~TransactionScope() { state = false; }
+        bool& state;
+    } scope(m_transactionActive);
+    m_transactionError = 0;
+
+    auto errorCode = [this]() -> int
+    {
+        uint32 error = m_transactionError ? m_transactionError : GetLastError();
+        return error ? static_cast<int>(error) : -1;
+    };
+
+    auto rollback = [this]() -> bool
+    {
+        if (Execute("ROLLBACK"))
+            return true;
+
+        // An unconfirmed rollback must not leave an open transaction in the pool.
+        // Recycle the session only AFTER the transaction body has stopped. No SQL replay.
+        m_transactionActive = false;
+        _HandleMySQLErrno(CR_SERVER_LOST, "EV2B: discard session after unconfirmed rollback");
+        return false;
+    };
+
+    if (!Execute("START TRANSACTION"))
+    {
+        int error = errorCode();
+        rollback(); // Also recycle an already-dead pooled connection for the next request.
+        return error; // No transaction body was sent; never replay this request here.
+    }
 
     for (auto const& data : queries)
     {
         switch (data.type)
         {
+            case SQL_ELEMENT_EXPECT_AFFECTED:
+                if (mysql_affected_rows(m_Mysql) != std::get<uint64>(data.element))
+                    return rollback() ? TRANSACTION_PRECONDITION_FAILED : TRANSACTION_RESULT_UNKNOWN;
+                break;
             case SQL_ELEMENT_PREPARED:
             {
                 PreparedStatementBase* stmt = nullptr;
@@ -433,9 +469,8 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
                 if (!Execute(stmt))
                 {
                     LOG_WARN("sql.sql", "Transaction aborted. {} queries not executed.", queries.size());
-                    int errorCode = GetLastError();
-                    RollbackTransaction();
-                    return errorCode;
+                    int error = errorCode();
+                    return rollback() ? error : TRANSACTION_RESULT_UNKNOWN;
                 }
             }
             break;
@@ -458,9 +493,8 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
                 if (!Execute(sql))
                 {
                     LOG_WARN("sql.sql", "Transaction aborted. {} queries not executed.", queries.size());
-                    uint32 errorCode = GetLastError();
-                    RollbackTransaction();
-                    return errorCode;
+                    int error = errorCode();
+                    return rollback() ? error : TRANSACTION_RESULT_UNKNOWN;
                 }
             }
             break;
@@ -472,7 +506,13 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
     // This is done in calling functions DatabaseWorkerPool<T>::DirectCommitTransaction and TransactionTask::Execute,
     // and not while iterating over every element.
 
-    CommitTransaction();
+    if (!Execute("COMMIT"))
+    {
+        // COMMIT may have reached MySQL even when its acknowledgement was lost.
+        // Neither retry the transaction nor report that its writes were undone.
+        rollback();
+        return TRANSACTION_RESULT_UNKNOWN;
+    }
     return 0;
 }
 
@@ -577,6 +617,23 @@ PreparedResultSet* MySQLConnection::Query(PreparedStatementBase* stmt)
 
 bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, char const* err, uint8 attempts /*= 5*/)
 {
+    if (m_transactionActive)
+    {
+        if (!m_transactionError)
+            m_transactionError = errNo ? errNo : 1;
+        switch (errNo)
+        {
+            case CR_SERVER_GONE_ERROR:
+            case CR_SERVER_LOST:
+            case CR_SERVER_LOST_EXTENDED:
+            case CR_CONN_HOST_ERROR:
+                // Keep prepared statement handles alive until Execute has unwound.
+                // The caller aborts the entire transaction; never reconnect and replay here.
+                return false;
+            default:
+                break;
+        }
+    }
     std::string str = "";
     switch (errNo)
     {

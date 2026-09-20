@@ -26,13 +26,14 @@
 enum SQLElementDataType
 {
     SQL_ELEMENT_RAW,
-    SQL_ELEMENT_PREPARED
+    SQL_ELEMENT_PREPARED,
+    SQL_ELEMENT_EXPECT_AFFECTED
 };
 
 //- The element
 struct SQLElementData
 {
-    std::variant<PreparedStatementBase*, std::string> element;
+    std::variant<PreparedStatementBase*, std::string, uint64> element;
     SQLElementDataType type;
 };
 

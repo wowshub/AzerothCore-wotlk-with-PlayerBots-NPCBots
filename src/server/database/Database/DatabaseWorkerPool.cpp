@@ -306,35 +306,34 @@ TransactionCallback DatabaseWorkerPool<T>::AsyncCommitTransaction(SQLTransaction
 }
 
 template <class T>
+std::future<int> DatabaseWorkerPool<T>::AsyncCommitTransactionWithStatus(SQLTransaction<T> transaction)
+{
+    auto* task = new TransactionWithStatusTask(transaction);
+    std::future<int> result = task->GetFuture();
+    Enqueue(task);
+    return result;
+}
+
+template <class T>
 void DatabaseWorkerPool<T>::DirectCommitTransaction(SQLTransaction<T>& transaction)
 {
+    // Preserve the existing API. New item-transfer callers must use the status API.
+    DirectCommitTransactionWithStatus(transaction);
+}
+
+template <class T>
+int DatabaseWorkerPool<T>::DirectCommitTransactionWithStatus(SQLTransaction<T>& transaction)
+{
     T* connection = GetFreeConnection();
-    int errorCode = connection->ExecuteTransaction(transaction);
+    int error = connection->ExecuteTransaction(transaction);
+    for (uint8 i = 0; error == ER_LOCK_DEADLOCK && i < 5; ++i)
+        error = connection->ExecuteTransaction(transaction);
 
-    if (!errorCode)
-    {
-        connection->Unlock();      // OK, operation succesful
-        return;
-    }
-
-    //! Handle MySQL Errno 1213 without extending deadlock to the core itself
-    /// @todo More elegant way
-    if (errorCode == ER_LOCK_DEADLOCK)
-    {
-        //todo: handle multiple sync threads deadlocking in a similar way as async threads
-        uint8 loopBreaker = 5;
-
-        for (uint8 i = 0; i < loopBreaker; ++i)
-        {
-            if (!connection->ExecuteTransaction(transaction))
-                break;
-        }
-    }
-
-    //! Clean up now.
-    transaction->Cleanup();
-
+    transaction->Complete(error);
+    if (error)
+        transaction->Cleanup();
     connection->Unlock();
+    return error;
 }
 
 template <class T>

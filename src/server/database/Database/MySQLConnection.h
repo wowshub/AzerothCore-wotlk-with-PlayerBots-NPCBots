@@ -114,6 +114,10 @@ private:
     ConnectionFlags m_connectionFlags;                  //! Connection flags (for preparing relevant statements)
     std::mutex m_Mutex;
 
+    // EV2B: never replay a single statement on a new session inside a transaction.
+    bool m_transactionActive{false};
+    uint32 m_transactionError{0};
+
     MySQLConnection(MySQLConnection const& right) = delete;
     MySQLConnection& operator=(MySQLConnection const& right) = delete;
 };

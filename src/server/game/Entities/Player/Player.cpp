@@ -1370,6 +1370,10 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
 
 bool Player::IsClass(Classes unitClass, ClassContext context) const
 {
+    // WD2 foundation: Shaman stat formulas only; identity/spells keep class 13.
+    if (getClass() == CLASS_WITCH_DOCTOR && context == CLASS_CONTEXT_STATS)
+        return unitClass == CLASS_SHAMAN;
+
     Optional<bool> scriptResult = sScriptMgr->OnPlayerIsClass(this, unitClass, context);
     if (scriptResult != std::nullopt)
         return *scriptResult;
@@ -5288,6 +5292,8 @@ float Player::GetMeleeCritFromAgility()
 {
     uint8 level = GetLevel();
     uint32 pclass = getClass();
+    if (pclass == CLASS_WITCH_DOCTOR)
+        pclass = CLASS_SHAMAN; // WD2: native stat table index only.
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -5336,6 +5342,8 @@ void Player::GetDodgeFromAgility(float& diminishing, float& nondiminishing)
 
     uint8 level = GetLevel();
     uint32 pclass = getClass();
+    if (pclass == CLASS_WITCH_DOCTOR)
+        pclass = CLASS_SHAMAN; // WD2: native stat table index only.
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -5358,6 +5366,8 @@ float Player::GetSpellCritFromIntellect()
 {
     uint8 level = GetLevel();
     uint32 pclass = getClass();
+    if (pclass == CLASS_WITCH_DOCTOR)
+        pclass = CLASS_SHAMAN; // WD2: native stat table index only.
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -5410,6 +5420,8 @@ float Player::OCTRegenHPPerSpirit()
 {
     uint8 level = GetLevel();
     uint32 pclass = getClass();
+    if (pclass == CLASS_WITCH_DOCTOR)
+        pclass = CLASS_SHAMAN; // WD2: native stat table index only.
 
     // The 3.3.5a client/core GT health-regeneration tables are built around the native class
     // index range.  Monk is a custom class (14) whose base-stat and Energy model deliberately
@@ -5442,6 +5454,8 @@ float Player::OCTRegenMPPerSpirit()
 {
     uint8 level = GetLevel();
     uint32 pclass = getClass();
+    if (pclass == CLASS_WITCH_DOCTOR)
+        pclass = CLASS_SHAMAN; // WD2: native stat table index only.
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -10277,7 +10291,9 @@ void Player::RemoveSpellMods(Spell* spell)
 
 void Player::ApplyModToSpell(SpellModifier* mod, Spell* spell)
 {
-    if (!spell)
+    // WD5C: standalone modifiers have no aura or charges to register.
+    // ApplySpellMod has already accumulated their numeric effect.
+    if (!spell || !mod || !mod->ownerAura)
         return;
 
     // don't do anything with no charges

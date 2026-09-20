@@ -1,0 +1,13 @@
+# WD13 saved-build slot purchase policy. Restart worldserver after changing.
+# Existing three-slot test characters are grandfathered by the one-time SQL migration.
+# Slot 1: free. Slot 2: level 40, 1000 gold. Browsing/switching never charges.
+# Third slot requires slot 2. Defaults: purchasing closed, level 40, 1000 gold.
+# Gold range: 0..200000 (0 = free); level range 1..80. Invalid values disable the option.
+# Only GOLD is implemented in this stage; no VP/DP debit.
+RebornWD13.ThirdSlot.Enable = 0
+RebornWD13.ThirdSlot.MinLevel = 40
+RebornWD13.ThirdSlot.Gold = 1000
+
+# WD16: gold per full reset of ONE build; 0 = free, valid range 0..200000.
+# Clears chosen specialization and saved talents; other builds/equipment are retained.
+RebornWD16.Reset.Gold = 10

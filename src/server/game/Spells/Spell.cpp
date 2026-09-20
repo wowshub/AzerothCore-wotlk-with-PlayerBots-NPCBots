@@ -3516,8 +3516,12 @@ SpellCastResult Spell::prepare(SpellCastTargets const* targets, AuraEffect const
         return SPELL_FAILED_UNKNOWN;
     }
 
+    // WD33B: raid Wujus keep their learned level, but can benefit lower-level teammates.
+    // Limit the exception to these private group buffs; keep normal rank scaling unchanged.
+    bool const allowLowLevelWuju = m_spellInfo->HasAttribute(SPELL_ATTR2_ALLOW_LOW_LEVEL_BUFF) &&
+        (m_spellInfo->Id == 9003280 || m_spellInfo->Id == 9003290 || m_spellInfo->Id == 9003300);
     // Fill aura scaling information
-    if (sScriptMgr->CanScalingEverything(this) || m_caster->IsTotem() || (m_caster->IsControlledByPlayer() && !m_spellInfo->IsPassive() && m_spellInfo->SpellLevel && !m_spellInfo->IsChanneled() && !HasTriggeredCastFlag(TRIGGERED_IGNORE_AURA_SCALING)))
+    if (!allowLowLevelWuju && (sScriptMgr->CanScalingEverything(this) || m_caster->IsTotem() || (m_caster->IsControlledByPlayer() && !m_spellInfo->IsPassive() && m_spellInfo->SpellLevel && !m_spellInfo->IsChanneled() && !HasTriggeredCastFlag(TRIGGERED_IGNORE_AURA_SCALING))))
     {
         for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         {

@@ -49,6 +49,7 @@ void TransactionBase::AppendPreparedStatement(PreparedStatementBase* stmt)
 
 void TransactionBase::Cleanup()
 {
+    Complete(-1); // Dropped/unexecuted transaction. Does not overwrite a terminal result.
     // This might be called by explicit calls to Cleanup or by the auto-destructor
     if (_cleanedUp)
         return;
@@ -73,6 +74,8 @@ void TransactionBase::Cleanup()
                 }
             }
             break;
+            case SQL_ELEMENT_EXPECT_AFFECTED:
+                break;
             case SQL_ELEMENT_RAW:
             {
                 try
@@ -95,37 +98,32 @@ void TransactionBase::Cleanup()
 
 bool TransactionTask::Execute()
 {
-    int errorCode = TryExecute();
+    int error = ExecuteWithRetries();
+    m_trans->Complete(error);
+    if (error)
+        CleanupOnFailure();
+    return error == 0;
+}
 
-    if (!errorCode)
-        return true;
+int TransactionTask::ExecuteWithRetries()
+{
+    int error = TryExecute();
+    if (error != ER_LOCK_DEADLOCK)
+        return error;
 
-    if (errorCode == ER_LOCK_DEADLOCK)
+    // Retry only a confirmed deadlock rollback. Re-evaluate EVERY attempt:
+    // a later disconnect or unknown COMMIT must stop this loop immediately.
+    std::lock_guard<std::mutex> lock(_deadlockLock);
+    for (Milliseconds elapsed{}, start = GetTimeMS(); elapsed <= DEADLOCK_MAX_RETRY_TIME_MS;
+        elapsed = GetMSTimeDiffToNow(start))
     {
-        std::ostringstream threadIdStream;
-        threadIdStream << std::this_thread::get_id();
-        std::string threadId = threadIdStream.str();
-
-        {
-            // Make sure only 1 async thread retries a transaction so they don't keep dead-locking each other
-            std::lock_guard<std::mutex> lock(_deadlockLock);
-
-            for (Milliseconds loopDuration{}, startMSTime = GetTimeMS(); loopDuration <= DEADLOCK_MAX_RETRY_TIME_MS; loopDuration = GetMSTimeDiffToNow(startMSTime))
-            {
-                if (!TryExecute())
-                    return true;
-
-                LOG_WARN("sql.sql", "Deadlocked SQL Transaction, retrying. Loop timer: {} ms, Thread Id: {}", loopDuration.count(), threadId);
-            }
-        }
-
-        LOG_ERROR("sql.sql", "Fatal deadlocked SQL Transaction, it will not be retried anymore. Thread Id: {}", threadId);
+        error = TryExecute();
+        if (error != ER_LOCK_DEADLOCK)
+            return error;
+        LOG_WARN("sql.sql", "Deadlocked SQL transaction, retrying. Elapsed: {} ms", elapsed.count());
     }
-
-    // Clean up now.
-    CleanupOnFailure();
-
-    return false;
+    LOG_ERROR("sql.sql", "SQL transaction exceeded deadlock retry time.");
+    return error;
 }
 
 int TransactionTask::TryExecute()
@@ -140,43 +138,22 @@ void TransactionTask::CleanupOnFailure()
 
 bool TransactionWithResultTask::Execute()
 {
-    int errorCode = TryExecute();
-    if (!errorCode)
-    {
-        m_result.set_value(true);
-        return true;
-    }
+    int error = ExecuteWithRetries();
+    m_trans->Complete(error);
+    if (error)
+        CleanupOnFailure();
+    m_result.set_value(error == 0);
+    return error == 0;
+}
 
-    if (errorCode == ER_LOCK_DEADLOCK)
-    {
-        std::ostringstream threadIdStream;
-        threadIdStream << std::this_thread::get_id();
-        std::string threadId = threadIdStream.str();
-
-        {
-            // Make sure only 1 async thread retries a transaction so they don't keep dead-locking each other
-            std::lock_guard<std::mutex> lock(_deadlockLock);
-
-            for (Milliseconds loopDuration{}, startMSTime = GetTimeMS(); loopDuration <= DEADLOCK_MAX_RETRY_TIME_MS; loopDuration = GetMSTimeDiffToNow(startMSTime))
-            {
-                if (!TryExecute())
-                {
-                    m_result.set_value(true);
-                    return true;
-                }
-
-                LOG_WARN("sql.sql", "Deadlocked SQL Transaction, retrying. Loop timer: {} ms, Thread Id: {}", loopDuration.count(), threadId);
-            }
-        }
-
-        LOG_ERROR("sql.sql", "Fatal deadlocked SQL Transaction, it will not be retried anymore. Thread Id: {}", threadId);
-    }
-
-    // Clean up now.
-    CleanupOnFailure();
-    m_result.set_value(false);
-
-    return false;
+bool TransactionWithStatusTask::Execute()
+{
+    int error = ExecuteWithRetries();
+    m_trans->Complete(error);
+    if (error)
+        CleanupOnFailure();
+    m_status.set_value(error);
+    return error == 0;
 }
 
 bool TransactionCallback::InvokeIfReady()

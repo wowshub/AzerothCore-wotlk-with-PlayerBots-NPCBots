@@ -7671,7 +7671,9 @@ void bot_ai::OnSpellHit(Unit* caster, SpellInfo const* spell)
                     if (spell->IsRankOf(sSpellMgr->GetSpellInfo(20484)))
                         health = me->GetMaxHealth();
                     else
-                        health = damage;
+                        // WD30A: private Reclaim Soul ranks use the same fixed value as player resurrection.
+                        health = (spell->Id >= 9003260 && spell->Id <= 9003267)
+                            ? uint32(std::max<int32>(0, spell->Effects[i].CalcValue(caster))) : damage;
                     mana = spell->Effects[i].MiscValue;
                 }
                 else if (damage < 0)

@@ -341,6 +341,13 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
         }
     }
 
+    // WD2: new-character policy only. Do not alter existing-character login.
+    if (createInfo->Class == CLASS_WITCH_DOCTOR && createInfo->Race != RACE_HUMAN)
+    {
+        SendCharCreate(CHAR_CREATE_DISABLED);
+        return;
+    }
+
     // prevent character creating Expansion race without Expansion account
     if (raceEntry->expansion > Expansion())
     {

@@ -1,0 +1,16 @@
+# EV2H original-item wardrobes. Requires EV2C core support + EV2H characters migration.
+RebornEquipmentVault.Preview.Enable = 1
+RebornEquipmentVault.Storage.Enable = 0
+
+# Sales are opt-in. Merge these options into your installed module .conf.
+# Wardrobe 1 is free. Existing purchased wardrobes remain usable if cap is lowered.
+RebornEquipmentVault.Unlock.Enable = 0
+# 0 = no gameplay purchase cap; technical protocol bound still applies.
+RebornEquipmentVault.Unlock.MaxWardrobes = 0
+# Price for wardrobe N>=2 = PriceGold + (N-2)*PriceGoldStep.
+# Negative values disable sales; prices above 214748 gold are unavailable.
+RebornEquipmentVault.Unlock.PriceGold = 1000
+RebornEquipmentVault.Unlock.PriceGoldStep = 0
+
+# EV2I: optional saved-build links; requires characters migration.
+RebornEquipmentVault.Link.Enable = 1

@@ -333,12 +333,27 @@ void Item::UpdateDuration(Player* owner, uint32 diff)
     SetState(ITEM_CHANGED, owner);                          // save new time in database
 }
 
+void Item::AppendVaultSnapshot(CharacterDatabaseTransaction trans)
+{
+    ASSERT(trans && uState != ITEM_REMOVED);
+    ItemUpdateState saved = uState;
+    int32 queue = uQueuePos;
+    m_vaultSnapshot = true;
+    if (uState == ITEM_UNCHANGED) uState = ITEM_CHANGED;
+    Item::SaveToDB(trans);
+    uState = saved; uQueuePos = queue;
+    m_vaultSnapshot = false;
+}
+
 void Item::SaveToDB(CharacterDatabaseTransaction trans)
 {
+    if (Player* owner = GetOwner())
+        if (owner->VaultReconcileRequired()) return;
     bool isInTransaction = static_cast<bool>(trans);
     if (!isInTransaction)
         trans = CharacterDatabase.BeginTransaction();
 
+    if (!m_vaultSnapshot && uState != ITEM_UNCHANGED) m_vaultWriteWatch.Observe(trans->CompletionToken());
     ObjectGuid::LowType guid = GetGUID().GetCounter();
     switch (uState)
     {
@@ -501,6 +516,7 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
     SetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME, fields[9].Get<uint32>());
     SetText(fields[10].Get<std::string>());
 
+    if (need_save && m_vaultReadOnlyLoad) return false; // Never normalize the stored original silently.
     if (need_save)                                           // normal item changed state set not work at loading
     {
         CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ITEM_INSTANCE_ON_LOAD);
@@ -508,7 +524,9 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
         stmt->SetData(1, GetUInt32Value(ITEM_FIELD_FLAGS));
         stmt->SetData(2, GetUInt32Value(ITEM_FIELD_DURABILITY));
         stmt->SetData(3, guid);
-        CharacterDatabase.Execute(stmt);
+        auto fix = CharacterDatabase.BeginTransaction();
+        fix->Append(stmt);m_vaultWriteWatch.Observe(fix->CompletionToken());
+        CharacterDatabase.CommitTransaction(fix);
     }
 
     return true;

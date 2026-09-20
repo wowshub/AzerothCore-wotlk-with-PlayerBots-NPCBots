@@ -7218,6 +7218,7 @@ void Player::SaveToDB(bool create, bool logout)
 
 void Player::SaveToDB(CharacterDatabaseTransaction trans, bool create, bool logout)
 {
+    if (m_vaultReconcileRequired) return; // Unconfirmed transfer: reload DB, never overwrite with stale memory.
     // delay auto save at any saves (manual, in code, or autosave)
     m_nextSave = sWorld->getIntConfig(CONFIG_INTERVAL_SAVE);
 
@@ -7302,6 +7303,8 @@ void Player::SaveInventoryAndGoldToDB(CharacterDatabaseTransaction trans)
 
 void Player::SaveGoldToDB(CharacterDatabaseTransaction trans)
 {
+    if (m_vaultReconcileRequired) return;
+    m_vaultInventoryWrites.Observe(trans->CompletionToken());
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UDP_CHAR_MONEY);
     stmt->SetData(0, GetMoney());
     stmt->SetData(1, GetGUID().GetCounter());
@@ -7417,8 +7420,56 @@ void Player::_SaveAuras(CharacterDatabaseTransaction trans, bool logout)
     }
 }
 
+// EV2C: snapshots do not consume dirty state or remove queue entries.
+int Player::VaultInventoryWriteStatus()
+{
+    if (m_vaultReconcileRequired) return -1;
+    int status = m_vaultInventoryWrites.Status();
+    auto inspect = [&status](Item* item)
+    {
+        if (!item) return;
+        int value = item->VaultWriteStatus();
+        if (value < 0) status = -1;
+        else if (value && !status) status = 1;
+    };
+    for (uint16 slot = 0; slot < PLAYER_SLOT_END; ++slot)
+    {
+        Item* item = m_items[slot]; inspect(item);
+        if (item && item->IsBag())
+            for (uint32 cell = 0; cell < item->ToBag()->GetBagSize(); ++cell) inspect(item->ToBag()->GetItemByPos(cell));
+    }
+    return status;
+}
+
+void Player::AppendVaultInventorySnapshot(CharacterDatabaseTransaction trans)
+{
+    ASSERT(trans && VaultInventoryWriteStatus() == 0);
+    // Serialize EVERY current native position, including bank/bags/keyring. Otherwise
+    // a just-moved item may still occupy the chosen withdrawal cell in the database.
+    trans->Append("UPDATE characters SET money={}, totalHonorPoints={}, arenaPoints={} WHERE guid={}", GetMoney(), GetHonorPoints(), GetArenaPoints(), GetGUID().GetCounter());
+    trans->Append("DELETE FROM character_inventory WHERE guid = {}", GetGUID().GetCounter());
+    auto append = [this, &trans](Item* item, uint32 bag, uint8 slot)
+    {
+        if (!item) return;
+        item->AppendVaultSnapshot(trans);
+        auto* stmt = CharacterDatabase.GetPreparedStatement(CHAR_REP_INVENTORY_ITEM);
+        stmt->SetData(0, GetGUID().GetCounter());stmt->SetData(1, bag);
+        stmt->SetData(2, slot);stmt->SetData(3, item->GetGUID().GetCounter());trans->Append(stmt);
+    };
+    for (uint16 slot = 0; slot < PLAYER_SLOT_END; ++slot)
+    {
+        if (slot >= BUYBACK_SLOT_START && slot < BUYBACK_SLOT_END) continue;
+        Item* item = m_items[slot];append(item, 0, uint8(slot));
+        if (item && item->IsBag())
+            for (uint32 cell = 0; cell < item->ToBag()->GetBagSize(); ++cell)
+                append(item->ToBag()->GetItemByPos(cell), item->GetGUID().GetCounter(), uint8(cell));
+    }
+}
+
 void Player::_SaveInventory(CharacterDatabaseTransaction trans)
 {
+    if (m_vaultReconcileRequired) return;
+    m_vaultInventoryWrites.Observe(trans->CompletionToken());
     CharacterDatabasePreparedStatement* stmt = nullptr;
     // force items in buyback slots to new state
     // and remove those that aren't already

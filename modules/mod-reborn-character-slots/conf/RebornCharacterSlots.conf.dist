@@ -1,0 +1,44 @@
+###################################################################################################
+# REBORWOW ACCOUNT-LEVEL PAID CHARACTER SLOTS
+#
+# DP is the existing website donation currency stored in sahtout_site.user_currencies.tokens.
+# Keep Enabled = 0 until the SQL migration is installed and worldserver DB user can CALL the
+# configured procedures in sahtout_site.
+###################################################################################################
+
+RebornCharacterSlots.Enabled = 0
+
+# Slots 1..FreeSlots never consume currency.
+RebornCharacterSlots.FreeSlots = 10
+
+# Currency contract. DP maps to the website recharge balance user_currencies.tokens.
+# This stage intentionally rejects any other value: VP is activity/vote points and is not
+# increased by Alipay. Do not rename this merely for display purposes.
+RebornCharacterSlots.CurrencyCode = "DP"
+
+# Comma-separated inclusive ranges: first-last:price_per_new_character.
+# Example: slot 11 costs 100; slot 21 costs 200; slot 31 costs 400.
+RebornCharacterSlots.PriceTiers = "11-20:100,21-30:200,31-50:400"
+
+# Stored procedures are installed by server_SQL/00_site_DP角色槽位计费.sql.
+# Only letters, numbers and underscore are accepted in these identifiers.
+RebornCharacterSlots.Database = "sahtout_site"
+RebornCharacterSlots.ReserveProcedure = "reborn_character_slot_reserve"
+RebornCharacterSlots.CommitProcedure = "reborn_character_slot_commit"
+RebornCharacterSlots.RefundProcedure = "reborn_character_slot_refund"
+RebornCharacterSlots.ReconcileProcedure = "reborn_character_slot_reconcile_stale"
+
+# If a price tier or database call is missing, 1 rejects paid-slot creation without charging.
+# Set 0 only on a development server if you intentionally want creation to continue for free.
+RebornCharacterSlots.FailClosed = 1
+
+# Failed Player::Create / character DB commit is refunded immediately.
+RebornCharacterSlots.RefundOnFailure = 1
+
+# On worldserver startup, reserved rows older than this are reconciled against the characters DB:
+# an existing character is committed; a missing character is refunded.
+RebornCharacterSlots.ReservationTimeoutSeconds = 300
+
+# Optional GM bypass. Security values follow AccountTypes (0 player, 1 moderator, 2 GM, 3 admin).
+RebornCharacterSlots.GMBypassEnabled = 1
+RebornCharacterSlots.GMBypassSecurity = 3

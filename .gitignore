@@ -6,6 +6,9 @@
 !/conf/dist
 /modules/*
 !/modules/mod-reborn-monk-spec/
+!/modules/mod-reborn-witchdoctor/
+!/modules/mod-reborn-equipment-vault/
+!/modules/mod-reborn-character-slots/
 !/modules/*.md
 !/modules/*.sh
 !/modules/CMakeLists.txt

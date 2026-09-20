@@ -23,8 +23,44 @@
 #include "SQLOperation.h"
 #include "StringFormat.h"
 #include <functional>
+#include <algorithm>
+#include <atomic>
+#include <future>
 #include <mutex>
 #include <vector>
+
+// A COMMIT/ROLLBACK acknowledgement was not confirmed. Reconcile a durable
+// operation ID before retrying or restoring item/money state. Not a rollback result.
+constexpr int TRANSACTION_RESULT_UNKNOWN = -2;
+
+// Completion is shared without a Player/Item pointer crossing database threads.
+constexpr int TRANSACTION_PENDING = 2147483647;
+constexpr int TRANSACTION_PRECONDITION_FAILED = -3;
+class TransactionWriteWatch
+{
+public:
+    void Observe(std::shared_ptr<std::atomic<int>> const& token)
+    {
+        Status();
+        if (std::find(tokens.begin(), tokens.end(), token) == tokens.end()) tokens.push_back(token);
+    }
+    int Status()
+    {
+        int result = 0;
+        for (auto it = tokens.begin(); it != tokens.end();)
+        {
+            int code = (*it)->load();
+            if (code == 0) { it = tokens.erase(it); continue; }
+            if (code == TRANSACTION_PENDING) { if (!result) result = 1; }
+            else { failed = true; it = tokens.erase(it); continue; }
+            ++it;
+        }
+        return failed ? -1 : result; // Latch failures, but do not retain every failed token.
+    }
+private:
+    std::vector<std::shared_ptr<std::atomic<int>>> tokens;
+    bool failed = false;
+};
 
 /*! Transactions, high level class. */
 class AC_DATABASE_API TransactionBase
@@ -40,6 +76,17 @@ public:
     virtual ~TransactionBase() { Cleanup(); }
 
     void Append(std::string_view sql);
+    void ExpectAffectedRows(uint64 count)
+    {
+        SQLElementData data{}; data.type = SQL_ELEMENT_EXPECT_AFFECTED;
+        data.element = count; m_queries.emplace_back(data);
+    }
+    std::shared_ptr<std::atomic<int>> CompletionToken() const { return completion; }
+    void Complete(int result)
+    {
+        int expected = TRANSACTION_PENDING;
+        completion->compare_exchange_strong(expected, result);
+    }
 
     template<typename... Args>
     void Append(std::string_view sql, Args&&... args)
@@ -56,6 +103,7 @@ protected:
 
 private:
     bool _cleanedUp{false};
+    std::shared_ptr<std::atomic<int>> completion = std::make_shared<std::atomic<int>>(TRANSACTION_PENDING);
 };
 
 template<typename T>
@@ -86,6 +134,7 @@ public:
 protected:
     bool Execute() override;
     int TryExecute();
+    int ExecuteWithRetries();
     void CleanupOnFailure();
 
     std::shared_ptr<TransactionBase> m_trans;
@@ -103,6 +152,22 @@ protected:
     bool Execute() override;
 
     TransactionPromise m_result;
+};
+
+// Opt-in status API for operations such as original-item vault transfers.
+// 0: acknowledged commit; -2: outcome unknown; other: transaction not committed
+// (requires transactional DML only; no DDL or nontransactional tables).
+class AC_DATABASE_API TransactionWithStatusTask : public TransactionTask
+{
+public:
+    explicit TransactionWithStatusTask(std::shared_ptr<TransactionBase> trans) : TransactionTask(std::move(trans)) { }
+    std::future<int> GetFuture() { return m_status.get_future(); }
+
+protected:
+    bool Execute() override;
+
+private:
+    std::promise<int> m_status;
 };
 
 class AC_DATABASE_API TransactionCallback
