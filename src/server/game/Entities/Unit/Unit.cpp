@@ -2010,6 +2010,9 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
     {
         damageInfo->hitOutCome = MELEE_HIT_CRIT;
     }
+    // WD43A: Cursed Effigy also suppresses forced sitting crits and NPCBot outcomes.
+    if (damageInfo->hitOutCome == MELEE_HIT_CRIT && HasAura(9003431))
+        damageInfo->hitOutCome = MELEE_HIT_NORMAL;
     switch (damageInfo->hitOutCome)
     {
         case MELEE_HIT_EVADE:
@@ -4267,6 +4270,7 @@ float Unit::GetUnitBlockChance() const
 
 float Unit::GetUnitCriticalChance(WeaponAttackType attackType, Unit const* victim) const
 {
+    if (HasAura(9003431)) return 0.0f; // WD43A private Cursed Effigy marker
     float crit;
 
     if (IsPlayer())
@@ -9480,8 +9484,17 @@ uint32 Unit::SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, ui
     // From caster spells
     if (caster)
     {
-        TakenTotalMod *= GetTotalAuraMultiplier(SPELL_AURA_MOD_DAMAGE_FROM_CASTER, [caster, spellProto](AuraEffect const* aurEff) -> bool
+        TakenTotalMod *= GetTotalAuraMultiplier(SPELL_AURA_MOD_DAMAGE_FROM_CASTER, [caster, spellProto, damagetype](AuraEffect const* aurEff) -> bool
         {
+            // WD51A: only this owner's Hex periodic damage; no foreign family masks,
+            // no mutation of the stored DoT snapshot and no bonus to direct hits.
+            if (aurEff->GetId()==9003531)
+            {
+                uint32 id=spellProto->Id;
+                return damagetype==DOT && aurEff->GetCasterGUID()==caster->GetGUID() &&
+                    caster->HasAura(9003530) && (id==9003104 || id==9003106 || id==9003107 ||
+                    id==9003108 || id==9003109 || id==9003110 || id==9003111 || id==9003112);
+            }
             if (aurEff->GetCasterGUID() == caster->GetGUID() && aurEff->IsAffectedOnSpell(spellProto))
                 return true;
             return false;
@@ -9653,6 +9666,8 @@ int32 Unit::SpellBaseDamageBonusTaken(SpellSchoolMask schoolMask, bool isDoT)
 
 float Unit::SpellDoneCritChance(Unit const* /*victim*/, SpellInfo const* spellProto, SpellSchoolMask schoolMask, WeaponAttackType attackType, bool skipEffectCheck) const
 {
+    // Preserve periodic snapshots; the current marker is checked at each tick.
+    if (!skipEffectCheck && HasAura(9003431)) return 0.0f; // WD43A
     // Mobs can't crit with spells.
     if (IsCreature() && !GetSpellModOwner())
 #ifdef MOD_NPCERBOTS
@@ -9748,6 +9763,7 @@ float Unit::SpellDoneCritChance(Unit const* /*victim*/, SpellInfo const* spellPr
 
 float Unit::SpellTakenCritChance(Unit const* caster, SpellInfo const* spellProto, SpellSchoolMask schoolMask, float doneChance, WeaponAttackType attackType, bool skipEffectCheck) const
 {
+    if (!skipEffectCheck && caster && caster->HasAura(9003431)) return 0.0f; // WD43A: precedes forced-crit rules
     // not critting spell
     if (spellProto->HasAttribute(SPELL_ATTR2_CANT_CRIT))
         return 0.0f;

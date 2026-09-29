@@ -17,6 +17,7 @@
 
 #include "CombatPackets.h"
 #include "CreatureAI.h"
+#include "Item.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
 #include "Opcodes.h"
@@ -62,11 +63,48 @@ void WorldSession::HandleAttackSwingOpcode(WorldPacket& recvData)
         }
     }
 
+    // WD71E: explicitly supported custom classes use native ranged repeat
+    // with an equipped usable weapon. Original classes retain their behavior.
+    if ((_player->getClass() == CLASS_WITCH_DOCTOR || _player->getClass() == CLASS_MONK) && !_player->IsWithinMeleeRange(pEnemy))
+    {
+        if (Item* weapon = _player->GetWeaponForAttack(RANGED_ATTACK, true))
+        {
+            uint32 shot = 0;
+            switch (weapon->GetTemplate()->SubClass)
+            {
+                case ITEM_SUBCLASS_WEAPON_GUN:
+                case ITEM_SUBCLASS_WEAPON_BOW:
+                case ITEM_SUBCLASS_WEAPON_CROSSBOW:
+                    shot = 75; // Auto Shot; the manual Shoot spell 3018 remains available.
+                    break;
+                case ITEM_SUBCLASS_WEAPON_WAND:
+                    shot = 5019; // Native repeating wand Shoot.
+                    break;
+                default:
+                    break;
+            }
+
+            if (shot && _player->HasSpell(shot))
+            {
+                _player->Attack(pEnemy, false);
+                _player->CastSpell(pEnemy, shot, false);
+                return;
+            }
+        }
+    }
+
+    if ((_player->getClass() == CLASS_WITCH_DOCTOR || _player->getClass() == CLASS_MONK))
+    {
+        _player->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
+        _player->SetSheath(SHEATH_STATE_MELEE);
+    }
     _player->Attack(pEnemy, true);
 }
 
 void WorldSession::HandleAttackStopOpcode(WorldPacket& /*recvData*/)
 {
+    if ((GetPlayer()->getClass() == CLASS_WITCH_DOCTOR || GetPlayer()->getClass() == CLASS_MONK))
+        GetPlayer()->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
     GetPlayer()->AttackStop();
 }
 
@@ -78,6 +116,24 @@ void WorldSession::HandleSetSheathedOpcode(WorldPackets::Combat::SetSheathed& pa
         return;
     }
 
+    // WD71C: a late client melee-sheath request must not clear the ranged
+    // slot while the custom class is already running native Auto Shot.
+    if ((_player->getClass() == CLASS_WITCH_DOCTOR || _player->getClass() == CLASS_MONK) &&
+        packet.CurrentSheathState == SHEATH_STATE_MELEE &&
+        (_player->FindCurrentSpellBySpellId(75) || _player->FindCurrentSpellBySpellId(5019)) &&
+        _player->GetWeaponForAttack(RANGED_ATTACK, true))
+    {
+        if (Unit* victim = _player->GetVictim())
+        {
+            if (!_player->IsWithinMeleeRange(victim))
+            {
+                _player->SetSheath(SHEATH_STATE_RANGED);
+                _player->ForceValuesUpdateAtIndex(UNIT_FIELD_BYTES_2);
+                _player->ForceValuesUpdateAtIndex(UNIT_VIRTUAL_ITEM_SLOT_ID + 2);
+                return;
+            }
+        }
+    }
     _player->SetSheath(SheathState(packet.CurrentSheathState));
 }
 

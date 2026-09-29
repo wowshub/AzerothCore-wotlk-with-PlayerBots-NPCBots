@@ -3406,6 +3406,19 @@ void ObjectMgr::LoadItemTemplates()
         itemTemplate.SellPrice                 = uint32(fields[11].Get<uint32>());
         itemTemplate.InventoryType             = uint32(fields[12].Get<uint8>());
         itemTemplate.AllowableClass            = fields[13].Get<int32>();
+        // ITEM75A: a whitelist covering every playable WotLK class is a
+        // legacy "all classes" item, not a restriction on future classes.
+        // Normalize the shared template used by both equip/use checks and
+        // item-query packets; retain genuine class-specific masks.
+        constexpr uint32 legacyPlayableClasses =
+            (1u << (CLASS_WARRIOR - 1)) | (1u << (CLASS_PALADIN - 1)) |
+            (1u << (CLASS_HUNTER - 1)) | (1u << (CLASS_ROGUE - 1)) |
+            (1u << (CLASS_PRIEST - 1)) | (1u << (CLASS_DEATH_KNIGHT - 1)) |
+            (1u << (CLASS_SHAMAN - 1)) | (1u << (CLASS_MAGE - 1)) |
+            (1u << (CLASS_WARLOCK - 1)) | (1u << (CLASS_DRUID - 1));
+        if (itemTemplate.AllowableClass > 0 &&
+            (uint32(itemTemplate.AllowableClass) & legacyPlayableClasses) == legacyPlayableClasses)
+            itemTemplate.AllowableClass = -1;
         itemTemplate.AllowableRace             = fields[14].Get<int32>();
         itemTemplate.ItemLevel                 = uint32(fields[15].Get<uint16>());
         itemTemplate.RequiredLevel             = uint32(fields[16].Get<uint8>());

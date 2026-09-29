@@ -26,6 +26,7 @@
 #include "Group.h"
 #include "Guild.h"
 #include "InstanceScript.h"
+#include "Item.h"
 #include "Language.h"
 #include "OutdoorPvPMgr.h"
 #include "Pet.h"
@@ -83,6 +84,55 @@ void Player::Update(uint32 p_time)
     Unit::Update(p_time);
     RebornBrewUpdate(p_time);
     SetMustDelayTeleport(false);
+
+    // WD71B: keep the native Auto Shot / wand repeat spell in sync with the
+    // distance of an already selected attack target. WD71E includes Monk
+    // with a usable ranged weapon in this bridge; all classic classes
+    // retain their original attack state machine.
+    if (getClass() == CLASS_WITCH_DOCTOR || getClass() == CLASS_MONK)
+    {
+        if (Unit* victim = GetVictim())
+        {
+            if (IsValidAttackTarget(victim))
+            {
+                if (IsWithinMeleeRange(victim))
+                {
+                    if (GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
+                    {
+                        InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
+                        SetSheath(SHEATH_STATE_MELEE);
+                        Attack(victim, true);
+                    }
+                }
+                else if (HasUnitState(UNIT_STATE_MELEE_ATTACKING))
+                {
+                    if (Item* weapon = GetWeaponForAttack(RANGED_ATTACK, true))
+                    {
+                        uint32 shot = 0;
+                        switch (weapon->GetTemplate()->SubClass)
+                        {
+                            case ITEM_SUBCLASS_WEAPON_GUN:
+                            case ITEM_SUBCLASS_WEAPON_BOW:
+                            case ITEM_SUBCLASS_WEAPON_CROSSBOW:
+                                shot = 75;
+                                break;
+                            case ITEM_SUBCLASS_WEAPON_WAND:
+                                shot = 5019;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (shot && HasSpell(shot))
+                        {
+                            Attack(victim, false);
+                            CastSpell(victim, shot, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     time_t now = GameTime::GetGameTime().count();
 

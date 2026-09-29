@@ -7,6 +7,9 @@
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "RebornWitchDoctorRanks.h"
+#include "RebornWitchDoctorTalentNodes.h"
+#include "RebornWitchDoctorBudget.h"
+#include "WitchDoctorTalentPolicy.h"
 #include "ScriptDefines/GlobalScript.h"
 #include "SpellInfo.h"
 #include "SpellMgr.h"
@@ -19,7 +22,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
-namespace WD19A { uint32 ResolveAction(Player* player, uint32 spell); }
+namespace WD19A { uint32 ResolveAction(Player* player, uint32 spell); void SyncBadJuju(Player* player); }
 
 namespace WD5A
 {
@@ -32,6 +35,9 @@ struct State : DataMap::Base
     SpellModifier* modifier=nullptr;
     uint32 revision=0, active=0, builds=0;
     bool loaded=false;
+    char const* readyError="blocked"; // WD67B: preserve the actual rejection reason.
+    bool modern=false;
+    std::array<uint32,3> aeMasks{};
     uint32 unlocked=0;
     uint32 quoteSlot=0, quoteGold=0, quoteLevel=0;
     bool quoteValid=false;
@@ -43,7 +49,17 @@ struct State : DataMap::Base
     uint32 resetSlot=0,resetRevision=0,resetGold=0;
     std::chrono::steady_clock::time_point resetQuoteTime;
     std::chrono::steady_clock::time_point request;
+    std::chrono::steady_clock::time_point auditRequest;
 };
+bool AELoad(Player*,State*);
+void AEApply(Player*,State*);
+void WD67ClearSummons(Player*,bool,bool);
+void WD68Clear(Player*,bool,bool);
+uint32 AESpent(uint32);
+uint32 TEFoundation(uint32);
+uint32 AERank(uint32,uint32);
+bool AEValid(uint32,uint32);
+extern uint32 const AEIds[27];
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
 bool ProfilesEnabled() { return sConfigMgr->GetOption<bool>("RebornWD8.Enable",false); }
@@ -100,26 +116,56 @@ void Remove(Player* p,State* s)
     p->AddSpellMod(s->modifier,false); // Player owns deletion for a modifier without an aura.
     s->modifier=nullptr;
 }
+// WD81A: no database query on every hit; use the already loaded active build.
+bool CanUseHollow(Player* p)
+{
+    if(!Doctor(p)) return false;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    if(s->modern) return Enabled() && ProfilesEnabled() && s->loaded && s->specs[s->active]==0 &&
+        AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],16)>0;
+    return p->GetLevel()>=30 && (!ProfilesEnabled() || s->loaded);
+}
+// WD82A: legacy trainer ranks keep level30; modern ownership comes from the active saved build.
+bool CanUseHexTalent(Player* p,uint32 spell)
+{
+    if(!Doctor(p)) return false;
+    uint32 index=spell==9003521?17u:(spell==9003530?18u:(spell==9003520?19u:20u));
+    if(index==20) return false;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    if(s->modern) return Enabled() && ProfilesEnabled() && s->loaded && s->specs[s->active]==0 &&
+        AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],index)>0;
+    return p->GetLevel()>=30 && (!ProfilesEnabled() || s->loaded);
+}
+// WD83A: read only active, committed ownership; no database lookup in hit hooks.
+uint32 RitualHexingRank(Player* p)
+{
+    if(!Doctor(p)) return 0;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    if(!Enabled() || !ProfilesEnabled() || !s->modern || !s->loaded || s->specs[s->active]!=0 ||
+        !AEValid(s->aeMasks[s->active],p->GetLevel())) return 0;
+    return AERank(s->aeMasks[s->active],21);
+}
 bool CanCastBadJuju(Player* p)
 {
     if (!Doctor(p) || !Enabled() || !ProfilesEnabled() || p->GetLevel()<15) return false;
     State* s=p->CustomData.GetDefault<State>(Key);
-    return s->loaded && s->specs[s->active]==0 && ((s->builds>>(s->active+3))&1u);
+    return s->loaded && s->specs[s->active]==0 &&
+        (s->modern ? AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],12)>0 : ((s->builds>>(s->active+3))&1u));
 }
 void ClearEffects(Player* p,State* s)
 {
     Remove(p,s);
-    if (Doctor(p) && p->HasSpell(BadJuju)) p->removeSpell(BadJuju,3,false);
+    if (Doctor(p)) {
+        for (auto const& rank:WD19A::BadJujuRanks) if(p->HasSpell(rank.spell)) p->removeSpell(rank.spell,3,false);
+        if(p->HasSpell(9003490)) p->removeSpell(9003490,3,false);
+    }
 }
 void Apply(Player* p,State* s)
 {
-    if (Doctor(p))
-    {
-        bool learn=CanCastBadJuju(p) && sSpellMgr->GetSpellInfo(BadJuju);
-        if (learn && !p->HasSpell(BadJuju)) p->learnSpell(BadJuju);
-        else if (!learn && p->HasSpell(BadJuju)) p->removeSpell(BadJuju,3,false);
-    }
-    bool wanted=Enabled() && Doctor(p) && p->GetLevel()>=10 && s->loaded && s->specs[s->active]==0 && ((s->builds>>s->active)&1);
+    AEApply(p,s);
+    WD19A::SyncBadJuju(p);
+    bool wanted=Enabled() && Doctor(p) && p->GetLevel()>=10 && s->loaded && s->specs[s->active]==0 &&
+        (s->modern ? AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],11)>0 : ((s->builds>>s->active)&1));
     if (!wanted) { Remove(p,s);return; }
     if (s->modifier) return;
     if (!sSpellMgr->GetSpellInfo(Wrath)) return;
@@ -146,7 +192,9 @@ bool Load(Player* p,State* s)
     uint32 mask=slots->Fetch()[0].Get<uint32>();
     s->unlocked=mask==1?1:(mask==3?2:(mask==7?3:0));
     if (!s->unlocked || active>=s->unlocked) return false;
-    s->revision=rev;s->active=active;s->builds=builds;s->loaded=true;Apply(p,s);
+    s->revision=rev;s->active=active;s->builds=builds;
+    if(!AELoad(p,s)) return false;
+    s->loaded=true;Apply(p,s);
     if (s->pendingActionRestore)
     {
         RestoreActions(p,s->pendingActions);
@@ -165,21 +213,26 @@ void Reply(Player* p,char const* status)
 bool Ready(Player* p,bool mutation)
 {
     if (!Doctor(p)) return false;
+    State* state=p->CustomData.GetDefault<State>(Key);state->readyError="blocked";
     if (!Enabled()) { ClearEffects(p,p->CustomData.GetDefault<State>(Key));Reply(p,"disabled");return false; }
-    if (!sSpellMgr->GetSpellInfo(Wrath) || !sSpellMgr->GetSpellInfo(BadJuju)) { Reply(p,"spell");return false; }
+    if (!sSpellMgr->GetSpellInfo(Wrath) || !sSpellMgr->GetSpellInfo(BadJuju)) { state->readyError="spell";Reply(p,"spell");return false; }
     State* s=p->CustomData.GetDefault<State>(Key);
     auto now=std::chrono::steady_clock::now();
-    if (now-s->request<std::chrono::milliseconds(250)) { Reply(p,"busy");return false; }
+    if (now-s->request<std::chrono::milliseconds(250)) { state->readyError="busy";Reply(p,"busy");return false; }
     s->request=now;
-    if (mutation && (!p->IsAlive() || p->IsInCombat() || p->IsNonMeleeSpellCast(false) || p->IsInFlight() || p->GetVehicle() || p->GetTransport()))
-    { Reply(p,"unsafe");return false; }
+    if (mutation)
+    {
+        char const* reason=!p->IsAlive()?"dead":p->IsInCombat()?"combat":
+            p->IsNonMeleeSpellCast(false)?"casting":(p->IsInFlight() || p->GetVehicle() || p->GetTransport())?"transport":nullptr;
+        if(reason) { state->readyError=reason;Reply(p,reason);return false; }
+    }
     if (!s->loaded)
     {
         CharacterDatabase.DirectExecute("INSERT IGNORE INTO reborn_wd5a_builds (guid,revision,active,builds) VALUES ({},0,0,0)",p->GetGUID().GetCounter());
         if (ProfilesEnabled()) CharacterDatabase.DirectExecute("INSERT IGNORE INTO reborn_wd8_profiles(guid) VALUES ({})",p->GetGUID().GetCounter());
         CharacterDatabase.DirectExecute("INSERT IGNORE INTO reborn_wd13_slots(guid,slot,paid_copper) VALUES ({},0,0)",p->GetGUID().GetCounter());
         for(uint32 slot=0;slot<3;++slot) CharacterDatabase.DirectExecute("INSERT IGNORE INTO reborn_wd16_profiles(guid,slot,spec) VALUES ({},{},3)",p->GetGUID().GetCounter(),slot);
-        if (!Load(p,s)) { Reply(p,"database");return false; }
+        if (!Load(p,s)) { state->readyError="database";Reply(p,"database");return false; }
     }
     return true;
 }
@@ -197,16 +250,20 @@ uint32 ProfilePoints(Player* p)
     uint32 level=p->GetLevel();
     return level<10 ? 0 : (level>80 ? 71 : level-9);
 }
+bool ResetPrice(uint32& gold);
 void ProfileReply(Player* p,char const* result)
 {
     State* s=p->CustomData.GetDefault<State>(Key);
-    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked);
+    uint32 resetGold=0;
+    if(ResetPrice(resetGold)) ChatHandler(p->GetSession()).PSendSysMessage("WD16P|{}",resetGold);
+    else ChatHandler(p->GetSession()).PSendSysMessage("WD16P|invalid");
+    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,s->aeMasks[0],s->aeMasks[1],s->aeMasks[2],WD67Budget::AE(p->GetLevel()),WD67Budget::TE(p->GetLevel()));
 }
 bool ProfileReady(Player* p,bool mutation)
 {
     if(!Doctor(p))return false;
     if(!ProfilesEnabled() || !Enabled()) { ClearEffects(p,p->CustomData.GetDefault<State>(Key));ProfileReply(p,"disabled");return false; }
-    if(!Ready(p,mutation)) { ProfileReply(p,"blocked");return false; }
+    if(!Ready(p,mutation)) { ProfileReply(p,p->CustomData.GetDefault<State>(Key)->readyError);return false; }
     State* s=p->CustomData.GetDefault<State>(Key);
     if(!Load(p,s)) { s->loaded=false;ClearEffects(p,s);ProfileReply(p,"database");return false; }
     return true;
@@ -219,6 +276,7 @@ bool ProfileWrite(ChatHandler* h,uint32 expected,uint32 slot,uint32 spec,uint32 
 {
     Player* p=h->GetSession()->GetPlayer();if(!ProfileReady(p,true))return true;
     State* s=p->CustomData.GetDefault<State>(Key);
+    if(s->modern && operation==0) { ProfileReply(p,"invalid");return true; }
     if(slot>=s->unlocked) { ProfileReply(p,"locked");return true; }
     if(slot>2 || spec>2 || rank>3 || operation>2 || (operation==0 && spec!=0 && rank) || PointsUsed(rank)>ProfilePoints(p) || ((rank&2u) && p->GetLevel()<15))
     { ProfileReply(p,"invalid");return true; }
@@ -259,9 +317,14 @@ bool ResetPrice(uint32& gold)
 }
 bool ResetQuote(ChatHandler* h,uint32 rev,uint32 slot)
 {
-    Player* p=h->GetSession()->GetPlayer();if(!ProfileReady(p,true))return true;
+    Player* p=h->GetSession()->GetPlayer();if(!Doctor(p))return true;
     State* s=p->CustomData.GetDefault<State>(Key);s->resetQuoteValid=false;
     uint32 gold=0;
+    if(!ProfilesEnabled() || !Enabled()) { ProfileReply(p,"disabled");return true; }
+    if(!ResetPrice(gold)) { ProfileReply(p,"invalid");return true; }
+    // Quote is not a purchase. Report insufficient funds before transient action guards.
+    if(p->GetMoney()<gold*10000u) { ProfileReply(p,"money");return true; }
+    if(!ProfileReady(p,true))return true;
     if (slot>=s->unlocked || slot>2 || s->specs[slot]==3 || rev!=s->revision || !ResetPrice(gold))
     { ProfileReply(p,"invalid");return true; }
     s->resetSlot=slot;s->resetRevision=rev;s->resetGold=gold;
@@ -276,6 +339,7 @@ bool ResetConfirm(ChatHandler* h,uint32 rev,uint32 slot,uint32 quotedGold)
     if (!valid || !ResetPrice(gold) || gold!=quotedGold || gold!=s->resetGold || rev!=s->resetRevision || slot!=s->resetSlot ||
         std::chrono::steady_clock::now()-s->resetQuoteTime>std::chrono::seconds(60))
     { ProfileReply(p,"quoteexpired");return true; }
+    if(p->GetMoney()<gold*10000u) { ProfileReply(p,"money");return true; }
     if(!ProfileReady(p,true))return true;
     if (slot>2 || slot>=s->unlocked || s->specs[slot]==3 || s->revision!=rev || rev>=2000000000)
     { ProfileReply(p,"stale");return true; }
@@ -286,6 +350,7 @@ bool ResetConfirm(ChatHandler* h,uint32 rev,uint32 slot,uint32 quotedGold)
     CharacterDatabaseTransaction trans=CharacterDatabase.BeginTransaction();
     // Procedure uses SIGNAL on any guard failure; outer native transaction rolls everything back.
     trans->Append("CALL reborn_wd16_reset({},{},{},{},{})",p->GetGUID().GetCounter(),p->GetSession()->GetAccountId(),rev,slot,cost);
+    if(s->modern) trans->Append("DELETE FROM reborn_wd67_nodes WHERE guid={} AND slot={}",p->GetGUID().GetCounter(),slot);
     p->SaveGoldToDB(trans);
     auto result=CharacterDatabase.AsyncCommitTransaction(trans);
     if(!result.m_future.get())
@@ -355,6 +420,63 @@ void TrainerPurchase(Player* p)
     ChatHandler(p->GetSession()).SendSysMessage("WD16: 保存方案已永久解锁，切换不再收费。 / Build unlocked permanently; switching is free.");
 }
 
+// WD64A: read-only server projection. This never awards spells or talent points.
+bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if (!Doctor(p)) return true;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    auto now=std::chrono::steady_clock::now();
+    if (now-s->auditRequest<std::chrono::milliseconds(500)) return true;
+    s->auditRequest=now;
+    WD64A::Node const* n=WD64A::Find(nodeID);
+    // No Ready/Load here: inspecting a node must not create records or reapply effects.
+    if (!Enabled() || !ProfilesEnabled() || !s->loaded || expected!=s->revision || slot>2 || slot>=s->unlocked || !n)
+    {
+        h->PSendSysMessage("WD64|{}|{}|{}|unavailable",s->revision,slot,nodeID);
+        return true;
+    }
+    auto rank=[&](uint32 id)->uint32 {
+        if (s->modern) { for(uint32 i=0;i<27;++i) if(AEIds[i]==id) return AERank(s->aeMasks[slot],i);return 0; }
+        if (s->specs[slot]!=0) return 0;
+        if (id==6058) return (s->builds>>slot)&1u;
+        if (id==29928) return (s->builds>>(slot+3))&1u;
+        return 0; // Trainer ownership never counts as an allocated talent point.
+    };
+    uint32 ae=0,te=0,missing=0,group=0;
+    for (auto const& other:WD64A::Nodes)
+    {
+        uint32 r=rank(other.id);
+        if (other.tree==n->tree) { ae+=r*other.ae;te+=r*other.te; }
+        if (n->group && other.group==n->group && other.id!=n->id && r) group=1;
+    }
+    for (uint32 required:n->required) if (!rank(required)) ++missing;
+    uint32 flags=0,level=n->level;
+    if (n->id==6058) level=10;
+    if (n->id==29928) level=15;
+    bool legacy=!s->modern && (n->id==6058 || n->id==29928);
+    bool open=legacy;
+    if(s->modern) for(uint32 id:AEIds) if(id==n->id) open=true;
+    if(s->modern && (n->id==31344 || n->id==31340)) level=10;
+    if(s->modern && n->id==7157) level=15;
+    if(s->modern && (n->id==6045 || n->id==31341 || n->id==31347 || n->id==31348 || n->id==6644 || n->id==6046 || n->id==6062 || n->id==30889 || n->id==31343 || n->id==6053 || n->id==31350 || n->id==5333)) { level=10;te=TEFoundation(s->aeMasks[slot]); }
+    if (s->specs[slot]==3 || (n->tree!=3 && s->specs[slot]!=n->tree)) flags|=1;
+    if (p->GetLevel()<level) flags|=2;
+    if (missing) flags|=4;
+    if (ae<n->needAE) flags|=8;
+    if (te<n->needTE) flags|=16;
+    if (group) flags|=32;
+    if (!n->mapped) flags|=64;
+    if (!open) flags|=128;
+    if (rank(n->id)>=n->maxRank) flags|=256;
+    if (!s->modern && rank(n->id)==0 && PointsUsed(((s->builds>>slot)&1u)|(((s->builds>>(slot+3))&1u)<<1))>=ProfilePoints(p)) flags|=512;
+    // Graph ConnectedNodes are preserved in the source but not invented as AND/OR rules.
+    h->PSendSysMessage("WD64|{}|{}|{}|ok|{}|{}|{}|{}|{}|{}|{}|{}|{}",s->revision,slot,nodeID,flags,rank(n->id),level,ae,n->needAE,te,n->needTE,missing,open?1:0);
+    return true;
+}
+
+#include "RebornWitchDoctorAllocation.inc"
+
 class Commands : public CommandScript
 {
 public:
@@ -362,6 +484,9 @@ public:
     ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable cmds={
+            {"wd67join",AEJoin,SEC_PLAYER,Console::No},
+            {"wd67save",AESave,SEC_PLAYER,Console::No},
+            {"wd64check",AuditNode,SEC_PLAYER,Console::No},
             {"wd16bind",ProfileBind,SEC_PLAYER,Console::No},
             {"wd16quote",ResetQuote,SEC_PLAYER,Console::No},
             {"wd16reset",ResetConfirm,SEC_PLAYER,Console::No},
@@ -379,7 +504,7 @@ public:
     ExactModifier():GlobalScript("reborn_wd5a_exact_modifier"){}
     bool OnIsAffectedBySpellModCheck(SpellInfo const*,SpellInfo const* check,SpellModifier const* mod) override
     {
-        if (!Enabled() || !check || (!WD19A::IsWrath(check->Id) && check->Id!=BadJuju) || !mod || mod->op!=SPELLMOD_CASTING_TIME) return true;
+        if (!Enabled() || !check || (!WD19A::IsWrath(check->Id) && !WD19A::IsBadJuju(check->Id)) || !mod || mod->op!=SPELLMOD_CASTING_TIME) return true;
         std::lock_guard<std::mutex> lock(registryMutex);
         // In this core false bypasses family-mask matching and returns affected=true (SpellInfo.cpp).
         auto it=registry.find(mod);

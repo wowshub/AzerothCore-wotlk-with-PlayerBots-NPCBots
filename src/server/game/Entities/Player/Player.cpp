@@ -11206,6 +11206,17 @@ void Player::AddSpellAndCategoryCooldowns(SpellInfo const* spellInfo, uint32 ite
         if (rec <= 0 && catrec <= 0 && (cat == 76 || (spellInfo->IsAutoRepeatRangedSpell() && spellInfo->Id != 75)))
             rec = GetAttackTime(RANGED_ATTACK);
 
+        // WD63B: the exact server-only Hastened modifier has a zero client mask.
+        // Send the final native cooldown; do not apply the 25% reduction twice.
+        for (auto mod : m_spellMods[SPELLMOD_COOLDOWN])
+        {
+            if (mod && mod->spellId == 9003653 && IsAffectedBySpellmod(spellInfo, mod, spell))
+            {
+                needsCooldownPacket = true;
+                break;
+            }
+        }
+
         // Now we have cooldown data (if found any), time to apply mods
         if (rec > 0)
             ApplySpellMod(spellInfo->Id, SPELLMOD_COOLDOWN, rec, spell);

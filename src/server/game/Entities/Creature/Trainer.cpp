@@ -21,6 +21,7 @@
 #include "Creature.h"
 #include "NPCPackets.h"
 #include "Player.h"
+#include "WitchDoctorTalentPolicy.h"
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 
@@ -169,6 +170,10 @@ namespace Trainer
 
     SpellState Trainer::GetSpellState(Player const* player, Spell const* trainerSpell) const
     {
+        // New talent ownership cannot be bypassed by purchasing the old test spell.
+        // The same state gates TeachSpell before money is deducted.
+        if (WD67::Managed(trainerSpell->SpellId) && WD67::Enrollment(player)!=0)
+            return SpellState::Unavailable;
         if (player->HasSpell(trainerSpell->SpellId))
             return SpellState::Known;
 

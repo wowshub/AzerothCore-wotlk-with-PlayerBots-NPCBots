@@ -622,11 +622,19 @@ Spell::Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags,
 
     m_spellSchoolMask = info->GetSchoolMask();           // Can be override for some spell (wand shoot for example)
 
-    if (m_attackType == RANGED_ATTACK)
-        // wand case
-        if ((m_caster->getClassMask() & CLASSMASK_WAND_USERS) != 0 && m_caster->IsPlayer())
-            if (Item* pItem = m_caster->ToPlayer()->GetWeaponForAttack(RANGED_ATTACK))
+    if (m_attackType == RANGED_ATTACK && m_caster->IsPlayer())
+    {
+        // WD71A: a Witch Doctor can shoot bows/crossbows as well as wands.
+        // Only its wand shots inherit the wand's damage school; keep the
+        // existing wand-user behavior for the original classes.
+        if (Item* pItem = m_caster->ToPlayer()->GetWeaponForAttack(RANGED_ATTACK))
+        {
+            if ((m_caster->getClassMask() & CLASSMASK_WAND_USERS) != 0 ||
+                (m_caster->getClass() == CLASS_WITCH_DOCTOR &&
+                    pItem->GetTemplate()->SubClass == ITEM_SUBCLASS_WEAPON_WAND))
                 m_spellSchoolMask = SpellSchoolMask(1 << pItem->GetTemplate()->Damage[0].DamageType);
+        }
+    }
 
 #ifdef MOD_NPCERBOTS
     //npcbot: ranged weapon dmg school
@@ -4030,7 +4038,49 @@ void Spell::_cast(bool skipCheck)
     HandleLaunchPhase();
 
     // we must send smsg_spell_go packet before m_castItem delete in TakeCastItem()...
+    // WD71C: native auto-repeat shots are triggered casts and can bypass
+    // the non-triggered prepare branch. Reassert the equipped weapon at
+    // each real shot, including to the owning client's predicted sheath.
+    if (Player* player = m_caster->ToPlayer())
+    {
+        if ((player->getClass() == CLASS_WITCH_DOCTOR || player->getClass() == CLASS_MONK) &&
+            (m_spellInfo->Id == 3018 || m_spellInfo->Id == 75 || m_spellInfo->Id == 5019) &&
+            player->GetWeaponForAttack(RANGED_ATTACK, true))
+        {
+            player->SetSheath(SHEATH_STATE_RANGED);
+            player->ForceValuesUpdateAtIndex(UNIT_FIELD_BYTES_2);
+            player->ForceValuesUpdateAtIndex(UNIT_VIRTUAL_ITEM_SLOT_ID + 2);
+        }
+    }
     SendSpellGo();
+
+    // WD63E: correct server-only Hastened prediction AFTER SMSG_SPELL_GO.
+    // SPELL_GO can start the client's unmodified DBC cooldown. Replace only
+    // that client's timer; never recalculate or erase the server cooldown.
+    if (Player* player = m_caster->ToPlayer())
+    {
+        if (player->getClass() == 13 && !m_CastItem &&
+            !m_spellInfo->IsPassive() && !m_spellInfo->IsCooldownStartedOnEvent() &&
+            !HasTriggeredCastFlag(TRIGGERED_IGNORE_SPELL_AND_CATEGORY_CD) &&
+            !HasTriggeredCastFlag(TRIGGERED_IGNORE_EFFECTS))
+        {
+            AuraEffect* hastened = player->GetAuraEffect(9003653, EFFECT_0);
+            SpellModifier* modifier = hastened ? hastened->GetSpellModifier() : nullptr;
+            if (modifier && modifier->op == SPELLMOD_COOLDOWN &&
+                player->IsAffectedBySpellmod(m_spellInfo, modifier, this))
+            {
+                uint32 remaining = player->GetSpellCooldownDelay(m_spellInfo->Id);
+                if (remaining)
+                {
+                    player->SendClearCooldown(m_spellInfo->Id, player);
+                    WorldPacket cooldown;
+                    player->BuildCooldownPacket(cooldown, SPELL_COOLDOWN_FLAG_NONE,
+                        m_spellInfo->Id, remaining);
+                    player->SendDirectMessage(&cooldown);
+                }
+            }
+        }
+    }
 
     bool resetAttackTimers = IsAutoActionResetSpell() && !m_spellInfo->HasAttribute(SPELL_ATTR2_DO_NOT_RESET_COMBAT_TIMERS);
     if (resetAttackTimers)
@@ -8814,7 +8864,7 @@ void Spell::DoAllEffectOnLaunchTarget(TargetInfo& targetInfo, float* multiplier)
 
     float critChance = caster->SpellDoneCritChance(unit, m_spellInfo, m_spellSchoolMask, m_attackType, false);
     critChance = unit->SpellTakenCritChance(caster, m_spellInfo, m_spellSchoolMask, critChance, m_attackType, false);
-    targetInfo.crit = roll_chance_f(std::max(0.0f, critChance));
+    targetInfo.crit = !caster->HasAura(9003431) && !m_caster->HasAura(9003431) && roll_chance_f(std::max(0.0f, critChance)); // WD43A: includes owner-credited totems
 }
 
 SpellCastResult Spell::CanOpenLock(uint32 effIndex, uint32 lockId, SkillType& skillId, int32& reqSkillValue, int32& skillValue)

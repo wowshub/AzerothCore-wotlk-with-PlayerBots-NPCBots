@@ -967,6 +967,14 @@ void AuraEffect::UpdatePeriodic(Unit* caster)
                 case SPELLFAMILY_GENERIC:
                     switch (GetId())
                     {
+                        // WD34A private drinks: retain native Player/NPCBot and arena paths.
+                        case 9003330:
+                        case 9003331:
+                        case 9003332:
+                        case 9003333:
+                        case 9003334:
+                        case 9003335:
+                        case 9003336:
                         // Drink
                         case 430:
                         case 431:
@@ -6474,7 +6482,7 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
 
     // calculate crit chance
     bool crit = false;
-    if ((crit = roll_chance_f(GetCritChance())))
+    if ((crit = !(caster && caster->HasAura(9003431)) && roll_chance_f(GetCritChance()))) // WD43A: preserve snapshot, suppress current tick only
         damage = Unit::SpellCriticalDamageBonus(caster, m_spellInfo, damage, target);
 
 #ifdef MOD_NPCERBOTS
@@ -6589,7 +6597,7 @@ void AuraEffect::HandlePeriodicHealthLeechAuraTick(Unit* target, Unit* caster) c
     damage = target->SpellDamageBonusTaken(caster, GetSpellInfo(), damage, DOT, GetBase()->GetStackAmount());
 
     bool crit = false;
-    if ((crit = roll_chance_f(GetCritChance())))
+    if ((crit = !(caster && caster->HasAura(9003431)) && roll_chance_f(GetCritChance()))) // WD43A: preserve snapshot, suppress current tick only
         damage = Unit::SpellCriticalDamageBonus(caster, m_spellInfo, damage, target);
 
     // Calculate armor mitigation
@@ -6773,7 +6781,7 @@ void AuraEffect::HandlePeriodicHealAurasTick(Unit* target, Unit* caster) const
     }
 
     bool crit = false;
-    if ((crit = roll_chance_f(GetCritChance())))
+    if ((crit = !(caster && caster->HasAura(9003431)) && roll_chance_f(GetCritChance()))) // WD43A: preserve snapshot, suppress current tick only
         damage = Unit::SpellCriticalHealingBonus(caster, GetSpellInfo(), damage, target);
 
     LOG_DEBUG("spells.aura.effect", "PeriodicTick: {} heal of {} for {} health inflicted by {}",
