@@ -1733,6 +1733,9 @@ public:
     void SendLearnPacket(uint32 spellId, bool learn);
     bool addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool temporary = false, bool learnFromSkill = false);
     bool _addSpell(uint32 spellId, uint8 addSpecMask, bool temporary, bool learnFromSkill = false);
+    void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
+    uint32 GetTemporarySpellReplacement(uint32 original) const;
+    uint32 GetCanonicalTemporarySpell(uint32 replacement) const;
     void learnSpell(uint32 spellId, bool temporary = false, bool learnFromSkill = false);
     void removeSpell(uint32 spellId, uint8 removeSpecMask, bool onlyTemporary);
     void resetSpells();
@@ -2914,6 +2917,7 @@ protected:
 
     PlayerMails m_mail;
     PlayerSpellMap m_spells;
+    std::map<uint32,uint32> m_temporarySpellReplacements; // transient, never serialized
     PlayerTalentMap m_talents;
     uint32 m_lastPotionId;                              // last used health/mana potion in combat, that block next potion use
 

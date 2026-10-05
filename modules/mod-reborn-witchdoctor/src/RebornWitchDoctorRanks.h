@@ -8,7 +8,7 @@ namespace WD19A
 struct Rank { uint32 spell; uint8 level; };
 struct Family { Rank const* ranks; std::size_t count; bool starter; };
 // WD54A: innate class passive; native aura 98 adds +15 to Alchemy only.
-constexpr Rank DarkMojoRanks[]={{9003640,30}};
+constexpr Rank DarkMojoRanks[]={{9003640,32}};
 constexpr Rank WizenedRanks[]={{9003641,30},{9003642,40}};
 constexpr Rank LoaStrengthRanks[]={{9003643,30},{9003644,40}};
 constexpr Rank JujuInjectionRanks[]={{9003650,30},{9003651,40}};
@@ -187,6 +187,7 @@ static inline bool IsBadJuju(uint32 spell)
 }
 static inline bool IsWrath(uint32 spell)
 {
+    if(spell==9003822) return true; // WD99: exact Wrath modifiers, no rank-learning changes.
     Family const* family=FindFamily(spell);
     return family && family->ranks[0].spell==9003100;
 }

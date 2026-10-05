@@ -1,0 +1,346 @@
+{
+  "memory.md": {
+    "size": 1686,
+    "sha256": "94c7b23d3e2811d22fdd968462628db05d26111068f3ee1442eb98b14a642a08"
+  },
+  "README_覆盖与测试说明.md": {
+    "size": 4439,
+    "sha256": "7c9d39356b6d0dd2b399069c760c6919f6befce4837dc2fef72ecf1fe33cf2ff"
+  },
+  "tutor.md": {
+    "size": 2759,
+    "sha256": "a11a99b360701ca91f472c222f37b38fbfcbacc06cfb274037d386a78ea2aff7"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+    "size": 162710,
+    "sha256": "ccde5d89f49d008add18780ecb508801abcc81d2dcaf3537e188ee6842bfdbca"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc": {
+    "size": 35866,
+    "sha256": "2e3689b2486b114db093f316cd5846d74737619ffd676bb77c2c57d758c11fed"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingFoundation.inc": {
+    "size": 4388,
+    "sha256": "820b5f6baf17dd7b402c14f95199d85b7ddf77ba6b4becbf1a08de7cf24330be"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingNumbers.h": {
+    "size": 1444,
+    "sha256": "a2be0a471d7668225b914a168153d1848ec276f879b09d432636662e42a30e02"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorMimicStatus.inc": {
+    "size": 4744,
+    "sha256": "87a14f3bb4de5d88b8e85e56936f4d912d1bcae44df547b535a5187bfb96e6f5"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSpiritWalker.h": {
+    "size": 527,
+    "sha256": "87d9150ccec21338d4531d332502cfb70c0e90a5b84876cb17c809ae1391bb78"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h": {
+    "size": 6717,
+    "sha256": "13056a9f46fcab8235be2474348f75c72b853f8fc08ba7495525162b43627bfd"
+  },
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp": {
+    "size": 38013,
+    "sha256": "2477dd93c7e39b63f1b3c0ae44c7549acf37a32c0313b0afd0f90cc410cfb475"
+  },
+  "01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp": {
+    "size": 652786,
+    "sha256": "6b30572da15d016dd9e48933ea38318fd31bcc58d0ec73e95f8da00010f207f5"
+  },
+  "01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h": {
+    "size": 2609,
+    "sha256": "5992b10d16de5af02b6eff600f6773ee5b39d7caa18049060a834f863c8af2bf"
+  },
+  "01_覆盖到源代码根目录/src/server/game/Entities/Unit/Unit.cpp": {
+    "size": 702913,
+    "sha256": "6b33f9ae9a3e85f79370ac147be523b2d016b196b85b3ba1ff87744888272f7a"
+  },
+  "01_覆盖到源代码根目录/src/server/game/Spells/Spell.cpp": {
+    "size": 399551,
+    "sha256": "3ccf00957ad6b1f63aa7fefd4fddfd9e490e7ee9e03f4e7c1575b8e57ad6fc84"
+  },
+  "01_覆盖到源代码根目录/src/server/game/Spells/SpellInfo.cpp": {
+    "size": 151229,
+    "sha256": "719f6980039ba37c954997f4457b25321fcb4f6ec1c83b78d5141b1534b9403c"
+  },
+  "01_覆盖到源代码根目录/src/server/game/Spells/SpellMgr.cpp": {
+    "size": 146737,
+    "sha256": "a687ba9fd8c296f40347a1812af69a694e3d16d7cb43624edfdb6866706d82f1"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWDCooldownTooltip/Cooldown.lua": {
+    "size": 4452,
+    "sha256": "419819e4c17a81656e63cae1ec4cf1cb40e4a6fbff4b67c75b47ce8d1cbc429c"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorSkillBook/RebornWitchDoctorSkillBook.lua": {
+    "size": 3008,
+    "sha256": "e0d06d492dca7780a22e510695bd486ab7d3198f8fcaeec6021d5d40cc90ca92"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua": {
+    "size": 88198,
+    "sha256": "b7947b7269072332dfe9e20fbeea623fabcce0cfddbf111145d3ec065c72f7ca"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua": {
+    "size": 99837,
+    "sha256": "b863e65f9430815186cb712d79f631a0632503dece90c01b9a2aa32c23b0dcbe"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua": {
+    "size": 12239,
+    "sha256": "bd4a82888107c5c23a236ced5ac4bfc7089c4b882b1202c0f6583b2e709848d9"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua": {
+    "size": 7561,
+    "sha256": "3de1344350c00f34475c743a3df26d8e805397690dfed96ffe883b25917807c6"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc": {
+    "size": 407,
+    "sha256": "a2d4d73b6c29c4afb0352b534cc020fdc93a47a56d7bcb914fcd5df28d5accd1"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/WD8.lua": {
+    "size": 18663,
+    "sha256": "c9105ad994feb5c89979ad452009e650180f578f39651608220132b12ed279ce"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/1e9d98eaf72e9f5e.blp": {
+    "size": 3916,
+    "sha256": "79dbb7cd22e45349f2c6bedc504d72d16a731561c4351672762f62d6148d65be"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/30a815263647b234.blp": {
+    "size": 6660,
+    "sha256": "5ac7d3ff864b5a24cb7ad1a1adeae3091bac760ca535b1355ec15573ef978a4d"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/36a212983bcf60a7.blp": {
+    "size": 6660,
+    "sha256": "0cf359f1f0a5c99d2438f9f23a55e6e3285a508236967f5af922a0fe12f9bb29"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/44990583e8157511.blp": {
+    "size": 3916,
+    "sha256": "fab03eca7c0238b1586b1bf7210c8150253b3fae5bf23739c5166b74a4a41c65"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/5e1a7cbbed79e62b.blp": {
+    "size": 3916,
+    "sha256": "8c94b1d62dc89bb509d35b0baf54b10914a04596a22101df3eff876134a0a4c9"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/607c33b4b97eb670.blp": {
+    "size": 6660,
+    "sha256": "dde97e9e4e56c8fe77bb3f52e863b33842b577c2c4080912ef26540e95467145"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/706f2cfc47b53886.blp": {
+    "size": 6660,
+    "sha256": "a8c94b8da1b428b0ec02b9c50d880437a6fb64666b87c7c5b10730591da9f48a"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/7e06e90aea7e069e.blp": {
+    "size": 3916,
+    "sha256": "e2637995bb751a54518c1e8e4cb1fa51596ba77cc5acc9ed4f4ffcea1978a879"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/848c316b639e7f53.blp": {
+    "size": 6660,
+    "sha256": "3300789d01a8cb473cb02ae194f22e8a812c5b8286e45676f1207d704e9171fc"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/974fc02dcf985f9f.blp": {
+    "size": 6660,
+    "sha256": "0974cc448324a9aa842428eb776d5f2e9b8c45578991ceac5f06a2bc53a2c23f"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/a2bf3be4c33eb990.blp": {
+    "size": 6660,
+    "sha256": "e3d15d2b64bd1908a9fca4c90816d1df8f5af08697067c86e1dabf9d089bba7e"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/b7ff938336b5e4a9.blp": {
+    "size": 6660,
+    "sha256": "3b25578482b9bfd6873974294ce5bcbc4e4e5338c0ec9a5f61c333d62d13d6ee"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/ce630a6b5a66988b.blp": {
+    "size": 6660,
+    "sha256": "5531e4389f52c765931a1d6a3ba0ddda0311566e41e79ee055923df5b9d34a8b"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/d3d8f35d3ff29325.blp": {
+    "size": 3916,
+    "sha256": "0bc9ca190500fb1f878e07f64f934ae17ecceb069a137432fa81e3ea9864e3ba"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/e8d90419302de36b.blp": {
+    "size": 3916,
+    "sha256": "58b8dd91f2a74fc01c43330887a28af1a2df0252cff3b4fcab668cbb4876cce8"
+  },
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/eb289c1702adddd2.blp": {
+    "size": 5268,
+    "sha256": "8045e5ae128dba09a0dd4a871d9222cd1081269e3516d44ac8f5a46f3cd5fe67"
+  },
+  "03_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc": {
+    "size": 1115205,
+    "sha256": "b3e79447166c533116bea0a00b851798cea0a87d1b7eceb5ff735816dfb809b7"
+  },
+  "03_覆盖到服务端根目录/Data/dbc/Spell.dbc": {
+    "size": 61581958,
+    "sha256": "33c1da9b666d5cb8668fea1a37a2e56eff49431e9306a27d9a9c8d11fabfcebc"
+  },
+  "03_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc": {
+    "size": 1773444,
+    "sha256": "eb3311d65a15aef86892d0ef894b6aa96aa55ca7300643e19ef12a4b86ffeb54"
+  },
+  "checks/build_candidate.py": {
+    "size": 5707,
+    "sha256": "8418fe4f31b8843084c3969d1bedf5ca0cccb233860edc57a304c2f417efec86"
+  },
+  "checks/check_results.txt": {
+    "size": 423,
+    "sha256": "86478a297f756f3963ef196240391e1f0a36b9888503dcad05f21a1e0a9d73f0"
+  },
+  "checks/create_checks.py": {
+    "size": 5883,
+    "sha256": "b7d6905622e71352d62e47f17bed248afa6515a248091ce878e8aa8aaad89a70"
+  },
+  "checks/dbc_validation.json": {
+    "size": 642,
+    "sha256": "9bb9f1c4cafae3b1be3f34d97d3fda69a3e55d1b886055ec89e6bd93eac53891"
+  },
+  "checks/lua_syntax.lua": {
+    "size": 85,
+    "sha256": "bd048e3c091db15c2cf52a2d56e973c179118a4dcfd634dc85fde38d368f3d84"
+  },
+  "checks/post_go.cpp": {
+    "size": 3908,
+    "sha256": "00522444cf1768804692e13734b4cf58b0df55e2677f49507db4ab033ce6f5e9"
+  },
+  "checks/potion_numeric_test.lua": {
+    "size": 4320,
+    "sha256": "2b9a8edbe24a11df638542aa3705f648171ffa4924933c10cdf7b07a948c89ee"
+  },
+  "checks/previous_numeric_test.lua": {
+    "size": 12057,
+    "sha256": "bcf89e3d641c192e708e9c200b0800e2c0d12861a96b291ec20c4c96ee46024d"
+  },
+  "client_mpq输入_导入现有Patch-XA/DBFilesClient/SkillLineAbility.dbc": {
+    "size": 1115205,
+    "sha256": "0b5e7589756e101d3db18c31c7a6638ca73a8109a9cd901cdedb6996596c74de"
+  },
+  "client_mpq输入_导入现有Patch-XA/DBFilesClient/Spell.dbc": {
+    "size": 61534958,
+    "sha256": "5e216ee539fa733415fc6cace24d63d3f256a2461683efd8964257edbb89c652"
+  },
+  "client_mpq输入_导入现有Patch-XA/DBFilesClient/SpellIcon.dbc": {
+    "size": 1774612,
+    "sha256": "1a76204d7ef611a1b4738d120bcb6721036b374b5707721deae1a71b74ffe621"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/1e9d98eaf72e9f5e.blp": {
+    "size": 3916,
+    "sha256": "79dbb7cd22e45349f2c6bedc504d72d16a731561c4351672762f62d6148d65be"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/30a815263647b234.blp": {
+    "size": 6660,
+    "sha256": "5ac7d3ff864b5a24cb7ad1a1adeae3091bac760ca535b1355ec15573ef978a4d"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/36a212983bcf60a7.blp": {
+    "size": 6660,
+    "sha256": "0cf359f1f0a5c99d2438f9f23a55e6e3285a508236967f5af922a0fe12f9bb29"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/44990583e8157511.blp": {
+    "size": 3916,
+    "sha256": "fab03eca7c0238b1586b1bf7210c8150253b3fae5bf23739c5166b74a4a41c65"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/5e1a7cbbed79e62b.blp": {
+    "size": 3916,
+    "sha256": "8c94b1d62dc89bb509d35b0baf54b10914a04596a22101df3eff876134a0a4c9"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/607c33b4b97eb670.blp": {
+    "size": 6660,
+    "sha256": "dde97e9e4e56c8fe77bb3f52e863b33842b577c2c4080912ef26540e95467145"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/706f2cfc47b53886.blp": {
+    "size": 6660,
+    "sha256": "a8c94b8da1b428b0ec02b9c50d880437a6fb64666b87c7c5b10730591da9f48a"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/7e06e90aea7e069e.blp": {
+    "size": 3916,
+    "sha256": "e2637995bb751a54518c1e8e4cb1fa51596ba77cc5acc9ed4f4ffcea1978a879"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/848c316b639e7f53.blp": {
+    "size": 6660,
+    "sha256": "3300789d01a8cb473cb02ae194f22e8a812c5b8286e45676f1207d704e9171fc"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/974fc02dcf985f9f.blp": {
+    "size": 6660,
+    "sha256": "0974cc448324a9aa842428eb776d5f2e9b8c45578991ceac5f06a2bc53a2c23f"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/a2bf3be4c33eb990.blp": {
+    "size": 6660,
+    "sha256": "e3d15d2b64bd1908a9fca4c90816d1df8f5af08697067c86e1dabf9d089bba7e"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/b7ff938336b5e4a9.blp": {
+    "size": 6660,
+    "sha256": "3b25578482b9bfd6873974294ce5bcbc4e4e5338c0ec9a5f61c333d62d13d6ee"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/ce630a6b5a66988b.blp": {
+    "size": 6660,
+    "sha256": "5531e4389f52c765931a1d6a3ba0ddda0311566e41e79ee055923df5b9d34a8b"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/d3d8f35d3ff29325.blp": {
+    "size": 3916,
+    "sha256": "0bc9ca190500fb1f878e07f64f934ae17ecceb069a137432fa81e3ea9864e3ba"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/e8d90419302de36b.blp": {
+    "size": 3916,
+    "sha256": "58b8dd91f2a74fc01c43330887a28af1a2df0252cff3b4fcab668cbb4876cce8"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/eb289c1702adddd2.blp": {
+    "size": 5268,
+    "sha256": "8045e5ae128dba09a0dd4a871d9222cd1081269e3516d44ac8f5a46f3cd5fe67"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/Icons/INV_Ascend_Potion_11.blp": {
+    "size": 3916,
+    "sha256": "de4bdb618a81dde49b3665ef105a78f437dd38c7c4b3421345bacb8d6970210a"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/Icons/INV_Ascend_Potion_12.blp": {
+    "size": 3916,
+    "sha256": "a3e72f510ea2b8084dc3d99fbe339eed7501489227f39474f9ea8fee8fdfba01"
+  },
+  "client_mpq输入_导入现有Patch-XA/Interface/Icons/inv_bloodtrollfemaleheaddire01.blp": {
+    "size": 5268,
+    "sha256": "b9ec9822c033f8139804fd3c6c6f2a4eb466c44ee4a28a7a646f73c6693b0575"
+  },
+  "rollback_本次修改前/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp": {
+    "size": 38681,
+    "sha256": "bdf0627b42bcfc981e4d64c74d67235c5eb8f1df230b11d45c0542962d35c4df"
+  },
+  "rollback_本次修改前/01_覆盖到源代码根目录/src/server/game/Spells/Spell.cpp": {
+    "size": 399180,
+    "sha256": "ca9b78b79b9f4404f5490d7a7ac54cabcda130b616acd61943c33ca0798f5bfa"
+  },
+  "rollback_本次修改前/02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua": {
+    "size": 12021,
+    "sha256": "ce0f4c1faf094ccb9f618fc127fd51724345c72afcf5812703dea2f0341d30ff"
+  },
+  "rollback_本次修改前/03_覆盖到服务端根目录/Data/dbc/Spell.dbc": {
+    "size": 61581958,
+    "sha256": "901a61165c84da26221c92ef6b19ac34ec874e41882d774b7406bb388baf4689"
+  },
+  "rollback_本次修改前/client_mpq输入_导入现有Patch-XA/DBFilesClient/Spell.dbc": {
+    "size": 61534958,
+    "sha256": "cbda66fbffbc340b80fe4896b4f0c446cee7e15cc0aea730ea8384cba7f9e2e1"
+  },
+  "server_SQL/01_CHARACTERS_WD127A_必须执行.sql": {
+    "size": 31460,
+    "sha256": "e843219298f30000b16e38f88c7e7f2bcfbd09a4e3df14316fbbeca954ea855f"
+  },
+  "server_SQL/02_WORLD_WD112A_必须执行.sql": {
+    "size": 944,
+    "sha256": "36d74d93f3e1fc36e9bf341982dd0fdbf86b3f3daa2c15ee61e187bd9b8f22da"
+  },
+  "server_SQL/02_WORLD_WD118A_必须执行.sql": {
+    "size": 162,
+    "sha256": "4f33679184e69ae04df350fea58c8c6f9f898cb0815300fa78a2b50debbc0a0a"
+  },
+  "server_SQL/03_WORLD_WD120A_必须执行.sql": {
+    "size": 2528,
+    "sha256": "ddec675b9ccf60e7c516963e72407d85c1c0ecfd44931b7cf72bb48e32508816"
+  },
+  "server_SQL/04_WORLD_WD123A_必须执行.sql": {
+    "size": 2207,
+    "sha256": "dbc35dd806951a9a50206a4747406b80688ee72a55344866696270eb7cf861bc"
+  },
+  "server_SQL/05_WORLD_WD125A_必须执行.sql": {
+    "size": 625,
+    "sha256": "e2d3ea9027cb771893e202a8250ceac6b351e8e897ffb9af622a4a8267b75bdd"
+  },
+  "server_SQL/06_WORLD_WD126A_必须执行.sql": {
+    "size": 560,
+    "sha256": "36aa3055d1f70b1c851d8f0ebddb90f2aa70cabf0e07d5ef20f66e7ce56baa35"
+  }
+}

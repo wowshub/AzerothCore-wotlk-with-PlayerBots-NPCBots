@@ -556,6 +556,16 @@ int32 AuraEffect::CalculateAmount(Unit* caster)
             break;
     }
 
+    // WD99: add the private curse coefficient BEFORE native done multipliers and snapshots.
+    if(caster && GetId()==9003822 && GetEffIndex()==EFFECT_1 && GetAuraType()==SPELL_AURA_PERIODIC_DAMAGE)
+    {
+        Unit* powerCaster=caster;
+        if(Player* owner=caster->GetSpellModOwner()) powerCaster=owner;
+        float power=float(std::max(0,std::max(powerCaster->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_FIRE),powerCaster->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE))));
+        amount+=int32(.10f*power*(powerCaster->HasAura(9003720)?1.20f:1.0f));
+        m_canBeRecalculated=false;
+    }
+
     // xinef: save base amount, before calculating sp etc. Used for Unit::CastDelayedSpellWithPeriodicAmount
     SetOldAmount(amount * GetBase()->GetStackAmount());
 
@@ -1150,6 +1160,10 @@ float AuraEffect::CalcPeriodicCritChance(Unit const* caster, Unit const* target)
             }
         }
     }
+    // WD99: only the private Hexfire curse gains native periodic critical settlement.
+    if(caster && GetId()==9003822)
+        if(Player* owner=caster->GetSpellModOwner())
+            critChance=owner->SpellDoneCritChance(nullptr,GetSpellInfo(),GetSpellInfo()->GetSchoolMask(),BASE_ATTACK,true);
     if (target && critChance > 0.0f)
         critChance = target->SpellTakenCritChance(caster, GetSpellInfo(), GetSpellInfo()->GetSchoolMask(), critChance, BASE_ATTACK, true);
 

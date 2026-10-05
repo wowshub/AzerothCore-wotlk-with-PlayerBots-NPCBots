@@ -1,6 +1,9 @@
 // WD3: isolated level-one Witch Doctor mechanics adapted from local CoA.
 // CoA AscensionWitchDoctorAbilities.cpp: previousBrew, effective healing / 2.
 #include "ScriptMgr.h"
+#include "Log.h" // WD101 clone initialization diagnostic
+#include "WorldPacket.h"
+#include "ScriptDefines/AllSpellScript.h"
 #include "GameObject.h"
 #include "ScriptDefines/GlobalScript.h"
 #include "RebornWitchDoctorRanks.h"
@@ -12,6 +15,9 @@
 #include "Spell.h"
 #include "SpellMgr.h"
 #include "SpellInfo.h"
+#include "RebornWitchDoctorSpiritWalker.h"
+#include "ScriptDefines/UnitScript.h"
+#include <limits>
 #include "SpellAuraEffects.h"
 #include "Player.h"
 #include "ObjectAccessor.h"
@@ -181,13 +187,44 @@ float PowerScale(Player* p) { return IsDoctor(p) && p->HasAura(Overflowing) ? 1.
 }
 // WD85A: stored Threads power is released only by the original caster.
 namespace WD85A { constexpr uint32 Strings=9003730, Spirits=9003731, StringsTick=9003732; }
+#include "RebornWitchDoctorSpiritTalents.inc"
+#include "RebornWitchDoctorAdvancedTalents.inc"
+
+// WD86A: exact private Puppet IDs; both timings snapshot the caster's current Spirits.
+namespace WD86A
+{
+constexpr uint32 Mind=9003740, Blessing=9003741, Spirit=9003574;
+bool Owns(Player* p,uint32 spell)
+{
+    // A raid recipient has the damage aura, but must not inherit the owner's talent.
+    return IsDoctor(p) && p->HasSpell(spell) && p->HasAura(spell);
+}
+uint32 MindPercent(Player* p)
+{
+    if (!Owns(p,Mind)) return 100;
+    Aura* spirit=p->GetAura(Spirit,p->GetGUID());
+    return 100+10*(spirit ? std::min<uint32>(5,spirit->GetStackAmount()) : 0);
+}
+int32 Interval(Player* p,int32 amplitude)
+{
+    int64 value=int64(amplitude)*100/MindPercent(p);
+    if (Owns(p,Blessing)) value=value*80/100;
+    return int32(std::max<int64>(1,value));
+}
+int32 Duration(Player* p,int32 duration)
+{
+    int64 value=int64(duration)*MindPercent(p)/100;
+    if (Owns(p,Blessing)) value=value*80/100;
+    return int32(std::min<int64>(2147483647,value));
+}
+}
 // WD68A: owned Mimic slot and Voodoo entry effects. No legacy character conversion.
 namespace WD68A
 {
 constexpr uint32 Puppeteer=9003670, Threads=9003671, Burst=9003672, Mimic=9003673;
 constexpr uint32 PuppetFirst=9003680, PuppetLast=9003689, PuppetHit=9003695, PuppetVisual=9003696;
 constexpr uint32 MimicEntry=900213;
-struct State : DataMap::Base { ObjectGuid mimic; std::unordered_set<ObjectGuid> marked; };
+struct State : DataMap::Base { ObjectGuid mimic, extra; std::unordered_set<ObjectGuid> marked; };
 char const* const Key="RebornWD68A";
 Player* Caster(Unit* unit)
 {
@@ -197,24 +234,33 @@ Player* Caster(Unit* unit)
     if (!c || c->GetEntry()!=MimicEntry || !c->IsAlive()) return nullptr;
     Player* p=ObjectAccessor::GetPlayer(*c,c->GetOwnerGUID());
     return IsDoctor(p) && p->IsAlive() && p->HasSpell(Mimic) &&
-        p->CustomData.GetDefault<State>(Key)->mimic==c->GetGUID() ? p : nullptr;
+        (p->CustomData.GetDefault<State>(Key)->mimic==c->GetGUID() ||
+         (p->HasSpell(9003840) && p->HasAura(9003840) && p->CustomData.GetDefault<State>(Key)->extra==c->GetGUID())) ? p : nullptr;
 }
 void Clear(Player* p)
 {
     State* s=p->CustomData.GetDefault<State>(Key);
     if (Creature* c=ObjectAccessor::GetCreature(*p,s->mimic))
         if(c->GetEntry()==MimicEntry && c->GetOwnerGUID()==p->GetGUID()) c->DespawnOrUnsummon();
-    s->mimic.Clear();
+    if (Creature* c=ObjectAccessor::GetCreature(*p,s->extra))
+        if(c->GetEntry()==MimicEntry && c->GetOwnerGUID()==p->GetGUID()) c->DespawnOrUnsummon();
+    s->extra.Clear();s->mimic.Clear();
 }
 void Mirror(Player* p,Unit* target,uint32 spell)
 {
     if (!IsDoctor(p) || !target || !p->IsAlive() || !p->HasSpell(Mimic)) return;
-    Creature* c=ObjectAccessor::GetCreature(*p,p->CustomData.GetDefault<State>(Key)->mimic);
-    if (!c || Caster(c)!=p || !c->IsInMap(target) || !c->InSamePhase(target) ||
-        !c->IsWithinDistInMap(target,40.0f) || !c->IsWithinLOSInMap(target)) return;
-    c->CastSpell(target,spell,true);
+    State* state=p->CustomData.GetDefault<State>(Key);
+    for(ObjectGuid guid : {state->mimic,state->extra})
+    {
+        Creature* c=ObjectAccessor::GetCreature(*p,guid);
+        if (!c || Caster(c)!=p || !c->IsInMap(target) || !c->InSamePhase(target) ||
+            !c->IsWithinDistInMap(target,40.0f) || !c->IsWithinLOSInMap(target)) continue;
+        if(spell==9003822) c->CastSpell(target,spell,true,nullptr,nullptr,p->GetGUID());
+        else c->CastSpell(target,spell,true);
+    }
 }
 }
+#include "RebornWitchDoctorMimicStatus.inc"
 class spell_reborn_wd68a_summon : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd68a_summon);
@@ -229,14 +275,29 @@ class spell_reborn_wd68a_summon : public SpellScript
         PreventHitDefaultEffect(index);
         Player* p=GetCaster()->ToPlayer();if (!IsDoctor(p)) return;
         int32 duration=GetSpellInfo()->GetDuration();p->ApplySpellMod(GetSpellInfo()->Id,SPELLMOD_DURATION,duration);
-        Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,0.8f);
-        if (TempSummon* c=p->SummonCreature(WD68A::MimicEntry,pos,TEMPSUMMON_TIMED_DESPAWN,uint32(std::max(1,duration))))
+        // Allocate the new group first; a partial failure preserves the previous group.
+        bool const chosen=p->HasSpell(9003840) && p->HasAura(9003840);
+        TempSummon* fresh[2]={nullptr,nullptr};
+        uint32 count=chosen?2u:1u;
+        for(uint32 i=0;i<count;++i)
         {
-            WD68A::Clear(p);c->SetOwnerGUID(p->GetGUID());c->SetCreatorGUID(p->GetGUID());
-            c->SetFaction(p->GetFaction());c->SetLevel(p->GetLevel());
-            c->SetMaxHealth(std::max(5u,uint32(p->GetLevel())*10));c->SetHealth(c->GetMaxHealth());
-            p->CustomData.GetDefault<WD68A::State>(WD68A::Key)->mimic=c->GetGUID();
+            Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,i?5.48f:0.8f);
+            fresh[i]=p->SummonCreature(WD68A::MimicEntry,pos,TEMPSUMMON_TIMED_DESPAWN,uint32(std::max(1,duration)));
+            if(!fresh[i])
+            {
+                for(uint32 j=0;j<i;++j) fresh[j]->DespawnOrUnsummon();
+                ChatHandler(p->GetSession()).SendSysMessage("拟态守卫召唤失败，原守卫已保留。");return;
+            }
+            fresh[i]->SetOwnerGUID(p->GetGUID());fresh[i]->SetCreatorGUID(p->GetGUID());
+            fresh[i]->SetFaction(p->GetFaction());fresh[i]->SetLevel(p->GetLevel());
+            fresh[i]->SetMaxHealth(std::max(5u,uint32(p->GetLevel())*10));fresh[i]->SetHealth(fresh[i]->GetMaxHealth());
         }
+        WD68A::Clear(p);
+        auto* state=p->CustomData.GetDefault<WD68A::State>(WD68A::Key);
+        state->mimic=fresh[0]->GetGUID();
+        if(chosen) state->extra=fresh[1]->GetGUID();
+        p->CustomData.GetDefault<WD87B::Status>(WD87B::Key)->lifetime=fresh[0]->GetTimer();
+        WD87B::Snapshot(p);
     }
     void Register() override
     {
@@ -388,6 +449,11 @@ class aura_reborn_wd68a_puppet : public AuraScript
         amount=int32(p->SpellDamageBonusDone(GetUnitOwner(),GetSpellInfo(),uint32(std::max(0,amount)),SPELL_DIRECT_DAMAGE,EFFECT_0));
         recalculate=false;
     }
+    void Periodic(AuraEffect const*,bool& periodic,int32& amplitude)
+    {
+        Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;
+        if (IsDoctor(p) && periodic && amplitude>0) amplitude=WD86A::Interval(p,amplitude);
+    }
     void Tick(AuraEffect const* e)
     {
         PreventDefaultAction();Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;
@@ -398,6 +464,7 @@ class aura_reborn_wd68a_puppet : public AuraScript
     }
     void Register() override
     {
+        DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(aura_reborn_wd68a_puppet::Periodic,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY);
         DoEffectCalcAmount += AuraEffectCalcAmountFn(aura_reborn_wd68a_puppet::Amount,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY);
         AfterEffectApply += AuraEffectApplyFn(aura_reborn_wd68a_puppet::PoseStart,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY,AURA_EFFECT_HANDLE_REAL);
         AfterEffectRemove += AuraEffectRemoveFn(aura_reborn_wd68a_puppet::PoseEnd,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY,AURA_EFFECT_HANDLE_REAL);
@@ -406,6 +473,13 @@ class aura_reborn_wd68a_puppet : public AuraScript
 };
 namespace WD5A
 {
+void WD111ClearExtra(Player* p)
+{
+    auto* state=p->CustomData.GetDefault<WD68A::State>(WD68A::Key);
+    if(Creature* c=ObjectAccessor::GetCreature(*p,state->extra))
+        if(c->GetEntry()==WD68A::MimicEntry && c->GetOwnerGUID()==p->GetGUID()) c->DespawnOrUnsummon();
+    state->extra.Clear();
+}
 void WD68Clear(Player* p,bool mimic,bool puppeteer)
 {
     if (mimic) WD68A::Clear(p);
@@ -441,7 +515,7 @@ class spell_reborn_wd3_birth : public SpellScript
         bool healing = WD19A::IsBrew(GetSpellInfo()->Id);
         int32 power = healing ? player->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE)
                               : player->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE);
-        float coefficient = healing ? 0.84f : 0.625f*WD84A::PowerScale(player);
+        float coefficient = healing ? (player->HasAura(9003911) ? 0.84f*1.15f : 0.84f) : 0.625f*WD84A::PowerScale(player);
         // CoA adds power to base value before native done/taken modifiers.
         // SQL disables native coefficients to avoid double scaling and low-rank penalties.
         float bonus=float(std::max(0,power))*coefficient;
@@ -766,6 +840,7 @@ namespace
 {
 uint8 WD20AuraGroup(uint32 spell)
 {
+    if(spell==WD88A::Jinx) return 2;
     WD19A::Family const* family=WD19A::FindFamily(spell);
     if (!family) return 0;
     if (family->ranks[0].spell==9003140 || family->ranks[0].spell==9003180 || family->ranks[0].spell==9003190 || family->ranks[0].spell==9003280 || family->ranks[0].spell==9003290 || family->ranks[0].spell==9003300) return 1; // Spirit/Power/Resourceful/Greater Resourceful/Greater Spirit/Greater Power Wuju
@@ -935,7 +1010,7 @@ void Track(Player* player, Spell* spell, ObjectGuid guid)
     auto& paid=player->CustomData.GetDefault<State>(Key)->paid[slot];
     player->CustomData.GetDefault<State>(Key)->selected[slot]=spell->GetSpellInfo()->Id;
     // Only successful, owned Idol placement reaches Track; failures give no buff.
-    if (slot==1 && IsDoctor(player) && player->HasAura(9003660))
+    if (slot==1 && IsDoctor(player) && player->HasSpell(9003660) && player->HasAura(9003660))
         player->CastSpell(player,9003663,true);
     paid.guid=guid;
     paid.mana=spell->HasTriggeredCastFlag(TRIGGERED_IGNORE_POWER_AND_REAGENT_COST) ||
@@ -1186,8 +1261,42 @@ class spell_reborn_wd28a_hexbreak : public SpellScript
             player->HasSpell(9003240) && player->GetLevel() >= 16
             ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
+    void ExtraAlly()
+    {
+        Player* player=GetCaster()->ToPlayer();
+        Unit* center=GetHitUnit();
+        if(!IsDoctor(player) || !player->HasAura(9003911) || !center || GetSpell()->IsTriggered()) return;
+        std::list<Unit*> nearby;
+        Acore::AnyUnitInObjectRangeCheck check(center,8.0f);
+        Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(center,nearby,check);
+        Cell::VisitObjects(center,search,8.0f);
+        nearby.remove_if([player,center](Unit* unit)
+        {
+            if(unit==center || !unit->IsAlive() || !player->IsValidAssistTarget(unit) ||
+                !player->IsInMap(unit) || !player->InSamePhase(unit) || !center->IsWithinLOSInMap(unit)) return true;
+            for(auto const& aura:unit->GetAppliedAuras())
+                if(aura.second && aura.second->GetBase()->GetSpellInfo()->Dispel==DISPEL_CURSE)
+                    return false;
+            return true;
+        });
+        nearby.sort([center](Unit* a,Unit* b)
+        {
+            float da=center->GetDistance(a),db=center->GetDistance(b);
+            return da==db ? a->GetGUID()<b->GetGUID() : da<db;
+        });
+        if(!nearby.empty()) player->CastSpell(nearby.front(),GetSpellInfo()->Id,true);
+    }
+    void ShorterGlobalCooldown()
+    {
+        Player* player=GetCaster()->ToPlayer();
+        if(!IsDoctor(player) || !player->HasAura(9003911) || GetSpell()->IsTriggered()) return;
+        uint32 remaining=player->GetGlobalCooldownMgr().GetGlobalCooldown(GetSpellInfo());
+        if(remaining>1000) player->GetGlobalCooldownMgr().AddGlobalCooldown(GetSpellInfo(),1000);
+    }
     void Register() override
     {
+        AfterHit += SpellHitFn(spell_reborn_wd28a_hexbreak::ExtraAlly);
+        AfterCast += SpellCastFn(spell_reborn_wd28a_hexbreak::ShorterGlobalCooldown);
         OnCheckCast += SpellCheckCastFn(spell_reborn_wd28a_hexbreak::CheckDoctor);
     }
 };
@@ -1423,7 +1532,7 @@ class spell_reborn_wd38a_idol : public SpellScript
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD38A::BySpell(GetSpellInfo()->Id);
         if (!cfg || !IsDoctor(player))return;
         Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
-        TempSummon* idol=player->SummonCreature(cfg->entry,pos,TEMPSUMMON_TIMED_DESPAWN,cfg->entry==900202 ? 11000 : 61000);
+        TempSummon* idol=player->SummonCreature(cfg->entry,pos,TEMPSUMMON_TIMED_DESPAWN,cfg->entry==900202 ? WD117::Duration(player)+1000 : 61000);
         if (!idol) { ChatHandler(player->GetSession()).SendSysMessage("神像召唤失败，原神像已保留。");return; }
         WD36A::Clear(player);
         player->CustomData.GetDefault<WD36A::State>(WD36A::Key)->guid=idol->GetGUID();
@@ -1443,6 +1552,7 @@ public:
     {
         explicit AI(Creature* creature):ScriptedAI(creature) { }
         ObjectGuid owner; WD38A::Config const* cfg=nullptr;
+        int32 swiftAmount=25;
         uint32 timer=1,remaining=60000;
         std::vector<ObjectGuid> affected;
         void Remove(ObjectGuid const& guid)
@@ -1455,7 +1565,7 @@ public:
         {
             Player* player=summoner ? summoner->ToPlayer():nullptr;cfg=WD38A::ByEntry(me->GetEntry());
             if(!cfg || !IsDoctor(player)) { me->DespawnOrUnsummon();return; }
-            if(cfg->entry==900202)remaining=10000;
+            if(cfg->entry==900202) { remaining=WD117::Duration(player);swiftAmount=WD117::SwiftAmount(player); }
             owner=player->GetGUID();me->SetOwnerGUID(owner);me->SetCreatorGUID(owner);
             me->SetFaction(player->GetFaction());me->SetLevel(player->GetLevel());
             me->SetMaxHealth(std::max(5u,uint32(player->GetLevel())*10));me->SetHealth(me->GetMaxHealth());
@@ -1486,6 +1596,7 @@ public:
                     {
                         // Refresh the same aura in place; never remove/re-add each second.
                         if(Aura* aura=unit->GetAura(cfg->aura,owner)) aura->SetDuration(2200);
+                        else if(cfg->entry==900202) me->CastCustomSpell(unit,cfg->aura,&swiftAmount,&swiftAmount,&swiftAmount,true,nullptr,nullptr,owner);
                         else me->CastSpell(unit,cfg->aura,true,nullptr,nullptr,owner);
                     }
         }
@@ -1759,11 +1870,15 @@ public:
         Unit* target=aura->GetOwner()->ToUnit();
         if(!target)return; // DynamicObject auras are not unit-owned.
         SpellInfo const* info=aura->GetSpellInfo();
+        // WD86A: native duration hook runs before effect periodic initialization.
+        if (info->Id>=WD68A::PuppetFirst && info->Id<=WD68A::PuppetLast)
+            if (Player* player=aura->GetCaster()?aura->GetCaster()->ToPlayer():nullptr)
+                if (IsDoctor(player)) duration=WD86A::Duration(player,duration);
         // WD45A: private passive increases only this new stun before native diminishing.
         if(info->Id==9003451)
             if(Unit* caster=aura->GetCaster())
                 if(Player* player=caster->GetCharmerOrOwnerPlayerOrPlayerItself())
-                    if(IsDoctor(player) && player->HasAura(9003452))duration+=1000;
+                    if(IsDoctor(player) && player->HasSpell(9003452) && player->HasAura(9003452))duration+=1000;
 
         if(info->Id==9003421)
         {
@@ -2050,7 +2165,7 @@ class spell_reborn_wd46a_bottle : public SpellScript
         Player* player=GetCaster()->ToPlayer();if(!IsDoctor(player))return;
         // Match CoA base-value scaling; native SQL coefficient is zero, also for old ranks.
         int32 power=std::max(0,player->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_SHADOW));
-        SetEffectValue(int32(float(GetEffectValue())+float(power)*0.45f));
+        SetEffectValue(int32(float(GetEffectValue())+float(power)*(player->HasAura(9003911)?0.45f*1.15f:0.45f)));
     }
     void Splash()
     {
@@ -2102,7 +2217,7 @@ class spell_reborn_wd46a_damage : public SpellScript
         Player* player=GetCaster()->ToPlayer();Unit* target=GetHitUnit();
         // AfterHit damage is post immunity/resist/absorb. No debuff on a fully absorbed hit.
         if(GetHitDamage()<=0 || !IsDoctor(player) || !player->IsAlive() || !target || !target->IsAlive() ||
-            !player->HasAura(WD46A::Touch) || !player->IsValidAttackTarget(target))return;
+            !player->HasSpell(WD46A::Touch) || !player->HasAura(WD46A::Touch) || !player->IsValidAttackTarget(target))return;
         player->CastSpell(target,WD46A::Debuff,true);
     }
     void Register() override { AfterHit += SpellHitFn(spell_reborn_wd46a_damage::ApplyTouch); }
@@ -2118,7 +2233,7 @@ namespace WD47A
             unit->GetHealth()>=unit->GetMaxHealth() || !player->IsInMap(unit) ||
             !player->InSamePhase(unit) || !player->IsFriendlyTo(unit) ||
             !effigy->IsInMap(unit) || !effigy->InSamePhase(unit) ||
-            !effigy->IsWithinDistInMap(unit,80.0f) || !effigy->IsWithinLOSInMap(unit))return false;
+            !effigy->IsWithinDistInMap(unit,20.0f) || !effigy->IsWithinLOSInMap(unit))return false;
         if(unit->GetTypeId()==TYPEID_PLAYER)return unit==player || player->IsInRaidWith(unit);
 #ifdef MOD_NPCERBOTS
         if(unit->IsNPCBot())return player->GetGroup() && unit->ToCreature()->GetBotGroup()==player->GetGroup();
@@ -2128,16 +2243,16 @@ namespace WD47A
     void Echo(Player* player, ObjectGuid primary, int32 healing)
     {
         int32 amount=int32(uint64(healing)*35/100);
-        if(!amount || !player->HasAura(Secrets))return;
+        if(!amount || !player->HasSpell(Secrets) || !player->HasAura(Secrets))return;
         // Resolve the accepted Effigy slot; Ward and Idol slots are intentionally unrelated.
         ObjectGuid guid=player->CustomData.GetDefault<WD41A::State>(WD41A::Key)->guid;
         Creature* effigy=ObjectAccessor::GetCreature(*player,guid);
         if(!effigy || !effigy->IsAlive() || !effigy->IsInWorld() || !WD41A::ByEntry(effigy->GetEntry()) ||
             effigy->GetOwnerGUID()!=player->GetGUID() || !player->IsInMap(effigy) ||
             !player->InSamePhase(effigy))return;
-        std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(effigy,80.0f);
+        std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(effigy,20.0f);
         Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(effigy,units,check);
-        Cell::VisitObjects(effigy,search,80.0f);
+        Cell::VisitObjects(effigy,search,20.0f);
         units.remove_if([player,effigy,primary](Unit* unit){return !Ally(player,effigy,unit,primary);});
         units.sort([](Unit* a,Unit* b)
         {
@@ -2165,7 +2280,7 @@ class spell_reborn_wd47a_brew : public SpellScript
         WD47A::Echo(player,primaryGuid,healing);
         // A synchronous heal/proc can change target state, so resolve it again.
         primary=ObjectAccessor::GetUnit(*player,primaryGuid);
-        if(player->IsAlive() && primary && primary->IsAlive() && player->HasAura(WD47A::Blessing) &&
+        if(player->IsAlive() && primary && primary->IsAlive() && player->HasSpell(WD47A::Blessing) && player->HasAura(WD47A::Blessing) &&
             player->IsInMap(primary) && player->InSamePhase(primary) && player->IsFriendlyTo(primary))
         {
             constexpr uint32 blessings[]={9003482,9003483,9003484,9003485};
@@ -2259,7 +2374,7 @@ public:
     {
         if (!check || !mod) return true;
         // In this core false means this modifier affects this spell, bypassing
-        // family-mask matching. Every other spell falls through to the zero mask.
+        // family-mask matching. WD89A rejects other targets before native fallback.
         if (mod->spellId==9003510 && mod->op==SPELLMOD_CRITICAL_CHANCE)
             return !(WD19A::IsWrath(check->Id) || WD48A::Juju(check->Id));
         if (mod->spellId==9003511 &&
@@ -2866,6 +2981,7 @@ namespace WD59A
     constexpr uint32 Style=9003610, Zalazane=9003611, Voodoo=9003612;
     uint32 FamilyBase(uint32 id)
     {
+        if(id==9003822) return 9003100; // WD99 inherits Wrath threat modifiers.
         WD19A::Family const* family=WD19A::FindFamily(id);
         return family ? family->ranks[0].spell : 0;
     }
@@ -2877,7 +2993,7 @@ namespace WD59A
     bool Jinx(uint32 id, uint32 base)
     {
         // Shrinking's linked spellpower component must expire with its parent.
-        return base==9003150 || base==9003200 || base==9003210 || base==9003220 ||
+        return id==WD88A::Jinx || base==9003150 || base==9003200 || base==9003210 || base==9003220 ||
             (id>=9003230 && id<=9003235);
     }
 }
@@ -2891,7 +3007,7 @@ public:
         if (!check || !mod) return true;
         uint32 base=WD59A::FamilyBase(check->Id);
         // This core interprets false as an exact positive match. Non-matches
-        // fall back to our empty DBC masks, never a broad generic class mask.
+        // are rejected by WD89A before the generic-family native fallback.
         if (mod->spellId==WD59A::Style && mod->op==SPELLMOD_THREAT)
             return !WD59A::Offensive(base);
         if (mod->spellId==WD59A::Zalazane)
@@ -2910,11 +3026,55 @@ class reborn_wd60a_brewing_mods : public GlobalScript
 {
 public:
     reborn_wd60a_brewing_mods() : GlobalScript("reborn_wd60a_brewing_mods") { }
+    void OnLoadSpellCustomAttr(SpellInfo* info) override
+    {
+        // Upstream PR6192: keep pacify/silence; make the self buff cancellable.
+        if(info && (info->Id==9003859 || info->Id==9003860)) info->AttributesCu &= ~SPELL_ATTR0_CU_NEGATIVE;
+    }
+
     bool OnIsAffectedBySpellModCheck(SpellInfo const*, SpellInfo const* check,
                                    SpellModifier const* mod) override
     {
         if (!check || !mod)
             return true;
+        if (mod->spellId==9003830 && mod->op==SPELLMOD_COST)
+        {
+            WD19A::Family const* family=WD19A::FindFamily(check->Id);
+            return !family || (family->ranks[0].spell!=9003101 && family->ranks[0].spell!=9003240);
+        }
+        // Native flat/pct modifiers, exact target; no family-wide fallback.
+        // WD121: use native done-healing modifiers after coefficients, not base-only edits.
+        if(mod->spellId==9003897)
+            return !((check->Id>=9003870 && check->Id<=9003876 ||
+                      check->Id>=9003890 && check->Id<=9003896) && mod->op==SPELLMOD_COOLDOWN);
+        if(mod->spellId==9003880) return check->Id!=9003866 || mod->op!=SPELLMOD_DAMAGE;
+        if(mod->spellId==9003881) return check->Id!=9003865 || mod->op!=SPELLMOD_ACTIVATION_TIME;
+        if(mod->spellId==9003877 || mod->spellId==9003878)
+            return check->Id!=9003866 || mod->op!=SPELLMOD_DAMAGE;
+        if(mod->spellId==9003879)
+            return !((check->Id>=9003870 && check->Id<=9003876 && mod->op==SPELLMOD_DAMAGE) ||
+                     ((check->Id==9003867 || check->Id==9003889) && mod->op==SPELLMOD_DOT));
+        if(mod->spellId==9003862) return check->Id!=9003861 || (mod->op!=SPELLMOD_COOLDOWN && mod->op!=SPELLMOD_CASTING_TIME);
+        if(mod->spellId==9003863) return check->Id!=9003861 || mod->op!=SPELLMOD_CASTING_TIME;
+        if(mod->spellId==9003857 || mod->spellId==9003858)
+            return check->Id!=9003855 || (mod->op!=SPELLMOD_DURATION && mod->op!=SPELLMOD_EFFECT1);
+        if(mod->spellId==9003854 && mod->op==SPELLMOD_THREAT) return false;
+        // WD113: explicit positive matching; SpellInfo rejects all other targets.
+        uint32 const base=WD59A::FamilyBase(check->Id);
+        if(mod->spellId==9003850)
+        {
+            if(mod->op==SPELLMOD_COST)
+                return !(base==9003140 || base==9003180 || base==9003190 ||
+                         base==9003280 || base==9003290 || base==9003300);
+            if(mod->op==SPELLMOD_ALL_EFFECTS)
+                return !(base==9003180 || base==9003300);
+            return true;
+        }
+        if(mod->spellId==9003851 && mod->op==SPELLMOD_EFFECT1)
+            return check->Id!=9003240;
+        if(mod->spellId==9003852 && mod->op==SPELLMOD_COST)
+            return !(base==9003150 || base==9003200 || base==9003210 ||
+                     base==9003220 || check->Id==WD88A::Jinx);
         // ThreatManager calls SPELLMOD_THREAT only for spell-generated threat.
         // Native melee swings have no SpellInfo and never enter this path.
         if ((mod->spellId == 9003620 || mod->spellId == 9003621) && mod->op == SPELLMOD_THREAT)
@@ -2943,7 +3103,7 @@ public:
             return true;
         WD19A::Family const* family = WD19A::FindFamily(check->Id);
         // false requests a positive match in this core's GlobalScript hook.
-        // Zero DBC masks keep unrelated spells out of the native fallback.
+        // WD89A excludes unrelated targets before the native fallback.
         return check->Id!=WD68A::Mimic && (!family || WD53A::Slot(family->ranks[0].spell) < 0);
     }
 };
@@ -3026,9 +3186,120 @@ class aura_reborn_wd65a_voodoo_party : public AuraScript
     }
 };
 
+#include "RebornWitchDoctorDarkEffigy.inc"
+
+#include "RebornWitchDoctorVoice.inc"
+
+#include "RebornWitchDoctorGrasp.inc"
+
+#include "RebornWitchDoctorEndVoodoo.inc"
+
+#include "RebornWitchDoctorHexfire.inc"
+
+// WD112: native energize percent / native flat aura scaling; no custom duplicate stat math.
+class spell_reborn_wd112_brew : public SpellScript
+{
+    PrepareSpellScript(spell_reborn_wd112_brew);
+    bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003841,9003842,9003843}); }
+    SpellCastResult Check()
+    {
+        Player* p=GetCaster()->ToPlayer();
+        if(!IsDoctor(p) || !p->HasSpell(GetSpellInfo()->Id) || p->GetLevel()<31) return SPELL_FAILED_CASTER_AURASTATE;
+        Unit* target=GetExplTargetUnit();
+        return target && target->IsAlive() && p->IsValidAssistTarget(target) ? SPELL_CAST_OK : SPELL_FAILED_BAD_TARGETS;
+    }
+    void Hit()
+    {
+        if(GetSpellInfo()->Id==9003841 && GetHitUnit())
+            GetCaster()->CastSpell(GetHitUnit(),9003842,true);
+    }
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_reborn_wd112_brew::Check);
+        AfterHit += SpellHitFn(spell_reborn_wd112_brew::Hit);
+    }
+};
+
+// WD117 scales actual health, not the integer "2 percent" spell base point.
+
+// WD118: native speed, transform, pacify/silence; helper follows the parent lifetime.
+class aura_reborn_wd118_slither : public AuraScript
+{
+    PrepareAuraScript(aura_reborn_wd118_slither);
+    bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003860}); }
+    void Apply(AuraEffect const*,AuraEffectHandleModes)
+    {
+        Unit* unit=GetTarget();
+        unit->RemoveMovementImpairingAuras(true);
+        unit->AttackStop();
+        unit->CastSpell(unit,9003860,true);
+    }
+    void Remove(AuraEffect const*,AuraEffectHandleModes)
+    {
+        GetTarget()->RemoveAurasDueToSpell(9003860,GetCasterGUID());
+    }
+    void Register() override
+    {
+        AfterEffectApply += AuraEffectApplyFn(aura_reborn_wd118_slither::Apply,EFFECT_0,SPELL_AURA_MOD_INCREASE_SPEED,AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(aura_reborn_wd118_slither::Remove,EFFECT_0,SPELL_AURA_MOD_INCREASE_SPEED,AURA_EFFECT_HANDLE_REAL);
+    }
+};
+
+class reborn_wd117_heal : public UnitScript
+{
+public:
+    reborn_wd117_heal():UnitScript("reborn_wd117_heal") { }
+    void ModifyHealReceived(Unit* a,Unit* b,uint32& heal,SpellInfo const* spell) override
+    {
+        if(!spell || spell->Id!=9003856 || !a || a!=b) return;
+        heal=uint32(std::min<uint64>(std::numeric_limits<uint32>::max(),uint64(heal)*(100+WD117::Bonus(a))/100));
+    }
+};
+namespace WD5A
+{
+void WD117ClearSwift(Player* p)
+{
+    Creature* idol=ObjectAccessor::GetCreature(*p,p->CustomData.GetDefault<WD36A::State>(WD36A::Key)->guid);
+    if(idol && idol->GetEntry()==900202 && idol->GetOwnerGUID()==p->GetGUID()) WD36A::Clear(p);
+}
+}
+
+#include "RebornWitchDoctorBrewingFoundation.inc"
+
+// WD126: the donor spell's Dodge and Scale auras remain native 3.3.5a effects.
+class spell_reborn_wd126_shrink_ally : public SpellScript
+{
+    PrepareSpellScript(spell_reborn_wd126_shrink_ally);
+    SpellCastResult Check()
+    {
+        Player* p=GetCaster()->ToPlayer();
+        Unit* target=GetExplTargetUnit();
+        return IsDoctor(p) && p->HasSpell(9003910) && target && target->IsAlive() &&
+            p->IsValidAssistTarget(target) ? SPELL_CAST_OK : SPELL_FAILED_BAD_TARGETS;
+    }
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_reborn_wd126_shrink_ally::Check);
+    }
+};
+
 void AddRebornWitchDoctorScripts()
 {
+    new reborn_wd117_heal();
+    RegisterSpellScript(aura_reborn_wd118_slither);
+    RegisterSpellScript(spell_reborn_wd112_brew);
     RegisterSpellScript(spell_reborn_wd68a_summon);
+    WD87A::Register();
+    new WD87B::StatusScript();
+    new WD89A::Diagnostics();
+    WD88A::Register();
+    WD91A::Register();
+    RegisterSpellScript(spell_reborn_wd120_brewing);
+    RegisterSpellScript(spell_reborn_wd126_shrink_ally);
+    WD93A::Register();
+    WD96A::Register();
+    WD98A::Register();
+    WD99A::Register();
     RegisterSpellScript(aura_reborn_wd68a_puppeteer);
     RegisterSpellScript(aura_reborn_wd68a_threads);
     RegisterSpellScript(spell_reborn_wd68a_puppet);

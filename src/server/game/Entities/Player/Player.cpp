@@ -5837,8 +5837,53 @@ bool Player::IsActionButtonDataValid(uint8 button, uint32 action, uint8 type)
     return true;
 }
 
+void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
+{
+    auto itr = m_temporarySpellReplacements.find(original);
+    uint32 previous = itr == m_temporarySpellReplacements.end() ? original : itr->second;
+    if (!replacement)
+    {
+        m_temporarySpellReplacements.erase(original);
+        replacement = original;
+    }
+    else
+    {
+        if (!HasActiveSpell(original) || !HasActiveSpell(replacement))
+            return;
+        m_temporarySpellReplacements[original] = replacement;
+    }
+    if (previous != replacement && IsInWorld())
+    {
+        WorldPacket packet(SMSG_SUPERCEDED_SPELL, 8);
+        packet << previous << replacement;
+        GetSession()->SendPacket(&packet);
+    }
+}
+
+uint32 Player::GetTemporarySpellReplacement(uint32 original) const
+{
+    // Macros sending another learned Wrath rank share the same one-use readiness.
+    if((original==9003100 || (original>=9003120 && original<=9003127)) && HasActiveSpell(original) &&
+        HasActiveSpell(9003822) && HasSpell(9003820) && HasAura(9003820) && HasAura(9003821)) return 9003822;
+    auto itr = m_temporarySpellReplacements.find(original);
+    return itr != m_temporarySpellReplacements.end() && HasActiveSpell(original) && HasActiveSpell(itr->second) ?
+        itr->second : original;
+}
+
+uint32 Player::GetCanonicalTemporarySpell(uint32 replacement) const
+{
+    for(auto const& pair:m_temporarySpellReplacements)
+        if(pair.second==replacement && HasActiveSpell(pair.first)) return pair.first;
+    // WD99: old queued/saved temporary buttons also canonicalize after aura expiry.
+    if(replacement==9003822)
+        for(uint32 original:{9003127u,9003126u,9003125u,9003124u,9003123u,9003122u,9003121u,9003120u,9003100u})
+            if(HasActiveSpell(original)) return original;
+    return replacement;
+}
+
 ActionButton* Player::addActionButton(uint8 button, uint32 action, uint8 type)
 {
+    if(type==ACTION_BUTTON_SPELL) action=GetCanonicalTemporarySpell(action);
     if (!IsActionButtonDataValid(button, action, type))
         return nullptr;
 
@@ -11206,16 +11251,23 @@ void Player::AddSpellAndCategoryCooldowns(SpellInfo const* spellInfo, uint32 ite
         if (rec <= 0 && catrec <= 0 && (cat == 76 || (spellInfo->IsAutoRepeatRangedSpell() && spellInfo->Id != 75)))
             rec = GetAttackTime(RANGED_ATTACK);
 
-        // WD63B: the exact server-only Hastened modifier has a zero client mask.
+        // WD119C: Hastened and Gonk use exact server-only modifiers with zero client masks.
         // Send the final native cooldown; do not apply the 25% reduction twice.
         for (auto mod : m_spellMods[SPELLMOD_COOLDOWN])
         {
-            if (mod && mod->spellId == 9003653 && IsAffectedBySpellmod(spellInfo, mod, spell))
+            if (mod && (mod->spellId == 9003653 || (mod->spellId == 9003862 && spellInfo->Id == 9003861)) && IsAffectedBySpellmod(spellInfo, mod, spell))
             {
                 needsCooldownPacket = true;
                 break;
             }
         }
+
+        // WD127D: potion slinger is a private, exact-match passive. Its zero family mask
+        // is not enough for the 3.3.5 client to infer the adjusted cooldown.
+        bool const wdPotionSlinger = (spellInfo->Id >= 9003870 && spellInfo->Id <= 9003876 ||
+                                      spellInfo->Id >= 9003890 && spellInfo->Id <= 9003896) && HasAura(9003897);
+        if (wdPotionSlinger)
+            needsCooldownPacket = true;
 
         // Now we have cooldown data (if found any), time to apply mods
         if (rec > 0)
@@ -11225,6 +11277,11 @@ void Player::AddSpellAndCategoryCooldowns(SpellInfo const* spellInfo, uint32 ite
         {
             ApplySpellMod(spellInfo->Id, SPELLMOD_COOLDOWN, catrec, spell);
         }
+
+        // The native SpellMod may already have reduced rec. Clamp instead of subtracting
+        // again so the effective cooldown cannot remain 15 sec or become 5 sec.
+        if (wdPotionSlinger && rec > 0)
+            rec = std::min<int32>(rec, std::max<int32>(0, int32(spellInfo->RecoveryTime) - 5000));
 
         if (int32 cooldownMod = GetTotalAuraModifier(SPELL_AURA_MOD_COOLDOWN))
         {

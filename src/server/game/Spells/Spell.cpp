@@ -16,6 +16,7 @@
  */
 
 #include "Spell.h"
+#include "Config.h"
 #include "ArenaSpectator.h"
 #include "BattlefieldMgr.h"
 #include "Battleground.h"
@@ -571,6 +572,19 @@ SpellValue::SpellValue(SpellInfo const* proto)
     AuraStackAmount = 1;
     AuraDuration = 0;
     ForcedCritResult = false;
+}
+
+// WD96A: this local 3.3.5 core has no CoA Unit::CanCastSpellWhileMoving.
+// Keep the exception exact; never mutate shared SpellInfo interrupt flags at runtime.
+static bool RebornWD96CanCastWhileMoving(Unit const* caster, SpellInfo const* info)
+{
+    if(!info || !(info->Id==9003822 || info->Id==9003100 || (info->Id>=9003120 && info->Id<=9003127) ||
+        info->Id==9003103 || (info->Id>=9003491 && info->Id<=9003498))) return false;
+    Player const* p=caster ? caster->ToPlayer() : nullptr;
+    return p && p->getClass()==13 && p->getRace()==1 && p->IsAlive() && p->GetLevel()>=27 &&
+        sConfigMgr->GetOption<bool>("RebornWD5A.Enable",false) &&
+        sConfigMgr->GetOption<bool>("RebornWD8.Enable",false) && sConfigMgr->GetOption<bool>("RebornWD67.Enable",false) &&
+        p->HasSpell(9003790) && p->HasAura(9003790,p->GetGUID());
 }
 
 Spell::Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags, ObjectGuid originalCasterGUID, bool skipCheck) :
@@ -3622,7 +3636,7 @@ SpellCastResult Spell::prepare(SpellCastTargets const* targets, AuraEffect const
 
     // don't allow channeled spells / spells with cast time to be casted while moving
     // (even if they are interrupted on moving, spells with almost immediate effect get to have their effect processed before movement interrupter kicks in)
-    if ((m_spellInfo->IsChanneled() || m_casttime) && m_caster->IsPlayer() && m_caster->isMoving() && m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_MOVEMENT && !IsTriggered())
+    if ((m_spellInfo->IsChanneled() || m_casttime) && m_caster->IsPlayer() && m_caster->isMoving() && m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_MOVEMENT && !IsTriggered() && !RebornWD96CanCastWhileMoving(m_caster,m_spellInfo))
     {
         // 1. Has casttime, 2. Or doesn't have flag to allow action during channel
         if (m_casttime || !m_spellInfo->IsActionAllowedChannel())
@@ -4064,10 +4078,28 @@ void Spell::_cast(bool skipCheck)
             !HasTriggeredCastFlag(TRIGGERED_IGNORE_SPELL_AND_CATEGORY_CD) &&
             !HasTriggeredCastFlag(TRIGGERED_IGNORE_EFFECTS))
         {
-            AuraEffect* hastened = player->GetAuraEffect(9003653, EFFECT_0);
-            SpellModifier* modifier = hastened ? hastened->GetSpellModifier() : nullptr;
-            if (modifier && modifier->op == SPELLMOD_COOLDOWN &&
-                player->IsAffectedBySpellmod(m_spellInfo, modifier, this))
+            // WD121B: Gonk has the same server-only prediction issue as Hastened.
+            // AddSpellAndCategoryCooldowns runs BEFORE SPELL_GO; its earlier packet
+            // can be replaced by the client's base DBC timer when SPELL_GO arrives.
+            // WD127F: both potion families need the same post-GO correction.
+            // Use the cooldown already stored by Player; do not subtract twice.
+            bool exactCooldown = ((m_spellInfo->Id >= 9003870 && m_spellInfo->Id <= 9003876) ||
+                                  (m_spellInfo->Id >= 9003890 && m_spellInfo->Id <= 9003896)) &&
+                                 player->HasAura(9003897);
+            for (uint32 source : {9003653u, 9003862u})
+            {
+                if (source == 9003862 && m_spellInfo->Id != 9003861)
+                    continue;
+                AuraEffect* effect = player->GetAuraEffect(source, EFFECT_0);
+                SpellModifier* modifier = effect ? effect->GetSpellModifier() : nullptr;
+                if (modifier && modifier->op == SPELLMOD_COOLDOWN &&
+                    player->IsAffectedBySpellmod(m_spellInfo, modifier, this))
+                {
+                    exactCooldown = true;
+                    break;
+                }
+            }
+            if (exactCooldown)
             {
                 uint32 remaining = player->GetSpellCooldownDelay(m_spellInfo->Id);
                 if (remaining)
@@ -4554,7 +4586,7 @@ void Spell::update(uint32 difftime)
     // check if the player caster has moved before the spell finished
     // xinef: added preparing state (real cast, skip channels as they have other flags for this)
     if ((m_caster->IsPlayer() && m_timer != 0) &&
-            m_caster->isMoving() && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_MOVEMENT) && m_spellState == SPELL_STATE_PREPARING &&
+            m_caster->isMoving() && !RebornWD96CanCastWhileMoving(m_caster,m_spellInfo) && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_MOVEMENT) && m_spellState == SPELL_STATE_PREPARING &&
             (m_spellInfo->Effects[0].Effect != SPELL_EFFECT_STUCK || !m_caster->HasUnitMovementFlag(MOVEMENTFLAG_FALLING_FAR)))
     {
         // don't cancel for melee, autorepeat, triggered and instant spells

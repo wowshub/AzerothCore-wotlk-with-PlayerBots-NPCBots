@@ -1410,6 +1410,37 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     if (!sScriptMgr->OnIsAffectedBySpellModCheck(affectSpell, this, mod))
         return true;
 
+    // WD89A: these private modifiers are exclusively matched by module hooks above.
+    // Native IsAffected treats family 0 (and an empty mask within a family) as broad.
+    // An unclaimed exact modifier must NOT reach that fallback. Other spells retain it.
+    switch (mod->spellId)
+    {
+        case 9003510: case 9003511: // exact critical modifiers
+        case 9003610: case 9003611: case 9003612: // Style, Zalazane, Voodoo
+        case 9003897: // WD124 exact toss/splash cooldown modifier
+        case 9003880: case 9003881: // WD122 exact pulse/cadence modifiers
+        case 9003877: case 9003878: case 9003879: // WD121 exact Brewing healing only
+        case 9003862: case 9003863: // WD119 Amphibimorph only
+        case 9003857: case 9003858: // WD117 exact Vigil targets only
+        case 9003854: // WD114: Potent Mixes spell threat only
+        case 9003850: // WD113: exact Wuju cost / Power Wuju amount
+        case 9003851: // WD113: Hexbreak first effect only
+        case 9003852: // WD113: Jinx cost only
+        case 9003830: // WD109: only Brew / Hexbreak cost via module hook
+        case 9003620: case 9003621: case 9003624: case 9003625: // brewing
+        case 9003652: case 9003653: // owned summon cost/cooldown
+        case 9003752: case 9003753: case 9003754: // Beware and Juju
+        case 9003812: // WD98A exact Marionette damage / critical chance only
+        case 9003761: // Overflow ready: Bad Juju cooldown only
+            return false;
+        case 9003100: // synthetic Black Magic modifier uses Wrath as its source ID
+            if (!mod->ownerAura && mod->op == SPELLMOD_CASTING_TIME)
+                return false;
+            break;
+        default:
+            break;
+    }
+
     return IsAffected(affectSpell->SpellFamilyName, mod->mask);
 }
 

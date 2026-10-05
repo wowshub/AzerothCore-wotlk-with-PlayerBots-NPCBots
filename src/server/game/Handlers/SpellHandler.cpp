@@ -413,6 +413,18 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
         return;
     }
 
+    // WD99: same transient replacement protocol as fixed upstream; ownership is checked below.
+    if(mover==_player)
+    {
+        uint32 replacement=_player->GetTemporarySpellReplacement(spellId);
+        if(replacement!=spellId)
+        {
+            spellInfo=sSpellMgr->GetSpellInfo(replacement);
+            if(!spellInfo) { recvPacket.rfinish();return; }
+            spellId=replacement;
+        }
+    }
+
     // fail if we are cancelling pending request
     if (!_player->SpellQueue.empty())
     {
@@ -564,6 +576,7 @@ void WorldSession::HandleCancelCastOpcode(WorldPacket& recvPacket)
     recvPacket.read_skip<uint8>();                          // counter, increments with every CANCEL packet, don't use for now
     recvPacket >> spellId;
 
+    spellId=_player->GetTemporarySpellReplacement(spellId);
     _player->SpellQueue.clear();
 
     _player->InterruptSpell(CURRENT_MELEE_SPELL);

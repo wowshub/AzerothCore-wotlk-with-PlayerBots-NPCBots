@@ -324,6 +324,9 @@ int32 GetDiminishingReturnsLimitDuration(DiminishingGroup group, SpellInfo const
     if (!IsDiminishingReturnsGroupDurationLimited(group))
         return 0;
 
+    // WD119: clamp before native diminishing (8/4/2 seconds), not after it.
+    if (spellproto->Id == 9003861) return 8 * IN_MILLISECONDS;
+
     // WD25A: official Hireek Jinx limit; native PvP eligibility and DR still apply.
     if (spellproto->Id == 9003200)
         return 8 * IN_MILLISECONDS;

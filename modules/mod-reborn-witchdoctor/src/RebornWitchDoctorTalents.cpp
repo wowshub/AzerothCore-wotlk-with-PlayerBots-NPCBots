@@ -1,3 +1,4 @@
+#include "RebornWitchDoctorBrewingNumbers.h"
 // WD5A: one working CoA talent, three independent saved test builds.
 #include "Chat.h"
 #include "CommandScript.h"
@@ -12,10 +13,14 @@
 #include "WitchDoctorTalentPolicy.h"
 #include "ScriptDefines/GlobalScript.h"
 #include "SpellInfo.h"
+#include "RebornWitchDoctorSpiritWalker.h"
+#include "SpellAuraEffects.h"
 #include "SpellMgr.h"
 #include "WorldSession.h"
 #include "ScriptedGossip.h"
 #include "Transaction.h"
+#include <boost/multiprecision/cpp_int.hpp>
+#include <string_view>
 #include <array>
 #include <sstream>
 #include <chrono>
@@ -29,6 +34,8 @@ namespace WD5A
 constexpr uint32 Wrath=9003100, BadJuju=9003103, Node=6058;
 uint32 PointsUsed(uint32 mask) { return (mask&1u)+((mask>>1)&1u); }
 constexpr char Key[]="Reborn.WD5A";
+// WD109: exact mask transport; persistent storage remains node rows.
+using AEMask=boost::multiprecision::uint128_t;
 using ActionLayout=std::array<uint32,MAX_ACTION_BUTTONS>;
 struct State : DataMap::Base
 {
@@ -37,7 +44,8 @@ struct State : DataMap::Base
     bool loaded=false;
     char const* readyError="blocked"; // WD67B: preserve the actual rejection reason.
     bool modern=false;
-    std::array<uint32,3> aeMasks{};
+    uint32 testAE=0,testTE=0; // WD95: character/account-scoped GM test allowance.
+    std::array<AEMask,3> aeMasks{};
     uint32 unlocked=0;
     uint32 quoteSlot=0, quoteGold=0, quoteLevel=0;
     bool quoteValid=false;
@@ -49,17 +57,23 @@ struct State : DataMap::Base
     uint32 resetSlot=0,resetRevision=0,resetGold=0;
     std::chrono::steady_clock::time_point resetQuoteTime;
     std::chrono::steady_clock::time_point request;
+    std::chrono::steady_clock::time_point mutationRequest; // WD101: reads never consume the write cooldown.
+    std::chrono::steady_clock::time_point numberRequest;
     std::chrono::steady_clock::time_point auditRequest;
 };
 bool AELoad(Player*,State*);
 void AEApply(Player*,State*);
 void WD67ClearSummons(Player*,bool,bool);
 void WD68Clear(Player*,bool,bool);
-uint32 AESpent(uint32);
-uint32 TEFoundation(uint32);
-uint32 AERank(uint32,uint32);
-bool AEValid(uint32,uint32);
-extern uint32 const AEIds[27];
+void WD111ClearExtra(Player*);
+void WD117ClearSwift(Player*);
+uint32 AESpent(AEMask);
+uint32 TEFoundation(AEMask);
+uint32 TESpent(AEMask);
+uint32 AERank(AEMask,uint32);
+bool AEValid(AEMask,uint32,uint32=0,uint32=0);
+constexpr uint32 AEIdCount=88;
+extern uint32 const AEIds[AEIdCount];
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
 bool ProfilesEnabled() { return sConfigMgr->GetOption<bool>("RebornWD8.Enable",false); }
@@ -122,7 +136,7 @@ bool CanUseHollow(Player* p)
     if(!Doctor(p)) return false;
     State* s=p->CustomData.GetDefault<State>(Key);
     if(s->modern) return Enabled() && ProfilesEnabled() && s->loaded && s->specs[s->active]==0 &&
-        AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],16)>0;
+        AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) && AERank(s->aeMasks[s->active],16)>0;
     return p->GetLevel()>=30 && (!ProfilesEnabled() || s->loaded);
 }
 // WD82A: legacy trainer ranks keep level30; modern ownership comes from the active saved build.
@@ -133,7 +147,7 @@ bool CanUseHexTalent(Player* p,uint32 spell)
     if(index==20) return false;
     State* s=p->CustomData.GetDefault<State>(Key);
     if(s->modern) return Enabled() && ProfilesEnabled() && s->loaded && s->specs[s->active]==0 &&
-        AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],index)>0;
+        AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) && AERank(s->aeMasks[s->active],index)>0;
     return p->GetLevel()>=30 && (!ProfilesEnabled() || s->loaded);
 }
 // WD83A: read only active, committed ownership; no database lookup in hit hooks.
@@ -142,7 +156,7 @@ uint32 RitualHexingRank(Player* p)
     if(!Doctor(p)) return 0;
     State* s=p->CustomData.GetDefault<State>(Key);
     if(!Enabled() || !ProfilesEnabled() || !s->modern || !s->loaded || s->specs[s->active]!=0 ||
-        !AEValid(s->aeMasks[s->active],p->GetLevel())) return 0;
+        !AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE)) return 0;
     return AERank(s->aeMasks[s->active],21);
 }
 bool CanCastBadJuju(Player* p)
@@ -150,7 +164,7 @@ bool CanCastBadJuju(Player* p)
     if (!Doctor(p) || !Enabled() || !ProfilesEnabled() || p->GetLevel()<15) return false;
     State* s=p->CustomData.GetDefault<State>(Key);
     return s->loaded && s->specs[s->active]==0 &&
-        (s->modern ? AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],12)>0 : ((s->builds>>(s->active+3))&1u));
+        (s->modern ? AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) && AERank(s->aeMasks[s->active],12)>0 : ((s->builds>>(s->active+3))&1u));
 }
 void ClearEffects(Player* p,State* s)
 {
@@ -165,7 +179,7 @@ void Apply(Player* p,State* s)
     AEApply(p,s);
     WD19A::SyncBadJuju(p);
     bool wanted=Enabled() && Doctor(p) && p->GetLevel()>=10 && s->loaded && s->specs[s->active]==0 &&
-        (s->modern ? AEValid(s->aeMasks[s->active],p->GetLevel()) && AERank(s->aeMasks[s->active],11)>0 : ((s->builds>>s->active)&1));
+        (s->modern ? AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) && AERank(s->aeMasks[s->active],11)>0 : ((s->builds>>s->active)&1));
     if (!wanted) { Remove(p,s);return; }
     if (s->modifier) return;
     if (!sSpellMgr->GetSpellInfo(Wrath)) return;
@@ -218,8 +232,9 @@ bool Ready(Player* p,bool mutation)
     if (!sSpellMgr->GetSpellInfo(Wrath) || !sSpellMgr->GetSpellInfo(BadJuju)) { state->readyError="spell";Reply(p,"spell");return false; }
     State* s=p->CustomData.GetDefault<State>(Key);
     auto now=std::chrono::steady_clock::now();
-    if (now-s->request<std::chrono::milliseconds(250)) { state->readyError="busy";Reply(p,"busy");return false; }
-    s->request=now;
+    auto& lastRequest = mutation ? s->mutationRequest : s->request;
+    if (now-lastRequest<std::chrono::milliseconds(250)) { state->readyError="busy";Reply(p,"busy");return false; }
+    lastRequest=now;
     if (mutation)
     {
         char const* reason=!p->IsAlive()?"dead":p->IsInCombat()?"combat":
@@ -257,7 +272,7 @@ void ProfileReply(Player* p,char const* result)
     uint32 resetGold=0;
     if(ResetPrice(resetGold)) ChatHandler(p->GetSession()).PSendSysMessage("WD16P|{}",resetGold);
     else ChatHandler(p->GetSession()).PSendSysMessage("WD16P|invalid");
-    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,s->aeMasks[0],s->aeMasks[1],s->aeMasks[2],WD67Budget::AE(p->GetLevel()),WD67Budget::TE(p->GetLevel()));
+    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,s->aeMasks[0].str(),s->aeMasks[1].str(),s->aeMasks[2].str(),WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE);
 }
 bool ProfileReady(Player* p,bool mutation)
 {
@@ -437,7 +452,7 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
         return true;
     }
     auto rank=[&](uint32 id)->uint32 {
-        if (s->modern) { for(uint32 i=0;i<27;++i) if(AEIds[i]==id) return AERank(s->aeMasks[slot],i);return 0; }
+        if (s->modern) { for(uint32 i=0;i<AEIdCount;++i) if(AEIds[i]==id) return AERank(s->aeMasks[slot],i);return 0; }
         if (s->specs[slot]!=0) return 0;
         if (id==6058) return (s->builds>>slot)&1u;
         if (id==29928) return (s->builds>>(slot+3))&1u;
@@ -452,14 +467,47 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     }
     for (uint32 required:n->required) if (!rank(required)) ++missing;
     uint32 flags=0,level=n->level;
-    if (n->id==6058) level=10;
+    if (n->id==6058 || n->id==7131 || n->id==30884 || n->id==29736 || n->id==5055 || n->id==7129) level=10;
     if (n->id==29928) level=15;
     bool legacy=!s->modern && (n->id==6058 || n->id==29928);
     bool open=legacy;
     if(s->modern) for(uint32 id:AEIds) if(id==n->id) open=true;
     if(s->modern && (n->id==31344 || n->id==31340)) level=10;
     if(s->modern && n->id==7157) level=15;
-    if(s->modern && (n->id==6045 || n->id==31341 || n->id==31347 || n->id==31348 || n->id==6644 || n->id==6046 || n->id==6062 || n->id==30889 || n->id==31343 || n->id==6053 || n->id==31350 || n->id==5333)) { level=10;te=TEFoundation(s->aeMasks[slot]); }
+    if(s->modern && (n->id==30147 || n->id==4132 || n->id==7033 || n->id==6051 || n->id==6048)) ae=AESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],40)-AERank(s->aeMasks[slot],41)-AERank(s->aeMasks[slot],46)-AERank(s->aeMasks[slot],47)-AERank(s->aeMasks[slot],48)-AERank(s->aeMasks[slot],58)-AERank(s->aeMasks[slot],59)-AERank(s->aeMasks[slot],63)-AERank(s->aeMasks[slot],64)-AERank(s->aeMasks[slot],65)-AERank(s->aeMasks[slot],67)-AERank(s->aeMasks[slot],68)-AERank(s->aeMasks[slot],69)-AERank(s->aeMasks[slot],70)-AERank(s->aeMasks[slot],71)-AERank(s->aeMasks[slot],72)-AERank(s->aeMasks[slot],73);
+    if(s->modern && (n->id==7948 || n->id==31137)) { level=n->id==31137?30:16;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],81); }
+    if(s->modern && (n->id==5113 || n->id==30891 || n->id==6030 || n->id==7132 || n->id==29753))
+    {
+        level=n->id==5113?58:n->id==30891?30:n->id==6030?10:31;
+        if(n->id==5113 || n->id==30891) ae=AESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],40)-AERank(s->aeMasks[slot],41)-AERank(s->aeMasks[slot],46)-AERank(s->aeMasks[slot],47)-AERank(s->aeMasks[slot],48)-AERank(s->aeMasks[slot],58)-AERank(s->aeMasks[slot],59)-AERank(s->aeMasks[slot],63)-AERank(s->aeMasks[slot],64)-AERank(s->aeMasks[slot],65)-AERank(s->aeMasks[slot],67)-AERank(s->aeMasks[slot],68)-AERank(s->aeMasks[slot],69)-AERank(s->aeMasks[slot],70)-AERank(s->aeMasks[slot],71)-AERank(s->aeMasks[slot],72)-AERank(s->aeMasks[slot],73);
+        if(n->id==7132 || n->id==29753) te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],81);
+    }
+    if(s->modern && (n->id==6381 || n->id==12048 || n->id==11323 || n->id==12264 || n->id==6042 || n->id==9347 || n->id==29306 || n->id==6031 || n->id==6525 || n->id==12525))
+    {
+        level=10;
+        auto mask=s->aeMasks[slot];
+        ae=AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66);
+    }
+    if(s->modern && (n->id==31118 || n->id==6042 || n->id==9347)) level=10;
+    if(s->modern && (n->id==6031 || n->id==6525 || n->id==12525)) level=26;
+    if(s->modern && n->id==7128) level=17;
+    if(s->modern && (n->id==6498 || n->id==29303 || n->id==6020 || n->id==29737 || n->id==35065 || n->id==35064 || n->id==35068 || n->id==29738 || n->id==30888 || n->id==35051))
+    {
+        level=10;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128);
+    }
+    if(s->modern && (n->id==4005 || n->id==12645 || n->id==12646))
+    {
+        level=n->id==12646?14:10;
+        if(n->id!=4005) missing=(rank(4005) || rank(29744))?0:1;
+    }
+    if(s->modern && n->id==29306) level=30;
+    if(s->modern && n->id==31349) { level=59;te=TEFoundation(s->aeMasks[slot]); }
+    if(s->modern && (n->id==29929 || n->id==6055)) te=TESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],34)-AERank(s->aeMasks[slot],35)-AERank(s->aeMasks[slot],36)-AERank(s->aeMasks[slot],37)-AERank(s->aeMasks[slot],43)-AERank(s->aeMasks[slot],44);
+    if(s->modern && n->id==30596) { level=27;te=TEFoundation(s->aeMasks[slot]); }
+    if(s->modern && (n->id==29768 || n->id==6057)) { level=57;te=TESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],34)-AERank(s->aeMasks[slot],35)-AERank(s->aeMasks[slot],36)-AERank(s->aeMasks[slot],37)-AERank(s->aeMasks[slot],43)-AERank(s->aeMasks[slot],44); }
+    if(s->modern && n->id==7100) { level=10;te=TESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],34)-AERank(s->aeMasks[slot],35)-AERank(s->aeMasks[slot],36)-AERank(s->aeMasks[slot],37)-AERank(s->aeMasks[slot],43)-AERank(s->aeMasks[slot],44); }
+    if(s->modern && n->id==31346) { level=10;te=TESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],34)-AERank(s->aeMasks[slot],35)-AERank(s->aeMasks[slot],36)-AERank(s->aeMasks[slot],37)-AERank(s->aeMasks[slot],43)-AERank(s->aeMasks[slot],44); }
+    if(s->modern && (n->id==6045 || n->id==31341 || n->id==31347 || n->id==31348 || n->id==6644 || n->id==6046 || n->id==6062 || n->id==30889 || n->id==31343 || n->id==6053 || n->id==31350 || n->id==5333 || n->id==6059 || n->id==5332 || n->id==6007 || n->id==29121)) { level=n->id==29121?33:10;te=TEFoundation(s->aeMasks[slot]); }
     if (s->specs[slot]==3 || (n->tree!=3 && s->specs[slot]!=n->tree)) flags|=1;
     if (p->GetLevel()<level) flags|=2;
     if (missing) flags|=4;
@@ -477,6 +525,91 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
 
 #include "RebornWitchDoctorAllocation.inc"
 
+// WD114: tooltip uses the same cost/effect calculator as the cast itself.
+bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if(!Doctor(p)) return true;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    auto const now=std::chrono::steady_clock::now();
+    if(now-s->numberRequest<std::chrono::milliseconds(400)) return true;
+    s->numberRequest=now;
+    WD19A::Family const* family=WD19A::FindFamily(id);
+    uint32 const base=family?family->ranks[0].spell:0;
+    bool const wuju=base==9003140 || base==9003180 || base==9003190 || base==9003280 || base==9003290 || base==9003300;
+    bool const jinx=base==9003150 || base==9003200 || base==9003210 || base==9003220 || id==9003762;
+    bool const walkerTarget=id==9003855 || id==9003432;
+    bool const allowed=id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
+    SpellInfo const* info=sSpellMgr->GetSpellInfo(id);
+    if(!Enabled() || !allowed || !info || !p->HasSpell(id) || !s->loaded)
+    {
+        h->PSendSysMessage("WD114|{}|{}|unavailable",sequence,id);return true;
+    }
+    if(walkerTarget)
+    {
+        int32 const amount=id==9003855 ? -p->CalculateSpellDamage(p,info,EFFECT_0) : WD117::SwiftAmount(p);
+        uint32 const healing=id==9003855 ? 2*(100+WD117::Bonus(p)) : 0;
+        h->PSendSysMessage("WD114|{}|{}|ok|0|{}|{}|{}|{}|{}",sequence,id,WD117::Duration(p),amount,s->revision,s->active,healing);
+        return true;
+    }
+    int32 const cost=p->GetCommandStatus(CHEAT_POWER)?0:info->CalcPowerCost(p,info->GetSchoolMask());
+    if(id==WD120A::Shrooms || WD120A::IsToss(id) || WD120A::IsSplash(id))
+    {
+        bool pulse=id==WD120A::Shrooms;
+        SpellInfo const* heal=pulse?sSpellMgr->GetSpellInfo(WD120A::Pulse):info;
+        if(!heal) { h->PSendSysMessage("WD114|{}|{}|unavailable",sequence,id);return true; }
+        auto const& effect=heal->Effects[EFFECT_0];
+        int32 level=int32(p->GetLevel());
+        if(heal->MaxLevel && level>int32(heal->MaxLevel)) level=int32(heal->MaxLevel);
+        level=std::max(level,int32(heal->BaseLevel))-int32(std::max(heal->BaseLevel,heal->SpellLevel));
+        int32 base=effect.BasePoints+int32(level*effect.RealPointsPerLevel);
+        auto estimate=[&](int32 dice)
+        {
+            float amount=p->ApplyEffectModifiers(heal,EFFECT_0,float(base+dice));
+            if(pulse) amount=float(int32(double(amount)*WD120A::Scaling(p->GetLevel())));
+            uint32 result=uint32(std::max(0,int32(amount+(WD120A::IsSplash(id)?WD120A::SplashBonus(p):WD120A::Bonus(p,pulse)))));
+            return p->SpellHealingBonusDone(p,heal,result,HEAL,EFFECT_0);
+        };
+        uint32 lo=estimate(effect.DieSides==0?0:1),hi=estimate(effect.DieSides);
+        int32 cooldown=info->RecoveryTime;
+        p->ApplySpellMod(id,SPELLMOD_COOLDOWN,cooldown);
+        if(p->HasAura(9003897) && (WD120A::IsToss(id) || WD120A::IsSplash(id)))
+            cooldown=std::min<int32>(cooldown,std::max<int32>(0,int32(info->RecoveryTime)-5000));
+        if(pulse)
+        {
+            int32 interval=info->Effects[EFFECT_0].Amplitude;
+            p->ApplySpellMod(id,SPELLMOD_ACTIVATION_TIME,interval);
+            if(AuraEffect* effect=p->GetAuraEffect(id,EFFECT_0,p->GetGUID())) interval=effect->GetAmplitude();
+            h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}|{}|{}",sequence,id,cost,lo,hi,s->revision,s->active,interval,WD120A::PulseTargets(p));
+        }
+        else if(WD120A::IsSplash(id))
+        {
+            SpellInfo const* hot=sSpellMgr->GetSpellInfo(WD120A::SplashHot);
+            if(!hot) { h->PSendSysMessage("WD114|{}|{}|unavailable",sequence,id);return true; }
+            uint32 tick=p->SpellHealingBonusDone(p,hot,uint32(std::max(0,hot->Effects[EFFECT_0].CalcValue(p))),DOT,EFFECT_0);
+            h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}|{}|{}|{}",sequence,id,cost,lo,hi,s->revision,s->active,tick,12000,std::max(0,cooldown));
+        }
+        else h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}|{}|{}|{}",sequence,id,cost,lo,hi,s->revision,s->active,0,0,std::max(0,cooldown));
+        return true;
+    }
+    if(id==9003861)
+    {
+        int32 cooldown=info->RecoveryTime;
+        p->ApplySpellMod(id,SPELLMOD_COOLDOWN,cooldown);
+        h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}",sequence,id,cost,info->CalcCastTime(p),std::max(0,cooldown),s->revision,s->active);
+        return true;
+    }
+    // Only fixed-range effects: don't roll RNG just to display a tooltip.
+    int32 a=0,b=0;
+    if(base==9003180 || base==9003300 || base==9003240)
+    {
+        a=p->CalculateSpellDamage(p,info,EFFECT_0);
+        if(base!=9003240) b=p->CalculateSpellDamage(p,info,EFFECT_1);
+    }
+    h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}",sequence,id,cost,a,b,s->revision,s->active);
+    return true;
+}
+
 class Commands : public CommandScript
 {
 public:
@@ -484,6 +617,8 @@ public:
     ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable cmds={
+            {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
+            {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
             {"wd67join",AEJoin,SEC_PLAYER,Console::No},
             {"wd67save",AESave,SEC_PLAYER,Console::No},
             {"wd64check",AuditNode,SEC_PLAYER,Console::No},

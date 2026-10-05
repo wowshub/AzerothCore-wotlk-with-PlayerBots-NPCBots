@@ -16,6 +16,7 @@
  */
 
 #include "Unit.h"
+#include "Config.h"
 #include "AbstractFollower.h"
 #include "AreaDefines.h"
 #include "ArenaSpectator.h"
@@ -8667,6 +8668,22 @@ Unit* Unit::GetMagicHitRedirectTarget(Unit* victim, SpellInfo const* spellInfo)
     if (spellInfo->HasAttribute(SPELL_ATTR0_IS_ABILITY) || spellInfo->HasAttribute(SPELL_ATTR1_NO_REDIRECTION) || spellInfo->HasAttribute(SPELL_ATTR0_NO_IMMUNITIES))
         return victim;
 
+    // WD98A: private War Golem redirect. Keep native no-redirection flags above.
+    if(!spellInfo->IsPositive() && sConfigMgr->GetOption<bool>("RebornWD67.Enable",false))
+    {
+        std::list<Creature*> golems;
+        victim->GetCreatureListWithEntryInGrid(golems,9003800,15.0f);
+        golems.sort([victim](Creature* a,Creature* b) { return victim->GetDistance(a)<victim->GetDistance(b); });
+        for(Creature* golem:golems)
+        {
+            Player* owner=ObjectAccessor::GetPlayer(*golem,golem->GetOwnerGUID());
+            if(!golem->IsAlive() || !owner || !owner->IsAlive() || owner->getClass()!=13 || owner->getRace()!=1 ||
+                !owner->HasSpell(9003800) || !owner->HasAura(9003800,owner->GetGUID()) || !owner->IsFriendlyTo(victim) ||
+                !golem->IsWithinLOSInMap(victim) || !_IsValidAttackTarget(golem,spellInfo) ||
+                spellInfo->CheckExplicitTarget(this,golem)!=SPELL_CAST_OK) continue;
+            return golem;
+        }
+    }
     Unit::AuraEffectList const& magnetAuras = victim->GetAuraEffectsByType(SPELL_AURA_SPELL_MAGNET);
     for (Unit::AuraEffectList::const_iterator itr = magnetAuras.begin(); itr != magnetAuras.end(); ++itr)
     {
@@ -13073,6 +13090,8 @@ void Unit::SetAnimTier(AnimTier animTier)
 
 uint32 Unit::GetCreatureType() const
 {
+    // WD119: temporary frog category without changing templates or shapeshift state.
+    if (HasAura(9003861)) return CREATURE_TYPE_BEAST;
     if (IsPlayer())
     {
         ShapeshiftForm form = GetShapeshiftForm();
