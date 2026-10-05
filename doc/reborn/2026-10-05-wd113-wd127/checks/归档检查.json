@@ -1,0 +1,7 @@
+{
+  "frontmatter": "PASS constrained plain YAML fields/name/description/reference/tutor pairing",
+  "standard_validator": "NOT RUN: default Python lacks PyYAML",
+  "stage_packages": 30,
+  "failed_zip_backups": 12,
+  "annotated_source_sections": 14
+}

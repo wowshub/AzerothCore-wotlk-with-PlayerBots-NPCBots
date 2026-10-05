@@ -1,0 +1,13 @@
+{
+  "baseline": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610020855_阶段WD114A_巫祝数值同步与通用双技能",
+  "baseline_zip_sha256": "3ce59a96fcec5ac90b1097b17454d85b822701f8a1428bed475acce6351ada40",
+  "original_lua_sha256": "2dd652a0f86a535523b9e0afdbf48efc0cbd3af3cb4dfad173037c624d1118c4",
+  "new_lua_sha256": "b9acb97a557b4947192844d99073b1d689a3d72c8289bf9800547ef7260720b2",
+  "changed_runtime_files": [
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua"
+  ],
+  "cpp_sql_dbc_changes": false,
+  "lua_pass": true,
+  "old_version_expected_failure": true,
+  "in_game_tested": false
+}

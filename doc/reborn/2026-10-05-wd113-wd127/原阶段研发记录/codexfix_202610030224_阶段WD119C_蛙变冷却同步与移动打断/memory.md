@@ -1,0 +1,6 @@
+# 故障与来源
+用户图：贡克已保存，数值查询60秒，客户端剩余2分钟；后续报告读条中移动不取消。两项有独立原因。
+源码Player::AddSpellAndCategoryCooldowns先ApplySpellMod再保存冷却，但needsCooldownPacket的精确ID只有WD63B迅捷9003653，漏9003862；_AddSpellCooldown仅保存冷却及needSend标志，本函数不会立即发送最终SMSG_SPELL_COOLDOWN。沿既有路径补精确对，拒绝二次应用修正。
+Spell::prepare及update均按InterruptFlags&MOVEMENT检查，瞬发不走读条移动中断；WD119A记录14而原生Hex15，MOVEMENT=1。只补位，不改全局施法/移动逻辑。
+技能来源沿用本会话新鲜核对HEAD d7620151fa4267ab90c7e0554b32628017df241a及官方20260925和PR4753。本批适配本地客户端协议/原生InterruptFlags，不改官方贡克数值。使用trace-and-port-coa-spell-resources与既有UI稳定规范，未将用户报告升级为通过。
+Player.cpp来自当前项目源码（WD119A包无该文件），包内保留完整输入和精确差异证据。双端DBC分别取用户明确测试的WD119A对应侧，不拿锁定MPQ的旧解包替代当前数据。

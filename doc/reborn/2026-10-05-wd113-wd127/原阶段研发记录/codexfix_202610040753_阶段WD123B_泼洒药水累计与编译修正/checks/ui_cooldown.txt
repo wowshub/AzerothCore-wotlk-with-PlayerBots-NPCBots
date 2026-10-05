@@ -1,0 +1,1 @@
+PASS WD100 cooldown tooltip: 5 routes; 180->135, 60->45, 45->33.75; repeat/switch/no-draft/no-duration/no-remaining/no-unrelated; zhCN/enUS

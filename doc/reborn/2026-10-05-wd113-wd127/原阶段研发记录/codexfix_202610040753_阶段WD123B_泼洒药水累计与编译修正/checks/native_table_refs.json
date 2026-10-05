@@ -1,0 +1,82 @@
+{
+  "SpellDuration": {
+    "id": 29,
+    "row": [
+      29,
+      12000,
+      0,
+      12000
+    ],
+    "sha256": "d7167a1341c5f3125841deeb1bb5438435acbdda10d9d031283406cb3da8d0f9",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20260929Ascend\\Data\\dbc\\SpellDuration.dbc"
+  },
+  "SpellRadius": {
+    "id": 13,
+    "row": [
+      13,
+      1092616192,
+      0,
+      1092616192
+    ],
+    "sha256": "3ac886ff9fd1f3bb54f54673df72b28f7e8fe2be4730ff232d420de9fbabfc57",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20260929Ascend\\Data\\dbc\\SpellRadius.dbc"
+  },
+  "SpellRange": {
+    "id": 5,
+    "row": [
+      5,
+      0,
+      0,
+      1109393408,
+      1109393408,
+      0,
+      75,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4259902,
+      86,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4259900
+    ],
+    "sha256": "1eecbc6b8fd14fba37bd65481d13298d8875359609f712bb5b2c9213ab7fa6f1",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20260929Ascend\\Data\\dbc\\SpellRange.dbc"
+  },
+  "SpellCastTimes": {
+    "id": 1,
+    "row": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "sha256": "c0921f4c02693fb95e041a99fc8c671e161dd23c94582230d924a84eb177d3ef",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20260929Ascend\\Data\\dbc\\SpellCastTimes.dbc"
+  }
+}

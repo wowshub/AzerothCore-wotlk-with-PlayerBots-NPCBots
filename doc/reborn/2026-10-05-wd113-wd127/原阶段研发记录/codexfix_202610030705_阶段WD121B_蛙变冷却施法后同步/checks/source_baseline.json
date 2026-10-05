@@ -1,0 +1,6 @@
+{
+  "Spell.cpp": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\Spell.cpp",
+  "sha256": "e47357171f1cee700aed7cd196ab4e521b21f934841fa5d4424ffebbbcdd51ba",
+  "Player.cpp": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030339_\u9636\u6bb5WD121A_\u917f\u9020\u6cbb\u7597\u53cc\u5929\u8d4b\\01_\u8986\u76d6\u5230\u6e90\u4ee3\u7801\u6839\u76ee\u5f55\\src\\server\\game\\Entities\\Player\\Player.cpp",
+  "change": "post-SPELL_GO exact Gonk match; no cooldown storage mutation"
+}

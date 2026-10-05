@@ -1,0 +1,69 @@
+{
+  "status": "PASS arithmetic + source-route audit only, not engine execution",
+  "cases": 384,
+  "limits": "HoT model verifies base growth and Boss multiplier, not all core default bonus-healing coefficients or target modifiers",
+  "checks": [
+    "all 7 level thresholds",
+    "direct manual coefficient 0.224494 + Spirit0.08",
+    "Boss excludes direct Splash, includes SplashHot",
+    "correct 803698 healing route, never803273 speed aura",
+    "only hidden child has 12sec periodic heal; no separate spellbook entry",
+    "saved active spec owns highest rank; no new global hooks"
+  ],
+  "samples": [
+    [
+      17,
+      1,
+      0,
+      0,
+      false,
+      54,
+      15
+    ],
+    [
+      17,
+      1,
+      0,
+      0,
+      true,
+      54,
+      18
+    ],
+    [
+      17,
+      1,
+      1000,
+      200,
+      false,
+      294,
+      15
+    ],
+    [
+      17,
+      1,
+      1000,
+      200,
+      true,
+      294,
+      18
+    ],
+    [
+      17,
+      1,
+      3000,
+      600,
+      false,
+      775,
+      15
+    ],
+    [
+      17,
+      1,
+      3000,
+      600,
+      true,
+      775,
+      18
+    ]
+  ]
+}

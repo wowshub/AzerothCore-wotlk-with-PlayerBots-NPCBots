@@ -1,0 +1,8 @@
+PASS WD114 tooltip: authoritative integer cost, no repeated halving, drafts ignored, stale replies, aura invalidation, range preserved, Power Wuju/Hexbreak effects, supported spell whitelist, Chinese/English
+PASS WD117 server duration, integer effect and fractional healing; Chinese/English
+PASS WD118 Slither cost uses authoritative reply
+PASS WD119 authoritative cast/cooldown transitions and fast hover isolation
+PASS WD119B real description: ranks 0/1/2, two skills, two languages, repeat paint, invalidate, independent cooldown
+PASS WD119C Chinese cast-time header, three blessing states; remaining cooldown untouched
+PASS WD120 query values / min-max / no stale heal number after invalidation
+PASS WD122 authoritative interval/cap/amount refresh

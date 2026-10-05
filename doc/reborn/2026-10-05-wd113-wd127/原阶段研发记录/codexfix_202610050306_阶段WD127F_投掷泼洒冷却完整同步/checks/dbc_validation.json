@@ -1,0 +1,24 @@
+[
+  {
+    "side": "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc",
+    "only_changed": {
+      "spell": 9003897,
+      "field": 80,
+      "before": -5001,
+      "after": -5000
+    },
+    "rows": 61879,
+    "sha256": "33c1da9b666d5cb8668fea1a37a2e56eff49431e9306a27d9a9c8d11fabfcebc"
+  },
+  {
+    "side": "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient",
+    "only_changed": {
+      "spell": 9003897,
+      "field": 80,
+      "before": -5001,
+      "after": -5000
+    },
+    "rows": 61879,
+    "sha256": "5e216ee539fa733415fc6cace24d63d3f256a2461683efd8964257edbb89c652"
+  }
+]

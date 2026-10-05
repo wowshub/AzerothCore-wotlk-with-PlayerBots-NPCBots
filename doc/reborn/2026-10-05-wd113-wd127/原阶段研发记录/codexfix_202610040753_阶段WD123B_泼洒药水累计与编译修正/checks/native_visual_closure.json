@@ -1,0 +1,421 @@
+{
+  "tables": {
+    "SpellVisual": {
+      "source": "current Patch-XA override",
+      "sha256": "5317f85be16aa9601212217eed0bd64a2db3dc52311421826ae7280a3d204ee6"
+    },
+    "SpellVisualKit": {
+      "source": "current Patch-XA override",
+      "sha256": "b8267ab2d7405d22b687821daf5fc9b39322ce6ebe79a24afc4f047ad713b930"
+    },
+    "SpellVisualEffectName": {
+      "source": "current Patch-XA override",
+      "sha256": "02b4f0cbfb460edc88000b85517a4e93dc5aebeabc75ba3476bf0b139c9673d1"
+    },
+    "SoundEntries": {
+      "source": "current Patch-XA override",
+      "sha256": "e158bdf94fcf4791829ab75ff0956714ce8dba9703663329ff2e07ec61d739d6"
+    },
+    "SpellVisualKitModelAttach": {
+      "source": "current Patch-XA override",
+      "sha256": "ed15804bcd890062154a696c833c7130d54e3082d3dbdc9fb5e3ba8c8ae32464"
+    },
+    "SpellMissile": {
+      "source": "current Patch-XA override",
+      "sha256": "8f2363a5da7804914739a963b6d10bdb1eefa5542b7ec2ea6d9e8f449ebdfd2c"
+    }
+  },
+  "assets": {
+    "Spells\\RebornWD3\\Spells\\Enchant_PreCast_Hand.m2": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "5b51350b6c73f0addb67fa5773f025f8801f7dc31df4f50d98167f52d8f0974a"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\CREATURE\\FIREELEMENTAL\\GLOWBALL.BLP": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "98649a7db3e74a9b016a0c81d97c4d2e71cf41b32f13b999f4739436c41c2e24"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\SPELLS\\CYAN_GLOW3.BLP": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "38a3b4b54bf05d99f49d3d06ecb921f68071f6e53f2f30fd4f6a0c1473d9e252"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\CREATURE\\SPELLS\\SHOCKWAVE4WHITE.BLP": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "04c24ab83e329c0dfb0ebd80b8f114667081844a1375da847d0984eaf4e4b8bf"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Spells\\Enchant_PreCast_Hand00.skin": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "47120f26ec08bca898f7a8604a8f70e46002c16e8835897bb542d16d16f31ac6"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\Spells\\Tradeskills\\AlchemyCraftingA.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "755be606055a4cd7b99017d896ec9e93751a5a90acfa4a9e2815e535ebb2e60c"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\Spells\\Tradeskills\\AlchemyCraftingB.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "762d2c56b44f7e48befe0bbe8cdf74a4c7dff1c880346d4768a3d49e8eb33577"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\Spells\\Tradeskills\\AlchemyCraftingC.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "3149d802c27b932b605318d6d6e66a302ffa9c617b410f644a29423a71b2c4ce"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\SPELLS\\PotionA_SpellObject.m2": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "614be6342894067d490c1cc2ac5bb207c384a550c32ebc3211c83e03c42c7a9c"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\ITEM\\OBJECTCOMPONENTS\\WEAPON\\MISC_1H_POTION_B_01BLUE.BLP": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "1db324e2ba15dcad4864888176ae77499432d1b5e494bbb3b567aedb76f33b6b"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\ITEM\\OBJECTCOMPONENTS\\WEAPON\\ARMORREFLECTPOTION.BLP": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "7c11464ed415ffff2f532eb6622da151630c5c2f0db1012ccb411c5fc74d3516"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\SPELLS\\PotionA_SpellObject00.skin": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "1897e551386ae1f0517bcaf5536370b6ba81a9bafd1f91e097ed2dac36b5761e"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Spells\\Enchant_Cast_Hand.m2": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "5b944a92eaa54ebd6abff882f83a919e292f2be2b249b428c5a8a32bc7765297"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Spells\\Enchant_Cast_Hand00.skin": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "78b3eb9374f29998cfda8714b580f378dda7b0953bbcb149a42d16452b545d9e"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\Item\\Weapons\\WeaponSwings\\mWooshLarge1.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "5ca87a60dd49bc3bfe866c4cf8e1601b23aa2ae055a4d67b1609b49a069ffc80"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\Item\\Weapons\\WeaponSwings\\mWooshLarge2.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "3a34eb91e88ad08aebfad86f86f1b378a39744a5fde5e214d2d3965a34c7cdb0"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\Item\\Weapons\\WeaponSwings\\mWooshLarge3.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "7f0b756b8399aa2317852f2f8ec5b9522fa90097fa421a4532567f5bbdc42c43"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\CFX_DemonHunter_EyeBeam_MissileImpact.m2": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "c62704e69d2dc6f88197baa4faa3e5d117823bd0415fdb1718db2a25f62efecb"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\ember_offset_streak_green.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "cf8062b3eaf2dc2ae8ef16c9cbefab6a63273809a9dd617feab5ea372e26a778"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\white8x8.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\smoke_htv_mod4x_demonhunterdps.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "092a29564842d6ee465c8bb9f1383a52d971e0dafdfc5efad967a8bccda68c0f"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\cloud_puffysofter_mod4x_demonhunterdps.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "87b27e82b804ce7e7d3ce2def29110f6094e9ea377809cf7cd803ed0b8f8c20d"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\t_vfx_flar_blur_64.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "ce09ebf4b23d22a7b53db389526e352020820c2da4352a51b79ccee87966e7f8"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\smoke_wispy_mask_blend.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "d035bc407d351b32c551b76e42ab6ffa395b9b03082c2061b0710ea5b94ae01b"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\grey50percentsquare16x16_a.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\incense_demonhunterdps.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "0959bdc04b355cafde832c214d2f526cab680d66e1cdf23c2c351c6f802f6ba5"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\smoke_htv_mod4x_yellowflash.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "00c7223cb0c19331b0411e4e806e4cfb96a3477895a6374d54d6b8a5e0fabf55"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\cloud_wispysoft_brighter_02_mod4x.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "d1adee0de2cce603d6cabfff47c31352ee4dc00afe002dfedc0ae9cb521632f2"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\CFX_DemonHunter_EyeBeam_MissileImpact00.skin": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\Sound\\interface\\PickUp\\PickUpWater_Liquid01.wav": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "a1f729ba79badd0b439f2727890ede30b232e279b8e1a53a0ba46105d1e1d00d"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\SPELLS\\monk_chiblast_impact_jade.m2": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "40aed3aa66a19206a4f584c0c72baa3326009b7cf14aa694c96f7529c35ad5da"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\star2.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "ef5f358552cf920c016dd62db7c1aa0c610195e8b708813f426b70c6c7bc7551"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\sha_smokeblur_07.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "09d9c0b6024f6e75c3f5a45baf6fe78916ed59f699bf494069488b97d6795dc1"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\fire_anim02_128_bw.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "6f81202bbaee84c553e92fd51d9b4f77ee8090c96f7b3e75d0d76cbb024080e8"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\spells\\caustic_medfreq.blp": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "3a9f38fad41f60f130c55d7935d3fbe688f63d3903431a5f38fd94230c4e92a3"
+        }
+      ],
+      "exists": true
+    },
+    "Spells\\RebornWD3\\SPELLS\\monk_chiblast_impact_jade00.skin": {
+      "candidates": [
+        {
+          "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20260929beAscend\\Data\\Patch-XA.mpq",
+          "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+        }
+      ],
+      "exists": true
+    }
+  },
+  "notes": [
+    "Existing Loa Brew healing visual reused; no new cauldron model or bottle projectile claimed. Archive asset candidates are inventoried, not treated as proven mount precedence."
+  ],
+  "status": "all referenced native assets found",
+  "records": [
+    [
+      "SoundEntries",
+      9001567
+    ],
+    [
+      "SoundEntries",
+      9001568
+    ],
+    [
+      "SoundEntries",
+      9001569
+    ],
+    [
+      "SpellMissile",
+      2707
+    ],
+    [
+      "SpellVisual",
+      887925
+    ],
+    [
+      "SpellVisualEffectName",
+      812957
+    ],
+    [
+      "SpellVisualEffectName",
+      812958
+    ],
+    [
+      "SpellVisualEffectName",
+      812959
+    ],
+    [
+      "SpellVisualEffectName",
+      812960
+    ],
+    [
+      "SpellVisualEffectName",
+      812961
+    ],
+    [
+      "SpellVisualEffectName",
+      812962
+    ],
+    [
+      "SpellVisualKit",
+      823959
+    ],
+    [
+      "SpellVisualKit",
+      823960
+    ],
+    [
+      "SpellVisualKit",
+      823961
+    ],
+    [
+      "SpellVisualKit",
+      823962
+    ]
+  ],
+  "unreadable_archives": {}
+}

@@ -1,0 +1,1 @@
+PASS WD119B read-only book: native globals/tables/handlers untouched, diagnostics and blocked event preserved

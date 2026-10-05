@@ -1,0 +1,22 @@
+{
+  "full_project_build": false,
+  "in_game_test": false,
+  "msvc_version": "14.44.35207",
+  "before_exit_code": 1,
+  "after_exit_code": 0,
+  "compile_time_assertions": 10,
+  "changed_install_files": [
+    "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp"
+  ],
+  "unchanged_install_files": [
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua"
+  ],
+  "file_hashes": {
+    "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp": "bdf0627b42bcfc981e4d64c74d67235c5eb8f1df230b11d45c0542962d35c4df",
+    "01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp": "6b30572da15d016dd9e48933ea38318fd31bcc58d0ec73e95f8da00010f207f5",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua": "b863e65f9430815186cb712d79f631a0632503dece90c01b9a2aa32c23b0dcbe",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua": "ce0f4c1faf094ccb9f618fc127fd51724345c72afcf5812703dea2f0341d30ff"
+  }
+}

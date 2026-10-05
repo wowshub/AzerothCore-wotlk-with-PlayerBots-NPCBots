@@ -1,0 +1,13 @@
+2026-10-03T06:16:55.647296Z 0 [System] [MY-013169] [Server] D:\000rebornWOW\000RebornWOWHighForkPRO\beascendserver\wowshub_playerbot_npcbot_newrace20260929Ascend\mysql-8.0.31-winx64\bin\mysqld.exe (mysqld 8.0.31) initializing of server in progress as process 25616
+2026-10-03T06:16:55.753338Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-03T06:16:56.124507Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-03T06:16:56.721484Z 5 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2026-10-03T06:16:58.896639Z 0 [System] [MY-010116] [Server] D:\000rebornWOW\000RebornWOWHighForkPRO\beascendserver\wowshub_playerbot_npcbot_newrace20260929Ascend\mysql-8.0.31-winx64\bin\mysqld.exe (mysqld 8.0.31) starting as process 75592
+2026-10-03T06:16:58.905075Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-03T06:16:59.064262Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-03T06:16:59.222196Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-10-03T06:16:59.222222Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-10-03T06:16:59.244250Z 0 [System] [MY-010931] [Server] D:\000rebornWOW\000RebornWOWHighForkPRO\beascendserver\wowshub_playerbot_npcbot_newrace20260929Ascend\mysql-8.0.31-winx64\bin\mysqld.exe: ready for connections. Version: '8.0.31'  socket: ''  port: 33500  MySQL Community Server - GPL.
+2026-10-03T06:17:43.132105Z 635 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.31).
+2026-10-03T06:17:43.132238Z 0 [System] [MY-013105] [Server] D:\000rebornWOW\000RebornWOWHighForkPRO\beascendserver\wowshub_playerbot_npcbot_newrace20260929Ascend\mysql-8.0.31-winx64\bin\mysqld.exe: Normal shutdown.
+2026-10-03T06:17:43.994402Z 0 [System] [MY-010910] [Server] D:\000rebornWOW\000RebornWOWHighForkPRO\beascendserver\wowshub_playerbot_npcbot_newrace20260929Ascend\mysql-8.0.31-winx64\bin\mysqld.exe: Shutdown complete (mysqld 8.0.31)  MySQL Community Server - GPL.

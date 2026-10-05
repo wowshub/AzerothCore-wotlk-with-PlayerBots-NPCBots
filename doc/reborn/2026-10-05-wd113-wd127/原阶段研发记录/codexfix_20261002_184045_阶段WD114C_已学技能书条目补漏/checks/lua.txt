@@ -1,0 +1,1 @@
+PASS: known-only recovery; real native slot; missing-slot by-ID entry; counts; idempotence; removal; existing entries; combat; other class; pet; missing category; old Potent rank retained

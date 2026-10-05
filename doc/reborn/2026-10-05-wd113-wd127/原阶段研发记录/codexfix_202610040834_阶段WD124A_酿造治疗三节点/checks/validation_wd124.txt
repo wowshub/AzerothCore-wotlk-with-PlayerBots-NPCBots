@@ -1,0 +1,7 @@
+WD124A validation, 2026-10-04
+- Cumulative Lua scenarios through WD124: passed
+- All packaged Lua syntax: passed
+- Isolated scratch MySQL: 449 checks passed, port 33500
+- Client and server Spell/SkillLineAbility DBC: old rows unchanged, four new passive rows and all strings valid
+- Spell aura and SpellMod enum names checked against target source
+- No C++ compilation, deployment or in-game test in this run

@@ -1,0 +1,52 @@
+[
+  {
+    "spell": 9003897,
+    "effects": [
+      {
+        "effect": 6,
+        "die_sides_field74": 0,
+        "base_points_field80": -5000,
+        "aura_field95": 107
+      }
+    ]
+  },
+  {
+    "spell": 9003898,
+    "effects": [
+      {
+        "effect": 6,
+        "die_sides_field74": 0,
+        "base_points_field80": 49,
+        "aura_field95": 134
+      }
+    ]
+  },
+  {
+    "spell": 9003899,
+    "effects": [
+      {
+        "effect": 6,
+        "die_sides_field74": 0,
+        "base_points_field80": 9,
+        "aura_field95": 136
+      },
+      {
+        "effect": 6,
+        "die_sides_field74": 0,
+        "base_points_field80": 49,
+        "aura_field95": 134
+      }
+    ]
+  },
+  {
+    "spell": 9003900,
+    "effects": [
+      {
+        "effect": 6,
+        "die_sides_field74": 0,
+        "base_points_field80": 9,
+        "aura_field95": 220
+      }
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "unchanged_install_files": 66,
+  "source_change": "one enum identifier only",
+  "lua_dbc": "rerun PASS",
+  "sql": "unchanged; historical isolated 441 checks only",
+  "compile": "not run",
+  "game": "pending",
+  "upstream_refresh": "failed"
+}

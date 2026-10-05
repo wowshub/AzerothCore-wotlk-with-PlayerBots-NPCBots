@@ -1,0 +1,80 @@
+assert(loadfile(arg[5]))()
+local M=RebornWD8
+local low23=65024+2*2^32+2^17
+for i=17,27 do low23=low23+(i==21 and 2*2^23 or 2^(i>=22 and i+3 or i+2)) end
+local v,p,d,o=2^41,2^42,2^40,2^39
+M.level=80;M.teBudget=35;M.aeBudget=36;M.specs[1]=0
+assert(M.AERank(29768,v)==1 and M.AERank(6057,p)==1)
+assert(M.AEValid(low23+v));assert(M.AEValid(low23+v+p));assert(not M.AEValid(low23+p))
+assert(not M.AEValid(low23-2^30+v+p+d+o));assert(M.AEValid(low23+v+p+d+o))
+M.level=56;assert(not M.AEValid(low23+v));M.level=57;assert(M.AEValid(low23+v))
+M.teBudget=24;assert(not M.AEValid(low23+v+p));M.teBudget=25;assert(M.AEValid(low23+v+p))
+M.specs[1]=1;assert(not M.AEValid(low23+v));M.specs[1]=0
+assert(not M.AEValid(2^52));assert(M.TESpent(low23+v+p)==25)
+M.level=80;M.draftAE=low23+v+p;M.aeMasks[1]=low23;M.aeDirty=true;M.dirty=true;M.pending=nil
+local request;M.Request=function(s)request=s end;M.Save()
+assert(request and request:match(' '..string.format('%.0f',low23+v+p)..'$'))
+for _,id in ipairs({29768,6057})do assert(M.AETooltip({ID=id,AECost=0,TECost=1}))end
+print('PASS WD93 43-bit save/decode, Voice/Price dependency, four-node tier boundary, budget/spec/level and tooltip')
+
+local g=2^43;local low8=65024
+M.level=27;M.teBudget=9;M.aeBudget=9;M.specs[1]=0
+assert(M.AERank(30596,g)==1 and M.TESpent(low8+g)==9)
+assert(M.AEValid(low8+g));M.level=26;assert(not M.AEValid(low8+g));M.level=27
+M.teBudget=8;assert(not M.AEValid(low8+g));M.teBudget=109;assert(M.AEValid(low8+g))
+assert(not M.AEValid(low8-512+g));assert(not M.AEValid(low8-512+2^19+g))
+M.level=57;assert(M.AEValid(low23-2^30+g+v+p))
+M.specs[1]=1;assert(not M.AEValid(low8+g));M.specs[1]=0
+M.level=85;M.aeBudget=56;M.teBudget=55;M.draftAE=low23+v+p+g;M.aeMasks[1]=low23+v+p;M.aeDirty=true;M.dirty=true;M.pending=nil
+M.Save();assert(request and request:match(' '..string.format('%.0f',low23+v+p+g)..'$'))
+assert(M.AETooltip({ID=30596,AECost=0,TECost=1}));assert(not M.AEValid(2^52))
+print('PASS WD96 44-bit Grasp, level27/foundation8/TE9, saved-decimal payload, next-tier contribution and GM budgets')
+
+local j,a,h=2^44,2^46,2^47
+local class9=123+2*j -- 1+1+2+1+1+1 legacy AE =7, Juju rank2 =2
+M.level=80;M.aeBudget=36;M.teBudget=35;M.specs[1]=0;M.pending=nil
+assert(M.AERank(7088,2*j)==2 and M.AERank(30147,a)==1 and M.AERank(4132,h)==1)
+assert(M.AESpent(class9)==9 and M.AESpent(class9+a+h)==11 and M.TESpent(class9+a+h)==0)
+assert(M.AEValid(j));assert(M.AEValid(2*j));assert(not M.AEValid(3*j))
+assert(M.AEValid(class9+a+h));assert(not M.AEValid(class9-j+a+h))
+M.aeBudget=10;assert(not M.AEValid(class9+a+h));M.aeBudget=11
+M.level=27;assert(not M.AEValid(class9+a));assert(M.AEValid(class9+h));M.level=28;assert(M.AEValid(class9+a))
+M.level=80;M.specs[1]=1;assert(M.AEValid(class9+a+h));assert(not M.AEValid(low8+g));M.specs[1]=0
+M.aeMasks[1]=class9;M.draftAE=class9+a+h;M.aeDirty=true;M.dirty=true;M.pending=nil
+local request97;M.Request=function(s) request97=s end;M.Save()
+assert(request97 and request97:match(' '..string.format('%.0f',class9+a+h)..'$'))
+for _,id in ipairs({7088,30147,4132})do assert(M.AETooltip({ID=id,AECost=1,TECost=0}))end
+assert(not M.AEValid(2^52))
+print('PASS WD97B 48-bit Class rank/budget/foundation/level/spec/protocol/tooltip scenarios')
+
+local war,mal,soul=2^48,2^49,2^50
+M.level=80;M.teBudget=35;M.aeBudget=36;M.specs[1]=0
+assert(M.AERank(31349,war)==1 and M.AERank(29929,mal)==1 and M.AERank(6055,soul)==1)
+assert(M.TESpent(low23+war+mal+soul)==26 and M.AESpent(low23+war+mal+soul)==0)
+assert(M.AEValid(low23+war+mal+soul))
+M.level=58;assert(not M.AEValid(low8+war));assert(not M.AEValid(low23+soul));M.level=59
+assert(M.AEValid(low8+war));assert(not M.AEValid(low8-512+war))
+assert(not M.AEValid(low23-2^30+mal+soul))
+assert(M.AEValid(low23-2^30+war+mal+soul))
+M.teBudget=25;assert(not M.AEValid(low23+war+mal+soul));M.teBudget=26
+M.specs[1]=1;assert(not M.AEValid(low23+war+mal+soul));assert(M.AEValid(class9+a+h));M.specs[1]=0
+M.level=80;M.aeBudget=36;M.teBudget=35;M.draftAE=low23+war+mal+soul;M.aeMasks[1]=low23;M.aeDirty=true;M.dirty=true;M.pending=nil
+local req98;M.Request=function(s)req98=s end;M.Save()
+assert(req98 and req98:match(' '..string.format('%.0f',low23+war+mal+soul)..'$'))
+for _,id in ipairs({31349,29929,6055})do assert(M.AETooltip({ID=id,AECost=0,TECost=1}))end
+print('PASS WD98 51-bit, three Voodoo nodes, TE budgets, level59, tier anti-bootstrap, spec, save and tooltip')
+
+local adept=2^51
+M.level=50;M.aeBudget=0;M.teBudget=0;M.specs[1]=0
+assert(M.AERank(11133,adept)==1)
+assert(M.AEValid(adept) and M.AESpent(adept)==0 and M.TESpent(adept)==0)
+M.level=49;assert(not M.AEValid(adept));M.level=50
+M.specs[1]=1;assert(not M.AEValid(adept));M.specs[1]=0
+M.level=80;M.aeBudget=36;M.teBudget=35
+assert(M.AEValid(low23+war+mal+soul+adept))
+assert(M.TESpent(low23+war+mal+soul+adept)==26)
+M.draftAE=low23+war+mal+soul+adept;M.aeMasks[1]=low23;M.aeDirty=true;M.dirty=true;M.pending=nil
+local sent;M.Request=function(s)sent=s end;M.Save()
+assert(sent and sent:match(' '..string.format('%.0f',M.draftAE)..'$'))
+assert(M.AETooltip({ID=11133,AECost=0,TECost=0}))
+print('PASS WD99 52-bit: free node, level50, spec ownership, cumulative TE, exact decimal save, tooltip')

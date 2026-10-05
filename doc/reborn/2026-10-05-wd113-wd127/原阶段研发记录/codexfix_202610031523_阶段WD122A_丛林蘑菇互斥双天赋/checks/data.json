@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checks": [
+    "03_覆盖到服务端根目录/Data/dbcSpell old rows preserved except Shrooms base-description offsets",
+    "exact two additions",
+    "all core strings valid",
+    "Booms exact +100% native heal",
+    "Doctor exact -2000ms native amplitude",
+    "Pulse area filter target hook matches",
+    "Shrooms base6000 and no periodic haste",
+    "03_覆盖到服务端根目录/Data/dbcSkillLineAbility old rows preserved except Shrooms base-description offsets",
+    "exact book Brewing ownership",
+    "client_mpq输入_导入现有Patch-XA/DBFilesClientSpell old rows preserved except Shrooms base-description offsets",
+    "exact two additions",
+    "all core strings valid",
+    "Booms exact +100% native heal",
+    "Doctor exact -2000ms native amplitude",
+    "Pulse area filter target hook matches",
+    "Shrooms base6000 and no periodic haste",
+    "client_mpq输入_导入现有Patch-XA/DBFilesClientSkillLineAbility old rows preserved except Shrooms base-description offsets",
+    "exact book Brewing ownership",
+    "old icons preserved",
+    "matching icon 910128",
+    "matching icon 910129",
+    "WD121B preserved src/server/game/Spells/Spell.cpp",
+    "WD121B preserved src/server/game/Entities/Player/Player.cpp"
+  ]
+}

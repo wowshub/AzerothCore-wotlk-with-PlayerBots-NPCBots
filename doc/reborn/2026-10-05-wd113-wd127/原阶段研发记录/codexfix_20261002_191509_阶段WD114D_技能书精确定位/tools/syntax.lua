@@ -1,0 +1,1 @@
+assert(loadfile(arg[1]))

@@ -1,0 +1,7 @@
+[WD114D] 9003852：分类2，第4页，第4格；按钮匹配=true，可见=true
+[WD114D] 9003853：分类2，第1页，第7格；按钮匹配=true，可见=true
+[WD114D] 9003854：分类2，第2页，第7格；按钮匹配=true，可见=true
+[WD114D] 请脱战后定位技能。
+[WD114D] 当前方案未学会该技能。
+[WD114D] 请先打开法术书的法术页，再执行命令。
+PASS exact ID/page/slot navigation, Chinese aliases, same-name rank preserved, combat/unknown/pet guards

@@ -1,0 +1,11 @@
+{
+  "status": "PASS source audit and offline arithmetic, not engine execution",
+  "cases": 378,
+  "checks": [
+    "native percent healing multiplies Fresh and Booms: 1.30*2 = 2.60",
+    "Doctor native activation time 6000-2000 = 4000ms",
+    "exact pulse cap5 vs8; no PotionToss/HoT modifiers",
+    "changed cadence resets full interval without extra cast",
+    "registration uses m_scriptSpellId, no null Spell dereference"
+  ]
+}

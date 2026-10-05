@@ -1,0 +1,274 @@
+[
+  {
+    "stage": "WD113A",
+    "name": "codexfix_202610020804_阶段WD113A_通用巫祝破咒与诅咒增强",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610020804_阶段WD113A_通用巫祝破咒与诅咒增强",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610020804_阶段WD113A_通用巫祝破咒与诅咒增强.zip",
+    "sha256": "5138c1b3e54f016f7c2255d107f9cdba460da80c240b571ecae877ea294e871b",
+    "has_docs": true
+  },
+  {
+    "stage": "WD114A",
+    "name": "codexfix_202610020855_阶段WD114A_巫祝数值同步与通用双技能",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610020855_阶段WD114A_巫祝数值同步与通用双技能",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610020855_阶段WD114A_巫祝数值同步与通用双技能.zip",
+    "sha256": "3ce59a96fcec5ac90b1097b17454d85b822701f8a1428bed475acce6351ada40",
+    "has_docs": true
+  },
+  {
+    "stage": "WD114B",
+    "name": "codexfix_202610021638_阶段WD114B_巫祝提示重绘优化",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610021638_阶段WD114B_巫祝提示重绘优化",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610021638_阶段WD114B_巫祝提示重绘优化.zip",
+    "sha256": "28ed59981fc9899223e9a9505541b480ac071a0c56a758bd7b31e8ee1f597562",
+    "has_docs": true
+  },
+  {
+    "stage": "WD116A",
+    "name": "codexfix_202610022006_阶段WD116A_沃金守望通用防御技能",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022006_阶段WD116A_沃金守望通用防御技能",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022006_阶段WD116A_沃金守望通用防御技能.zip",
+    "sha256": "7bb6b2411a0c0a556191b86ac40fa623d64993cee897b5098b40121a270f4b49",
+    "has_docs": true
+  },
+  {
+    "stage": "WD115A",
+    "name": "codexfix_202610022030_阶段WD115A_假死图标与强效混合来源审计",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022030_阶段WD115A_假死图标与强效混合来源审计",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022030_阶段WD115A_假死图标与强效混合来源审计.zip",
+    "sha256": "be987886df6c41099cbd345d3b0edba5a4ed062eb2524440908a971115003d27",
+    "has_docs": true
+  },
+  {
+    "stage": "WD117A",
+    "name": "codexfix_202610022033_阶段WD117A_灵魂行者双技能联动",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022033_阶段WD117A_灵魂行者双技能联动",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022033_阶段WD117A_灵魂行者双技能联动.zip",
+    "sha256": "ba2e743f813316cceb0daaf1c3f5abf5a7a2daaee52449b222ac90e155f17bc6",
+    "has_docs": true
+  },
+  {
+    "stage": "WD118A",
+    "name": "codexfix_202610022100_阶段WD118A_森金之临施法联动",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022100_阶段WD118A_森金之临施法联动",
+    "zip": null,
+    "sha256": null,
+    "has_docs": false
+  },
+  {
+    "stage": "WD118A",
+    "name": "codexfix_202610022101_阶段WD118A_化蛇通用生存技能",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022101_阶段WD118A_化蛇通用生存技能",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022101_阶段WD118A_化蛇通用生存技能.zip",
+    "sha256": "302b7254571ee0b44ba30d95b9cc4a3c64fb5e410843e73c5e11560c8445550f",
+    "has_docs": true
+  },
+  {
+    "stage": "WD118A",
+    "name": "codexfix_202610022101_阶段WD118A_森金之临施法联动",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022101_阶段WD118A_森金之临施法联动",
+    "zip": null,
+    "sha256": null,
+    "has_docs": false
+  },
+  {
+    "stage": "WD118B",
+    "name": "codexfix_202610022207_阶段WD118B_原生拖动图标资源补齐",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022207_阶段WD118B_原生拖动图标资源补齐",
+    "zip": null,
+    "sha256": null,
+    "has_docs": false
+  },
+  {
+    "stage": "WD118B",
+    "name": "codexfix_202610022208_阶段WD118B_原生拖动图标资源补齐",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022208_阶段WD118B_原生拖动图标资源补齐",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022208_阶段WD118B_原生拖动图标资源补齐.zip",
+    "sha256": "fafcb38ceb02d34065360acfbbd5fec393d395cd44cd7b9d79065af3be3128ce",
+    "has_docs": true
+  },
+  {
+    "stage": "WD119A",
+    "name": "codexfix_202610022255_阶段WD119A_通用控制三技能",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022255_阶段WD119A_通用控制三技能",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_202610022255_阶段WD119A_通用控制三技能.zip",
+    "sha256": "51c3063a16dcd0f24ca3c5d8a2e9c093f11b98ce84dbfbcf2b8b12690c386733",
+    "has_docs": true
+  },
+  {
+    "stage": "WD114C",
+    "name": "codexfix_20261002_184045_阶段WD114C_已学技能书条目补漏",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_20261002_184045_阶段WD114C_已学技能书条目补漏",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_20261002_184045_阶段WD114C_已学技能书条目补漏.zip",
+    "sha256": "bf1717d311ed3f7e97171ccf1dbd095a442213a849f22b608f4cf31a4b12a36e",
+    "has_docs": true
+  },
+  {
+    "stage": "WD114D",
+    "name": "codexfix_20261002_191509_阶段WD114D_技能书精确定位",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_20261002_191509_阶段WD114D_技能书精确定位",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261002\\codexfix_20261002_191509_阶段WD114D_技能书精确定位.zip",
+    "sha256": "f3116c51f5d2793d706e9573e8cbd310e44b12778364147283ac46b3ad0b6a00",
+    "has_docs": true
+  },
+  {
+    "stage": "WD119B",
+    "name": "codexfix_202610030124_阶段WD119B_持续时间显示与技能书污染清理",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030124_阶段WD119B_持续时间显示与技能书污染清理",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030124_阶段WD119B_持续时间显示与技能书污染清理.zip",
+    "sha256": "c7c7cf3ca7e025bef3781210913b574ea363a1b0948e80d80bd93a437cd99ce9",
+    "has_docs": true
+  },
+  {
+    "stage": "WD120A",
+    "name": "codexfix_202610030147_阶段WD120A_酿造下一批依赖开发",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030147_阶段WD120A_酿造下一批依赖开发",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030147_阶段WD120A_酿造下一批依赖开发.zip",
+    "sha256": "02ee4367bc97f2f9df779b800886cc20a5759539b88a3b62c26ab8e134fea71c",
+    "has_docs": true
+  },
+  {
+    "stage": "WD119C",
+    "name": "codexfix_202610030224_阶段WD119C_蛙变冷却同步与移动打断",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030224_阶段WD119C_蛙变冷却同步与移动打断",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030224_阶段WD119C_蛙变冷却同步与移动打断.zip",
+    "sha256": "2d464fbaa1401cacf87881fb8a51bd105bd6392466e1fa40a8fb5640ef04e170",
+    "has_docs": true
+  },
+  {
+    "stage": "WD121A",
+    "name": "codexfix_202610030339_阶段WD121A_酿造治疗双天赋",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030339_阶段WD121A_酿造治疗双天赋",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030339_阶段WD121A_酿造治疗双天赋.zip",
+    "sha256": "61a121430c0696d33f4991142ad71cb7e4107e2cbeb1588c8615ad159d47b220",
+    "has_docs": true
+  },
+  {
+    "stage": "WD121B",
+    "name": "codexfix_202610030705_阶段WD121B_蛙变冷却施法后同步",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030705_阶段WD121B_蛙变冷却施法后同步",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610030705_阶段WD121B_蛙变冷却施法后同步.zip",
+    "sha256": "34acda358562d324b3c84027f90fba5dd4142214410b123b3f166246e3db2f63",
+    "has_docs": true
+  },
+  {
+    "stage": "WD122A",
+    "name": "codexfix_202610031523_阶段WD122A_丛林蘑菇互斥双天赋",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031523_阶段WD122A_丛林蘑菇互斥双天赋",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031523_阶段WD122A_丛林蘑菇互斥双天赋.zip",
+    "sha256": "b1b494f939234f7a4ae443af1fd63915227e224336229274cfa89175d5d7899e",
+    "has_docs": true
+  },
+  {
+    "stage": "WD123A",
+    "name": "codexfix_202610031548_阶段WD123A_泼洒药水与蘑菇范围治疗",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031548_阶段WD123A_泼洒药水与蘑菇范围治疗",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031548_阶段WD123A_泼洒药水与蘑菇范围治疗.zip",
+    "sha256": "33a8ba7a096ce1848b861710d6af1e2145db91333bc440f5909674246a3b0d38",
+    "has_docs": true
+  },
+  {
+    "stage": "WD122B",
+    "name": "codexfix_202610040721_阶段WD122B_范围目标枚举编译修正",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610040721_阶段WD122B_范围目标枚举编译修正",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610040721_阶段WD122B_范围目标枚举编译修正.zip",
+    "sha256": "723474723e7ff16174015ec842890b70e8d16d1b6a2965b0380de06f1b311510",
+    "has_docs": true
+  },
+  {
+    "stage": "WD123B",
+    "name": "codexfix_202610040753_阶段WD123B_泼洒药水累计与编译修正",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610040753_阶段WD123B_泼洒药水累计与编译修正",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610040753_阶段WD123B_泼洒药水累计与编译修正.zip",
+    "sha256": "601d3b2d0ab69f45f94d76dbffc4613dd6477511688d99619e0b85bcd66531a1",
+    "has_docs": true
+  },
+  {
+    "stage": "WD124A",
+    "name": "codexfix_202610040834_阶段WD124A_酿造治疗三节点",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610040834_阶段WD124A_酿造治疗三节点",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610040834_阶段WD124A_酿造治疗三节点.zip",
+    "sha256": "25653a842c82a3d95fc9bb34095eb450eeb1ec7492389390145df6c30f38e023",
+    "has_docs": true
+  },
+  {
+    "stage": "WD125A",
+    "name": "codexfix_202610041754_阶段WD125A_鱼油蛙骨双配料",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610041754_阶段WD125A_鱼油蛙骨双配料",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610041754_阶段WD125A_鱼油蛙骨双配料.zip",
+    "sha256": "5b8f8adc0cb780f2f93e97dc6e49463b1aec3fb1d656dc2e7764062def22b12f",
+    "has_docs": true
+  },
+  {
+    "stage": "WD124B",
+    "name": "codexfix_202610041807_阶段WD124B_编译变量重名修正",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610041807_阶段WD124B_编译变量重名修正",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610041807_阶段WD124B_编译变量重名修正.zip",
+    "sha256": "c5ba1570fb42abb1ca4540bf986aeca64243ac4778fb2fb44252ea91e3698ccd",
+    "has_docs": true
+  },
+  {
+    "stage": "WD126A",
+    "name": "codexfix_202610041919_阶段WD126A_缩小盟友",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610041919_阶段WD126A_缩小盟友",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610041919_阶段WD126A_缩小盟友.zip",
+    "sha256": "9fab086de95bb2b1277ea83017835a8663096dac5631de096fae75ddaa615309",
+    "has_docs": true
+  },
+  {
+    "stage": "WD127A",
+    "name": "codexfix_202610042012_阶段WD127A_蛇神门徒",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042012_阶段WD127A_蛇神门徒",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042012_阶段WD127A_蛇神门徒.zip",
+    "sha256": "1624e79edf91a6915972e966b66ec972f4429f8a82f17cbe1f356b5f5c09434f",
+    "has_docs": true
+  },
+  {
+    "stage": "WD127B",
+    "name": "codexfix_202610042116_阶段WD127B_AEIds编译修正",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042116_阶段WD127B_AEIds编译修正",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042116_阶段WD127B_AEIds编译修正.zip",
+    "sha256": "9ceae653d60f8cfdadd8ab6af840578a8e857fe13eb394859a990ac41738a3a3",
+    "has_docs": true
+  },
+  {
+    "stage": "WD127C",
+    "name": "codexfix_202610042230_阶段WD127C_酿造六节点面板显现",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042230_阶段WD127C_酿造六节点面板显现",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042230_阶段WD127C_酿造六节点面板显现.zip",
+    "sha256": "4df04081112659e4328d3570634aa7bee26c63c5e6a0007ba7cd7b60d2abab90",
+    "has_docs": true
+  },
+  {
+    "stage": "WD127D",
+    "name": "codexfix_202610042355_阶段WD127D_药水投手图标与冷却修正",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042355_阶段WD127D_药水投手图标与冷却修正",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261004\\codexfix_202610042355_阶段WD127D_药水投手图标与冷却修正.zip",
+    "sha256": "47729bec56c0c4e32928d2e3219afe225af0fe47fbac2377d168f2e51ddae446",
+    "has_docs": true
+  },
+  {
+    "stage": "WD127E",
+    "name": "codexfix_202610050149_阶段WD127E_冷却整型编译修正",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261005\\codexfix_202610050149_阶段WD127E_冷却整型编译修正",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261005\\codexfix_202610050149_阶段WD127E_冷却整型编译修正.zip",
+    "sha256": "48dadac48a21bce34d231630d43a0f8bc9d5c607cd085c099ce3599378a8c111",
+    "has_docs": true
+  },
+  {
+    "stage": "WD127F",
+    "name": "codexfix_202610050305_阶段WD127F_投掷泼洒冷却完整同步",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261005\\codexfix_202610050305_阶段WD127F_投掷泼洒冷却完整同步",
+    "zip": null,
+    "sha256": null,
+    "has_docs": false
+  },
+  {
+    "stage": "WD127F",
+    "name": "codexfix_202610050306_阶段WD127F_投掷泼洒冷却完整同步",
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261005\\codexfix_202610050306_阶段WD127F_投掷泼洒冷却完整同步",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261005\\codexfix_202610050306_阶段WD127F_投掷泼洒冷却完整同步.zip",
+    "sha256": "e68282509364048d9b32009ac07b7c7f14dfa5fb46ae918560856201e4e90417",
+    "has_docs": true
+  }
+]

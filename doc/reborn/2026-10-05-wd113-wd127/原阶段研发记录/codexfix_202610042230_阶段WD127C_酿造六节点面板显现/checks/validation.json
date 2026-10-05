@@ -1,0 +1,42 @@
+{
+  "checks": {
+    "35065": {
+      "previously_visible": false,
+      "now_visible": true,
+      "progress_mapped": true,
+      "allocation_mapped": true
+    },
+    "35064": {
+      "previously_visible": false,
+      "now_visible": true,
+      "progress_mapped": true,
+      "allocation_mapped": true
+    },
+    "35068": {
+      "previously_visible": false,
+      "now_visible": true,
+      "progress_mapped": true,
+      "allocation_mapped": true
+    },
+    "29738": {
+      "previously_visible": false,
+      "now_visible": true,
+      "progress_mapped": true,
+      "allocation_mapped": true
+    },
+    "30888": {
+      "previously_visible": false,
+      "now_visible": true,
+      "progress_mapped": true,
+      "allocation_mapped": true
+    },
+    "35051": {
+      "previously_visible": false,
+      "now_visible": true,
+      "progress_mapped": true,
+      "allocation_mapped": true
+    }
+  },
+  "data_prefix_sha256": "c53e83196c809b0e07ac7006579a049c9ab5abb3258711f8bd97ac7e9f1f79e4",
+  "candidate_only": true
+}

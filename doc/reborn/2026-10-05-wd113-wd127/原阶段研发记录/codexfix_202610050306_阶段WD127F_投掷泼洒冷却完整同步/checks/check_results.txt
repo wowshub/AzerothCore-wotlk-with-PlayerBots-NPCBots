@@ -1,0 +1,7 @@
+PASS MSVC /Zs /std:c++17 /W4 /WX actual post-GO block plus cooldown expression static assertions; exit 0
+PASS 84 potion rank/locale/build cases in Lua 5.2
+PASS previous WD114-WD123 numeric regression
+PASS all delivered Lua syntax
+PASS both DBC full string offsets and single-field byte comparison
+PASS post-GO packet order and numeric protocol argument counts
+NOT RUN full project compile or game deployment/testing

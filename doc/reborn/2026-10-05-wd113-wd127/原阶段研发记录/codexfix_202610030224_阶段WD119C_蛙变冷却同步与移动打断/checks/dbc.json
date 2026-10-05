@@ -1,0 +1,10 @@
+{
+  "base": "WD119A, explicitly under user test",
+  "delta_each_side": {
+    "spell": 9003861,
+    "field": 31,
+    "before": 14,
+    "after": 15
+  },
+  "all_other_rows_fields_strings": "unchanged"
+}

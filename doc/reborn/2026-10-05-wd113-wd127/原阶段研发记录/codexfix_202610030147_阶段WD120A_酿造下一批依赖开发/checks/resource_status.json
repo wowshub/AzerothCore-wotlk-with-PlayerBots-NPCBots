@@ -1,0 +1,88 @@
+{
+  "current_XA": "readable",
+  "native_visual_ids": [
+    887925
+  ],
+  "reference_only_source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20260929Ascend\\Data\\dbc",
+  "reference_visual_rows": {
+    "887925": [
+      887925,
+      823959,
+      823960,
+      823961,
+      823962,
+      4294967295,
+      4294967295,
+      1,
+      812962,
+      0,
+      1,
+      4294967295,
+      0,
+      0,
+      4294967295,
+      0,
+      4294967295,
+      0,
+      0,
+      0,
+      0,
+      2707,
+      4294967295,
+      4294967295,
+      4294967295,
+      4294967295,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "reference_table_hashes": {
+    "SpellVisual": "eb91da95fede92c430915d6108fcf3a93b34f2dcc2c3475bef3ba90dbbd06aae",
+    "SpellVisualKit": "74702a7ed44a9809a8857b5fb908231b94ce6908564affccaf0bfd6f68aef1e9",
+    "SpellVisualEffectName": "c7e0c9cc0cf77ea74d54be0ce5cb588da2f5e014223e4a671bab999ed8eababb"
+  },
+  "duration_radius_cast_verified": {
+    "SpellDuration85": [
+      85,
+      18000,
+      0,
+      18000
+    ],
+    "SpellDuration21": [
+      21,
+      4294967295,
+      0,
+      4294967295
+    ],
+    "SpellRadius10": [
+      10,
+      1106247680,
+      0,
+      1106247680
+    ],
+    "SpellCastTimes1": [
+      1,
+      0,
+      0,
+      0
+    ]
+  },
+  "icons": {
+    "910123": {
+      "path": "Interface/AddOns/RebornWitchDoctorTalents/Icons/30a815263647b234.blp",
+      "sha256": "5ac7d3ff864b5a24cb7ad1a1adeae3091bac760ca535b1355ec15573ef978a4d"
+    },
+    "910124": {
+      "path": "Interface/AddOns/RebornWitchDoctorTalents/Icons/974fc02dcf985f9f.blp",
+      "sha256": "0974cc448324a9aa842428eb776d5f2e9b8c45578991ceac5f06a2bc53a2c23f"
+    },
+    "910125": {
+      "path": "Interface/AddOns/RebornWitchDoctorTalents/Icons/848c316b639e7f53.blp",
+      "sha256": "3300789d01a8cb473cb02ae194f22e8a812c5b8286e45676f1207d704e9171fc"
+    }
+  }
+}

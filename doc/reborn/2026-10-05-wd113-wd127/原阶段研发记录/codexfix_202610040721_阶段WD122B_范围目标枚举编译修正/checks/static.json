@@ -1,0 +1,43 @@
+{
+  "header": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\shared\\SharedDefines.h",
+  "header_sha256": "1a9088886adc9339bc7c32375db13c58aee27b8603c15396db815c4e36f70b90",
+  "enum_value": 56,
+  "variants": {
+    "122": {
+      "baseline": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031523_阶段WD122A_丛林蘑菇互斥双天赋",
+      "before": "62eef4fd737daa18cab5f2d1341043adb31a6f2e750cc30ea1cb86744e935d46",
+      "after": "b5a15408eab54ed28ca6ac9eaa5bfc49589bb3935ac44767be30ea244e38d2ab",
+      "only_change": "TARGET_UNIT_SRC_AREA_RAID -> TARGET_UNIT_CASTER_AREA_RAID",
+      "dbc": [
+        {
+          "file": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031523_阶段WD122A_丛林蘑菇互斥双天赋\\03_覆盖到服务端根目录\\Data\\dbc\\Spell.dbc",
+          "pulse": 9003866,
+          "targetA": 56
+        },
+        {
+          "file": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031523_阶段WD122A_丛林蘑菇互斥双天赋\\client_mpq输入_导入现有Patch-XA\\DBFilesClient\\Spell.dbc",
+          "pulse": 9003866,
+          "targetA": 56
+        }
+      ]
+    },
+    "123": {
+      "baseline": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031548_阶段WD123A_泼洒药水与蘑菇范围治疗",
+      "before": "d0b51c9c57f6950c0ff385d862c5c418e5bc59b56aac173baf5b9c7222501247",
+      "after": "8bb2a515a233bd0171d8601e1d05ac6e52df6a1f25a215372d9ab9c7215c9a42",
+      "only_change": "TARGET_UNIT_SRC_AREA_RAID -> TARGET_UNIT_CASTER_AREA_RAID",
+      "dbc": [
+        {
+          "file": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031548_阶段WD123A_泼洒药水与蘑菇范围治疗\\03_覆盖到服务端根目录\\Data\\dbc\\Spell.dbc",
+          "pulse": 9003866,
+          "targetA": 56
+        },
+        {
+          "file": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261003\\codexfix_202610031548_阶段WD123A_泼洒药水与蘑菇范围治疗\\client_mpq输入_导入现有Patch-XA\\DBFilesClient\\Spell.dbc",
+          "pulse": 9003866,
+          "targetA": 56
+        }
+      ]
+    }
+  }
+}

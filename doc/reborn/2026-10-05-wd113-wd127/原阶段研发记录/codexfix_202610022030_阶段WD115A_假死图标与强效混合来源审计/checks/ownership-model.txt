@@ -1,0 +1,1 @@
+72 transition/stale-state cases passed, including passive restoration. This is a behavior model, not a compiled C++ runtime test.

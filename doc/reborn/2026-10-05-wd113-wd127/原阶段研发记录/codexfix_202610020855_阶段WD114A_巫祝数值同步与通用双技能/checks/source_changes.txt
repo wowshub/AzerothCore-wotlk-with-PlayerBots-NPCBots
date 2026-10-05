@@ -1,0 +1,505 @@
+--- WD113/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctor.cpp
++++ WD114/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctor.cpp
+@@ -2997,6 +2997,7 @@
+             WD19A::Family const* family=WD19A::FindFamily(check->Id);
+             return !family || (family->ranks[0].spell!=9003101 && family->ranks[0].spell!=9003240);
+         }
++        if(mod->spellId==9003854 && mod->op==SPELLMOD_THREAT) return false;
+         // WD113: explicit positive matching; SpellInfo rejects all other targets.
+         uint32 const base=WD59A::FamilyBase(check->Id);
+         if(mod->spellId==9003850)
+--- WD113/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctorAllocation.inc
++++ WD114/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctorAllocation.inc
+@@ -1,5 +1,5 @@
+ // WD67A lives inside WD5A and deliberately shares its revision / actions / lock rules.
+-uint32 const AEIds[66]={29744,6054,6047,7092,29309,29301,4004,31154,31344,31340,7157,6058,29928,30973,4533,31341,6045,31347,31348,6644,6046,6062,30889,31343,6053,31350,5333,6059,5332,31345,6007,11532,4532,29121,31346,7100,29768,6057,30596,7088,30147,4132,31349,29929,6055,11133,7033,6051,6048,7131,30884,29736,9311,5055,4715,7129,7948,31137,0,30891,6030,7132,29753,6381,12048,11323};
++uint32 const AEIds[68]={29744,6054,6047,7092,29309,29301,4004,31154,31344,31340,7157,6058,29928,30973,4533,31341,6045,31347,31348,6644,6046,6062,30889,31343,6053,31350,5333,6059,5332,31345,6007,11532,4532,29121,31346,7100,29768,6057,30596,7088,30147,4132,31349,29929,6055,11133,7033,6051,6048,7131,30884,29736,9311,5055,4715,7129,7948,31137,0,30891,6030,7132,29753,6381,12048,11323,31118,12264};
+ static uint32 const AESpells[8]={9003170,9003632,9003641,9003642,9003652,9003440,9003673,9003670};
+ uint32 AERank(AEMask mask,uint32 index)
+ {
+@@ -18,7 +18,7 @@
+ }
+ uint32 AESpent(AEMask mask)
+ {
+-    uint32 total=0;for(uint32 i=0;i<6;++i) total+=AERank(mask,i);return total+AERank(mask,39)+AERank(mask,40)+AERank(mask,41)+AERank(mask,46)+AERank(mask,47)+AERank(mask,48)+AERank(mask,58)+AERank(mask,59)+AERank(mask,60)+AERank(mask,63)+AERank(mask,64)+AERank(mask,65);
++    uint32 total=0;for(uint32 i=0;i<6;++i) total+=AERank(mask,i);return total+AERank(mask,39)+AERank(mask,40)+AERank(mask,41)+AERank(mask,46)+AERank(mask,47)+AERank(mask,48)+AERank(mask,58)+AERank(mask,59)+AERank(mask,60)+AERank(mask,63)+AERank(mask,64)+AERank(mask,65)+AERank(mask,66)+AERank(mask,67);
+ }
+ // WD82A: threshold talents cannot bootstrap each other with circular pending points.
+ uint32 TEFoundation(AEMask mask)
+@@ -38,24 +38,24 @@
+ }
+ bool AEValid(AEMask mask,uint32 level,uint32 testAE,uint32 testTE)
+ {
+-    if(AERank(mask,58) || (mask>>75)!=0 || testAE>100 || testTE>100 || (AERank(mask,2)>2 || AERank(mask,21)>2 || AERank(mask,29)>2 || AERank(mask,30)>2 || AERank(mask,39)>2 || AERank(mask,49)>2 || AERank(mask,50)>2 || AERank(mask,51)>2) || AESpent(mask)>WD67Budget::AE(level)+testAE || TESpent(mask)>WD67Budget::TE(level)+testTE) return false;
++    if(AERank(mask,58) || (mask>>77)!=0 || testAE>100 || testTE>100 || (AERank(mask,2)>2 || AERank(mask,21)>2 || AERank(mask,29)>2 || AERank(mask,30)>2 || AERank(mask,39)>2 || AERank(mask,49)>2 || AERank(mask,50)>2 || AERank(mask,51)>2) || AESpent(mask)>WD67Budget::AE(level)+testAE || TESpent(mask)>WD67Budget::TE(level)+testTE) return false;
+     if((AERank(mask,52) && level<20) || (AERank(mask,54) && level<30)) return false;
+     // Both tier-eight nodes exclude themselves and one another from foundation.
+     if((AERank(mask,56) || AERank(mask,57)) && AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)<8) return false;
+     if((AERank(mask,56) && level<16) || (AERank(mask,57) && level<30)) return false;
+     // WD110/112: class tier-nine and Brewing tier-eight are independent budgets.
+-    if((AERank(mask,58) || AERank(mask,59)) && AESpent(mask)-AERank(mask,40)-AERank(mask,41)-AERank(mask,46)-AERank(mask,47)-AERank(mask,48)-AERank(mask,58)-AERank(mask,59)-AERank(mask,63)-AERank(mask,64)-AERank(mask,65)<9) return false;
++    if((AERank(mask,58) || AERank(mask,59)) && AESpent(mask)-AERank(mask,40)-AERank(mask,41)-AERank(mask,46)-AERank(mask,47)-AERank(mask,48)-AERank(mask,58)-AERank(mask,59)-AERank(mask,63)-AERank(mask,64)-AERank(mask,65)-AERank(mask,67)<9) return false;
+     if(AERank(mask,58) && level<58) return false;
+     if(AERank(mask,59) && level<30) return false;
+     if((AERank(mask,61) || AERank(mask,62)) && level<31) return false;
+     if(AERank(mask,61) && AERank(mask,62)) return false;
+     if((AERank(mask,61) || AERank(mask,62)) && AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)<8) return false;
+     // WD113: tier-nine Class nodes cannot bootstrap one another.
+-    if((AERank(mask,63) || AERank(mask,64) || AERank(mask,65)) &&
+-       AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)<9) return false;
++    if((AERank(mask,63) || AERank(mask,64) || AERank(mask,65) || AERank(mask,67)) &&
++       AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)<9) return false;
+     if(AERank(mask,64) && AERank(mask,48)) return false; // Hir'eek / Dark Mojo choice.
+     // WD100: the five tier-9 Class talents cannot count themselves toward nine AE.
+-    if((AERank(mask,40) || AERank(mask,41) || AERank(mask,46) || AERank(mask,47) || AERank(mask,48)) && AESpent(mask)-AERank(mask,40)-AERank(mask,41)-AERank(mask,46)-AERank(mask,47)-AERank(mask,48)-AERank(mask,58)-AERank(mask,59)-AERank(mask,63)-AERank(mask,64)-AERank(mask,65)<9) return false;
++    if((AERank(mask,40) || AERank(mask,41) || AERank(mask,46) || AERank(mask,47) || AERank(mask,48)) && AESpent(mask)-AERank(mask,40)-AERank(mask,41)-AERank(mask,46)-AERank(mask,47)-AERank(mask,48)-AERank(mask,58)-AERank(mask,59)-AERank(mask,63)-AERank(mask,64)-AERank(mask,65)-AERank(mask,67)<9) return false;
+     if((AERank(mask,47) && level<28) || (AERank(mask,48) && level<32)) return false;
+     if(AERank(mask,40) && level<28) return false;
+     if(AERank(mask,45) && level<50) return false;
+@@ -103,8 +103,8 @@
+         Field* f=q->Fetch();uint32 slot=f[0].Get<uint32>(),id=f[1].Get<uint32>(),rank=f[2].Get<uint32>();
+         if(slot==3 && id==0 && rank==0) continue;
+         if(slot>2 || !rank) return false;
+-        uint32 index=0;for(;index<66 && AEIds[index]!=id;++index) {}
+-        if(index==66 || rank>((index==2 || index==21 || index==29 || index==30 || index==39 || (index>=49 && index<=51))?2u:(index==13?3u:1u))) return false;
++        uint32 index=0;for(;index<68 && AEIds[index]!=id;++index) {}
++        if(index==68 || rank>((index==2 || index==21 || index==29 || index==30 || index==39 || (index>=49 && index<=51))?2u:(index==13?3u:1u))) return false;
+         s->aeMasks[slot]|=AEMask(rank)<<(index>=52?index+9:index>=49?55+2*(index-49):index>=40?index+6:(index==39?44:(index>=32?index+5:(index>=29?32+2*(index-29):(index<3?index:(index>=22?index+3:(index>=14?index+2:index+1)))))));
+     } while(q->NextRow());
+     // Level decreases keep the saved layout, but do not grant an invalid active build.
+@@ -117,7 +117,7 @@
+ {
+     if(!s->modern || !s->loaded) return;
+     AEMask mask=AESpecValid(s->aeMasks[s->active],s->specs[s->active]) && AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) ? s->aeMasks[s->active] : 0;
+-    for(uint32 spell:{9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003522u,9003530u,9003531u,9003600u,9003601u,9003610u,9003611u,9003612u,9003690u,9003700u,9003701u,9003702u,9003703u}) if(!sSpellMgr->GetSpellInfo(spell)) return;
++    for(uint32 spell:{9003853u,9003854u,9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003522u,9003530u,9003531u,9003600u,9003601u,9003610u,9003611u,9003612u,9003690u,9003700u,9003701u,9003702u,9003703u}) if(!sSpellMgr->GetSpellInfo(spell)) return;
+     for(auto const& rank:WD19A::BadJujuRanks) if(!sSpellMgr->GetSpellInfo(rank.spell)) return;
+     for(auto const& rank:WD19A::HexfireRanks) if(!sSpellMgr->GetSpellInfo(rank.spell)) return;
+     for(uint32 spell:AESpells) if(!sSpellMgr->GetSpellInfo(spell)) return;
+@@ -227,7 +227,26 @@
+             if(p->HasSpell(class113[i])) p->removeSpell(class113[i],3,false);
+             p->RemoveAurasDueToSpell(class113[i],p->GetGUID());
+         }
+-        else if(!p->HasSpell(class113[i])) p->learnSpell(class113[i]);
++        else
++        {
++            if(!p->HasSpell(class113[i])) p->learnSpell(class113[i]);
++            // Recover the permanent native modifier when restoring an active saved build.
++            if(!p->HasAura(class113[i])) p->CastSpell(p,class113[i],true);
++        }
++    }
++    for(uint32 i=0;i<2;++i)
++    {
++        uint32 const id=9003853+i;
++        if(!AERank(mask,66+i))
++        {
++            p->RemoveAurasDueToSpell(id,p->GetGUID());
++            if(p->HasSpell(id)) p->removeSpell(id,3,false);
++        }
++        else
++        {
++            if(!p->HasSpell(id)) p->learnSpell(id);
++            if(i==1 && !p->HasAura(id)) p->CastSpell(p,id,true);
++        }
+     }
+     bool wanted[8]={AERank(mask,0)>0,AERank(mask,1)>0,AERank(mask,2)>=1,
+         AERank(mask,2)==2,AERank(mask,3)>0,AERank(mask,4)>0,AERank(mask,5)>0,AERank(mask,6)>0};
+@@ -334,7 +353,7 @@
+         if(p->HasSpell(AESpells[i])) known|=1u<<i;
+     }
+     // This release is for newly created characters only; no legacy migration.
+-    for(uint32 spell:{9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003530u,9003600u,9003690u,9003612u,9003700u,9003701u,9003702u,9003703u}) if(p->HasSpell(spell)) known|=256u;
++    for(uint32 spell:{9003853u,9003854u,9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003530u,9003600u,9003690u,9003612u,9003700u,9003701u,9003702u,9003703u}) if(p->HasSpell(spell)) known|=256u;
+     if(p->HasSpell(9003610) || p->HasSpell(9003611)) known|=256u;
+     for(auto const& rank:WD19A::HexfireRanks) if(p->HasSpell(rank.spell)) known|=256u;
+     if(known || s->builds) {ProfileReply(p,"freshonly");return true;}
+@@ -348,7 +367,7 @@
+ {
+     AEMask mask=0;
+     // Parse exactly; never wrap or accept signed/scientific notation from chat.
+-    AEMask const maximum=(AEMask(1)<<75)-1;
++    AEMask const maximum=(AEMask(1)<<77)-1;
+     if(maskText.empty() || maskText.size()>39) return false;
+     for(char ch:maskText)
+     {
+@@ -362,7 +381,7 @@
+     if(!s->modern || slot>=s->unlocked || slot>2 || s->specs[slot]==3 || !AEValid(mask,p->GetLevel(),s->testAE,s->testTE) || !AESpecValid(mask,s->specs[slot]))
+     {ProfileReply(p,"invalid");return true;}
+     if(expected!=s->revision) {ProfileReply(p,"stale");return true;}
+-    for(uint32 i=0;i<66;++i) if(AERank(mask,i)<AERank(s->aeMasks[slot],i))
++    for(uint32 i=0;i<68;++i) if(AERank(mask,i)<AERank(s->aeMasks[slot],i))
+     {ProfileReply(p,"resetrequired");return true;}
+     QueryResult result=CharacterDatabase.Query("CALL reborn_wd67_save({},{},{},{},{},{})",
+         p->GetGUID().GetCounter(),p->GetSession()->GetAccountId(),expected,slot,mask.str(),uint32(p->GetLevel()));
+--- WD113/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctorTalentNodes.h
++++ WD114/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctorTalentNodes.h
+@@ -137,7 +137,7 @@
+     {6044,3,0,1,1,0,0,0,0,false,{}},
+     {6047,3,0,2,1,0,0,0,0,true,{}},
+     {7092,3,0,1,1,0,0,0,0,true,{}},
+-    {31118,3,0,1,1,0,0,0,0,false,{}},
++    {31118,3,0,1,1,0,0,0,0,true,{}},
+     {29309,3,0,1,1,0,0,0,0,true,{}},
+     {12749,3,0,1,1,0,9,0,681465,false,{}},
+     {29749,3,0,1,1,0,9,0,681465,false,{}},
+@@ -151,7 +151,7 @@
+     {6051,3,28,1,1,0,9,0,0,true,{}},
+     {29306,3,0,1,1,0,9,0,0,false,{}},
+     {30891,3,0,1,1,0,9,0,0,true,{}},
+-    {12264,3,0,1,1,0,9,0,0,false,{}},
++    {12264,3,0,1,1,0,9,0,0,true,{}},
+     {9347,3,0,2,1,0,9,0,0,false,{}},
+     {6048,3,32,1,1,0,9,0,572870,true,{}},
+     {12048,3,0,1,1,0,9,0,572870,true,{}},
+--- WD113/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctorTalents.cpp
++++ WD114/01_覆盖到源代码根目录\modules\mod-reborn-witchdoctor\src\RebornWitchDoctorTalents.cpp
+@@ -56,6 +56,7 @@
+     std::chrono::steady_clock::time_point resetQuoteTime;
+     std::chrono::steady_clock::time_point request;
+     std::chrono::steady_clock::time_point mutationRequest; // WD101: reads never consume the write cooldown.
++    std::chrono::steady_clock::time_point numberRequest;
+     std::chrono::steady_clock::time_point auditRequest;
+ };
+ bool AELoad(Player*,State*);
+@@ -68,7 +69,7 @@
+ uint32 TESpent(AEMask);
+ uint32 AERank(AEMask,uint32);
+ bool AEValid(AEMask,uint32,uint32=0,uint32=0);
+-extern uint32 const AEIds[66];
++extern uint32 const AEIds[68];
+ std::mutex registryMutex;
+ std::unordered_map<SpellModifier const*,Player*> registry;
+ bool ProfilesEnabled() { return sConfigMgr->GetOption<bool>("RebornWD8.Enable",false); }
+@@ -447,7 +448,7 @@
+         return true;
+     }
+     auto rank=[&](uint32 id)->uint32 {
+-        if (s->modern) { for(uint32 i=0;i<66;++i) if(AEIds[i]==id) return AERank(s->aeMasks[slot],i);return 0; }
++        if (s->modern) { for(uint32 i=0;i<68;++i) if(AEIds[i]==id) return AERank(s->aeMasks[slot],i);return 0; }
+         if (s->specs[slot]!=0) return 0;
+         if (id==6058) return (s->builds>>slot)&1u;
+         if (id==29928) return (s->builds>>(slot+3))&1u;
+@@ -469,20 +470,21 @@
+     if(s->modern) for(uint32 id:AEIds) if(id==n->id) open=true;
+     if(s->modern && (n->id==31344 || n->id==31340)) level=10;
+     if(s->modern && n->id==7157) level=15;
+-    if(s->modern && (n->id==30147 || n->id==4132 || n->id==7033 || n->id==6051 || n->id==6048)) ae=AESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],40)-AERank(s->aeMasks[slot],41)-AERank(s->aeMasks[slot],46)-AERank(s->aeMasks[slot],47)-AERank(s->aeMasks[slot],48)-AERank(s->aeMasks[slot],58)-AERank(s->aeMasks[slot],59)-AERank(s->aeMasks[slot],63)-AERank(s->aeMasks[slot],64)-AERank(s->aeMasks[slot],65);
++    if(s->modern && (n->id==30147 || n->id==4132 || n->id==7033 || n->id==6051 || n->id==6048)) ae=AESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],40)-AERank(s->aeMasks[slot],41)-AERank(s->aeMasks[slot],46)-AERank(s->aeMasks[slot],47)-AERank(s->aeMasks[slot],48)-AERank(s->aeMasks[slot],58)-AERank(s->aeMasks[slot],59)-AERank(s->aeMasks[slot],63)-AERank(s->aeMasks[slot],64)-AERank(s->aeMasks[slot],65)-AERank(s->aeMasks[slot],67);
+     if(s->modern && (n->id==7948 || n->id==31137)) { level=n->id==31137?30:16;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55); }
+     if(s->modern && (n->id==5113 || n->id==30891 || n->id==6030 || n->id==7132 || n->id==29753))
+     {
+         level=n->id==5113?58:n->id==30891?30:n->id==6030?10:31;
+-        if(n->id==5113 || n->id==30891) ae=AESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],40)-AERank(s->aeMasks[slot],41)-AERank(s->aeMasks[slot],46)-AERank(s->aeMasks[slot],47)-AERank(s->aeMasks[slot],48)-AERank(s->aeMasks[slot],58)-AERank(s->aeMasks[slot],59)-AERank(s->aeMasks[slot],63)-AERank(s->aeMasks[slot],64)-AERank(s->aeMasks[slot],65);
++        if(n->id==5113 || n->id==30891) ae=AESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],40)-AERank(s->aeMasks[slot],41)-AERank(s->aeMasks[slot],46)-AERank(s->aeMasks[slot],47)-AERank(s->aeMasks[slot],48)-AERank(s->aeMasks[slot],58)-AERank(s->aeMasks[slot],59)-AERank(s->aeMasks[slot],63)-AERank(s->aeMasks[slot],64)-AERank(s->aeMasks[slot],65)-AERank(s->aeMasks[slot],67);
+         if(n->id==7132 || n->id==29753) te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55);
+     }
+-    if(s->modern && (n->id==6381 || n->id==12048 || n->id==11323))
++    if(s->modern && (n->id==6381 || n->id==12048 || n->id==11323 || n->id==12264))
+     {
+         level=10;
+         auto mask=s->aeMasks[slot];
+-        ae=AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60);
+-    }
++        ae=AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66);
++    }
++    if(s->modern && n->id==31118) level=10;
+     if(s->modern && n->id==31349) { level=59;te=TEFoundation(s->aeMasks[slot]); }
+     if(s->modern && (n->id==29929 || n->id==6055)) te=TESpent(s->aeMasks[slot])-AERank(s->aeMasks[slot],34)-AERank(s->aeMasks[slot],35)-AERank(s->aeMasks[slot],36)-AERank(s->aeMasks[slot],37)-AERank(s->aeMasks[slot],43)-AERank(s->aeMasks[slot],44);
+     if(s->modern && n->id==30596) { level=27;te=TEFoundation(s->aeMasks[slot]); }
+@@ -507,6 +509,37 @@
+ 
+ #include "RebornWitchDoctorAllocation.inc"
+ 
++// WD114: tooltip uses the same cost/effect calculator as the cast itself.
++bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
++{
++    Player* p=h->GetSession()->GetPlayer();
++    if(!Doctor(p)) return true;
++    State* s=p->CustomData.GetDefault<State>(Key);
++    auto const now=std::chrono::steady_clock::now();
++    if(now-s->numberRequest<std::chrono::milliseconds(400)) return true;
++    s->numberRequest=now;
++    WD19A::Family const* family=WD19A::FindFamily(id);
++    uint32 const base=family?family->ranks[0].spell:0;
++    bool const wuju=base==9003140 || base==9003180 || base==9003190 || base==9003280 || base==9003290 || base==9003300;
++    bool const jinx=base==9003150 || base==9003200 || base==9003210 || base==9003220 || id==9003762;
++    bool const allowed=wuju || jinx || base==9003240 || base==9003101;
++    SpellInfo const* info=sSpellMgr->GetSpellInfo(id);
++    if(!Enabled() || !allowed || !info || !p->HasSpell(id) || !s->loaded)
++    {
++        h->PSendSysMessage("WD114|{}|{}|unavailable",sequence,id);return true;
++    }
++    int32 const cost=p->GetCommandStatus(CHEAT_POWER)?0:info->CalcPowerCost(p,info->GetSchoolMask());
++    // Only fixed-range effects: don't roll RNG just to display a tooltip.
++    int32 a=0,b=0;
++    if(base==9003180 || base==9003300 || base==9003240)
++    {
++        a=p->CalculateSpellDamage(p,info,EFFECT_0);
++        if(base!=9003240) b=p->CalculateSpellDamage(p,info,EFFECT_1);
++    }
++    h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}",sequence,id,cost,a,b,s->revision,s->active);
++    return true;
++}
++
+ class Commands : public CommandScript
+ {
+ public:
+@@ -514,6 +547,7 @@
+     ChatCommandTable GetCommands() const override
+     {
+         static ChatCommandTable cmds={
++            {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
+             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
+             {"wd67join",AEJoin,SEC_PLAYER,Console::No},
+             {"wd67save",AESave,SEC_PLAYER,Console::No},
+--- WD113/01_覆盖到源代码根目录\src\server\game\Entities\Player\WitchDoctorTalentPolicy.h
++++ WD114/01_覆盖到源代码根目录\src\server\game\Entities\Player\WitchDoctorTalentPolicy.h
+@@ -9,7 +9,7 @@
+ inline bool WD79BadJuju(uint32 spell) { return spell==9003103 || (spell>=9003491 && spell<=9003498); }
+ inline bool Managed(uint32 spell)
+ {
+-    return spell==9003850 || spell==9003851 || spell==9003852 || spell==9003452 || spell==9003840 || spell==9003841 || spell==9003843 || spell==9003830 || spell==9003470 || spell==9003481 || spell==9003630 || spell==9003631 || spell==9003480 || (spell>=9003620 && spell<=9003625) || spell==9003660 || spell==9003432 || spell==9003640 || spell==9003820 || spell==9003822 || spell==9003800 || spell==9003801 || spell==9003810 || spell==9003650 || spell==9003651 || spell==9003633 || spell==9003653 || spell==9003790 || (spell>=9003780 && spell<=9003782) || spell==9003770 || spell==9003760 || spell==9003762 || spell==9003764 || (spell>=9003750 && spell<=9003754) || (spell>=9003740 && spell<=9003741) || (spell>=9003730 && spell<=9003731) || (spell>=9003720 && spell<=9003721) || spell==9003511 || (spell>=9003710 && spell<=9003712) || (spell>=9003700 && spell<=9003703) || spell==9003520 || spell==9003521 || spell==9003530 || spell==9003600 || spell==9003612 || spell==9003690 || WD79BadJuju(spell) || spell==9003610 || spell==9003611 || (spell>=9003500 && spell<=9003507) || spell==9003170 || spell==9003632 || spell==9003641 ||
++    return spell==9003853 || spell==9003854 || spell==9003850 || spell==9003851 || spell==9003852 || spell==9003452 || spell==9003840 || spell==9003841 || spell==9003843 || spell==9003830 || spell==9003470 || spell==9003481 || spell==9003630 || spell==9003631 || spell==9003480 || (spell>=9003620 && spell<=9003625) || spell==9003660 || spell==9003432 || spell==9003640 || spell==9003820 || spell==9003822 || spell==9003800 || spell==9003801 || spell==9003810 || spell==9003650 || spell==9003651 || spell==9003633 || spell==9003653 || spell==9003790 || (spell>=9003780 && spell<=9003782) || spell==9003770 || spell==9003760 || spell==9003762 || spell==9003764 || (spell>=9003750 && spell<=9003754) || (spell>=9003740 && spell<=9003741) || (spell>=9003730 && spell<=9003731) || (spell>=9003720 && spell<=9003721) || spell==9003511 || (spell>=9003710 && spell<=9003712) || (spell>=9003700 && spell<=9003703) || spell==9003520 || spell==9003521 || spell==9003530 || spell==9003600 || spell==9003612 || spell==9003690 || WD79BadJuju(spell) || spell==9003610 || spell==9003611 || (spell>=9003500 && spell<=9003507) || spell==9003170 || spell==9003632 || spell==9003641 ||
+         spell==9003642 || spell==9003652 || spell==9003440 || spell==9003670 || spell==9003673 ||
+         (spell>=9003680 && spell<=9003689);
+ }
+--- WD113/01_覆盖到源代码根目录\src\server\game\Spells\SpellInfo.cpp
++++ WD114/01_覆盖到源代码根目录\src\server\game\Spells\SpellInfo.cpp
+@@ -1417,6 +1417,7 @@
+     {
+         case 9003510: case 9003511: // exact critical modifiers
+         case 9003610: case 9003611: case 9003612: // Style, Zalazane, Voodoo
++        case 9003854: // WD114: Potent Mixes spell threat only
+         case 9003850: // WD113: exact Wuju cost / Power Wuju amount
+         case 9003851: // WD113: Hexbreak first effect only
+         case 9003852: // WD113: Jinx cost only
+--- WD113/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\Allocation.lua
++++ WD114/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\Allocation.lua
+@@ -56,8 +56,8 @@
+  return MaskFromParts(unpack(words))
+ end
+ 
+-local index={[29744]=0,[6054]=1,[6047]=2,[7092]=3,[29309]=4,[29301]=5,[4004]=6,[31154]=7,[31344]=8,[31340]=9,[7157]=10,[6058]=11,[29928]=12,[30973]=13,[4533]=14,[31341]=15,[6045]=16,[31347]=17,[31348]=18,[6644]=19,[6046]=20,[6062]=21,[30889]=22,[31343]=23,[6053]=24,[31350]=25,[5333]=26,[6059]=27,[5332]=28,[31345]=29,[6007]=30,[11532]=31,[4532]=32,[29121]=33,[31346]=34,[7100]=35,[29768]=36,[6057]=37,[30596]=38,[7088]=39,[30147]=40,[4132]=41,[31349]=42,[29929]=43,[6055]=44,[11133]=45,[7033]=46,[6051]=47,[6048]=48,[7131]=49,[30884]=50,[29736]=51,[9311]=52,[5055]=53,[4715]=54,[7129]=55,[7948]=56,[31137]=57,[30891]=59,[6030]=60,[7132]=61,[29753]=62,[6381]=63,[12048]=64,[11323]=65}
+-local maximum={[29744]=1,[6054]=1,[6047]=2,[7092]=1,[29309]=1,[29301]=1,[4004]=1,[31154]=1,[31344]=1,[31340]=1,[7157]=1,[6058]=1,[29928]=1,[30973]=3,[4533]=1,[31341]=1,[6045]=1,[31347]=1,[31348]=1,[6644]=1,[6046]=1,[6062]=2,[30889]=1,[31343]=1,[6053]=1,[31350]=1,[5333]=1,[6059]=1,[5332]=1,[31345]=2,[6007]=2,[11532]=1,[4532]=1,[29121]=1,[31346]=1,[7100]=1,[29768]=1,[6057]=1,[30596]=1,[7088]=2,[30147]=1,[4132]=1,[31349]=1,[29929]=1,[6055]=1,[11133]=1,[7033]=1,[6051]=1,[6048]=1,[7131]=2,[30884]=2,[29736]=2,[9311]=1,[5055]=1,[4715]=1,[7129]=1,[7948]=1,[31137]=1,[30891]=1,[6030]=1,[7132]=1,[29753]=1,[6381]=1,[12048]=1,[11323]=1}
++local index={[29744]=0,[6054]=1,[6047]=2,[7092]=3,[29309]=4,[29301]=5,[4004]=6,[31154]=7,[31344]=8,[31340]=9,[7157]=10,[6058]=11,[29928]=12,[30973]=13,[4533]=14,[31341]=15,[6045]=16,[31347]=17,[31348]=18,[6644]=19,[6046]=20,[6062]=21,[30889]=22,[31343]=23,[6053]=24,[31350]=25,[5333]=26,[6059]=27,[5332]=28,[31345]=29,[6007]=30,[11532]=31,[4532]=32,[29121]=33,[31346]=34,[7100]=35,[29768]=36,[6057]=37,[30596]=38,[7088]=39,[30147]=40,[4132]=41,[31349]=42,[29929]=43,[6055]=44,[11133]=45,[7033]=46,[6051]=47,[6048]=48,[7131]=49,[30884]=50,[29736]=51,[9311]=52,[5055]=53,[4715]=54,[7129]=55,[7948]=56,[31137]=57,[30891]=59,[6030]=60,[7132]=61,[29753]=62,[6381]=63,[12048]=64,[11323]=65,[31118]=66,[12264]=67}
++local maximum={[29744]=1,[6054]=1,[6047]=2,[7092]=1,[29309]=1,[29301]=1,[4004]=1,[31154]=1,[31344]=1,[31340]=1,[7157]=1,[6058]=1,[29928]=1,[30973]=3,[4533]=1,[31341]=1,[6045]=1,[31347]=1,[31348]=1,[6644]=1,[6046]=1,[6062]=2,[30889]=1,[31343]=1,[6053]=1,[31350]=1,[5333]=1,[6059]=1,[5332]=1,[31345]=2,[6007]=2,[11532]=1,[4532]=1,[29121]=1,[31346]=1,[7100]=1,[29768]=1,[6057]=1,[30596]=1,[7088]=2,[30147]=1,[4132]=1,[31349]=1,[29929]=1,[6055]=1,[11133]=1,[7033]=1,[6051]=1,[6048]=1,[7131]=2,[30884]=2,[29736]=2,[9311]=1,[5055]=1,[4715]=1,[7129]=1,[7948]=1,[31137]=1,[30891]=1,[6030]=1,[7132]=1,[29753]=1,[6381]=1,[12048]=1,[11323]=1,[31118]=1,[12264]=1}
+ M.aeMasks={0,0,0};M.draftAE=0
+ local function Changed() if M.changed then M.changed() end;if M.homeChanged then M.homeChanged() end end
+ local function Message(s) M.message=s;Changed() end
+@@ -69,13 +69,13 @@
+  return M.MaskRank(mask,Shift(i),(i==2 or i==13 or i==21 or i==29 or i==30 or i==39 or (i>=49 and i<=51)) and 2 or 1)
+ end
+ function M.AESpent(mask)
+- local total=0;for id,i in pairs(index) do if i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=65) then total=total+M.AERank(id,mask) end end;return total
++ local total=0;for id,i in pairs(index) do if i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=67) then total=total+M.AERank(id,mask) end end;return total
+ end
+ function M.TEFoundation(mask) return M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31345,mask) end
+ function M.BrewingSpent(mask) return M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask)+M.AERank(7948,mask)+M.AERank(31137,mask)+M.AERank(7132,mask)+M.AERank(29753,mask) end
+ function M.TESpent(mask) return M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
+ function M.AEValid(mask)
+- if M.MaskRank(mask,67,1)>0 or not M.MaskFits(mask,75) or (M.AERank(6047,mask)>2 or M.AERank(6062,mask)>2 or M.AERank(31345,mask)>2 or M.AERank(6007,mask)>2 or M.AERank(7088,mask)>2 or M.AERank(7131,mask)>2 or M.AERank(30884,mask)>2 or M.AERank(29736,mask)>2) then return false,"加点数据无效，请刷新方案" end
++ if M.MaskRank(mask,67,1)>0 or not M.MaskFits(mask,77) or (M.AERank(6047,mask)>2 or M.AERank(6062,mask)>2 or M.AERank(31345,mask)>2 or M.AERank(6007,mask)>2 or M.AERank(7088,mask)>2 or M.AERank(7131,mask)>2 or M.AERank(30884,mask)>2 or M.AERank(29736,mask)>2) then return false,"加点数据无效，请刷新方案" end
+  if M.TESpent(mask)>(M.teBudget or 0) then return false,"专精点数TE不足；AE不能代替TE" end
+  local function rank(id) return M.AERank(id,mask) end
+  if M.AESpent(mask)>(M.aeBudget or 0) then return false,"通用点数AE不足；TE不能代替AE" end
+@@ -90,13 +90,13 @@
+  if (rank(7948)>0 or rank(31137)>0) and M.BrewingSpent(mask)-rank(7948)-rank(31137)-rank(7132)-rank(29753)<8 then return false,"需要先投入8点基础酿造TE；这两个节点不能互相凑前置" end
+  if rank(7948)>0 and M.level<16 then return false,"灵魂之触需要16级" end
+  if rank(31137)>0 and M.level<30 then return false,"丛林秘法需要30级" end
+- if (rank(5113)>0 or rank(30891)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
++ if (rank(5113)>0 or rank(30891)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
+  if rank(5113)>0 and M.level<58 then return false,"诅咒雕像需要58级" end
+  if rank(30891)>0 and M.level<30 then return false,"穆厄扎拉之触需要30级" end
+  if (rank(7132)>0 or rank(29753)>0) and M.level<31 then return false,"佳酿需要31级" end
+  if rank(7132)>0 and rank(29753)>0 then return false,"怒气佳酿与奥术佳酿二选一" end
+  if (rank(7132)>0 or rank(29753)>0) and M.BrewingSpent(mask)-rank(7948)-rank(31137)-rank(7132)-rank(29753)<8 then return false,"先投入8点基础酿造TE" end
+- if (rank(6381)>0 or rank(12048)>0 or rank(11323)>0) and rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
++ if (rank(6381)>0 or rank(12048)>0 or rank(11323)>0 or rank(12264)>0) and rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
+  if rank(12048)>0 and rank(6048)>0 then return false,"希里克的祝福与黑暗魔精二选一" end
+  if rank(31154)>0 then
+   if M.level<11 then return false,"暗影傀儡需要角色等级11" end
+@@ -105,7 +105,7 @@
+   if rank(4004)==0 then return false,"暗影傀儡缺少前置：傀儡师之线（巫毒最右竖列顶部，免费）" end
+   if (M.teBudget or 0)<1 then return false,"暗影傀儡需要1点TE" end
+  end
+- if (rank(30147)>0 or rank(4132)>0 or rank(7033)>0 or rank(6051)>0 or rank(6048)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)<9 then return false,"需要先投入9 AE；同层节点不能互相凑前置" end
++ if (rank(30147)>0 or rank(4132)>0 or rank(7033)>0 or rank(6051)>0 or rank(6048)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)<9 then return false,"需要先投入9 AE；同层节点不能互相凑前置" end
+  if rank(6051)>0 and M.level<28 then return false,"迅捷神像需要等级28" end
+  if rank(6048)>0 and M.level<32 then return false,"黑暗魔精需要等级32" end
+  if rank(30147)>0 and M.level<28 then return false,"炼金强化需要等级28" end
+@@ -374,6 +374,8 @@
+ details[6381]={zh="洛阿强化",en="Loa Empowerment",level=10,early="先投9 AE",kind="通用被动 / Class passive",effects={{"巫祝技能耗蓝降低50%；力量巫祝效果提高20%。包括已移植的强效巫祝。","Wuju mana cost -50%; Power Wuju effectiveness +20%, including supported Greater Wujus."}},limit={"保存并激活后生效；既有增益需重新施放。","Active saved build only; recast existing buffs."},path={"9点基础AE后花1 AE；同层不计前置。","Nine foundation AE, then one AE."}}
+ details[12048]={zh="希里克的祝福",en="Blessing of Hir’eek",level=10,early="先投9 AE",kind="通用被动 / Class passive",effects={{"破咒术额外尝试移除一个诅咒，与黑暗魔精互斥。","Hexbreak attempts to remove one additional curse; exclusive with Dark Mojo."}},limit={"保存并激活后生效；既有增益需重新施放。","Active saved build only; recast existing buffs."},path={"9点基础AE后花1 AE；同层不计前置。","Nine foundation AE, then one AE."}}
+ details[11323]={zh="显性诅咒",en="Blatant Curse",level=10,early="先投9 AE",kind="通用被动 / Class passive",effects={{"倦怠、希里克、法力、缩小及恶毒诅咒耗蓝降低25%；不影响其他巫毒伤害或治疗技能。","Supported Jinx mana cost -25%; does not affect other damage/healing spells."}},limit={"保存并激活后生效；既有增益需重新施放。","Active saved build only; recast existing buffs."},path={"9点基础AE后花1 AE；同层不计前置。","Nine foundation AE, then one AE."}}
++details[31118]={zh="假死药剂",en="Death Draught",level=10,early="10",kind="通用主动 / Class active",effects={{"进入假死，最多持续5分钟，30秒冷却。","Feign death for up to 5 minutes; 30 sec cooldown."}},limit={"沿用原生假死；不是无敌，副本中不保证脱战。移动/主动取消后恢复。","Native feign death, not immunity; dungeon combat may persist. Move or cancel to stand."},path={"10级花1 AE；本批不强制图中连线为技能前置。","Level 10 and one AE; graph connections are not extra prerequisites."}}
++details[12264]={zh="强效混合",en="Potent Mixes",level=10,early="先投9 AE",kind="通用被动 / Class passive",effects={{"治疗量提高4%；法术产生的威胁降低15%。","Healing done +4%; threat generated by spells -15%."}},limit={"不直接削减已有仇恨，不降低普通近战白字仇恨；保存激活后生效。","Does not erase existing threat or reduce white melee threat; active saved build only."},path={"9点基础AE后花1 AE；同层不能凑前置。","Nine foundation AE, then one AE; same-tier nodes do not count."}}
+ local function Pair(zh,en,r,g,b,sameColor)
+  -- Both languages remain visible; the language switch chooses which comes first.
+  if RebornWDLanguage=="en" then zh,en=en,zh end
+@@ -381,16 +383,16 @@
+  GameTooltip:AddLine(en,sameColor and (r or 1) or .7,sameColor and (g or .82) or .75,sameColor and (b or 0) or .8,true)
+ end
+ local function PathReady(id)
+- if id==6381 or id==12048 or id==11323 then return M.AERank(29744)+M.AERank(6054)+M.AERank(6047)+M.AERank(7092)+M.AERank(29309)+M.AERank(29301)+M.AERank(7088)+M.AERank(6030)>=9 end
++ if id==6381 or id==12048 or id==11323 or id==12264 then return M.AERank(29744)+M.AERank(6054)+M.AERank(6047)+M.AERank(7092)+M.AERank(29309)+M.AERank(29301)+M.AERank(7088)+M.AERank(6030)+M.AERank(31118)>=9 end
+  if id==6030 then return true end
+- if id==30891 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)>=9 end
++ if id==30891 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)-M.AERank(12264)>=9 end
+  if id==7132 or id==29753 then return M.specs[M.slot+1]==1 and M.BrewingSpent(M.draftAE)-M.AERank(7948)-M.AERank(31137)-M.AERank(7132)-M.AERank(29753)>=8 end
+  if id==7948 or id==31137 then return M.specs[M.slot+1]==1 and M.BrewingSpent(M.draftAE)-M.AERank(7948)-M.AERank(31137)-M.AERank(7132)-M.AERank(29753)>=8 end
+  if id==7131 or id==30884 or id==29736 or id==9311 or id==5055 or id==4715 or id==7129 then return M.specs[M.slot+1]==1 end
+  if id==11133 then return M.specs[M.slot+1]==0 and M.level>=50 end
+  if id==31349 then return M.specs[M.slot+1]==0 and M.level>=59 and M.TEFoundation(M.draftAE)>=8 end
+  if id==29929 or id==6055 then return M.specs[M.slot+1]==0 and M.level>=(id==6055 and 59 or 57) and M.TESpent(M.draftAE)-M.AERank(31346)-M.AERank(7100)-M.AERank(29768)-M.AERank(6057)-M.AERank(29929)-M.AERank(6055)>=23 end
+- if id==30147 or id==4132 or id==7033 or id==6051 or id==6048 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)>=9 and ((id~=30147 and id~=6051) or M.level>=28) and (id~=6048 or M.level>=32) end
++ if id==30147 or id==4132 or id==7033 or id==6051 or id==6048 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)-M.AERank(12264)>=9 and ((id~=30147 and id~=6051) or M.level>=28) and (id~=6048 or M.level>=32) end
+  if id==30596 then return M.specs[M.slot+1]==0 and M.level>=27 and M.TEFoundation(M.draftAE)>=8 end
+  if id==29768 or id==6057 then return M.specs[M.slot+1]==0 and M.level>=57 and M.TESpent(M.draftAE)-M.AERank(31346)-M.AERank(7100)-M.AERank(29768)-M.AERank(6057)-M.AERank(29929)-M.AERank(6055)>=23 and (id==29768 or M.AERank(29768)>0) end
+  if id==7100 then return M.specs[M.slot+1]==0 and M.TESpent(M.draftAE)-M.AERank(31346)-M.AERank(7100)-M.AERank(29768)-M.AERank(6057)-M.AERank(29929)-M.AERank(6055)>=23 end
+--- WD113/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\NumericTooltip.lua
++++ WD114/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\NumericTooltip.lua
+@@ -0,0 +1,98 @@
++-- WD114: read-only, self-only server calculation. Never computes cost from a draft.
++local tip=GameTooltip
++local allowed,power={},{}
++local function range(a,b) for id=a,b do allowed[id]=true end end
++range(9003140,9003143);range(9003180,9003185)
++for _,id in ipairs({9003190,9003280,9003290,9003300,9003150,9003200,9003210,9003762,9003240,9003101}) do allowed[id]=true end
++range(9003220,9003225);range(9003130,9003138)
++for id=9003180,9003185 do power[id]=true end;power[9003300]=true
++local en=GetLocale()~="zhCN" and GetLocale()~="zhTW"
++local frame=CreateFrame("Frame")
++local cache,pending={},nil
++local seq,epoch,nextSend,elapsed,failures=0,0,0,0,0
++local function doctor()
++ local _,token,id=UnitClass("player");return token=="WITCHDOCTOR" or tonumber(id)==13
++end
++local function invalidate()
++ epoch=epoch+1;cache={};pending=nil
++end
++local function plain(s) return s:gsub("|c%x%x%x%x%x%x%x%x",""):gsub("|r","") end
++local function failed()
++ failures=failures+1
++ if failures>=3 then nextSend=GetTime()+60;failures=0 end
++end
++local function refresh(self,forced)
++ if not doctor() then return end
++ local _,second,third=self:GetSpell()
++ local id=tonumber(forced) or tonumber(third) or tonumber(second) or self.wd114Spell
++ if not allowed[id] then return end
++ self.wd114Spell=id
++ local now=GetTime();local value=cache[id]
++ if value and now-value.time>2 then value=nil end
++ local state=RebornWD8
++ if state and (state.pending or (value and state.loaded and (value.rev~=state.revision or value.active~=state.active))) then value=nil end
++ if pending and now-pending.time>2 then pending=nil;failed() end
++ if not pending and now>=nextSend and (not value or now-value.time>1) and not (state and state.pending) then
++  seq=seq+1;pending={seq=seq,id=id,epoch=epoch,time=now};nextSend=now+1
++  SendChatMessage(".wd114numbers "..seq.." "..id,"SAY")
++ end
++ self.wd114Lines=self.wd114Lines or {}
++ for i=2,self:NumLines() do
++  for _,side in ipairs({"Left","Right"}) do
++   local key=self:GetName().."Text"..side..i
++   local font=_G[key];local text=font and font:GetText()
++   if text then
++    local original=self.wd114Lines[key] or text
++    local clean=plain(original)
++    if clean:match("^%s*%d+%s*法力值%s*$") or clean:match("^%s*%d+%s*[Mm]ana%s*$") then
++     self.wd114Lines[key]=original
++     font:SetText(value and (tostring(value.cost)..(en and " Mana" or "法力值")) or (original..(en and " (syncing)" or "（同步中）")))
++    end
++   end
++  end
++ end
++ if power[id] or id==9003240 then
++  local text
++  if value then
++   if power[id] then text=en and ("Current melee / ranged attack power: +"..value.a.." / +"..value.b) or ("当前近战／远程攻击强度：+"..value.a.."／+"..value.b)
++   else text=en and ("Curse removal attempts: "..value.a) or ("可尝试移除诅咒数量："..value.a) end
++  else text=en and "Current effect: syncing" or "当前效果：同步中" end
++  if not self.wd114EffectLine then
++   self:AddLine(text,.3,1,.3,true);self.wd114EffectLine=self:NumLines();if self.Show then self:Show() end
++  else
++   local font=_G[self:GetName().."TextLeft"..self.wd114EffectLine];if font then font:SetText(text) end
++  end
++ end
++end
++local function receive(message)
++ local n,id,status,rest=message:match("^WD114|(%d+)|(%d+)|([^|]+)|?(.*)$")
++ n,id=tonumber(n),tonumber(id)
++ if not n or not pending or n~=pending.seq or id~=pending.id or pending.epoch~=epoch then return end
++ pending=nil
++ if status~="ok" then failed();return end
++ local cost,a,b,rev,active=rest:match("^(%d+)|([%-]?%d+)|([%-]?%d+)|(%d+)|(%d+)$")
++ if not cost then return end
++ local state=RebornWD8
++ if state and state.loaded and (state.pending or tonumber(rev)~=state.revision or tonumber(active)~=state.active) then return end
++ failures=0
++ cache[id]={cost=tonumber(cost),a=tonumber(a),b=tonumber(b),rev=tonumber(rev),active=tonumber(active),time=GetTime()}
++ if tip:IsShown() and tip.wd114Spell==id then refresh(tip,id) end
++end
++for _,event in ipairs({"CHAT_MSG_SYSTEM","PLAYER_ENTERING_WORLD","UNIT_AURA","UNIT_STATS","UNIT_INVENTORY_CHANGED","PLAYER_LEVEL_UP"}) do frame:RegisterEvent(event) end
++frame:SetScript("OnEvent",function(_,event,arg)
++ if event=="CHAT_MSG_SYSTEM" then
++  if type(arg)=="string" and arg:match("^WD114|") then receive(arg)
++  elseif type(arg)=="string" and arg:match("^WD16|") then invalidate() end
++ elseif event:match("^UNIT_") then if arg=="player" then invalidate() end
++ else invalidate() end
++end)
++ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM",function(_,_,text) return type(text)=="string" and text:match("^WD114|")~=nil end)
++tip:HookScript("OnTooltipCleared",function(self) self.wd114Spell=nil;self.wd114Lines=nil;self.wd114EffectLine=nil end)
++tip:HookScript("OnTooltipSetSpell",refresh)
++tip:HookScript("OnUpdate",function(self,dt) elapsed=elapsed+dt;if elapsed>=.2 then elapsed=0;refresh(self) end end)
++hooksecurefunc(tip,"SetHyperlink",function(self,link) if type(link)=="string" then refresh(self,link:match("spell:(%d+)")) end end)
++if tip.SetSpellByID then hooksecurefunc(tip,"SetSpellByID",refresh) end
++if tip.SetSpell and GetSpellLink then hooksecurefunc(tip,"SetSpell",function(self,index,book) local link=GetSpellLink(index,book);if type(link)=="string" then refresh(self,link:match("spell:(%d+)")) end end) end
++if tip.SetSpellBookItem and GetSpellBookItemInfo then hooksecurefunc(tip,"SetSpellBookItem",function(self,index,book) local _,id=GetSpellBookItemInfo(index,book);refresh(self,id) end) end
++if tip.SetAction and GetActionInfo then hooksecurefunc(tip,"SetAction",function(self,slot) local kind,id=GetActionInfo(slot);if kind=="spell" then refresh(self,id) end end) end
++return {refresh=refresh,receive=receive,invalidate=invalidate,allowed=allowed}
+--- WD113/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\Progress.lua
++++ WD114/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\Progress.lua
+@@ -1,5 +1,7 @@
+ -- WD52A: display metadata only. Learning remains server-authoritative.
+ RebornWDProgress = { nodes = {
++ [31118]={name="假死药剂",spells={9003853}},
++ [12264]={name="强效混合",spells={9003854}},
+  [6381]={name="洛阿强化",spells={9003850}},
+  [12048]={name="希里克的祝福",spells={9003851}},
+  [11323]={name="显性诅咒",spells={9003852}},
+--- WD113/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\RebornWitchDoctorTalents.toc
++++ WD114/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\RebornWitchDoctorTalents.toc
+@@ -0,0 +1,22 @@
++## Interface: 30300
++## Title: Reborn Witch Doctor Talents
++## Notes: CoA原版美术适配；巫医天赋
++## Version: WD9A
++## SavedVariables: RebornWDButtonPosition, RebornWDLanguage, RebornWD8Equipment
++Data.lua
++Art.lua
++WD5A.lua
++HomeArt.lua
++Language.lua
++Progress.lua
++WD8.lua
++Allocation.lua
++Eligibility.lua
++BuildNames.lua
++Profiles.lua
++Home.lua
++Panel.lua
++
++Routing.lua
++
++NumericTooltip.lua
+--- WD113/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\WD8.lua
++++ WD114/02_覆盖到客户端根目录\Interface\AddOns\RebornWitchDoctorTalents\WD8.lua
+@@ -186,7 +186,7 @@
+  if points and tonumber(points)~=math.max(0,math.min(80,level)-9) then return end
+  if modern then
+   a0,a1,a2,ae,te=M.MaskParse(a0),M.MaskParse(a1),M.MaskParse(a2),tonumber(ae),tonumber(te)
+-  if not M.MaskFits(a0,75) or not M.MaskFits(a1,75) or not M.MaskFits(a2,75) or ae>255 or te>255 then return end
++  if not M.MaskFits(a0,77) or not M.MaskFits(a1,77) or not M.MaskFits(a2,77) or ae>255 or te>255 then return end
+   M.modern=modern=="1";M.aeMasks={a0,a1,a2};M.aeBudget=ae;M.teBudget=te
+  end
+  M.unlocked=tonumber(unlocked)

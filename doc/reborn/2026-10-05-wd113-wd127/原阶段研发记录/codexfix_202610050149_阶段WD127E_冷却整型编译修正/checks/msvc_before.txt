@@ -1,0 +1,46 @@
+command: cl.exe /nologo /Zs /std:c++17 /W4 /WX before.cpp
+exit_code: 1
+before.cpp
+before.cpp(6): error C2672: 'std::max': no matching overloaded function found
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(85): note: could be '_Ty std::max(std::initializer_list<_Elem>)'
+before.cpp(6): note: '_Ty std::max(std::initializer_list<_Elem>)': expects 1 arguments - 2 provided
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(82): note: or       '_Ty std::max(std::initializer_list<_Elem>,_Pr)'
+before.cpp(6): note: '_Ty std::max(std::initializer_list<_Elem>,_Pr)': could not deduce template argument for 'std::initializer_list<_Elem>' from 'int'
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(74): note: or       'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)'
+before.cpp(6): note: 'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)': template parameter '_Ty' is ambiguous
+before.cpp(6): note: could be 'uint32'
+before.cpp(6): note: or       'int'
+before.cpp(6): note: 'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)': could not deduce template argument for 'const _Ty &' from 'uint32'
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(64): note: or       'const _Ty &std::max(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)'
+before.cpp(6): note: 'const _Ty &std::max(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)': expects 3 arguments - 2 provided
+before.cpp(6): error C2672: 'std::min': no matching overloaded function found
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(109): note: could be '_Ty std::min(std::initializer_list<_Elem>)'
+before.cpp(6): note: '_Ty std::min(std::initializer_list<_Elem>)': could not deduce template argument for 'std::initializer_list<_Elem>' from 'int32'
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(106): note: or       '_Ty std::min(std::initializer_list<_Elem>,_Pr)'
+before.cpp(6): note: '_Ty std::min(std::initializer_list<_Elem>,_Pr)': expects 2 arguments - 1 provided
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(98): note: or       'const _Ty &std::min(const _Ty &,const _Ty &) noexcept(<expr>)'
+before.cpp(6): note: 'const _Ty &std::min(const _Ty &,const _Ty &) noexcept(<expr>)': expects 2 arguments - 1 provided
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(88): note: or       'const _Ty &std::min(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)'
+before.cpp(6): note: 'const _Ty &std::min(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)': expects 3 arguments - 1 provided
+before.cpp(9): error C2672: 'std::max': no matching overloaded function found
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(85): note: could be '_Ty std::max(std::initializer_list<_Elem>)'
+before.cpp(9): note: '_Ty std::max(std::initializer_list<_Elem>)': expects 1 arguments - 2 provided
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(82): note: or       '_Ty std::max(std::initializer_list<_Elem>,_Pr)'
+before.cpp(9): note: '_Ty std::max(std::initializer_list<_Elem>,_Pr)': could not deduce template argument for 'std::initializer_list<_Elem>' from 'int'
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(74): note: or       'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)'
+before.cpp(9): note: 'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)': template parameter '_Ty' is ambiguous
+before.cpp(9): note: could be 'uint32'
+before.cpp(9): note: or       'int'
+before.cpp(9): note: 'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)': could not deduce template argument for 'const _Ty &' from 'uint32'
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(64): note: or       'const _Ty &std::max(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)'
+before.cpp(9): note: 'const _Ty &std::max(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)': expects 3 arguments - 2 provided
+before.cpp(9): error C2672: 'std::min': no matching overloaded function found
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(109): note: could be '_Ty std::min(std::initializer_list<_Elem>)'
+before.cpp(9): note: '_Ty std::min(std::initializer_list<_Elem>)': could not deduce template argument for 'std::initializer_list<_Elem>' from 'int32'
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(106): note: or       '_Ty std::min(std::initializer_list<_Elem>,_Pr)'
+before.cpp(9): note: '_Ty std::min(std::initializer_list<_Elem>,_Pr)': expects 2 arguments - 1 provided
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(98): note: or       'const _Ty &std::min(const _Ty &,const _Ty &) noexcept(<expr>)'
+before.cpp(9): note: 'const _Ty &std::min(const _Ty &,const _Ty &) noexcept(<expr>)': expects 2 arguments - 1 provided
+D:\soft\vs2022\enterprise\VC\Tools\MSVC\14.44.35207\include\utility(88): note: or       'const _Ty &std::min(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)'
+before.cpp(9): note: 'const _Ty &std::min(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)': expects 3 arguments - 1 provided
+

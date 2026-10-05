@@ -1,0 +1,78 @@
+// WD120: CoA d7620151, isolated Brewing ingredient / Potion Toss closure.
+#include "RebornWitchDoctorBrewingNumbers.h"
+#include "Containers.h"
+class spell_reborn_wd120_brewing : public SpellScript
+{
+    PrepareSpellScript(spell_reborn_wd120_brewing);
+    bool _shrooms=false,_fish=false,_bones=false;
+    bool Validate(SpellInfo const*) override
+    {
+        return ValidateSpellInfo({WD120A::Brewer,WD120A::Shrooms,WD120A::Pulse,WD120A::Hot,WD120A::SplashHot,WD125A::FishPrep,WD125A::FishField,WD125A::FishPotion,WD125A::FishSplash,WD125A::BonesPrep,WD125A::BonesField,WD125A::BonesPotion,WD125A::BonesSplash});
+    }
+    SpellCastResult Check()
+    {
+        if(GetSpellInfo()->Id==WD120A::Pulse) return SPELL_CAST_OK;
+        Player* p=GetCaster()->ToPlayer();
+        if(!IsDoctor(p) || !p->HasSpell(GetSpellInfo()->Id)) return SPELL_FAILED_CASTER_AURASTATE;
+        if((WD120A::IsToss(GetSpellInfo()->Id) || WD120A::IsSplash(GetSpellInfo()->Id)) && !p->HasAura(WD120A::Shrooms) && !p->HasAura(WD125A::FishPrep) && !p->HasAura(WD125A::BonesPrep)) return SPELL_FAILED_CASTER_AURASTATE;
+        return SPELL_CAST_OK;
+    }
+    void PulseTargets(std::list<WorldObject*>& targets)
+    {
+        if(GetSpellInfo()->Id==WD120A::Pulse)
+            Acore::Containers::RandomResize(targets,WD120A::PulseTargets(GetCaster()));
+    }
+    void Snapshot()
+    {
+        // Per-cast state: a different preparation while the missile travels cannot change it.
+        _shrooms=GetCaster()->HasAura(WD120A::Shrooms);
+        _fish=GetCaster()->HasAura(WD125A::FishPrep);
+        _bones=GetCaster()->HasAura(WD125A::BonesPrep);
+        // Exactly one prepared ingredient until the Mixologist capacity node is implemented.
+        uint32 id=GetSpellInfo()->Id;
+        if(WD125A::IsPrep(id))
+            for(uint32 other:{WD120A::Shrooms,WD125A::FishPrep,WD125A::BonesPrep})
+                if(other!=id) GetCaster()->RemoveAurasDueToSpell(other,GetCaster()->GetGUID());
+    }
+    void HealBase(SpellEffIndex)
+    {
+        if(GetSpellInfo()->Id!=WD120A::Pulse && !WD120A::IsToss(GetSpellInfo()->Id) && !WD120A::IsSplash(GetSpellInfo()->Id)) return;
+        Player* p=GetCaster()->ToPlayer();
+        if(!IsDoctor(p)) return;
+        bool pulse=GetSpellInfo()->Id==WD120A::Pulse;
+        // The upstream scaling hook runs after level growth/dice, before done/taken modifiers.
+        float base=float(GetEffectValue());
+        if(pulse) base=float(int32(double(base)*WD120A::Scaling(p->GetLevel())));
+        SetEffectValue(int32(base+(WD120A::IsSplash(GetSpellInfo()->Id)?WD120A::SplashBonus(p):WD120A::Bonus(p,pulse))));
+    }
+    void IngredientEffect()
+    {
+        Player* p=GetCaster()->ToPlayer();Unit* target=GetHitUnit();
+        if(!IsDoctor(p) || (!WD120A::IsToss(GetSpellInfo()->Id) && !WD120A::IsSplash(GetSpellInfo()->Id)) || !target ||
+           !target->IsAlive() || !p->IsFriendlyTo(target)) return;
+        // Correct official 803698 healing route, not upstream 803273 Fish Oil.
+        bool splash=WD120A::IsSplash(GetSpellInfo()->Id);
+        if(_shrooms)
+            p->CastSpell(target,splash?WD120A::SplashHot:WD120A::Hot,true);
+        else if(_fish)
+            p->CastSpell(target,splash?WD125A::FishSplash:WD125A::FishPotion,true);
+        else if(_bones)
+        {
+            // Donor formula: base + 35% Spirit + 80% bonus healing.
+            float amount=(splash?25.0f:100.0f)+std::max(0.0f,p->GetStat(STAT_SPIRIT))*0.35f
+                +float(std::max(0,p->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE)))*0.80f;
+            int32 shield=std::max(1,int32(amount));
+            p->CastCustomSpell(target,splash?WD125A::BonesSplash:WD125A::BonesPotion,&shield,nullptr,nullptr,true);
+        }
+    }
+    void Register() override
+    {
+        // Pulse is a hidden triggered heal, not an independently learned player ability.
+        if(m_scriptSpellId==WD120A::Pulse)
+            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_reborn_wd120_brewing::PulseTargets,EFFECT_0,TARGET_UNIT_CASTER_AREA_RAID);
+        OnCheckCast += SpellCheckCastFn(spell_reborn_wd120_brewing::Check);
+        OnCast += SpellCastFn(spell_reborn_wd120_brewing::Snapshot);
+        OnEffectLaunchTarget += SpellEffectFn(spell_reborn_wd120_brewing::HealBase,EFFECT_0,SPELL_EFFECT_ANY);
+        AfterHit += SpellHitFn(spell_reborn_wd120_brewing::IngredientEffect);
+    }
+};

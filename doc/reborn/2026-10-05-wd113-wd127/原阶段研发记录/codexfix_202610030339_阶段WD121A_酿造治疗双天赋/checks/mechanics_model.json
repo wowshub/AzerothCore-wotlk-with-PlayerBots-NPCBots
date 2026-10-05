@@ -1,0 +1,12 @@
+{
+  "status": "PASS offline model + source call-path audit; NOT engine execution",
+  "cases": 720,
+  "source": "Unit::SpellHealingBonusDone, explicit mod routing, DBC native108 operations0/22",
+  "assertions": [
+    "rank replacement excludes simultaneous Fresh ranks",
+    "Fresh does not affect tossed HoT",
+    "Boss does not affect Cauldron pulse",
+    "unrelated spells/operations unchanged",
+    "old healing spell rows byte-identical"
+  ]
+}

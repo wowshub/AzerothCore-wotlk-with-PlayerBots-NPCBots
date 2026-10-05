@@ -1,0 +1,4 @@
+interface:
+  display_name: "stabilize-spelldraft-client-ui"
+  short_description: "beAscend verified repair workflow"
+  default_prompt: "Use the verified beAscend workflow and package complete replacement files."

@@ -1,0 +1,4 @@
+2026-10-03T04:23:15.164304Z 0 [System] [MY-013169] [Server] D:\000rebornWOW\000RebornWOWHighForkPRO\beascendserver\wowshub_playerbot_npcbot_newrace20260929Ascend\mysql-8.0.31-winx64\bin\mysqld.exe (mysqld 8.0.31) initializing of server in progress as process 51328
+2026-10-03T04:23:15.179522Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-03T04:23:15.527092Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-03T04:23:16.190886Z 5 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.

@@ -1,0 +1,7 @@
+{
+  "icon_id": 2020,
+  "targets": 14,
+  "expected_base_ms": 15000,
+  "expected_talented_ms": 10000,
+  "static_only": true
+}

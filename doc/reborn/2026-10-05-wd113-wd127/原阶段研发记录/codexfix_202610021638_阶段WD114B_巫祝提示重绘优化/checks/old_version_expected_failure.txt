@@ -1,0 +1,6 @@
+PASS WD114 tooltip: authoritative integer cost, no repeated halving, drafts ignored, stale replies, aura invalidation, range preserved, Power Wuju/Hexbreak effects, supported spell whitelist, Chinese/English
+D:\000rebornWOW\000RebornWOWHighForkPRO\beascendBuild\modules\mod-ale\src\lualib\lua\RelWithDebInfo\lua52_interpreter.exe: ..._巫祝提示重绘优化\tools\test_numeric_tooltip.lua:100: assertion failed!
+stack traceback:
+	[C]: in function 'assert'
+	..._巫祝提示重绘优化\tools\test_numeric_tooltip.lua:100: in main chunk
+	[C]: in ?

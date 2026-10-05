@@ -1,0 +1,21 @@
+[
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+  "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+  "01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+  "01_覆盖到源代码根目录/src/server/game/Spells/SpellInfo.cpp",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/WD8.lua",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/607c33b4b97eb670.blp",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Icons/706f2cfc47b53886.blp",
+  "03_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+  "03_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+  "client_mpq输入_导入现有Patch-XA/DBFilesClient/SkillLineAbility.dbc",
+  "client_mpq输入_导入现有Patch-XA/DBFilesClient/Spell.dbc",
+  "client_mpq输入_导入现有Patch-XA/DBFilesClient/SpellIcon.dbc",
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/607c33b4b97eb670.blp",
+  "client_mpq输入_导入现有Patch-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/706f2cfc47b53886.blp",
+  "server_SQL/01_CHARACTERS_WD121A_必须执行.sql"
+]

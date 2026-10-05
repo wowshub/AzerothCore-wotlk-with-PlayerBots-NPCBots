@@ -1,0 +1,17 @@
+{
+  "memory.md": "ce78abbc5e727069d75ca5a5fc98ad2fbedcc24e5b0ceb40adf3ab075568db49",
+  "phaseFixForNewChat.md": "ce78abbc5e727069d75ca5a5fc98ad2fbedcc24e5b0ceb40adf3ab075568db49",
+  "README_覆盖与测试说明.md": "15e0fb980026396f317f034f57fe8ac0243c804a71f3111a05ef3d5bd613ac22",
+  "tutor.md": "84aa304cda3cc8bc1419952ff2d4026f465763fac294c7828e2b7e25041a81c2",
+  "02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorSkillBook\\RebornWitchDoctorSkillBook.lua": "d48e5be0c5abc20ab8fc04bff353311a224812d1523d7a36d00ca968005986a8",
+  "checks\\lua.txt": "4c67fa1186b1d9de9493ed5e5521c8f9d917a87bc0ec053285fd7329eb8d2599",
+  "research\\archive_skilllines.json": "eae1aac1fff4739daf0d33624c5e4b64e3913ca5106f822ef60e0fa91d6ca843",
+  "research\\SpellBookFrame_current.lua": "6d898fcedc10fbceff31ebea4e1aad9f80852b273a2e2850ac2c06c8dc659f86",
+  "rollback\\Interface\\AddOns\\RebornWitchDoctorSkillBook\\RebornWitchDoctorSkillBook.lua": "d2f2f99a411efd2f9c471ee13e041529f3f8e9d1b2ef0b58f53bcf965a6650be",
+  "tools\\wd114c_audit.py": "5b47c91d4856ddaba421ed8aa085672f76c28155bedd9db93bd23254d03945aa",
+  "tools\\wd114c_book.lua": "70e7064a66ad21c66da483b438568f9e86fbefac8c57602209e8c3a763d9c745",
+  "tools\\wd114c_finish.py": "0b57d872f7669ae7aa16f0d5ba3010ca3fa5dda2d536e1d1aa5e3233cd0cb409",
+  "tools\\wd114c_more.py": "785f839bda5b7b6c5efaa31f5a65154cd94dd8c6febfd8c98fe777c8678bb253",
+  "tools\\wd114c_scanui.py": "1f183f4f958bd6e1c828c08c938a680422b4a2820a855b9b853e7a89800c5677",
+  "tools\\wd114c_test.lua": "d7199df91b845a2466423ca0b9d3c9287efa4f486755748b83115f8d0c1eb1db"
+}

@@ -1,0 +1,19 @@
+PASS 320 decode combinations; 40-bit protocol with WD87 regression, exact decimal save, rank/gates/free-level40/rollback UI guards
+PASS WD88: 40 high-bit combinations, 30/33 levels, free node, 23 prior TE, budget/spec and exact save
+PASS WD91: 41-bit decode/save, lower-tier gate, no circular bootstrap, budget/spec and tooltip
+PASS WD93 43-bit save/decode, Voice/Price dependency, four-node tier boundary, budget/spec/level and tooltip
+PASS WD96 44-bit Grasp, level27/foundation8/TE9, saved-decimal payload, next-tier contribution and GM budgets
+PASS WD97B 48-bit Class rank/budget/foundation/level/spec/protocol/tooltip scenarios
+PASS WD98 51-bit, three Voodoo nodes, TE budgets, level59, tier anti-bootstrap, spec, save and tooltip
+PASS WD99 52-bit: free node, level50, spec ownership, cumulative TE, exact decimal save, tooltip
+PASS WD100 40 exact mask combinations; >2^53 odd values, three slots, events, dirty state, decimal save, foundation, levels, budgets, tooltips
+PASS WD104A 27 Brewing rank combinations; 61bit exact decimal, 3 nodes, budgets, spec, rank3, draft undo, saved no-refund, reply and tooltips
+PASS WD105: 8 combinations, uint64 maximum and overflow, high odd mask, levels, free costs, exact save/reply, undo and saved no-refund
+PASS WD109: 128bit exact transport, 67bit limit, high node ownership, prereq/level/budget/branch, save/reply and unbound third slot
+PASS WD110/111/112 class ownership, cross-spec, budget, levels, choices and 72-bit transport
+PASS WD113 three high Class bits, ownership, cross-spec, foundation, mutually exclusive Dark Mojo, budget, exact save, tooltip
+PASS WD114 two nodes, old builds, cross spec, foundation, budget, level, 77-bit save
+PASS WD116 Vigil 78-bit ownership, exact save, cross spec, 9-AE foundation, no circular bootstrap, budget and tooltip
+PASS WD117 two ranks, foundation, budget, cross spec, 80-bit exact save
+PASS WD118 Slither level30, cross spec, foundation, budgets, 81-bit save, no Walker bit collision
+PASS WD119 three nodes: exact84-bit, mutual choice, prerequisite, budgets, cross-spec and levels

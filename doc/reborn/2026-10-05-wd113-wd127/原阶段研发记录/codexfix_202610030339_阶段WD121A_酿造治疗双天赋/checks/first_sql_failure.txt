@@ -1,0 +1,1 @@
+Initial isolated WD121 run failed old war level58 rejected assertion at test_mysql.py:90. Raw return was not captured on that run. Private server shut down in finally. No production mutation. Added JSONL SQL/return tracing; next full suite passed413. Added20 repeated level58 refusals and no-mutation checks for final suite. Failure is not root-caused and must not be claimed fixed.

@@ -1,0 +1,22 @@
+[
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbcSpell.dbc all prior rows untouched",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbcSpell.dbc pool prefix preserved",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc native reduction 25",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc heal exactly2 percent",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc self only",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc timed native trigger",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc no recursive helper",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbcSkillLineAbility.dbc all prior rows untouched",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbcSkillLineAbility.dbc pool prefix preserved",
+  "03_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc hidden helper not taught",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClientSpell.dbc all prior rows untouched",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClientSpell.dbc pool prefix preserved",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient native reduction 25",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient heal exactly2 percent",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient self only",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient timed native trigger",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient no recursive helper",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClientSkillLineAbility.dbc all prior rows untouched",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClientSkillLineAbility.dbc pool prefix preserved",
+  "client_mpq\u8f93\u5165_\u5bfc\u5165\u73b0\u6709Patch-XA/DBFilesClient hidden helper not taught"
+]
