@@ -1,0 +1,9 @@
+# 教学：让天赋图标与技能书一致
+
+两张面板各有自己的图标来源：技能书由Spell.dbc的SpellIcon字段查SpellIcon.dbc得到贴图路径，天赋树由Data.lua节点的Icon字段指定。此处技能效果和SpellID本来相同，只是节点独立贴图填错。
+
+先从实际运行客户端Patch-XA读取9003910，再查其1761图标，得到Ability_Creature_Cursed_01。确认客户端Data.lua与WD130A一致后复制副本，仅在文件尾部按node.ID==30888更新Icon和IconSource，既不修改原生技能书，也不覆盖任何共享BLP。ipairs逐个遍历节点；ID条件保证只改一项；IconSource跟随Icon，避免两个来源记录矛盾。
+
+新图标已由该客户端原生技能书成功显示，因此本次引用已有纹理，不制造新DBC或导入旧资源。回归读取前后实际Lua表，除目标节点两个图标字段外必须完全相同。真正屏幕观感仍由用户/reload后确认。
+
+本次使用项目stabilize-spelldraft-client-ui Skill；这是单节点UI修复，没有新机制移植，不重新声称已审计上游今天新实现。WD130A原包SHA及验收状态保持。

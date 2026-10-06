@@ -68,3 +68,11 @@ for _,node in ipairs(RebornWDTreeData) do
  if node.ID==6022 then node.RequiredLevel=10;node.RequiredIDs={7128} end
  if node.ID==6013 then node.RequiredLevel=10;node.RequiredIDs={29303,29738};node.ConnectedNodes={29303,29738} end
 end
+
+-- WD130B: Shrink Ally uses the same texture as native Spell 9003910 (SpellIcon 1761).
+for _,node in ipairs(RebornWDTreeData) do
+ if node.ID==30888 then
+  node.Icon="Interface\\Icons\\Ability_Creature_Cursed_01"
+  node.IconSource=node.Icon
+ end
+end

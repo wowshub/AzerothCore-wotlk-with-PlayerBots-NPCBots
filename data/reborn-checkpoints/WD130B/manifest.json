@@ -1,0 +1,10 @@
+{
+  "stage": "WD130B",
+  "baseline": "WD130A",
+  "spell_id": 9003910,
+  "spell_icon_id": 1761,
+  "node_id": 30888,
+  "old_sha256": "5b1317a00d645deda928e42ab3ad3d43f49dc7ae4c3ebe3f1b3e235a20d8b601",
+  "new_sha256": "66bde8b32d1ccd509a617ac0e02e2edb9cf8a1a7e8841061ef366a54a9b8acfc",
+  "status": "UI candidate; not deployed"
+}
