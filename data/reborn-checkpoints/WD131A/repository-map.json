@@ -1,0 +1,14 @@
+[
+  {
+    "package_path": "server_SQL/01_CHARACTERS_WD131A_必须执行.sql",
+    "future_repository_path": "data/customfixsql/characters/witchdoctor/20261006_wd131/01_CHARACTERS_WD131A_必须执行.sql",
+    "sha256": "46d1c4c4af2245fdc4dacf74129e24ebf7570be999212dd6ce6b3c7b74166773",
+    "status": "tracked; manual execution only; not executed during acceptance"
+  },
+  {
+    "package_path": "server_SQL/09_WORLD_WD131A_必须执行.sql",
+    "future_repository_path": "data/customfixsql/world/witchdoctor/20261006_wd131/09_WORLD_WD131A_必须执行.sql",
+    "sha256": "ed27d8b8a0932645bb124970d068cafb9744a1ee1e9f1c261fcc43ae75305373",
+    "status": "tracked; manual execution only; not executed during acceptance"
+  }
+]

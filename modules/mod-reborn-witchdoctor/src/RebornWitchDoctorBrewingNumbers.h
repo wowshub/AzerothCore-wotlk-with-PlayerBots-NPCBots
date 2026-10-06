@@ -40,16 +40,20 @@ inline bool IsPrep(uint32 id) { return id==9003915 || id==FishPrep || id==BonesP
 namespace WD128A
 {
 constexpr uint32 Mixologist=9003912, Peacebloom=9003913, Earthroot=9003914;
-struct Ingredients : DataMap::Base { std::vector<uint32> order; };
+struct Ingredients : DataMap::Base { std::vector<uint32> order; uint32 mojoPair=0; bool mixing=false; };
 inline void Normalize(Player* p,uint32 preparing=0)
 {
-    auto& order=p->CustomData.GetDefault<Ingredients>("Reborn.WD128.Ingredients")->order;
+    auto* state=p->CustomData.GetDefault<Ingredients>("Reborn.WD128.Ingredients");
+    if(state->mixing) return;
+    if(preparing) { state->mojoPair=0; p->RemoveAurasDueToSpell(9003933); p->RemoveAurasDueToSpell(9003934); }
+    if(state->mojoPair && !p->HasSpell(state->mojoPair)) state->mojoPair=0;
+    auto& order=state->order;
     order.erase(std::remove_if(order.begin(),order.end(),[p,preparing](uint32 id)
         { return id==preparing || !p->HasAura(id,p->GetGUID()); }),order.end());
     for(uint32 id:{WD120A::Shrooms,WD125A::FishPrep,WD125A::BonesPrep,9003915u})
         if(id!=preparing && p->HasAura(id,p->GetGUID()) && std::find(order.begin(),order.end(),id)==order.end()) order.push_back(id);
     if(preparing) order.push_back(preparing);
-    uint32 const capacity=p->HasSpell(Mixologist) && p->HasAura(Mixologist,p->GetGUID())?2u:1u;
+    uint32 const capacity=(state->mojoPair || (p->HasSpell(Mixologist) && p->HasAura(Mixologist,p->GetGUID())))?2u:1u;
     while(order.size()>capacity)
     {
         uint32 const oldest=order.front();order.erase(order.begin());

@@ -5,6 +5,7 @@ class spell_reborn_wd120_brewing : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd120_brewing);
     bool _shrooms=false,_fish=false,_bones=false,_thistle=false;
+    uint32 _mojo=0;
     bool Validate(SpellInfo const*) override
     {
         return ValidateSpellInfo({WD120A::Brewer,WD120A::Shrooms,WD120A::Pulse,WD120A::Hot,WD120A::SplashHot,WD125A::FishPrep,WD125A::FishField,WD125A::FishPotion,WD125A::FishSplash,WD125A::BonesPrep,WD125A::BonesField,WD125A::BonesPotion,WD125A::BonesSplash,9003915,9003917,9003918});
@@ -30,6 +31,14 @@ class spell_reborn_wd120_brewing : public SpellScript
         _bones=GetCaster()->HasAura(WD125A::BonesPrep);
         _thistle=GetCaster()->HasAura(9003915);
         uint32 id=GetSpellInfo()->Id;
+        if(WD120A::IsToss(id) || WD120A::IsSplash(id))
+        {
+            // Consume at successful launch, once per cast; every hit uses this snapshot.
+            if(GetCaster()->HasAura(9003933)) _mojo=9003935;
+            else if(GetCaster()->HasAura(9003934)) _mojo=9003936;
+            GetCaster()->RemoveAurasDueToSpell(9003933);
+            GetCaster()->RemoveAurasDueToSpell(9003934);
+        }
         if(WD125A::IsPrep(id)) WD128A::Normalize(GetCaster()->ToPlayer(),id);
     }
     void HealBase(SpellEffIndex)
@@ -50,6 +59,7 @@ class spell_reborn_wd120_brewing : public SpellScript
            !target->IsAlive() || !p->IsFriendlyTo(target)) return;
         // Correct official 803698 healing route, not upstream 803273 Fish Oil.
         bool splash=WD120A::IsSplash(GetSpellInfo()->Id);
+        if(_mojo) p->CastSpell(target,_mojo,true);
         if(_shrooms)
             p->CastSpell(target,splash?WD120A::SplashHot:WD120A::Hot,true);
         if(_fish)

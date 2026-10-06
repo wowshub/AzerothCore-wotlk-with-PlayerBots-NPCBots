@@ -186,7 +186,7 @@ f:SetScript("OnEvent",function(_,event,msg)
  if points and tonumber(points)~=math.max(0,math.min(80,level)-9) then return end
  if modern then
   a0,a1,a2,ae,te=M.MaskParse(a0),M.MaskParse(a1),M.MaskParse(a2),tonumber(ae),tonumber(te)
-  if not M.MaskFits(a0,108) or not M.MaskFits(a1,108) or not M.MaskFits(a2,108) or ae>255 or te>255 then return end
+  if not M.MaskFits(a0,110) or not M.MaskFits(a1,110) or not M.MaskFits(a2,110) or ae>255 or te>255 then return end
   M.modern=modern=="1";M.aeMasks={a0,a1,a2};M.aeBudget=ae;M.teBudget=te
  end
  M.unlocked=tonumber(unlocked)
