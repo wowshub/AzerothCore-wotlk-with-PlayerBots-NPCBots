@@ -33,3 +33,27 @@ constexpr uint32 FishPrep=9003901,FishField=9003902,FishPotion=9003903,FishSplas
 constexpr uint32 BonesPrep=9003905,BonesField=9003906,BonesPotion=9003907,BonesSplash=9003908;
 inline bool IsPrep(uint32 id) { return id==FishPrep || id==BonesPrep || id==WD120A::Shrooms; }
 }
+
+// WD128: per-player FIFO, shared by preparation and saved-build cleanup.
+#include "DataMap.h"
+#include <vector>
+namespace WD128A
+{
+constexpr uint32 Mixologist=9003912, Peacebloom=9003913, Earthroot=9003914;
+struct Ingredients : DataMap::Base { std::vector<uint32> order; };
+inline void Normalize(Player* p,uint32 preparing=0)
+{
+    auto& order=p->CustomData.GetDefault<Ingredients>("Reborn.WD128.Ingredients")->order;
+    order.erase(std::remove_if(order.begin(),order.end(),[p,preparing](uint32 id)
+        { return id==preparing || !p->HasAura(id,p->GetGUID()); }),order.end());
+    for(uint32 id:{WD120A::Shrooms,WD125A::FishPrep,WD125A::BonesPrep})
+        if(id!=preparing && p->HasAura(id,p->GetGUID()) && std::find(order.begin(),order.end(),id)==order.end()) order.push_back(id);
+    if(preparing) order.push_back(preparing);
+    uint32 const capacity=p->HasSpell(Mixologist) && p->HasAura(Mixologist,p->GetGUID())?2u:1u;
+    while(order.size()>capacity)
+    {
+        uint32 const oldest=order.front();order.erase(order.begin());
+        p->RemoveAurasDueToSpell(oldest,p->GetGUID());
+    }
+}
+}

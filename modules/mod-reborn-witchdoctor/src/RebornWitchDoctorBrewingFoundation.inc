@@ -28,11 +28,8 @@ class spell_reborn_wd120_brewing : public SpellScript
         _shrooms=GetCaster()->HasAura(WD120A::Shrooms);
         _fish=GetCaster()->HasAura(WD125A::FishPrep);
         _bones=GetCaster()->HasAura(WD125A::BonesPrep);
-        // Exactly one prepared ingredient until the Mixologist capacity node is implemented.
         uint32 id=GetSpellInfo()->Id;
-        if(WD125A::IsPrep(id))
-            for(uint32 other:{WD120A::Shrooms,WD125A::FishPrep,WD125A::BonesPrep})
-                if(other!=id) GetCaster()->RemoveAurasDueToSpell(other,GetCaster()->GetGUID());
+        if(WD125A::IsPrep(id)) WD128A::Normalize(GetCaster()->ToPlayer(),id);
     }
     void HealBase(SpellEffIndex)
     {
@@ -54,9 +51,9 @@ class spell_reborn_wd120_brewing : public SpellScript
         bool splash=WD120A::IsSplash(GetSpellInfo()->Id);
         if(_shrooms)
             p->CastSpell(target,splash?WD120A::SplashHot:WD120A::Hot,true);
-        else if(_fish)
+        if(_fish)
             p->CastSpell(target,splash?WD125A::FishSplash:WD125A::FishPotion,true);
-        else if(_bones)
+        if(_bones)
         {
             // Donor formula: base + 35% Spirit + 80% bonus healing.
             float amount=(splash?25.0f:100.0f)+std::max(0.0f,p->GetStat(STAT_SPIRIT))*0.35f

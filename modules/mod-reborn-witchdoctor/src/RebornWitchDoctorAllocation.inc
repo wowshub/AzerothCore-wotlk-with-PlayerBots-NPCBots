@@ -1,5 +1,5 @@
 // WD67A lives inside WD5A and deliberately shares its revision / actions / lock rules.
-uint32 const AEIds[AEIdCount]={29744,6054,6047,7092,29309,29301,4004,31154,31344,31340,7157,6058,29928,30973,4533,31341,6045,31347,31348,6644,6046,6062,30889,31343,6053,31350,5333,6059,5332,31345,6007,11532,4532,29121,31346,7100,29768,6057,30596,7088,30147,4132,31349,29929,6055,11133,7033,6051,6048,7131,30884,29736,9311,5055,4715,7129,7948,31137,0,30891,6030,7132,29753,6381,12048,11323,31118,12264,6042,9347,29306,6031,6525,12525,4005,12645,12646,6498,29303,6020,29737,7128,35065,35064,35068,29738,30888,35051};
+uint32 const AEIds[AEIdCount]={29744,6054,6047,7092,29309,29301,4004,31154,31344,31340,7157,6058,29928,30973,4533,31341,6045,31347,31348,6644,6046,6062,30889,31343,6053,31350,5333,6059,5332,31345,6007,11532,4532,29121,31346,7100,29768,6057,30596,7088,30147,4132,31349,29929,6055,11133,7033,6051,6048,7131,30884,29736,9311,5055,4715,7129,7948,31137,0,30891,6030,7132,29753,6381,12048,11323,31118,12264,6042,9347,29306,6031,6525,12525,4005,12645,12646,6498,29303,6020,29737,7128,35065,35064,35068,29738,30888,35051,6645,4112,7130};
 static uint32 const AESpells[8]={9003170,9003632,9003641,9003642,9003652,9003440,9003673,9003670};
 uint32 AERank(AEMask mask,uint32 index)
 {
@@ -33,18 +33,22 @@ uint32 TEFoundation(AEMask mask)
 }
 uint32 TESpent(AEMask mask)
 {
-    return TEFoundation(mask)+AERank(mask,15)+AERank(mask,16)+AERank(mask,17)+AERank(mask,18)+AERank(mask,19)+AERank(mask,20)+AERank(mask,21)+AERank(mask,22)+AERank(mask,23)+AERank(mask,24)+AERank(mask,25)+AERank(mask,26)+AERank(mask,27)+AERank(mask,28)+AERank(mask,30)+AERank(mask,33)+AERank(mask,34)+AERank(mask,35)+AERank(mask,36)+AERank(mask,37)+AERank(mask,38)+AERank(mask,42)+AERank(mask,43)+AERank(mask,44)+AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)+AERank(mask,56)+AERank(mask,57)+AERank(mask,61)+AERank(mask,62)+AERank(mask,77)+AERank(mask,78)+AERank(mask,79)+AERank(mask,80)+AERank(mask,81)+AERank(mask,82)+AERank(mask,83)+AERank(mask,84)+AERank(mask,85)+AERank(mask,86)+AERank(mask,87);
+    return TEFoundation(mask)+AERank(mask,15)+AERank(mask,16)+AERank(mask,17)+AERank(mask,18)+AERank(mask,19)+AERank(mask,20)+AERank(mask,21)+AERank(mask,22)+AERank(mask,23)+AERank(mask,24)+AERank(mask,25)+AERank(mask,26)+AERank(mask,27)+AERank(mask,28)+AERank(mask,30)+AERank(mask,33)+AERank(mask,34)+AERank(mask,35)+AERank(mask,36)+AERank(mask,37)+AERank(mask,38)+AERank(mask,42)+AERank(mask,43)+AERank(mask,44)+AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)+AERank(mask,56)+AERank(mask,57)+AERank(mask,61)+AERank(mask,62)+AERank(mask,77)+AERank(mask,78)+AERank(mask,79)+AERank(mask,80)+AERank(mask,81)+AERank(mask,82)+AERank(mask,83)+AERank(mask,84)+AERank(mask,85)+AERank(mask,86)+AERank(mask,87)+AERank(mask,88)+AERank(mask,89)+AERank(mask,90);
 }
 bool AESpecValid(AEMask mask,uint32 spec)
 {
     // An unused/unbound slot is valid storage, but cannot own any allocated nodes.
     if(spec==3) return mask==0;
     return spec<3 && (!(mask&4239716836704128ULL) || spec==0) &&
-        (!((mask>>55)&4095) && !AERank(mask,61) && !AERank(mask,62) && !AERank(mask,74) && !AERank(mask,75) && !AERank(mask,76) && !AERank(mask,77) && !AERank(mask,78) && !AERank(mask,79) && !AERank(mask,80) && !AERank(mask,81) && !AERank(mask,82) && !AERank(mask,83) && !AERank(mask,84) && !AERank(mask,85) && !AERank(mask,86) && !AERank(mask,87) || spec==1);
+        (!((mask>>55)&4095) && !AERank(mask,61) && !AERank(mask,62) && !AERank(mask,74) && !AERank(mask,75) && !AERank(mask,76) && !AERank(mask,77) && !AERank(mask,78) && !AERank(mask,79) && !AERank(mask,80) && !AERank(mask,81) && !AERank(mask,82) && !AERank(mask,83) && !AERank(mask,84) && !AERank(mask,85) && !AERank(mask,86) && !AERank(mask,87) && !AERank(mask,88) && !AERank(mask,89) && !AERank(mask,90) || spec==1);
 }
 bool AEValid(AEMask mask,uint32 level,uint32 testAE,uint32 testTE)
 {
-    if(AERank(mask,83)>2 || AERank(mask,77)>2 || AERank(mask,69)>2 || AERank(mask,58) || (mask>>100)!=0 || testAE>100 || testTE>100 || (AERank(mask,2)>2 || AERank(mask,21)>2 || AERank(mask,29)>2 || AERank(mask,30)>2 || AERank(mask,39)>2 || AERank(mask,49)>2 || AERank(mask,50)>2 || AERank(mask,51)>2) || AESpent(mask)>WD67Budget::AE(level)+testAE || TESpent(mask)>WD67Budget::TE(level)+testTE) return false;
+    if(AERank(mask,83)>2 || AERank(mask,77)>2 || AERank(mask,69)>2 || AERank(mask,58) || (mask>>103)!=0 || testAE>100 || testTE>100 || (AERank(mask,2)>2 || AERank(mask,21)>2 || AERank(mask,29)>2 || AERank(mask,30)>2 || AERank(mask,39)>2 || AERank(mask,49)>2 || AERank(mask,50)>2 || AERank(mask,51)>2) || AESpent(mask)>WD67Budget::AE(level)+testAE || TESpent(mask)>WD67Budget::TE(level)+testTE) return false;
+    if(AERank(mask,89) && AERank(mask,90)) return false;
+    if((AERank(mask,89) || AERank(mask,90)) &&
+       AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)+AERank(mask,81)<8) return false;
+    if((AERank(mask,88) || AERank(mask,89) || AERank(mask,90)) && !AERank(mask,74)) return false;
     if(AERank(mask,79) && AERank(mask,80)) return false; // WD122 authored choice group 706545.
     if(AERank(mask,81) && level<17) return false; // WD123 first Splash rank.
     if((AERank(mask,82) || AERank(mask,83) || AERank(mask,84) || AERank(mask,85) || AERank(mask,86) || AERank(mask,87)) &&
@@ -147,6 +151,18 @@ void AEApply(Player* p,State* s)
     for(uint32 id:{9003877u,9003878u,9003879u,9003880u,9003881u}) if(!sSpellMgr->GetSpellInfo(id)) return;
     for(uint32 id:{9003901u,9003902u,9003903u,9003904u,9003905u,9003906u,9003907u,9003908u}) if(!sSpellMgr->GetSpellInfo(id)) return;
     if(!sSpellMgr->GetSpellInfo(9003910) || !sSpellMgr->GetSpellInfo(9003911)) return;
+    for(uint32 id:{9003912u,9003913u,9003914u}) if(!sSpellMgr->GetSpellInfo(id)) return;
+    // WD128: remove old choice first; only the active saved build grants passives.
+    for(uint32 i=0;i<3;++i) if(!AERank(mask,88+i))
+    {
+        p->RemoveAurasDueToSpell(9003912+i,p->GetGUID());
+        if(p->HasSpell(9003912+i)) p->removeSpell(9003912+i,3,false);
+    }
+    for(uint32 i=0;i<3;++i) if(AERank(mask,88+i))
+    {
+        if(!p->HasSpell(9003912+i)) p->learnSpell(9003912+i);
+        if(!p->HasAura(9003912+i)) p->CastSpell(p,9003912+i,true);
+    }
     uint32 const fresh=AERank(mask,77);
     bool const cadenceChanged=p->HasAura(9003881)!=(AERank(mask,80)>0);
     uint32 const brewingPassives[5]={9003877,9003878,9003879,9003880,9003881};
@@ -201,7 +217,7 @@ void AEApply(Player* p,State* s)
         }
     }
     // WD125: Fish Oil is the official level-16 class ability; Frog Bones is a saved talent.
-    bool const fish=p->GetLevel()>=16;
+    bool const fish=p->GetLevel()>=16 || AERank(mask,88)>0;
     bool const bones=AERank(mask,85)>0;
     for(uint32 id:{WD125A::FishPrep,WD125A::BonesPrep})
     {
@@ -230,6 +246,7 @@ void AEApply(Player* p,State* s)
         if(!p->HasSpell(9003911)) p->learnSpell(9003911);
         if(!p->HasAura(9003911)) p->CastSpell(p,9003911,true);
     }
+    WD128A::Normalize(p); // Trim only after removing ineligible preparations.
     uint32 toss=0;
     uint32 const tossLevels[7]={14,22,30,38,46,54,60};
     if(AERank(mask,76)) for(uint32 i=0;i<7;++i) if(p->GetLevel()>=tossLevels[i]) toss=9003870+i;

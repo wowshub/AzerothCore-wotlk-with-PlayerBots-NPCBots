@@ -3044,6 +3044,11 @@ public:
         }
         // Native flat/pct modifiers, exact target; no family-wide fallback.
         // WD121: use native done-healing modifiers after coefficients, not base-only edits.
+        // WD128: coefficient-complete healing uses DAMAGE/DOT; utility/absorb use ALL_EFFECTS.
+        if(mod->spellId==9003914)
+            return !((check->Id==9003866 && mod->op==SPELLMOD_DAMAGE) ||
+                     ((check->Id==9003867 || check->Id==9003889) && mod->op==SPELLMOD_DOT) ||
+                     ((check->Id>=9003902 && check->Id<=9003908 && check->Id!=9003905) && mod->op==SPELLMOD_ALL_EFFECTS));
         if(mod->spellId==9003897)
             return !((check->Id>=9003870 && check->Id<=9003876 ||
                       check->Id>=9003890 && check->Id<=9003896) && mod->op==SPELLMOD_COOLDOWN);

@@ -1,0 +1,10 @@
+{
+  "archive_crc": "passed",
+  "payload_sha256_checked": 70,
+  "repository_mapping_sha256_checked": 29,
+  "original_archive_unchanged": true,
+  "WD128B_deferred_100_bit_entry_preserved": true,
+  "compiled": false,
+  "deployed": false,
+  "database_executed": false
+}

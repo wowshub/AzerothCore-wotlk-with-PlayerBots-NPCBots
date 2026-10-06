@@ -1,0 +1,22 @@
+## Interface: 30300
+## Title: Reborn Witch Doctor Talents
+## Notes: CoA原版美术适配；巫医天赋
+## Version: WD9A
+## SavedVariables: RebornWDButtonPosition, RebornWDLanguage, RebornWD8Equipment
+Data.lua
+Art.lua
+WD5A.lua
+HomeArt.lua
+Language.lua
+Progress.lua
+WD8.lua
+Allocation.lua
+Eligibility.lua
+BuildNames.lua
+Profiles.lua
+Home.lua
+Panel.lua
+
+Routing.lua
+
+NumericTooltip.lua
