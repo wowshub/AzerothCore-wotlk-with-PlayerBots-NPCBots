@@ -24,6 +24,7 @@ class spell_reborn_wd130_heal : public SpellScript
     void Hit()
     {
         Player* p=GetCaster()->ToPlayer();
+        WD132A::Echo(p,GetHitUnit(),uint32(std::max(0,GetHitHeal())));
         // Effective gain, not the raw heal or overheal, reduces each live rank's cooldown.
         if(IsDoctor(p) && GetHitHeal()>0 && p->HasAura(9003930))
         { WD130Local::Reduce(p,9003870,9003876,1000); WD130Local::Reduce(p,9003890,9003896,1000); }
@@ -35,7 +36,7 @@ class aura_reborn_wd130_beam : public AuraScript
     PrepareAuraScript(aura_reborn_wd130_beam);
     std::vector<ObjectGuid> branches;
     uint32 ticks=0;
-    bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003929,9003932}); }
+    bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003929,9003932,9003937,9003938,9003939}); }
     void Apply(AuraEffect const*,AuraEffectHandleModes)
     {
         if(Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr)
@@ -101,6 +102,7 @@ public:
     {
         Player* p=caster?caster->ToPlayer():nullptr;
         if(!spell || spell->IsTriggered() || !info || !IsDoctor(p) || !p->IsAlive()) return;
+        if(WD130A::Beam(info->Id)) WD132A::Restore(p);
         if(WD19A::IsBrew(info->Id) && p->HasAura(9003930)) WD130Local::Reduce(p,9003922,9003928,2000);
         if(WD130A::Bottle(info->Id) && p->HasAura(9003931)) p->CastSpell(p,9003574,true);
     }

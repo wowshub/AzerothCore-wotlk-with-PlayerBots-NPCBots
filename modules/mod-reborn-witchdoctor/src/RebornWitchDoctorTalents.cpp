@@ -72,7 +72,7 @@ uint32 TEFoundation(AEMask);
 uint32 TESpent(AEMask);
 uint32 AERank(AEMask,uint32);
 bool AEValid(AEMask,uint32,uint32=0,uint32=0);
-constexpr uint32 AEIdCount=98;
+constexpr uint32 AEIdCount=99;
 extern uint32 const AEIds[AEIdCount];
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
@@ -490,6 +490,7 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     }
     if(s->modern && (n->id==31118 || n->id==6042 || n->id==9347)) level=10;
     if(s->modern && (n->id==6031 || n->id==6525 || n->id==12525)) level=26;
+    if(s->modern && n->id==4733) { level=40;missing=rank(4715)?0:1;te=0; }
     if(s->modern && (n->id==6016 || n->id==6009))
     {
         level=10;missing=rank(4005) && rank(12645) && rank(n->id==6016?29738:6021)?0:1;

@@ -82,3 +82,8 @@ for _,node in ipairs(RebornWDTreeData) do
  if node.ID==6016 then node.RequiredLevel=10;node.RequiredIDs={29738};node.ConnectedNodes={29738} end
  if node.ID==6009 then node.RequiredLevel=10;node.RequiredIDs={6021};node.ConnectedNodes={6021} end
 end
+
+-- WD132: free level-40 Brewing passive, preserving earlier local node mappings.
+for _,node in ipairs(RebornWDTreeData) do
+ if node.ID==4733 then node.RequiredLevel=40;node.RequiredIDs={4715};node.ConnectedNodes={4715} end
+end

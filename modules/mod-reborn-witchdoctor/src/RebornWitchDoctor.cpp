@@ -3276,6 +3276,7 @@ void WD117ClearSwift(Player* p)
 
 #include "RebornWitchDoctorBrewingFoundation.inc"
 #include "RebornWitchDoctorBrewing129.inc"
+#include "RebornWitchDoctorBrewing132.inc"
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
 
