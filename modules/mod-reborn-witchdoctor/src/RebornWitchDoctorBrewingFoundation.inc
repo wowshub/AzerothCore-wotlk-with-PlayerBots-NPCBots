@@ -4,17 +4,17 @@
 class spell_reborn_wd120_brewing : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd120_brewing);
-    bool _shrooms=false,_fish=false,_bones=false;
+    bool _shrooms=false,_fish=false,_bones=false,_thistle=false;
     bool Validate(SpellInfo const*) override
     {
-        return ValidateSpellInfo({WD120A::Brewer,WD120A::Shrooms,WD120A::Pulse,WD120A::Hot,WD120A::SplashHot,WD125A::FishPrep,WD125A::FishField,WD125A::FishPotion,WD125A::FishSplash,WD125A::BonesPrep,WD125A::BonesField,WD125A::BonesPotion,WD125A::BonesSplash});
+        return ValidateSpellInfo({WD120A::Brewer,WD120A::Shrooms,WD120A::Pulse,WD120A::Hot,WD120A::SplashHot,WD125A::FishPrep,WD125A::FishField,WD125A::FishPotion,WD125A::FishSplash,WD125A::BonesPrep,WD125A::BonesField,WD125A::BonesPotion,WD125A::BonesSplash,9003915,9003917,9003918});
     }
     SpellCastResult Check()
     {
         if(GetSpellInfo()->Id==WD120A::Pulse) return SPELL_CAST_OK;
         Player* p=GetCaster()->ToPlayer();
         if(!IsDoctor(p) || !p->HasSpell(GetSpellInfo()->Id)) return SPELL_FAILED_CASTER_AURASTATE;
-        if((WD120A::IsToss(GetSpellInfo()->Id) || WD120A::IsSplash(GetSpellInfo()->Id)) && !p->HasAura(WD120A::Shrooms) && !p->HasAura(WD125A::FishPrep) && !p->HasAura(WD125A::BonesPrep)) return SPELL_FAILED_CASTER_AURASTATE;
+        if((WD120A::IsToss(GetSpellInfo()->Id) || WD120A::IsSplash(GetSpellInfo()->Id)) && !p->HasAura(WD120A::Shrooms) && !p->HasAura(WD125A::FishPrep) && !p->HasAura(WD125A::BonesPrep) && !p->HasAura(9003915)) return SPELL_FAILED_CASTER_AURASTATE;
         return SPELL_CAST_OK;
     }
     void PulseTargets(std::list<WorldObject*>& targets)
@@ -28,6 +28,7 @@ class spell_reborn_wd120_brewing : public SpellScript
         _shrooms=GetCaster()->HasAura(WD120A::Shrooms);
         _fish=GetCaster()->HasAura(WD125A::FishPrep);
         _bones=GetCaster()->HasAura(WD125A::BonesPrep);
+        _thistle=GetCaster()->HasAura(9003915);
         uint32 id=GetSpellInfo()->Id;
         if(WD125A::IsPrep(id)) WD128A::Normalize(GetCaster()->ToPlayer(),id);
     }
@@ -53,6 +54,7 @@ class spell_reborn_wd120_brewing : public SpellScript
             p->CastSpell(target,splash?WD120A::SplashHot:WD120A::Hot,true);
         if(_fish)
             p->CastSpell(target,splash?WD125A::FishSplash:WD125A::FishPotion,true);
+        if(_thistle) p->CastSpell(target,splash?9003918u:9003917u,true);
         if(_bones)
         {
             // Donor formula: base + 35% Spirit + 80% bonus healing.

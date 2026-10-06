@@ -56,3 +56,8 @@ for _,node in ipairs(RebornWDTreeData) do
   node.RequiredIDs={4005};node.RequiredLevel=10
  end
 end
+
+-- WD129: keep old IDs/layout; exact implemented prerequisites.
+for _,node in ipairs(RebornWDTreeData) do
+ if node.ID==6021 or node.ID==6014 then node.RequiredIDs={4005};node.RequiredLevel=10 end
+end
