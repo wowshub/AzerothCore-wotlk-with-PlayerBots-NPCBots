@@ -560,7 +560,7 @@ bool AESave(ChatHandler* h,uint32 expected,uint32 slot,std::string_view maskText
 {
     AEMask mask=0;
     // Parse exactly; never wrap or accept signed/scientific notation from chat.
-    AEMask const maximum=(AEMask(1)<<100)-1;
+    AEMask const maximum=(AEMask(1)<<103)-1; // WD128B: match AEValid, Lua and SQL.
     if(maskText.empty() || maskText.size()>39) return false;
     for(char ch:maskText)
     {
