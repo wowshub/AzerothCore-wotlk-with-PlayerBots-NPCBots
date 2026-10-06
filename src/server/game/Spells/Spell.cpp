@@ -16,6 +16,7 @@
  */
 
 #include "Spell.h"
+#include "RebornWitchDoctorBeam.h"
 #include "Config.h"
 #include "ArenaSpectator.h"
 #include "BattlefieldMgr.h"
@@ -940,6 +941,18 @@ void Spell::SelectSpellTargets()
         }
     }
 
+    // WD130: real extra Bottle targets, preserving its native heal and hit scripts.
+    if (!IsTriggered() && WD130A::Bottle(m_spellInfo->Id) && WD130A::Channel(m_caster) && m_caster->HasAura(9003931))
+        if (Unit* primary=m_targets.GetUnitTarget())
+        {
+            uint32 count=0;
+            for(Unit* ally:WD130A::Allies(m_caster,primary))
+                if(ally!=primary)
+                {
+                    AddUnitTarget(ally,1u<<EFFECT_0,true,false);
+                    if(++count==2) break;
+                }
+        }
     if (uint64 dstDelay = CalculateDelayMomentForDst())
         m_delayMoment = dstDelay;
 }
@@ -4583,6 +4596,9 @@ void Spell::update(uint32 difftime)
         return;
     }
 
+    // WD130: allowing side actions does not allow movement during Mojo Beam.
+    if(WD130A::Beam(m_spellInfo->Id) && m_caster->isMoving() && !IsTriggered())
+    { cancel(true); return; }
     // check if the player caster has moved before the spell finished
     // xinef: added preparing state (real cast, skip channels as they have other flags for this)
     if ((m_caster->IsPlayer() && m_timer != 0) &&

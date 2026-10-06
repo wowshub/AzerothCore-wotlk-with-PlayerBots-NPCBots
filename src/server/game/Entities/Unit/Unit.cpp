@@ -58,6 +58,7 @@
 #include "ScriptMgr.h"
 #include "SharedDefines.h"
 #include "Spell.h"
+#include "RebornWitchDoctorBeam.h"
 #include "SpellAuraDefines.h"
 #include "SpellAuraEffects.h"
 #include "SpellAuras.h"
@@ -4547,7 +4548,7 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
                 // generic spells always break channeled not delayed spells
                 if (Spell* s = GetCurrentSpell(CURRENT_CHANNELED_SPELL))
                 {
-                    if (!s->GetSpellInfo()->IsActionAllowedChannel())
+                    if (!s->GetSpellInfo()->IsActionAllowedChannel() || (WD130A::Beam(s->GetSpellInfo()->Id) && !WD130A::SideCast(this,pSpell->GetSpellInfo())))
                     {
                         InterruptSpell(CURRENT_CHANNELED_SPELL, false);
                     }

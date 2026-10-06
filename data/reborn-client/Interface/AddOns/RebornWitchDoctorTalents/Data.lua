@@ -61,3 +61,10 @@ end
 for _,node in ipairs(RebornWDTreeData) do
  if node.ID==6021 or node.ID==6014 then node.RequiredIDs={4005};node.RequiredLevel=10 end
 end
+
+-- WD130: preserve old authored IDs; map retired Frog Bones parent to its implemented node.
+for _,node in ipairs(RebornWDTreeData) do
+ if node.ID==30823 then node.RequiredLevel=29;node.RequiredIDs={7128,29303};node.ConnectedNodes={7128,29303} end
+ if node.ID==6022 then node.RequiredLevel=10;node.RequiredIDs={7128} end
+ if node.ID==6013 then node.RequiredLevel=10;node.RequiredIDs={29303,29738};node.ConnectedNodes={29303,29738} end
+end

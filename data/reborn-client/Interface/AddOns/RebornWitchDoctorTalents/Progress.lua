@@ -1,5 +1,8 @@
 -- WD52A: display metadata only. Learning remains server-authoritative.
 RebornWDProgress = { nodes = {
+ [30823]={name="魔精光束",spells={9003922,9003923,9003924,9003925,9003926,9003927,9003928}},
+ [6022]={name="泼洒他们",spells={9003930}},
+ [6013]={name="瓶外之灵",spells={9003931}},
  [6021]={name="配料：血蓟",spells={9003915}},
  [6014]={name="森金之仪",spells={9003920}},
  [6645]={name="调酒师",spells={9003912}},

@@ -72,7 +72,7 @@ uint32 TEFoundation(AEMask);
 uint32 TESpent(AEMask);
 uint32 AERank(AEMask,uint32);
 bool AEValid(AEMask,uint32,uint32=0,uint32=0);
-constexpr uint32 AEIdCount=93;
+constexpr uint32 AEIdCount=96;
 extern uint32 const AEIds[AEIdCount];
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
@@ -490,6 +490,13 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     }
     if(s->modern && (n->id==31118 || n->id==6042 || n->id==9347)) level=10;
     if(s->modern && (n->id==6031 || n->id==6525 || n->id==12525)) level=26;
+    if(s->modern && (n->id==30823 || n->id==6022 || n->id==6013))
+    {
+        level=n->id==30823?29:10;
+        bool parent=n->id==30823?(rank(7128)||rank(29303)):(n->id==6022?rank(7128):(rank(29303)||rank(29738)));
+        missing=rank(4005) && parent?0:1;
+        te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128);
+    }
     if(s->modern && (n->id==6021 || n->id==6014))
     {
         level=10;missing=rank(4005)?0:1;
@@ -549,7 +556,7 @@ bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
     bool const wuju=base==9003140 || base==9003180 || base==9003190 || base==9003280 || base==9003290 || base==9003300;
     bool const jinx=base==9003150 || base==9003200 || base==9003210 || base==9003220 || id==9003762;
     bool const walkerTarget=id==9003855 || id==9003432;
-    bool const allowed=id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
+    bool const allowed=(id>=9003922 && id<=9003928) || (id>=9003460 && id<=9003467) || id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
     SpellInfo const* info=sSpellMgr->GetSpellInfo(id);
     if(!Enabled() || !allowed || !info || !p->HasSpell(id) || !s->loaded)
     {

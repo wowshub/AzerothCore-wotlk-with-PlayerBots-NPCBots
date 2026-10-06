@@ -13,6 +13,7 @@
 #include <utility>
 #include "SpellScript.h"
 #include "Spell.h"
+#include "RebornWitchDoctorBeam.h"
 #include "SpellMgr.h"
 #include "SpellInfo.h"
 #include "RebornWitchDoctorSpiritWalker.h"
@@ -3045,6 +3046,8 @@ public:
         // Native flat/pct modifiers, exact target; no family-wide fallback.
         // WD121: use native done-healing modifiers after coefficients, not base-only edits.
         // WD128: coefficient-complete healing uses DAMAGE/DOT; utility/absorb use ALL_EFFECTS.
+        if(mod->spellId==9003929)
+            return !WD130A::Side(check->Id) || (mod->op!=SPELLMOD_CASTING_TIME && mod->op!=SPELLMOD_COST);
         if(mod->spellId==9003921)
             return mod->op!=SPELLMOD_CASTING_TIME || !WD19A::IsBrew(check->Id);
         if(mod->spellId==9003914)
@@ -3273,6 +3276,7 @@ void WD117ClearSwift(Player* p)
 
 #include "RebornWitchDoctorBrewingFoundation.inc"
 #include "RebornWitchDoctorBrewing129.inc"
+#include "RebornWitchDoctorBrewing130.inc"
 
 // WD126: the donor spell's Dodge and Scale auras remain native 3.3.5a effects.
 class spell_reborn_wd126_shrink_ally : public SpellScript
@@ -3305,6 +3309,10 @@ void AddRebornWitchDoctorScripts()
     RegisterSpellScript(spell_reborn_wd120_brewing);
     RegisterSpellScript(aura_reborn_wd129_thistle);
     new wd129_senjin_events();
+    RegisterSpellScript(aura_reborn_wd130_beam);
+    RegisterSpellScript(spell_reborn_wd130_beam);
+    RegisterSpellScript(spell_reborn_wd130_heal);
+    new wd130_events();
     RegisterSpellScript(spell_reborn_wd126_shrink_ally);
     WD93A::Register();
     WD96A::Register();

@@ -1417,6 +1417,7 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     {
         case 9003510: case 9003511: // exact critical modifiers
         case 9003610: case 9003611: case 9003612: // Style, Zalazane, Voodoo
+        case 9003929: // WD130 side-action cost and cast-time whitelist
         case 9003921: // WD129: only Loa Brew casting time
         case 9003914: // WD128 exact ingredient effectiveness
         case 9003897: // WD124 exact toss/splash cooldown modifier

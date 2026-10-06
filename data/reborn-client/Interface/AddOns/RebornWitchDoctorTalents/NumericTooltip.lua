@@ -6,7 +6,7 @@ range(9003140,9003143);range(9003180,9003185)
 for _,id in ipairs({9003190,9003280,9003290,9003300,9003150,9003200,9003210,9003762,9003240,9003101}) do allowed[id]=true end
 range(9003220,9003225);range(9003130,9003138)
 for id=9003180,9003185 do power[id]=true end;power[9003300]=true
-allowed[9003865]=true;range(9003870,9003876);range(9003890,9003896);allowed[9003861]=true;allowed[9003859]=true;allowed[9003855]=true;allowed[9003432]=true
+range(9003922,9003928);range(9003460,9003467);allowed[9003865]=true;range(9003870,9003876);range(9003890,9003896);allowed[9003861]=true;allowed[9003859]=true;allowed[9003855]=true;allowed[9003432]=true
 local en=GetLocale()~="zhCN" and GetLocale()~="zhTW"
 local frame=CreateFrame("Frame")
 local cache,pending={},nil
