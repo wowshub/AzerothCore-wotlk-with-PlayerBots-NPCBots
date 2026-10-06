@@ -358,45 +358,52 @@
   "repository_mapping": [
     {
       "package_path": "server_SQL/01_CHARACTERS_WD128A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/characters/01_CHARACTERS_WD128A_必须执行.sql",
+      "repository_path": "data/customfixsql/characters/witchdoctor/20261005_wd128/01_CHARACTERS_WD128A_必须执行.sql",
       "sha256": "6da31fa5cc35086997ff6df1a2e6ec4b451279c5d7fcac6e02d56e6159835b73",
-      "git_blob_oid": "01ebdca2bf9933e2a8250d13d1436233057bd622"
+      "git_blob_oid": "01ebdca2bf9933e2a8250d13d1436233057bd622",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/characters/01_CHARACTERS_WD128A_必须执行.sql"
     },
     {
       "package_path": "server_SQL/02_WORLD_WD112A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/02_WORLD_WD112A_必须执行.sql",
+      "repository_path": "data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies/02_WORLD_WD112A_必须执行.sql",
       "sha256": "36d74d93f3e1fc36e9bf341982dd0fdbf86b3f3daa2c15ee61e187bd9b8f22da",
-      "git_blob_oid": "acd9aadddfdd31ea50bd679de2786dc7c7f8d8ac"
+      "git_blob_oid": "acd9aadddfdd31ea50bd679de2786dc7c7f8d8ac",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/02_WORLD_WD112A_必须执行.sql"
     },
     {
       "package_path": "server_SQL/02_WORLD_WD118A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/02_WORLD_WD118A_必须执行.sql",
+      "repository_path": "data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies/02_WORLD_WD118A_必须执行.sql",
       "sha256": "4f33679184e69ae04df350fea58c8c6f9f898cb0815300fa78a2b50debbc0a0a",
-      "git_blob_oid": "2dbb334646cf4134b81848ceebbcfdaf9bb08df5"
+      "git_blob_oid": "2dbb334646cf4134b81848ceebbcfdaf9bb08df5",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/02_WORLD_WD118A_必须执行.sql"
     },
     {
       "package_path": "server_SQL/03_WORLD_WD120A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/03_WORLD_WD120A_必须执行.sql",
+      "repository_path": "data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies/03_WORLD_WD120A_必须执行.sql",
       "sha256": "ddec675b9ccf60e7c516963e72407d85c1c0ecfd44931b7cf72bb48e32508816",
-      "git_blob_oid": "286d0096fec44c6dac6d322437d8dd0250c6b0ff"
+      "git_blob_oid": "286d0096fec44c6dac6d322437d8dd0250c6b0ff",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/03_WORLD_WD120A_必须执行.sql"
     },
     {
       "package_path": "server_SQL/04_WORLD_WD123A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/04_WORLD_WD123A_必须执行.sql",
+      "repository_path": "data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies/04_WORLD_WD123A_必须执行.sql",
       "sha256": "dbc35dd806951a9a50206a4747406b80688ee72a55344866696270eb7cf861bc",
-      "git_blob_oid": "64b54f5ccccb5140a27224749b5ad50e953c7522"
+      "git_blob_oid": "64b54f5ccccb5140a27224749b5ad50e953c7522",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/04_WORLD_WD123A_必须执行.sql"
     },
     {
       "package_path": "server_SQL/05_WORLD_WD125A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/05_WORLD_WD125A_必须执行.sql",
+      "repository_path": "data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies/05_WORLD_WD125A_必须执行.sql",
       "sha256": "e2d3ea9027cb771893e202a8250ceac6b351e8e897ffb9af622a4a8267b75bdd",
-      "git_blob_oid": "239a2705c53d33c04bfd1af3caf08b1dbe2c9fe1"
+      "git_blob_oid": "239a2705c53d33c04bfd1af3caf08b1dbe2c9fe1",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/05_WORLD_WD125A_必须执行.sql"
     },
     {
       "package_path": "server_SQL/06_WORLD_WD126A_必须执行.sql",
-      "repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/06_WORLD_WD126A_必须执行.sql",
+      "repository_path": "data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies/06_WORLD_WD126A_必须执行.sql",
       "sha256": "36aa3055d1f70b1c851d8f0ebddb90f2aa70cabf0e07d5ef20f66e7ce56baa35",
-      "git_blob_oid": "cc322ff7af3ca6d61e013f3965065f560b82cd71"
+      "git_blob_oid": "cc322ff7af3ca6d61e013f3965065f560b82cd71",
+      "original_repository_path": "data/customfixsql/witchdoctor/20261005_wd128/world-history/06_WORLD_WD126A_必须执行.sql"
     },
     {
       "package_path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWDCooldownTooltip/Cooldown.lua",

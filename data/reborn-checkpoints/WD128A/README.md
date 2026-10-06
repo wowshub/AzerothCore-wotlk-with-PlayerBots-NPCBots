@@ -18,7 +18,7 @@
 
 ## 源码与资源配对
 
-仓库 data/reborn-checkpoints/WD128A/manifest.json 记录归档包及各安装文件 SHA256。C++ 位于正常源码目录，客户端 Lua/TOC 位于 data/reborn-client，SQL 位于 data/customfixsql/witchdoctor/20261005_wd128。
+仓库 data/reborn-checkpoints/WD128A/manifest.json 记录归档包及各安装文件 SHA256。C++ 位于正常源码目录，客户端 Lua/TOC 位于 data/reborn-client，SQL 已按数据库分类到 data/customfixsql/characters/witchdoctor/20261005_wd128 与 data/customfixsql/world/witchdoctor/20261005_wd128/historical-dependencies；旧目录 README 提供迁移入口。
 DBC、BLP 在本归档包中保存，不把大 ZIP 加入普通 Git 历史。本批存在已知保存缺陷，不发布为正常版本。后续修复并验证后，用配套源码 commit 创建版本 tag，将匹配的 ZIP 和 SHA256 作为 Release 附件。未上传前，其他人仅 clone 仓库不能取得这些二进制资源，必须取得本包。不要删除本地唯一副本。
 
 本地附件：`D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261005\codexarchive_202610052158_WD128A_源码与资源版本归档.zip`

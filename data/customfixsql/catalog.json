@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "migration_date": "2026-10-05",
+  "source_commit": "7e19a30decb123d37b9cad1de450ae8eabe61f8c",
+  "hash_semantics": "sha256=original working/delivery bytes; git_blob_oid=Git normalized text",
+  "files": [
+    {
+      "old_path": "20260516_fix_draktharon_immortal_mobs.sql",
+      "path": "world/dungeons/20260516_fix_draktharon_immortal_mobs.sql",
+      "database": "world",
+      "sha256": "48147aadc5b1479d468257a6bd713b6ed8d40b997dbd0e19265e3db39c166382",
+      "git_blob_oid": "28f1c24f7d621fceb20fd8416b44071eaac83379",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260516_fix_sfk_vincent_immortal.sql",
+      "path": "world/dungeons/20260516_fix_sfk_vincent_immortal.sql",
+      "database": "world",
+      "sha256": "e4fa74a89f15fe12ae2ff577b4c4a8253c72097827bb8d1e1aeaf24ce04b672c",
+      "git_blob_oid": "f2a81d81b11a01187c4f75dc527e03566f89b972",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260529_add_hunter_trainer_northshire.sql",
+      "path": "world/trainers/20260529_add_hunter_trainer_northshire.sql",
+      "database": "world",
+      "sha256": "c62e5ee59b83914b8cade076b74c527bf898912048d011fd963e5361059ba491",
+      "git_blob_oid": "52135ecf2590f90bac97d01a0ede65e043e1e43a",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260602_worgen_rescue_door_quest.sql",
+      "path": "world/worgen/20260602_worgen_rescue_door_quest.sql",
+      "database": "world",
+      "sha256": "483949d619097ce7f07f18e8b1858988ea86acdce12d1aa7e436f91ca76b078b",
+      "git_blob_oid": "2457e9844bbc476b64d557739804a22c7f0a044a",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260602_worgen_starting_zone_quest_chain.sql",
+      "path": "world/worgen/20260602_worgen_starting_zone_quest_chain.sql",
+      "database": "world",
+      "sha256": "c2baafa64b5532d042f60bb5b8c0a891ca275d45e4b1e7ecb4cd5c72144a9652",
+      "git_blob_oid": "f53bac0c164bf3b50238711818ed912364712f39",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260602_worgen_supply_loot_graveyard.sql",
+      "path": "world/worgen/20260602_worgen_supply_loot_graveyard.sql",
+      "database": "world",
+      "sha256": "939f5a1d5193ea2528acf0df9024542df383d6011f5325bf6affa0087e162499",
+      "git_blob_oid": "938bf765fa490036bb2e55e19f6e827abf9c0078",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260604_heritage_npc_distribution.sql",
+      "path": "world/heritage/20260604_heritage_npc_distribution.sql",
+      "database": "world",
+      "sha256": "53f66512985725bc3076baccd30fb83d059c73f73e5ad84e55206177e4d16b99",
+      "git_blob_oid": "eec2b2a2b7e4d350dd3c81a0ad81cef8009e6f6c",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "20260604_heritage_racial_menu.sql",
+      "path": "world/heritage/20260604_heritage_racial_menu.sql",
+      "database": "world",
+      "sha256": "bcbe8c0515f516ba67276bd19ad8b68fa1fe9dd6f87f5aaf05fd1d4b936732f3",
+      "git_blob_oid": "0ca75e59dabf928f8070d139e9618c345f3c0571",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "实际执行语句属于 World；Characters 建表仅在注释中，不能取消注释后整体导入 World。"
+    },
+    {
+      "old_path": "2026_06_06_01_kezan_goblin_quest1.sql",
+      "path": "world/goblin/2026_06_06_01_kezan_goblin_quest1.sql",
+      "database": "world",
+      "sha256": "cd6f088b97008c82297086168c9d848037af36194aa99ce5e42b7542be6b3e2b",
+      "git_blob_oid": "2e810ba7ccc30f52624e954704da2949198386a1",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "2026_06_06_02_kezan_goblin_story.sql",
+      "path": "world/goblin/2026_06_06_02_kezan_goblin_story.sql",
+      "database": "world",
+      "sha256": "2af202951bcecc2138f2719ea69c42a92d4924152251805455849f69e3c6d501",
+      "git_blob_oid": "657bade700654c81d50bda5966073a3ef9860a32",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "2026_08_09_A20_heritage_server_authority.sql",
+      "path": "characters/heritage/2026_08_09_A20_heritage_server_authority.sql",
+      "database": "characters",
+      "sha256": "28d304ab7a34c3ab700e2763a381c09c470739c159a3fc779c38969acf261fb5",
+      "git_blob_oid": "5887751f66d7f5ca626d055c9438c12ba77e835a",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/01_characters_dk_bootstrap.sql",
+      "path": "characters/threemodelcard/01_characters_dk_bootstrap.sql",
+      "database": "characters",
+      "sha256": "232a68706b3b96aab7a63d5471055db67dcae69fcc5b138004ee26bed3287d2e",
+      "git_blob_oid": "54813aee62f3539f2cf7f47e6b082c696a687ef6",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/02_world_starting_zones.sql",
+      "path": "world/threemodelcard/02_world_starting_zones.sql",
+      "database": "world",
+      "sha256": "ca3ce94ee3ddd9dd1b30cb5d7f3d8cf34714820b6c24f5c48a5a126adb62600b",
+      "git_blob_oid": "53e477c765727d8dc5d0823769bfe83de2967f33",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/03_world_dk_level_1_to_54_stats.sql",
+      "path": "world/threemodelcard/03_world_dk_level_1_to_54_stats.sql",
+      "database": "world",
+      "sha256": "d12aa73b8ea3b4000cd6d9fa894ce8fb755f0bf2eb7cd85329ac535279588f2a",
+      "git_blob_oid": "e9a328452ee7636897fdfb6d9f8a12ae283ff89e",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/04_characters_dk_bootstrap_state.sql",
+      "path": "characters/threemodelcard/04_characters_dk_bootstrap_state.sql",
+      "database": "characters",
+      "sha256": "21ae236f1492024bd6fd132f2024078a8a347fa440ea9846a704953ebf763249",
+      "git_blob_oid": "ee63bc9cc84b5956cbde29b75b02df0c5d929c42",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/05_world_dk_starting_equipment_templates.sql",
+      "path": "world/threemodelcard/05_world_dk_starting_equipment_templates.sql",
+      "database": "world",
+      "sha256": "7305005cc45a326a568c2becf82396f3a6ca3015f914ab44fc95c13afea7bbd1",
+      "git_blob_oid": "9207356402fa0c958cb55dcd32817fd25b595b93",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/06_world_tome_of_talents_zero_sell_price.sql",
+      "path": "world/threemodelcard/06_world_tome_of_talents_zero_sell_price.sql",
+      "database": "world",
+      "sha256": "7616b51cd9c92eb6ed2c18e546c9afc0dec51244401e4f96ca73577756075029",
+      "git_blob_oid": "03c3b94a7ee3c92240660695ebcd6e7697fb7ed5",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/07_characters_starter_tome_once.sql",
+      "path": "characters/threemodelcard/07_characters_starter_tome_once.sql",
+      "database": "characters",
+      "sha256": "366961b55546a60782e054fef44ad019ecc24dd4836da0766783a9d066deaa0e",
+      "git_blob_oid": "95ea40e68a6f33e91d8bbcb3bd5addc5371129f4",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/08_world_dungeon_boss_tome_chance.sql",
+      "path": "world/threemodelcard/08_world_dungeon_boss_tome_chance.sql",
+      "database": "world",
+      "sha256": "fcb510eda85b88335a0369e9ed83b897623f10ae7f515e6d7b839e132749861b",
+      "git_blob_oid": "898dfe531086cd0cca27de8f4b983cf35b4f1d05",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "threemodelcard/09_characters_mystic_enchant_pity.sql",
+      "path": "characters/threemodelcard/09_characters_mystic_enchant_pity.sql",
+      "database": "characters",
+      "sha256": "23779ff83f5bf5d30e424b61e40f862434026dd3619b37b2ee95b9de4d09cfea",
+      "git_blob_oid": "26d43faf21b32adb4ffe3239ab9d94cb0dd2979a",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/characters/01_CHARACTERS_WD128A_必须执行.sql",
+      "path": "characters/witchdoctor/20261005_wd128/01_CHARACTERS_WD128A_必须执行.sql",
+      "database": "characters",
+      "sha256": "6da31fa5cc35086997ff6df1a2e6ec4b451279c5d7fcac6e02d56e6159835b73",
+      "git_blob_oid": "01ebdca2bf9933e2a8250d13d1436233057bd622",
+      "execution": "manual; do not bulk import",
+      "status": "known-save-defect",
+      "note": "WD128A Characters 累计更新；依赖既有 WD67/WD93；已执行不因搬目录重跑。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/world-history/02_WORLD_WD112A_必须执行.sql",
+      "path": "world/witchdoctor/20261005_wd128/historical-dependencies/02_WORLD_WD112A_必须执行.sql",
+      "database": "world",
+      "sha256": "36d74d93f3e1fc36e9bf341982dd0fdbf86b3f3daa2c15ee61e187bd9b8f22da",
+      "git_blob_oid": "acd9aadddfdd31ea50bd679de2786dc7c7f8d8ac",
+      "execution": "manual; do not bulk import",
+      "status": "historical-dependency",
+      "note": "WD128A 包含的历史 World 依赖；已部署 WD127F 不重跑。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/world-history/02_WORLD_WD118A_必须执行.sql",
+      "path": "world/witchdoctor/20261005_wd128/historical-dependencies/02_WORLD_WD118A_必须执行.sql",
+      "database": "world",
+      "sha256": "4f33679184e69ae04df350fea58c8c6f9f898cb0815300fa78a2b50debbc0a0a",
+      "git_blob_oid": "2dbb334646cf4134b81848ceebbcfdaf9bb08df5",
+      "execution": "manual; do not bulk import",
+      "status": "historical-dependency",
+      "note": "WD128A 包含的历史 World 依赖；已部署 WD127F 不重跑。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/world-history/03_WORLD_WD120A_必须执行.sql",
+      "path": "world/witchdoctor/20261005_wd128/historical-dependencies/03_WORLD_WD120A_必须执行.sql",
+      "database": "world",
+      "sha256": "ddec675b9ccf60e7c516963e72407d85c1c0ecfd44931b7cf72bb48e32508816",
+      "git_blob_oid": "286d0096fec44c6dac6d322437d8dd0250c6b0ff",
+      "execution": "manual; do not bulk import",
+      "status": "historical-dependency",
+      "note": "WD128A 包含的历史 World 依赖；已部署 WD127F 不重跑。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/world-history/04_WORLD_WD123A_必须执行.sql",
+      "path": "world/witchdoctor/20261005_wd128/historical-dependencies/04_WORLD_WD123A_必须执行.sql",
+      "database": "world",
+      "sha256": "dbc35dd806951a9a50206a4747406b80688ee72a55344866696270eb7cf861bc",
+      "git_blob_oid": "64b54f5ccccb5140a27224749b5ad50e953c7522",
+      "execution": "manual; do not bulk import",
+      "status": "historical-dependency",
+      "note": "WD128A 包含的历史 World 依赖；已部署 WD127F 不重跑。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/world-history/05_WORLD_WD125A_必须执行.sql",
+      "path": "world/witchdoctor/20261005_wd128/historical-dependencies/05_WORLD_WD125A_必须执行.sql",
+      "database": "world",
+      "sha256": "e2d3ea9027cb771893e202a8250ceac6b351e8e897ffb9af622a4a8267b75bdd",
+      "git_blob_oid": "239a2705c53d33c04bfd1af3caf08b1dbe2c9fe1",
+      "execution": "manual; do not bulk import",
+      "status": "historical-dependency",
+      "note": "WD128A 包含的历史 World 依赖；已部署 WD127F 不重跑。"
+    },
+    {
+      "old_path": "witchdoctor/20261005_wd128/world-history/06_WORLD_WD126A_必须执行.sql",
+      "path": "world/witchdoctor/20261005_wd128/historical-dependencies/06_WORLD_WD126A_必须执行.sql",
+      "database": "world",
+      "sha256": "36aa3055d1f70b1c851d8f0ebddb90f2aa70cabf0e07d5ef20f66e7ce56baa35",
+      "git_blob_oid": "cc322ff7af3ca6d61e013f3965065f560b82cd71",
+      "execution": "manual; do not bulk import",
+      "status": "historical-dependency",
+      "note": "WD128A 包含的历史 World 依赖；已部署 WD127F 不重跑。"
+    },
+    {
+      "old_path": "world.player_totem_model.sql",
+      "path": "world/totems/world.player_totem_model.sql",
+      "database": "world",
+      "sha256": "b5c5a7447d5b709db04c555445402b193a3ff68f3fcdbd2045c7698b455991ff",
+      "git_blob_oid": "6203469846e5ac4a5d8eca617f66cf8866495ee1",
+      "execution": "manual; do not bulk import",
+      "status": "historical-unverified",
+      "note": "历史脚本；本次仅分类，部署状态及执行前置条件需查原说明。"
+    }
+  ]
+}
