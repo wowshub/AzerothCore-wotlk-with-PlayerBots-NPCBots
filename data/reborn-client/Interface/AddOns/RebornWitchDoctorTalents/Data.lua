@@ -87,3 +87,8 @@ end
 for _,node in ipairs(RebornWDTreeData) do
  if node.ID==4733 then node.RequiredLevel=40;node.RequiredIDs={4715};node.ConnectedNodes={4715} end
 end
+
+-- WD133: local prerequisites preserve saved IDs.
+for _,n in ipairs(RebornWDTreeData) do
+ if n.ID==6015 then n.RequiredLevel=16;n.RequiredIDs={7948,29738} elseif n.ID==29754 then n.RequiredIDs={29310} end
+end

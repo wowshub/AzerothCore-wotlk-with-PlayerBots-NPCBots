@@ -36,8 +36,10 @@ class spell_reborn_wd120_brewing : public SpellScript
             // Consume at successful launch, once per cast; every hit uses this snapshot.
             if(GetCaster()->HasAura(9003933)) _mojo=9003935;
             else if(GetCaster()->HasAura(9003934)) _mojo=9003936;
+            else if(GetCaster()->HasAura(9003940)) _mojo=9003941;
             GetCaster()->RemoveAurasDueToSpell(9003933);
             GetCaster()->RemoveAurasDueToSpell(9003934);
+            GetCaster()->RemoveAurasDueToSpell(9003940);
         }
         if(WD125A::IsPrep(id)) WD128A::Normalize(GetCaster()->ToPlayer(),id);
     }

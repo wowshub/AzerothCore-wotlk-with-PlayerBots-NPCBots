@@ -72,7 +72,7 @@ uint32 TEFoundation(AEMask);
 uint32 TESpent(AEMask);
 uint32 AERank(AEMask,uint32);
 bool AEValid(AEMask,uint32,uint32=0,uint32=0);
-constexpr uint32 AEIdCount=99;
+constexpr uint32 AEIdCount=102;
 extern uint32 const AEIds[AEIdCount];
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
@@ -490,6 +490,9 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     }
     if(s->modern && (n->id==31118 || n->id==6042 || n->id==9347)) level=10;
     if(s->modern && (n->id==6031 || n->id==6525 || n->id==12525)) level=26;
+    if(s->modern && n->id==6015) { level=16;missing=rank(4005)&&rank(7948)&&rank(29738)?0:1;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128); }
+    if(s->modern && n->id==29310) { level=10;missing=rank(4005)&&(rank(6009)||rank(7132)||rank(29753))?0:1;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128); }
+    if(s->modern && n->id==29754) { level=10;missing=rank(4005)&&rank(29310)?0:1;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],56)+AERank(s->aeMasks[slot],57)+AERank(s->aeMasks[slot],61)+AERank(s->aeMasks[slot],62)+AERank(s->aeMasks[slot],77)+AERank(s->aeMasks[slot],78)+AERank(s->aeMasks[slot],79)+AERank(s->aeMasks[slot],80)+AERank(s->aeMasks[slot],81)+AERank(s->aeMasks[slot],82)+AERank(s->aeMasks[slot],83)+AERank(s->aeMasks[slot],84)+AERank(s->aeMasks[slot],85)+AERank(s->aeMasks[slot],86)+AERank(s->aeMasks[slot],87)+AERank(s->aeMasks[slot],88)+AERank(s->aeMasks[slot],89)+AERank(s->aeMasks[slot],90)+AERank(s->aeMasks[slot],91)+AERank(s->aeMasks[slot],92)+AERank(s->aeMasks[slot],93)+AERank(s->aeMasks[slot],94)+AERank(s->aeMasks[slot],95)+AERank(s->aeMasks[slot],96)+AERank(s->aeMasks[slot],97)+AERank(s->aeMasks[slot],99)+AERank(s->aeMasks[slot],100); }
     if(s->modern && n->id==4733) { level=40;missing=rank(4715)?0:1;te=0; }
     if(s->modern && (n->id==6016 || n->id==6009))
     {

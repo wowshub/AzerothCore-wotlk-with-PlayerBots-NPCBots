@@ -45,7 +45,7 @@ inline void Normalize(Player* p,uint32 preparing=0)
 {
     auto* state=p->CustomData.GetDefault<Ingredients>("Reborn.WD128.Ingredients");
     if(state->mixing) return;
-    if(preparing) { state->mojoPair=0; p->RemoveAurasDueToSpell(9003933); p->RemoveAurasDueToSpell(9003934); }
+    if(preparing) { state->mojoPair=0; p->RemoveAurasDueToSpell(9003933); p->RemoveAurasDueToSpell(9003934); p->RemoveAurasDueToSpell(9003940); }
     if(state->mojoPair && !p->HasSpell(state->mojoPair)) state->mojoPair=0;
     auto& order=state->order;
     order.erase(std::remove_if(order.begin(),order.end(),[p,preparing](uint32 id)
