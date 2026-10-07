@@ -92,3 +92,6 @@ end
 for _,n in ipairs(RebornWDTreeData) do
  if n.ID==6015 then n.RequiredLevel=16;n.RequiredIDs={7948,29738} elseif n.ID==29754 then n.RequiredIDs={29310} end
 end
+
+-- WD134: official spell level and connected dependency closure.
+for _,n in ipairs(RebornWDTreeData) do if n.ID==30333 or n.ID==6027 then n.RequiredLevel=57 end end

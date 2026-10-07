@@ -3277,6 +3277,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewingFoundation.inc"
 #include "RebornWitchDoctorBrewing129.inc"
 #include "RebornWitchDoctorBrewing133.inc"
+#include "RebornWitchDoctorBrewing134.inc"
 #include "RebornWitchDoctorBrewing132.inc"
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
@@ -3316,6 +3317,11 @@ void AddRebornWitchDoctorScripts()
     RegisterSpellScript(spell_reborn_wd130_beam);
     RegisterSpellScript(spell_reborn_wd130_heal);
     new wd130_events();
+    RegisterSpellScript(spell_reborn_wd134_cauldron);
+    RegisterSpellScript(spell_reborn_wd134_unstable);
+    RegisterSpellScript(spell_reborn_wd134_heal);
+    new npc_reborn_wd134_cauldron();
+    new player_reborn_wd134_lifecycle();
     RegisterSpellScript(spell_reborn_wd133_base);
     RegisterSpellScript(aura_reborn_wd133_base);
     RegisterSpellScript(aura_reborn_wd133_beast);

@@ -1,0 +1,9 @@
+# WD134B 修复记录与教学
+
+两个可见技能误继承生成器统一设置的RangeIndex=13。RangeIndex描述施法距离，脚本的15/20码描述治疗筛选半径，二者用途不同。零起始字段46改成原生SpellRange行1（min/max均0，自身），保留目标字段和被动0x40。通过按ID定位记录并原位写入uint32，避免重生成整个表的字符串或回退累计修复。只改9003947/9003950，隐藏法术不改。
+
+已读取项目AGENTS、ruleAscend、refResourceAscend、skillsAscend及trace-and-port-coa-spell-resources/SKILL.md；按其双端独立、隐藏法术分离、候选与实测分开的流程完成。
+
+2026-10-07在线上游main=64188b25575c1244a23b6051d1044350aaabc610，保存Abilities.cpp和两技能Issues/PR搜索结果。相关模型issue4457仍open，PR6012已merged，merge=c50d94b75240dc25ea6a759a46f9365438cc2308；这些不作为本地私有DBC射程问题已被上游修复的证明。本次根因证据是本地两端9003947/9003950的46列均13、自身目标和原生SpellRange行1。前批官方机制依据继续有效，未重新移植或变更技能数值。
+
+验证通过：双端实际输入与A一致；DBC头/记录长度；仅指定两字段改变；字符串池和其余全部字段原样；被动属性保留；隐藏治疗无限射程保留；ZIP逐文件哈希。实机待用户确认，不晋升永久已验证Skill。原WD134A归档未改。
