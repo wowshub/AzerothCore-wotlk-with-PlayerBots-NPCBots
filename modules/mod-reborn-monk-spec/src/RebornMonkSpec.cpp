@@ -715,6 +715,16 @@ public:
     RebornMonkSpecPurchaseRecovery() : PlayerScript("RebornMonkSpecPurchaseRecovery") { }
     void OnPlayerLogin(Player* player) override
     {
+        // Orc monks from older creation data can have no Orcish skill. SAY-based
+        // spectator commands are rejected by ChatHandler before command parsing.
+        // Restore only their native language; never bypass chat validation.
+        if (player->getClass() == 14 && player->getRace() == RACE_ORC)
+        {
+            if (!player->HasSpell(669))
+                player->learnSpell(669);
+            if (!player->HasSkill(SKILL_LANG_ORCISH))
+                player->SetSkill(SKILL_LANG_ORCISH, 0, 300, 300);
+        }
         if (player->getClass() != 14 || player->HasMonkThirdSpec() || player->GetSpecsCount() != 2) return;
         ChatHandler handler(player->GetSession());
         RebornMonkSpecCommands::RecoverVP(player, &handler);
