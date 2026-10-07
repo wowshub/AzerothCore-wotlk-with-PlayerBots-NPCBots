@@ -124,6 +124,7 @@ struct RebornSpectatorSession
     bool hadSilenced = false;
     bool hadNotSelectable = false;
     bool hadCanFly = false;
+    bool hadDisableGravity = false;
     bool protectionApplied = false;
 
     uint32 totalPendingMs = 0;
@@ -147,6 +148,7 @@ struct RebornPendingCarrierLogin
     float returnO = 0.0f;
     uint32 returnPhaseMask = PHASEMASK_NORMAL;
     bool returnCanFly = false;
+    bool returnDisableGravity = false;
 };
 
 struct RebornPendingReturn
@@ -160,6 +162,7 @@ struct RebornPendingReturn
     uint32 totalElapsedMs = 0;
     uint32 attempts = 0;
     bool hadCanFly = false;
+    bool hadDisableGravity = false;
 };
 
 struct RebornResumeWatch
@@ -190,6 +193,7 @@ struct RebornPreloginRequest
     float returnO = 0.0f;
     uint32 returnPhaseMask = PHASEMASK_NORMAL;
     bool returnCanFly = false;
+    bool returnDisableGravity = false;
 };
 
 struct RebornCarrierRecord
@@ -598,6 +602,7 @@ public:
         request.returnO = carrier->GetOrientation();
         request.returnPhaseMask = carrier->GetPhaseMask();
         request.returnCanFly = carrier->CanFly();
+        request.returnDisableGravity = carrier->HasUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
         request.returnCaptured = true;
 
         // Never move a corpse or ghost to the observation target during the pre-login bridge.
@@ -625,7 +630,7 @@ public:
             target->GetNearPosition(g_RebornPreloginCarrierOffset, 3.14159265f);
         // The physical carrier may be prepared beside a flying or high-altitude target. Grant
         // temporary flight before relocation so it cannot fall during the login/viewpoint gap.
-        carrier->SetCanFly(true);
+        ApplyFallProtection(carrier);
         carrier->ResetMap();
         carrier->Relocate(
             nearPosition.GetPositionX(),
@@ -675,6 +680,17 @@ public:
         if (HasSession(observer->GetGUID()))
         {
             SendPrototypeMessage(observer, "|cffff5555A prototype session is already active. Use .rebornspec stop first.|r");
+            return false;
+        }
+
+        bool returningToOrigin = false;
+        {
+            std::lock_guard<std::mutex> lock(_mutex);
+            returningToOrigin = _pendingReturns.find(observer->GetGUID().GetRawValue()) != _pendingReturns.end();
+        }
+        if (returningToOrigin)
+        {
+            SendPrototypeMessage(observer, "|cffff5555Wait for the previous spectator return to finish before starting another observation.|r");
             return false;
         }
 
@@ -808,6 +824,9 @@ public:
         session.hadCanFly = preparedLogin && preparedLogin->returnCaptured
             ? preparedLogin->returnCanFly
             : observer->CanFly();
+        session.hadDisableGravity = preparedLogin && preparedLogin->returnCaptured
+            ? preparedLogin->returnDisableGravity
+            : observer->HasUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
         session.protectionApplied = true;
 
         {
@@ -884,9 +903,10 @@ public:
 
         ClearAssistForParticipant(observer->GetGUID());
         RemoveViewpoint(observer);
-        RestoreProtection(observer, session);
+        bool const returning = returnToOrigin && g_RebornReturnOnStop && observer->IsInWorld();
+        RestoreProtection(observer, session, returning);
 
-        if (returnToOrigin && g_RebornReturnOnStop && observer->IsInWorld())
+        if (returning)
         {
             QueueReturn(observer, session);
             ProcessPendingReturn(observer, 0, true);
@@ -966,6 +986,11 @@ public:
 
         if (!shouldCheck)
             return;
+
+        if (observer->IsInWorld() && observer->IsAlive() &&
+            (!observer->HasUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY) ||
+             observer->HasUnitMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)))
+            ApplyFallProtection(observer);
 
         Player* target = ObjectAccessor::FindPlayer(session.targetGuid);
         if (!target || !target->IsInWorld())
@@ -1234,10 +1259,20 @@ public:
         if (HasSession(player->GetGUID()))
             Stop(player, true, "observer logout");
 
+        RebornPendingReturn abandonedReturn;
+        bool hadPendingReturn = false;
         {
             std::lock_guard<std::mutex> lock(_mutex);
-            _pendingReturns.erase(player->GetGUID().GetRawValue());
+            auto itr = _pendingReturns.find(player->GetGUID().GetRawValue());
+            if (itr != _pendingReturns.end())
+            {
+                abandonedReturn = itr->second;
+                hadPendingReturn = true;
+                _pendingReturns.erase(itr);
+            }
         }
+        if (hadPendingReturn)
+            RestoreFallProtection(player, abandonedReturn.hadCanFly, abandonedReturn.hadDisableGravity);
     }
 
     void HandlePlayerDeath(Player* killed, char const* cause)
@@ -1335,6 +1370,7 @@ public:
                 carrierItr->second.returnO = resurrected->GetOrientation();
                 carrierItr->second.returnPhaseMask = resurrected->GetPhaseMask();
                 carrierItr->second.returnCanFly = resurrected->CanFly();
+                carrierItr->second.returnDisableGravity = resurrected->HasUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
                 retainedCarrierRequest = true;
             }
 
@@ -1435,6 +1471,7 @@ public:
             pending.returnO = request.returnO;
             pending.returnPhaseMask = request.returnPhaseMask;
             pending.returnCanFly = request.returnCanFly;
+            pending.returnDisableGravity = request.returnDisableGravity;
             {
                 std::lock_guard<std::mutex> lock(_mutex);
                 _pendingCarrierLogins[carrier->GetGUID().GetRawValue()] = pending;
@@ -1613,6 +1650,7 @@ public:
             prepared.returnO = pending.returnO;
             prepared.returnPhaseMask = pending.returnPhaseMask;
             prepared.returnCanFly = pending.returnCanFly;
+            prepared.returnDisableGravity = pending.returnDisableGravity;
             prepared.worldPrepared = pending.worldPrepared &&
                 observer->GetMapId() == target->GetMapId() &&
                 observer->GetInstanceId() == target->GetInstanceId();
@@ -2872,6 +2910,7 @@ private:
         returnSession.returnO = request.returnO;
         returnSession.returnPhaseMask = request.returnPhaseMask;
         returnSession.hadCanFly = request.returnCanFly;
+        returnSession.hadDisableGravity = request.returnDisableGravity;
         carrier->SetPhaseMask(request.returnPhaseMask, true);
         QueueReturn(carrier, returnSession);
         ProcessPendingReturn(carrier, 0, true);
@@ -2889,10 +2928,11 @@ private:
         pending.z = session.returnZ;
         pending.o = session.returnO;
         pending.hadCanFly = session.hadCanFly;
+        pending.hadDisableGravity = session.hadDisableGravity;
 
         // Keep gravity from turning an asynchronous cross-map return into a
         // second fall window. The original flag is restored only after arrival.
-        observer->SetCanFly(true);
+        ApplyFallProtection(observer);
 
         {
             std::lock_guard<std::mutex> lock(_mutex);
@@ -2931,7 +2971,13 @@ private:
             pending = itr->second;
         }
 
+        if (observer->IsAlive() &&
+            (!observer->HasUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY) ||
+             observer->HasUnitMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)))
+            ApplyFallProtection(observer);
+
         bool const arrived =
+            !observer->IsBeingTeleported() &&
             observer->GetMapId() == pending.mapId &&
             std::fabs(observer->GetPositionX() - pending.x) <= 3.0f &&
             std::fabs(observer->GetPositionY() - pending.y) <= 3.0f &&
@@ -2942,7 +2988,7 @@ private:
                 std::lock_guard<std::mutex> lock(_mutex);
                 _pendingReturns.erase(observer->GetGUID().GetRawValue());
             }
-            observer->SetCanFly(pending.hadCanFly);
+            RestoreFallProtection(observer, pending.hadCanFly, pending.hadDisableGravity);
             SendPrototypeMessage(
                 observer,
                 "|cff00ff00S.6.13.3 return confirmed: the observer carrier reached its original position.|r");
@@ -3414,6 +3460,28 @@ private:
         return true;
     }
 
+    static void ApplyFallProtection(Player* observer)
+    {
+        // CAN_FLY only grants permission; DISABLE_GRAVITY actually prevents falling.
+        observer->RemoveUnitMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR);
+        observer->AddUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
+        observer->SetFallInformation(0, observer->GetPositionZ());
+        observer->SetCanFly(true);
+        observer->SetDisableGravity(true);
+    }
+
+    static void RestoreFallProtection(Player* observer, bool canFly, bool disabledGravity)
+    {
+        observer->RemoveUnitMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR);
+        observer->SetFallInformation(0, observer->GetPositionZ());
+        if (disabledGravity)
+            observer->AddUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
+        else
+            observer->RemoveUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
+        observer->SetCanFly(canFly);
+        observer->SetDisableGravity(disabledGravity);
+    }
+
     static void ApplyProtection(Player* observer, RebornSpectatorSession const& session)
     {
         // Keep the server-side player in a normal free-move state so the 3.3.5 logout
@@ -3422,7 +3490,7 @@ private:
         // Flight protection must be active before any target relocation. This
         // prevents a physical carrier from falling when the target is flying,
         // airborne, or standing on geometry that is not valid for the carrier.
-        observer->SetCanFly(true);
+        ApplyFallProtection(observer);
         observer->SetClientControl(observer, false, true);
         if (!session.hadNonAttackable)
             observer->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
@@ -3434,7 +3502,7 @@ private:
             observer->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    static void RestoreProtection(Player* observer, RebornSpectatorSession const& session)
+    static void RestoreProtection(Player* observer, RebornSpectatorSession const& session, bool keepFallProtection)
     {
         if (session.protectionApplied)
         {
@@ -3449,7 +3517,8 @@ private:
                 observer->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        observer->SetCanFly(session.hadCanFly);
+        if (!keepFallProtection)
+            RestoreFallProtection(observer, session.hadCanFly, session.hadDisableGravity);
 
         observer->SetPhaseMask(session.returnPhaseMask, true);
 
