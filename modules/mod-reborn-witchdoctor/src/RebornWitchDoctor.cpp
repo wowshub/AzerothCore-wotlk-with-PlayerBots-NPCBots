@@ -999,7 +999,7 @@ int Slot(uint32 id)
     switch(id)
     {
         case 9003160: case 9003170: case 9003450: case 9003400: return 0;
-        case 9003370: case 9003440: case 9003432: case 9003382: case 9003380: case 9003390: return 1;
+        case 9003953: case 9003370: case 9003440: case 9003432: case 9003382: case 9003380: case 9003390: return 1;
         case 9003410: case 9003420: case 9003422: case 9003430: return 2;
         default: return -1;
     }
@@ -1373,7 +1373,7 @@ void Clear(Player* player)
     State* state=player->CustomData.GetDefault<State>(Key);
     if (!state->guid.IsEmpty() && player->IsInWorld())
         if (Creature* old=ObjectAccessor::GetCreature(*player,state->guid))
-            if ((old->GetEntry()==Entry || old->GetEntry()==900193 || old->GetEntry()==900194 || old->GetEntry()==900195 || old->GetEntry()==900202 || old->GetEntry()==900203) && old->GetOwnerGUID()==player->GetGUID())
+            if ((old->GetEntry()==Entry || old->GetEntry()==900193 || old->GetEntry()==900194 || old->GetEntry()==900195 || old->GetEntry()==900202 || old->GetEntry()==900203 || old->GetEntry()==900232) && old->GetOwnerGUID()==player->GetGUID())
             {
                 if (old->GetEntry()!=Entry && old->AI()) old->AI()->DoAction(38);
                 old->DespawnOrUnsummon();
@@ -3278,6 +3278,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing129.inc"
 #include "RebornWitchDoctorBrewing133.inc"
 #include "RebornWitchDoctorBrewing134.inc"
+#include "RebornWitchDoctorSpiritLink135.inc"
 #include "RebornWitchDoctorBrewing132.inc"
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
@@ -3321,6 +3322,8 @@ void AddRebornWitchDoctorScripts()
     RegisterSpellScript(spell_reborn_wd134_unstable);
     RegisterSpellScript(spell_reborn_wd134_heal);
     new npc_reborn_wd134_cauldron();
+    RegisterSpellScript(spell_reborn_wd135_link);
+    new npc_reborn_wd135_link();
     new player_reborn_wd134_lifecycle();
     RegisterSpellScript(spell_reborn_wd133_base);
     RegisterSpellScript(aura_reborn_wd133_base);

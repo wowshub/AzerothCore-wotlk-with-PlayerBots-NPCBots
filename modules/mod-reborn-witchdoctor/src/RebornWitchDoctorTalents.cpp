@@ -72,7 +72,7 @@ uint32 TEFoundation(AEMask);
 uint32 TESpent(AEMask);
 uint32 AERank(AEMask,uint32);
 bool AEValid(AEMask,uint32,uint32=0,uint32=0);
-constexpr uint32 AEIdCount=104;
+constexpr uint32 AEIdCount=105;
 extern uint32 const AEIds[AEIdCount];
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
@@ -490,6 +490,7 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     }
     if(s->modern && (n->id==31118 || n->id==6042 || n->id==9347)) level=10;
     if(s->modern && (n->id==6031 || n->id==6525 || n->id==12525)) level=26;
+    if(s->modern && n->id==13133) { level=50;missing=rank(4733)?0:1; }
     if(s->modern && n->id==30333) { level=57;missing=rank(4005)&&(rank(6014)||rank(6020)||rank(29737))?0:1;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],56)+AERank(s->aeMasks[slot],57)+AERank(s->aeMasks[slot],61)+AERank(s->aeMasks[slot],62)+AERank(s->aeMasks[slot],77)+AERank(s->aeMasks[slot],78)+AERank(s->aeMasks[slot],79)+AERank(s->aeMasks[slot],80)+AERank(s->aeMasks[slot],81)+AERank(s->aeMasks[slot],82)+AERank(s->aeMasks[slot],83)+AERank(s->aeMasks[slot],84)+AERank(s->aeMasks[slot],85)+AERank(s->aeMasks[slot],86)+AERank(s->aeMasks[slot],87)+AERank(s->aeMasks[slot],88)+AERank(s->aeMasks[slot],89)+AERank(s->aeMasks[slot],90)+AERank(s->aeMasks[slot],91)+AERank(s->aeMasks[slot],92)+AERank(s->aeMasks[slot],93)+AERank(s->aeMasks[slot],94)+AERank(s->aeMasks[slot],95)+AERank(s->aeMasks[slot],96)+AERank(s->aeMasks[slot],97)+AERank(s->aeMasks[slot],99)+AERank(s->aeMasks[slot],100)+AERank(s->aeMasks[slot],101); }
     if(s->modern && n->id==6027) { level=57;missing=rank(30333)?0:1;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],56)+AERank(s->aeMasks[slot],57)+AERank(s->aeMasks[slot],61)+AERank(s->aeMasks[slot],62)+AERank(s->aeMasks[slot],77)+AERank(s->aeMasks[slot],78)+AERank(s->aeMasks[slot],79)+AERank(s->aeMasks[slot],80)+AERank(s->aeMasks[slot],81)+AERank(s->aeMasks[slot],82)+AERank(s->aeMasks[slot],83)+AERank(s->aeMasks[slot],84)+AERank(s->aeMasks[slot],85)+AERank(s->aeMasks[slot],86)+AERank(s->aeMasks[slot],87)+AERank(s->aeMasks[slot],88)+AERank(s->aeMasks[slot],89)+AERank(s->aeMasks[slot],90)+AERank(s->aeMasks[slot],91)+AERank(s->aeMasks[slot],92)+AERank(s->aeMasks[slot],93)+AERank(s->aeMasks[slot],94)+AERank(s->aeMasks[slot],95)+AERank(s->aeMasks[slot],96)+AERank(s->aeMasks[slot],97)+AERank(s->aeMasks[slot],99)+AERank(s->aeMasks[slot],100)+AERank(s->aeMasks[slot],101)+rank(30333); }
     if(s->modern && n->id==6015) { level=16;missing=rank(4005)&&rank(7948)&&rank(29738)?0:1;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128); }
