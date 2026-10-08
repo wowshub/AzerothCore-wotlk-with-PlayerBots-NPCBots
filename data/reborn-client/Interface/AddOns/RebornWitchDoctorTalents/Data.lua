@@ -95,3 +95,6 @@ end
 
 -- WD134: official spell level and connected dependency closure.
 for _,n in ipairs(RebornWDTreeData) do if n.ID==30333 or n.ID==6027 then n.RequiredLevel=57 end end
+
+-- WD136: Concoctions depends on implemented Senjin path; Cauldron Empowerment 6023 remains preview.
+for _,n in ipairs(RebornWDTreeData) do if n.ID==6026 then n.RequiredLevel=57 end end

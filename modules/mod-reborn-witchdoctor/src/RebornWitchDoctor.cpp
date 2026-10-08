@@ -1871,6 +1871,18 @@ public:
         Unit* target=aura->GetOwner()->ToUnit();
         if(!target)return; // DynamicObject auras are not unit-owned.
         SpellInfo const* info=aura->GetSpellInfo();
+        // WD136: eight delivered ingredient effects only; preparation/other HoTs excluded.
+        switch(info->Id)
+        {
+            case 9003867: case 9003889: case 9003903: case 9003904:
+            case 9003907: case 9003908: case 9003917: case 9003918:
+                if(Unit* source=aura->GetCaster())
+                    if(Player* doctor=source->ToPlayer())
+                        if(IsDoctor(doctor) && doctor->HasSpell(9003954) && doctor->HasAura(9003954,doctor->GetGUID()))
+                            duration=int32(int64(duration)*120/100);
+                break;
+            default:break;
+        }
         // WD86A: native duration hook runs before effect periodic initialization.
         if (info->Id>=WD68A::PuppetFirst && info->Id<=WD68A::PuppetLast)
             if (Player* player=aura->GetCaster()?aura->GetCaster()->ToPlayer():nullptr)

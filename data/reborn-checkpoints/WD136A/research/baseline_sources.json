@@ -1,0 +1,329 @@
+{
+  "files": [
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+      "sha256": "aa4be78603c3be1333f9475be4c4efe0cc14cfd1c0c50837fc7c7489ed7d75bb",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorAllocation.inc",
+      "sha256": "40e7c252893d1108e461dfff2b74ffaac18d416d3d713a27e82d11325c4578a8",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewing129.inc",
+      "sha256": "9d6e6a8679387fa3b203b48afd100266850e47ae4936464d4b87b2785c9c5557",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewing130.inc",
+      "sha256": "8a6a2fb02040d59cfd33dbb17d0d889aa68678e58f644efbcef4b9fcd2e8cdb2",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewing131.inc",
+      "sha256": "2e47a85c5c0e4431cfe138b3ecf05a4bd2ea6315638eba0877167662e05191d1",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewing132.inc",
+      "sha256": "b7de51d03cd07822f6a57b18bd722dfef54781ff221f1401d4b9798f4c5725ab",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewing133.inc",
+      "sha256": "3ce279e4d79527005e7fe7ca12bf2341d75b568382b744ae045b06425b5609f2",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewing134.inc",
+      "sha256": "34d025a14b860d5a60dabf95b69e3b26b0b0f07932ca5520936419e14f77adbc",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewingFoundation.inc",
+      "sha256": "16ee277163b57cd338cfee3ced2450224bd4ac1ebbe7d69bc7615f3356910d0f",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBrewingNumbers.h",
+      "sha256": "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorDeferredDamage.h",
+      "sha256": "b325759c6ecb45dd3a5c8fdb10c388f0f00c71099aceb22c54acca7685cfe86b",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorLinkBalance.h",
+      "sha256": "04fe9ebec702754a5e85d25c65708ef88dab102b5003ac0d44c107a7f7e8e6fc",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorMimicStatus.inc",
+      "sha256": "87a14f3bb4de5d88b8e85e56936f4d912d1bcae44df547b535a5187bfb96e6f5",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorSpiritLink135.inc",
+      "sha256": "a4e8973903de34a31d6d81715781feafac2acb310bd787aeb9bc9f17bf6ced14",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorSpiritWalker.h",
+      "sha256": "87d9150ccec21338d4531d332502cfb70c0e90a5b84876cb17c809ae1391bb78",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalentNodes.h",
+      "sha256": "e4995ec0a797a605cbac14be0466d529748c922f2c2d5311b779b590a48bedd0",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+      "sha256": "a0657197f7779dc4d409c718147aa32c07759680776241068b04aa1baa63e913",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Player\\Player.cpp",
+      "sha256": "6b30572da15d016dd9e48933ea38318fd31bcc58d0ec73e95f8da00010f207f5",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Player\\WitchDoctorTalentPolicy.h",
+      "sha256": "a3195fbd790a7e42abc446526e386d25465b06e0db02f457dde0060d2184d575",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Unit\\Unit.cpp",
+      "sha256": "c198f0f3eaf7c9290ddd204fab35a1e65fa0701d231bd39aa4f3a4c07b2e0924",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\RebornWitchDoctorBeam.h",
+      "sha256": "25bfe73a07ab0f51c1b6e6218bb6fa182b19987a50d3d815076c4546cddb7d36",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\Spell.cpp",
+      "sha256": "8c97626f38d247480fd8f47ecc0e0cd3e37fe044381ece801f483b8175adce60",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\SpellInfo.cpp",
+      "sha256": "29cce514132c9ed1fc8bad84b975bd32c9f1eeb83ff5e29502d5c8b4e4a1641b",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\SpellMgr.cpp",
+      "sha256": "a687ba9fd8c296f40347a1812af69a694e3d16d7cb43624edfdb6866706d82f1",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWDCooldownTooltip\\Cooldown.lua",
+      "sha256": "419819e4c17a81656e63cae1ec4cf1cb40e4a6fbff4b67c75b47ce8d1cbc429c",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorSkillBook\\RebornWitchDoctorSkillBook.lua",
+      "sha256": "e0d06d492dca7780a22e510695bd486ab7d3198f8fcaeec6021d5d40cc90ca92",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua",
+      "sha256": "46b30862f2409ff4b412fa3fae3386c0573a0d6d850d53c94a4fab4cf9590171",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+      "sha256": "57b429dba9b7be0e185249f80218e13d9e40fb6efb9f17f23aedbeb059db1b42",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\NumericTooltip.lua",
+      "sha256": "87a6e751024ed11d18b6e820ec929736e6b435e591272546ccfcf2f70a8f50a4",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+      "sha256": "6f79bc780ea2ebfcdbbbedc4279030905558e76bca9593483bad06a4fc18215a",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+      "sha256": "a2d4d73b6c29c4afb0352b534cc020fdc93a47a56d7bcb914fcd5df28d5accd1",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\WD8.lua",
+      "sha256": "5c876da516fe1a9c175e5450a427914d2759e54b848225e4779d68955300c470",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\10719f9395ce53ae.blp",
+      "sha256": "e73801726d16108363f0e5fc15452f9bbcac0d8188533a3417933baeb4e0b2db",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\18a02c9e03c9fd51.blp",
+      "sha256": "8a34771b437539e9773a8aab1d46306bad4251443c9591bea289b61f430b28f3",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\1e9d98eaf72e9f5e.blp",
+      "sha256": "79dbb7cd22e45349f2c6bedc504d72d16a731561c4351672762f62d6148d65be",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\24286479d0e21a55.blp",
+      "sha256": "7bbafd1749f7e65572ceb181c4be3c6372add6bbc3d04faef04002472a914392",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\26420000cc04b4eb.blp",
+      "sha256": "a12a2110f404d7de26ba24afe5de362b5eaadb9bb8ef96fea32bc3a6be6a51f4",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\30a815263647b234.blp",
+      "sha256": "5ac7d3ff864b5a24cb7ad1a1adeae3091bac760ca535b1355ec15573ef978a4d",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\36a212983bcf60a7.blp",
+      "sha256": "0cf359f1f0a5c99d2438f9f23a55e6e3285a508236967f5af922a0fe12f9bb29",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\43b0ae323f008bea.blp",
+      "sha256": "a7027ff299c9b25a977d74144ad76b9177eb0b25a6ad8db23223a7dedce1a459",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\44990583e8157511.blp",
+      "sha256": "fab03eca7c0238b1586b1bf7210c8150253b3fae5bf23739c5166b74a4a41c65",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\5e1a7cbbed79e62b.blp",
+      "sha256": "8c94b1d62dc89bb509d35b0baf54b10914a04596a22101df3eff876134a0a4c9",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\607c33b4b97eb670.blp",
+      "sha256": "dde97e9e4e56c8fe77bb3f52e863b33842b577c2c4080912ef26540e95467145",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\68aab84e642065b2.blp",
+      "sha256": "42a1f7a0ba590f2c3a577011e31bbe86608a1a1fbf73d3383271b0b9007b1d8f",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\706f2cfc47b53886.blp",
+      "sha256": "a8c94b8da1b428b0ec02b9c50d880437a6fb64666b87c7c5b10730591da9f48a",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\762653c392ca1576.blp",
+      "sha256": "ce1373913c0df6ef635ff6fc0ffc9a62a8702789863e2744f22a442b27da6f24",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\7e06e90aea7e069e.blp",
+      "sha256": "e2637995bb751a54518c1e8e4cb1fa51596ba77cc5acc9ed4f4ffcea1978a879",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\848c316b639e7f53.blp",
+      "sha256": "3300789d01a8cb473cb02ae194f22e8a812c5b8286e45676f1207d704e9171fc",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\873bb297340bcb3a.blp",
+      "sha256": "3d9231e20ceceafd471e388515c7fdb7847d8c39711ff21c1102f2017fcd0d72",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\8a244d888465c333.blp",
+      "sha256": "d8c64c269d8c7e0d9a2ea611404ab81b8af64dfd01572d0b480da0aa6746a737",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\8f1982321a3029fb.blp",
+      "sha256": "f4a88d4b056b6925eedd7e0c100316ec2cc8e2e0feb8aa920ba78f69ffedc5b8",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\974fc02dcf985f9f.blp",
+      "sha256": "0974cc448324a9aa842428eb776d5f2e9b8c45578991ceac5f06a2bc53a2c23f",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\9cd8d8ab6084bb4c.blp",
+      "sha256": "e37e7b2364d7c7e690824793242f9c8fa61d31f2d9a00ad61981e8e07d30673b",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\a2bf3be4c33eb990.blp",
+      "sha256": "e3d15d2b64bd1908a9fca4c90816d1df8f5af08697067c86e1dabf9d089bba7e",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\a4bf3f9c7e064948.blp",
+      "sha256": "2844386eea782e55f776de36db160907c0d3a8723e6c84ee2052590e7cf7051c",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\b7ff938336b5e4a9.blp",
+      "sha256": "3b25578482b9bfd6873974294ce5bcbc4e4e5338c0ec9a5f61c333d62d13d6ee",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\ce630a6b5a66988b.blp",
+      "sha256": "5531e4389f52c765931a1d6a3ba0ddda0311566e41e79ee055923df5b9d34a8b",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\d33a6dfb13528219.blp",
+      "sha256": "64bd1731b60f569ff4e6d725aea338b64c98b23823d3fcb40109888326e7d9a9",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\d3d8f35d3ff29325.blp",
+      "sha256": "0bc9ca190500fb1f878e07f64f934ae17ecceb069a137432fa81e3ea9864e3ba",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\e8d90419302de36b.blp",
+      "sha256": "58b8dd91f2a74fc01c43330887a28af1a2df0252cff3b4fcab668cbb4876cce8",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\eb289c1702adddd2.blp",
+      "sha256": "8045e5ae128dba09a0dd4a871d9222cd1081269e3516d44ac8f5a46f3cd5fe67",
+      "matches_WD135": true
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261007beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Icons\\ed5295895a636f23.blp",
+      "sha256": "ad0cde26a66c3266682919a3b38ee14f9aa8e1fb6250a72bb4919722112776b9",
+      "matches_WD135": true
+    }
+  ],
+  "client_archive_order_XA_ZA": {
+    "Spell.dbc": [
+      "38330a2ddca901f9ee2592ad1dc04b6f0793aea1e70d3b4cbe6412bf3b17128b",
+      "95d06ada22aa97e2a37106a6c1b29f5e4c97942f845244d11a069938b98a5366"
+    ],
+    "SpellIcon.dbc": [
+      "5e3624338b19a09f4e289b3fe0841bd86e3f5253cc710b99677303ff15d41f58"
+    ],
+    "SkillLineAbility.dbc": [
+      "c2b06bd3e6ca4e6a0b2c5c40495e11b2d2d747f61032d9e54f1c5c223774c654"
+    ],
+    "CreatureDisplayInfo.dbc": [
+      "c2ed0059dfa933ff2a9dcf92bd62d51065290968f20207472d32f8e32ec45c34"
+    ]
+  }
+}

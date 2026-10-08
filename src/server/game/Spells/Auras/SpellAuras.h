@@ -19,6 +19,7 @@
 #define ACORE_SPELLAURAS_H
 
 #include "SpellAuraDefines.h"
+#include "RebornConcoctionsState.h"
 #include "Unit.h"
 
 class Unit;
@@ -85,6 +86,8 @@ public:
 
 class Aura
 {
+public:
+    RebornConcoctions::Snapshot rebornConcoctions;
     friend Aura* Unit::_TryStackingOrRefreshingExistingAura(SpellInfo const* newAura, uint8 effMask, Unit* caster, int32* baseAmount, Item* castItem, ObjectGuid casterGUID, bool noPeriodicReset);
 public:
     typedef std::map<ObjectGuid, AuraApplication*> ApplicationMap;

@@ -16,6 +16,7 @@
  */
 
 #include "Spell.h"
+#include "RebornWitchDoctorConcoctions.h"
 #include "RebornWitchDoctorBeam.h"
 #include "Config.h"
 #include "ArenaSpectator.h"
@@ -3229,6 +3230,8 @@ SpellMissInfo Spell::DoSpellHitOnUnit(Unit* unit, uint32 effectMask, bool scaleA
 
             if (m_spellAura)
             {
+                // Refresh replaces the old snapshot, including an empty (unbuffed) one.
+                if(!m_spellInfo->IsPositive()) m_spellAura->rebornConcoctions=rebornConcoctions;
                 // Set aura stack amount to desired value
                 if (m_spellValue->AuraStackAmount > 1)
                 {
@@ -3534,6 +3537,10 @@ bool Spell::UpdateChanneledTargetList()
 
 SpellCastResult Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggeredByAura)
 {
+    // A periodic trigger child inherits its own parent aura's snapshot; no extra charge.
+    if(triggeredByAura && !m_spellInfo->IsPositive() &&
+       triggeredByAura->GetSpellInfo()->Effects[triggeredByAura->GetEffIndex()].TriggerSpell==m_spellInfo->Id)
+        rebornConcoctions=triggeredByAura->GetBase()->rebornConcoctions;
     if (m_CastItem)
     {
         m_castItemGUID = m_CastItem->GetGUID();
@@ -4062,6 +4069,9 @@ void Spell::_cast(bool skipCheck)
 
     PrepareScriptHitHandlers();
 
+    // WD136: successful offensive cast identity; cancelled/failed casts never arrive here.
+    if (!IsTriggered() && !m_spellInfo->IsPositive() && !IsAutoRepeat() && !m_CastItem)
+        rebornConcoctions=RebornConcoctions::Launch(m_caster);
     HandleLaunchPhase();
 
     // we must send smsg_spell_go packet before m_castItem delete in TakeCastItem()...

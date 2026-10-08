@@ -4,7 +4,7 @@
 class spell_reborn_wd120_brewing : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd120_brewing);
-    bool _shrooms=false,_fish=false,_bones=false,_thistle=false;
+    bool _shrooms=false,_fish=false,_bones=false,_thistle=false,_concoctions=false;
     uint32 _mojo=0;
     bool Validate(SpellInfo const*) override
     {
@@ -27,6 +27,7 @@ class spell_reborn_wd120_brewing : public SpellScript
     {
         // Per-cast state: a different preparation while the missile travels cannot change it.
         _shrooms=GetCaster()->HasAura(WD120A::Shrooms);
+        _concoctions=GetCaster()->HasAura(9003954);
         _fish=GetCaster()->HasAura(WD125A::FishPrep);
         _bones=GetCaster()->HasAura(WD125A::BonesPrep);
         _thistle=GetCaster()->HasAura(9003915);
@@ -63,7 +64,11 @@ class spell_reborn_wd120_brewing : public SpellScript
         bool splash=WD120A::IsSplash(GetSpellInfo()->Id);
         if(_mojo) p->CastSpell(target,_mojo,true);
         if(_shrooms)
+        {
             p->CastSpell(target,splash?WD120A::SplashHot:WD120A::Hot,true);
+            if(_concoctions && p->HasSpell(9003954) && p->HasAura(9003954,p->GetGUID()))
+                p->CastSpell(target,9003955,true);
+        }
         if(_fish)
             p->CastSpell(target,splash?WD125A::FishSplash:WD125A::FishPotion,true);
         if(_thistle) p->CastSpell(target,splash?9003918u:9003917u,true);

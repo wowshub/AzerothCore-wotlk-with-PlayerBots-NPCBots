@@ -58,6 +58,7 @@
 #include "ScriptMgr.h"
 #include "SharedDefines.h"
 #include "Spell.h"
+#include "RebornWitchDoctorConcoctions.h"
 #include "RebornWitchDoctorBeam.h"
 #include "SpellAuraDefines.h"
 #include "SpellAuraEffects.h"
@@ -1865,7 +1866,10 @@ void Unit::DealSpellDamage(SpellNonMeleeDamage* damageInfo, bool durabilityLoss,
 
     // Call default DealDamage
     CleanDamage cleanDamage(damageInfo->cleanDamage, damageInfo->absorb, BASE_ATTACK, MELEE_HIT_NORMAL);
-    Unit::DealDamage(this, victim, damageInfo->damage, &cleanDamage, SPELL_DIRECT_DAMAGE, SpellSchoolMask(damageInfo->schoolMask), spellProto, durabilityLoss, false, spell);
+    uint32 const healthBefore=victim->GetHealth();
+    uint32 const resolved=Unit::DealDamage(this, victim, damageInfo->damage, &cleanDamage, SPELL_DIRECT_DAMAGE, SpellSchoolMask(damageInfo->schoolMask), spellProto, durabilityLoss, false, spell);
+    if(spell && spell->GetCaster()==this && victim!=this)
+        RebornConcoctions::Heal(this,spell->rebornConcoctions,resolved,healthBefore);
 }
 
 // @todo for melee need create structure as in

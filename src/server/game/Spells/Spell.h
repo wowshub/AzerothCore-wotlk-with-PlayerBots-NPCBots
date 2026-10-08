@@ -19,6 +19,7 @@
 #define __SPELL_H
 
 #include "ConditionMgr.h"
+#include "RebornConcoctionsState.h"
 #include "GridDefines.h"
 #include "LootMgr.h"
 #include "PathGenerator.h"
@@ -301,6 +302,7 @@ class Spell
 public:
     Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags, ObjectGuid originalCasterGUID = ObjectGuid::Empty, bool skipCheck = false);
     ~Spell();
+    RebornConcoctions::Snapshot rebornConcoctions;
 
     void EffectNULL(SpellEffIndex effIndex);
     void EffectUnused(SpellEffIndex effIndex);

@@ -1,0 +1,6 @@
+node,original_spell,private_spell,status,dependencies
+6026,801690,9003954,candidate-tested-offline,"4005;12645;6014;prior23BrewingTE"
+6026,570064,9003955,hidden-buff,"real-cast-and-aura-snapshot"
+6026,570185,9003956,hidden-heal,"resolved-damage"
+29740,705864,,preview,"6026;cauldron-effect-scaling"
+7133,500053,,preview,"29754;button-replacement"
