@@ -8225,6 +8225,22 @@ Unit* Unit::GetCharmer() const
     return nullptr;
 }
 
+#ifdef MOD_NPCERBOTS
+//reborn NPCB1A: a bot pet's own m_creator is a raw Player* copied when it was summoned and is never
+//cleared when that player is deleted, while the pet can still be in the grid (pending unsummon).
+//Resolve it through the owning bot (looked up by owner GUID): BotMgr clears the bot's creator when
+//its owner logs out.
+static Unit* GetNpcBotCreatorSafe(Unit const* unit)
+{
+    if (unit->IsNPCBotPet())
+    {
+        Unit* bot = unit->GetCharmerOrOwner();
+        return (bot && bot->IsNPCBot()) ? bot->GetCreator() : nullptr;
+    }
+    return unit->GetCreator();
+}
+#endif
+
 Player* Unit::GetCharmerOrOwnerPlayerOrPlayerItself() const
 {
     ObjectGuid guid = GetCharmerOrOwnerGUID();
@@ -8234,7 +8250,7 @@ Player* Unit::GetCharmerOrOwnerPlayerOrPlayerItself() const
 #ifdef MOD_NPCERBOTS
     //npcbot
     if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsNPCBotOrPet())
-        if (Unit* creator = ToUnit()->GetCreator())
+        if (Unit* creator = GetNpcBotCreatorSafe(this))
             return creator->ToPlayer();
     //end npcbot
 #endif
@@ -8246,7 +8262,7 @@ Player* Unit::GetAffectingPlayer() const
 #ifdef MOD_NPCERBOTS
     //npcbot: affecting player is creator
     if (IsNPCBotOrPet())
-        if (Unit* creator = GetCreator())
+        if (Unit* creator = GetNpcBotCreatorSafe(this))
             return creator->ToPlayer();
     //end npcbot
 #endif

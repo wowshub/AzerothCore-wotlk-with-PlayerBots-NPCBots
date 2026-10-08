@@ -16567,6 +16567,10 @@ void bot_ai::UnsummonCreature(Creature* creature, bool /*save*/)
             petai->canUpdate = false;
         }
 
+        //reborn NPCB1A: the summon only leaves the grid on the next map update (remove list), but its
+        //raw creator pointer is the bot's owner, which a logging-out owner deletes right after this.
+        //Drop it now so nothing reads a freed player from the pending pet.
+        creature->SetCreator(nullptr);
         ASSERT_NOTNULL(creature->ToTempSummon())->UnSummon();
     }
 }
