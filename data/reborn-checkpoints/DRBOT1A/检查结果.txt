@@ -1,0 +1,4 @@
+﻿PlayerbotAI.cpp: additive-only change; baseline unchanged; rollback byte-identical
+PlayerbotAI.h: additive-only change; baseline unchanged; rollback byte-identical
+Static guard review: real bot/race/group, aura ownership, retry grace, idle hysteresis, manual form exclusion.
+C++ compilation and live gameplay NOT RUN. No runtime/state-machine pass claimed.

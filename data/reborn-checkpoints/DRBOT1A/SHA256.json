@@ -1,0 +1,10 @@
+{
+  "modules\\mod-playerbots\\src\\Bot\\PlayerbotAI.cpp": {
+    "baseline": "5e7bdbc9eec545082dff4de72cd277cbf3a0a37152d8278abd5515dbab758c86",
+    "candidate": "e2c74ae71d168ae5bfd2fd98f606718df48ba7e5f171ca525fb0ea9ccfe3dfed"
+  },
+  "modules\\mod-playerbots\\src\\Bot\\PlayerbotAI.h": {
+    "baseline": "eae6c633b636a3dfcb19bf8147ce6005ac7a2fbaf8c445a1636b8775e1522792",
+    "candidate": "450b1e2b3301947d0a7361ea1c416d4d55afa172d5b42c7023a8404e67e8e5fe"
+  }
+}
