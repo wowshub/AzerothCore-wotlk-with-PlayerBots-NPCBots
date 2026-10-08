@@ -1,0 +1,17 @@
+{
+  "checks.json": "a0973f2d5b93cc239254d08cf9abf5740a3da0fb7c29235dba6a84303931c087",
+  "memory.md": "e6a5e2a0aa20f38cf2a07ca0f4ab7db626d6adc3ebef814683e0332587c31ce3",
+  "phaseFixForNewChat.md": "812e58829b1a7876cbc33b4bef11318bf5d7a98993cc30a7d780cfd4e58237f7",
+  "README_覆盖与测试说明.md": "b679b8e6cd6d1da7c666dd6636f16bcce122a574c75b51333f89b5bd4f493f59",
+  "tutor.md": "d8717bb3883320bde2dddbdc2b7b55058d2a1be8981d08916db1979b53cb260c",
+  "02_覆盖到客户端根目录\\Data\\patch-ZB.mpq": "52be6764887bf76e7217cc904ff22bf10265697e2e8e144634cc5438ad69885c",
+  "client_mpq输入_导入Patch-XA\\Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_HuM.m2": "8a2e2fd993927d754f0879378ccf90d621c2452dd18a13ba2f6c0af0855f80f5",
+  "client_mpq输入_导入Patch-XA\\Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_HuM00.skin": "eff79ad22f37e5bde667abef3d72af7142e2ba10e36bff62916ca6330afc03c6",
+  "client_mpq输入_导入Patch-XA\\Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NiM.m2": "8a2e2fd993927d754f0879378ccf90d621c2452dd18a13ba2f6c0af0855f80f5",
+  "client_mpq输入_导入Patch-XA\\Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NiM00.skin": "eff79ad22f37e5bde667abef3d72af7142e2ba10e36bff62916ca6330afc03c6",
+  "research\\assets.json": "5a010a32173186be10b9e76eb2dcc8e740882e8cf40d962c59e87d3f3eb78806",
+  "research\\dependencies.json": "d19c43e50cd86de1e7011ae92acfbc4fa41ed5fbac73ffcdc37facd28931e9e3",
+  "tools\\npc23956_assets.py": "f5cb6c46666317124105446f867e1d5df30f806f5c46f7fcd2f944f0eae502ae",
+  "tools\\npc23956_build.py": "0b6e9f0921e2af5d66ecba1c692af32e99f81a88669da038f9cae34445447e4a",
+  "tools\\npc23956_probe.py": "f83489633ce501a20a24ee14f0254e355dc7a3f14b22bb597a1cff7368e301e9"
+}

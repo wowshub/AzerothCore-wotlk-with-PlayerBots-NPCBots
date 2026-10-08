@@ -1,0 +1,6 @@
+# NPC23956：缺失头盔资源兼容归档
+用户2026-10-08明确要求独立commit/push。当前种族23指向Ni/Hu前缀，缺对应头盔M2/SKIN；新增成对兼容资源，不改DBC/SQL/怪物属性。记录生成工具、资源哈希与静态证据，资源ZIP供下载。用户本条没有单独确认本怪物修复实机通过，保留待验证边界，不晋升成功Skill。
+
+原包：D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261007\codexfix_20261007_223300_NPC23956_头盔方块资源修复
+ZIP SHA256：1c478e9ce02a5c425a74bcd817fbe91980251953427524f3e4e01bd0f1a86078
+旧归档不改写。发布结果以远端读回为准。

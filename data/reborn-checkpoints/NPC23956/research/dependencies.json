@@ -1,0 +1,38 @@
+{
+  "ITEM\\OBJECTCOMPONENTS\\SHOULDER\\ORBREFLECT02.BLP": [
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\common.MPQ",
+      "sha256": "a41c76842c314e40d4f9aec744c7993e4e17f0719dbcb3d568476b9e9cf2150c"
+    },
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-7.mpq",
+      "sha256": "c373c97d032e8df65b163c53ed6525f5388af29526e4707025de1271d38f1ccd"
+    },
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-K.mpq",
+      "sha256": "8f8516a16527f0676b4dfc74372d476220bfa054c3a681a74a68085558088ba3"
+    },
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-W.mpq",
+      "sha256": "e05f8ad96394dcba93583a2f23a7e72e740017037137df58ba253bdf484b0db3"
+    },
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch.MPQ",
+      "sha256": "8f8516a16527f0676b4dfc74372d476220bfa054c3a681a74a68085558088ba3"
+    }
+  ],
+  "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01Blue.blp": [
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\common.MPQ",
+      "sha256": "998a425f9ab2cc5bf329f54c0eeb8fc3100c6753dd40bda09c88954157ba46bc"
+    },
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-6.mpq",
+      "sha256": "3288b80264af78d1bb6e0a03a434e8c11ea186c8b8b7f412cc1fa5e86a1e2091"
+    },
+    {
+      "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-W.mpq",
+      "sha256": "479b7c8850babd847d134fe3cb4b9989ce981a6745b2dcb7f354398520132e0b"
+    }
+  ]
+}

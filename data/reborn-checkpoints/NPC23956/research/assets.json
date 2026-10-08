@@ -1,0 +1,187 @@
+[
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\common.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01Blue.blp",
+    "size": 88580,
+    "sha256": "998a425f9ab2cc5bf329f54c0eeb8fc3100c6753dd40bda09c88954157ba46bc",
+    "magic": "b'BLP2'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\lichking.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM.m2",
+    "size": 36784,
+    "sha256": "1fe08fee6979a37e22ebd48e0c479f2ce556cf2ba297847dbc9e8e1605251553",
+    "magic": "b'MD20'",
+    "vertices": 578,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\lichking.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM00.skin",
+    "size": 7488,
+    "sha256": "05a6ca7981005c8b35a2a9079f3310a13095248c78e61ac5a791089044e086cd",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\lichking.MPQ",
+    "key": "Character\\Vrykul\\Male\\VrykulMale.m2",
+    "size": 2249440,
+    "sha256": "27a6c533b0f982ff4aa60ce4c5d5600ba2ae5d2ef10bd9361ef569ab37dd2b8a",
+    "magic": "b'MD20'",
+    "vertices": 5839,
+    "views": 3
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-2.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM.m2",
+    "size": 41248,
+    "sha256": "4e5da16cf6db55693b8da6ec06f4dff41865ca15160ce9a914fc373feb85d970",
+    "magic": "b'MD20'",
+    "vertices": 671,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-2.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM00.skin",
+    "size": 8624,
+    "sha256": "46f1f1571484b0b87397d36b55bec8f3ab6a674345948528d4fe53dcd9a6888d",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-2.MPQ",
+    "key": "Character\\Vrykul\\Male\\VrykulMale.m2",
+    "size": 2305408,
+    "sha256": "28141eb574148ccc65eccee371f1afd691cbb40bdc9d1877e95ba6948167df4d",
+    "magic": "b'MD20'",
+    "vertices": 5929,
+    "views": 3
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-3.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM.m2",
+    "size": 36784,
+    "sha256": "b56c21c2f2f07afcaba4e9c375456e4415a9288a3be83c7a18c2e08a65cd5710",
+    "magic": "b'MD20'",
+    "vertices": 578,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-3.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM00.skin",
+    "size": 7488,
+    "sha256": "ae4b44681e8d6b70babe594842160790f341539dff73b7035a6f78bf5d8d1952",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-6.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM.m2",
+    "size": 36746,
+    "sha256": "8a2e2fd993927d754f0879378ccf90d621c2452dd18a13ba2f6c0af0855f80f5",
+    "magic": "b'MD20'",
+    "vertices": 578,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-6.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM00.skin",
+    "size": 7512,
+    "sha256": "eff79ad22f37e5bde667abef3d72af7142e2ba10e36bff62916ca6330afc03c6",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-6.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM.m2",
+    "size": 41210,
+    "sha256": "b6a618a3cf300101d34c082b7dca4f13d8ba41fc836ae284fd0793a69f219787",
+    "magic": "b'MD20'",
+    "vertices": 671,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-6.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM00.skin",
+    "size": 8648,
+    "sha256": "4e54c83bcf951c049de123bebf19c044c7bcdf2e7cfa86b02dbf8f3c7e2250b9",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-6.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01Blue.blp",
+    "size": 2797374,
+    "sha256": "3288b80264af78d1bb6e0a03a434e8c11ea186c8b8b7f412cc1fa5e86a1e2091",
+    "magic": "b'BLP2'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-B.mpq",
+    "key": "Character\\Vrykul\\Male\\VrykulMale.m2",
+    "size": 4287026,
+    "sha256": "7b901f5c887e1d00af8e94f82d0c9f70861e008cd6af2d2c42f0bb7c81abd11e",
+    "magic": "b'MD20'",
+    "vertices": 15700,
+    "views": 4
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-H.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM.m2",
+    "size": 36746,
+    "sha256": "8a2e2fd993927d754f0879378ccf90d621c2452dd18a13ba2f6c0af0855f80f5",
+    "magic": "b'MD20'",
+    "vertices": 578,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-H.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_VrM00.skin",
+    "size": 7512,
+    "sha256": "eff79ad22f37e5bde667abef3d72af7142e2ba10e36bff62916ca6330afc03c6",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-H.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM.m2",
+    "size": 41210,
+    "sha256": "b6a618a3cf300101d34c082b7dca4f13d8ba41fc836ae284fd0793a69f219787",
+    "magic": "b'MD20'",
+    "vertices": 671,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch-H.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM00.skin",
+    "size": 8648,
+    "sha256": "4e54c83bcf951c049de123bebf19c044c7bcdf2e7cfa86b02dbf8f3c7e2250b9",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\Patch-W.mpq",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01Blue.blp",
+    "size": 350740,
+    "sha256": "479b7c8850babd847d134fe3cb4b9989ce981a6745b2dcb7f354398520132e0b",
+    "magic": "b'BLP2'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM.m2",
+    "size": 36784,
+    "sha256": "6392044896c428e2efac46699142f71ade0517a1c584f0778c82e1621370f431",
+    "magic": "b'MD20'",
+    "vertices": 578,
+    "views": 1
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch.MPQ",
+    "key": "Item\\ObjectComponents\\Head\\Helm_Mail_Vrykul_01_NsM00.skin",
+    "size": 7488,
+    "sha256": "2c655f2fc163dec562661f8db71872661939510f2e9c0a71211215c7a554e6de",
+    "magic": "b'SKIN'"
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261008beAscend\\Data\\patch.MPQ",
+    "key": "Character\\Vrykul\\Male\\VrykulMale.m2",
+    "size": 2305408,
+    "sha256": "28141eb574148ccc65eccee371f1afd691cbb40bdc9d1877e95ba6948167df4d",
+    "magic": "b'MD20'",
+    "vertices": 5929,
+    "views": 3
+  }
+]

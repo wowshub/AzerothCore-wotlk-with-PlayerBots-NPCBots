@@ -1,0 +1,1 @@
+使用repair-wotlk-item-texture-references和audit-wotlk-shadowing-mpq-backups。基线按新refResource为20261008。只读DB确认模型；首轮沙箱拒绝连接，经只读授权升级成功。未修改数据库、运行资源或旧包。当前Data/enUS存在多个备份MPQ，此次未擅自移动；对相关行和文件扫描记录来源，所有归档均缺NiM/HuM，补文件不依赖替换DBC胜出顺序。待用户验证，不登记成功或发布。

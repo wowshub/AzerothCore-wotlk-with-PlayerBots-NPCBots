@@ -1,0 +1,10 @@
+{
+  "M2_SKIN_structure": true,
+  "vertex_triangle_bounds": true,
+  "textures_exist": true,
+  "MPQ_readback": true,
+  "runtime_verified": false,
+  "vertices": 578,
+  "skin_indices": 578,
+  "triangles_indices": 1884
+}
