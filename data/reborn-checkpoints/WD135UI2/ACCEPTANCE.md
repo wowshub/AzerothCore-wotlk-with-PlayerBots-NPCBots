@@ -1,0 +1,6 @@
+# WD135UI2：中文术语统一归档
+用户2026-10-08明确要求本修复独立commit/push。9003953改为灵魂链接神像，与Idol栏一致；效果不变。Git客户端文本用WD136兼容B版本，ZIP保留A/B供对应安装版本选择。四次DBC行/数值保护、Lua语法、MPQ读回为历史检查；用户本条仅明确WD136A测试通过，不把它扩大为本项独立实机验收。
+
+原包：D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261007\codexfix_20261007_195205_WD135UI2_灵魂链接神像译名
+ZIP SHA256：868d6b128279053c7fef21cc2255a4f57b1fa5b0a259623a4f0fed57e6197121
+旧归档不改写。发布结果以远端读回为准。
