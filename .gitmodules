@@ -1,7 +1,7 @@
 [submodule "modules/mod-playerbots"]
 	path = modules/mod-playerbots
 	url = https://github.com/wowshub/mod-playerbots.git
-	branch = reborn-drbot1a-20261008
+	branch = reborn-dcai1a-20261009
 	ignore = untracked
 [submodule "modules/mod-ale"]
 	path = modules/mod-ale

@@ -1,0 +1,284 @@
+keys 278: translated (now matchable) 273, already English 5, not in this DB 0
+
+  acolyte of shadron -> 沙德隆的追随者
+  ahn'kahar guardian -> 安卡哈守护者
+  akil'zon -> 埃基尔松
+  al'ar -> 奥
+  alliance commander -> 联盟指挥官
+  amani dragonhawk hatchling -> 阿曼尼龙鹰幼崽
+  amani'shi hatcher -> 阿曼尼孵化者
+  amani'shi medicine man -> 阿曼尼医师
+  ancient conservator -> 远古监护者
+  ancient rune giant -> 古代符文巨人
+  anetheron -> 安纳塞隆
+  anomalus -> 阿诺玛鲁斯
+  anub'arak -> 阿努巴拉克
+  anub'rekhan -> 阿努布雷坎
+  arcane explosion -> 奥术爆裂
+  archimonde -> 阿克蒙德
+  ashtongue channeler -> 灰舌导魔师
+  astral flare -> 星界光芒
+  attumen the huntsman -> 猎手阿图门
+  auriaya -> 欧尔莉亚
+  azgalor -> 阿兹加洛
+  baltharus the warborn -> 战争之子巴尔萨鲁斯
+  baron geddon -> 迦顿男爵
+  baron rafe dreuger -> 拉弗·德鲁格尔男爵
+  baron rivendare -> 瑞文戴尔男爵
+  baroness dorothea millstipe -> 杜萝希·米尔斯迪普女伯爵
+  blindeye the seer -> 盲眼先知
+  blood-queen lana'thel -> 鲜血女王兰娜瑟尔
+  bronjahm -> 布隆亚姆
+  burning abyssal -> 深渊燃魔
+  chaotic rift -> 混乱裂隙
+  chrono-lord epoch -> 时光领主埃博克
+  coilfang elite -> 盘牙精英
+  coilfang strider -> 盘牙巡逻者
+  commander kolurg -> 指挥官库鲁尔格
+  commander stoutbeard -> 指挥官斯托比德
+  conjured elemental -> 被召唤的元素
+  core hound -> 熔火恶犬
+  cosmic infuser -> 宇宙灌注者
+  crimson hand centurion -> 炽手百夫长
+  crypt guard -> 地穴卫士
+  crystal handler -> 水晶处理者
+  cyanigosa -> 塞安妮苟萨
+  dalronn the controller -> 控制者达尔隆
+  dark rune acolyte -> 黑暗符文助手
+  dark rune evoker -> 黑暗符文唤魔师
+  death knight understudy -> 死亡骑士学员
+  death talon wyrmguard -> 死爪龙人护卫
+  deathbringer saurfang -> 死亡使者萨鲁法尔
+  devastation -> 毁灭
+  devourer of souls -> 噬魂者
+  dorothee -> 多萝茜
+  drakos the interrogator -> 审讯者达库斯
+  eadric the pure -> 纯洁者耶德瑞克
+  earthbind totem -> 地缚图腾
+  elder nadox -> 纳多克斯长老
+  emalon the storm watcher -> 风暴看守者埃玛尔隆
+  ember of al'ar -> 奥的灰烬
+  enchanted elemental -> 魔化元素
+  erekem -> 埃雷克姆
+  essence of anger -> 愤怒精华
+  essence of desire -> 欲望精华
+  essence of suffering -> 苦痛精华
+  fathom lurker -> 深渊潜伏者
+  fathom sporebat -> 深水孢子蝠
+  fathom-guard caribdis -> 深水卫士卡莉蒂丝
+  fathom-guard sharkkis -> 深水卫士沙克基斯
+  fathom-guard tidalvess -> 深水卫士泰达维斯
+  fathom-lord karathress -> 深水领主卡拉瑟雷斯
+  festergut -> 烂肠
+  feugen -> 费尔根
+  flame of azzinoth -> 埃辛诺斯之焰
+  flame tsunami -> 烈焰飓风
+  forgotten one -> 被遗忘的无面者
+  freya -> 弗蕾亚
+  gal'darah -> 迦尔达拉
+  garfrost -> 熔炉之主加弗斯特
+  garr -> 加尔
+  gas cloud -> 毒气之云
+  gathios the shatterer -> 击碎者加西奥斯
+  gehennas -> 基赫纳斯
+  general bjarngrim -> 比亚格里将军
+  general vezax -> 维扎克斯将军
+  general zarithrian -> 萨瑞瑟里安将军
+  gluth -> 格拉斯
+  golemagg the incinerator -> 焚化者古雷曼格
+  gothik the harvester -> 收割者戈提克
+  grand astromancer capernian -> 星术师卡波妮娅
+  grand magus telestra -> 大魔导师泰蕾丝塔
+  grand widow faerlina -> 黑女巫法琳娜
+  grauf -> 格拉乌弗
+  greyheart spellbinder -> 暗心缚法者
+  greyheart tidecaller -> 暗心唤潮者
+  grobbulus -> 格罗布鲁斯
+  grobbulus cloud -> 天灾云雾
+  grounding totem -> 根基图腾
+  gruul the dragonkiller -> 屠龙者格鲁尔
+  guardian of icecrown -> 寒冰皇冠卫士
+  gurtogg bloodboil -> 古尔图格·血沸
+  halazzi -> 哈尔拉兹
+  halion -> 海里昂
+  heigan the unclean -> 肮脏的希尔盖
+  hellfire channeler -> 地狱火导魔者
+  hex lord malacrass -> 妖术领主玛拉卡斯
+  high astromancer solarian -> 大星术师索兰莉安
+  high king maulgar -> 莫加尔大王
+  high nethermancer zerevor -> 高阶灵术师塞勒沃尔
+  high warlord naj'entus -> 高阶督军纳因图斯
+  highlord mograine -> 大领主莫格莱尼
+  hodir -> 霍迪尔
+  horde commander -> 部落指挥官
+  hydross the unstable -> 不稳定的海度斯
+  ichoron -> 艾库隆
+  ick -> 伊克
+  ignis the furnace master -> 掌炉者伊格尼斯
+  illidan stormrage -> 伊利丹·怒风
+  infinity blades -> 无尽之刃
+  ingvar the plunderer -> 掠夺者因格瓦尔
+  instructor razuvious -> 教官拉苏维奥斯
+  ionar -> 艾欧纳尔
+  iron honor guard -> 钢铁荣誉卫士
+  iron ring guard -> 竞技场铁卫士
+  jan'alai -> 加亚莱
+  jedoga shadowseeker -> 耶戈达·觅影者
+  julianne -> 朱丽叶
+  kael'thas sunstrider -> 凯尔萨斯·逐日者
+  kaz'rogal -> 卡兹洛加
+  kel'thuzad -> 克尔苏加德
+  keristrasza -> 克莉斯塔萨
+  kiggler the crazed -> 疯狂的基戈尔
+  king ymiron -> 伊米隆国王
+  kologarn -> 科隆加恩
+  koralon the flame watcher -> 火焰看守者科拉隆
+  krik'thir the gatewatcher -> 看门者克里克希尔
+  krosh firehand -> 克洛什·火拳
+  krystallus -> 克莱斯塔卢斯
+  lady blaumeux -> 女公爵布劳缪克丝
+  lady catriona von'indi -> 卡翠欧娜·沃宁迪女伯爵
+  lady deathwhisper -> 亡语者女士
+  lady keira berrybuck -> 吉拉·拜瑞巴克女伯爵
+  lady malande -> 女公爵玛兰德
+  lady vashj -> 瓦丝琪
+  left arm -> 左臂
+  leotheras the blind -> 盲眼者莱欧瑟拉斯
+  lesser doomguard -> 低级末日守卫
+  leviathan mk ii -> 巨兽二型
+  ley-guardian eregos -> 魔网守护者埃雷苟斯
+  little ooze -> 小软泥怪
+  loatheb -> 洛欧塞布
+  loken -> 洛肯
+  lord crispin ference -> 克里斯宾·费伦斯伯爵
+  lord marrowgar -> 玛洛加尔领主
+  lord robin daris -> 罗宾·达尼斯伯爵
+  lord sanguinar -> 萨古纳尔男爵
+  lucifron -> 鲁西弗隆
+  maexxna -> 迈克斯纳
+  mage-lord urom -> 法师领主伊洛姆
+  magmadar -> 玛格曼达
+  maiden of virtue -> 贞节圣女
+  majordomo executus -> 管理者埃克索图斯
+  mana warp -> 法力畸变
+  master engineer telonicus -> 首席技师塔隆尼库斯
+  midnight -> 午夜
+  mimiron -> 米米尔隆
+  moroes -> 莫罗斯
+  morogrim tidewalker -> 莫洛格里·踏潮者
+  mother shahraz -> 莎赫拉丝主母
+  nalorakk -> 纳洛拉克
+  nefarian -> 奈法利安
+  nether portal - dominance -> 虚空之门 - 统御
+  nether portal - serenity -> 虚空之门 - 平静
+  netherspite -> 虚空幽龙
+  netherstrand longbow -> 灵弦长弓
+  nightbane -> 夜之魇
+  novos the summoner -> 召唤者诺沃斯
+  olm the summoner -> 召唤者沃尔姆
+  onyxia -> 奥妮克希亚
+  ormorok the tree-shaper -> 塑树者奥莫洛克
+  ossirian the unscarred -> 无疤者奥斯里安
+  patchwerk -> 帕奇维克
+  phaseshift bulwark -> 相位壁垒
+  phoenix -> 凤凰
+  phoenix egg -> 凤凰卵
+  power spark -> 能量火花
+  precious -> 小宝 / 普莱瑟斯
+  prince keleseth -> 凯雷塞斯王子
+  prince malchezaar -> 玛克扎尔王子
+  prince taldaram -> 塔达拉姆王子
+  prince valanar -> 瓦拉纳王子
+  professor putricide -> 普崔塞德教授
+  pure spawn of hydross -> 纯净的海度斯爪牙
+  rage winterchill -> 雷基·冬寒
+  ragnaros -> 拉格纳罗斯
+  razorgore the untamed -> 狂野的拉佐格尔
+  razorscale -> 锋鳞
+  reliquary of the lost -> 迷失者的圣骨匣
+  right arm -> 右臂
+  roar -> 胆小的狮子
+  romulo -> 罗密欧
+  rotface -> 腐面
+  rotting frost giant -> 腐烂的冰霜巨人
+  runic colossus -> 符印巨像
+  salramm the fleshcrafter -> 塑血者沙尔拉姆
+  sapphiron -> 萨菲隆
+  sara -> 萨拉
+  sartharion -> 萨塔里奥
+  saviana ragefire -> 塞维娅娜·怒火
+  scorch -> 灼烧
+  scourgelord tyrannus -> 天灾领主泰兰努斯
+  shade of aran -> 埃兰之影
+  shadow fissure -> 暗影裂隙
+  shadron -> 沙德隆
+  shazzrah -> 沙斯拉尔
+  shirrak the dead watcher -> 死亡观察者希尔拉克
+  sindragosa -> 辛达苟萨
+  sir zeliek -> 瑟里耶克爵士
+  sister svalna -> 女武神席瓦娜
+  sjonnir the ironshaper -> 塑铁者斯约尼尔
+  skadi the ruthless -> 残忍的斯卡迪
+  slad'ran -> 斯拉德兰
+  snake wrap -> 毒蛇陷阱
+  solarium priest -> 日晷祭司
+  soldier of the frozen wastes -> 冰冻废土的士兵
+  soul weaver -> 织魂者
+  spirit of the lynx -> 山猫之灵
+  spore -> 孢子
+  staff of disintegration -> 瓦解法杖
+  stalagg -> 斯塔拉格
+  stinky -> 大臭
+  stormcaller brundir -> 唤雷者布隆迪尔
+  stormforged lieutenant -> 雷铸军官
+  strawman -> 稻草人
+  sulfuron harbinger -> 萨弗隆先驱者
+  supremus -> 苏普雷姆斯
+  swarming shadows -> 蜂拥之影
+  tainted elemental -> 被污染的元素
+  tainted spawn of hydross -> 污染的海度斯爪牙
+  tenebron -> 塔尼布隆
+  terestian illhoof -> 特雷斯坦·邪蹄
+  teron gorefiend -> 塔隆·血魔
+  thaddius -> 塔迪乌斯
+  thaladred the darkener -> 亵渎者萨拉德雷
+  thane korth'azz -> 库尔塔兹领主
+  the big bad wolf -> 大灰狼
+  the crone -> 巫婆
+  the curator -> 馆长
+  the lich king -> 巫妖王
+  the lurker below -> 鱼斯拉
+  the prophet tharon'ja -> 先知萨隆亚
+  thorim -> 托里姆
+  tidewalker lurker -> 踏潮潜伏者
+  time bomb -> 时间炸弹
+  tinhead -> 铁皮人
+  tito -> 托托
+  towering infernal -> 巨大的地狱火
+  trollgore -> 托尔戈
+  twilight fissure -> 暮光裂隙
+  unstable sphere -> 不稳定的宝珠
+  unstoppable abomination -> 势不可挡的憎恶
+  vaelastrasz the corrupt -> 堕落的瓦拉斯塔兹
+  varos cloudstrider -> 瓦尔洛斯·云击
+  veras darkshadow -> 维尔莱斯·深影
+  vesperon -> 维斯匹隆
+  void reaver -> 空灵机甲
+  volatile ooze -> 不稳定的软泥怪
+  volkhan -> 沃尔坎
+  warp slicer -> 迁跃切割者
+  whirlwind -> 旋风
+  wild fel stalker -> 野蛮的魔能猎犬
+  yogg-saron -> 尤格-萨隆
+  zombie chow -> 肉用僵尸
+  zul'jin -> 祖尔金
+  zuramat the obliterator -> 湮灭者祖拉玛特
+
+already English:
+  focused eyebeam
+  magtheridon
+  malygos
+  spore drop trigger
+  vx-001
+
+not in DB:

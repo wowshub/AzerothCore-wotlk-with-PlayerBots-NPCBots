@@ -1,0 +1,73 @@
+names: 278  entries: 415
+find target qualifiers: 240  not in upstream: 0
+
+skipped (only outside Dungeon/Raid code): 69
+  alchemy: Bot/Cmd/ChatHelper.cpp
+  ancestral spirit: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/Strategy/ShamanNonCombatStra
+  arcane torrent: Ai/Base/ActionContext.h, Ai/Base/Actions/GenericSpellActions.h, Ai/Base/Strategy/RacialsStrategy.cpp
+  ashtongue deathsworn: Ai/Base/Actions/SuggestWhatToDoAction.cpp
+  blacksmithing: Bot/Cmd/ChatHelper.cpp
+  blizzard: Ai/Class/Mage/MageActions.h, Ai/Class/Mage/MageAiObjectContext.cpp, Ai/Class/Mage/Strategy/GenericMageStrategy.cpp
+  brood of nozdormu: Ai/Base/Actions/SuggestWhatToDoAction.cpp
+  cat: Ai/Base/Actions/WorldBuffAction.cpp, Ai/Class/Druid/DruidAiObjectContext.cpp, Ai/Class/Druid/Strategy/CatDruidStrategy.c
+  charge target: Ai/Base/Actions/ChooseTargetActions.cpp
+  chicken: Ai/Base/Actions/EmoteAction.cpp
+  claw: Ai/Class/Druid/Action/DruidCatActions.h, Ai/Class/Druid/DruidAiObjectContext.cpp, Ai/Class/Druid/Strategy/CatDruidStrate
+  cleansing totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  combustion: Ai/Class/Mage/MageActions.h, Ai/Class/Mage/MageAiObjectContext.cpp, Ai/Class/Mage/MageTriggers.h, Ai/Class/Mage/Strategy
+  cooking: Bot/Cmd/ChatHelper.cpp
+  cyclone: Ai/Class/Druid/Action/DruidActions.h, Ai/Class/Druid/DruidAiObjectContext.cpp, Ai/Class/Druid/DruidTriggers.h, Ai/Class/
+  dash: Ai/Class/Druid/Action/DruidCatActions.h, Ai/Class/Druid/Action/DruidShapeshiftActions.cpp, Ai/Class/Druid/DruidAiObjectC
+  death knight: Bot/PlayerbotMgr.cpp
+  enchanting: Bot/Cmd/ChatHelper.cpp
+  engineering: Bot/Cmd/ChatHelper.cpp
+  felguard: Ai/Class/Warlock/Strategy/GenericWarlockNonCombatStrategy.h, Ai/Class/Warlock/WarlockAiObjectContext.cpp, Ai/Class/Warlo
+  felhunter: Ai/Class/Warlock/Strategy/GenericWarlockNonCombatStrategy.h, Ai/Class/Warlock/WarlockAiObjectContext.cpp, Ai/Class/Warlo
+  feral spirit: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/Strategy/EnhancementShamanSt
+  fire elemental totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  fire resistance totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  first aid: Bot/Cmd/ChatHelper.cpp
+  fishing: Bot/Cmd/ChatHelper.cpp
+  flametongue totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  force of nature: Ai/Class/Druid/Action/DruidActions.h, Ai/Class/Druid/DruidAiObjectContext.cpp, Ai/Class/Druid/DruidTriggers.h, Ai/Class/
+  frost resistance totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  frostbite: Ai/Class/Mage/MageTriggers.h
+  fury: Ai/Class/Warrior/Strategy/FuryWarriorStrategy.h, Ai/Class/Warrior/WarriorAiObjectContext.cpp, Bot/Cmd/ChatFilter.cpp, Bo
+  guardian spirit: Ai/Class/Priest/PriestActions.h
+  healing stream totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  herbalism: Bot/Cmd/ChatHelper.cpp
+  imp: Ai/Class/Warlock/Strategy/GenericWarlockNonCombatStrategy.h, Ai/Class/Warlock/WarlockAiObjectContext.cpp, Ai/Class/Warlo
+  jewelcrafting: Bot/Cmd/ChatHelper.cpp
+  leatherworking: Bot/Cmd/ChatHelper.cpp
+  lightwell: Ai/Class/Priest/PriestActions.h, Ai/Class/Priest/PriestAiObjectContext.cpp
+  magma totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  mana spring totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  mana tide totem: Ai/Class/Shaman/ShamanActions.cpp, Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/
+  melee target: Ai/Base/Actions/ChooseTargetActions.cpp
+  mining: Bot/Cmd/ChatHelper.cpp
+  mirror image: Ai/Class/Mage/MageActions.h, Ai/Class/Mage/MageAiObjectContext.cpp, Ai/Class/Mage/MageTriggers.h, Ai/Class/Mage/Strategy
+  nature resistance totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  priest: Bot/Cmd/ChatHelper.cpp, Bot/PlayerbotMgr.cpp, Mgr/Travel/TravelMgr.cpp
+  ram: Ai/Base/ActionContext.h, Ai/Base/Actions/GenericSpellActions.h, Ai/Base/Strategy/BattlegroundStrategy.cpp
+  ranged target: Ai/Base/Actions/ChooseTargetActions.cpp
+  ravage: Ai/Class/Druid/Action/DruidCatActions.h, Ai/Class/Druid/DruidAiObjectContext.cpp, Ai/Class/Druid/Strategy/CatDruidStrate
+  ravenholdt: Ai/Base/Actions/SuggestWhatToDoAction.cpp
+  scarlet commander mograine: Bot/Cmd/ChatFilter.cpp
+  searing totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  shadow: Ai/Class/Priest/PriestAiObjectContext.cpp, Ai/Class/Priest/Strategy/ShadowPriestStrategy.h, Bot/Cmd/ChatHelper.cpp, Bot/
+  shadowfiend: Ai/Class/Priest/PriestActions.h, Ai/Class/Priest/PriestAiObjectContext.cpp, Ai/Class/Priest/PriestTriggers.h, Ai/Class/P
+  skinning: Bot/Cmd/ChatHelper.cpp
+  spirit healer: Ai/Base/Actions/ReviveFromCorpseAction.cpp, Ai/Base/Actions/ReviveFromCorpseAction.h, Ai/Base/ChatActionContext.h, Ai/Ba
+  stoneclaw totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/Strategy/ElementalShamanStra
+  stoneskin totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  strength of earth: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.cpp, Ai/Class
+  strength of earth totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  succubus: Ai/Class/Warlock/Strategy/GenericWarlockNonCombatStrategy.h, Ai/Class/Warlock/WarlockAiObjectContext.cpp, Ai/Class/Warlo
+  tailoring: Bot/Cmd/ChatHelper.cpp
+  tick: Script/PlayerbotCommandScript.cpp
+  tremor totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  typhoon: Ai/Class/Druid/Action/DruidActions.h, Ai/Class/Druid/DruidAiObjectContext.cpp, Ai/Class/Druid/Strategy/BalanceDruidStrat
+  voidwalker: Ai/Class/Warlock/Strategy/GenericWarlockNonCombatStrategy.h, Ai/Class/Warlock/WarlockAiObjectContext.cpp, Ai/Class/Warlo
+  whisper: Bot/Cmd/ChatHelper.cpp
+  windfury totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
+  wrath of air totem: Ai/Class/Shaman/ShamanActions.h, Ai/Class/Shaman/ShamanAiObjectContext.cpp, Ai/Class/Shaman/ShamanTriggers.h, Ai/Class/S
