@@ -1,0 +1,47 @@
+[worldserver]
+
+########################################
+# mod-reborn-bot-telemetry (RebornWOW, DC line P1)
+########################################
+#
+# Writes one JSON line per group fight to BotTelemetry.File: party members
+# (class, spec tab, role, bot/human, item level), damage done, effective
+# healing done, damage taken, deaths, time under 50% / 25% health, boss, wipe.
+# Pairs with mod-dungeon-clear's dc_testruns.jsonl for the bot statistics site.
+# All values are re-read on `.reload config`.
+#
+#    BotTelemetry.Enable
+#        1 = record fights, 0 = off (the hooks return immediately).
+#        Default: 1
+BotTelemetry.Enable = 1
+
+#    BotTelemetry.DungeonsOnly
+#        1 = only fights inside dungeon / raid instances.
+#        Default: 1
+BotTelemetry.DungeonsOnly = 1
+
+#    BotTelemetry.BotGroupsOnly
+#        1 = only groups that contain at least one playerbot (bot test parties
+#        and players running with bots); groups of real players only are skipped.
+#        Default: 1
+BotTelemetry.BotGroupsOnly = 1
+
+#    BotTelemetry.SampleMs
+#        How often fight state and health are sampled (ms, min 100).
+#        Default: 500
+BotTelemetry.SampleMs = 500
+
+#    BotTelemetry.EndAfterMs
+#        A fight ends after nobody in the group has been in combat this long.
+#        Default: 4000
+BotTelemetry.EndAfterMs = 4000
+
+#    BotTelemetry.MinFightMs
+#        Shorter fights (a stray critter) are not written.
+#        Default: 5000
+BotTelemetry.MinFightMs = 5000
+
+#    BotTelemetry.File
+#        Output file, relative to the worldserver working directory.
+#        Default: "dc_fights.jsonl"
+BotTelemetry.File = "dc_fights.jsonl"
