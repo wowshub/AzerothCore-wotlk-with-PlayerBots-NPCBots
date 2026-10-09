@@ -31,6 +31,7 @@
 #include "DungeonClearDispatch.h"
 #include "StringFormat.h"
 #include "Util/DcSpectator.h"
+#include "Util/DcSelfBot.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettingsRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Util/DungeonClearUtil.h"
@@ -203,7 +204,10 @@ public:
         if (!DcModule::IsEnabled())
             return;  // no run can exist, so no override store to clear
         if (player)
+        {
             DcSettings::ClearRun(player->GetGUID());
+            DcSelfBot::Forget(player);
+        }
     }
 
     // Block the core from relaying our own control messages to the rest of the
@@ -288,11 +292,23 @@ public:
             return;
         }
 
+        // Self-bot ("let the AI play me", RebornWOW DCSB1A): acts on the sending
+        // player directly, like spectate -- never dispatched to a tank bot.
+        if (subCmd == "selfbot")
+        {
+            DcSelfBot::Handle(player, param,
+                [player](std::string const& payload) { SendAddonPayload(player, payload); });
+            return;
+        }
+
         // Piggyback the spectate-enabled flag on the addon's status poll: it's
         // the panel's heartbeat (sent on open and on combat transitions), so the
         // button stays in sync regardless of whether a tank bot is present.
         if (subCmd == "status")
+        {
             SendSpectateState(player);
+            SendAddonPayload(player, DcSelfBot::StateLine(player));
+        }
 
         // Map subcommand strings to action names.
         std::string action;

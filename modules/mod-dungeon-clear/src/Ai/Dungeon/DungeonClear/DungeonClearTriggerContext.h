@@ -9,6 +9,7 @@
 #include "ChatCommandTrigger.h"
 #include "NamedObjectContext.h"
 #include "Ai/Dungeon/DungeonClear/Trigger/DungeonClearTriggers.h"
+#include "Ai/Dungeon/DungeonClear/Strategy/DcSelfBotStrategy.h"
 
 class DungeonClearTriggerContext : public NamedObjectContext<Trigger>
 {
@@ -30,6 +31,7 @@ public:
         creators["dungeon clear recover stranded"] = &DungeonClearTriggerContext::recover_stranded;
         creators["dungeon clear stalled"] = &DungeonClearTriggerContext::stalled;
         creators["dungeon clear follow tank"] = &DungeonClearTriggerContext::follow_tank;
+        creators["dc selfbot stray"] = &DungeonClearTriggerContext::selfbot_stray;  // DCSB1A
         creators["dungeon clear door blocked"] = &DungeonClearTriggerContext::door_blocked;
         creators["dungeon clear door reopened"] = &DungeonClearTriggerContext::door_reopened;
         creators["dungeon clear needs drink"] = &DungeonClearTriggerContext::needs_drink;
@@ -89,6 +91,7 @@ private:
     static Trigger* recover_stranded(PlayerbotAI* ai) { return new DungeonClearRecoverStrandedTrigger(ai); }
     static Trigger* stalled(PlayerbotAI* ai) { return new DungeonClearStalledTrigger(ai); }
     static Trigger* follow_tank(PlayerbotAI* ai) { return new DungeonClearFollowTankTrigger(ai); }
+    static Trigger* selfbot_stray(PlayerbotAI* ai) { return new DcSelfBotStrayTrigger(ai); }
     static Trigger* door_blocked(PlayerbotAI* ai) { return new DungeonClearDoorBlockedTrigger(ai); }
     static Trigger* door_reopened(PlayerbotAI* ai) { return new DungeonClearDoorReopenedTrigger(ai); }
     static Trigger* needs_drink(PlayerbotAI* ai) { return new DungeonClearNeedsDrinkTrigger(ai); }

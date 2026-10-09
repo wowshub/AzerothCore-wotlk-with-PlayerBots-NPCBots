@@ -9,6 +9,7 @@
 #include "NamedObjectContext.h"
 #include "Strategy.h"
 #include "Ai/Dungeon/DungeonClear/Strategy/DungeonClearStrategy.h"
+#include "Ai/Dungeon/DungeonClear/Strategy/DcSelfBotStrategy.h"
 
 class DungeonClearStrategyContext : public NamedObjectContext<Strategy>
 {
@@ -20,11 +21,16 @@ public:
         creators["dungeon clear"] = &DungeonClearStrategyContext::dungeon_clear;
         // Combat-engine companion holding the advanced-pull maneuver trigger.
         creators["dungeon clear combat"] = &DungeonClearStrategyContext::dungeon_clear_combat;
+        // Self-bot helpers (RebornWOW DCSB1A, see DcSelfBotStrategy.h).
+        creators["dc selfbot regroup"] = &DungeonClearStrategyContext::selfbot_regroup;
+        creators["dc selfbot basic"] = &DungeonClearStrategyContext::selfbot_basic;
     }
 
 private:
     static Strategy* dungeon_clear(PlayerbotAI* ai) { return new DungeonClearStrategy(ai); }
     static Strategy* dungeon_clear_combat(PlayerbotAI* ai) { return new DungeonClearCombatStrategy(ai); }
+    static Strategy* selfbot_regroup(PlayerbotAI* ai) { return new DcSelfBotRegroupStrategy(ai); }
+    static Strategy* selfbot_basic(PlayerbotAI* ai) { return new DcSelfBotBasicStrategy(ai); }
 };
 
 #endif

@@ -12,6 +12,7 @@
 #include "Ai/Dungeon/DungeonClear/Action/DungeonClearActions.h"
 #include "Ai/Dungeon/DungeonClear/Action/DungeonClearChatActions.h"
 #include "Ai/Dungeon/DungeonClear/Action/StayDeadAction.h"
+#include "Ai/Dungeon/DungeonClear/Strategy/DcSelfBotStrategy.h"
 
 class DungeonClearActionContext : public NamedObjectContext<Action>
 {
@@ -29,6 +30,7 @@ public:
         creators["dungeon clear room preclear hold"] = &DungeonClearActionContext::room_preclear_hold;
         creators["dungeon clear clear stalled"] = &DungeonClearActionContext::clear_stalled;
         creators["dungeon clear follow tank"] = &DungeonClearActionContext::follow_tank;
+        creators["dc selfbot drop fight"] = &DungeonClearActionContext::selfbot_drop_fight;  // DCSB1A
         creators["dungeon clear disable on death"] = &DungeonClearActionContext::disable_on_death;
         creators["dungeon clear rez party"] = &DungeonClearActionContext::rez_party;
         creators["dungeon clear disable on cleared"] = &DungeonClearActionContext::disable_on_cleared;
@@ -98,6 +100,7 @@ private:
     static Action* room_preclear_hold(PlayerbotAI* ai) { return new DungeonClearRoomPreClearHoldAction(ai); }
     static Action* clear_stalled(PlayerbotAI* ai) { return new DungeonClearClearStalledAction(ai); }
     static Action* follow_tank(PlayerbotAI* ai) { return new DungeonClearFollowTankAction(ai); }
+    static Action* selfbot_drop_fight(PlayerbotAI* ai) { return new DcSelfBotDropFightAction(ai); }
     static Action* disable_on_death(PlayerbotAI* ai) { return new DungeonClearDisableOnDeathAction(ai); }
     static Action* rez_party(PlayerbotAI* ai) { return new DungeonClearRezPartyAction(ai); }
     static Action* disable_on_cleared(PlayerbotAI* ai) { return new DungeonClearDisableOnClearedAction(ai); }
