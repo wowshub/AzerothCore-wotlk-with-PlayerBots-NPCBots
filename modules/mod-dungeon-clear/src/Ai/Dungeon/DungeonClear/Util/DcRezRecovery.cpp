@@ -36,24 +36,37 @@
 #include "Player.h"
 #include "PlayerbotAI.h"
 #include "Playerbots.h"
+#include "SpellMgr.h"
 #include "Timer.h"
 
 namespace
 {
     using DcRezDecision::Member;
 
+    // First rank of each class's out-of-combat resurrection (Resurrection, Redemption,
+    // Ancestral Spirit, Revive). 0 = the class has none.
+    uint32 RezSpellFirstRank(uint8 cls)
+    {
+        switch (cls)
+        {
+            case CLASS_PRIEST:  return 2006;
+            case CLASS_PALADIN: return 7328;
+            case CLASS_SHAMAN:  return 2008;
+            case CLASS_DRUID:   return 50769;
+            default:            return 0;
+        }
+    }
+
+    // RebornWOW DCRZ1A: the class alone is not enough -- a bot levelled without visiting a
+    // trainer (Halls of Stone, paladin "Dvd") was picked as the rezzer and refused forever with
+    // "no spell id for name", freezing the run on "coming to resurrect". Require any rank of the
+    // class rez (walking the whole chain, custom high ranks included).
     bool IsRezClass(Player const* p)
     {
-        switch (p->getClass())
-        {
-            case CLASS_PRIEST:
-            case CLASS_PALADIN:
-            case CLASS_SHAMAN:
-            case CLASS_DRUID:
+        for (uint32 id = RezSpellFirstRank(p->getClass()); id; id = sSpellMgr->GetNextSpellInChain(id))
+            if (p->HasSpell(id))
                 return true;
-            default:
-                return false;
-        }
+        return false;
     }
 
     // The member whose DcRunState owns this run — DEAD OR ALIVE. This used to be a
