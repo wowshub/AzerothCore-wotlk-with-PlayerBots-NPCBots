@@ -4,6 +4,7 @@
  */
 
 #include "DcTestDungeonRegistry.h"
+#include "TestRun/DcTestRunManager.h"  // DCTEST4A: MaxConcurrent()
 
 #include <algorithm>
 #include <cstdlib>
@@ -386,7 +387,7 @@ namespace DcTestDungeonRegistry
 
         std::ostringstream s;
         s << "{\"limits\":{\"maxConcurrent\":"
-          << DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent")
+          << DcTestRunManager::MaxConcurrent()
           << ",\"maxPlans\":"
           << DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxPlans")
           << ",\"planMaxTotal\":"

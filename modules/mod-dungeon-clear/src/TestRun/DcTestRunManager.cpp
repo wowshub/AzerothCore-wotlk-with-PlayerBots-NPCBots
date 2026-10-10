@@ -5,6 +5,7 @@
 
 #include "TestRun/DcTestRunManager.h"
 
+#include <atomic>
 #include <ctime>
 #include <fstream>
 #include <limits>
@@ -85,7 +86,7 @@ bool DcTestRunManager::Start(Player* gm, std::string const& dungeonToken,
         return fail(StartErr::NoMgr, "no playerbot manager on this account");
 
     // Concurrency cap (0 = unlimited). World-thread read, no lock.
-    uint32 const maxConcurrent = DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent");
+    uint32 const maxConcurrent = MaxConcurrent();
     if (maxConcurrent != 0 && _runs.size() >= maxConcurrent)
         return fail(StartErr::CapHit,
                     "max concurrent test runs reached (" + std::to_string(maxConcurrent) +
@@ -151,7 +152,7 @@ bool DcTestRunManager::StartRoster(Player* gm, std::string const& dungeonToken,
     if (!gm || !GET_PLAYERBOT_MGR(gm))
         return fail(StartErr::NoMgr, "no playerbot manager on this account");
 
-    uint32 const maxConcurrent = DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent");
+    uint32 const maxConcurrent = MaxConcurrent();
     if (maxConcurrent != 0 && _runs.size() >= maxConcurrent)
         return fail(StartErr::CapHit,
                     "max concurrent test runs reached (" + std::to_string(maxConcurrent) +
@@ -398,7 +399,7 @@ std::string DcTestRunManager::StatusText() const
     if (_runs.empty())
         return "no test runs active";
 
-    uint32 const maxConcurrent = DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent");
+    uint32 const maxConcurrent = MaxConcurrent();
     std::string out = std::to_string(_runs.size()) +
                       (_runs.size() == 1 ? " test run active" : " test runs active") + " (max " +
                       (maxConcurrent == 0 ? std::string("unlimited") : std::to_string(maxConcurrent)) +
@@ -410,7 +411,7 @@ std::string DcTestRunManager::StatusText() const
 
 uint32 DcTestRunManager::CapHeadroom() const
 {
-    uint32 const maxConcurrent = DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent");
+    uint32 const maxConcurrent = MaxConcurrent();
     if (maxConcurrent == 0)
         return std::numeric_limits<uint32>::max();
     return maxConcurrent > _runs.size() ? maxConcurrent - static_cast<uint32>(_runs.size()) : 0;
@@ -494,6 +495,74 @@ void DcTestRunManager::Tick(uint32 diff)
         _liveAccumMs = 0;
         WriteLiveStatus();
     }
+}
+
+namespace
+{
+    std::atomic<int32> g_maxConcurrentOverride{ -1 };  // DCTEST4A, -1 = none
+}
+
+uint32 DcTestRunManager::ConfMaxConcurrent()
+{
+    return DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent");
+}
+
+uint32 DcTestRunManager::MaxConcurrent()
+{
+    int32 const ov = g_maxConcurrentOverride.load();
+    return ov >= 0 ? static_cast<uint32>(ov) : ConfMaxConcurrent();
+}
+
+bool DcTestRunManager::MaxConcurrentOverridden()
+{
+    return g_maxConcurrentOverride.load() >= 0;
+}
+
+void DcTestRunManager::SetMaxConcurrentOverride(int32 value)
+{
+    g_maxConcurrentOverride.store(value < 0 ? -1 : value);
+}
+
+std::vector<DcTestRunManager::AddonRunView> DcTestRunManager::AddonRunViews() const
+{
+    std::vector<AddonRunView> out;
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    out.reserve(_runs.size());
+    for (auto const& job : _runs)
+    {
+        AddonRunView v;
+        v.snap = job->Snapshot();
+        v.tank = job->TankGuid();
+        DcTestRunRecord::Record const& rec = job->RecordData();
+        v.seed = rec.compSeed;
+        v.gearIlvl = rec.gearIlvl;
+        v.gearQuality = rec.gearQuality;
+        v.roster = rec.roster;
+        v.deaths = static_cast<uint32>(rec.deaths.size());
+        v.pulls = static_cast<uint32>(rec.pulls.size());
+        for (DcTestRunRecord::CompEntry const& c : rec.comp)
+            v.comp.emplace_back(c.name, c.role);
+        out.push_back(std::move(v));
+    }
+    return out;
+}
+
+bool DcTestRunManager::AddonRunDetail(std::string const& runId,
+                                      std::vector<DcTestRunRecord::BossKill>* kills,
+                                      std::vector<DcTestRunRecord::DeathEntry>* deaths) const
+{
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    for (auto const& job : _runs)
+    {
+        if (job->RunId() != runId)
+            continue;
+        if (kills)
+            *kills = job->RecordData().bossTimeline;
+        if (deaths)
+            *deaths = job->RecordData().deaths;
+        return true;
+    }
+    return false;
 }
 
 void DcTestRunManager::WriteLiveStatus()

@@ -108,8 +108,7 @@ namespace
         // MaxConcurrent at its 0 = unlimited default nothing is clamped: an omitted
         // concurrent= still defaults to a modest 5, but an explicit concurrent=N is
         // honoured for any N — the machine's bot budget is the only ceiling.
-        uint32 const maxConcurrent =
-            DcSettings::GetUInt(ObjectGuid::Empty, "TestRun.MaxConcurrent");
+        uint32 const maxConcurrent = DcTestRunManager::MaxConcurrent();  // DCTEST4A
         uint32 c = requested;
         if (c == 0)
             c = std::min<uint32>(5, maxConcurrent ? maxConcurrent : 5);

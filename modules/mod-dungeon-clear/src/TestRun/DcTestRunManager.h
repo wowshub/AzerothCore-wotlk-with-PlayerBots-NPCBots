@@ -15,6 +15,8 @@
 
 #include "ObjectGuid.h"
 #include "TestRun/DcTestGearTiers.h"
+#include "TestRun/DcTestRunLiveJson.h"
+#include "TestRun/DcTestRunRecord.h"
 
 class DcTestRunJob;
 class Player;
@@ -127,6 +129,39 @@ public:
                          std::string* msg, std::string* tokenOut = nullptr) const;
 
     std::string StatusText() const;
+
+    // RebornWOW DCTEST4A: the concurrent-run cap in force. A GM can set it from the
+    // addon's test window; that setting lives in memory until the next restart and
+    // wins over DungeonClear.TestRun.MaxConcurrent. 0 = unlimited.
+    static uint32 MaxConcurrent();
+    static uint32 ConfMaxConcurrent();
+    static bool MaxConcurrentOverridden();
+    static void SetMaxConcurrentOverride(int32 value);  // < 0 clears it
+
+    // RebornWOW DCTEST2A: every live run for the addon's test-run list -- the same
+    // snapshot the dashboard's live file carries, plus the run's tank so the caller
+    // can tell which run a watcher is sitting in (same Map* rule as NextWatchTarget).
+    // World thread.
+    struct AddonRunView
+    {
+        DcTestRunLive::RunSnapshot snap;
+        ObjectGuid tank;
+        // DCTEST3A: what the addon's right-click menu needs to replay or explain a run.
+        uint32 seed = 0;
+        uint32 gearIlvl = 0;
+        uint32 gearQuality = 0;
+        bool roster = false;
+        uint32 deaths = 0;
+        uint32 pulls = 0;
+        std::vector<std::pair<std::string, std::string>> comp;  // name, role
+    };
+    std::vector<AddonRunView> AddonRunViews() const;
+
+    // DCTEST3A: one live run's boss timeline and deaths so far, for the addon's
+    // "run stats". False when no live run has that id. World thread.
+    bool AddonRunDetail(std::string const& runId,
+                        std::vector<DcTestRunRecord::BossKill>* kills,
+                        std::vector<DcTestRunRecord::DeathEntry>* deaths) const;
     bool IsActive() const { return !_runs.empty(); }
 
     // Remaining global-cap headroom for the plan scheduler's launch decision

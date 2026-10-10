@@ -170,7 +170,10 @@ namespace
     // it again to stop. Neither needs a group — that gate lives only
     // in the addon's party-channel transport, which is why a GM watching from
     // outside the party has to type the command.
-    bool HandleSpectate(ChatHandler* handler, Optional<std::string> param)
+    // RebornWOW DCTEST4C: Tail, not Optional<std::string> -- the optional string takes
+    // ONE word, so `.dc spectate follow <name>` (two words) was refused by the command
+    // parser with "no detailed usage information" before this handler ever ran.
+    bool HandleSpectate(ChatHandler* handler, Tail param)
     {
         if (DcDisabledNotice(handler))
             return true;
@@ -182,7 +185,7 @@ namespace
             return true;
         }
 
-        std::string arg = param ? *param : "";
+        std::string arg(param);
         std::string sub;
         std::string name;
         {
