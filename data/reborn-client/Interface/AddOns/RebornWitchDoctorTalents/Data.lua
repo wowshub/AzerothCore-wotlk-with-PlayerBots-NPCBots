@@ -98,3 +98,6 @@ for _,n in ipairs(RebornWDTreeData) do if n.ID==30333 or n.ID==6027 then n.Requi
 
 -- WD136: Concoctions depends on implemented Senjin path; Cauldron Empowerment 6023 remains preview.
 for _,n in ipairs(RebornWDTreeData) do if n.ID==6026 then n.RequiredLevel=57 end end
+
+-- WD137: official spell level59; previous node6026 remains required.
+for _,n in ipairs(RebornWDTreeData) do if n.ID==29740 then n.RequiredLevel=59 end end

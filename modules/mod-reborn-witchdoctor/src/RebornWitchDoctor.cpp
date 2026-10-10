@@ -3062,6 +3062,10 @@ public:
             return !WD130A::Side(check->Id) || (mod->op!=SPELLMOD_CASTING_TIME && mod->op!=SPELLMOD_COST);
         if(mod->spellId==9003921)
             return mod->op!=SPELLMOD_CASTING_TIME || !WD19A::IsBrew(check->Id);
+        if(mod->spellId==9003957)
+            return !((check->Id==9003866 && mod->op==SPELLMOD_DAMAGE) ||
+                     ((check->Id==9003867 || check->Id==9003889) && mod->op==SPELLMOD_DOT) ||
+                     (((check->Id>=9003902 && check->Id<=9003908 && check->Id!=9003905) || (check->Id>=9003916 && check->Id<=9003918)) && mod->op==SPELLMOD_ALL_EFFECTS));
         if(mod->spellId==9003914)
             return !((check->Id==9003866 && mod->op==SPELLMOD_DAMAGE) ||
                      ((check->Id==9003867 || check->Id==9003889) && mod->op==SPELLMOD_DOT) ||
@@ -3290,6 +3294,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing129.inc"
 #include "RebornWitchDoctorBrewing133.inc"
 #include "RebornWitchDoctorBrewing134.inc"
+#include "RebornWitchDoctorBrewing137.inc"
 #include "RebornWitchDoctorSpiritLink135.inc"
 #include "RebornWitchDoctorBrewing132.inc"
 #include "RebornWitchDoctorBrewing130.inc"
@@ -3324,6 +3329,7 @@ void AddRebornWitchDoctorScripts()
     WD88A::Register();
     WD91A::Register();
     RegisterSpellScript(spell_reborn_wd120_brewing);
+    RegisterSpellScript(aura_reborn_wd137_master);
     RegisterSpellScript(aura_reborn_wd129_thistle);
     new wd129_senjin_events();
     RegisterSpellScript(aura_reborn_wd130_beam);

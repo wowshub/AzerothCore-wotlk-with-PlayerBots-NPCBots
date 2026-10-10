@@ -1,0 +1,63 @@
+{
+  "client_before": "44c01f5bf107d626e4761f67340e55c24f32f4a9260f23bfee1f3a162ceea559",
+  "client_after": "84acd8076a02452bb75f6dbea6714338c1b4c0ab92e3d503347a2161975f2800",
+  "server_spell": "faa8c330008d05855122b470583890d8259a987c284118e50e59ea201aeeb360",
+  "changed_fields": [
+    [
+      9003460,
+      31,
+      15,
+      14
+    ],
+    [
+      9003461,
+      31,
+      15,
+      14
+    ],
+    [
+      9003462,
+      31,
+      15,
+      14
+    ],
+    [
+      9003463,
+      31,
+      15,
+      14
+    ],
+    [
+      9003464,
+      31,
+      15,
+      14
+    ],
+    [
+      9003465,
+      31,
+      15,
+      14
+    ],
+    [
+      9003466,
+      31,
+      15,
+      14
+    ],
+    [
+      9003467,
+      31,
+      15,
+      14
+    ]
+  ],
+  "all_other_records_and_string_pool_unchanged": true,
+  "mpq_files_read_back": 15,
+  "installed_source_equals_137A": {
+    "src/server/game/Spells/Spell.cpp": "f79fc89a6e36155d4b0ef79f444eb377968beb77baae0419654297487ed1765a",
+    "src/server/game/Spells/SpellInfo.cpp": "58c6fa5c13c3837c981640bf1fb54d38cae4279ea8727b36c0866e57cd63aa08",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing137.inc": "248a67af525971db2d7d703bee293642a481203606f2da627d2420ba7955d160"
+  },
+  "runtime_test": "pending; client cancellation cause inferred from flags and previous WD96 mechanism, no packet capture"
+}

@@ -580,6 +580,10 @@ SpellValue::SpellValue(SpellInfo const* proto)
 // Keep the exception exact; never mutate shared SpellInfo interrupt flags at runtime.
 static bool RebornWD96CanCastWhileMoving(Unit const* caster, SpellInfo const* info)
 {
+    // WD137: timed, owned Master Mixologist permits only Spirit in a Bottle ranks.
+    Player const* mixer=caster?caster->ToPlayer():nullptr;
+    if(info && info->Id>=9003460 && info->Id<=9003467 && mixer && mixer->IsAlive() &&
+       mixer->getClass()==13 && mixer->HasSpell(9003957) && mixer->HasAura(9003957,mixer->GetGUID())) return true;
     if(!info || !(info->Id==9003822 || info->Id==9003100 || (info->Id>=9003120 && info->Id<=9003127) ||
         info->Id==9003103 || (info->Id>=9003491 && info->Id<=9003498))) return false;
     Player const* p=caster ? caster->ToPlayer() : nullptr;
