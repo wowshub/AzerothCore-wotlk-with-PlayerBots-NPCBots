@@ -253,6 +253,17 @@ public:
     // while DC is off) — so whichever fires first clears the latch.
     static bool ResetCompletionLatchesForNewInstance(Player* bot, AiObjectContext* context);
 
+    // RebornWOW DCMOV1A: latch every objective ordered before the furthest anchor the
+    // instance has provably finished -- a killed boss (kill-bit), a cleared objective,
+    // or an objective whose own DBC credit bit is set (Halls of Stone's Tribunal, bit
+    // 2). Objectives have no kill-bit of their own, so a wipe (which ends the run) or
+    // a re-enter forgets them; the run then walked back to an escort whose NPC had
+    // long left. Run from every reader of the completion state: dc on, dc go, the
+    // boss panel and NextDungeonBossValue. Returns how many it latched.
+    static uint32 LatchObjectivesBehindProgress(Player* bot, AiObjectContext* context,
+                                                std::vector<DungeonBossInfo> const& bosses,
+                                                char const* source, bool resetNext = true);
+
     // --- Pull-back bosses (BossPullbackRegistry) --------------------------
 
     // True when the next anchor is a PULL-BACK boss, the tank has arrived at its

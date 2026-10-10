@@ -386,6 +386,16 @@ bool DcOnAction::Execute(Event event)
     // teardown alongside the rest of the run state).
     context->GetValue<DungeonClearSwimState&>(DcKey::SwimState)->Get().Reset();
 
+    // RebornWOW DCOBJ1A: ClearedAnchors (the only completion record an objective has --
+    // escorts and events carry no kill-bit) was just wiped, so re-enabling after a wipe made
+    // every finished objective "alive" again. Halls of Stone: after a Tribunal wipe and
+    // re-entry the run went back to "Escort Brann" with Brann long gone to Sjonnir's door,
+    // looping "can't keep up with the escort"; skipping it parked the tank at the Tribunal.
+    // An objective ordered before a boss the group has already killed was necessarily
+    // done, so latch those back as cleared. DCMOV1A: also behind a cleared objective or
+    // an objective's own credit bit (the Tribunal), shared with the panel and next target.
+    DcTargeting::LatchObjectivesBehindProgress(bot, context, bosses, "dc on");
+
     std::optional<DungeonBossInfo> next = AI_VALUE(std::optional<DungeonBossInfo>, DcKey::NextDungeonBoss);
     std::string const target = next.has_value() ? next->name : "the next boss";
     // Say which wing was picked: a bare `dc on` at the shared Blackrock Spire
@@ -618,6 +628,9 @@ bool DcBossesAction::Execute(Event event)
     DcTargeting::ResetCompletionLatchesForNewInstance(bot, context);
 
     auto const& bosses = AI_VALUE(std::vector<DungeonBossInfo>, DcKey::DungeonBosses);
+    // RebornWOW DCMOV1A: show (and keep) finished objectives as done, by the same rule
+    // the run uses to pick its next target.
+    DcTargeting::LatchObjectivesBehindProgress(bot, context, bosses, "boss list");
 
     std::string const param = event.getParam();
     bool const silent = (param == "addon" || param == "silent");
@@ -648,6 +661,27 @@ bool DcBossesAction::Execute(Event event)
     // silently flip from "dead" to "missing" the moment its body vanished.
     InstanceScript* inst = DcTargeting::GetInstanceScript(bot);
     uint32 const completedMask = inst ? inst->GetCompletedEncounterMask() : 0u;
+
+    // RebornWOW DCOBJ1B: objectives have no kill-bit, only the run's ClearedAnchors latch,
+    // which a disabled or restarted run no longer holds -- the panel then listed a finished
+    // escort / event as "alive" next to a killed final boss. An objective ordered before a
+    // boss the group has killed was necessarily done (same rule as dc on, DCOBJ1A).
+    bool anyBossKilled = false;
+    bool allBossesKilled = true;  // DCOBJ1C: dungeon cleared -> conditional events are done too
+    uint32 lastKilledOrder = 0u;
+    for (DungeonBossInfo const& info : bosses)
+    {
+        if (info.kind != DungeonAnchorKind::Boss)
+            continue;
+        if (info.encounterIndex < 32 && (completedMask & (1u << info.encounterIndex)) != 0u)
+        {
+            anyBossKilled = true;
+            lastKilledOrder = std::max(lastKilledOrder, BossOrderKey(info));
+        }
+        else
+            allBossesKilled = false;
+    }
+    allBossesKilled = allBossesKilled && anyBossKilled;
 
     // Resolve the room-aggro anchor boss (the first room-aggro boss in this
     // wing-filtered list) up front — a room-aggro pre-clear event has no boss
@@ -772,8 +806,9 @@ bool DcBossesAction::Execute(Event event)
         // the tank has reached it.
         if (info.kind == DungeonAnchorKind::Objective)
         {
+            bool const behindKilledBoss = anyBossKilled && BossOrderKey(info) < lastKilledOrder;
             std::string const objStatus =
-                cleared.count(info.entry) ? "dead"
+                (cleared.count(info.entry) || behindKilledBoss) ? "dead"
                 : skipped.count(info.entry) ? "skipped"
                                             : "alive";
             std::string const objName = "Objective: " + info.name;
@@ -943,8 +978,11 @@ bool DcBossesAction::Execute(Event event)
         }
 
         uint32 const latchKey = DungeonEventExecutor::ConditionalLatchKey(ev->id);
+        // RebornWOW DCOBJ1C: a repeatable conditional event (Halls of Stone "Repel the Tribunal
+        // wave") is never latched cleared, so it read "alive" forever, even after the final boss.
+        // Once every boss on the map is killed there is nothing left for it to gate.
         std::string const evStatus =
-            cleared.count(latchKey) ? "dead"
+            (cleared.count(latchKey) || allBossesKilled) ? "dead"
             : skipped.count(latchKey) ? "skipped"
                                       : "alive";
         std::string const evName = "Event: " + ev->name;
@@ -1124,6 +1162,9 @@ bool DcGoAction::Execute(Event event)
         return false;
     }
 
+    // RebornWOW DCMOV1A: after a wipe the panel's "Go" on a finished escort sent the
+    // tank to an event whose NPC had left; refuse it like any other done objective.
+    DcTargeting::LatchObjectivesBehindProgress(bot, context, bosses, "dc go");
     if (matched->kind == DungeonAnchorKind::Objective &&
         AI_VALUE(std::unordered_set<uint32>&, DcKey::ClearedAnchors).count(matched->entry))
     {

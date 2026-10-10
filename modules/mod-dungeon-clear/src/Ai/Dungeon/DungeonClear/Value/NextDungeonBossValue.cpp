@@ -92,6 +92,11 @@ std::optional<DungeonBossInfo> NextDungeonBossValue::Calculate()
     std::vector<DungeonBossInfo> const& bosses =
         AI_VALUE(std::vector<DungeonBossInfo>, DcKey::DungeonBosses);
 
+    // RebornWOW DCMOV1A: objectives the instance has provably passed (behind a killed
+    // boss / a cleared objective / their own credit bit) are done even if this run
+    // never latched them -- after a wipe the run otherwise re-targets the escort.
+    DcTargeting::LatchObjectivesBehindProgress(bot, context, bosses, "next target", /*resetNext*/ false);
+
     std::unordered_set<uint32> const& skipped =
         AI_VALUE(std::unordered_set<uint32>&, DcKey::Skipped);
 

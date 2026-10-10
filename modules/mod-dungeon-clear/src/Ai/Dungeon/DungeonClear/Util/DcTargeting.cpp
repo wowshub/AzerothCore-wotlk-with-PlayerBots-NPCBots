@@ -60,6 +60,7 @@
 #include "Ai/Dungeon/DungeonClear/Data/DcNeverTargetRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Data/DcTargetExclusionRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Data/DungeonBossInfo.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcAnchorDone.h"
 #include "Ai/Dungeon/DungeonClear/Data/DungeonEventRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Data/RoomAggroRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcTickMemo.h"
@@ -1231,6 +1232,72 @@ bool DcTargeting::ResetCompletionLatchesForNewInstance(Player* bot, AiObjectCont
     DcRun::Of(context).selectedBossEntry = 0u;
     context->GetValue<uint32>(DcKey::RunInstance)->Set(instanceId);
     return true;
+}
+uint32 DcTargeting::LatchObjectivesBehindProgress(Player* bot, AiObjectContext* context,
+                                                  std::vector<DungeonBossInfo> const& bosses,
+                                                  char const* source, bool resetNext)
+{
+    if (!bot || !context || bosses.empty())
+        return 0u;
+    InstanceScript* inst = GetInstanceScript(bot);
+    uint32 const completedMask = inst ? inst->GetCompletedEncounterMask() : 0u;
+    auto& cleared = context->GetValue<std::unordered_set<uint32>&>(DcKey::ClearedAnchors)->Get();
+
+    // An objective's encounterIndex is its own DBC credit only when it was authored
+    // with an explicit order (orderOverride) and no boss row shares the bit: Halls of
+    // Stone's escort reuses the Maiden's bit 1 and its door step Sjonnir's bit 3 for
+    // ordering, but the Tribunal's bit 2 is the event's own credit (spell 59046).
+    auto const ownCreditDone = [&](DungeonBossInfo const& obj)
+    {
+        if (obj.orderOverride < 0 || obj.encounterIndex >= 32 ||
+            (completedMask & (1u << obj.encounterIndex)) == 0u)
+            return false;
+        for (DungeonBossInfo const& other : bosses)
+            if (other.kind == DungeonAnchorKind::Boss && other.encounterIndex == obj.encounterIndex)
+                return false;
+        return true;
+    };
+
+    bool any = false;
+    uint32 furthest = 0u;
+    for (DungeonBossInfo const& info : bosses)
+    {
+        bool done = false;
+        if (info.kind == DungeonAnchorKind::Boss)
+            done = (info.encounterIndex < 32 && (completedMask & (1u << info.encounterIndex)) != 0u) ||
+                   DcAnchorDoneByInstanceScript(info, inst);
+        else
+            done = cleared.count(info.entry) != 0u || ownCreditDone(info);
+        if (done)
+        {
+            any = true;
+            furthest = std::max(furthest, BossOrderKey(info));
+        }
+    }
+    if (!any)
+        return 0u;
+
+    uint32 latched = 0u;
+    for (DungeonBossInfo const& info : bosses)
+    {
+        if (info.kind != DungeonAnchorKind::Objective || cleared.count(info.entry))
+            continue;
+        // DCMOV1B: only objectives BEHIND the furthest finished anchor. An objective's
+        // own credit bit proves its predecessors done, never itself: Halls of Stone sets
+        // the Tribunal's bit 2 while its event still has the lore-skip gossip to run, and
+        // latching it there sent the party to Sjonnir's door with Brann parked at the
+        // lore stop waiting to be spoken to.
+        if (BossOrderKey(info) >= furthest)
+            continue;
+        cleared.insert(info.entry);
+        ++latched;
+        LOG_INFO("playerbots.dungeonclear",
+                 "[DC:{}] {}: objective '{}' is already done (instance progress, mask={:#x}) -- latched",
+                 bot->GetName(), source, info.name, completedMask);
+    }
+    if (latched && resetNext)
+        context->GetValue<std::optional<DungeonBossInfo>>(DcKey::NextDungeonBoss)->Reset();
+    return latched;
 }
 bool DcTargeting::IsRoomClearActive(Player* bot, AiObjectContext* ctx)
 {

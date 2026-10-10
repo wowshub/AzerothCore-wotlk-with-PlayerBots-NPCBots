@@ -9,6 +9,8 @@
 #include <cmath>
 #include <iterator>
 #include <list>
+#include <mutex>
+#include <unordered_map>
 #include <optional>
 #include <unordered_set>
 #include <vector>
@@ -29,6 +31,7 @@
 #include "Log.h"
 #include "MotionMaster.h"
 #include "MoveSplineInitArgs.h"
+#include "PathGenerator.h"
 #include "Player.h"
 #include "Playerbots.h"
 #include "Spell.h"
@@ -167,14 +170,89 @@ namespace
     // enough that the probe's reach comfortably spans any sane clear radius.
     constexpr float DC_EVENT_CLEAR_JUDGE_RADIUS = 12.0f;
 
+    // RebornWOW DCMOV1A: beyond this a hop is checked against the navmesh first.
+    constexpr float DC_EVENT_HOP_CHECK_DIST = 20.0f;
+
+    // Throttled "no route" note, one per bot per 10s (map threads -> guarded).
+    void LogNoHopRoute(Player* bot, float x, float y, float z, char const* why)
+    {
+        static std::mutex lock;
+        static std::unordered_map<ObjectGuid::LowType, uint32> last;
+        uint32 const now = getMSTime();
+        {
+            std::lock_guard<std::mutex> guard(lock);
+            uint32& t = last[bot->GetGUID().GetCounter()];
+            if (t && getMSTimeDiff(t, now) < 10000)
+                return;
+            t = now;
+        }
+        LOG_INFO("playerbots.dungeonclear",
+                 "[DC:{}] event hop: {} from ({:.1f},{:.1f},{:.1f}) to ({:.1f},{:.1f},{:.1f}) -- "
+                 "holding instead of moving in a straight line",
+                 bot->GetName(), why, bot->GetPositionX(), bot->GetPositionY(), bot->GetPositionZ(),
+                 x, y, z);
+    }
+
     // Issue a one-shot move toward (x,y,z) if not already moving there. Short,
     // intra-room hops — the surrounding objective travel got the party into the
     // room; this just closes the last few yards to an interactable.
+    //
+    // RebornWOW DCMOV1A: not always short. A persistent event whose first step is a
+    // MoveTo (Halls of Stone "Escort Brann") drives from wherever the tank stands,
+    // and MovePoint falls back to a STRAIGHT spline when the navmesh has no path --
+    // through walls and over the void; the tank and its breadcrumb followers then
+    // dropped into the pits. A far hop now follows the navmesh: a full path as is,
+    // a partial one to its last reachable point, a chunked route's first leg, and
+    // nothing (logged) rather than a straight line.
     void HopTo(Player* bot, float x, float y, float z)
     {
         if (bot->isMoving())
             return;
-        bot->GetMotionMaster()->MovePoint(0, x, y, z, FORCED_MOVEMENT_NONE, 0.0f, 0.0f,
+
+        float tx = x, ty = y, tz = z;
+        if (bot->GetExactDist(x, y, z) > DC_EVENT_HOP_CHECK_DIST)
+        {
+            PathGenerator path(bot);
+            bool const ok = path.CalculatePath(x, y, z, false);
+            uint32 const type = path.GetPathType();
+            Movement::PointsArray const& pts = path.GetPath();
+            bool const usable = ok && !(type & (PATHFIND_NOPATH | PATHFIND_SHORTCUT)) && pts.size() >= 2;
+            if (usable && (type & (PATHFIND_INCOMPLETE | PATHFIND_SHORT)))
+            {
+                // Walk as far as the mesh goes; the next hop re-plans from there.
+                G3D::Vector3 const& end = pts.back();
+                tx = end.x; ty = end.y; tz = end.z;
+            }
+            else if (!usable)
+            {
+                ChunkedPathfinder::Result const route =
+                    ChunkedPathfinder::Build(bot, bot->GetMapId(), 0u, x, y, z);
+                if (!route.reachable || route.segments.empty() || route.segments.front().polyline.empty())
+                {
+                    LogNoHopRoute(bot, x, y, z, route.failureReason.empty() ? "no navmesh route"
+                                                                            : route.failureReason.c_str());
+                    return;
+                }
+                // The first point of the leg at least 15yd out (or its end).
+                std::vector<G3D::Vector3> const& leg = route.segments.front().polyline;
+                G3D::Vector3 pick = leg.back();
+                for (G3D::Vector3 const& p : leg)
+                    if (bot->GetExactDist(p.x, p.y, p.z) >= 15.0f)
+                    {
+                        pick = p;
+                        break;
+                    }
+                tx = pick.x; ty = pick.y; tz = pick.z;
+            }
+
+            if (bot->GetExactDist(tx, ty, tz) < 2.0f)
+            {
+                LogNoHopRoute(bot, x, y, z, "navmesh route ends here");
+                return;
+            }
+        }
+
+        bot->GetMotionMaster()->MovePoint(0, tx, ty, tz, FORCED_MOVEMENT_NONE, 0.0f, 0.0f,
                                           /*generatePath*/ true, false);
     }
 
