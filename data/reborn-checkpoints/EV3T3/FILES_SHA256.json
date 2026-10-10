@@ -1,0 +1,13 @@
+{
+  "modules/mod-reborn-equipment-vault/src/RebornEquipmentVault.cpp": "7ff6b6c0f93427b49d7fc65f8d33e85c1ea02291a436c9d13635bb0e43a77fd4",
+  "modules/mod-reborn-equipment-vault/src/RebornEquipmentVaultShared.inc": "40e7ebf781a265872de9657b97ab63ab7786cfc3dd582b00c83f3942fc25faac",
+  "data/customfixsql/characters/equipment-vault/EV3S/EV3S_shared_wardrobe.sql": "2f39ecf319e50cc022ad71aa2073098ad7266428b15ee5f05d9ad6f874627674",
+  "Interface/AddOns/RebornEquipmentVault/RebornEquipmentVault.toc": "ad3b7dad0cbf25c957e5fa6716130650737608694332803f37aa020ea4d4ed67",
+  "Interface/AddOns/RebornEquipmentVault/Shared.lua": "29015d823bd2544031bab4f5c1b1a11beb1a5cba7e086a0205f6c3d1e510f1f8",
+  "Interface/AddOns/RebornEquipmentVault/Vault.lua": "ce1a9e9f308465545bb3044291d0d55e13a7f8b13fb00149b25d2e3f0b10aa75",
+  "Interface/AddOns/RebornEquipmentVault/MicroButton.lua": "18142f90f69ced61251a5902220f6b22b76fffc9c07cadc0652da8e53357b290",
+  "Interface/AddOns/RebornEquipmentVault/EntryStyle.lua": "6ee1e8d11b82f4655301e9557e297e6bfae03e7b4671d2753c071b41a85addf4",
+  "Interface/AddOns/RebornEquipmentVault/Media/RibbonMedallion.tga": "f6bb6a077c5b8000bb93af73996e0e4e5b50fd2d960c1408e1048bab795f9e4f",
+  "Interface/AddOns/Equipence/Modules/EquipmentLayout.lua": "bb6c165d064f1fb65e8f8027175d111d1e172f803bbabd5bfd20b18fbaa08711",
+  "Interface\\AddOns\\RebornEquipmentVault\\Art\\TwinDragons_cartoon_v3_blp.blp": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81"
+}

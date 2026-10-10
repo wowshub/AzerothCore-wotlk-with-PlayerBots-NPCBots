@@ -51,12 +51,18 @@ bool Read(ChatHandler* h,uint32 id)
         if(auto* it=Source(p,bag,cell))h->PSendSysMessage("EV2A|BAG|{}|{}|{}|{}|{}",id,bag,cell,it->GetGUID().GetCounter(),it->GetEntry());
     h->PSendSysMessage("EV2A|END|{}",id);return true;
 }
-bool Supported(Item const* it)
+// EV2R: report the precise rejection without stripping original item state.
+char const* UnsupportedReason(Item const* it)
 {
-    if(it->IsBag() || it->GetCount()!=1 || it->IsWrapped() || it->IsInTrade() || it->IsRefundable() || it->IsBOPTradable() || it->GetUInt32Value(ITEM_FIELD_DURATION) || it->GetTemplate()->Duration)return false;
-    for(uint8 n=0;n<MAX_ENCHANTMENT_SLOT;++n)if(it->GetEnchantmentDuration(EnchantmentSlot(n)))return false;
-    return true;
+    if(it->IsBag() || it->GetCount()!=1 || it->IsWrapped())return "unsupported";
+    if(it->IsInTrade() || it->IsBOPTradable())return "itemtrade";
+    if(it->IsRefundable())return "itemrefund";
+    if(it->GetUInt32Value(ITEM_FIELD_DURATION) || it->GetTemplate()->Duration)return "itemduration";
+    for(uint8 n=0;n<MAX_ENCHANTMENT_SLOT;++n)
+        if(it->GetEnchantmentDuration(EnchantmentSlot(n)))return "itemenchant";
+    return nullptr;
 }
+bool Supported(Item const* it) { return !UnsupportedReason(it); }
 bool Check(ChatHandler* h,uint32 id,uint32 bag,uint32 cell,uint32 slot,uint32 expectedGuid)
 {
     auto* p=h->GetSession()->GetPlayer();if(!Ready(p,id))return true;
@@ -64,7 +70,7 @@ bool Check(ChatHandler* h,uint32 id,uint32 bag,uint32 cell,uint32 slot,uint32 ex
     if(!p->IsAlive() || p->IsInCombat() || p->GetTradeData() || p->IsInFlight() || p->IsBeingTeleported()) {Error(p,id,"blocked");return true;}
     Item* it=Source(p,bag,cell);
     if(!it || it->GetGUID().GetCounter()!=expectedGuid || it->GetOwnerGUID()!=p->GetGUID()){Error(p,id,"changed");return true;}
-    if(!Supported(it)){Error(p,id,"unsupported");return true;}
+    if(auto reason=EV2A::UnsupportedReason(it)){Error(p,id,reason);return true;}
     // Client slots 1..19 map to native EQUIPMENT_SLOT_* 0..18.
     // Native checks also include current offhand/unique-equipped restrictions.
     uint16 destination=0;
@@ -102,16 +108,13 @@ bool Ready(Player* p,uint32 id)
     if(p->VaultReconcileRequired()){Error(p,id,"relogin");return false;}
     auto* gate=p->CustomData.GetDefault<Gate>("Reborn.EV3");auto now=std::chrono::steady_clock::now();
     if(now-gate->last<std::chrono::milliseconds(500)){Error(p,id,"busy");return false;}gate->last=now;
-    // Check names/engines BEFORE touching optional tables (core missing-table policy is fatal).
-    auto schema=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND engine='InnoDB' AND table_name IN ('characters','character_inventory','item_instance','character_gifts','reborn_ev_head','reborn_ev_slot','reborn_ev_op','reborn_ev_unlock','reborn_ev_home')");
-    if(!schema || schema->Fetch()[0].Get<uint32>()!=9){Error(p,id,"schema");return false;}
-    auto columns=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND ((table_name='reborn_ev_slot' AND column_name='wardrobe') OR (table_name='reborn_ev_op' AND column_name='wardrobe') OR (table_name='reborn_ev_unlock' AND column_name='name'))");
-    auto key=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='reborn_ev_slot' AND index_name='PRIMARY' AND ((seq_in_index=1 AND column_name='guid') OR (seq_in_index=2 AND column_name='wardrobe') OR (seq_in_index=3 AND column_name='slot'))");
-    if(!columns || !key || columns->Fetch()[0].Get<uint32>()!=3 || key->Fetch()[0].Get<uint32>()!=3){Error(p,id,"schema");return false;}
-    auto homeColumns=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND table_name='reborn_ev_home' AND column_name IN ('guid','wardrobe','slot','item')");
-    auto homeKey=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='reborn_ev_home' AND index_name='PRIMARY' AND ((seq_in_index=1 AND column_name='guid') OR (seq_in_index=2 AND column_name='wardrobe') OR (seq_in_index=3 AND column_name='slot'))");
-    auto homeItem=CharacterDatabase.Query("SELECT COUNT(*) FROM (SELECT index_name FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='reborn_ev_home' AND non_unique=0 GROUP BY index_name HAVING COUNT(*)=1 AND MAX(column_name)='item') k");
-    if(!homeColumns||!homeKey||!homeItem||homeColumns->Fetch()[0].Get<uint32>()!=4||homeKey->Fetch()[0].Get<uint32>()!=3||!homeItem->Fetch()[0].Get<uint32>()){Error(p,id,"schema");return false;}
+    auto schema=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND engine='InnoDB' AND table_name IN ('reborn_ev_pool','reborn_ev_outfit','reborn_ev_shared_meta')");
+    if(!schema || schema->Fetch()[0].Get<uint32>()!=3){Error(p,id,"schema");return false;}
+    auto marker=CharacterDatabase.Query("SELECT version FROM reborn_ev_shared_meta WHERE id=1");
+    if(!marker || marker->Fetch()[0].Get<uint32>()!=1){Error(p,id,"schema");return false;}
+    // EV3S quarantine guard: interrupted migration must finish before use.
+    auto legacy=CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name IN ('reborn_ev_slot','reborn_ev_home')");
+    if(!legacy || legacy->Fetch()[0].Get<uint32>()!=0){Error(p,id,"schema");return false;}
     auto tx=CharacterDatabase.BeginTransaction();
     tx->Append("INSERT IGNORE INTO reborn_ev_head (guid,revision) VALUES ({},0)",p->GetGUID().GetCounter());
     tx->Append("INSERT IGNORE INTO reborn_ev_unlock (guid,wardrobe,price_copper) VALUES ({},1,0)",p->GetGUID().GetCounter());
@@ -260,63 +263,8 @@ bool HomeViews(Player* p,uint32 pack,std::vector<HomeView>& views)
     return views.size()<=2048;
 }
 
-bool Snapshot(Player* p,uint32 id,uint32 pack=1)
-{
-    auto result=CharacterDatabase.Query("SELECT h.revision,COALESCE(v.slot,0),COALESCE(v.item,0),COALESCE(i.itemEntry,0),i.creatorGuid,i.giftCreatorGuid,i.count,i.duration,i.charges,i.flags,i.enchantments,i.randomPropertyId,i.durability,i.playedTime,i.text FROM reborn_ev_head h LEFT JOIN reborn_ev_slot v ON v.guid=h.guid AND v.wardrobe={} LEFT JOIN item_instance i ON i.guid=v.item AND i.owner_guid=h.guid WHERE h.guid={} ORDER BY v.slot",pack,p->GetGUID().GetCounter());
-    if(!result){Error(p,id,"database");return false;}
-    uint32 owned=0;if(!Ownership(p,id,owned))return false;
-    uint32 cap=MaxPacks();uint32 last=owned;
-    if(owned<PackLimit && (!cap || owned<cap))++last;
-    if(pack>last){Error(p,id,"invalid");return false;}
-    uint32 first=p->CustomData.GetDefault<Gate>("Reborn.EV3")->page;
-    first=std::min(first,((last-1)/6)*6+1);uint32 end=std::min(last,first+5);
-    std::map<uint32,std::string> labels;
-    for(uint32 i=first;i<=end;++i)labels[i]="";labels[pack]="";
-    auto link=ReadBuildLinks(p);
-    for(uint32 linked:link.packs)if(linked && linked<=owned)labels[linked]="";
-    auto names=CharacterDatabase.Query("SELECT wardrobe,name FROM reborn_ev_unlock WHERE guid={} AND ((wardrobe>={} AND wardrobe<={}) OR wardrobe={} OR wardrobe=1 OR wardrobe IN ({},{},{}))",p->GetGUID().GetCounter(),first,end,pack,link.packs[0],link.packs[1],link.packs[2]);
-    if(!names){Error(p,id,"database");return false;}
-    do{auto* n=names->Fetch();auto found=labels.find(n[0].Get<uint32>());if(found!=labels.end())found->second=n[1].Get<std::string>();}while(names->NextRow());
-    ItemTemplate const* targetMain=nullptr;
-    uint32 revision=0;std::vector<std::tuple<uint32,uint32,std::string>> items;
-    do {auto* f=result->Fetch();revision=f[0].Get<uint32>();uint32 slot=f[1].Get<uint32>();if(!slot)continue;
-        uint32 guid=f[2].Get<uint32>(),entry=f[3].Get<uint32>();
-        if(!entry || slot>19){Error(p,id,"record");return false;}
-        auto it=LoadOriginal(guid,p,entry,f+4);if(!it){Error(p,id,"record");return false;}
-        if(slot==16)targetMain=it->GetTemplate();
-        items.emplace_back(slot,guid,EV2A::Link(it.get(),p));
-    } while(result->NextRow());
-    uint32 bags=0;
-    for(uint32 bag=0;bag<=4;++bag)for(uint32 cell=1;cell<=EV2A::BagSize(p,bag);++cell)if(EV2A::Source(p,bag,cell))++bags;
-    uint32 equipped=0;
-    for(uint8 slot=0;slot<EQUIPMENT_SLOT_END;++slot)if(p->GetItemByPos(INVENTORY_SLOT_BAG_0,slot))++equipped;
-    std::vector<HomeView> homeViews;if(!HomeViews(p,pack,homeViews)){Error(p,id,"record");return false;}
-    // Predict the main hand after the existing return-home phase, not just the current weapon.
-    auto* wornMain=p->GetItemByPos(INVENTORY_SLOT_BAG_0,EQUIPMENT_SLOT_MAINHAND);
-    bool returningMain=false;
-    for(auto const& v:homeViews)
-    {
-        if(v.home.pack==pack && v.home.slot==16 && (v.state==2 || v.state==3))
-            if(auto* it=Carried(p,v.home.item))targetMain=it->GetTemplate();
-        if(wornMain && v.home.item==wornMain->GetGUID().GetCounter() && v.home.pack!=pack)returningMain=true;
-    }
-    if(!targetMain && wornMain && !returningMain)targetMain=wornMain->GetTemplate();
-    bool noOffhand=targetMain && targetMain->Class==ITEM_CLASS_WEAPON &&
-        (targetMain->SubClass==ITEM_SUBCLASS_WEAPON_POLEARM || targetMain->SubClass==ITEM_SUBCLASS_WEAPON_STAFF ||
-         targetMain->SubClass==ITEM_SUBCLASS_WEAPON_FISHING_POLE ||
-         (targetMain->InventoryType==INVTYPE_2HWEAPON && !p->CanTitanGrip()));
-    // EV2F optional count: old clients ignore the extension; new clients require all rows.
-    ChatHandler h(p->GetSession());h.PSendSysMessage("EV3|BEGIN|{}|{}|{}|{}|{}|1|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",id,revision,bags,items.size(),equipped,pack,owned,cap,Price(owned+1),labels.size(),first,uint32(link.available),link.revision,link.active,link.spec,link.packs[0],link.packs[1],link.packs[2],homeViews.size(),uint32(noOffhand));
-    for(auto const& v:homeViews)h.PSendSysMessage("EV3|HOME|{}|{}|{}|{}|{}|{}|{}",id,v.home.pack,v.home.slot,v.home.item,v.state,v.link,Hex(v.name));
-    for(auto const& label:labels)h.PSendSysMessage("EV3|LABEL|{}|{}|{}",id,label.first,Hex(label.second));
-    for(uint8 slot=0;slot<EQUIPMENT_SLOT_END;++slot)
-        if(auto* it=p->GetItemByPos(INVENTORY_SLOT_BAG_0,slot))
-            h.PSendSysMessage("EV3|EQUIPPED|{}|{}|{}|{}",id,uint32(slot)+1,it->GetGUID().GetCounter(),it->GetEntry());
-    for(uint32 bag=0;bag<=4;++bag)for(uint32 cell=1;cell<=EV2A::BagSize(p,bag);++cell)
-        if(auto* it=EV2A::Source(p,bag,cell))h.PSendSysMessage("EV3|BAG|{}|{}|{}|{}|{}",id,bag,cell,it->GetGUID().GetCounter(),it->GetEntry());
-    for(auto const& row:items)h.PSendSysMessage("EV3|ITEM|{}|{}|{}|{}",id,std::get<0>(row),std::get<1>(row),std::get<2>(row));
-    h.PSendSysMessage("EV3|END|{}",id);return true;
-}
+bool SharedSnapshot(Player* p,uint32 id,uint32 pack);
+bool Snapshot(Player* p,uint32 id,uint32 pack=1) { return SharedSnapshot(p,id,pack); }
 bool Read(ChatHandler* h,uint32 id)
 {auto* p=h->GetSession()->GetPlayer();if(Ready(p,id))Snapshot(p,id);return true;}
 // Always returns the head row; null is a DB failure, not an absent operation.
@@ -399,7 +347,7 @@ bool PutOriginal(ChatHandler* h,uint32 id,uint32 version,uint32 bag,uint32 cell,
     Item* it=worn?p->GetItemByPos(INVENTORY_SLOT_BAG_0,uint8(slot-1)):EV2A::Source(p,bag,cell);
     if(!it || it->GetGUID().GetCounter()!=guid || it->GetOwnerGUID()!=p->GetGUID()){Error(p,id,"changed");return true;}
     if(worn && p->CanUnequipItem(uint16(INVENTORY_SLOT_BAG_0)<<8 | uint16(slot-1),false)!=EQUIP_ERR_OK){Error(p,id,"blocked");return true;}
-    if(!Supported(it)){Error(p,id,"unsupported");return true;}
+    if(auto reason=EV2A::UnsupportedReason(it)){Error(p,id,reason);return true;}
     std::map<uint32,Home> homes;if(!Homes(p,homes,pack)){Error(p,id,"database");return true;}
     if(replaceDetached && (replaceDetached==guid || !DetachedHome(p,id,pack,slot,replaceDetached,homes)))return true;
     auto own=homes.find(guid);
@@ -590,7 +538,7 @@ bool Equip(ChatHandler* h,uint32 id,uint32 version,uint32 slot,uint32 guid,uint3
 bool Buy(ChatHandler* h,uint32 id,uint32 version,uint32 pack,uint32 quoted)
 {
     auto* p=h->GetSession()->GetPlayer();
-    if(pack<2 || pack>PackLimit){Error(p,id,"invalid");return true;}
+    if(pack<2 || pack>1000){Error(p,id,"invalid");return true;}
     if(!Begin(p,id,version,5,pack,1,pack))return true;
     uint32 owned=0;if(!Ownership(p,id,owned))return true;
     if(pack<=owned){Snapshot(p,id,pack);return true;}
@@ -684,24 +632,27 @@ bool ReleaseHome(ChatHandler* handler,uint32 id,uint32 version,uint32 slot,uint3
 
 bool ReplaceHome(ChatHandler* handler,uint32 id,uint32 version,uint32 bag,uint32 cell,uint32 slot,uint32 newGuid,uint32 oldGuid,uint32 pack,uint32 wear)
 {
-    auto* p=handler->GetSession()->GetPlayer();uint32 kind=wear?13:12;
-    if(wear>1||!oldGuid||newGuid==oldGuid){Error(p,id,"invalid");return true;}
+    auto* p=handler->GetSession()->GetPlayer();uint32 kind=wear==2?17:(wear?13:12);
+    if(wear>2||!oldGuid||newGuid==oldGuid){Error(p,id,"invalid");return true;}
     if(!Begin(p,id,version,kind,newGuid,slot,pack))return true;
     std::map<uint32,Home> homes;if(!Homes(p,homes,pack)){Error(p,id,"database");return true;}
     auto oldHome=homes.find(oldGuid);
     if(oldHome==homes.end()||oldHome->second.pack!=pack||oldHome->second.slot!=slot){Error(p,id,"changed");return true;}
     if(homes.count(newGuid)){Error(p,id,"assigned");return true;}
-    auto* fresh=EV2A::Source(p,bag,cell);
-    if(!fresh||fresh->GetGUID().GetCounter()!=newGuid||fresh->GetOwnerGUID()!=p->GetGUID()||!Supported(fresh)){Error(p,id,"changed");return true;}
+    auto* fresh=wear==2?p->GetItemByPos(INVENTORY_SLOT_BAG_0,uint8(slot-1)):EV2A::Source(p,bag,cell);
+    if(!fresh||fresh->GetGUID().GetCounter()!=newGuid||fresh->GetOwnerGUID()!=p->GetGUID()){Error(p,id,"changed");return true;}
+    if(auto reason=EV2A::UnsupportedReason(fresh)){Error(p,id,reason);return true;}
     uint16 equipPos=0;uint8 nativeSlot=uint8(slot-1);
+    if(wear==2 && p->CanUnequipItem(uint16(INVENTORY_SLOT_BAG_0)<<8|nativeSlot,false)!=EQUIP_ERR_OK){Error(p,id,"blocked");return true;}
     // Same item eligibility as an ordinary deposit; wear additionally uses native displaced checks.
-    if(wear ? (p->CanEquipItem(nativeSlot,equipPos,fresh,true)!=EQUIP_ERR_OK||equipPos!=(uint16(INVENTORY_SLOT_BAG_0)<<8|nativeSlot)) : !StorageFits(p,fresh,slot)){Error(p,id,"cantwear");return true;}
+    if(wear==1 ? (p->CanEquipItem(nativeSlot,equipPos,fresh,true)!=EQUIP_ERR_OK||equipPos!=(uint16(INVENTORY_SLOT_BAG_0)<<8|nativeSlot)) : !StorageFits(p,fresh,slot)){Error(p,id,"cantwear");return true;}
     auto* former=Carried(p,oldGuid);std::unique_ptr<Item> stored;
     if(!former){
         auto q=CharacterDatabase.Query("SELECT i.itemEntry,i.creatorGuid,i.giftCreatorGuid,i.count,i.duration,i.charges,i.flags,i.enchantments,i.randomPropertyId,i.durability,i.playedTime,i.text FROM reborn_ev_slot v JOIN item_instance i ON i.guid=v.item AND i.owner_guid=v.guid WHERE v.guid={} AND v.wardrobe={} AND v.slot={} AND v.item={}",p->GetGUID().GetCounter(),pack,slot,oldGuid);
         if(!q){Error(p,id,"record");return true;}auto* f=q->Fetch();stored=LoadOriginal(oldGuid,p,f[0].Get<uint32>(),f+1);former=stored.get();
     }
-    if(!former||!Supported(former)){Error(p,id,"unsupported");return true;}
+    if(!former){Error(p,id,"record");return true;}
+    if(auto reason=EV2A::UnsupportedReason(former)){Error(p,id,reason);return true;}
     std::vector<Displaced> moves;
     auto plan=[&](Item* it,bool fromStore)->bool {
         if(!it)return true;
@@ -718,7 +669,7 @@ bool ReplaceHome(ChatHandler* handler,uint32 id,uint32 version,uint32 bag,uint32
     if(stored){if(!plan(former,true))return true;}
     else if(Worn(former)&&!plan(former,false))return true;
     auto* proto=fresh->GetTemplate();
-    if(wear){
+    if(wear==1){
         auto* off=p->GetItemByPos(INVENTORY_SLOT_BAG_0,EQUIPMENT_SLOT_OFFHAND);
         bool clearOff=nativeSlot==EQUIPMENT_SLOT_MAINHAND&&off&&
           ((!p->CanDualWield()&&(off->GetTemplate()->InventoryType==INVTYPE_WEAPONOFFHAND||off->GetTemplate()->InventoryType==INVTYPE_WEAPON))||
@@ -736,7 +687,7 @@ bool ReplaceHome(ChatHandler* handler,uint32 id,uint32 version,uint32 bag,uint32
         if(r.homePack)tx->Append("INSERT INTO reborn_ev_slot (guid,wardrobe,slot,item) VALUES ({},{},{},{})",p->GetGUID().GetCounter(),r.homePack,r.homeSlot,r.guid);
         else tx->Append("INSERT INTO character_inventory (guid,bag,slot,item) VALUES ({},{},{},{})",p->GetGUID().GetCounter(),r.bagGuid,uint32(r.dest[0].pos&255),r.guid);
     }
-    if(wear){
+    if(wear==1){
         tx->Append("INSERT INTO character_inventory (guid,bag,slot,item) VALUES ({},0,{},{})",p->GetGUID().GetCounter(),uint32(nativeSlot),newGuid);
         if(proto->Bonding==BIND_WHEN_EQUIPPED||proto->Bonding==BIND_WHEN_PICKED_UP||proto->Bonding==BIND_QUEST_ITEM)
             tx->Append("UPDATE item_instance SET flags=flags|{} WHERE guid={} AND owner_guid={}",uint32(ITEM_FIELD_FLAG_SOULBOUND),newGuid,p->GetGUID().GetCounter());
@@ -750,7 +701,7 @@ bool ReplaceHome(ChatHandler* handler,uint32 id,uint32 version,uint32 bag,uint32
         if(!actual||actual->GetGUID().GetCounter()!=r.guid){p->RequireVaultReconcile();Error(p,id,"relogin");p->GetSession()->KickPlayer("Wardrobe replacement placement mismatch");return true;}
         actual->SetUInt32Value(ITEM_FIELD_FLAGS,r.flags);
     }
-    if(!wear)RemoveToVault(p,fresh);
+    if(wear!=1)RemoveToVault(p,fresh);
     else{
         p->MoveItemFromInventory(fresh->GetBagSlot(),fresh->GetSlot(),true);
         p->ItemAddedQuestCheck(fresh->GetEntry(),fresh->GetCount());
@@ -830,12 +781,18 @@ bool RenameBuild(ChatHandler* h,uint32 id,uint32 version,uint32 wdRevision,uint3
     return NamesReply(p,id);
 }
 
+#include "RebornEquipmentVaultShared.inc"
 class Commands : public CommandScript
 {
 public:Commands():CommandScript("reborn_equipment_vault_storage"){}
-    ChatCommandTable GetCommands()const override
-    {static ChatCommandTable c={{"ev7repair",RepairHome,SEC_PLAYER,Console::No},{"ev7forget",ForgetHome,SEC_PLAYER,Console::No},{"ev3state",Read,SEC_PLAYER,Console::No},{"ev3put",Put,SEC_PLAYER,Console::No},{"ev3take",Take,SEC_PLAYER,Console::No},{"ev3putw",PutWorn,SEC_PLAYER,Console::No},{"ev3equip",Equip,SEC_PLAYER,Console::No},{"ev4state",ReadPack,SEC_PLAYER,Console::No},{"ev4put",PutPack,SEC_PLAYER,Console::No},{"ev4take",TakePack,SEC_PLAYER,Console::No},{"ev4putw",PutWornPack,SEC_PLAYER,Console::No},{"ev4equip",EquipPack,SEC_PLAYER,Console::No},{"ev4buy",Buy,SEC_PLAYER,Console::No},{"ev4name",Rename,SEC_PLAYER,Console::No},{"wdnames",ReadNames,SEC_PLAYER,Console::No},{"wdrename",RenameBuild,SEC_PLAYER,Console::No},{"ev6replace",ReplaceHome,SEC_PLAYER,Console::No},{"ev6return",ReturnHome,SEC_PLAYER,Console::No},{"ev6release",ReleaseHome,SEC_PLAYER,Console::No},{"ev5link",LinkBuild,SEC_PLAYER,Console::No},{"ev5equip",EquipLinked,SEC_PLAYER,Console::No}};return c;}
+ ChatCommandTable GetCommands()const override
+ {static ChatCommandTable c={
+ {"evsstate",ReadPack,SEC_PLAYER,Console::No},{"evssave",SharedSave,SEC_PLAYER,Console::No},
+ {"evsclear",SharedClear,SEC_PLAYER,Console::No},{"evsput",SharedPut,SEC_PLAYER,Console::No},
+ {"evstake",SharedTake,SEC_PLAYER,Console::No},{"evsequip",SharedEquip,SEC_PLAYER,Console::No},
+ {"evsbuy",Buy,SEC_PLAYER,Console::No},{"evsname",Rename,SEC_PLAYER,Console::No},
+ {"evsreturn",SharedReturn,SEC_PLAYER,Console::No},{"evsunequip",SharedUnequip,SEC_PLAYER,Console::No},{"evslinked",SharedLinked,SEC_PLAYER,Console::No},{"evslink",LinkBuild,SEC_PLAYER,Console::No},
+ {"wdnames",ReadNames,SEC_PLAYER,Console::No},{"wdrename",RenameBuild,SEC_PLAYER,Console::No}};return c;}
 };
 }
-
 void AddRebornEquipmentVaultScripts(){new EV2A::Commands();new EV3::Commands();}

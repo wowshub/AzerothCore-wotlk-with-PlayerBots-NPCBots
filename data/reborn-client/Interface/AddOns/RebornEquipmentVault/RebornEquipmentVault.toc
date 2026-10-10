@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: Reborn Equipment Vault
+## Notes: Shared outfits and original item storage
+## Version: EV3S
+## OptionalDeps: RebornWitchDoctorTalents
+## SavedVariables: RebornEVSettings
+Vault.lua
+Shared.lua
+MicroButton.lua
+EntryStyle.lua
