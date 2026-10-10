@@ -15,6 +15,13 @@
  * PlayerbotAI::IsTank/IsHeal and AiFactory::GetPlayerSpecTab, and changes no
  * playerbots or mod-dungeon-clear behaviour.
  *
+ * DCDIAG1A: a fall recorder. Each sample keeps the last few positions of every
+ * tracked player; when one ends up BotTelemetry.FallMinDrop yards or more below
+ * a recent position, mostly straight down (not a ramp walk or a teleport), one
+ * JSON line goes to BotTelemetry.FallFile (default dc_falls.jsonl) with the
+ * trajectory, combat state, target and movement generator, to tell a bot
+ * walking off a ledge from a knockback or a scripted pull.
+ *
  * Threading: OnDamage/OnHeal/OnUnitDeath fire on map-update threads, so the
  * per-player counters are mutex-guarded. Fight boundaries are sampled in
  * WorldScript::OnUpdate, which runs on the world thread before the map update
@@ -27,6 +34,7 @@
 #include "Group.h"
 #include "Log.h"
 #include "Map.h"
+#include "MotionMaster.h"
 #include "ObjectAccessor.h"
 #include "Player.h"
 #include "PlayerbotAI.h"
@@ -38,6 +46,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <fstream>
 #include <mutex>
 #include <shared_mutex>
@@ -58,6 +67,9 @@ namespace
         uint32 endAfterMs = 4000;
         uint32 minFightMs = 5000;
         std::string file = "dc_fights.jsonl";
+        bool fallLog = true;
+        float fallMinDrop = 10.0f;
+        std::string fallFile = "dc_falls.jsonl";
     } cfg;
 
     // Accumulated from the combat hooks (map threads), keyed by player guid.
@@ -93,6 +105,23 @@ namespace
     };
     std::unordered_map<ObjectGuid::LowType, Fight> fights;
     uint32 sampleTimer = 0;
+
+    // Fall recorder (world thread only): recent positions per player, oldest first.
+    struct PosSample
+    {
+        uint32 ms = 0;
+        float x = 0.0f, y = 0.0f, z = 0.0f;
+    };
+    struct Track
+    {
+        uint32 mapId = 0;
+        uint32 instanceId = 0;
+        std::vector<PosSample> recent;
+        uint32 lastAirMs = 0;
+    };
+    std::unordered_map<ObjectGuid::LowType, Track> tracks;
+    constexpr std::size_t TRACK_SAMPLES = 10;  // 5 s at the default 500 ms
+
 
     uint64 NowUnixMs()
     {
@@ -240,6 +269,122 @@ namespace
             LOG_ERROR("module", "BotTelemetry: cannot open {} for writing", cfg.file);
     }
 
+    void RecordFall(Player* player, Track const& track, PosSample const& from, PosSample const& to, char const* kind)
+    {
+        Unit* victim = player->GetVictim();
+        std::ostringstream js;
+        js.setf(std::ios::fixed);
+        js.precision(2);
+        js << "{\"t\":" << NowUnixMs()
+           << ",\"kind\":\"" << kind << "\""
+           << ",\"guid\":" << player->GetGUID().GetCounter()
+           << ",\"name\":\"" << JsonEscape(player->GetName()) << "\""
+           << ",\"bot\":" << (GET_PLAYERBOT_AI(player) ? "true" : "false")
+           << ",\"tank\":" << (PlayerbotAI::IsTank(player) ? "true" : "false")
+           << ",\"map\":" << track.mapId
+           << ",\"instance\":" << track.instanceId
+           << ",\"from\":[" << from.x << "," << from.y << "," << from.z << "]"
+           << ",\"to\":[" << to.x << "," << to.y << "," << to.z << "]"
+           << ",\"drop\":" << (from.z - to.z)
+           << ",\"overMs\":" << getMSTimeDiff(from.ms, to.ms)
+           << ",\"alive\":" << (player->IsAlive() ? "true" : "false")
+           << ",\"hpPct\":" << player->GetHealthPct()
+           << ",\"combat\":" << (player->IsInCombat() ? "true" : "false")
+           << ",\"falling\":" << (player->HasUnitMovementFlag(MOVEMENTFLAG_FALLING) ? "true" : "false")
+           << ",\"motion\":" << uint32(player->GetMotionMaster()->GetCurrentMovementGeneratorType())
+           << ",\"victimEntry\":" << (victim && victim->ToCreature() ? victim->GetEntry() : 0)
+           << ",\"victim\":\"" << (victim ? JsonEscape(victim->GetName()) : std::string()) << "\""
+           << ",\"path\":[";
+        for (std::size_t i = 0; i < track.recent.size(); ++i)
+        {
+            PosSample const& p = track.recent[i];
+            js << (i ? "," : "") << "[" << getMSTimeDiff(p.ms, to.ms) << "," << p.x << "," << p.y << "," << p.z << "]";
+        }
+        js << "]}";
+
+        LOG_INFO("module", "BotTelemetry: {} {} map {} ({:.1f},{:.1f},{:.1f}) -> ({:.1f},{:.1f},{:.1f}) drop {:.1f} combat={}",
+            kind, player->GetName(), track.mapId, from.x, from.y, from.z, to.x, to.y, to.z, from.z - to.z, player->IsInCombat());
+
+        std::ofstream out(cfg.fallFile, std::ios::app);
+        if (out)
+            out << js.str() << '\n';
+        else
+            LOG_ERROR("module", "BotTelemetry: cannot open {} for writing", cfg.fallFile);
+    }
+
+    void TrackFall(Player* player, uint32 now)
+    {
+        Map* map = player->FindMap();
+        if (!map)
+            return;
+        Track& track = tracks[player->GetGUID().GetCounter()];
+        if (track.mapId != map->GetId() || track.instanceId != map->GetInstanceId())
+        {
+            track = Track();
+            track.mapId = map->GetId();
+            track.instanceId = map->GetInstanceId();
+        }
+
+        PosSample cur;
+        cur.ms = now;
+        cur.x = player->GetPositionX();
+        cur.y = player->GetPositionY();
+        cur.z = player->GetPositionZ();
+
+        // Highest recent point this position dropped from steeply: a fall, not a ramp
+        // (steeper than about 35 degrees) and not a teleport.
+        PosSample const* from = nullptr;
+        for (PosSample const& p : track.recent)
+        {
+            float const drop = p.z - cur.z;
+            float const horiz = std::hypot(p.x - cur.x, p.y - cur.y);
+            if (drop >= cfg.fallMinDrop && drop >= 0.7f * horiz && horiz < 60.0f && (!from || p.z > from->z))
+                from = &p;
+        }
+
+        // DCDIAG1B: a staircase descends as steeply, but only ~2yd per sample. A real
+        // drop has one sample-to-sample step of 4yd or more (free fall passes 8yd/s
+        // within half a second).
+        float maxStep = 0.0f;
+        float prevZ = from ? from->z : cur.z;
+        bool afterFrom = false;
+        for (PosSample const& p : track.recent)
+        {
+            if (&p == from)
+                afterFrom = true;
+            else if (afterFrom)
+            {
+                maxStep = std::max(maxStep, prevZ - p.z);
+                prevZ = p.z;
+            }
+        }
+        maxStep = std::max(maxStep, prevZ - cur.z);
+
+        if (from && maxStep >= 4.0f)
+        {
+            RecordFall(player, track, *from, cur, "fall");
+            track.recent.clear();  // one line per fall
+        }
+        else if (Map* m = player->GetMap(); m && getMSTimeDiff(track.lastAirMs, now) >= 10000)
+        {
+            // DCDIAG1B: walking on air -- a straight spline over a gap (the event hop
+            // DCMOV1A fixes) never "falls", it glides down at walking pace.
+            float const ground = m->GetHeight(player->GetPhaseMask(), cur.x, cur.y, cur.z + 2.0f, true, 50.0f);
+            if (ground > INVALID_HEIGHT && cur.z - ground > 6.0f && !player->IsFlying() &&
+                !player->IsInWater() && !player->GetVehicle() && !player->HasUnitMovementFlag(MOVEMENTFLAG_FALLING))
+            {
+                PosSample below = cur;
+                below.z = ground;
+                RecordFall(player, track, cur, below, "air");
+                track.lastAirMs = now;
+            }
+        }
+
+        track.recent.push_back(cur);
+        if (track.recent.size() > TRACK_SAMPLES)
+            track.recent.erase(track.recent.begin());
+    }
+
     void Sample()
     {
         uint32 const now = getMSTime();
@@ -259,6 +404,8 @@ namespace
                 Player* player = entry.second;
                 if (!player || !player->IsInWorld() || !Tracked(player))
                     continue;
+                if (cfg.fallLog)
+                    TrackFall(player, now);
                 GroupView& view = groups[player->GetGroup()->GetGUID().GetCounter()];
                 Map* map = player->FindMap();
                 if (!view.map)
@@ -412,8 +559,11 @@ public:
         cfg.endAfterMs = sConfigMgr->GetOption<uint32>("BotTelemetry.EndAfterMs", 4000);
         cfg.minFightMs = sConfigMgr->GetOption<uint32>("BotTelemetry.MinFightMs", 5000);
         cfg.file = sConfigMgr->GetOption<std::string>("BotTelemetry.File", "dc_fights.jsonl");
-        LOG_INFO("module", "BotTelemetry: {} (dungeonsOnly={}, botGroupsOnly={}, file={})",
-            cfg.enable ? "enabled" : "disabled", cfg.dungeonsOnly, cfg.botGroupsOnly, cfg.file);
+        cfg.fallLog = sConfigMgr->GetOption<bool>("BotTelemetry.FallLog", true);
+        cfg.fallMinDrop = std::max(3.0f, sConfigMgr->GetOption<float>("BotTelemetry.FallMinDrop", 10.0f));
+        cfg.fallFile = sConfigMgr->GetOption<std::string>("BotTelemetry.FallFile", "dc_falls.jsonl");
+        LOG_INFO("module", "BotTelemetry: {} (dungeonsOnly={}, botGroupsOnly={}, file={}, fallLog={}, fallFile={})",
+            cfg.enable ? "enabled" : "disabled", cfg.dungeonsOnly, cfg.botGroupsOnly, cfg.file, cfg.fallLog, cfg.fallFile);
     }
 
     void OnUpdate(uint32 diff) override

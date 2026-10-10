@@ -45,3 +45,19 @@ BotTelemetry.MinFightMs = 5000
 #        Output file, relative to the worldserver working directory.
 #        Default: "dc_fights.jsonl"
 BotTelemetry.File = "dc_fights.jsonl"
+
+#    BotTelemetry.FallLog
+#        DCDIAG1A fall recorder: write a line whenever a tracked player drops
+#        steeply (a ledge, a hole, a knockback) inside a dungeon.
+#        Default: 1
+BotTelemetry.FallLog = 1
+
+#    BotTelemetry.FallMinDrop
+#        Smallest drop in yards that counts as a fall (min 3).
+#        Default: 10
+BotTelemetry.FallMinDrop = 10
+
+#    BotTelemetry.FallFile
+#        Fall output file, relative to the worldserver working directory.
+#        Default: "dc_falls.jsonl"
+BotTelemetry.FallFile = "dc_falls.jsonl"
