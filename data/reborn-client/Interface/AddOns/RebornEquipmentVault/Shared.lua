@@ -8,12 +8,32 @@ function M.CanUse()return M.ready and not M.pending and V.selected<=M.owned end
 function M.IsBusy()return M.pending~=nil or M.batch~=nil end
 local function say(s)M.message=s;if DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage(s)end end
 local errors={busy='衣柜请求过快，本轮已停止，稍后刷新再试',schema='请先安装EV3S迁移SQL及配套服务端',changed='装备或版本已变化，请刷新后重试',blocked='当前状态不能操作（战斗/死亡/交易/飞行等）',saving='装备正在保存，请稍后重试',relogin='需要重新登录校对装备',full='背包空位不足',equipfull='需要空背包格安放被替换装备',itemenchant='临时附魔尚未结束，暂不能收纳',itemrefund='装备仍可退款，暂不能收纳',itemtrade='装备仍可交易，暂不能收纳',itemduration='限时装备暂不能收纳',missing='找不到记录的原装备',cantwear='装备组合或穿戴资格不满足',wornelsewhere='原装备穿在另一个位置，请先放回背包',limit='记录数超过本版同步上限',buildchanged='天赋方案已变化，停止自动换装'}
+-- EV3U: current means exact original GUID in every slot, not last clicked outfit.
+M.equipmentEpoch=0
+M.snapshotEpoch=-1
+function M.CurrentOutfits()
+ local found={}
+ if (not M.ready and not(M.pending and M.pending.action=='state'))or(M.pending and M.pending.action~='state')or M.batch or M.snapshotEpoch~=M.equipmentEpoch then return found,false end
+ local worn={};for g,c in pairs(M.carry)do if c.state==2 then worn[c.slot]=g end end
+ for p=1,M.owned do
+  local rows=M.refs[p]or{};local exact=true;local count=0
+  for slot=1,19 do
+   local r=rows[slot];local guid=r and r.guid
+   if guid then count=count+1 end
+   if guid~=worn[slot]then exact=false end
+  end
+  -- A cleared/empty outfit is not a worn outfit, even when naked.
+  if exact and count>0 then found[#found+1]=p end
+ end
+ return found,true
+end
 local function send(command,action)
  if M.pending then return false end
  local now=GetTime();M.serial=M.serial+1
  M.pending={id=M.serial,time=now,action=action or'state',command=command:format(M.serial),pack=V.selected,due=math.max(now,(M.lastSend or -1)+.8)};M.ready=false
  -- All commands share the same gate, including reads and manual tab changes.
- if now>=M.pending.due then M.pending.dispatched=true;M.lastSend=now;SendChatMessage(M.pending.command,'SAY')end
+ if now>=M.pending.due then M.pending.dispatched=true;M.pending.equipmentEpoch=M.equipmentEpoch;M.lastSend=now;SendChatMessage(M.pending.command,'SAY')end
+ if V.frame and M.RefreshCurrentOutfit then M.RefreshCurrentOutfit()end
  return true
 end
 function M.Query()return send('.evsstate %d '..V.selected..' '..M.page,'state')end
@@ -131,7 +151,7 @@ local function beginBatch(mode,auto)
   if mode=='equip'and(not c or c.state~=2 or c.slot~=slot)or mode=='store'and c and c.state==3 or mode=='take'and(M.pool[r.guid]or c and c.state==2)then list[#list+1]={slot=slot,guid=r.guid}end
  end end
  if #list==0 then say(mode=='take'and en('此搭配没有身上或库内装备需要放回背包','No worn or stored outfit items to return')or mode=='store'and en('背包中没有此搭配可存入公共库的装备','No outfit bag items to store')or en('此搭配已经穿好','Outfit already equipped'));return end
- M.batch={mode=mode,rows=list,pos=1,pack=V.selected,auto=auto};M.nextStep=GetTime()+.6
+ M.batch={mode=mode,rows=list,pos=1,pack=V.selected,auto=auto};M.nextStep=GetTime()+.6;if V.frame then M.RefreshCurrentOutfit()end
 end
 function M.OnTalentActivated(slot,revision)
  if M.IsBusy()then say(en('天赋已切换，衣柜忙，请稍后手动穿戴','Talents switched; wardrobe busy, equip manually'));return false end
@@ -191,7 +211,7 @@ local function receive(msg)
    for g in pairs(d.pool)do assert(not d.carry[g])end
    local slots={};for g,r in pairs(d.carry)do assert(r.link and r.link:match('^item:%d+:'));if r.state==2 then assert(r.slot>0 and not slots[r.slot]);slots[r.slot]=g else assert(r.slot==0)end end
    for _,rows in pairs(d.refs)do local ids={};for _,r in pairs(rows)do assert(not ids[r.guid]);ids[r.guid]=true;local c=d.carry[r.guid];assert(r.state==(d.pool[r.guid]and 1 or c and c.state or 4))end end
-   M.revision=d.revision;M.owned=d.owned;M.price=d.price;M.refs=d.refs;M.pool=d.pool;M.capacity=d.capacity;M.carry=d.carry;M.names=d.names;M.build=d.build;M.linkInfo=d.build;M.ready=true;M.pending=nil
+   M.revision=d.revision;M.owned=d.owned;M.price=d.price;M.refs=d.refs;M.pool=d.pool;M.capacity=d.capacity;M.carry=d.carry;M.names=d.names;M.build=d.build;M.linkInfo=d.build;M.ready=true;M.snapshotEpoch=p.equipmentEpoch;M.pending=nil
    if M.batch and p.action~='state'then
     local b=M.batch;local r=b.rows[b.pos];local c=M.carry[r.guid]
     local ok=b.mode=='equip'and c and(r.clear and c.state==3 or not r.clear and c.state==2 and c.slot==r.slot)or b.mode=='store'and M.pool[r.guid]or b.mode=='take'and c and c.state==3
@@ -221,10 +241,42 @@ local function button(parent,label,x,y,fn)
  local b=CreateFrame('Button',nil,parent,'UIPanelButtonTemplate');b:SetPoint('TOPLEFT',x,y);b:SetSize(166,26);b:SetText(label);b:SetScript('OnClick',fn);return b
 end
 function M.Summary(pack)
- local total,worn,missing=0,0,0;for _,r in pairs(M.refs[pack]or{})do total=total+1;local c=M.carry[r.guid];if c and c.state==2 then worn=worn+1 elseif not c and not M.pool[r.guid]then missing=missing+1 end end
+ local total,worn,missing=0,0,0;for slot,r in pairs(M.refs[pack]or{})do total=total+1;local c=M.carry[r.guid];if c and c.state==2 and c.slot==slot then worn=worn+1 elseif not c and not M.pool[r.guid]then missing=missing+1 end end
  return en('共','Total ')..total..en('件 · 身上',' · worn ')..worn..(missing>0 and(en(' · 缺',' · missing ')..missing)or'')
 end
 local function enabled(b,on)if on then b:Enable()else b:Disable()end end
+function M.RefreshCurrentOutfit()
+ local ids,fresh=M.CurrentOutfits();local match={};local names={}
+ for _,id in ipairs(ids)do match[id]=true;names[#names+1]='#'..id..' '..M.Name(id)end
+ if not M.currentBar then
+  local b=CreateFrame('Frame',nil,V.frame);M.currentBar=b;b:SetPoint('TOPLEFT',350,-15);b:SetSize(395,23);b:EnableMouse(true)
+  b.bg=b:CreateTexture(nil,'BACKGROUND');b.bg:SetAllPoints();b.bg:SetTexture('Interface\\Buttons\\WHITE8X8')
+  b.text=b:CreateFontString(nil,'OVERLAY','GameFontHighlightSmall');b.text:SetPoint('LEFT',8,0);b.text:SetWidth(379);b.text:SetHeight(16);b.text:SetJustifyH('LEFT')
+  b:SetScript('OnEnter',function(self)
+   GameTooltip:SetOwner(self,'ANCHOR_BOTTOM');GameTooltip:SetText(en('当前实际穿戴','Currently equipped outfit'))
+   GameTooltip:AddLine(self.detail or'',1,.85,.7,true)
+   GameTooltip:AddLine(en('按19个槽位与原装备编号逐一核对。选择衣柜不会改变此标记；相同搭配会同时标记。','Exact original and slot match across 19 slots. Selection does not change this marker. Identical outfits are all marked.'),.75,.8,.85,true);GameTooltip:Show()
+  end);b:SetScript('OnLeave',function()GameTooltip:Hide()end)
+ end
+ local bar=M.currentBar
+ bar.detail=not fresh and en('正在核对穿戴，请等待同步完成。','Checking equipment; waiting for synchronization.')or #ids==0 and en('混搭 / 未保存：身上装备与任何已保存搭配都不完全一致。','Mixed / unsaved: no saved outfit exactly matches your equipped items.')or table.concat(names,' / ')
+ local label
+ if not fresh then label=en('当前穿戴：核对中…','Current outfit: checking…')
+ elseif #ids==0 then label=en('当前穿戴：混搭 / 未保存','Current outfit: mixed / unsaved')
+ elseif #ids==1 then label=en('当前：','Current: ')..names[1]
+ else label=en('当前：','Current: ')..names[1]..en(' 等',' + ')..(#ids-1)..en('套相同搭配',' identical outfits')end
+ bar.text:SetText(label);bar.bg:SetVertexColor(fresh and #ids>0 and .58 or .18,.09,.10,.95)
+ for _,t in ipairs(V.tabs)do
+  if not t.currentTag then
+   local tag=CreateFrame('Frame',nil,t);t.currentTag=tag;tag:SetSize(38,17);tag:SetPoint('TOPRIGHT',-5,-4);tag:EnableMouse(false)
+   tag.bg=tag:CreateTexture(nil,'BACKGROUND');tag.bg:SetAllPoints();tag.bg:SetTexture('Interface\\Buttons\\WHITE8X8');tag.bg:SetVertexColor(.72,.08,.12,1)
+   tag.text=tag:CreateFontString(nil,'OVERLAY','GameFontHighlightSmall');tag.text:SetPoint('CENTER')
+   t:HookScript('OnEnter',function(self)if self.currentTag:IsShown()then GameTooltip:AddLine(en('当前：身上装备与此搭配完全一致','Current: exactly matches equipped items'),1,.35,.3,true);GameTooltip:Show()end end)
+  end
+  if match[t.pack]then t.label:SetWidth(105);t.currentTag.text:SetText(en('当前','NOW'));t.currentTag:Show()
+  else t.label:SetWidth(145);t.currentTag:Hide()end
+ end
+end
 local function bind()
  if M.bound or not V.frame then return end;M.bound=true
  V.capture:SetScript('OnClick',function()if M.CanUse()and not M.batch then local p=V.selected;confirm(en('用身上整套装备覆盖此搭配？不移动或删除装备。','Replace this outfit with currently equipped items? No items move or are deleted.'),function()if M.CanUse()and V.selected==p then act('evssave',p)end end)end end)
@@ -284,7 +336,12 @@ function V.Refresh()
   M.poolFrame:Show()
  else M.poolFrame:Hide()end
  oldRefresh()
- V.title:SetText(en('共享搭配衣柜 · EV3T3','Shared Outfit Wardrobe · EV3T3'))
+ -- Keep the last complete view during background reads; write controls stay locked.
+ if M.pending and M.pending.action=='state' and M.snapshotEpoch>=0 and V.selected<=M.owned then
+  V.lock:Hide()
+  for _,b in ipairs(V.buttons)do local r=display[b.slot];local texture=r and select(10,GetItemInfo(r.link));b.icon:SetTexture(texture or b.empty);b.icon:SetAlpha(r and 1 or .65)end
+ end
+ V.title:SetWidth(270);V.title:SetText(en('共享搭配衣柜 · EV3U1','Shared Outfit Wardrobe · EV3U1'))
  V.subtitle:SetText(M.poolView and en('公共装备总览 · 滚轮翻页','Shared storage · mouse wheel pages')..' '..(M.poolPage or 1)or M.Name(V.selected))
  V.hint:SetText(en('条带：当前编号 + 其他共用套数；x表示共用总套数。悬停看完整搭配；总览可筛选当前搭配。','Save records references. Store moves bag items only. Right-click stored originals to withdraw.'))
  V.footer:SetText(M.message or en('搭配共用原件，不复制装备','Outfits share originals; no duplicates'))
@@ -296,6 +353,7 @@ function V.Refresh()
  enabled(V.controls[6],usable and M.build and M.build.available);enabled(V.controls[4],M.ready and not M.batch and V.selected==M.owned+1 and M.price and M.price>=0)
  V.pageLabel:SetText((math.floor((M.page-1)/6)+1)..' / '..(math.floor(M.owned/6)+1))
  for i,t in ipairs(V.tabs)do t.pack=M.page+i-1;t.label:SetText(M.Name(t.pack));t.sub:SetText(t.pack<=M.owned and M.Summary(t.pack)or t.pack==M.owned+1 and en('可解锁','Unlock available')or en('未开放','Unavailable'));enabled(t,not M.IsBusy()and t.pack<=M.owned+1);t:SetBackdropBorderColor(t.pack==V.selected and 1 or .3,t.pack==V.selected and .8 or .3,.2,1)end
+ M.RefreshCurrentOutfit()
  for _,b in ipairs(V.buttons)do local r=display[b.slot];b.guid=r and r.guid;b.item=r and r.link;b.mark:SetText('');Ribbon(b,r and r.guid,(b.slot==10 or b.slot==6 or b.slot==7 or b.slot==8 or b.slot==11 or b.slot==12 or b.slot==13 or b.slot==14)and'right'or(b.slot>=16 and b.slot<=18)and'right'or'left');b.where:ClearAllPoints();b.where:SetPoint('TOP',b,'BOTTOM',0,(b.slot>=16 and b.slot<=18)and -18 or -1);b.where:SetText(r and location(r.guid)or'');if M.poolView then b:Hide()else b:Show()end end
  if M.poolView then V.model:Hide()else V.model:Show()end
  V.model:EnableMouseWheel(true);V.model:SetScript('OnMouseWheel',function(_,delta)if M.poolView then M.poolPage=math.max(1,(M.poolPage or 1)-(delta>0 and 1 or -1));V.Refresh()end end)
@@ -304,7 +362,11 @@ local frame=CreateFrame('Frame');frame:RegisterEvent('CHAT_MSG_SYSTEM');frame:Re
 frame:SetScript('OnEvent',function(_,event,msg)
  if event=='CHAT_MSG_SYSTEM'then local ok=pcall(receive,msg);if not ok then M.pending=nil;M.batch=nil;M.ready=false;say(en('同步记录不完整，请刷新','Incomplete snapshot; refresh'));M.nextQuery=GetTime()+1 end
  elseif event=='GET_ITEM_INFO_RECEIVED'then V.Refresh()
- else M.RefreshBadges(true);M.nextQuery=GetTime()+.8 end
+ elseif event=='BAG_UPDATE'then
+  -- Loot/ammo/consumables do not invalidate equipped GUIDs. Coalesce reads;
+  -- never keep pushing the deadline into the future during continuous loot.
+  M.nextQuery=M.nextQuery or math.max(GetTime()+1.5,(M.lastSend or 0)+5)
+ else M.equipmentEpoch=M.equipmentEpoch+1;M.RefreshBadges(true);M.nextQuery=GetTime()+.8;V.Refresh()end
 end)
 frame:SetScript('OnUpdate',function()
  local now=GetTime()
@@ -312,7 +374,7 @@ frame:SetScript('OnUpdate',function()
   local p=M.pending
   if p.pack~=V.selected or(p.action~='state'and InCombatLockdown())then
    M.pending=nil;M.batch=nil;M.follow=nil;M.ready=false;M.nextQuery=now+.8;say(en('操作取消：搭配或战斗状态已变化','Cancelled: outfit or combat changed'))
-  else p.dispatched=true;p.time=now;M.lastSend=now;SendChatMessage(p.command,'SAY')end
+  else p.dispatched=true;p.equipmentEpoch=M.equipmentEpoch;p.time=now;M.lastSend=now;SendChatMessage(p.command,'SAY')end
  end
  if M.pending and M.pending.dispatched and now-M.pending.time>15 then M.pending=nil;M.batch=nil;M.follow=nil;M.ready=false;say(en('操作超时，停止队列并重新查询（不重发写操作）','Timed out; querying without replaying writes'));M.nextQuery=now+1 end
  if M.nextQuery and now>=M.nextQuery and not M.pending and not M.batch then M.nextQuery=nil;M.Query()end
