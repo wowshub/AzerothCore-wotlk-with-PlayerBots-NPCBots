@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "MapMgr.h"
 #include "Chat.h"
 #include "DatabaseEnv.h"
@@ -124,6 +125,19 @@ Map* MapMgr::FindBaseNonInstanceMap(uint32 mapId) const
 
 Map* MapMgr::CreateMap(uint32 id, Player* player)
 {
+    if (auto const* route = RebornObserver::Get(player))
+    {
+        if (route->returning)
+            return id == route->origin.GetMapId() ? FindMap(id, 0) : nullptr;
+        // Never create an empty copy or fall back to the viewer's own bind.
+        if (id != route->mapId)
+            return nullptr;
+        Player* target = ObjectAccessor::FindConnectedPlayer(route->target);
+        if (!target || !target->IsAlive() || !target->IsInWorld() || target->IsBeingTeleported() ||
+            target->GetMapId() != id || target->GetInstanceId() != route->instanceId)
+            return nullptr;
+        return FindMap(id, route->instanceId);
+    }
     Map* m = CreateBaseMap(id);
 
     if (m && m->Instanceable())

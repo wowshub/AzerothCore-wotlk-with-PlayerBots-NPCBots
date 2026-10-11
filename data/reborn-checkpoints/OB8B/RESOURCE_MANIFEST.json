@@ -1,0 +1,15 @@
+{
+  "CONFIG_REQUIRED.txt": "cd378e5786e00bdec98e5340113bb468d6c880fb957fe782b3a83399d4f4b2ec",
+  "README.md": "a9203c074b24db4b0298ae01158d3cce6968b25e07fc692a69ec68052cd24d2e",
+  "01_覆盖到源代码根目录/modules/mod-reborn-spectator/src/RebornSpectator.cpp": "f64a47abef1722f4a24f2368945961add4f0c840fcaf627237239e54936dca9b",
+  "01_覆盖到源代码根目录/src/server/game/AI/NpcBots/botmgr.cpp": "b0f6ca91ca07f0ff2105c2cb9cb2bb5658d003a2ba6420d7a787e66b195f262e",
+  "01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp": "34eb0052ba0c262c4299367eeeff9db76dd585326b8ff0f4d8ff2e3a09c99592",
+  "01_覆盖到源代码根目录/src/server/game/Entities/Player/RebornObserverContext.h": "b1bc3f44603aaebc0e953b85d2e57cd16ad526d6e07bd4e010ed2f31a59c7b3f",
+  "01_覆盖到源代码根目录/src/server/game/Handlers/ChatHandler.cpp": "9d71b4d414545bc699963ef55ef2bc5fe4e15a8f9dde6b00eafbbd7502e249f4",
+  "01_覆盖到源代码根目录/src/server/game/Handlers/LootHandler.cpp": "aada8311df91f7ede8e1138ed3c4818c498ca678499e54ca28999d753b34eebf",
+  "01_覆盖到源代码根目录/src/server/game/Handlers/MiscHandler.cpp": "808a15be684e7ccafbf76854ee29747ed322ea829033a84a3530c5f0d66398d4",
+  "01_覆盖到源代码根目录/src/server/game/Handlers/MovementHandler.cpp": "6cf311664193c06b3aa1622bd95f4506fcddfdc71ad795cd8122a172d4bdf0fd",
+  "01_覆盖到源代码根目录/src/server/game/Handlers/SpellHandler.cpp": "9d5088320b7d18b316892de006bc685167f7bb0682abe5a8e1d03bac7b6c4f14",
+  "01_覆盖到源代码根目录/src/server/game/Maps/Map.cpp": "d3c8f30b678c637f87708fca8bb78063258683f1ccf7f6113e4a8198553d500d",
+  "01_覆盖到源代码根目录/src/server/game/Maps/MapMgr.cpp": "3124992b2363fa6ff33d575abcb01159221d31d1846e757ec7a3efc34d852e7d"
+}

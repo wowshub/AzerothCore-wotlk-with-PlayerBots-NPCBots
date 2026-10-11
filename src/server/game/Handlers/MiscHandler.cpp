@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "AccountMgr.h"
 #include "BattlefieldMgr.h"
 #include "RBAC.h"
@@ -705,6 +706,8 @@ void WorldSession::HandleResurrectResponseOpcode(WorldPacket& recv_data)
 
 void WorldSession::HandleAreaTriggerOpcode(WorldPacket& recv_data)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     uint32 triggerId;
     recv_data >> triggerId;
 

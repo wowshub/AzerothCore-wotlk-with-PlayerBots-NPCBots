@@ -1,3 +1,4 @@
+#include "RebornObserverContext.h"
 #include "botmgr.h"
 #include "Battleground.h"
 #include "BattlegroundMgr.h"
@@ -1302,6 +1303,8 @@ bool BotMgr::IsMapAllowedForBots(Map const* map) const
 
 bool BotMgr::RestrictBots(Creature const* bot, bool add) const
 {
+    if (RebornObserver::Active(_owner))
+        return true; // Do not bring the observer's hirelings into someone else's run.
     if (!_owner->FindMap())
         return true;
 

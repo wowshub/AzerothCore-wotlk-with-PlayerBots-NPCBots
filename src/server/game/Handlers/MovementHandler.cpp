@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "AreaDefines.h"
 #include "ArenaSpectator.h"
 #include "Battleground.h"
@@ -93,7 +94,13 @@ void WorldSession::HandleMoveWorldportAck()
     if (!newMap || newMap->CannotEnter(GetPlayer(), false))
     {
         LOG_ERROR("network.opcode", "Map {} could not be created for player {}, porting player to homebind", loc.GetMapId(), GetPlayer()->GetGUID().ToString());
-        GetPlayer()->TeleportTo(GetPlayer()->m_homebindMapId, GetPlayer()->m_homebindX, GetPlayer()->m_homebindY, GetPlayer()->m_homebindZ, GetPlayer()->GetOrientation());
+        if (auto* route = RebornObserver::Get(GetPlayer()))
+        {
+            route->returning = true;
+            GetPlayer()->TeleportTo(route->origin, TELE_TO_GM_MODE);
+        }
+        else
+            GetPlayer()->TeleportTo(GetPlayer()->m_homebindMapId, GetPlayer()->m_homebindX, GetPlayer()->m_homebindY, GetPlayer()->m_homebindZ, GetPlayer()->GetOrientation());
         return;
     }
 
@@ -119,7 +126,13 @@ void WorldSession::HandleMoveWorldportAck()
             GetPlayer()->GetName(), GetPlayer()->GetGUID().ToString(), loc.GetMapId());
         GetPlayer()->ResetMap();
         GetPlayer()->SetMap(oldMap);
-        GetPlayer()->TeleportTo(GetPlayer()->m_homebindMapId, GetPlayer()->m_homebindX, GetPlayer()->m_homebindY, GetPlayer()->m_homebindZ, GetPlayer()->GetOrientation());
+        if (auto* route = RebornObserver::Get(GetPlayer()))
+        {
+            route->returning = true;
+            GetPlayer()->TeleportTo(route->origin, TELE_TO_GM_MODE);
+        }
+        else
+            GetPlayer()->TeleportTo(GetPlayer()->m_homebindMapId, GetPlayer()->m_homebindX, GetPlayer()->m_homebindY, GetPlayer()->m_homebindZ, GetPlayer()->GetOrientation());
         return;
     }
 
@@ -161,7 +174,8 @@ void WorldSession::HandleMoveWorldportAck()
         }
     }
 
-    // pussywizard: arena spectator stuff
+    // Native arena sessions and Reborn read-only sessions have separate ownership.
+    if (!RebornObserver::Active(_player))
     {
         if (newMap->IsBattleArena() && ((BattlegroundMap*)newMap)->GetBG() && _player->HasPendingSpectatorForBG(((BattlegroundMap*)newMap)->GetInstanceId()))
         {

@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "Player.h"
 #include <atomic>
 #include "AccountMgr.h"
@@ -1439,17 +1440,26 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         return false;
     }
 
+    auto const* observerRoute = RebornObserver::Get(this);
+    if (observerRoute && !observerRoute->returning)
+    {
+        if (mapid != observerRoute->mapId)
+            return false;
+        if (GetInstanceId() != observerRoute->instanceId)
+            newInstance = true;
+    }
+
     // preparing unsummon pet if lost (we must get pet before teleportation or will not find it later)
     Pet* pet = GetPet();
 
     MapEntry const* mEntry = sMapStore.LookupEntry(mapid);
 
     // don't let enter battlegrounds without assigned battleground id (for example through areatrigger)...
-    if (!InBattleground() && mEntry->IsBattlegroundOrArena())
+    if (!InBattleground() && mEntry->IsBattlegroundOrArena() && !observerRoute)
         return false;
 
     // pussywizard: arena spectator, prevent teleporting from arena to instance/etc
-    if (GetMapId() != mapid && IsSpectator() && mEntry->Instanceable())
+    if (GetMapId() != mapid && IsSpectator() && mEntry->Instanceable() && !observerRoute)
     {
         SendTransferAborted(mapid, TRANSFER_ABORT_MAP_NOT_ALLOWED);
         return false;
@@ -15425,7 +15435,7 @@ void Player::_SaveCharacter(bool create, CharacterDatabaseTransaction trans)
         //save, but in tavern/city
         stmt->SetData(index++, m_resetTalentsCost);
         stmt->SetData(index++, uint32(m_resetTalentsTime));
-        stmt->SetData(index++, (uint16)m_ExtraFlags);
+        stmt->SetData(index++, uint16(RebornObserver::Active(this) ? (m_ExtraFlags & ~PLAYER_EXTRA_SPECTATOR_ON) : m_ExtraFlags));
         stmt->SetData(index++, m_petStable ? m_petStable->MaxStabledPets : 0);
         stmt->SetData(index++, (uint16)m_atLoginFlags);
         stmt->SetData(index++, GetZoneId());
@@ -15509,7 +15519,18 @@ void Player::_SaveCharacter(bool create, CharacterDatabaseTransaction trans)
         stmt->SetData(index++, GetByteValue(PLAYER_BYTES_2, 3));
         stmt->SetData(index++, GetPlayerFlags());
 
-        if (!IsBeingTeleported())
+        if (auto const* route = RebornObserver::Get(this))
+        {
+            // Autosave/crash/logout must never park a normal character in a watched copy.
+            stmt->SetData(index++, uint16(route->origin.GetMapId()));
+            stmt->SetData(index++, uint32(0));
+            stmt->SetData(index++, uint8(GetDungeonDifficulty()) | uint8(GetRaidDifficulty()) << 4);
+            stmt->SetData(index++, finiteAlways(route->origin.GetPositionX()));
+            stmt->SetData(index++, finiteAlways(route->origin.GetPositionY()));
+            stmt->SetData(index++, finiteAlways(route->origin.GetPositionZ()));
+            stmt->SetData(index++, finiteAlways(route->origin.GetOrientation()));
+        }
+        else if (!IsBeingTeleported())
         {
             Difficulty dd = GetDungeonDifficulty(), rd = GetRaidDifficulty();
             if (Map* m = FindMap())
@@ -15565,7 +15586,7 @@ void Player::_SaveCharacter(bool create, CharacterDatabaseTransaction trans)
         //save, but in tavern/city
         stmt->SetData(index++, m_resetTalentsCost);
         stmt->SetData(index++, uint32(m_resetTalentsTime));
-        stmt->SetData(index++, (uint16)m_ExtraFlags);
+        stmt->SetData(index++, uint16(RebornObserver::Active(this) ? (m_ExtraFlags & ~PLAYER_EXTRA_SPECTATOR_ON) : m_ExtraFlags));
         stmt->SetData(index++, m_petStable ? m_petStable->MaxStabledPets : 0);
         stmt->SetData(index++, (uint16)m_atLoginFlags);
         stmt->SetData(index++, GetZoneId());
@@ -16089,6 +16110,22 @@ void Player::SendDuelCountdown(uint32 counter)
 
 void Player::SetIsSpectator(bool on)
 {
+    if (RebornObserver::Active(this))
+    {
+        if (on)
+        {
+            m_ExtraFlags |= PLAYER_EXTRA_SPECTATOR_ON;
+            AddUnitState(UNIT_STATE_ISOLATED);
+            SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+        }
+        else
+        {
+            m_ExtraFlags &= ~PLAYER_EXTRA_SPECTATOR_ON;
+            ClearUnitState(UNIT_STATE_ISOLATED);
+            RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+        }
+        return;
+    }
     if (on)
     {
         AddAura(SPECTATOR_SPELL_SPEED, this);

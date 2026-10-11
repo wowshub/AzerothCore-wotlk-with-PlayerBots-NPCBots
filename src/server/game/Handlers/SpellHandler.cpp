@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "DBCStores.h"
 #include "GameObjectAI.h"
 #include "Log.h"
@@ -334,6 +335,8 @@ void WorldSession::HandleOpenWrappedItemCallback(uint8 bagIndex, uint8 slot, Obj
 
 void WorldSession::HandleGameObjectUseOpcode(WorldPacket& recvData)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     ObjectGuid guid;
     recvData >> guid;
 
@@ -355,6 +358,8 @@ void WorldSession::HandleGameObjectUseOpcode(WorldPacket& recvData)
 
 void WorldSession::HandleGameobjectReportUse(WorldPacket& recvPacket)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     ObjectGuid guid;
     recvPacket >> guid;
 

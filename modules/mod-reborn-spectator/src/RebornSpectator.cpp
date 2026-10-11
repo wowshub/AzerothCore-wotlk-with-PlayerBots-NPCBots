@@ -26,6 +26,7 @@
  * audit history, and crash recovery belong to later stages.
  */
 
+#include "RebornObserverContext.h"
 #include "ArenaSpectator.h"
 #include "AccountScript.h"
 #include "CharacterCache.h"
@@ -118,6 +119,7 @@ struct RebornSpectatorSession
 
     bool wasGMVisible = true;
     bool hadRoot = false;
+    bool hadIsolated = false;
     bool hadDisableMove = false;
     bool hadNonAttackable = false;
     bool hadPacified = false;
@@ -130,6 +132,7 @@ struct RebornSpectatorSession
     uint32 totalPendingMs = 0;
     uint32 retryTimerMs = 0;
     uint32 activeCheckTimerMs = 0;
+    uint32 targetTransferWaitMs = 0;
 };
 
 struct RebornPendingCarrierLogin
@@ -153,6 +156,8 @@ struct RebornPendingCarrierLogin
 
 struct RebornPendingReturn
 {
+    RebornSpectatorSession original;
+    bool restoreSession = false;
     uint32 mapId = 0;
     float x = 0.0f;
     float y = 0.0f;
@@ -579,6 +584,16 @@ public:
         }
 
         Map* destinationMap = target->FindMap();
+        if (destinationMap && destinationMap->Instanceable())
+        {
+            // Finish normal login at the saved origin, then use the authorized
+            // cross-map path. Pre-login relocation cannot select an instance.
+            request.worldPrepared = false;
+            request.preparationRejected = false;
+            std::lock_guard<std::mutex> lock(_mutex);
+            _preloginRequests[accountId] = request;
+            return;
+        }
         if (!destinationMap || destinationMap->Instanceable() || target->GetInstanceId() != 0)
         {
             request.preparationRejected = true;
@@ -738,10 +753,10 @@ public:
 
         Map* observerMap = observer->FindMap();
         Map* targetMap = target->FindMap();
-        if (!observerMap || !targetMap || observerMap->Instanceable() || targetMap->Instanceable() ||
-            observer->GetInstanceId() != 0 || target->GetInstanceId() != 0)
+        if (!observerMap || !targetMap || observerMap->Instanceable() || observer->GetInstanceId() != 0 ||
+            observer->InBattleground() || observer->InBattlegroundQueue())
         {
-            SendPrototypeMessage(observer, "|cffff5555Stage S.4 only permits ordinary open-world maps (InstanceId 0).|r");
+            SendPrototypeMessage(observer, "|cffff5555Start observation from an ordinary world map, outside battlegrounds and queues.|r");
             return false;
         }
 
@@ -816,6 +831,7 @@ public:
         session.targetInstanceId = target->GetInstanceId();
         session.wasGMVisible = observer->isGMVisible();
         session.hadRoot = observer->HasUnitState(UNIT_STATE_ROOT);
+        session.hadIsolated = observer->HasUnitState(UNIT_STATE_ISOLATED);
         session.hadDisableMove = observer->HasUnitFlag(UNIT_FLAG_DISABLE_MOVE);
         session.hadNonAttackable = observer->HasUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
         session.hadPacified = observer->HasUnitFlag(UNIT_FLAG_PACIFIED);
@@ -843,6 +859,15 @@ public:
             observer->SetGMVisible(false);
             observer->UpdateObjectVisibility();
         }
+
+        auto* route = observer->CustomData.GetDefault<RebornObserver::Context>(RebornObserver::Key);
+        route->mapId = target->GetMapId();
+        route->instanceId = target->GetInstanceId();
+        route->target = target->GetGUID();
+        route->origin = WorldLocation(session.returnMapId, session.returnX, session.returnY, session.returnZ, session.returnO);
+        route->returning = false;
+        // Reuse native non-participant combat/trade/group protection, not GM privilege.
+        observer->SetIsSpectator(true);
 
         // Protection starts before any relocation. This closes the old high-altitude window in
         // which the physical carrier could fall, die, and later revive at the observed target.
@@ -903,8 +928,19 @@ public:
 
         ClearAssistForParticipant(observer->GetGUID());
         RemoveViewpoint(observer);
-        bool const returning = returnToOrigin && g_RebornReturnOnStop && observer->IsInWorld();
-        RestoreProtection(observer, session, returning);
+        auto* route = RebornObserver::Get(observer);
+        // A normal character must leave a watched copy even if legacy ReturnOnStop is off.
+        bool const returning = (returnToOrigin && g_RebornReturnOnStop) ||
+            (route && (observer->GetInstanceId() != 0 || observer->IsBeingTeleported()));
+        if (route)
+            route->returning = true;
+        if (!returning)
+        {
+            if (route)
+                observer->SetIsSpectator(false);
+            RestoreProtection(observer, session, false);
+            observer->CustomData.Erase(RebornObserver::Key);
+        }
 
         if (returning)
         {
@@ -992,7 +1028,20 @@ public:
              observer->HasUnitMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)))
             ApplyFallProtection(observer);
 
-        Player* target = ObjectAccessor::FindPlayer(session.targetGuid);
+        Player* target = ObjectAccessor::FindConnectedPlayer(session.targetGuid);
+        if (target && target->IsBeingTeleported())
+        {
+            uint32 waited = 0;
+            {
+                std::lock_guard<std::mutex> lock(_mutex);
+                auto it = _sessions.find(observer->GetGUID().GetRawValue());
+                if (it != _sessions.end())
+                    waited = (it->second.targetTransferWaitMs += REBORN_CHECK_INTERVAL_MS);
+            }
+            if (waited >= g_RebornBindTimeoutMs)
+                Stop(observer, true, "target transfer timed out");
+            return;
+        }
         if (!target || !target->IsInWorld())
         {
             Stop(observer, true, "target left the world");
@@ -1008,10 +1057,53 @@ public:
         if (target->IsBeingTeleported() || target->GetMapId() != session.targetMapId ||
             target->GetInstanceId() != session.targetInstanceId)
         {
-            Stop(observer, true, "target changed map or started teleporting");
+            if (observer->IsBeingTeleported())
+                return;
+            if (!IsTargetAllowed(target))
+            {
+                Stop(observer, true, "target withdrew permission");
+                return;
+            }
+            RemoveViewpoint(observer);
+            auto* route = RebornObserver::Get(observer);
+            if (!route)
+            {
+                Stop(observer, true, "missing instance route");
+                return;
+            }
+            route->mapId = target->GetMapId();
+            route->instanceId = target->GetInstanceId();
+            observer->SetPhaseMask(target->GetPhaseMask(), true);
+            {
+                std::lock_guard<std::mutex> lock(_mutex);
+                auto it = _sessions.find(observer->GetGUID().GetRawValue());
+                if (it == _sessions.end())
+                    return;
+                it->second.targetMapId = route->mapId;
+                it->second.targetInstanceId = route->instanceId;
+                it->second.stage = RebornSpectatorStage::PendingViewpoint;
+                it->second.totalPendingMs = 0;
+                it->second.retryTimerMs = 0;
+            }
+            if (!observer->TeleportTo(route->mapId, target->GetPositionX(), target->GetPositionY(),
+                target->GetPositionZ() + 0.25f, target->GetOrientation(), TELE_TO_GM_MODE, nullptr,
+                observer->GetInstanceId() != route->instanceId))
+                Stop(observer, true, "target instance transfer failed");
             return;
         }
 
+        if (session.targetTransferWaitMs)
+        {
+            std::lock_guard<std::mutex> lock(_mutex);
+            auto it = _sessions.find(observer->GetGUID().GetRawValue());
+            if (it != _sessions.end())
+                it->second.targetTransferWaitMs = 0;
+        }
+        if (auto const* route = RebornObserver::Get(observer); route && route->returning)
+        {
+            Stop(observer, true, "instance entry rejected");
+            return;
+        }
         if (session.stage == RebornSpectatorStage::Active)
         {
             WorldObject* viewpoint = observer->GetViewpoint();
@@ -1087,7 +1179,7 @@ public:
             return;
         }
 
-        Player* target = ObjectAccessor::FindPlayer(session.targetGuid);
+        Player* target = ObjectAccessor::FindConnectedPlayer(session.targetGuid);
         std::string targetName = target ? target->GetName() : "<offline>";
         SendPrototypeMessage(
             observer,
@@ -1272,7 +1364,16 @@ public:
             }
         }
         if (hadPendingReturn)
-            RestoreFallProtection(player, abandonedReturn.hadCanFly, abandonedReturn.hadDisableGravity);
+        {
+            if (abandonedReturn.restoreSession)
+            {
+                player->SetIsSpectator(false);
+                RestoreProtection(player, abandonedReturn.original, false);
+                // Keep routing metadata through SaveToDB and map unlink; Player owns its lifetime.
+            }
+            else
+                RestoreFallProtection(player, abandonedReturn.hadCanFly, abandonedReturn.hadDisableGravity);
+        }
     }
 
     void HandlePlayerDeath(Player* killed, char const* cause)
@@ -2922,6 +3023,8 @@ private:
             return;
 
         RebornPendingReturn pending;
+        pending.original = session;
+        pending.restoreSession = RebornObserver::Active(observer);
         pending.mapId = session.returnMapId;
         pending.x = session.returnX;
         pending.y = session.returnY;
@@ -2988,7 +3091,14 @@ private:
                 std::lock_guard<std::mutex> lock(_mutex);
                 _pendingReturns.erase(observer->GetGUID().GetRawValue());
             }
-            RestoreFallProtection(observer, pending.hadCanFly, pending.hadDisableGravity);
+            if (pending.restoreSession)
+            {
+                observer->SetIsSpectator(false);
+                RestoreProtection(observer, pending.original, false);
+                observer->CustomData.Erase(RebornObserver::Key);
+            }
+            else
+                RestoreFallProtection(observer, pending.hadCanFly, pending.hadDisableGravity);
             SendPrototypeMessage(
                 observer,
                 "|cff00ff00S.6.13.3 return confirmed: the observer carrier reached its original position.|r");
@@ -3210,7 +3320,7 @@ private:
         }
 
         Map* targetMap = target->FindMap();
-        if (!targetMap || targetMap->Instanceable() || target->GetInstanceId() != 0)
+        if (!targetMap)
             return false;
 
         return IsTargetAllowed(target);
@@ -3517,6 +3627,10 @@ private:
                 observer->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
         }
 
+        if (session.hadNonAttackable)
+            observer->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+        if (session.hadIsolated)
+            observer->AddUnitState(UNIT_STATE_ISOLATED);
         if (!keepFallProtection)
             RestoreFallProtection(observer, session.hadCanFly, session.hadDisableGravity);
 

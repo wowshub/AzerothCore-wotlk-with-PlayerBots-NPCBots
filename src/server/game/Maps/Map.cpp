@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "Map.h"
 #include "Battleground.h"
 #include "CellImpl.h"
@@ -1854,7 +1855,7 @@ uint32 Map::GetPlayersCountExceptGMs(bool aliveOnly /*= false*/) const
     uint32 count = 0;
     for (auto const& ref : m_mapRefMgr)
         if (Player* player = ref.GetSource())
-            if (!player->IsGameMaster() && (!aliveOnly || (player->IsAlive() && !player->HasSpiritOfRedemptionAura())))
+            if (!player->IsGameMaster() && !RebornObserver::Active(player) && (!aliveOnly || (player->IsAlive() && !player->HasSpiritOfRedemptionAura())))
 #ifdef MOD_NPCERBOTS
         //npcbot - count npcbots as group members (event if not in group)
         {
@@ -1972,6 +1973,9 @@ Map::EnterState InstanceMap::CannotEnter(Player* player, bool loginCheck)
         return CANNOT_ENTER_ALREADY_IN_MAP;
     }
 
+    if (RebornObserver::Destination(player, GetId(), GetInstanceId()))
+        return Map::CannotEnter(player, loginCheck);
+
     // allow GM's to enter
     if (player->IsGameMaster())
         return Map::CannotEnter(player, loginCheck);
@@ -2010,7 +2014,7 @@ Map::EnterState InstanceMap::CannotEnter(Player* player, bool loginCheck)
             {
                 if (iPlayer == player) // login case, player already added to map
                     continue;
-                if (iPlayer->IsGameMaster()) // bypass GMs
+                if (iPlayer->IsGameMaster() || RebornObserver::Active(iPlayer)) // non-participants
                     continue;
                 if (!player->GetGroup()) // player has not group and there is someone inside, deny entry
                 {
@@ -2037,7 +2041,7 @@ bool InstanceMap::AddPlayerToMap(Player* player)
     if (m_resetAfterUnload) // this instance has been reset, it's not meant to be used anymore
         return false;
 
-    if (IsDungeon())
+    if (IsDungeon() && !RebornObserver::Active(player))
     {
         Group* group = player->GetGroup();
 
@@ -2103,7 +2107,7 @@ bool InstanceMap::AddPlayerToMap(Player* player)
     // this will acquire the same mutex so it cannot be in the previous block
     Map::AddPlayerToMap(player);
 
-    if (instance_data)
+    if (instance_data && !RebornObserver::Active(player))
         instance_data->OnPlayerEnter(player);
 
     return true;
@@ -2120,7 +2124,7 @@ void InstanceMap::Update(const uint32 t_diff, const uint32 s_diff, bool /*thread
 
 void InstanceMap::RemovePlayerFromMap(Player* player, bool remove)
 {
-    if (instance_data)
+    if (instance_data && !RebornObserver::Active(player))
         instance_data->OnPlayerLeave(player);
     // pussywizard: moved m_unloadTimer to InstanceMap::AfterPlayerUnlinkFromMap(), in this function if 2 players run out at the same time the instance won't close
     //if (!m_unloadTimer && m_mapRefMgr.getSize() == 1)
@@ -2252,6 +2256,8 @@ void InstanceMap::PermBindAllPlayers()
     for (MapRefMgr::iterator itr = m_mapRefMgr.begin(); itr != m_mapRefMgr.end(); ++itr)
     {
         player = itr->GetSource();
+        if (RebornObserver::Active(player))
+            continue; // Boss kills must not bind observers.
         group = player->GetGroup();
 
         // players inside an instance cannot be bound to other instances
@@ -2348,7 +2354,7 @@ Map::EnterState BattlegroundMap::CannotEnter(Player* player, bool loginCheck)
         return CANNOT_ENTER_ALREADY_IN_MAP;
     }
 
-    if (player->GetBattlegroundId() != GetInstanceId())
+    if (!RebornObserver::Destination(player, GetId(), GetInstanceId()) && player->GetBattlegroundId() != GetInstanceId())
         return CANNOT_ENTER_INSTANCE_BIND_MISMATCH;
 
     // pussywizard: no need to check player limit here, invitations are limited by Battleground::GetFreeSlotsForTeam
@@ -2359,13 +2365,18 @@ Map::EnterState BattlegroundMap::CannotEnter(Player* player, bool loginCheck)
 bool BattlegroundMap::AddPlayerToMap(Player* player)
 {
     player->m_InstanceValid = true;
-    if (IsBattleArena())
+    if (IsBattleArena() && !RebornObserver::Active(player))
         player->CastSpell(player, 100102, true);
     return Map::AddPlayerToMap(player);
 }
 
 void BattlegroundMap::RemovePlayerFromMap(Player* player, bool remove)
 {
+    if (RebornObserver::Active(player))
+    {
+        Map::RemovePlayerFromMap(player, remove);
+        return;
+    }
     if (Battleground* bg = GetBG())
     {
         bg->RemovePlayerAtLeave(player);

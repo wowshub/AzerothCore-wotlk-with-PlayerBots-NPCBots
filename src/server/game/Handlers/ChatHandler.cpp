@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "AccountMgr.h"
 #include "CellImpl.h"
 #include "RBAC.h"
@@ -156,7 +157,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
         case CHAT_MSG_TEXT_EMOTE:
         case CHAT_MSG_AFK:
         case CHAT_MSG_DND:
-        if (sender->IsSpectator())
+        if (sender->IsSpectator() && !RebornObserver::Active(sender))
         {
             recvData.rfinish();
             return;

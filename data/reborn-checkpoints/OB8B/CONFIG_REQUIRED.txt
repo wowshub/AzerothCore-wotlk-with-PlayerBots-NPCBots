@@ -1,0 +1,4 @@
+Preserve existing configs/modules/RebornSpectator.conf; set only:
+RebornSpectator.AutoCarrierProvisionEnable = 0
+RebornSpectator.AutoCarrierHideFromCharacterEnum = 1
+No full runtime configs/credentials included. Existing OB8A overwrite package remains available locally.

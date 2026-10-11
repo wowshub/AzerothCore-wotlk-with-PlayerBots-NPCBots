@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RebornObserverContext.h"
 #include "Corpse.h"
 #include "Creature.h"
 #include "GameObject.h"
@@ -38,6 +39,8 @@
 
 void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket& recvData)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     LOG_DEBUG("network", "WORLD: CMSG_AUTOSTORE_LOOT_ITEM");
     Player* player = GetPlayer();
     ObjectGuid lguid = player->GetLootGUID();
@@ -119,6 +122,8 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket& recvData)
 
 void WorldSession::HandleLootMoneyOpcode(WorldPacket& /*recvData*/)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     LOG_DEBUG("network", "WORLD: CMSG_LOOT_MONEY");
 
     Player* player = GetPlayer();
@@ -290,6 +295,8 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket& /*recvData*/)
 
 void WorldSession::HandleLootOpcode(WorldPacket& recvData)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     LOG_DEBUG("network", "WORLD: CMSG_LOOT");
 
     ObjectGuid guid;
@@ -473,6 +480,8 @@ void WorldSession::DoLootRelease(ObjectGuid lguid)
 
 void WorldSession::HandleLootMasterGiveOpcode(WorldPacket& recvData)
 {
+    if (RebornObserver::Active(GetPlayer()))
+        return;
     uint8 slotid;
     ObjectGuid lootguid, target_playerguid;
 
