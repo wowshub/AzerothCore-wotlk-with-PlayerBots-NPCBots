@@ -1,4 +1,4 @@
-﻿#ifndef _BOTMGR_H
+#ifndef _BOTMGR_H
 #define _BOTMGR_H
 
 #include "botcommon.h"
@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <mutex>
+#include <set>
 
 class bot_ai;
 class Battleground;
@@ -315,6 +316,9 @@ class AC_GAME_API BotMgr
 
         bool GetBotsHidden() const;
         void SetBotsHidden(bool hidden);
+        bool IsBotIndividuallyHidden(ObjectGuid guid) const;
+        bool HasIndividuallyHiddenBots() const { return !_individuallyHiddenBots.empty(); }
+        bool SetBotHidden(ObjectGuid guid, bool hidden);
 
         uint32 GetEngageDelayDPS() const;
         uint32 GetEngageDelayHeal() const;
@@ -370,6 +374,7 @@ class AC_GAME_API BotMgr
 
         Player* const _owner;
         BotMap _bots;
+        std::set<ObjectGuid> _individuallyHiddenBots; // Session-only; never dismisses ownership.
         std::list<ObjectGuid> _removeList;
         std::list<std::pair<ObjectGuid, BotRemoveType>> _delayedRemoveList;
         DPSTracker* const _dpstracker;

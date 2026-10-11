@@ -2671,7 +2671,7 @@ public:
             return false;
         }
 
-        if (owner->GetBotMgr()->GetBotsHidden())
+        if (owner->GetBotMgr()->GetBotsHidden() || owner->GetBotMgr()->HasIndividuallyHiddenBots())
         {
             owner->GetBotMgr()->SetBotsHidden(false);
             handler->SendSysMessage("Bots unhidden");

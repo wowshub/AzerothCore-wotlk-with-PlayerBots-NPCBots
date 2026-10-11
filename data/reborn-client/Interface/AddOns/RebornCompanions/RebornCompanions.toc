@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: RebornCompanions - 雇佣随从
+## Notes: MultiBot雇佣NPCbot名单与单个/批量收起召回
+## Version: NBC2
+## OptionalDeps: MultiBot
+Main.lua

@@ -1221,7 +1221,7 @@ void BotMgr::Update(uint32 diff)
     Creature* bot;
     bot_ai* ai;
     bool partyCombat = IsPartyInCombat(false);
-    bool restrictBots = RestrictBots(_bots.begin()->second, false);
+    // NBC1: restriction is per companion, not per first map entry.
 
     _aoespots.clear();
     if (partyCombat)
@@ -1233,6 +1233,7 @@ void BotMgr::Update(uint32 diff)
     {
         //guid = itr->first;
         bot = itr->second;
+        bool const restrictBots = RestrictBots(bot, false);
         ai = bot->GetBotAI();
 
         if (ai->IAmFree())
@@ -1307,7 +1308,7 @@ bool BotMgr::RestrictBots(Creature const* bot, bool add) const
     if (_owner->IsInFlight())
         return true;
 
-    if (_data->HasFlag(NPCBOT_MGR_FLAG_HIDE_BOTS))
+    if (_data->HasFlag(NPCBOT_MGR_FLAG_HIDE_BOTS) || (bot && IsBotIndividuallyHidden(bot->GetGUID())))
         return true;
 
     Map const* currMap = _owner->GetMap();
@@ -1842,6 +1843,7 @@ void BotMgr::RemoveAllBots(uint8 removetype)
 //Bot is being abandoned by player
 void BotMgr::RemoveBot(ObjectGuid guid, uint8 removetype)
 {
+    _individuallyHiddenBots.erase(guid);
     BotMap::const_iterator itr = _bots.find(guid);
     ASSERT(itr != _bots.end(), "Trying to remove bot which does not belong to this botmgr(a)!!");
     //ASSERT(_owner->IsInWorld(), "Trying to remove bot while not in world(a)!!");
@@ -2853,6 +2855,27 @@ bool BotMgr::GetBotsHidden() const
 void BotMgr::SetBotsHidden(bool hidden)
 {
     hidden ? _data->SetFlag(NPCBOT_MGR_FLAG_HIDE_BOTS) : _data->RemoveFlag(NPCBOT_MGR_FLAG_HIDE_BOTS);
+    _individuallyHiddenBots.clear(); // Existing unhide remains a recovery route for all companions.
+}
+
+bool BotMgr::IsBotIndividuallyHidden(ObjectGuid guid) const
+{
+    return _individuallyHiddenBots.count(guid) != 0;
+}
+bool BotMgr::SetBotHidden(ObjectGuid guid, bool hidden)
+{
+    if (_bots.find(guid) == _bots.end())
+        return false;
+    // Expand an existing global hide into individual flags before changing one bot.
+    if (GetBotsHidden())
+    {
+        for (auto const& pair : _bots)
+            _individuallyHiddenBots.insert(pair.first);
+        _data->RemoveFlag(NPCBOT_MGR_FLAG_HIDE_BOTS);
+    }
+    if (hidden) _individuallyHiddenBots.insert(guid);
+    else _individuallyHiddenBots.erase(guid);
+    return true;
 }
 
 uint32 BotMgr::GetEngageDelayDPS() const

@@ -1,0 +1,11 @@
+{
+  "README.md": "45171bb195330e24f51e888e46b232e02565957987d25665265ca25d73a0a75a",
+  "01_覆盖到源代码根目录/modules/mod-reborn-companions/CMakeLists.txt": "733bf8efac8265a8d89eacbe91dcd0958ca2999a799a04310fea63c1660be7c5",
+  "01_覆盖到源代码根目录/modules/mod-reborn-companions/src/RebornCompanions.cpp": "76069e22c6d2bed9895033a2d7daa555cba8191ffea015518e7e93b710227793",
+  "01_覆盖到源代码根目录/src/server/game/AI/NpcBots/botcommands.cpp": "63dced23c21eeb4d956b0b566bca3782bbdfa48682269bddb1b29500b80bf4db",
+  "01_覆盖到源代码根目录/src/server/game/AI/NpcBots/botmgr.cpp": "1650d3552a6baca1db67e63c4aecfeb58bca580f87aa71f96b7b78af556d6279",
+  "01_覆盖到源代码根目录/src/server/game/AI/NpcBots/botmgr.h": "31725e02c1bbde0310c4a870f4a09eab3b23fae1b9cbfb51e5ab692c9098839a",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornCompanions/Main.lua": "567173ad1b66ecf61298df21e0f1535b8c0c2fd72c6c5f11aecb6ff36378fcf7",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornCompanions/RebornCompanions.toc": "6a842c7cd58ad1ce3a071b1835a1e2656fde59168733f42520187ce6c5932deb",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornCompanions/Art/Companions.blp": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81"
+}
