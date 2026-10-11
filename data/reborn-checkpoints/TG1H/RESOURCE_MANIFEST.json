@@ -1,0 +1,12 @@
+{
+  "README.md": "3bc8cb637c136e9cf3dc85d8b3a7ea7b5a7caaf821e958789d7cbebf17df9287",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/BotPresentation.lua": "186d95625d264175c10694d3c0c121ad16715da053c7e4ef4985e274d63065ae",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/Core.lua": "4d135cce7929e5cb9a801eee1c14d3fb2f125f6c5d1edf6e0b66ae5dfda0805c",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/Data.lua": "b7cad2f7f202781876d21ca48ca9e0cae6c8b5d2df8b8c380ae64edd0b00504a",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/EntryPoints.lua": "16649d4f8b82cbf43d4e4484bf3976e796c21de9a1d57a246c669b95718f78af",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/MultiBotCompat.lua": "5196620a75a3cb9ff0d677d98025091124751f387ae5baea65eda865bed15304",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc": "eeb7417c04ab58e30fb3e4fb857d0c823f965af1cb5a701ac2e3bb412e66515d",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/UI.lua": "25d59aef5dc94b34d1862bfafb8f6944e2426a49be37b4894ef6e306eac2cb42",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/Art/Backdrop.blp": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81",
+  "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd"
+}

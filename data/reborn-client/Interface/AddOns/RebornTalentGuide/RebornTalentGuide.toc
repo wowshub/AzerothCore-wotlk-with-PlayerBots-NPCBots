@@ -1,0 +1,14 @@
+## Interface: 30300
+## Title: Reborn Talent Guide | 天赋与雕文推荐
+## Notes: TG1F talent guide and unified quick entries
+## Version: TG1F
+## OptionalDeps: MultiBot, DragonUI, RebornEquipmentVault, RebornSpectatorAutoWatch
+## SavedVariables: RebornTGEntrySettings
+Data.lua
+Core.lua
+UI.lua
+MultiBotCompat.lua
+
+EntryPoints.lua
+
+BotPresentation.lua
