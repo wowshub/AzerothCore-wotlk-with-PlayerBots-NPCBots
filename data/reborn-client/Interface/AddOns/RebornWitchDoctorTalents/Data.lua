@@ -101,3 +101,6 @@ for _,n in ipairs(RebornWDTreeData) do if n.ID==6026 then n.RequiredLevel=57 end
 
 -- WD137: official spell level59; previous node6026 remains required.
 for _,n in ipairs(RebornWDTreeData) do if n.ID==29740 then n.RequiredLevel=59 end end
+
+-- WD138B current Tiki; no old-node order changes.
+for _,n in ipairs(RebornWDTreeData) do if n.ID==7133 then n.RequiredLevel=24 end end

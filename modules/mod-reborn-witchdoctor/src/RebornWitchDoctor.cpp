@@ -2170,6 +2170,13 @@ class spell_reborn_wd46a_bottle : public SpellScript
     SpellCastResult CheckDoctor()
     {
         Player* player=GetCaster()->ToPlayer();
+        if(IsDoctor(player) && player->HasSpell(9003958) && player->HasAura(9003958,player->GetGUID()) &&
+            (player->HasAura(9003942) || player->HasAura(9003944)))
+        {
+            if(player->GetSession()) ChatHandler(player->GetSession()).SendNotification(
+                "基底生效期间请施放提基泼洒。 / Cast Tiki Splash while your Base is active.");
+            return SPELL_FAILED_DONT_REPORT;
+        }
         return IsDoctor(player) && player->IsAlive() && player->HasSpell(GetSpellInfo()->Id) &&
             player->GetLevel()>=GetSpellInfo()->SpellLevel ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
@@ -3295,6 +3302,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing133.inc"
 #include "RebornWitchDoctorBrewing134.inc"
 #include "RebornWitchDoctorBrewing137.inc"
+#include "RebornWitchDoctorBrewing138.inc"
 #include "RebornWitchDoctorSpiritLink135.inc"
 #include "RebornWitchDoctorBrewing132.inc"
 #include "RebornWitchDoctorBrewing130.inc"
@@ -3329,6 +3337,8 @@ void AddRebornWitchDoctorScripts()
     WD88A::Register();
     WD91A::Register();
     RegisterSpellScript(spell_reborn_wd120_brewing);
+    RegisterSpellScript(spell_reborn_wd138_tiki);
+    RegisterSpellScript(aura_reborn_wd138_amount);
     RegisterSpellScript(aura_reborn_wd137_master);
     RegisterSpellScript(aura_reborn_wd129_thistle);
     new wd129_senjin_events();
