@@ -670,6 +670,30 @@ public:
             handler->PSendSysMessage("Transport offset: {:0.2f}, {:0.2f}, {:0.2f}, {:0.2f}", object->m_movementInfo.transport.pos.GetPositionX(), object->m_movementInfo.transport.pos.GetPositionY(), object->m_movementInfo.transport.pos.GetPositionZ(), object->m_movementInfo.transport.pos.GetOrientation());
         }
 
+        // RebornWOW DCGPS1A: one machine-readable line, always in this English shape
+        // whatever the client language, so the DungeonClear addon can offer it as
+        // copy-ready text (.go xyz, SQL, event constants). For a creature it carries
+        // the entry and spawn id; for a player the character guid. The name is last
+        // because it may contain spaces.
+        char const* kind = "object";
+        uint32 entry = 0;
+        uint64 spawn = 0;
+        if (Creature const* creature = object->ToCreature())
+        {
+            kind = "creature";
+            entry = creature->GetEntry();
+            spawn = creature->GetSpawnId();
+        }
+        else if (Player const* player = object->ToPlayer())
+        {
+            kind = "player";
+            spawn = player->GetGUID().GetCounter();
+        }
+        handler->PSendSysMessage("[gps] X {:.4f} Y {:.4f} Z {:.4f} O {:.4f} map {} zone {} area {} instance {} phase {} type {} entry {} spawn {} name {}",
+                                 object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), object->GetOrientation(),
+                                 object->GetMapId(), zoneId, areaId, object->GetInstanceId(), object->GetPhaseMask(),
+                                 kind, entry, spawn, object->GetName());
+
         return true;
     }
 
