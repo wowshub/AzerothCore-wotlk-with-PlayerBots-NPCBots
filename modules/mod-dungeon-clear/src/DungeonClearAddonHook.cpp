@@ -32,6 +32,7 @@
 #include "StringFormat.h"
 #include "Util/DcSpectator.h"
 #include "Util/DcSelfBot.h"
+#include "DcInstanceReset.h"
 #include "TestRun/DcTestRunManager.h"
 #include "AiFactory.h"
 #include "Item.h"
@@ -549,6 +550,20 @@ public:
                 ok = DcSpectator::Toggle(player, &whyNot);
             if (!ok)
                 SendAddonError(player, whyNot);
+            return;
+        }
+
+        // One-click dungeon reset (RebornWOW DCRST1A): acts on the sending player
+        // and its group directly, never dispatched to a tank bot. Progress and
+        // results arrive as system messages; a refusal also goes to the panel.
+        if (subCmd == "instreset")
+        {
+            std::string whyNot;
+            if (!DcInstanceReset::Request(player, &whyNot))
+            {
+                ChatHandler(player->GetSession()).SendSysMessage(("|cff33ccff[副本重置]|r " + whyNot).c_str());
+                SendAddonError(player, whyNot);
+            }
             return;
         }
 

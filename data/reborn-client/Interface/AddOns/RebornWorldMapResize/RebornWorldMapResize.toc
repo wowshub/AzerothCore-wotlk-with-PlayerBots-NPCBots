@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: Reborn World Map Resize
+## Title-zhCN: 世界地图小窗口缩放
+## Notes: Drag the corner grip of the windowed world map to resize it. Right-click the grip to reset.
+## Notes-zhCN: 拖动小窗口世界地图右下角的拖动角来缩放；右键拖动角恢复默认大小。
+## Author: RebornWOW / Claude (MAPRS1A, MAPRS1B)
+## Version: 1.0.1
+## SavedVariables: RebornWorldMapResizeDB
+
+RebornWorldMapResize.lua
