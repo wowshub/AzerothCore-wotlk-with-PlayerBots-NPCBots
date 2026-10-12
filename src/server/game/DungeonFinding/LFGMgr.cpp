@@ -615,6 +615,35 @@ namespace lfg
         LfgJoinResultData joinData;
         LfgGuidSet players;
         uint32 rDungeonId = 0;
+
+        // RebornWOW LFGFIX1A: a full LFG group whose random dungeon was left unfinished (walked out
+        // mid-run, or the server restarted and reloaded the group as "in dungeon") was treated as
+        // "continue the current dungeon" and refused below with PARTY_NOT_MEET_REQS until the party
+        // was disbanded and re-formed -- routine for playerbot parties. When nobody is inside that
+        // dungeon any more, close it out the way finishing it would, so a new queue starts normally.
+        // A party still inside its dungeon keeps the stock protection.
+        if (grp && grp->isLFGGroup() && grp->GetMembersCount() >= MAXGROUPSIZE &&
+            GetState(gguid) != LFG_STATE_FINISHED_DUNGEON)
+        {
+            uint32 const lfgMapId = GetDungeonMapId(gguid);
+            bool insideDungeon = false;
+            if (lfgMapId)
+                for (GroupReference* itr = grp->GetFirstMember(); itr != nullptr && !insideDungeon; itr = itr->next())
+                    if (Player* member = itr->GetSource())
+                        insideDungeon = member->IsInWorld() && member->GetMapId() == lfgMapId;
+
+            if (!insideDungeon)
+            {
+                LOG_DEBUG("lfg", "LFGMgr::Join: [{}] abandoned LFG dungeon (map {}) closed before a new join", gguid.ToString(), lfgMapId);
+                SetState(gguid, LFG_STATE_FINISHED_DUNGEON);
+                for (GroupReference* itr = grp->GetFirstMember(); itr != nullptr; itr = itr->next())
+                    if (Player* member = itr->GetSource())
+                        if (GetState(member->GetGUID()) == LFG_STATE_DUNGEON)
+                            SetState(member->GetGUID(), LFG_STATE_FINISHED_DUNGEON);
+                _SaveToDB(gguid);
+            }
+        }
+
         bool isContinue = grp && grp->isLFGGroup() && GetState(gguid) != LFG_STATE_FINISHED_DUNGEON;
 
         if (grp && (grp->isBGGroup() || grp->isBFGroup()))
@@ -3142,11 +3171,22 @@ namespace lfg
     LfgDungeonSet LFGMgr::GetRandomAndSeasonalDungeons(uint8 level, uint8 expansion)
     {
         LfgDungeonSet randomDungeons;
+        // RebornWOW LFG81A: this realm's level cap is above 80. With
+        // DungeonAccessRequirements.LFGLevelDBCOverride on, the per-dungeon lock
+        // already reads its upper limit from dungeon_access_template (0 = none),
+        // but this list still used the DBC maxlevel, so a level 81+ character saw
+        // no random entry at all. Keep endgame random entries (DBC maxlevel at the
+        // WotLK cap or above) open past their maxlevel, the way battleground
+        // brackets fold higher levels into the top bracket. Lower-tier randoms
+        // (classic, TBC) keep their range, so an 81 is never sent to a level 60 run.
+        bool const levelOverride = sWorld->getBoolConfig(CONFIG_DUNGEON_ACCESS_REQUIREMENTS_LFG_DBC_LEVEL_OVERRIDE);
         for (lfg::LFGDungeonContainer::const_iterator itr = LfgDungeonStore.begin(); itr != LfgDungeonStore.end(); ++itr)
         {
             lfg::LFGDungeonData const& dungeon = itr->second;
+            bool const levelFits = level <= dungeon.maxlevel ||
+                                   (levelOverride && dungeon.maxlevel >= DEFAULT_MAX_LEVEL);
             if ((dungeon.type == lfg::LFG_TYPE_RANDOM || (dungeon.seasonal && sLFGMgr->IsSeasonActive(dungeon.id)))
-                    && dungeon.expansion <= expansion && dungeon.minlevel <= level && level <= dungeon.maxlevel)
+                    && dungeon.expansion <= expansion && dungeon.minlevel <= level && levelFits)
                 randomDungeons.insert(dungeon.Entry());
         }
         return randomDungeons;
