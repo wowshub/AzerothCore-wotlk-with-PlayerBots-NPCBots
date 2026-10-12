@@ -1,0 +1,58 @@
+[
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Profiles.lua",
+    "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Profiles.lua",
+    "input_sha256": null,
+    "output_sha256": "96bccfaffb2a307fa7b4c68e20c19a5b75156262caa9b229d0b7a8162addc4ac",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+    "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "input_sha256": "b4af0c632afb76d7f0993dbc690121414da3d5acd66743fff78cc81dd256b465",
+    "output_sha256": "dc10719966dc5caa7c132d6bf922385c69e8c95e1d5a31d2d14f014e73a45986",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Unlock.lua",
+    "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Unlock.lua",
+    "input_sha256": null,
+    "output_sha256": "4bd77ee2a5da985f0b8b0d6315a37ef65087bddbcc43bc91192271ad36395e54",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "input_sha256": "4ade72798d5e31f4bd4a24667c1f19bc49d7dab63ed172b228006175ba724338",
+    "output_sha256": "dcfe1973d88522ecf823855923c7fd2a188cf73c6f9c68ec5e1a94a3d49b3034",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261011beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Profiles.lua",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Profiles.lua",
+    "input_sha256": "0494335ba8ea2dd5c43ae6cefc5dc811e0bef0a8ec65172918517fd480700849",
+    "output_sha256": "96bccfaffb2a307fa7b4c68e20c19a5b75156262caa9b229d0b7a8162addc4ac",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261011beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "input_sha256": "b4af0c632afb76d7f0993dbc690121414da3d5acd66743fff78cc81dd256b465",
+    "output_sha256": "dc10719966dc5caa7c132d6bf922385c69e8c95e1d5a31d2d14f014e73a45986",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261011beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Unlock.lua",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Unlock.lua",
+    "input_sha256": null,
+    "output_sha256": "4bd77ee2a5da985f0b8b0d6315a37ef65087bddbcc43bc91192271ad36395e54",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261011Ascend\\configs\\modules\\RebornWitchDoctor.conf",
+    "path": "03_覆盖到服务端根目录/configs/modules/RebornWitchDoctor.conf",
+    "input_sha256": "7a3ae416e89b10831c5b679a85f9e156c18471435db217f49e3fe2b135bc2e1b",
+    "output_sha256": "7462e3bf43be7ad56ce056b2e7be7c758c07dc504476578d7544e7b20e512aae",
+    "hash_mode": "raw"
+  }
+]

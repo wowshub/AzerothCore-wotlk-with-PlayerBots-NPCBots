@@ -15,6 +15,7 @@ HexCodec.lua
 Allocation.lua
 Eligibility.lua
 BuildNames.lua
+Unlock.lua
 Profiles.lua
 Home.lua
 Panel.lua

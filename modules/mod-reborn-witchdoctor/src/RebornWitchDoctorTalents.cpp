@@ -53,6 +53,8 @@ struct State : DataMap::Base
     uint32 unlocked=0;
     uint32 quoteSlot=0, quoteGold=0, quoteLevel=0;
     bool quoteValid=false;
+    bool panelQuoteValid=false; // WD141: distinct from NPC confirmation.
+    uint32 panelQuoteToken=0,panelQuoteRevision=0;
     std::chrono::steady_clock::time_point quoteTime;
     bool pendingActionRestore=false;
     ActionLayout pendingActions{};
@@ -419,7 +421,7 @@ void TrainerOptions(Player* p)
 {
     if (!ProfileReady(p,false)) return;
     State* s=p->CustomData.GetDefault<State>(Key);
-    s->quoteValid=false;
+    s->quoteValid=false;s->panelQuoteValid=false;
     uint32 level=0,gold=0;
     if (s->unlocked>=3 || !PurchasePolicy(s->unlocked,level,gold)) return;
     s->quoteSlot=s->unlocked;s->quoteLevel=level;s->quoteGold=gold;
@@ -465,6 +467,47 @@ void TrainerPurchase(Player* p)
     { s->loaded=false;ProfileReply(p,"database");return; } // Receipt already committed; no second charge.
     ProfileReply(p,"ok");
     ChatHandler(p->GetSession()).SendSysMessage("WD16: 保存方案已永久解锁，切换不再收费。 / Build unlocked permanently; switching is free.");
+}
+
+// WD141: panel and NPC share TrainerPurchase's transaction and pricing policy.
+bool PanelUnlockQuote(ChatHandler* h,uint32 sequence,uint32 revision,uint32 slot)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if(!Doctor(p)) return false;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    s->panelQuoteValid=false;s->quoteValid=false;
+    auto error=[&](char const* reason) { h->PSendSysMessage("WD141|{}|error|{}",sequence,reason);return true; };
+    if(!ProfileReady(p,false)) return error("unavailable");
+    if(s->layoutMismatch || !s->hexProtocol || revision!=s->revision) return error("refresh");
+    if(slot<1 || slot>2 || slot!=s->unlocked) return error("slot");
+    uint32 level=0,gold=0;
+    if(!PurchasePolicy(slot,level,gold)) return error("disabled");
+    s->quoteSlot=slot;s->quoteGold=gold;s->quoteLevel=level;
+    s->quoteTime=std::chrono::steady_clock::now();
+    s->panelQuoteRevision=revision;
+    if(++s->panelQuoteToken==0) ++s->panelQuoteToken;
+    s->panelQuoteValid=true;
+    h->PSendSysMessage("WD141|{}|quote|{}|{}|{}|{}|{}",sequence,revision,slot,s->panelQuoteToken,level,gold);
+    return true;
+}
+bool PanelUnlockBuy(ChatHandler* h,uint32 sequence,uint32 token,uint32 revision,uint32 slot)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if(!Doctor(p)) return false;
+    State* s=p->CustomData.GetDefault<State>(Key);
+    bool valid=s->panelQuoteValid && token==s->panelQuoteToken && revision==s->panelQuoteRevision && slot==s->quoteSlot;
+    s->panelQuoteValid=false; // every confirmation is single-use, including failures.
+    auto error=[&](char const* reason) { h->PSendSysMessage("WD141|{}|error|{}",sequence,reason);return true; };
+    if(!valid || std::chrono::steady_clock::now()-s->quoteTime>std::chrono::seconds(60)) return error("expired");
+    if(!s->loaded || s->layoutMismatch || !s->hexProtocol || revision!=s->revision) return error("refresh");
+    // TrainerPurchase rechecks configuration, live ownership, level, money and safe state,
+    // then commits the existing unique purchase receipt and gold in one transaction.
+    s->quoteValid=true;
+    TrainerPurchase(p);
+    if(!s->loaded) return error("verify");
+    if(s->unlocked<=slot) return error("failed");
+    h->PSendSysMessage("WD141|{}|ok|{}",sequence,slot);
+    return true;
 }
 
 // WD64A: read-only server projection. This never awards spells or talent points.
@@ -681,6 +724,8 @@ public:
     ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable cmds={
+            {"wd141quote",PanelUnlockQuote,SEC_PLAYER,Console::No},
+            {"wd141buy",PanelUnlockBuy,SEC_PLAYER,Console::No},
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
             {"wd67join",AEJoin,SEC_PLAYER,Console::No},

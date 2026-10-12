@@ -1,0 +1,9 @@
+{
+  "lua_interaction": 26,
+  "server_command_scenarios": 16,
+  "server_transactions": "mocked; existing transaction unchanged",
+  "cpp_translation_unit": "MSVC /Zs passed; existing C++23 stdfloat warning only",
+  "lua_syntax": "passed",
+  "game": "pending",
+  "production_sql": "not executed"
+}
