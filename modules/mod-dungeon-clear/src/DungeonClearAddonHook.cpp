@@ -33,6 +33,7 @@
 #include "Util/DcSpectator.h"
 #include "Util/DcSelfBot.h"
 #include "DcInstanceReset.h"
+#include "DcDungeonQueue.h"
 #include "TestRun/DcTestRunManager.h"
 #include "AiFactory.h"
 #include "Item.h"
@@ -564,6 +565,14 @@ public:
                 ChatHandler(player->GetSession()).SendSysMessage(("|cff33ccff[副本重置]|r " + whyNot).c_str());
                 SendAddonError(player, whyNot);
             }
+            return;
+        }
+
+        // Continuous clear (RebornWOW DCQ1A): a queue of dungeons run one after
+        // another for the sending player's party. Handled in-process.
+        if (subCmd == "queue")
+        {
+            DcDungeonQueue::HandleAddon(player, param);
             return;
         }
 

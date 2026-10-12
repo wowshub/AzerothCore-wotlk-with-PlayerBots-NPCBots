@@ -31,6 +31,10 @@ namespace DcInstanceReset
 {
     // False with *whyNot set when the request is refused up front.
     bool Request(Player* leader, std::string* whyNot);
+
+    // RebornWOW DCQ1A: true while a requested reset is still waiting for the
+    // party to leave the dungeon (the continuous-clear queue waits on it).
+    bool IsPending(Player* leader);
 }
 
 #endif  // _DC_INSTANCE_RESET_H

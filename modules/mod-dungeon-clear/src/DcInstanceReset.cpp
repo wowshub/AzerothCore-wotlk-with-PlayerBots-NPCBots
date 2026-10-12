@@ -77,6 +77,11 @@ namespace
 
 namespace DcInstanceReset
 {
+    bool IsPending(Player* leader)
+    {
+        return leader && g_pending.count(leader->GetGUID().GetCounter()) != 0;
+    }
+
     bool Request(Player* leader, std::string* whyNot)
     {
         auto refuse = [whyNot](std::string const& text)
@@ -238,9 +243,17 @@ public:
         for (auto it = g_pending.begin(); it != g_pending.end();)
         {
             Player* leader = ObjectAccessor::FindConnectedPlayer(ObjectGuid::Create<HighGuid::Player>(it->first));
-            if (!leader || !leader->IsInWorld())
+            if (!leader)
             {
                 it = g_pending.erase(it);
+                continue;
+            }
+            // RebornWOW DCQ1B: the leader is out of the world while its own
+            // teleport out is in flight; that is the normal case here, not a
+            // logout. Wait for it (the deadline below still applies).
+            if (!leader->IsInWorld())
+            {
+                ++it;
                 continue;
             }
 

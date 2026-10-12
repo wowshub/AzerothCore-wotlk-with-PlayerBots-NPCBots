@@ -13,6 +13,7 @@ void AddSC_dungeon_clear_queue_fill();
 void AddSC_dungeon_clear_bg_queue_fill();
 void AddSC_dungeon_clear_lab();
 void AddSC_dungeon_clear_instance_reset();  // RebornWOW DCRST1A
+void AddSC_dungeon_clear_dungeon_queue();   // RebornWOW DCQ1A
 
 void Addmod_dungeon_clearScripts()
 {
@@ -23,4 +24,5 @@ void Addmod_dungeon_clearScripts()
     AddSC_dungeon_clear_bg_queue_fill();
     AddSC_dungeon_clear_lab();
     AddSC_dungeon_clear_instance_reset();
+    AddSC_dungeon_clear_dungeon_queue();
 }

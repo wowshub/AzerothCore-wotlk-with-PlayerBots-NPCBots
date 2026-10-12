@@ -7,6 +7,7 @@
 #include "Ai/Dungeon/DungeonClear/Data/HealLeashRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "TestRun/DcTestRunManager.h"
+#include "DcDungeonQueue.h"
 
 #include <algorithm>
 #include <cmath>
@@ -345,6 +346,9 @@ namespace DcActionShared
         // Run-end observer for the `.dc test` harness — cheap GUID compare,
         // no-op unless this leader is the monitored test run's tank.
         DcTestRunManager::Instance().OnRunDisabled(bot, reason);
+
+        // Continuous clear (RebornWOW DCQ1A): queued to the world thread.
+        DcDungeonQueue::OnRunDisabled(bot, reason);
     }
 
 
