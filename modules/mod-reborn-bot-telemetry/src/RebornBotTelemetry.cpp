@@ -40,6 +40,7 @@
 #include "PlayerbotAI.h"
 #include "Playerbots.h"
 #include "ScriptMgr.h"
+#include "CombatManager.h"
 #include "Timer.h"
 #include "UnitScript.h"
 #include "WorldScript.h"
@@ -70,6 +71,13 @@ namespace
         bool fallLog = true;
         float fallMinDrop = 10.0f;
         std::string fallFile = "dc_falls.jsonl";
+        // TELE1A: a fight with nobody dealing or receiving damage or healing for
+        // this long is closed ("endedBy":"idle") instead of swallowing every later
+        // fight while some unreachable mob keeps the party combat-flagged.
+        uint32 idleEndMs = 30000;
+        // TELE1A: after this long without damage/heal, log who is still in combat
+        // and with what, every 30 s while it lasts.
+        uint32 holderLogAfterMs = 15000;
     } cfg;
 
     // Accumulated from the combat hooks (map threads), keyed by player guid.
@@ -79,6 +87,7 @@ namespace
         uint64 dmgTaken = 0;
         uint64 healDone = 0;
         uint32 deaths = 0;
+        uint32 lastMs = 0;  // TELE1A: getMSTime() of this player's last damage/heal event
     };
     std::mutex countersLock;
     std::unordered_map<ObjectGuid::LowType, Counters> counters;
@@ -102,8 +111,14 @@ namespace
         std::string bossName;
         std::unordered_map<ObjectGuid::LowType, MemberSample> members;
         std::unordered_set<ObjectGuid> enemies;
+        // TELE1A
+        uint32 lastHolderLogMs = 0;
+        std::unordered_map<ObjectGuid::LowType, std::string> names;  // for a shutdown write with nobody online
     };
     std::unordered_map<ObjectGuid::LowType, Fight> fights;
+    // TELE1A: group guid -> getMSTime() an idle fight was closed. While the party
+    // stays flagged with no new damage/heal after that, no new fight is opened.
+    std::unordered_map<ObjectGuid::LowType, uint32> idleClosed;
     uint32 sampleTimer = 0;
 
     // Fall recorder (world thread only): recent positions per player, oldest first.
@@ -176,7 +191,10 @@ namespace
         return tank ? "tank" : heal ? "heal" : "dps";
     }
 
-    void EndFight(Fight& fight)
+    // endedBy: "combat" (everyone out of combat), "idle" (TELE1A), "vanished",
+    // "shutdown". allowAbsent writes members that are no longer online from the
+    // cached names (the final shutdown hook runs after every player is kicked).
+    void EndFight(Fight& fight, char const* endedBy = "combat", bool allowAbsent = false)
     {
         uint32 const durationMs = getMSTimeDiff(fight.startMs, fight.lastCombatMs);
         fight.active = false;
@@ -223,7 +241,27 @@ namespace
         {
             Player* player = ObjectAccessor::FindConnectedPlayer(ObjectGuid::Create<HighGuid::Player>(low));
             if (!player)
+            {
+                if (!allowAbsent)
+                    continue;
+                Counters const& c = taken[low];
+                MemberSample const& s = fight.members[low];
+                auto const name = fight.names.find(low);
+                js << (first ? "" : ",")
+                   << "{\"guid\":" << low
+                   << ",\"name\":\"" << JsonEscape(name != fight.names.end() ? name->second : std::string()) << "\""
+                   << ",\"class\":0,\"race\":0,\"level\":0,\"specTab\":0"
+                   << ",\"role\":\"unknown\",\"specRole\":\"unknown\",\"tank\":false,\"heal\":false,\"bot\":false,\"ilvl\":0"
+                   << ",\"dmgDone\":" << c.dmgDone
+                   << ",\"healDone\":" << c.healDone
+                   << ",\"dmgTaken\":" << c.dmgTaken
+                   << ",\"deaths\":" << c.deaths
+                   << ",\"lowHpMs\":" << s.lowHpMs
+                   << ",\"critHpMs\":" << s.critHpMs
+                   << ",\"absent\":true}";
+                first = false;
                 continue;
+            }
             ++present;
             if (player->IsAlive())
                 ++alive;
@@ -257,9 +295,10 @@ namespace
                << "}";
             first = false;
         }
-        js << "],\"wipe\":" << ((present > 0 && alive == 0) ? "true" : "false") << "}";
+        js << "],\"wipe\":" << ((present > 0 && alive == 0) ? "true" : "false")
+           << ",\"endedBy\":\"" << endedBy << "\"}";
 
-        if (present == 0)
+        if (present == 0 && !allowAbsent)
             return;
 
         std::ofstream out(cfg.file, std::ios::app);
@@ -385,6 +424,42 @@ namespace
             track.recent.erase(track.recent.begin());
     }
 
+    // TELE1A: name what is keeping a quiet party in combat.
+    void LogHolders(std::vector<Player*> const& members, Map* map, Fight& fight, uint32 idleMs, uint32 now)
+    {
+        fight.lastHolderLogMs = now != 0 ? now : 1u;
+        std::ostringstream os;
+        for (Player* member : members)
+        {
+            if (!member->IsInCombat())
+                continue;
+            os << " | " << member->GetName() << (member->IsAlive() ? "" : "(dead)");
+            if (Unit* victim = member->GetVictim())
+                os << " victim=" << victim->GetName() << "(" << victim->GetEntry() << ")";
+            os << " attackers=" << member->getAttackers().size() << " refs:";
+            uint32 shown = 0;
+            for (auto const& kv : member->GetCombatManager().GetPvECombatRefs())
+            {
+                CombatReference* const ref = kv.second;
+                Unit* const other = ref ? ref->GetOther(member) : nullptr;
+                if (!other)
+                    continue;
+                if (++shown > 5)
+                {
+                    os << " ...";
+                    break;
+                }
+                os << " " << other->GetName() << "(" << other->GetEntry() << ") "
+                   << uint32(member->GetDistance(other)) << "yd "
+                   << uint32(other->GetHealthPct()) << "% z" << int32(other->GetPositionZ())
+                   << (other->GetCombatManager().IsInEvadeMode() ? " evading" : "");
+            }
+        }
+        LOG_INFO("module", "TELE1A: map {} instance {} fight {}s, no damage/heal for {}s, still in combat:{}",
+                 map ? map->GetId() : 0, map ? map->GetInstanceId() : 0,
+                 getMSTimeDiff(fight.startMs, now) / 1000, idleMs / 1000, os.str());
+    }
+
     void Sample()
     {
         uint32 const now = getMSTime();
@@ -434,6 +509,27 @@ namespace
 
             if (inCombat)
             {
+                // TELE1A: last damage/heal by anyone in this party.
+                uint32 lastActivity = 0;
+                {
+                    std::lock_guard<std::mutex> guard(countersLock);
+                    for (Player* member : view.members)
+                    {
+                        auto const c = counters.find(member->GetGUID().GetCounter());
+                        if (c != counters.end() && c->second.lastMs &&
+                            (!lastActivity || int32(c->second.lastMs - lastActivity) > 0))
+                            lastActivity = c->second.lastMs;
+                    }
+                }
+                // An idle-closed fight stays closed until something actually happens.
+                auto const closed = idleClosed.find(entry.first);
+                if (closed != idleClosed.end())
+                {
+                    if (!lastActivity || int32(lastActivity - closed->second) <= 0)
+                        continue;
+                    idleClosed.erase(closed);
+                }
+
                 if (!fight.active)
                 {
                     fight = Fight();
@@ -448,6 +544,7 @@ namespace
 
                 for (Player* member : view.members)
                 {
+                    fight.names[member->GetGUID().GetCounter()] = member->GetName();
                     MemberSample& s = fight.members[member->GetGUID().GetCounter()];
                     float const pct = member->GetHealthPct();
                     if (member->IsAlive() && pct < 50.0f)
@@ -466,10 +563,25 @@ namespace
                         }
                     }
                 }
+
+                // TELE1A: flagged, but nobody has dealt or taken damage or healing.
+                uint32 const activity = (lastActivity && int32(lastActivity - fight.startMs) > 0) ? lastActivity : fight.startMs;
+                uint32 const idleMs = getMSTimeDiff(activity, now);
+                if (cfg.holderLogAfterMs && idleMs >= cfg.holderLogAfterMs &&
+                    (!fight.lastHolderLogMs || getMSTimeDiff(fight.lastHolderLogMs, now) >= 30000))
+                    LogHolders(view.members, view.map, fight, idleMs, now);
+                if (cfg.idleEndMs && idleMs >= cfg.idleEndMs)
+                {
+                    fight.lastCombatMs = activity;
+                    EndFight(fight, "idle");
+                    idleClosed[entry.first] = now != 0 ? now : 1u;
+                }
             }
-            else if (fight.active && getMSTimeDiff(fight.lastCombatMs, now) >= cfg.endAfterMs)
+            else
             {
-                EndFight(fight);
+                idleClosed.erase(entry.first);
+                if (fight.active && getMSTimeDiff(fight.lastCombatMs, now) >= cfg.endAfterMs)
+                    EndFight(fight);
             }
         }
 
@@ -477,7 +589,19 @@ namespace
         for (auto& entry : fights)
             if (entry.second.active && !seen.count(entry.first) &&
                 getMSTimeDiff(entry.second.lastCombatMs, now) >= cfg.endAfterMs)
-                EndFight(entry.second);
+                EndFight(entry.second, "vanished");
+    }
+
+    // TELE1A: write every fight still open (server shutting down).
+    void FlushAll(bool allowAbsent)
+    {
+        uint32 const now = getMSTime();
+        for (auto& entry : fights)
+            if (entry.second.active)
+            {
+                entry.second.lastCombatMs = now;
+                EndFight(entry.second, "shutdown", allowAbsent);
+            }
     }
 
     void AddDamage(Unit* attacker, Unit* victim, uint32 damage)
@@ -490,11 +614,20 @@ namespace
         bool const countTarget = target && Tracked(target);
         if (!countDealer && !countTarget)
             return;
+        uint32 const now = getMSTime();
         std::lock_guard<std::mutex> guard(countersLock);
         if (countDealer)
-            counters[dealer->GetGUID().GetCounter()].dmgDone += damage;
+        {
+            Counters& c = counters[dealer->GetGUID().GetCounter()];
+            c.dmgDone += damage;
+            c.lastMs = now;
+        }
         if (countTarget)
-            counters[target->GetGUID().GetCounter()].dmgTaken += damage;
+        {
+            Counters& c = counters[target->GetGUID().GetCounter()];
+            c.dmgTaken += damage;
+            c.lastMs = now;
+        }
     }
 
     void AddHeal(Unit* healer, Unit* receiver, uint32 gain)
@@ -507,8 +640,11 @@ namespace
         // Topping off between pulls is not fight healing.
         if (!player->IsInCombat() && !(receiver && receiver->IsInCombat()))
             return;
+        uint32 const now = getMSTime();
         std::lock_guard<std::mutex> guard(countersLock);
-        counters[player->GetGUID().GetCounter()].healDone += gain;
+        Counters& c = counters[player->GetGUID().GetCounter()];
+        c.healDone += gain;
+        c.lastMs = now;
     }
 }
 
@@ -548,7 +684,25 @@ public:
     RebornBotTelemetryWorldScript() : WorldScript("RebornBotTelemetryWorldScript", {
         WORLDHOOK_ON_AFTER_CONFIG_LOAD,
         WORLDHOOK_ON_UPDATE,
+        WORLDHOOK_ON_SHUTDOWN_INITIATE,
+        WORLDHOOK_ON_SHUTDOWN,
     }) { }
+
+    // TELE1A: players are still online when a shutdown is initiated (console
+    // `server shutdown`): write open fights in full. A process stop (window
+    // closed, Ctrl+C) skips that hook; the final one runs after every player is
+    // kicked, so it writes what is left from the cached names.
+    void OnShutdownInitiate(ShutdownExitCode /*code*/, ShutdownMask /*mask*/) override
+    {
+        if (cfg.enable)
+            FlushAll(false);
+    }
+
+    void OnShutdown() override
+    {
+        if (cfg.enable)
+            FlushAll(true);
+    }
 
     void OnAfterConfigLoad(bool /*reload*/) override
     {
@@ -562,6 +716,8 @@ public:
         cfg.fallLog = sConfigMgr->GetOption<bool>("BotTelemetry.FallLog", true);
         cfg.fallMinDrop = std::max(3.0f, sConfigMgr->GetOption<float>("BotTelemetry.FallMinDrop", 10.0f));
         cfg.fallFile = sConfigMgr->GetOption<std::string>("BotTelemetry.FallFile", "dc_falls.jsonl");
+        cfg.idleEndMs = sConfigMgr->GetOption<uint32>("BotTelemetry.IdleEndMs", 30000);
+        cfg.holderLogAfterMs = sConfigMgr->GetOption<uint32>("BotTelemetry.HolderLogAfterMs", 15000);
         LOG_INFO("module", "BotTelemetry: {} (dungeonsOnly={}, botGroupsOnly={}, file={}, fallLog={}, fallFile={})",
             cfg.enable ? "enabled" : "disabled", cfg.dungeonsOnly, cfg.botGroupsOnly, cfg.file, cfg.fallLog, cfg.fallFile);
     }

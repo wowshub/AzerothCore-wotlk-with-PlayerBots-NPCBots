@@ -19,6 +19,7 @@
 #include <map>
 #include <mutex>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -40,6 +41,23 @@ namespace
     // active tanks buys nothing. Same throttle shape as the status pusher.
     constexpr uint32 DC_PURGE_SWEEP_MS = 1000;
     uint32 g_purgeSweepAccumMs = 0;
+
+    // RebornWOW DCCB1A: the sweep below only walks tanks whose run is still on.
+    // A clear that ends on the last boss ("disable on cleared") or a manual stop
+    // leaves the party in the instance with nobody watching, and a registered
+    // holder stranded there (Gundrak's Drakkari Raider in the water) then keeps
+    // the party flagged indefinitely: no eating, no drinking, no rez of a dead
+    // member, until someone walks off and kills an unrelated mob. Keep watching
+    // a tank for a while after its run ends, and purge once the party has been
+    // flagged with nobody actually engaged for long enough. World thread only.
+    constexpr uint32 DC_POST_RUN_WATCH_MS = 10 * 60 * 1000;
+    constexpr uint32 DC_POST_RUN_STUCK_MS = 15 * 1000;
+    struct PostRunWatch
+    {
+        uint32 lastActiveMs = 0;  // last sweep that saw the run on
+        uint32 stuckSinceMs = 0;  // first sweep of the current flagged-but-idle spell, 0 = not stuck
+    };
+    std::unordered_map<uint64, PostRunWatch> g_postRun;
 
     // Post-purge target bars: (instanceId, entry) -> getMSTime() the bar expires.
     //
@@ -246,6 +264,84 @@ namespace DcCombatPurge
         return cleared;
     }
 
+    // DCCB1A: watch a tank for DC_POST_RUN_WATCH_MS after its run ends. "Stuck"
+    // is: somebody in the party is combat-flagged, yet nothing is attacking any
+    // member (a stranded holder has no reachable victim, so it is never in
+    // getAttackers -- see Purge). Held for DC_POST_RUN_STUCK_MS, then the same
+    // registry-gated Purge as in a run; an ordinary fight never qualifies.
+    void SweepPostRun(uint32 now)
+    {
+        for (auto it = g_postRun.begin(); it != g_postRun.end();)
+        {
+            PostRunWatch& watch = it->second;
+            if (getMSTimeDiff(watch.lastActiveMs, now) > DC_POST_RUN_WATCH_MS)
+            {
+                it = g_postRun.erase(it);
+                continue;
+            }
+
+            Player* leader = ObjectAccessor::FindPlayer(ObjectGuid(it->first));
+            PlayerbotAI* leaderAI = leader ? GET_PLAYERBOT_AI(leader) : nullptr;
+            if (!leader || !leader->IsInWorld() || !leaderAI ||
+                DcRun::Of(leaderAI).enabled ||  // run on again: the in-run sweep owns it
+                !DcCombatPurgeRegistry::HasRowsFor(leader->GetMapId()))
+            {
+                watch.stuckSinceMs = 0;
+                ++it;
+                continue;
+            }
+
+            bool flagged = leader->IsInCombat();
+            bool engaged = !leader->getAttackers().empty();
+            if (Group* group = leader->GetGroup())
+                for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                {
+                    Player* member = ref->GetSource();
+                    if (!member || member == leader || !member->IsInWorld() ||
+                        member->GetMapId() != leader->GetMapId())
+                        continue;
+                    flagged = flagged || member->IsInCombat();
+                    engaged = engaged || !member->getAttackers().empty();
+                }
+
+            if (!flagged || engaged)
+            {
+                watch.stuckSinceMs = 0;
+                ++it;
+                continue;
+            }
+            if (watch.stuckSinceMs == 0)
+            {
+                watch.stuckSinceMs = now != 0 ? now : 1u;
+                ++it;
+                continue;
+            }
+            if (getMSTimeDiff(watch.stuckSinceMs, now) < DC_POST_RUN_STUCK_MS)
+            {
+                ++it;
+                continue;
+            }
+
+            uint32 const stuckSec = getMSTimeDiff(watch.stuckSinceMs, now) / 1000;
+            watch.stuckSinceMs = 0;
+            uint32 const cleared = Purge(leader);
+            // A holder outside the registry is left alone (and named by the
+            // telemetry module's TELE1A holder line); say so once per spell at
+            // debug level only, not every 15s at info.
+            if (cleared)
+                LOG_INFO("playerbots.dungeonclear",
+                         "DCCB1A: [{}] run ended, party combat-flagged with nothing attacking it for {}s "
+                         "-> purged {} registered holder(s)",
+                         leader->GetName(), stuckSec, cleared);
+            else
+                LOG_DEBUG("playerbots.dungeonclear",
+                          "DCCB1A: [{}] run ended, party flagged {}s with nothing attacking it; "
+                          "no registered holder to purge",
+                          leader->GetName(), stuckSec);
+            ++it;
+        }
+    }
+
     void Tick(uint32 diff)
     {
         g_purgeSweepAccumMs += diff;
@@ -254,10 +350,14 @@ namespace DcCombatPurge
         g_purgeSweepAccumMs = 0;
 
         std::vector<ObjectGuid> const tanks = DcStatusPublisher::ActiveTanks();
+        uint32 const now = getMSTime();
+
+        // DCCB1A: runs after they end. No early return on an empty `tanks` above:
+        // the moment a run ends is exactly when this has work.
+        SweepPostRun(now);
+
         if (tanks.empty())
             return;
-
-        uint32 const now = getMSTime();
 
         for (ObjectGuid guid : tanks)
         {
@@ -287,6 +387,12 @@ namespace DcCombatPurge
             DcRunState& run = DcRun::Of(leaderAI);
             if (!run.enabled)
                 continue;
+
+            // DCCB1A: a run that is on is the in-run purge's; note it so the
+            // post-run watch picks it up once it ends.
+            PostRunWatch& watch = g_postRun[guid.GetRawValue()];
+            watch.lastActiveMs = now != 0 ? now : 1u;
+            watch.stuckSinceMs = 0;
 
             uint32 const windowMs = PurgeWindowMs(leader);
             if (!windowMs)

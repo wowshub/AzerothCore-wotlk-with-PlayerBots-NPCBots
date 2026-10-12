@@ -61,3 +61,19 @@ BotTelemetry.FallMinDrop = 10
 #        Fall output file, relative to the worldserver working directory.
 #        Default: "dc_falls.jsonl"
 BotTelemetry.FallFile = "dc_falls.jsonl"
+
+#    BotTelemetry.IdleEndMs
+#        TELE1A: close a fight in which nobody in the party has dealt or taken
+#        damage or healing for this long, written with "endedBy":"idle". Without
+#        it, a mob that keeps the party combat-flagged out of reach (Gundrak's
+#        Drakkari Raider in the water) swallowed every later fight into one
+#        record that was never written. 0 = off.
+#        Default: 30000
+BotTelemetry.IdleEndMs = 30000
+
+#    BotTelemetry.HolderLogAfterMs
+#        TELE1A: after this long without damage or healing in a fight, log
+#        (Server.log, "TELE1A:") who is still in combat and with which creature
+#        (name, entry, distance, health, height, evading), every 30 s. 0 = off.
+#        Default: 15000
+BotTelemetry.HolderLogAfterMs = 15000
