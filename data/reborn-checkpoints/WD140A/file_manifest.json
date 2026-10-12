@@ -1,0 +1,30 @@
+[
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261011beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "relative_path": "02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "input_sha256": "753d716139642c0e26fa807589932d7c231febf83d3818a589c1894fa6c1f892",
+    "output_sha256": "89cdf865cf47405dd1f9f0d0a285ee2f107e842f7c26417e845c30d60af2abfb",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "relative_path": "01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "input_sha256": "4e84e7f685a967a80bbe976fbb3827c9d9c96416ebf5435da1b053233c9752ba",
+    "output_sha256": "89cdf865cf47405dd1f9f0d0a285ee2f107e842f7c26417e845c30d60af2abfb",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261011beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "relative_path": "02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "input_sha256": "ba446336b01d83417482af20564fa591688dbb9a297f86ec48956979862cf8f3",
+    "output_sha256": "e76b75d7eb0fa6a2d774ed4daaa775661d643700e22bb01bf727c6e1eac93839",
+    "hash_mode": "raw"
+  },
+  {
+    "target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "relative_path": "01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "input_sha256": "a2f26a3104624921a319cab1b465500b1d5813e89ef8007dbca3054e82b190af",
+    "output_sha256": "e76b75d7eb0fa6a2d774ed4daaa775661d643700e22bb01bf727c6e1eac93839",
+    "hash_mode": "raw"
+  }
+]

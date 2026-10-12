@@ -1,0 +1,88 @@
+{
+  "path": "D:\\game\\ascend\\coaWOW\\coawowClinet20260925OFFICIAL\\Data\\Content\\CharacterAdvancementData.json",
+  "sha256": "bc121f89f0d31fa6f76457dba5d43c3bad3cdf7a98b64a7c24aa816358b9ef77",
+  "rows": [
+    {
+      "Class": "WitchDoctor",
+      "ConnectedNodes": [
+        0,
+        29739,
+        29303
+      ],
+      "Expansion": 0,
+      "ID": 29738,
+      "Name": "Ingredient: Fishbones",
+      "PositionX": 6.0,
+      "PositionY": 4.0,
+      "Quality": "Normal",
+      "QualityCost": 1,
+      "QualityCost_Random": 1,
+      "Quality_Random": "Normal",
+      "Realms": "100679750",
+      "RequiredLevel": 10,
+      "RequiredTEInvestment": 8,
+      "SizeX": 64.0,
+      "SizeY": 64.0,
+      "Spells": [
+        801663
+      ],
+      "TECost": 1,
+      "Tab": "Brewing",
+      "Type": "Talent"
+    },
+    {
+      "Class": "WitchDoctor",
+      "ConnectedNodes": [
+        4005,
+        35065
+      ],
+      "Expansion": 0,
+      "ID": 29741,
+      "Name": "Revitalize",
+      "PositionX": 1.0,
+      "PositionY": 3.0,
+      "Quality": "Normal",
+      "QualityCost": 1,
+      "QualityCost_Random": 1,
+      "Quality_Random": "Normal",
+      "Realms": "100679750",
+      "RequiredLevel": 10,
+      "SizeX": 64.0,
+      "SizeY": 64.0,
+      "Spells": [
+        801667
+      ],
+      "TECost": 1,
+      "Tab": "Brewing",
+      "Type": "Talent"
+    },
+    {
+      "Class": "WitchDoctor",
+      "ConnectedNodes": [
+        0,
+        29758,
+        30888
+      ],
+      "Expansion": 0,
+      "ID": 35051,
+      "Name": "Disciple of Sseratus",
+      "NodeType": "SpendCircle",
+      "PositionX": 2.0,
+      "PositionY": 6.0,
+      "Quality": "Poor",
+      "QualityCost": 1,
+      "QualityCost_Random": 1,
+      "Quality_Random": "Poor",
+      "Realms": "100679750",
+      "RequiredTEInvestment": 8,
+      "SizeX": 64.0,
+      "SizeY": 64.0,
+      "Spells": [
+        300660
+      ],
+      "TECost": 1,
+      "Tab": "Brewing",
+      "Type": "Talent"
+    }
+  ]
+}

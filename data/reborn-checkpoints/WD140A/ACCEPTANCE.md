@@ -1,0 +1,5 @@
+2026-10-12 用户明确 WD140A通过，授权推送后继续开发。范围为两个重复预览归并与进度映射，469项离线检查；未外推全职业验收。
+基线a98a52786845b9aaa6f8340249c690a14b5d23ef，保留Claude已发布LFG81A。
+资源 D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261012\codexfix_20261012_044640_阶段WD140A_酿造旧节点归并与进度映射.zip
+SHA256 a727ff21705f47cd1b0f2b84669a1272c690d8a772a53584ab7a445075eb31a3
+无SQL/C++/DBC变更。

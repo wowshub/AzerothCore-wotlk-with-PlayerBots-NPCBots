@@ -1,4 +1,5 @@
--- WD52A: display metadata only. Learning remains server-authoritative.
+-- WD140A: one display mapping per node; 12048 uses the current saved-build spell 9003851.
+-- Learning remains server-authoritative.
 RebornWDProgress = { nodes = {
  [7133]={name="提基泼洒",spells={9003958}},
  [29740]={name="调酒大师",spells={9003957}},
@@ -80,12 +81,9 @@ RebornWDProgress = { nodes = {
     [4004] = { name = "傀儡师之线", spells = {9003670} },
     [29301] = { name = "拟态守卫", spells = {9003673} },
     [6050] = { name = "独臂华尔兹", spells = {9003662} },
-    [12048] = { name = "希里克的祝福", spells = {9003661} },
-    [7033] = { name = "灵魂守卫", spells = {9003660} },
     [7088] = { name = "巫毒注射", spells = {9003650, 9003651} },
     [7092] = { name = "寻觅者", spells = {9003652} },
     [4132] = { name = "迅捷召唤", spells = {9003653} },
-    [6048] = { name = "黑暗魔精", spells = {9003640} },
     [6047] = { name = "睿智", spells = {9003641, 9003642} },
     [7779] = { name = "洛阿之力", spells = {9003643, 9003644} },
     [9311] = { name = "灵魂医者", spells = {9003630} },
@@ -102,7 +100,6 @@ RebornWDProgress = { nodes = {
     [4715] = { name = "洛阿祝福", spells = {9003480} },
     [5113] = { name = "诅咒雕像", spells = {9003430} },
     [6046] = { name = "金度之怒", spells = {9003511} },
-    [6051] = { name = "迅捷神像", spells = {9003432} },
     [6644] = { name = "恶性蔓延", spells = {9003520} },
     [7157] = { name = "妖火", spells = {9003500,9003501,9003502,9003503,9003504,9003505,9003506,9003507} },
     [7948] = { name = "灵魂之触", spells = {9003470} },

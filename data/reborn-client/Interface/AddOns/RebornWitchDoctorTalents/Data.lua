@@ -96,7 +96,7 @@ end
 -- WD134: official spell level and connected dependency closure.
 for _,n in ipairs(RebornWDTreeData) do if n.ID==30333 or n.ID==6027 then n.RequiredLevel=57 end end
 
--- WD136: Concoctions depends on implemented Senjin path; Cauldron Empowerment 6023 remains preview.
+-- WD136: Concoctions depends on implemented Senjin path. Legacy 6023 is Sseratus (see WD140A).
 for _,n in ipairs(RebornWDTreeData) do if n.ID==6026 then n.RequiredLevel=57 end end
 
 -- WD137: official spell level59; previous node6026 remains required.
@@ -104,3 +104,21 @@ for _,n in ipairs(RebornWDTreeData) do if n.ID==29740 then n.RequiredLevel=59 en
 
 -- WD138B current Tiki; no old-node order changes.
 for _,n in ipairs(RebornWDTreeData) do if n.ID==7133 then n.RequiredLevel=24 end end
+
+-- WD140A: retired display entries, not saved-node aliases.
+-- 29741/801663 and 6023/300660 duplicate implemented 29738 and 35051.
+-- Keep official saved IDs, positions and prerequisites. Remove obsolete visual edges;
+-- do not invent new prerequisites by redirecting edges from an older tree layout.
+do
+ local retired = {[29741]=true, [6023]=true}
+ for i=#RebornWDTreeData,1,-1 do
+  local node=RebornWDTreeData[i]
+  if retired[node.ID] then
+   table.remove(RebornWDTreeData,i)
+  else
+   for j=#(node.ConnectedNodes or {}),1,-1 do
+    if retired[node.ConnectedNodes[j]] then table.remove(node.ConnectedNodes,j) end
+   end
+  end
+ end
+end

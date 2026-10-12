@@ -1,0 +1,6 @@
+{
+  "lua": "PASS 469 data/ownership/display regression checks",
+  "progress_unique": true,
+  "live_inputs_unchanged": true,
+  "game_test": "pending"
+}
