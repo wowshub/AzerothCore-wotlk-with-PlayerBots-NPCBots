@@ -66,13 +66,14 @@ local function WardrobeBusy()
  return v and v.IsBusy and v.IsBusy()
 end
 local function Request(command,operation)
+ if operation~="query" and not M.layoutReady then Message("请先刷新并同步新版天赋布局","Refresh and synchronize the talent layout first");return end
  if operation~="query" and WardrobeBusy()then Message("衣柜正在处理装备，请完成后再切换或修改天赋","Wardrobe is busy; finish it before changing talents");return end
  if M.pending then return end
  M.pending=true;M.operation=operation;M.expected=M.revision;M.requestSlot=M.slot;M.requestSpec=M.draftSpec;M.sent=GetTime()
  M.message="等待服务器确认…";Changed();SendChatMessage(command,"SAY")
 end
 M.Request=Request
-function M.Query() Request(".wd16state","query") end
+function M.Query() Request(".wd139state "..RebornWDNodeLayout.version.." "..RebornWDNodeLayout.hash,"query") end
 function M.Save()
  if not M.CanEdit() or not M.dirty or M.pending then return end
  Request(".wd16save "..M.revision.." "..M.slot.." "..M.draftSpec.." "..M.draftRank,"save")
@@ -174,7 +175,12 @@ f:SetScript("OnEvent",function(_,event,msg)
   StaticPopup_Show("REBORN_WD16_RESET");return
  end
 
- local baseMessage,modern,a0,a1,a2,ae,te=msg:match("^(WD16|.+)|([01])|(%d+)|(%d+)|(%d+)|(%d+)|(%d+)$")
+ local assembled,modernSnapshot=M.Receive139(msg)
+ if not assembled then return end
+ msg=assembled
+ -- Never overwrite a new-layout state with a delayed legacy packet.
+ if msg:match("^WD16|") and not modernSnapshot then return end
+ local baseMessage,modern,a0,a1,a2,ae,te=msg:match("^(WD16|.+)|([01])|(h:[0-9a-f]+)|(h:[0-9a-f]+)|(h:[0-9a-f]+)|(%d+)|(%d+)$")
  if baseMessage then msg=baseMessage end
  local core,points,unlocked=msg:match("^(WD16|[a-z]+|%d+|%d+|%d+|%d+|%d+|%d+|%d+|[01])|(%d+)|([0-3])$")
  if not core then return end
@@ -186,7 +192,7 @@ f:SetScript("OnEvent",function(_,event,msg)
  if points and tonumber(points)~=math.max(0,math.min(80,level)-9) then return end
  if modern then
   a0,a1,a2,ae,te=M.MaskParse(a0),M.MaskParse(a1),M.MaskParse(a2),tonumber(ae),tonumber(te)
-  if not M.MaskFits(a0,120) or not M.MaskFits(a1,120) or not M.MaskFits(a2,120) or ae>255 or te>255 then return end
+  if not M.LayoutValid(a0) or not M.LayoutValid(a1) or not M.LayoutValid(a2) or ae>255 or te>255 then return end
   M.modern=modern=="1";M.aeMasks={a0,a1,a2};M.aeBudget=ae;M.teBudget=te
  end
  M.unlocked=tonumber(unlocked)
@@ -210,6 +216,7 @@ f:SetScript("OnEvent",function(_,event,msg)
  if M.AEOnReply then M.AEOnReply(operation,confirmed) end
  if status~="ok" or not M.loaded then
   local errors={
+   layout={"存档含当前版本未知的天赋节点，请更新服务端；已禁止保存和重置，原始存档保留。","Saved build contains unknown nodes. Update the server; saving and resetting are blocked, stored rows are preserved."},
    freshonly={"请用新建巫医测试本批分支","Use a newly created Witch Doctor for this branch"},
    bound={"方案专精已绑定，其他专精只能浏览；更改需要付费重置","Build is bound; other specs are preview-only. Pay to reset before changing"},
    unbound={"请先为此方案选择专精","Choose this build's specialization first"},
@@ -242,7 +249,7 @@ f:SetScript("OnUpdate",function()
  if M.pending and GetTime()-M.sent>5 then M.pending=false;M.operation=nil;M.loaded=false;Message("未收到WD16应答：请更新本包服务端与SQL后刷新","No WD16 reply: install the matching server build and SQL, then refresh") end
  if M.gearPending and GetTime()-M.gearPending.time>5 then M.gearPending=nil;Message("装备保存未收到确认，请检查装备管理器","Equipment save unconfirmed; check equipment manager") end
 end)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM",function(_,_,msg) return type(msg)=="string" and (msg:match("^WD16|[a-z]+|")~=nil or msg:match("^WD16Q|")~=nil or msg:match("^WD16P|")~=nil) end)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM",function(_,_,msg) return type(msg)=="string" and (msg:match("^WD16|[a-z]+|")~=nil or msg:match("^WD139")~=nil or msg:match("^WD16Q|")~=nil or msg:match("^WD16P|")~=nil) end)
 
 
 -- WD90A: refresh authoritative budgets when the visible book observes a new level.

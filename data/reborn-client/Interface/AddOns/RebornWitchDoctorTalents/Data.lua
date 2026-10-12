@@ -90,7 +90,7 @@ end
 
 -- WD133: local prerequisites preserve saved IDs.
 for _,n in ipairs(RebornWDTreeData) do
- if n.ID==6015 then n.RequiredLevel=16;n.RequiredIDs={7948,29738} elseif n.ID==29754 then n.RequiredIDs={29310} end
+ if n.ID==6015 then n.RequiredLevel=16;n.RequiredIDs={29738} elseif n.ID==29754 then n.RequiredIDs={29310} end
 end
 
 -- WD134: official spell level and connected dependency closure.

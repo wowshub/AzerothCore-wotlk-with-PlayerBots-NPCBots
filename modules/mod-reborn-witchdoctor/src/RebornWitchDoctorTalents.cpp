@@ -19,7 +19,8 @@
 #include "WorldSession.h"
 #include "ScriptedGossip.h"
 #include "Transaction.h"
-#include <boost/multiprecision/cpp_int.hpp>
+#include "RebornWitchDoctorNodeLayout.h"
+#include "RebornWitchDoctorLegacyCodec.h"
 #include <string_view>
 #include <array>
 #include <sstream>
@@ -35,13 +36,16 @@ constexpr uint32 Wrath=9003100, BadJuju=9003103, Node=6058;
 uint32 PointsUsed(uint32 mask) { return (mask&1u)+((mask>>1)&1u); }
 constexpr char Key[]="Reborn.WD5A";
 // WD109: exact mask transport; persistent storage remains node rows.
-using AEMask=boost::multiprecision::uint128_t;
+using AEMask=WD139::Build;
 using ActionLayout=std::array<uint32,MAX_ACTION_BUTTONS>;
 struct State : DataMap::Base
 {
     SpellModifier* modifier=nullptr;
     uint32 revision=0, active=0, builds=0;
     bool loaded=false;
+    bool hexProtocol=false;
+    bool layoutMismatch=false;
+    uint32 snapshotSequence=0;
     char const* readyError="blocked"; // WD67B: preserve the actual rejection reason.
     bool modern=false;
     uint32 testAE=0,testTE=0; // WD95: character/account-scoped GM test allowance.
@@ -67,13 +71,13 @@ void WD67ClearSummons(Player*,bool,bool);
 void WD68Clear(Player*,bool,bool);
 void WD111ClearExtra(Player*);
 void WD117ClearSwift(Player*);
-uint32 AESpent(AEMask);
-uint32 TEFoundation(AEMask);
-uint32 TESpent(AEMask);
-uint32 AERank(AEMask,uint32);
-bool AEValid(AEMask,uint32,uint32=0,uint32=0);
-constexpr uint32 AEIdCount=108;
-extern uint32 const AEIds[AEIdCount];
+uint32 AESpent(AEMask const&);
+uint32 TEFoundation(AEMask const&);
+uint32 TESpent(AEMask const&);
+uint32 AERank(AEMask const&,uint32);
+bool AEValid(AEMask const&,uint32,uint32=0,uint32=0);
+constexpr uint32 AEIdCount=WD139::Count;
+inline constexpr auto const& AEIds=WD139::Ids;
 std::mutex registryMutex;
 std::unordered_map<SpellModifier const*,Player*> registry;
 bool ProfilesEnabled() { return sConfigMgr->GetOption<bool>("RebornWD8.Enable",false); }
@@ -269,10 +273,28 @@ bool ResetPrice(uint32& gold);
 void ProfileReply(Player* p,char const* result)
 {
     State* s=p->CustomData.GetDefault<State>(Key);
+    if(s->layoutMismatch) result="layout";
     uint32 resetGold=0;
     if(ResetPrice(resetGold)) ChatHandler(p->GetSession()).PSendSysMessage("WD16P|{}",resetGold);
     else ChatHandler(p->GetSession()).PSendSysMessage("WD16P|invalid");
-    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,s->aeMasks[0].str(),s->aeMasks[1].str(),s->aeMasks[2].str(),WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE);
+    if(s->hexProtocol) {
+        auto chat=ChatHandler(p->GetSession());
+        uint32 seq=++s->snapshotSequence;
+        chat.PSendSysMessage("WD139B|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",seq,WD139::Version,WD139::Hash,result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE,WD139::HexSize);
+        for(uint32 slot=0;slot<3;++slot) {
+            std::string hex=s->aeMasks[slot].Hex();
+            uint32 parts=(hex.size()+79)/80;
+            for(uint32 part=0;part<parts;++part)
+                chat.PSendSysMessage("WD139M|{}|{}|{}|{}|{}",seq,slot,part,parts,hex.substr(part*80,80));
+        }
+        chat.PSendSysMessage("WD139E|{}",seq);
+        return;
+    }
+    // Legacy clients may only see builds that round-trip without truncation.
+    for(auto const& build:s->aeMasks) if(!WD139::LegacyCompatible(build)) {
+        ChatHandler(p->GetSession()).SendSysMessage("WD139A: update the talent addon; this layout is not compatible with WD16.");return;
+    }
+    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,WD139::LegacyDecimal(s->aeMasks[0]),WD139::LegacyDecimal(s->aeMasks[1]),WD139::LegacyDecimal(s->aeMasks[2]),WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE);
 }
 bool ProfileReady(Player* p,bool mutation)
 {
@@ -286,6 +308,16 @@ bool ProfileReady(Player* p,bool mutation)
 bool ProfileState(ChatHandler* h)
 {
     Player* p=h->GetSession()->GetPlayer();if(ProfileReady(p,false))ProfileReply(p,"ok");return true;
+}
+bool ProfileState139(ChatHandler* h,uint32 version,std::string_view hash)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if(!Doctor(p)) return false;
+    if(version!=WD139::Version || hash!=WD139::Hash) {
+        h->SendSysMessage("WD139X|layout");return true;
+    }
+    p->CustomData.GetDefault<State>(Key)->hexProtocol=true;
+    return ProfileState(h);
 }
 bool ProfileWrite(ChatHandler* h,uint32 expected,uint32 slot,uint32 spec,uint32 rank,uint32 operation)
 {
@@ -496,7 +528,7 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     if(s->modern && n->id==13133) { level=50;missing=rank(4733)?0:1; }
     if(s->modern && n->id==30333) { level=57;missing=rank(4005)&&(rank(6014)||rank(6020)||rank(29737))?0:1;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],56)+AERank(s->aeMasks[slot],57)+AERank(s->aeMasks[slot],61)+AERank(s->aeMasks[slot],62)+AERank(s->aeMasks[slot],77)+AERank(s->aeMasks[slot],78)+AERank(s->aeMasks[slot],79)+AERank(s->aeMasks[slot],80)+AERank(s->aeMasks[slot],81)+AERank(s->aeMasks[slot],82)+AERank(s->aeMasks[slot],83)+AERank(s->aeMasks[slot],84)+AERank(s->aeMasks[slot],85)+AERank(s->aeMasks[slot],86)+AERank(s->aeMasks[slot],87)+AERank(s->aeMasks[slot],88)+AERank(s->aeMasks[slot],89)+AERank(s->aeMasks[slot],90)+AERank(s->aeMasks[slot],91)+AERank(s->aeMasks[slot],92)+AERank(s->aeMasks[slot],93)+AERank(s->aeMasks[slot],94)+AERank(s->aeMasks[slot],95)+AERank(s->aeMasks[slot],96)+AERank(s->aeMasks[slot],97)+AERank(s->aeMasks[slot],99)+AERank(s->aeMasks[slot],100)+AERank(s->aeMasks[slot],101); }
     if(s->modern && n->id==6027) { level=57;missing=rank(30333)?0:1;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],56)+AERank(s->aeMasks[slot],57)+AERank(s->aeMasks[slot],61)+AERank(s->aeMasks[slot],62)+AERank(s->aeMasks[slot],77)+AERank(s->aeMasks[slot],78)+AERank(s->aeMasks[slot],79)+AERank(s->aeMasks[slot],80)+AERank(s->aeMasks[slot],81)+AERank(s->aeMasks[slot],82)+AERank(s->aeMasks[slot],83)+AERank(s->aeMasks[slot],84)+AERank(s->aeMasks[slot],85)+AERank(s->aeMasks[slot],86)+AERank(s->aeMasks[slot],87)+AERank(s->aeMasks[slot],88)+AERank(s->aeMasks[slot],89)+AERank(s->aeMasks[slot],90)+AERank(s->aeMasks[slot],91)+AERank(s->aeMasks[slot],92)+AERank(s->aeMasks[slot],93)+AERank(s->aeMasks[slot],94)+AERank(s->aeMasks[slot],95)+AERank(s->aeMasks[slot],96)+AERank(s->aeMasks[slot],97)+AERank(s->aeMasks[slot],99)+AERank(s->aeMasks[slot],100)+AERank(s->aeMasks[slot],101)+rank(30333); }
-    if(s->modern && n->id==6015) { level=16;missing=rank(4005)&&rank(7948)&&rank(29738)?0:1;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128); }
+    if(s->modern && n->id==6015) { level=16;missing=rank(4005)&&rank(29738)?0:1;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128); }
     if(s->modern && n->id==29310) { level=10;missing=rank(4005)&&(rank(6009)||rank(7132)||rank(29753))?0:1;te=rank(7131)+rank(30884)+rank(29736)+rank(5055)+rank(7129)+rank(7128); }
     if(s->modern && n->id==29754) { level=10;missing=rank(4005)&&rank(29310)?0:1;te=AERank(s->aeMasks[slot],49)+AERank(s->aeMasks[slot],50)+AERank(s->aeMasks[slot],51)+AERank(s->aeMasks[slot],53)+AERank(s->aeMasks[slot],55)+AERank(s->aeMasks[slot],56)+AERank(s->aeMasks[slot],57)+AERank(s->aeMasks[slot],61)+AERank(s->aeMasks[slot],62)+AERank(s->aeMasks[slot],77)+AERank(s->aeMasks[slot],78)+AERank(s->aeMasks[slot],79)+AERank(s->aeMasks[slot],80)+AERank(s->aeMasks[slot],81)+AERank(s->aeMasks[slot],82)+AERank(s->aeMasks[slot],83)+AERank(s->aeMasks[slot],84)+AERank(s->aeMasks[slot],85)+AERank(s->aeMasks[slot],86)+AERank(s->aeMasks[slot],87)+AERank(s->aeMasks[slot],88)+AERank(s->aeMasks[slot],89)+AERank(s->aeMasks[slot],90)+AERank(s->aeMasks[slot],91)+AERank(s->aeMasks[slot],92)+AERank(s->aeMasks[slot],93)+AERank(s->aeMasks[slot],94)+AERank(s->aeMasks[slot],95)+AERank(s->aeMasks[slot],96)+AERank(s->aeMasks[slot],97)+AERank(s->aeMasks[slot],99)+AERank(s->aeMasks[slot],100); }
     if(s->modern && n->id==4733) { level=40;missing=rank(4715)?0:1;te=0; }
@@ -652,6 +684,8 @@ public:
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
             {"wd67join",AEJoin,SEC_PLAYER,Console::No},
+            {"wd139state",ProfileState139,SEC_PLAYER,Console::No},
+            {"wd67save2",AESave139,SEC_PLAYER,Console::No},
             {"wd67save",AESave,SEC_PLAYER,Console::No},
             {"wd64check",AuditNode,SEC_PLAYER,Console::No},
             {"wd16bind",ProfileBind,SEC_PLAYER,Console::No},

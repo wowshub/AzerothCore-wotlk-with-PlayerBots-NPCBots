@@ -1,0 +1,9 @@
+{
+  "status": "offline passed; live pending",
+  "mysql_checks": 258,
+  "cpp": "actual AEValid positive/negative regression passed; full modified translation unit MSVC /Zs passed (existing stdfloat warning)",
+  "lua": "full listener protocol test and actual SetNode Fish/Bottle/Splash, prerequisites, budget and saved-point-refund regression passed",
+  "test_fixture_correction": "First additional SQL matrix used level16 without sufficient TE. Corrected positive fixtures to level80; preserved below16 negative. Isolated instance stopped in finally. Full rerun passed.",
+  "baseline": "fa5a5f31e3e9bc67511551eeaabc8517fb0233a1",
+  "layout": "unchanged WD139B hash; no new nodes; no production writes or deployment"
+}

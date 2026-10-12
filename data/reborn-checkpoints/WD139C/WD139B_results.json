@@ -1,0 +1,13 @@
+{
+  "canonical_format_variants": 4,
+  "six_generated_outputs_identical": true,
+  "appended_node_changes_hash": true,
+  "existing_slot_change_rejected": true,
+  "sql_declarations": 108,
+  "sql_reads": 107,
+  "lua_mapping_coverage": 107,
+  "guards": "static source inspection; live save/activate/bind/reset with unknown node still requires game test",
+  "mysql": "248 isolated checks passed on private port33540; no production access",
+  "lua": "10000 codec + syntax + complete listener checks passed",
+  "cpp": "20000 combinations plus existing 3 builds; full modified translation unit MSVC /Zs passed; no worldserver link or game test"
+}

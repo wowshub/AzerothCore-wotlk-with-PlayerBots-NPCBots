@@ -1,0 +1,141 @@
+[
+  {
+    "kind": "source",
+    "path": "data/customfixsql/characters/witchdoctor/WD139A/01_node_reference.sql",
+    "sha256": "90dfc1ba018f99bdcbe2bfe4698bc0b1aec013bc3397cdc61a734c6792dc5086",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchdoctor\\WD139A\\01_node_reference.sql"
+  },
+  {
+    "kind": "source",
+    "path": "data/customfixsql/characters/witchdoctor/WD139A/02_save_rows.sql",
+    "sha256": "ba1d24dde14274a6cdd1b62bce38b9afa4e5e1210e4ae46d8bc4df455e9d8188",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchdoctor\\WD139A\\02_save_rows.sql"
+  },
+  {
+    "kind": "source",
+    "path": "data/customfixsql/characters/witchdoctor/WD139A/90_rollback_phase1_only.sql",
+    "sha256": "a80028ffaafc4506dafa97582f2c765b0d635796d8d5c665e21d831664c171c9",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchdoctor\\WD139A\\90_rollback_phase1_only.sql"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-checkpoints/witchdoctor/nodes.csv",
+    "sha256": "b29d2fcf8abe3fc4e08b3bbf14c8b58d65c076c9f952ff56efea11b8b48646b7",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\reborn-checkpoints\\witchdoctor\\nodes.csv"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-checkpoints/witchdoctor/tools/gen_layout.py",
+    "sha256": "25e70970e4baf455cb1453b5728702e60ba334786ab8d8c965c2246aa2206e18",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\reborn-checkpoints\\witchdoctor\\tools\\gen_layout.py"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "sha256": "39de59fe52368c949aa84c36cf21ca21485e5dde3aaac14e05c1b459391967e4",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/HexCodec.lua",
+    "sha256": "62c6106f6990d5489529047395a91cfadfb2a08bd83e2010d4695c9c5c8433b1",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\HexCodec.lua"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "sha256": "3ab50ce8e6fd87647d82ad1e285821ce7d63fa2fe09131bcc14ef1cfb96df2bc",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\NodeLayout.lua"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "sha256": "b4af0c632afb76d7f0993dbc690121414da3d5acd66743fff78cc81dd256b465",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/WD8.lua",
+    "sha256": "7d4296424e243f7f7430d3a120df865b2bd050ca2e15c5dfd475bb8ae4ce65a6",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\WD8.lua"
+  },
+  {
+    "kind": "source",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+    "sha256": "820821aa5cb89360a7d4a0984be3554d9d4dc2ead69cfdb9b9ca7eb6dff5ddeb",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorAllocation.inc"
+  },
+  {
+    "kind": "source",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorLegacyCodec.h",
+    "sha256": "a46a7fddf5b49bd43e5d2b94e5310809387457100439873a5d7b67a1f87b1034",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorLegacyCodec.h"
+  },
+  {
+    "kind": "source",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+    "sha256": "4f5a35d4da59ac74c38fc7d35b6d16ee0a46b828663a1b5752c3790a703c0c7f",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNodeLayout.h"
+  },
+  {
+    "kind": "source",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "sha256": "4ade72798d5e31f4bd4a24667c1f19bc49d7dab63ed172b228006175ba724338",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp"
+  },
+  {
+    "kind": "client",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "sha256": "39de59fe52368c949aa84c36cf21ca21485e5dde3aaac14e05c1b459391967e4",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua"
+  },
+  {
+    "kind": "client",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/HexCodec.lua",
+    "sha256": "62c6106f6990d5489529047395a91cfadfb2a08bd83e2010d4695c9c5c8433b1",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\HexCodec.lua"
+  },
+  {
+    "kind": "client",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "sha256": "3ab50ce8e6fd87647d82ad1e285821ce7d63fa2fe09131bcc14ef1cfb96df2bc",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\NodeLayout.lua"
+  },
+  {
+    "kind": "client",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "sha256": "b4af0c632afb76d7f0993dbc690121414da3d5acd66743fff78cc81dd256b465",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc"
+  },
+  {
+    "kind": "client",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/WD8.lua",
+    "sha256": "7d4296424e243f7f7430d3a120df865b2bd050ca2e15c5dfd475bb8ae4ce65a6",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261011\\codexfix_20261011_195608_阶段WD139B_评审修订与稳定布局哈希\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\WD8.lua"
+  },
+  {
+    "kind": "source",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+    "sha256": "2294dcb25fb85076146e3ee5ccaf0845dd0c088378bd1790d5f4c33afa2d547a",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalentNodes.h"
+  },
+  {
+    "kind": "client",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "sha256": "753d716139642c0e26fa807589932d7c231febf83d3818a589c1894fa6c1f892",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua"
+  },
+  {
+    "kind": "source",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "sha256": "753d716139642c0e26fa807589932d7c231febf83d3818a589c1894fa6c1f892",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261011beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "note": "Preserve published Tiki level24 override from verified installed C client; daily source mirror lacked this existing line."
+  },
+  {
+    "kind": "source",
+    "path": "data/customfixsql/characters/witchdoctor/WD139C/01_fix_fish_bones_prerequisite.sql",
+    "sha256": "a6ab2f27b1b9ee5f0d3c26d04bc5615abce060324706375421cb37f466ed753f",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261012\\codexfix_20261012_020722_阶段WD139C_魔精鱼骨前置修正\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchdoctor\\WD139C\\01_fix_fish_bones_prerequisite.sql"
+  }
+]

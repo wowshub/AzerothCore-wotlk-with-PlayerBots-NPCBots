@@ -9,7 +9,9 @@ WD5A.lua
 HomeArt.lua
 Language.lua
 Progress.lua
+NodeLayout.lua
 WD8.lua
+HexCodec.lua
 Allocation.lua
 Eligibility.lua
 BuildNames.lua
