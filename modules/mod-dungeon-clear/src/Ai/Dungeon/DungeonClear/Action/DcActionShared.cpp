@@ -15,6 +15,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -788,7 +789,55 @@ bool DcMovementAction::DcMoveTo(uint32 mapId, float x, float y, float z, bool id
             destZ = snap.z;
     }
 
-    bool const moved = DcRawMoveTo(mapId, x, y, destZ, idle, react, normal_only, exact_waypoint,
+    // DCMOV2A: STOCK MUST NOT SWAP THE DESTINATION'S FLOOR.
+    // Stock MoveTo (pre-#2747 SearchForBestPath) first re-reads the height with
+    // GetMapHeight(x, y, z) and accepts any path type carrying PATHFIND_NORMAL.
+    // Where the vmap misses the floor that height falls through to the terrain
+    // grid below the instance (z 0.0), and PathGenerator, finding no end poly
+    // there, answers a PLAYER with NORMAL|NOT_USING_PATH — players are treated as
+    // able to fly (PathGenerator::BuildPolyPath, `creature ? CanFly() : true`). The
+    // straight shortcut is then the shortest candidate, so the bot is sent in a
+    // straight line under the map. Live, Gundrak (map 604): 搞撒 follow-tank to a
+    // crumb at z 126.7 became (1763.9,648.4,0.0), pathType 17 — only PBMOVE1A's
+    // guard stopped the fall. Detect that divergence here and either walk the
+    // requested floor over a validated navmesh path, or refuse the move (the
+    // follow-tank caller then falls through to the stock Follow()).
+    bool useExact = exact_waypoint;
+    constexpr float kStockZDivergence = 5.0f;
+    if (!exact_waypoint && !bot->IsFlying() && !bot->isSwimming() && !bot->GetVehicle())
+    {
+        float const stockZ = bot->GetMapHeight(x, y, destZ);
+        if (stockZ > INVALID_HEIGHT && std::fabs(stockZ - destZ) > kStockZDivergence)
+        {
+            PathGenerator gen(bot);
+            gen.CalculatePath(x, y, destZ, /*forceDest*/ false);
+            bool const pathOk = gen.GetPathType() == PATHFIND_NORMAL;
+
+            // Throttled per bot: a follower can re-ask every tick.
+            thread_local std::unordered_map<uint64, uint32> lastLogMs;
+            uint32 const now = getMSTime();
+            uint32& last = lastLogMs[bot->GetGUID().GetRawValue()];
+            if (last == 0 || getMSTimeDiff(last, now) >= 5000)
+            {
+                last = now != 0 ? now : 1u;
+                LOG_INFO("playerbots.dungeonclear",
+                         "DCMOV2A: {} map {} dest ({:.1f},{:.1f},{:.1f}) stock height {:.1f} "
+                         "(off by {:.1f}) pathType {} -> {}",
+                         bot->GetName(), mapId, x, y, destZ, stockZ, std::fabs(stockZ - destZ),
+                         static_cast<uint32>(gen.GetPathType()),
+                         pathOk ? "walking the requested floor over the navmesh path"
+                                : "refused (no navmesh path on the requested floor)");
+            }
+
+            if (!pathOk)
+                return false;
+            // The point move generates its own path to exactly this z, which is
+            // the PATHFIND_NORMAL path just validated.
+            useExact = true;
+        }
+    }
+
+    bool const moved = DcRawMoveTo(mapId, x, y, destZ, idle, react, normal_only, useExact,
                                    priority, lessDelay, backwards, ignoreEnemyTargets);
 
     // NO RETRY ON REFUSAL. This seam used to re-issue a refused move as an
