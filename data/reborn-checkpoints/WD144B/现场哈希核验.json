@@ -1,0 +1,110 @@
+[
+  {
+    "path": "data/customfixsql/characters/witchdoctor/WD144A/01_node_reference.sql",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\customfixsql\\characters\\witchdoctor\\WD144A\\01_node_reference.sql",
+    "expected": "efb6034a8ca91ae5be7d000db65ea36dfee3470037f158afe330f5dbce02b8f9",
+    "matches": true
+  },
+  {
+    "path": "data/customfixsql/characters/witchdoctor/WD144A/02_save_rows.sql",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\customfixsql\\characters\\witchdoctor\\WD144A\\02_save_rows.sql",
+    "expected": "ff088c82aa5758cc6fc15ec88b182cecef15b0724265ac7437219f6d5a4517ed",
+    "matches": true
+  },
+  {
+    "path": "data/customfixsql/world/witchdoctor/WD144A/01_WD144_world.sql",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\customfixsql\\world\\witchdoctor\\WD144A\\01_WD144_world.sql",
+    "expected": "b9ce062ec67b0724bcd86281ae2938a97f58c23e7daec9c3bf8568e0dded91c1",
+    "matches": true
+  },
+  {
+    "path": "data/reborn-checkpoints/witchdoctor/nodes.csv",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-checkpoints\\witchdoctor\\nodes.csv",
+    "expected": "b96be4a234a2ec43ea92b479feaf7c1ed7eeffb6e1bd7b0f544bb8a59b2e032f",
+    "matches": true
+  },
+  {
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua",
+    "expected": "2e7ba453d79e4878589192fee4bb718f43a9900975cc5eafea2f783a9bd5feda",
+    "matches": true
+  },
+  {
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "expected": "0d8c071425c91720821a6d26ab32070aa7479f9ef561121ffac0d03d4fa62e22",
+    "matches": true
+  },
+  {
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\NodeLayout.lua",
+    "expected": "a0353e363135df80a9f908619943fe0532bbc9dc48c341280d18d636ec7ddf3d",
+    "matches": true
+  },
+  {
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "expected": "a395f8f8ea8d09f55362c5aa630c2433765a546ee1f9b334e35d47b69ca1f20d",
+    "matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+    "expected": "ebf5db8acf5c9de3578d6b5d451de8f13947a16820a90ec7de52fad79cdbb35b",
+    "matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorAllocation.inc",
+    "expected": "b0c80e1f2970092a85be605a53fb446dd0f948b942790ce441f305d76864090c",
+    "matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNodeLayout.h",
+    "expected": "427fb055fe081345c366365128d5f9d5ffdaeb457c29ed10b90f5411dacf5c99",
+    "matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSupport144.inc",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorSupport144.inc",
+    "expected": "28df29fbe2a8a08b8969189827cbc028d76d65128b815643157dae5b7b84e4dd",
+    "matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalentNodes.h",
+    "expected": "02c02869fbd06da4fd6c84d9f35bdf253bb92c4cbcbca1cdd6f3a61e4581d979",
+    "matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "expected": "1e8b309b5cea28d38b98af1febfdb834eed5a0229501dafb1e0eeb11f144caa5",
+    "matches": true
+  },
+  {
+    "path": "src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Player\\WitchDoctorTalentPolicy.h",
+    "expected": "5e0232bfb04b040effbcb34076674ef9f87f5f1064f8255d0b603226d362a0c4",
+    "matches": true
+  },
+  {
+    "path": "src/server/game/Spells/SpellInfo.cpp",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\SpellInfo.cpp",
+    "expected": "e5ec4bba16d0cdb878365142dde75aa5a78fb1a78082edc0f117face29e1a5e1",
+    "matches": true
+  },
+  {
+    "path": "src/server/game/Spells/Spell.cpp",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Spells\\Spell.cpp",
+    "expected": "896db8088bd62789369d221fce946e0a157f8805ce6a3da21afd8c82bb440c86",
+    "matches": true
+  },
+  {
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua",
+    "live": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\NumericTooltip.lua",
+    "expected": "e672f72d9dd01ce6be569f37bc1e1bbfd472de5bf7a166f173194be8b8785a78",
+    "matches": true
+  }
+]

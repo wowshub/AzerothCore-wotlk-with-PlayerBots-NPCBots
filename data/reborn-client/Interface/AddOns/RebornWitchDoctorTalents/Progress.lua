@@ -1,6 +1,10 @@
 -- WD140A: one display mapping per node; 12048 uses the current saved-build spell 9003851.
 -- Learning remains server-authoritative.
 RebornWDProgress = { nodes = {
+ [1969]={name="强化恶毒箭",spells={9003990,9003991}},
+ [7779]={name="洛阿之力",spells={9003992,9003993}},
+ [12749]={name="腐朽诅咒",spells={9003994}},
+ [29749]={name="巨蛇意志",spells={9003995}},
  [4006]={name="暗影猎手",spells={9003967}},
  [12086]={name="恶毒箭",spells={9003968}},
  [4505]={name="灵魂回收",spells={9003980,9003981,9003982,9003983,9003984,9003985,9003986,9003987,9003988}},

@@ -1,0 +1,13 @@
+# WD144B 新手教学
+
+把技能想成有两个时钟：服务器决定什么时候允许再施放，客户端决定按钮什么时候亮。天赋改变服务器的时钟，客户端如果不知道，就还会把按钮锁8秒。只把图标文字写4不能解决按钮预测，也不能证明服务器计时正确。
+
+Spell.cpp本次只在既有来源列表加9003990和9003991：这两个是强化恶毒箭一二级被动，不是主动技能ID。原有IsAffectedBySpellmod继续限制它们只匹配恶毒箭九个rank和COOLDOWN操作，其他技能不受影响。先发送施法成功消息，再GetSpellCooldownDelay读已存储时间，SendClearCooldown清的是客户端预测，BuildCooldownPacket发送剩余时间；没有调用服务器RemoveSpellCooldown，也没有再减4000。
+
+Talents.cpp让arrow布尔值在9003970到9003978闭区间为true，加入原查询白名单。ApplySpellMod以RecoveryTime为输入读取当前实际光环，不用UI草稿。复用已有五字段cost/a/b/revision/active，a是施法时长，b是修饰后冷却，避免改动旧通信格式。新增Check144只读：HasSpell判断已学，GetAuraEffect判断已生效，GetAmount查看数值，IsAffectedBySpellmod检查精确匹配；目标GetAura必须带本人GUID，否则会读到别人施放的诅咒。
+
+NumericTooltip.lua用range登记九个主动技能，服务器回包后value.b/1000把毫秒换秒。只替换白名单中的基础8秒短语，保留伤害/射程/系数；原字符串和上次绘制字符串分开存，反复悬停或换方案不会在4秒文本上继续减4。没有正确回包时显示同步中，不伪造4秒。
+
+测试并非只检查文本里有没有“4”。126条Lua实际执行交付文件并模拟重复悬停/旧revision/无关技能；194条C++把交付Spell.cpp的实际post-GO代码截取到测试夹具，记录GO→clear→build→send顺序，断言存储时间未被修改。它们能抓顺序和条件回归，但不能证明真实游戏已成功，所以还需要用户按README做服务器、按钮、提示三方面实测。
+
+巨蛇意志是“贴在目标身上、认准施法者”的加成，不改变人物全局属性。腐朽只削弱目标收到的持续治疗：1000×(1-0.30)=700；直接治疗不变。测试要控制装备、治疗等级、暴击、过量治疗和其他增减益，这属于软件测试中的控制变量与正负对照。

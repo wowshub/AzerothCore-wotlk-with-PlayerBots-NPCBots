@@ -134,3 +134,10 @@ for _,n in ipairs(RebornWDTreeData) do
  if n.ID==4006 or n.ID==12086 or n.ID==4505 then n.RequiredLevel=10;n.AECost=0;n.TECost=0 end
  if n.ID==12086 or n.ID==4505 then n.RequiredIDs={4006} end
 end
+
+-- WD144: preserve authored choice group and explicit dependency paths.
+for _,n in ipairs(RebornWDTreeData) do
+ if n.ID==1969 then n.RequiredLevel=11;n.RequiredIDs={12086} end
+ if n.ID==7779 then n.RequiredLevel=11;n.RequiredIDs={4505} end
+ if n.ID==12749 or n.ID==29749 then n.RequiredLevel=26;n.RequiredIDs={31118};n.RequiredAEInvestment=9 end
+end

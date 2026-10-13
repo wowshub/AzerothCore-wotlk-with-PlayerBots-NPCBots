@@ -1415,6 +1415,7 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     // An unclaimed exact modifier must NOT reach that fallback. Other spells retain it.
     switch (mod->spellId)
     {
+        case 9003990: case 9003991: case 9003994: case 9003995: // WD144 exact Arrow/Jinx modifiers
         case 9003510: case 9003511: // exact critical modifiers
         case 9003610: case 9003611: case 9003612: // Style, Zalazane, Voodoo
         case 9003929: // WD130 side-action cost and cast-time whitelist

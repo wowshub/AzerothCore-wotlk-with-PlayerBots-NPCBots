@@ -28,6 +28,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD144Bridge { void Apply(Player*,uint32,uint32,bool,bool); }
 namespace WD143Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD142Bridge { void Clear(Player*); }
 namespace WD19A { uint32 ResolveAction(Player* player, uint32 spell); void SyncBadJuju(Player* player); }
@@ -653,7 +654,8 @@ bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
     bool const wuju=base==9003140 || base==9003180 || base==9003190 || base==9003280 || base==9003290 || base==9003300;
     bool const jinx=base==9003150 || base==9003200 || base==9003210 || base==9003220 || id==9003762;
     bool const walkerTarget=id==9003855 || id==9003432;
-    bool const allowed=(id>=9003922 && id<=9003928) || (id>=9003460 && id<=9003467) || id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
+    bool const arrow=id>=9003970 && id<=9003978;
+    bool const allowed=arrow || (id>=9003922 && id<=9003928) || (id>=9003460 && id<=9003467) || id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
     SpellInfo const* info=sSpellMgr->GetSpellInfo(id);
     if(!Enabled() || !allowed || !info || !p->HasSpell(id) || !s->loaded)
     {
@@ -706,7 +708,7 @@ bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
         else h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}|{}|{}|{}",sequence,id,cost,lo,hi,s->revision,s->active,0,0,std::max(0,cooldown));
         return true;
     }
-    if(id==9003861)
+    if(id==9003861 || arrow)
     {
         int32 cooldown=info->RecoveryTime;
         p->ApplySpellMod(id,SPELLMOD_COOLDOWN,cooldown);
@@ -724,6 +726,34 @@ bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
     return true;
 }
 
+// WD144B: read-only live evidence; never learns spells, changes cooldowns or target auras.
+bool Check144(ChatHandler* h,uint32 id)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if(!Doctor(p)) return true;
+    if(id<9003970 || id>9003978) { h->SendSysMessage("WD144B: use .wd144check 9003978 (or your Arrow rank ID)");return true; }
+    SpellInfo const* info=sSpellMgr->GetSpellInfo(id);
+    if(!info) { h->SendSysMessage("WD144B: missing Arrow Spell.dbc row");return true; }
+    State* s=p->CustomData.GetDefault<State>(Key);
+    auto now=std::chrono::steady_clock::now();
+    if(now-s->numberRequest<std::chrono::milliseconds(400)) return true;
+    s->numberRequest=now;
+    int32 cooldown=info->RecoveryTime;
+    p->ApplySpellMod(id,SPELLMOD_COOLDOWN,cooldown);
+    h->PSendSysMessage("WD144B: spell={} learned={} base_ms={} calculated_ms={} remaining_ms={}",id,p->HasSpell(id)?1:0,info->RecoveryTime,std::max(0,cooldown),p->GetSpellCooldownDelay(id));
+    for(uint32 passive : {9003990u,9003991u,9003994u,9003995u})
+    {
+        AuraEffect* effect=p->GetAuraEffect(passive,EFFECT_0,p->GetGUID());
+        SpellModifier* mod=effect?effect->GetSpellModifier():nullptr;
+        h->PSendSysMessage("WD144B: passive={} learned={} aura={} amount={} arrow_match={}",passive,p->HasSpell(passive)?1:0,effect?1:0,effect?effect->GetAmount():0,mod&&p->IsAffectedBySpellmod(info,mod)?1:0);
+    }
+    Unit* target=p->GetSelectedUnit();
+    Aura* jinx=target?target->GetAura(9003150,p->GetGUID()):nullptr;
+    auto amount=[&](SpellEffIndex i)->int32 { AuraEffect* e=jinx?jinx->GetEffect(i):nullptr;return e?e->GetAmount():0; };
+    h->PSendSysMessage("WD144B: selected={} own_jinx={} crit_bonus_points={} periodic_healing_pct={}",target?1:0,jinx?1:0,amount(EFFECT_1),amount(EFFECT_2));
+    return true;
+}
+
 class Commands : public CommandScript
 {
 public:
@@ -734,6 +764,7 @@ public:
             {"wd141quote",PanelUnlockQuote,SEC_PLAYER,Console::No},
             {"wd141buy",PanelUnlockBuy,SEC_PLAYER,Console::No},
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
+            {"wd144check",Check144,SEC_PLAYER,Console::No},
             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
             {"wd67join",AEJoin,SEC_PLAYER,Console::No},
             {"wd139state",ProfileState139,SEC_PLAYER,Console::No},

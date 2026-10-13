@@ -7,6 +7,8 @@ for _,id in ipairs({9003190,9003280,9003290,9003300,9003150,9003200,9003210,9003
 range(9003220,9003225);range(9003130,9003138)
 for id=9003180,9003185 do power[id]=true end;power[9003300]=true
 range(9003922,9003928);range(9003460,9003467);allowed[9003865]=true;range(9003870,9003876);range(9003890,9003896);allowed[9003861]=true;allowed[9003859]=true;allowed[9003855]=true;allowed[9003432]=true
+range(9003970,9003978) -- WD144B: all Malefic Arrow ranks
+local function arrow(id) return id and id>=9003970 and id<=9003978 end
 local en=GetLocale()~="zhCN" and GetLocale()~="zhTW"
 local frame=CreateFrame("Frame")
 local cache,pending={},nil
@@ -77,6 +79,10 @@ local function draw(self,forced)
      local seconds=value and value.e and value.e/1000
      local rendered=seconds and clean:gsub("15秒冷却",string.format("%g秒冷却",seconds)):gsub("15 sec cooldown",string.format("%g sec cooldown",seconds)):gsub("15 sec Cooldown",string.format("%g sec Cooldown",seconds)) or (original..(en and " (syncing)" or "（同步中）"))
      self.wd114Lines[key]={original=original,rendered=rendered};if text~=rendered then font:SetText(rendered);changed=true end
+    elseif arrow(id) and (clean:find("8秒冷却",1,true) or clean:find("8 sec cooldown",1,true) or clean:find("8 sec Cooldown",1,true)) then
+     local seconds=value and value.b and value.b/1000
+     local rendered=seconds and clean:gsub("8秒冷却",string.format("%g秒冷却",seconds)):gsub("8 sec cooldown",string.format("%g sec cooldown",seconds)):gsub("8 sec Cooldown",string.format("%g sec Cooldown",seconds)) or (original..(en and " (syncing)" or "（同步中）"))
+     self.wd114Lines[key]={original=original,rendered=rendered};if text~=rendered then font:SetText(rendered);changed=true end
     elseif id==9003861 and (clean:match("秒冷却时间$") or clean:match("分钟冷却时间$") or clean:match("sec cooldown$") or clean:match("min cooldown$")) then
      local rendered=value and string.format(en and "%g sec cooldown" or "%g秒冷却时间",value.b/1000) or (original..(en and " (syncing)" or "（同步中）"))
      self.wd114Lines[key]={original=original,rendered=rendered};if text~=rendered then font:SetText(rendered);changed=true end
@@ -86,7 +92,7 @@ local function draw(self,forced)
    end
   end
  end
- if id==9003865 or (id>=9003870 and id<=9003876) or (id>=9003890 and id<=9003896) or id==9003861 or power[id] or id==9003240 or id==9003855 or id==9003432 then
+ if arrow(id) or id==9003865 or (id>=9003870 and id<=9003876) or (id>=9003890 and id<=9003896) or id==9003861 or power[id] or id==9003240 or id==9003855 or id==9003432 then
   local text
   if value then
    if id>=9003890 and id<=9003896 then
@@ -94,6 +100,8 @@ local function draw(self,forced)
    elseif id==9003865 or (id>=9003870 and id<=9003876) then
     local label=id==9003865 and string.format("当前每%g秒，最多%d人 / Pulse every %g sec, up to %d allies: ",(value.c or 6000)/1000,value.d or 8,(value.c or 6000)/1000,value.d or 8) or "直接治疗 / Direct heal: "
     text=label..value.a.."–"..value.b..(id==9003865 and "" or (value.e and string.format("；冷却%g秒 / cooldown %g sec",value.e/1000,value.e/1000) or "；冷却同步中 / cooldown syncing")).."（含自身加成；未计目标增减益及暴击 / self bonuses, before target modifiers and crit）"
+   elseif arrow(id) then
+    text=en and string.format("Server current cooldown: %g sec",value.b/1000) or string.format("服务器当前冷却：%g秒",value.b/1000)
    elseif id==9003861 then
     text=en and string.format("Current: %.2f sec cast; %g sec cooldown",value.a/1000,value.b/1000) or string.format("当前：施法%.2f秒；冷却%g秒",value.a/1000,value.b/1000)
    elseif id==9003855 then

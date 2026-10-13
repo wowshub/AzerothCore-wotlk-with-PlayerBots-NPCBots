@@ -4120,7 +4120,9 @@ void Spell::_cast(bool skipCheck)
             bool exactCooldown = ((m_spellInfo->Id >= 9003870 && m_spellInfo->Id <= 9003876) ||
                                   (m_spellInfo->Id >= 9003890 && m_spellInfo->Id <= 9003896)) &&
                                  player->HasAura(9003897);
-            for (uint32 source : {9003653u, 9003862u})
+            // WD144B: exact Arrow modifiers also require post-GO client synchronization.
+            // Native Player cooldown storage remains authoritative.
+            for (uint32 source : {9003653u, 9003862u, 9003990u, 9003991u})
             {
                 if (source == 9003862 && m_spellInfo->Id != 9003861)
                     continue;
