@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1F.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1G.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -296,6 +296,27 @@ local function Slot(i)
     s.hl:SetBlendMode("ADD")
     s.hl:SetAllPoints()
     s.hl:Hide()
+    -- DOCK1G: click target for shortcut entries (micro-menu buttons stay in their
+    -- bar; clicking here clicks the original).
+    s.click = CreateFrame("Button", nil, s)
+    s.click:SetAllPoints()
+    s.click:SetFrameLevel(box:GetFrameLevel() + 7)
+    s.click:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    s.click:SetScript("OnClick", function(self, mouse)
+        local o = s.owner
+        if o and o.mirror and o.btn and o.btn:IsEnabled() ~= 0 then o.btn:Click(mouse) end
+    end)
+    s.click:SetScript("OnEnter", function(self)
+        local o = s.owner
+        s.hl:Show()
+        if not o then return end
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:AddLine(o.btn.tooltipText or o.btn:GetName() or "?", 1, 1, 1)
+        if o.btn.newbieText then GameTooltip:AddLine(o.btn.newbieText, 1, .82, 0, true) end
+        GameTooltip:Show()
+    end)
+    s.click:SetScript("OnLeave", function() s.hl:Hide(); GameTooltip:Hide() end)
+    s.click:Hide()
     slots[i] = s
     return s
 end
@@ -434,7 +455,7 @@ local function Layout()
         o.slot = s
         PaintSlot(s, o)
         s:Show()
-        Pin(o)
+        if o.mirror then s.click:Show() else s.click:Hide(); Pin(o) end
     end
     for i = n + 1, #slots do slots[i]:Hide(); slots[i].owner = nil end
 end
@@ -452,11 +473,26 @@ local function HookOnce(b)
     b:HookScript("OnLeave", function(self) local o = owned[self.rdockKey or ""]; if o and o.slot then o.slot.hl:Hide() end end)
 end
 
+-- DOCK1G: a micro-menu button sitting in a bar (CollectionsMicroButton under
+-- MainMenuBarArtFrame / DragonUI's micro menu) is not moved: the bar keeps fixed
+-- slots and would show a hole. The dock shows a shortcut that clicks it instead.
+local function IsBarMicroButton(b)
+    local name = b:GetName() or ""
+    local parent = b:GetParent()
+    return name:find("MicroButton$") ~= nil and parent ~= nil and parent ~= UIParent
+end
+
 local function Take(b, key)
     if not key or owned[key] or b:IsProtected() then return false end
     local o = { btn = b, key = key, parent = b:GetParent(), oscale = b:GetScale(), alpha = b:GetAlpha(), insets = { b:GetHitRectInsets() },
                 strata = b:GetFrameStrata(), level = b:GetFrameLevel(), shown = b:IsShown(), points = {} }
     for i = 1, b:GetNumPoints() do o.points[i] = { b:GetPoint(i) } end
+    if IsBarMicroButton(b) then
+        o.mirror = true
+        owned[key] = o
+        dirty = true
+        return true
+    end
     owned[key] = o
     b.rdockOwned, b.rdockKey = true, key
     b.DragonUI_CollectorManaged = nil
@@ -471,8 +507,9 @@ local function Release(key)
     if not o then return end
     local b = o.btn
     owned[key] = nil
+    if o.slot then o.slot.hl:Hide(); o.slot.click:Hide() end
+    if o.mirror then dirty = true; return end
     b.rdockOwned, b.rdockKey = nil, nil
-    if o.slot then o.slot.hl:Hide() end
     pinning = true
     b:SetParent(o.parent or UIParent)
     b:SetScale(o.oscale or 1)
@@ -693,7 +730,7 @@ ticker:SetScript("OnUpdate", function(_, dt)
         for _, o in pairs(owned) do
             local b = o.btn
             local _, rel = b:GetPoint(1)
-            if b:GetParent() ~= box or rel ~= o.slot or not b:IsShown() or b:GetNumPoints() ~= 1 then dirty = true; break end
+            if not o.mirror and (b:GetParent() ~= box or rel ~= o.slot or not b:IsShown() or b:GetNumPoints() ~= 1) then dirty = true; break end
         end
     end
     if dirty then Layout(); if collecting then RefreshOverlays() end end
