@@ -1,0 +1,558 @@
+
+===== codexfix_20261012_190441_阶段UI9A_冷却分秒精确显示 =====
+--- Interface\AddOns\DragonUI\modules\cooldowns.lua BEFORE
++++ Interface\AddOns\DragonUI\modules\cooldowns.lua AFTER
+@@ -57,10 +57,12 @@
+             text:SetTextColor(1, 1, 0)
+             text:SetText(ceil(remaining))
+         elseif remaining <= 3600 then
+-            text:SetText(ceil(remaining / 60) .. 'm')
++            local seconds = ceil(remaining)
++            text:SetText(string.format('%d:%02d', math.floor(seconds / 60), seconds % 60))
+             text:SetTextColor(unpack(db.color))
+         else
+-            text:SetText(ceil(remaining / 3600) .. 'h')
++            local minutes = math.ceil(remaining / 60)
++            text:SetText(string.format('%dh%02dm', math.floor(minutes / 60), minutes % 60))
+             local r, g, b, a = unpack(db.color)
+             text:SetTextColor(r * 0.7, g * 0.7, b * 0.7, a)
+         end
+--- Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.lua BEFORE
++++ Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.lua AFTER
+@@ -0,0 +1,82 @@
++-- UI9A. Read cooldown APIs; never replace protected spell/action functions.
++local tip = GameTooltip
++if not tip or not hooksecurefunc then return end
++local query, elapsedSinceUpdate
++local ceil, floor, max = math.ceil, math.floor, math.max
++local prefixes = {}
++for _, key in ipairs({"ITEM_COOLDOWN_TIME", "ITEM_COOLDOWN_TIME_SEC", "ITEM_COOLDOWN_TIME_MIN", "ITEM_COOLDOWN_TIME_HOURS", "ITEM_COOLDOWN_TIME_DAYS"}) do
++    local value = _G[key]
++    if type(value) == "string" then
++        local at = value:find("%", 1, true)
++        if at and at > 1 then prefixes[#prefixes + 1] = value:sub(1, at - 1) end
++    end
++end
++local function IsRemainingLine(text)
++    if type(text) ~= "string" then return false end
++    for _, prefix in ipairs(prefixes) do
++        if text:sub(1, #prefix) == prefix then return true end
++    end
++    return false
++end
++local function Format(seconds)
++    seconds = ceil(max(0, seconds))
++    if seconds >= 3600 then
++        return string.format("%d:%02d:%02d", floor(seconds / 3600), floor(seconds / 60) % 60, seconds % 60)
++    elseif seconds >= 60 then
++        return string.format("%d:%02d", floor(seconds / 60), seconds % 60)
++    end
++    return tostring(seconds) .. "s"
++end
++local function Refresh()
++    if not query or not tip:IsShown() then return end
++    local start, duration, enabled = query()
++    if type(start) ~= "number" or type(duration) ~= "number" or enabled == 0 then return end
++    local remaining = max(0, start + duration - GetTime())
++    if start == 0 or duration == 0 then remaining = 0 end
++    local name = tip:GetName()
++    if not name then return end
++    for i = 1, tip:NumLines() do
++        local line = _G[name .. "TextLeft" .. i]
++        if line and IsRemainingLine(line:GetText()) then
++            -- Only the native remaining line: preserve base cooldown, costs and descriptions.
++            line:SetText(remaining > 0 and string.format(ITEM_COOLDOWN_TIME, Format(remaining)) or "")
++        end
++    end
++end
++local function TrackSpell(id)
++    local name = id and GetSpellInfo(id)
++    if not name then return end
++    query = function() return GetSpellCooldown(name) end
++    Refresh()
++end
++tip:HookScript("OnTooltipCleared", function() query = nil; elapsedSinceUpdate = 0 end)
++tip:HookScript("OnHide", function() query = nil end)
++tip:HookScript("OnTooltipSetSpell", function(self)
++    local _, id = self:GetSpell()
++    TrackSpell(id)
++end)
++if tip.SetAction then
++    hooksecurefunc(tip, "SetAction", function(self, slot)
++        query = function() return GetActionCooldown(slot) end
++        Refresh()
++    end)
++end
++if tip.SetSpell then
++    hooksecurefunc(tip, "SetSpell", function(self, slot, book)
++        query = function() return GetSpellCooldown(slot, book) end
++        Refresh()
++    end)
++end
++if tip.SetHyperlink then
++    hooksecurefunc(tip, "SetHyperlink", function(self, link)
++        local id = type(link) == "string" and link:match("^spell:(%d+)")
++        if id then TrackSpell(tonumber(id)) end
++    end)
++end
++tip:HookScript("OnUpdate", function(self, elapsed)
++    if not query then return end
++    elapsedSinceUpdate = (elapsedSinceUpdate or 0) + elapsed
++    if elapsedSinceUpdate < 0.1 then return end
++    elapsedSinceUpdate = 0
++    Refresh()
++end)
+--- Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.toc BEFORE
++++ Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.toc AFTER
+@@ -0,0 +1,6 @@
++## Interface: 30300
++## Title: Reborn Cooldown Display
++## Notes: UI9A precise remaining cooldown text; display only.
++## Version: UI9A
++## OptionalDeps: DragonUI
++RebornCooldownDisplay.lua
+
+===== codexfix_20261012_191912_阶段UI9B_冷却统一秒数与提示框修正 =====
+--- Interface\AddOns\Cooldowns\Cooldowns.lua BEFORE
++++ Interface\AddOns\Cooldowns\Cooldowns.lua AFTER
+@@ -177,27 +177,14 @@
+ 
+ 
+ function YarkoCooldowns.GetTimeFormat(timeleft)
+-	local str1;
+-	local str2;
+-	
+-	if (timeleft > 3600) then
+-		str1 = ((YarkoCooldowns_SavedVars.Tenths == "Y" 
+-			and YarkoCooldowns.TrimZeros(format("%.1f", (timeleft + 180) / 3600)))
+-			or format("%d", ceil(timeleft / 3600)));
+-		str2 = str1..((strlen(str1) > 2 and "\n") or "").."h";
+-	elseif (timeleft > YarkoCooldowns_SavedVars.Seconds) then
+-		str1 = ((YarkoCooldowns_SavedVars.Tenths == "Y" 
+-			and YarkoCooldowns.TrimZeros(format("%.1f", (timeleft + 3) / 60)))
+-			or format("%d", ceil(timeleft / 60)));
+-		str2 = str1..((strlen(str1) > 2 and "\n") or "").."m";
+-	else
+-		str1 = ((timeleft <= 2 and YarkoCooldowns_SavedVars.BelowTwo == "Y" 
+-			and format("%.1f", timeleft + 0.05))
+-			or format("%d", ceil(timeleft)));
+-		str2 = str1;
+-	end
+-	
+-	return str2, strlen(str1);
++    -- UI9B: display actual seconds; preserve the optional final two-second decimal.
++    local seconds
++    if timeleft <= 2 and YarkoCooldowns_SavedVars.BelowTwo == "Y" then
++        seconds = string.format("%.1f", timeleft + 0.05)
++    else
++        seconds = tostring(math.ceil(timeleft))
++    end
++    return seconds .. (timeleft > 60 and "s" or ""), #seconds
+ end
+ 
+ 
+--- Interface\AddOns\DragonUI\DragonUI.toc BEFORE
++++ Interface\AddOns\DragonUI\DragonUI.toc AFTER
+@@ -35,3 +35,6 @@
+ 
+ DragonUI.xml
+ 
++
++# UI9B: bundled display repair; no separate addon activation required
++modules\precisecooldowns.lua
+--- Interface\AddOns\DragonUI\modules\cooldowns.lua BEFORE
++++ Interface\AddOns\DragonUI\modules\cooldowns.lua AFTER
+@@ -56,15 +56,9 @@
+         elseif remaining <= 60 then
+             text:SetTextColor(1, 1, 0)
+             text:SetText(ceil(remaining))
+-        elseif remaining <= 3600 then
+-            local seconds = ceil(remaining)
+-            text:SetText(string.format('%d:%02d', math.floor(seconds / 60), seconds % 60))
++        else
++            text:SetText(ceil(remaining) .. 's')
+             text:SetTextColor(unpack(db.color))
+-        else
+-            local minutes = math.ceil(remaining / 60)
+-            text:SetText(string.format('%dh%02dm', math.floor(minutes / 60), minutes % 60))
+-            local r, g, b, a = unpack(db.color)
+-            text:SetTextColor(r * 0.7, g * 0.7, b * 0.7, a)
+         end
+     else
+         self.remain = nil
+--- Interface\AddOns\DragonUI\modules\precisecooldowns.lua BEFORE
++++ Interface\AddOns\DragonUI\modules\precisecooldowns.lua AFTER
+@@ -0,0 +1,83 @@
++-- UI9B: display only. Also loaded by DragonUI, so a newly added addon is not required.
++if _G.RebornCooldownDisplayVersion == "UI9B" then return end
++_G.RebornCooldownDisplayVersion = "UI9B"
++local tip = GameTooltip
++if not tip or not hooksecurefunc then return end
++local query, itemTip, elapsedTotal
++local function Normalize(text)
++    if type(text) ~= "string" then return "" end
++    return text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("：", ":"):gsub("%s", ""):lower()
++end
++local function IsRemaining(text)
++    local s = Normalize(text)
++    -- Native client text can differ from the Lua GlobalStrings punctuation/order.
++    if s:find("冷却时间剩余:",1,true)==1 or s:find("剩余冷却时间:",1,true)==1 or
++       s:find("冷卻時間剩餘:",1,true)==1 or s:find("剩餘冷卻時間:",1,true)==1 then return true end
++    for _, key in ipairs({"ITEM_COOLDOWN_TIME", "ITEM_COOLDOWN_TIME_SEC", "ITEM_COOLDOWN_TIME_MIN", "ITEM_COOLDOWN_TIME_HOURS", "ITEM_COOLDOWN_TIME_DAYS", "COOLDOWN_REMAINING"}) do
++        local value = _G[key]
++        if type(value)=="string" then
++            local at=value:find("%",1,true)
++            local prefix=Normalize(at and value:sub(1,at-1) or value)
++            if #prefix>0 and s:sub(1,#prefix)==prefix then return true end
++        end
++    end
++    return false
++end
++local function Resolve()
++    if query then return query end
++    if itemTip then return end
++    local owner=tip:GetOwner()
++    if owner and type(owner.action)=="number" and owner.action>0 then
++        local slot=owner.action
++        return function() return GetActionCooldown(slot) end
++    end
++    local name,id=tip:GetSpell()
++    name=(id and GetSpellInfo(id)) or name
++    if name then return function() return GetSpellCooldown(name) end end
++end
++local function Refresh()
++    if not tip:IsShown() then return end
++    local read=Resolve()
++    if not read then return end
++    local start,duration,enable=read()
++    if type(start)~="number" or type(duration)~="number" or enable==0 then return end
++    local remaining=math.ceil(math.max(0,start+duration-GetTime()))
++    if start==0 or duration==0 then remaining=0 end
++    local locale=GetLocale()
++    local suffix=(locale=="zhCN" or locale=="zhTW") and "秒" or "s"
++    local replacement=remaining>0 and string.format(ITEM_COOLDOWN_TIME,tostring(remaining)..suffix) or ""
++    local name=tip:GetName()
++    if not name then return end
++    for i=1,tip:NumLines() do
++        for _,side in ipairs({"Left","Right"}) do
++            local line=_G[name.."Text"..side..i]
++            if line and IsRemaining(line:GetText()) then line:SetText(replacement) end
++        end
++    end
++end
++tip:HookScript("OnTooltipCleared",function()query=nil;itemTip=nil end)
++tip:HookScript("OnHide",function()query=nil;itemTip=nil end)
++tip:HookScript("OnTooltipSetItem",function()query=nil;itemTip=true end)
++tip:HookScript("OnTooltipSetSpell",function()itemTip=nil;Refresh() end)
++if tip.SetAction then hooksecurefunc(tip,"SetAction",function(self,slot)
++    query=function()return GetActionCooldown(slot)end;Refresh()
++end)end
++if tip.SetSpell then hooksecurefunc(tip,"SetSpell",function(self,slot,book)
++    query=function()return GetSpellCooldown(slot,book)end;itemTip=nil;Refresh()
++end)end
++if tip.SetHyperlink then hooksecurefunc(tip,"SetHyperlink",function(self,link)
++    local id=type(link)=="string" and link:match("^spell:(%d+)")
++    local name=id and GetSpellInfo(tonumber(id))
++    if name then query=function()return GetSpellCooldown(name)end;itemTip=nil;Refresh() end
++end)end
++-- Independent timer survives another addon replacing GameTooltip's OnUpdate script.
++local driver=CreateFrame("Frame")
++driver:SetScript("OnUpdate",function(self,elapsed)
++    elapsedTotal=(elapsedTotal or 0)+elapsed
++    if elapsedTotal<0.1 then return end
++    elapsedTotal=0;Refresh()
++end)
++SLASH_REBORNCOOLDOWNDISPLAY1="/rcd"
++SlashCmdList.REBORNCOOLDOWNDISPLAY=function()
++    print("UI9B: "..(GetLocale()=="zhCN" and "冷却秒数显示已加载" or "cooldowns in seconds loaded"))
++end
+--- Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.lua BEFORE
++++ Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.lua AFTER
+@@ -1,82 +1,83 @@
+--- UI9A. Read cooldown APIs; never replace protected spell/action functions.
++-- UI9B: display only. Also loaded by DragonUI, so a newly added addon is not required.
++if _G.RebornCooldownDisplayVersion == "UI9B" then return end
++_G.RebornCooldownDisplayVersion = "UI9B"
+ local tip = GameTooltip
+ if not tip or not hooksecurefunc then return end
+-local query, elapsedSinceUpdate
+-local ceil, floor, max = math.ceil, math.floor, math.max
+-local prefixes = {}
+-for _, key in ipairs({"ITEM_COOLDOWN_TIME", "ITEM_COOLDOWN_TIME_SEC", "ITEM_COOLDOWN_TIME_MIN", "ITEM_COOLDOWN_TIME_HOURS", "ITEM_COOLDOWN_TIME_DAYS"}) do
+-    local value = _G[key]
+-    if type(value) == "string" then
+-        local at = value:find("%", 1, true)
+-        if at and at > 1 then prefixes[#prefixes + 1] = value:sub(1, at - 1) end
+-    end
++local query, itemTip, elapsedTotal
++local function Normalize(text)
++    if type(text) ~= "string" then return "" end
++    return text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("：", ":"):gsub("%s", ""):lower()
+ end
+-local function IsRemainingLine(text)
+-    if type(text) ~= "string" then return false end
+-    for _, prefix in ipairs(prefixes) do
+-        if text:sub(1, #prefix) == prefix then return true end
++local function IsRemaining(text)
++    local s = Normalize(text)
++    -- Native client text can differ from the Lua GlobalStrings punctuation/order.
++    if s:find("冷却时间剩余:",1,true)==1 or s:find("剩余冷却时间:",1,true)==1 or
++       s:find("冷卻時間剩餘:",1,true)==1 or s:find("剩餘冷卻時間:",1,true)==1 then return true end
++    for _, key in ipairs({"ITEM_COOLDOWN_TIME", "ITEM_COOLDOWN_TIME_SEC", "ITEM_COOLDOWN_TIME_MIN", "ITEM_COOLDOWN_TIME_HOURS", "ITEM_COOLDOWN_TIME_DAYS", "COOLDOWN_REMAINING"}) do
++        local value = _G[key]
++        if type(value)=="string" then
++            local at=value:find("%",1,true)
++            local prefix=Normalize(at and value:sub(1,at-1) or value)
++            if #prefix>0 and s:sub(1,#prefix)==prefix then return true end
++        end
+     end
+     return false
+ end
+-local function Format(seconds)
+-    seconds = ceil(max(0, seconds))
+-    if seconds >= 3600 then
+-        return string.format("%d:%02d:%02d", floor(seconds / 3600), floor(seconds / 60) % 60, seconds % 60)
+-    elseif seconds >= 60 then
+-        return string.format("%d:%02d", floor(seconds / 60), seconds % 60)
++local function Resolve()
++    if query then return query end
++    if itemTip then return end
++    local owner=tip:GetOwner()
++    if owner and type(owner.action)=="number" and owner.action>0 then
++        local slot=owner.action
++        return function() return GetActionCooldown(slot) end
+     end
+-    return tostring(seconds) .. "s"
++    local name,id=tip:GetSpell()
++    name=(id and GetSpellInfo(id)) or name
++    if name then return function() return GetSpellCooldown(name) end end
+ end
+ local function Refresh()
+-    if not query or not tip:IsShown() then return end
+-    local start, duration, enabled = query()
+-    if type(start) ~= "number" or type(duration) ~= "number" or enabled == 0 then return end
+-    local remaining = max(0, start + duration - GetTime())
+-    if start == 0 or duration == 0 then remaining = 0 end
+-    local name = tip:GetName()
++    if not tip:IsShown() then return end
++    local read=Resolve()
++    if not read then return end
++    local start,duration,enable=read()
++    if type(start)~="number" or type(duration)~="number" or enable==0 then return end
++    local remaining=math.ceil(math.max(0,start+duration-GetTime()))
++    if start==0 or duration==0 then remaining=0 end
++    local locale=GetLocale()
++    local suffix=(locale=="zhCN" or locale=="zhTW") and "秒" or "s"
++    local replacement=remaining>0 and string.format(ITEM_COOLDOWN_TIME,tostring(remaining)..suffix) or ""
++    local name=tip:GetName()
+     if not name then return end
+-    for i = 1, tip:NumLines() do
+-        local line = _G[name .. "TextLeft" .. i]
+-        if line and IsRemainingLine(line:GetText()) then
+-            -- Only the native remaining line: preserve base cooldown, costs and descriptions.
+-            line:SetText(remaining > 0 and string.format(ITEM_COOLDOWN_TIME, Format(remaining)) or "")
++    for i=1,tip:NumLines() do
++        for _,side in ipairs({"Left","Right"}) do
++            local line=_G[name.."Text"..side..i]
++            if line and IsRemaining(line:GetText()) then line:SetText(replacement) end
+         end
+     end
+ end
+-local function TrackSpell(id)
+-    local name = id and GetSpellInfo(id)
+-    if not name then return end
+-    query = function() return GetSpellCooldown(name) end
+-    Refresh()
++tip:HookScript("OnTooltipCleared",function()query=nil;itemTip=nil end)
++tip:HookScript("OnHide",function()query=nil;itemTip=nil end)
++tip:HookScript("OnTooltipSetItem",function()query=nil;itemTip=true end)
++tip:HookScript("OnTooltipSetSpell",function()itemTip=nil;Refresh() end)
++if tip.SetAction then hooksecurefunc(tip,"SetAction",function(self,slot)
++    query=function()return GetActionCooldown(slot)end;Refresh()
++end)end
++if tip.SetSpell then hooksecurefunc(tip,"SetSpell",function(self,slot,book)
++    query=function()return GetSpellCooldown(slot,book)end;itemTip=nil;Refresh()
++end)end
++if tip.SetHyperlink then hooksecurefunc(tip,"SetHyperlink",function(self,link)
++    local id=type(link)=="string" and link:match("^spell:(%d+)")
++    local name=id and GetSpellInfo(tonumber(id))
++    if name then query=function()return GetSpellCooldown(name)end;itemTip=nil;Refresh() end
++end)end
++-- Independent timer survives another addon replacing GameTooltip's OnUpdate script.
++local driver=CreateFrame("Frame")
++driver:SetScript("OnUpdate",function(self,elapsed)
++    elapsedTotal=(elapsedTotal or 0)+elapsed
++    if elapsedTotal<0.1 then return end
++    elapsedTotal=0;Refresh()
++end)
++SLASH_REBORNCOOLDOWNDISPLAY1="/rcd"
++SlashCmdList.REBORNCOOLDOWNDISPLAY=function()
++    print("UI9B: "..(GetLocale()=="zhCN" and "冷却秒数显示已加载" or "cooldowns in seconds loaded"))
+ end
+-tip:HookScript("OnTooltipCleared", function() query = nil; elapsedSinceUpdate = 0 end)
+-tip:HookScript("OnHide", function() query = nil end)
+-tip:HookScript("OnTooltipSetSpell", function(self)
+-    local _, id = self:GetSpell()
+-    TrackSpell(id)
+-end)
+-if tip.SetAction then
+-    hooksecurefunc(tip, "SetAction", function(self, slot)
+-        query = function() return GetActionCooldown(slot) end
+-        Refresh()
+-    end)
+-end
+-if tip.SetSpell then
+-    hooksecurefunc(tip, "SetSpell", function(self, slot, book)
+-        query = function() return GetSpellCooldown(slot, book) end
+-        Refresh()
+-    end)
+-end
+-if tip.SetHyperlink then
+-    hooksecurefunc(tip, "SetHyperlink", function(self, link)
+-        local id = type(link) == "string" and link:match("^spell:(%d+)")
+-        if id then TrackSpell(tonumber(id)) end
+-    end)
+-end
+-tip:HookScript("OnUpdate", function(self, elapsed)
+-    if not query then return end
+-    elapsedSinceUpdate = (elapsedSinceUpdate or 0) + elapsed
+-    if elapsedSinceUpdate < 0.1 then return end
+-    elapsedSinceUpdate = 0
+-    Refresh()
+-end)
+--- Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.toc BEFORE
++++ Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.toc AFTER
+@@ -1,6 +1,6 @@
+ ## Interface: 30300
+ ## Title: Reborn Cooldown Display
+-## Notes: UI9A precise remaining cooldown text; display only.
+-## Version: UI9A
++## Notes: UI9B precise remaining cooldown text; display only.
++## Version: UI9B
+ ## OptionalDeps: DragonUI
+ RebornCooldownDisplay.lua
+
+===== codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号 =====
+--- Interface\AddOns\Cooldowns\Cooldowns.lua BEFORE
++++ Interface\AddOns\Cooldowns\Cooldowns.lua AFTER
+@@ -184,7 +184,7 @@
+     else
+         seconds = tostring(math.ceil(timeleft))
+     end
+-    return seconds .. (timeleft > 60 and "s" or ""), #seconds
++    return seconds, #seconds
+ end
+ 
+ 
+@@ -246,7 +246,8 @@
+ 		len = 4;
+ 	end
+ 	
+-	cooldownframe:SetScale(Scales[len] * (cooldownframe.cooldown:GetParent():GetWidth() 
++	local compact = cooldownframe.cooldown:GetParent().action and 0.75 or 1
++	cooldownframe:SetScale(compact * Scales[len] * (cooldownframe.cooldown:GetParent():GetWidth() 
+ 		/ ActionButton1:GetWidth()));
+ 	_G[cooldownframe:GetName().."Text"]:SetText(cooldownframe.timeleftstr);
+ end
+--- Interface\AddOns\DragonUI\modules\cooldowns.lua BEFORE
++++ Interface\AddOns\DragonUI\modules\cooldowns.lua AFTER
+@@ -57,7 +57,7 @@
+             text:SetTextColor(1, 1, 0)
+             text:SetText(ceil(remaining))
+         else
+-            text:SetText(ceil(remaining) .. 's')
++            text:SetText(ceil(remaining))
+             text:SetTextColor(unpack(db.color))
+         end
+     else
+@@ -128,7 +128,7 @@
+         local fontPath = db.font and db.font[1]
+         text:SetFont(
+             fontPath or addon.Fonts.ACTIONBAR,
+-            db.font_size or (db.font and db.font[2]) or 16,
++            (db.font_size or (db.font and db.font[2]) or 16) * 0.75,
+             (db.font and db.font[3]) or 'OUTLINE'
+         )
+         text:SetPoint(unpack(db.position))
+@@ -160,7 +160,7 @@
+                     local fontPath = db.font and db.font[1]
+                     cooldown.text:SetFont(
+                         fontPath or addon.Fonts.ACTIONBAR,
+-                        db.font_size or (db.font and db.font[2]) or 16,
++                        (db.font_size or (db.font and db.font[2]) or 16) * 0.75,
+                         (db.font and db.font[3]) or 'OUTLINE'
+                     )
+ 
+--- Interface\AddOns\DragonUI\modules\precisecooldowns.lua BEFORE
++++ Interface\AddOns\DragonUI\modules\precisecooldowns.lua AFTER
+@@ -1,6 +1,6 @@
+--- UI9B: display only. Also loaded by DragonUI, so a newly added addon is not required.
+-if _G.RebornCooldownDisplayVersion == "UI9B" then return end
+-_G.RebornCooldownDisplayVersion = "UI9B"
++-- UI9C: display only. Also loaded by DragonUI, so a newly added addon is not required.
++if _G.RebornCooldownDisplayVersion == "UI9C" then return end
++_G.RebornCooldownDisplayVersion = "UI9C"
+ local tip = GameTooltip
+ if not tip or not hooksecurefunc then return end
+ local query, itemTip, elapsedTotal
+@@ -79,5 +79,5 @@
+ end)
+ SLASH_REBORNCOOLDOWNDISPLAY1="/rcd"
+ SlashCmdList.REBORNCOOLDOWNDISPLAY=function()
+-    print("UI9B: "..(GetLocale()=="zhCN" and "冷却秒数显示已加载" or "cooldowns in seconds loaded"))
++    print("UI9C: "..(GetLocale()=="zhCN" and "冷却秒数显示已加载" or "cooldowns in seconds loaded"))
+ end
+--- Interface\AddOns\OmniCC\cc.lua BEFORE
++++ Interface\AddOns\OmniCC\cc.lua AFTER
+@@ -116,6 +116,8 @@
+ --set font to the given settings
+ function Timer:UpdateFont()
+ 	local font, size, outline = OmniCC:GetFontInfo()
++	-- UI9C: compact numbers on action buttons; other timer widgets retain their size.
++	if self.cooldown:GetParent().action then size = size * 0.75 end
+ 	if OmniCC:ScalingText() then
+ 		size = size * (self:GetWidth() / ICON_SIZE)
+ 	end
+@@ -205,6 +207,12 @@
+ 
+ --returns both what text to display, and how long until the next update
+ function Timer:GetTimeText(s)
++    -- UI9C: action buttons show seconds, with frequent refresh instead of minute boundaries.
++    if self.cooldown:GetParent().action then
++        if s <= 0 then return '', 0.1 end
++        if s < OmniCC:GetTenthsDuration() then return format('%.1f', s), 0.05 end
++        return math.ceil(s), 0.1
++    end
+ 	--show tenths of seconds below tenths threshold
+ 	local tenths = OmniCC:GetTenthsDuration()
+ 	if s < tenths then
+--- Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.lua BEFORE
++++ Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.lua AFTER
+@@ -1,6 +1,6 @@
+--- UI9B: display only. Also loaded by DragonUI, so a newly added addon is not required.
+-if _G.RebornCooldownDisplayVersion == "UI9B" then return end
+-_G.RebornCooldownDisplayVersion = "UI9B"
++-- UI9C: display only. Also loaded by DragonUI, so a newly added addon is not required.
++if _G.RebornCooldownDisplayVersion == "UI9C" then return end
++_G.RebornCooldownDisplayVersion = "UI9C"
+ local tip = GameTooltip
+ if not tip or not hooksecurefunc then return end
+ local query, itemTip, elapsedTotal
+@@ -79,5 +79,5 @@
+ end)
+ SLASH_REBORNCOOLDOWNDISPLAY1="/rcd"
+ SlashCmdList.REBORNCOOLDOWNDISPLAY=function()
+-    print("UI9B: "..(GetLocale()=="zhCN" and "冷却秒数显示已加载" or "cooldowns in seconds loaded"))
++    print("UI9C: "..(GetLocale()=="zhCN" and "冷却秒数显示已加载" or "cooldowns in seconds loaded"))
+ end
+--- Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.toc BEFORE
++++ Interface\AddOns\RebornCooldownDisplay\RebornCooldownDisplay.toc AFTER
+@@ -1,6 +1,6 @@
+ ## Interface: 30300
+ ## Title: Reborn Cooldown Display
+-## Notes: UI9B precise remaining cooldown text; display only.
+-## Version: UI9B
++## Notes: UI9C precise remaining cooldown text; display only.
++## Version: UI9C
+ ## OptionalDeps: DragonUI
+ RebornCooldownDisplay.lua

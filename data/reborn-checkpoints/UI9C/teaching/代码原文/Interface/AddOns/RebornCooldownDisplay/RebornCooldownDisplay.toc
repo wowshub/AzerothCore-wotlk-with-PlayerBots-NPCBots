@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: Reborn Cooldown Display
+## Notes: UI9C precise remaining cooldown text; display only.
+## Version: UI9C
+## OptionalDeps: DragonUI
+RebornCooldownDisplay.lua
