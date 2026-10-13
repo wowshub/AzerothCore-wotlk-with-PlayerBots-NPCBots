@@ -1,0 +1,182 @@
+[
+  {
+    "Path": "01_覆盖到源代码根目录/data/customfixsql/characters/witchdoctor/WD142A/01_node_reference.sql",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\customfixsql\\characters\\witchdoctor\\WD142A\\01_node_reference.sql",
+    "Hash": "c7b23beaa9067469d80ad35fa2670795c114ef3edda0efab3dc3e9e7a168d6ab"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/customfixsql/characters/witchdoctor/WD142A/02_save_rows.sql",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\customfixsql\\characters\\witchdoctor\\WD142A\\02_save_rows.sql",
+    "Hash": "8f598a39fa903ac096e95cc391371fae02a58994bc1be1843d4a13fd3c6b9fc6"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/customfixsql/world/witchdoctor/WD142A/01_WD142_world.sql",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\customfixsql\\world\\witchdoctor\\WD142A\\01_WD142_world.sql",
+    "Hash": "d1507d81d31549460190991a724b9b26d0f67d78c2b708de9df92e87c58e4db6"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/reborn-checkpoints/witchdoctor/nodes.csv",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-checkpoints\\witchdoctor\\nodes.csv",
+    "Hash": "f5594a774189afc84d2996c2f05108135de6f3755b1d611623e8f60cc851ddbb"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua",
+    "Hash": "0240df2be64be75bd1776b36fbc58e8180cb490f78ce95cd16a4c809fd7f5a4c"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "Hash": "c2194e9b6f2b6cc0bd895138a7f457d78a9e07c53def53531f7ad4121df9230f"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\NodeLayout.lua",
+    "Hash": "8506adbbd18cf6b257519ad46de7da106c9d48e1fad68a051a924ea313c6794d"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "Hash": "2e81684034162ef1f5ecb4bcac4de1ca27fa568338f89ab24c8cb8acc2a2eb0c"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+    "Hash": "462751cedfbfd3655bc8a97aed78fe4a88c43b775d7446d814338ef07167ad72"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorAllocation.inc",
+    "Hash": "379927b7cec1f52862bd99b9e350821ddd4b300f4f4365d263d8a2a0f92f67ca"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorCommon142.inc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorCommon142.inc",
+    "Hash": "e77ea3d09f8f04926c0b7edc3f6da980283ceff231efaf3e53a09a682f1b12cd"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNodeLayout.h",
+    "Hash": "c370c3597fab5823d631d774a77f819db1a157d09e4998e214bba72138362a92"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalentNodes.h",
+    "Hash": "9930ac0f6e54928823f49eaa8c6f984358a63a522d718281d90a420323fe716e"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "Hash": "367250bc08290ec0ff02c891d6ff72528e962070e7f97d9c2904215509214036"
+  },
+  {
+    "Path": "01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Player\\WitchDoctorTalentPolicy.h",
+    "Hash": "58a1211bd132ae034bfd477c9993d7ef43da040e09d72c93df6fdcb942a3bedf"
+  },
+  {
+    "Path": "02_覆盖到客户端根目录/Data/patch-ZA.mpq",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Data\\patch-ZA.mpq",
+    "Hash": "9623aee5ee9f3e43951d3c4628145f7d6e9c4f8453aa9543f06fdd64ace5d986"
+  },
+  {
+    "Path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua",
+    "Hash": "0240df2be64be75bd1776b36fbc58e8180cb490f78ce95cd16a4c809fd7f5a4c"
+  },
+  {
+    "Path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "Hash": "c2194e9b6f2b6cc0bd895138a7f457d78a9e07c53def53531f7ad4121df9230f"
+  },
+  {
+    "Path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\NodeLayout.lua",
+    "Hash": "8506adbbd18cf6b257519ad46de7da106c9d48e1fad68a051a924ea313c6794d"
+  },
+  {
+    "Path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "Hash": "2e81684034162ef1f5ecb4bcac4de1ca27fa568338f89ab24c8cb8acc2a2eb0c"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SkillLineAbility.dbc",
+    "Hash": "c2013938bcf763c4c38d8af5bef5f11cc0ba4ee480c92a3fa65e4e53e11ce53c"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SoundEntries.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SoundEntries.dbc",
+    "Hash": "742d650e602b69c1e1721a42cb17e9b5f493dbfc45d222d83b0c5fb086ee448b"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\Spell.dbc",
+    "Hash": "20c56a4c2e5dee2aeb0c6d5c1be432af4ffbea64f671ae6ff0ec0a3aec33f227"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellCastTimes.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellCastTimes.dbc",
+    "Hash": "9a2dbe37d86dc68b35ae4447fbcd6337fa0cfd8020d69fd4813bb9c9a3deac5d"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellDuration.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellDuration.dbc",
+    "Hash": "d07ab097fd3996d582632636fe7cc0a029474cad3406b2b278706f78d12fe905"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellIcon.dbc",
+    "Hash": "c0ce8d436a7c2216a4295181d64b6ea812727d7423c1dd2580e2bc136e8b7f58"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellRange.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellRange.dbc",
+    "Hash": "f53adf6198eb42adcfd7fb4d35f6b5704e067006fb3f4f0acf4d91d4d53e5afa"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellVisual.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellVisual.dbc",
+    "Hash": "e2003c1258caf968bb553641de45397f764d7fa3fd8ce4591fb70b566df25899"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualEffectName.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellVisualEffectName.dbc",
+    "Hash": "4a445421057bad85eec6806fa7274cf0fbc7b8f1f755a189cfe55c28c3622f21"
+  },
+  {
+    "Path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualKit.dbc",
+    "State": "MATCH",
+    "Target": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261013Ascend\\Data\\dbc\\SpellVisualKit.dbc",
+    "Hash": "7f218bb99fdb73b78935d4ff91cad54fe8dba56a0c3d0c4cbeaef49447367bf4"
+  }
+]

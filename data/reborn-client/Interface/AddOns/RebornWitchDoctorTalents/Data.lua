@@ -122,3 +122,9 @@ do
   end
  end
 end
+
+-- WD142 source spell identity wins over reused official node IDs.
+for _,n in ipairs(RebornWDTreeData) do
+ if n.ID==30203 or n.ID==6052 or n.ID==29757 then n.RequiredLevel=n.ID==6052 and 58 or 56;n.RequiredAEInvestment=24 end
+ if n.ID==6052 then n.RequiredIDs={30203} end
+end

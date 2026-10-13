@@ -1,0 +1,4 @@
+node,source_spell,private_spell,state,level,prior_AE,prerequisite,type
+30203,802100,9003962,candidate_ingame_pending,56,24,,common_active
+6052,705907,9003964,candidate_ingame_pending,58,24,30203,common_passive
+29757,802756,9003965,candidate_ingame_pending,56,24,,common_passive

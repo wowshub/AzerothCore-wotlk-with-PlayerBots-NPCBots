@@ -3307,6 +3307,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing132.inc"
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
+#include "RebornWitchDoctorCommon142.inc"
 
 // WD126: the donor spell's Dodge and Scale auras remain native 3.3.5a effects.
 class spell_reborn_wd126_shrink_ally : public SpellScript
@@ -3327,6 +3328,10 @@ class spell_reborn_wd126_shrink_ally : public SpellScript
 
 void AddRebornWitchDoctorScripts()
 {
+    RegisterSpellScript(WD142::aura_veil);
+    RegisterSpellScript(WD142::spell_pulse);
+    RegisterSpellScript(WD142::aura_devotion);
+    new WD142::melee();
     new reborn_wd117_heal();
     RegisterSpellScript(aura_reborn_wd118_slither);
     RegisterSpellScript(spell_reborn_wd112_brew);
@@ -3449,3 +3454,5 @@ void WD67ClearSummons(Player* player,bool healing,bool cleansing)
     }
 }
 }
+
+namespace WD142Bridge { void Clear(Player* p) { WD142::Clear(p); } }
