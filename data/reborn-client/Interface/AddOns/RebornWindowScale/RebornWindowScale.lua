@@ -1,0 +1,231 @@
+-- RebornWindowScale (窗口缩放), RebornWOW WSC1A.
+-- Adds a corner grip (drag to scale, double-click to reset), Ctrl + mouse wheel
+-- scaling, dragging and remembered size/position to addon windows -- without
+-- changing those addons. Known windows are listed below; any other window can
+-- be added by pointing at it and typing /rwin add. Bilingual.
+
+local DB
+local MIN_SCALE, MAX_SCALE = 0.4, 2.0
+
+-- Main windows and their sub-windows (popups that are separate frames).
+local KNOWN = {
+    "RebornEquipmentVaultFrame",          -- 共享搭配衣柜
+    "RebornSpectatorRosterFrame",         -- 旁观中心
+    "NPCBotsRTSFrame", "NPCBotsRTSHelpFrame",
+    "GObjectEditorUIFrame",
+    "DungeonClearFrame",                  -- 副本自动清理
+    "RebornWDSpecHome", "RebornWDTreePreview", "RebornWDRecommendedBuilds", "RebornWD8EquipmentMenu",
+    "SpellDraftBookFrame", "SpellDraftMysticOverviewFrame", "SpellDraftMysticConfirmFrame",
+    "SpellDraftPrestigeShopFrame", "SpellDraftTalentRefundDialog",
+}
+-- Windows that already scale themselves (RebornTalentGuide has its own grip).
+local SKIP = { RebornTalentGuideFrame = true, RebornDockFrame = true }
+
+local STR = {
+    zh = {
+        title = "窗口缩放",
+        grip = "拖动：缩放窗口\n双击：恢复原大小\nCtrl+滚轮：也可缩放\n拖动窗口空白处：移动（位置会记住）",
+        added = "已加入：%s（右下角出现缩放小三角）", removed = "已移除：%s（下次重载后恢复原样）",
+        nothing = "鼠标下面没有可以加入的窗口（需要有名字的窗口）。", reset = "已恢复 %s 的大小和位置。",
+        list = "已管理的窗口：", help = "/rwin add 加入鼠标下的窗口；/rwin remove 移除；/rwin reset 恢复鼠标下窗口；/rwin list 列表",
+    },
+    en = {
+        title = "Window Scale",
+        grip = "Drag: scale the window\nDouble-click: original size\nCtrl+wheel: scale too\nDrag the window background: move (remembered)",
+        added = "Added: %s (a scale grip appears in its corner)", removed = "Removed: %s (back to normal after /reload)",
+        nothing = "No window under the mouse to add (it needs a name).", reset = "Reset size and position of %s.",
+        list = "Managed windows:", help = "/rwin add the window under the mouse; /rwin remove; /rwin reset; /rwin list",
+    },
+}
+local function T(k)
+    local zh = DB and DB.lang == "zh"
+    if DB and DB.lang == nil then zh = (GetLocale() == "zhCN" or GetLocale() == "zhTW") end
+    return (zh and STR.zh or STR.en)[k] or k
+end
+local function Say(m) DEFAULT_CHAT_FRAME:AddMessage("|cffd9a638[" .. T("title") .. "]|r " .. m) end
+
+local decorated = {}      -- name -> { frame, native = scale before ours }
+
+local function Entry(name)
+    DB.frames[name] = DB.frames[name] or {}
+    return DB.frames[name]
+end
+
+-- Keep the top-left corner on the same screen spot while the scale changes.
+local function SetScaleKeepCorner(f, s)
+    if s < MIN_SCALE then s = MIN_SCALE elseif s > MAX_SCALE then s = MAX_SCALE end
+    local l, t = f:GetLeft(), f:GetTop()
+    local eff = f:GetEffectiveScale()
+    f:SetScale(s)
+    if l and t then
+        local k = eff / f:GetEffectiveScale()
+        f:ClearAllPoints()
+        f:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", l * k, t * k)
+    end
+end
+
+local function SavePlace(name, f)
+    local l, t = f:GetLeft(), f:GetTop()
+    if not l or not t then return end
+    local e = Entry(name)
+    local k = f:GetEffectiveScale() / UIParent:GetEffectiveScale()
+    e.x, e.y = l * k, t * k            -- top-left, in UIParent units
+    e.scale = f:GetScale()
+end
+
+local function ApplySaved(name, f)
+    local e = DB.frames[name]
+    if not e then return end
+    if e.scale then f:SetScale(e.scale) end
+    if e.x and e.y then
+        local k = UIParent:GetEffectiveScale() / f:GetEffectiveScale()
+        f:ClearAllPoints()
+        f:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", e.x * k, e.y * k)
+    end
+end
+
+local function Decorate(name, f)
+    if decorated[name] then return end
+    local d = { frame = f, native = f:GetScale() }
+    decorated[name] = d
+    f:SetClampedToScreen(true)
+
+    -- Corner grip.
+    local grip = CreateFrame("Button", nil, f)
+    d.grip = grip
+    grip:SetSize(16, 16)
+    grip:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -3, 3)
+    grip:SetFrameStrata(f:GetFrameStrata())
+    grip:SetFrameLevel(f:GetFrameLevel() + 60)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT"); GameTooltip:AddLine(T("title"), 1, .82, .3)
+        GameTooltip:AddLine(T("grip"), 1, 1, 1, true); GameTooltip:Show()
+    end)
+    grip:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    grip:SetScript("OnMouseDown", function(self)
+        local eff = f:GetEffectiveScale()
+        self.drag = { left = f:GetLeft() * eff, width = f:GetWidth() }
+        self:SetScript("OnUpdate", function(g)
+            local cx = GetCursorPosition()
+            local s = (cx - g.drag.left) / (g.drag.width * UIParent:GetEffectiveScale())
+            if math.abs(s - f:GetScale()) > 0.005 then SetScaleKeepCorner(f, s) end
+        end)
+    end)
+    grip:SetScript("OnMouseUp", function(self) self:SetScript("OnUpdate", nil); self.drag = nil; SavePlace(name, f) end)
+    grip:SetScript("OnDoubleClick", function()
+        SetScaleKeepCorner(f, d.native or 1)
+        local e = Entry(name); e.scale = nil
+    end)
+
+    -- Ctrl + mouse wheel over the window background.
+    if not f:IsMouseWheelEnabled() then f:EnableMouseWheel(true) end
+    f:HookScript("OnMouseWheel", function(self, delta)
+        if IsControlKeyDown() then
+            SetScaleKeepCorner(self, self:GetScale() + (delta > 0 and 0.05 or -0.05)); SavePlace(name, self)
+        end
+    end)
+
+    -- Dragging: add it only when the window has none of its own.
+    if not f:GetScript("OnDragStart") then
+        f:SetMovable(true); f:EnableMouse(true); f:RegisterForDrag("LeftButton")
+        f:SetScript("OnDragStart", function(self) self:StartMoving() end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); SavePlace(name, self) end)
+    else
+        f:SetMovable(true)
+        f:HookScript("OnDragStop", function(self) SavePlace(name, self) end)
+    end
+
+    -- Re-apply after the addon shows (some reset their own scale each time they open).
+    f:HookScript("OnShow", function(self)
+        local e = DB.frames[name]
+        if not (e and e.scale) then d.native = self:GetScale() end
+        ApplySaved(name, self)
+    end)
+    ApplySaved(name, f)
+end
+
+local function Names()
+    local list, seen = {}, {}
+    for _, n in ipairs(KNOWN) do if not seen[n] then seen[n] = true; list[#list + 1] = n end end
+    for n in pairs(DB.added) do if not seen[n] then seen[n] = true; list[#list + 1] = n end end
+    return list
+end
+
+-- Windows are often created on first open: keep looking.
+local waiter = CreateFrame("Frame")
+local acc = 0
+waiter:SetScript("OnUpdate", function(_, dt)
+    if not DB then return end
+    acc = acc + dt
+    if acc < 1 then return end
+    acc = 0
+    for _, n in ipairs(Names()) do
+        if not decorated[n] and not SKIP[n] and not DB.removed[n] then
+            local f = _G[n]
+            if type(f) == "table" and f.GetObjectType and f.SetScale and not f:IsProtected() then Decorate(n, f) end
+        end
+    end
+end)
+
+local ev = CreateFrame("Frame")
+ev:RegisterEvent("ADDON_LOADED")
+ev:SetScript("OnEvent", function(_, _, arg1)
+    if arg1 ~= "RebornWindowScale" then return end
+    RebornWindowScaleDB = RebornWindowScaleDB or {}
+    DB = RebornWindowScaleDB
+    DB.frames = DB.frames or {}
+    DB.added = DB.added or {}
+    DB.removed = DB.removed or {}
+    if DB.lang == nil then DB.lang = (GetLocale() == "zhCN" or GetLocale() == "zhTW") and "zh" or "en" end
+end)
+
+-- The named top-level window under the mouse (walk up to a child of UIParent).
+local function WindowUnderMouse()
+    local f = GetMouseFocus()
+    local best
+    while f and f ~= UIParent and f ~= WorldFrame do
+        if f.GetName and f:GetName() and f:GetName() ~= "" and f.SetScale then best = f end
+        local p = f:GetParent()
+        if p == UIParent then break end
+        f = p
+    end
+    return best
+end
+
+SLASH_REBORNWINDOWSCALE1 = "/rwin"
+SlashCmdList.REBORNWINDOWSCALE = function(msg)
+    local cmd = ((msg or ""):match("^(%S*)") or ""):lower()
+    if cmd == "add" then
+        local f = WindowUnderMouse()
+        if not f or f:IsProtected() then Say(T("nothing")); return end
+        local n = f:GetName()
+        DB.added[n] = true; DB.removed[n] = nil
+        Decorate(n, f); Say(string.format(T("added"), n))
+    elseif cmd == "remove" then
+        local f = WindowUnderMouse(); local n = f and f:GetName()
+        if not n then Say(T("nothing")); return end
+        DB.added[n] = nil; DB.removed[n] = true; DB.frames[n] = nil
+        local d = decorated[n]
+        if d and d.grip then d.grip:Hide() end
+        Say(string.format(T("removed"), n))
+    elseif cmd == "reset" then
+        local f = WindowUnderMouse(); local n = f and f:GetName()
+        if not n then Say(T("nothing")); return end
+        DB.frames[n] = nil
+        local d = decorated[n]
+        if d then f:SetScale(d.native or 1); f:ClearAllPoints(); f:SetPoint("CENTER") end
+        Say(string.format(T("reset"), n))
+    elseif cmd == "list" then
+        Say(T("list"))
+        for _, n in ipairs(Names()) do
+            local e = DB.frames[n]
+            Say(string.format("  %s%s  %s", n, decorated[n] and "" or " (-)",
+                e and e.scale and string.format("x%.2f", e.scale) or ""))
+        end
+    else
+        Say(T("help"))
+    end
+end
