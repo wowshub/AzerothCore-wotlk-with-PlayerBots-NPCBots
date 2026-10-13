@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1E.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1F.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -282,6 +282,11 @@ local function Slot(i)
     s.bg:SetTexture(0, 0, 0, 0.6)
     s.icon = s:CreateTexture(nil, "ARTWORK")
     s.ring = s:CreateTexture(nil, "OVERLAY")
+    -- DOCK1F: dark round disc behind non-portrait pictures in the round style.
+    s.disc = s:CreateTexture(nil, "BACKGROUND")
+    s.disc:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+    s.disc:SetVertexColor(0, 0, 0, 0.85)
+    s.disc:Hide()
     s.edge = CreateFrame("Frame", nil, s)
     s.edge:SetAllPoints()
     s.edge:SetBackdrop({ edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = 1 })
@@ -308,9 +313,22 @@ local function PaintSlot(s, o)
     if shape == "round" then
         s.bg:Hide(); s.edge:Hide()
         s.icon:SetPoint("CENTER")
-        s.icon:SetSize(w * 0.66, h * 0.66)
-        if type(path) == "string" then SetPortraitToTexture(s.icon, path) else s.icon:SetTexture(path) end
-        s.icon:SetTexCoord(0, 1, 0, 1)
+        -- DOCK1F: SetPortraitToTexture ignores texcoords (micro-menu atlases came
+        -- out as stripes) and only takes stock icon files (addon pictures came out
+        -- blank). Portrait only a plain Interface\Icons\ picture; anything else is
+        -- drawn with its own coords, small enough to sit inside the ring, on a disc.
+        local isIcon = type(path) == "string" and path:lower():find("\\icons\\", 1, true)
+        local plain = not coords or #coords ~= 8 or (coords[1] == 0 and coords[2] == 0 and coords[7] == 1 and coords[8] == 1)
+        s.disc:ClearAllPoints(); s.disc:SetPoint("CENTER"); s.disc:SetSize(w * 0.74, h * 0.74); s.disc:Show()
+        if isIcon and plain then
+            s.icon:SetSize(w * 0.66, h * 0.66)
+            SetPortraitToTexture(s.icon, path)
+            s.icon:SetTexCoord(0, 1, 0, 1)
+        else
+            s.icon:SetSize(w * 0.48, h * 0.48)
+            s.icon:SetTexture(path or "Interface\\Icons\\INV_Misc_QuestionMark")
+            if coords and #coords == 8 then s.icon:SetTexCoord(unpack(coords)) else s.icon:SetTexCoord(0, 1, 0, 1) end
+        end
         -- Classic minimap ring: the visible circle fills ~60% of the texture and its
         -- centre sits ~31% in from the top-left corner (the stock 31px button with
         -- its 53px border); size and offset it so the circle lands on the slot.
@@ -320,7 +338,7 @@ local function PaintSlot(s, o)
         s.ring:SetPoint("TOPLEFT", s, "CENTER", -w * 1.7 * 0.31, h * 1.7 * 0.31)
         s.ring:Show()
     else
-        s.bg:Show(); s.edge:Show()
+        s.bg:Show(); s.edge:Show(); s.disc:Hide()
         s.bg:SetAllPoints()
         s.icon:SetPoint("TOPLEFT", 2, -2)
         s.icon:SetPoint("BOTTOMRIGHT", -2, 2)
