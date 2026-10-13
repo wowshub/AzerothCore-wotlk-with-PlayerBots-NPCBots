@@ -1,4 +1,4 @@
--- RebornWindowScale (窗口缩放), RebornWOW WSC1A/WSC1B.
+-- RebornWindowScale (窗口缩放), RebornWOW WSC1A-1C.
 -- Adds a corner grip (drag to scale, double-click to reset), Ctrl + mouse wheel
 -- scaling, dragging and remembered size/position to addon windows -- without
 -- changing those addons. Known windows are listed below; any other window can
@@ -47,6 +47,14 @@ reopener:SetScript("OnUpdate", function(self)
     for f in pairs(reopen) do if not f:IsShown() then f:Show() end end
     wipe(reopen)
 end)
+
+-- WSC1C: page views that fill a managed window and hide its corner grip.
+-- view name -> window it belongs to.
+local VIEWS = {
+    SpellDraftMysticCatalogView = "SpellDraftBookFrame",   -- 神秘附魔 page of the SpellDraft book
+}
+local viewDone = {}
+local AddViewGrip
 
 local function LooksLikeWindow(f, name)
     local prefixed = false
@@ -207,6 +215,45 @@ local function Decorate(name, f)
     ApplySaved(name, f)
 end
 
+AddViewGrip = function(view, v, owner, f)
+    local grip = CreateFrame("Button", nil, v)
+    grip:SetSize(16, 16)
+    grip:SetPoint("BOTTOMRIGHT", v, "BOTTOMRIGHT", -3, 3)
+    grip:SetFrameStrata(v:GetFrameStrata())
+    grip:SetFrameLevel(v:GetFrameLevel() + 60)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT"); GameTooltip:AddLine(T("title"), 1, .82, .3)
+        GameTooltip:AddLine(T("grip"), 1, 1, 1, true); GameTooltip:Show()
+    end)
+    grip:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    grip:SetScript("OnMouseDown", function(self)
+        -- Width of the view on screen tracks the cursor; scale the owner window.
+        local eff = v:GetEffectiveScale()
+        self.drag = { left = v:GetLeft() * eff, width = v:GetWidth() * v:GetScale() / 1 }
+        self:SetScript("OnUpdate", function(g)
+            local cx = GetCursorPosition()
+            local inner = v:GetEffectiveScale() / f:GetEffectiveScale()   -- view scale relative to owner
+            local s = (cx - g.drag.left) / (v:GetWidth() * inner * UIParent:GetEffectiveScale())
+            if math.abs(s - f:GetScale()) > 0.005 then SetScaleKeepCorner(f, s) end
+        end)
+    end)
+    grip:SetScript("OnMouseUp", function(self) self:SetScript("OnUpdate", nil); self.drag = nil; SavePlace(owner, f) end)
+    grip:SetScript("OnDoubleClick", function()
+        local d = decorated[owner]
+        SetScaleKeepCorner(f, d and d.native or 1)
+        local e = Entry(owner); e.scale = nil
+    end)
+    if not v:IsMouseWheelEnabled() then v:EnableMouseWheel(true) end
+    v:HookScript("OnMouseWheel", function(_, delta)
+        if IsControlKeyDown() then
+            SetScaleKeepCorner(f, f:GetScale() + (delta > 0 and 0.05 or -0.05)); SavePlace(owner, f)
+        end
+    end)
+end
+
 local function Names()
     local list, seen = {}, {}
     for _, n in ipairs(KNOWN) do if not seen[n] then seen[n] = true; list[#list + 1] = n end end
@@ -226,6 +273,13 @@ waiter:SetScript("OnUpdate", function(_, dt)
         if not decorated[n] and not SKIP[n] and not DB.removed[n] then
             local f = _G[n]
             if type(f) == "table" and f.GetObjectType and f.SetScale and not f:IsProtected() then Decorate(n, f) end
+        end
+    end
+    for view, owner in pairs(VIEWS) do
+        local v, d = _G[view], decorated[owner]
+        if not viewDone[view] and type(v) == "table" and v.GetObjectType and d then
+            viewDone[view] = true
+            AddViewGrip(view, v, owner, d.frame)
         end
     end
     -- WSC1B: automatic pick-up of these addons' popups (every 2 s).
