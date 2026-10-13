@@ -3,7 +3,7 @@
 ## Title-zhCN: RebornDock 插件收藏盒
 ## Notes: Gold-framed box that holds the addon icons you choose (drag them in).
 ## Notes-zhCN: 金边收藏盒：把你喜欢的插件小图标拖进来统一摆放，大小统一，可缩放。
-## Version: DOCK1B
+## Version: DOCK1C
 ## Author: RebornWOW
 ## SavedVariables: RebornDockDB
 ## OptionalDeps: MinimapButtonFrame, DragonUI, DungeonClear, NetherBot, AIO_Client
