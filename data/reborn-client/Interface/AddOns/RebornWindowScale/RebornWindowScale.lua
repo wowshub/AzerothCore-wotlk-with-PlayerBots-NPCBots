@@ -1,4 +1,4 @@
--- RebornWindowScale (窗口缩放), RebornWOW WSC1A-1C.
+-- RebornWindowScale (窗口缩放), RebornWOW WSC1A-1D.
 -- Adds a corner grip (drag to scale, double-click to reset), Ctrl + mouse wheel
 -- scaling, dragging and remembered size/position to addon windows -- without
 -- changing those addons. Known windows are listed below; any other window can
@@ -44,7 +44,8 @@ local reopener = CreateFrame("Frame")
 reopener:Hide()
 reopener:SetScript("OnUpdate", function(self)
     self:Hide()
-    for f in pairs(reopen) do if not f:IsShown() then f:Show() end end
+    -- Protected windows may not be shown from addon code in combat: skip them then.
+    for f in pairs(reopen) do if not f:IsShown() and not (InCombatLockdown() and f:IsProtected()) then f:Show() end end
     wipe(reopen)
 end)
 
@@ -97,7 +98,11 @@ local function Entry(name)
 end
 
 -- Keep the top-left corner on the same screen spot while the scale changes.
+local pendingApply = {}               -- windows to re-apply after combat
+local function Locked(f) return InCombatLockdown() and f:IsProtected() end
+
 local function SetScaleKeepCorner(f, s)
+    if Locked(f) then return end
     if s < MIN_SCALE then s = MIN_SCALE elseif s > MAX_SCALE then s = MAX_SCALE end
     local l, t = f:GetLeft(), f:GetTop()
     local eff = f:GetEffectiveScale()
@@ -121,6 +126,7 @@ end
 local function ApplySaved(name, f)
     local e = DB.frames[name]
     if not e then return end
+    if Locked(f) then pendingApply[name] = f; return end
     if e.scale then f:SetScale(e.scale) end
     if e.x and e.y then
         local k = UIParent:GetEffectiveScale() / f:GetEffectiveScale()
@@ -186,7 +192,7 @@ local function Decorate(name, f)
     -- WSC1B: a sub-window hanging off another frame would vanish with it; move
     -- it to UIParent, keeping its place on screen.
     local parent = f:GetParent()
-    if parent and parent ~= UIParent and KeepsOpen(name) and f:GetObjectType() == "Frame" then
+    if parent and parent ~= UIParent and KeepsOpen(name) and f:GetObjectType() == "Frame" and not f:IsProtected() then
         local l, t = f:GetLeft(), f:GetTop()
         local eff = f:GetEffectiveScale()
         f:SetParent(UIParent)
@@ -272,7 +278,7 @@ waiter:SetScript("OnUpdate", function(_, dt)
     for _, n in ipairs(Names()) do
         if not decorated[n] and not SKIP[n] and not DB.removed[n] then
             local f = _G[n]
-            if type(f) == "table" and f.GetObjectType and f.SetScale and not f:IsProtected() then Decorate(n, f) end
+            if type(f) == "table" and f.GetObjectType and f.SetScale and not InCombatLockdown() then Decorate(n, f) end
         end
     end
     for view, owner in pairs(VIEWS) do
@@ -287,7 +293,7 @@ waiter:SetScript("OnUpdate", function(_, dt)
     if scanTick % 2 == 0 then
         for _, c in ipairs({ UIParent:GetChildren() }) do
             local n = c.GetName and c:GetName()
-            if n and not decorated[n] and not SKIP[n] and not DB.removed[n] and not c:IsProtected()
+            if n and not decorated[n] and not SKIP[n] and not DB.removed[n] and not InCombatLockdown()
                and LooksLikeWindow(c, n) then
                 Decorate(n, c)
             end
@@ -297,7 +303,13 @@ end)
 
 local ev = CreateFrame("Frame")
 ev:RegisterEvent("ADDON_LOADED")
-ev:SetScript("OnEvent", function(_, _, arg1)
+ev:RegisterEvent("PLAYER_REGEN_ENABLED")
+ev:SetScript("OnEvent", function(_, event, arg1)
+    if event == "PLAYER_REGEN_ENABLED" then
+        for n, f in pairs(pendingApply) do ApplySaved(n, f) end
+        wipe(pendingApply)
+        return
+    end
     if arg1 ~= "RebornWindowScale" then return end
     RebornWindowScaleDB = RebornWindowScaleDB or {}
     DB = RebornWindowScaleDB
@@ -325,7 +337,7 @@ SlashCmdList.REBORNWINDOWSCALE = function(msg)
     local cmd = ((msg or ""):match("^(%S*)") or ""):lower()
     if cmd == "add" then
         local f = WindowUnderMouse()
-        if not f or f:IsProtected() then Say(T("nothing")); return end
+        if not f or InCombatLockdown() then Say(T("nothing")); return end
         local n = f:GetName()
         DB.added[n] = true; DB.removed[n] = nil
         Decorate(n, f); Say(string.format(T("added"), n))
