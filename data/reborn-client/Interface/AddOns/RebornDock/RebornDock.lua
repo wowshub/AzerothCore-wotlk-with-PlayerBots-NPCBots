@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1H.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1I.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -30,7 +30,7 @@ local STR = {
         gripTip = "拖动缩放收藏盒（双击恢复）", headerTip = "左键拖动移动收藏盒\n滚轮调整每行个数（当前 %d）",
         added = "已收进：%s", removed = "已放回：%s",
         combat = "战斗中不能调整，请脱战后再试。", reset = "已把所有图标放回原处。",
-        nothing = "鼠标下面没有可以收的按钮（安全按钮和暴雪界面不能收）。",
+        nothing = "鼠标下面没有可以收的按钮（技能/宏这类安全动作按钮不能收）。",
         under = "鼠标下：%s（%s）", unnamed = "无名字，按位置记为 %s",
         help = "/rdock 显示或隐藏；/rdock add 收进鼠标下的图标；/rdock what 查看鼠标下的图标；/rdock list 列出已收；/rdock cols 数字；/rdock reset 全部放回",
     },
@@ -44,7 +44,7 @@ local STR = {
         gripTip = "Drag to scale the dock (double-click resets)", headerTip = "Left-drag to move the dock\nMouse wheel: icons per row (now %d)",
         added = "Added: %s", removed = "Sent back: %s",
         combat = "Not in combat; try again after the fight.", reset = "All icons sent back.",
-        nothing = "Nothing collectable under the mouse (secure buttons and Blizzard UI are excluded).",
+        nothing = "Nothing collectable under the mouse (secure action buttons such as spells/macros are excluded).",
         under = "Under the mouse: %s (%s)", unnamed = "no name, kept by position as %s",
         help = "/rdock show/hide; /rdock add the icon under the mouse; /rdock what; /rdock list; /rdock cols N; /rdock reset",
     },
@@ -67,6 +67,16 @@ local BLOCK = { "^ActionButton", "^MultiBar", "^BonusAction", "^Shapeshift", "^P
 local DECOR = { "border", "ring", "background", "highlight", "hilight", "glow", "shadow", "mask", "tracking", "flash" }
 
 local owned = {}          -- key -> record
+
+-- DOCK1I: true for buttons driven by secure attributes (action/macro/spell
+-- buttons): those are never collected, not even as a shortcut.
+local function IsSecureAction(b)
+    if not b.GetAttribute then return false end
+    for _, a in ipairs({ "type", "*type1", "type1", "*type2", "macrotext", "spell", "action" }) do
+        if b:GetAttribute(a) ~= nil then return true end
+    end
+    return false
+end
 local pinning = false
 local dirty = true
 
@@ -310,12 +320,23 @@ local function Slot(i)
         local o = s.owner
         s.hl:Show()
         if not o then return end
+        local enter = o.btn:GetScript("OnEnter")
+        if enter and pcall(enter, o.btn) and GameTooltip:IsShown() then
+            GameTooltip:ClearAllPoints()
+            GameTooltip:SetPoint("BOTTOM", self, "TOP", 0, 4)
+            return
+        end
         GameTooltip:SetOwner(self, "ANCHOR_TOP")
         GameTooltip:AddLine(o.btn.tooltipText or o.btn:GetName() or "?", 1, 1, 1)
         if o.btn.newbieText then GameTooltip:AddLine(o.btn.newbieText, 1, .82, 0, true) end
         GameTooltip:Show()
     end)
-    s.click:SetScript("OnLeave", function() s.hl:Hide(); GameTooltip:Hide() end)
+    s.click:SetScript("OnLeave", function()
+        s.hl:Hide(); GameTooltip:Hide()
+        local o = s.owner
+        local leave = o and o.btn:GetScript("OnLeave")
+        if leave then pcall(leave, o.btn) end
+    end)
     s.click:Hide()
     slots[i] = s
     return s
@@ -483,11 +504,11 @@ local function IsBarMicroButton(b)
 end
 
 local function Take(b, key)
-    if not key or owned[key] or b:IsProtected() then return false end
+    if not key or owned[key] or IsSecureAction(b) then return false end
     local o = { btn = b, key = key, parent = b:GetParent(), oscale = b:GetScale(), alpha = b:GetAlpha(), insets = { b:GetHitRectInsets() },
                 strata = b:GetFrameStrata(), level = b:GetFrameLevel(), shown = b:IsShown(), points = {} }
     for i = 1, b:GetNumPoints() do o.points[i] = { b:GetPoint(i) } end
-    if IsBarMicroButton(b) then
+    if IsBarMicroButton(b) or b:IsProtected() then
         o.mirror = true
         owned[key] = o
         dirty = true
@@ -560,7 +581,7 @@ local function Eligible(f)
     if not name or name == "" then return false end
     local kind = f:GetObjectType()
     if kind ~= "Button" and kind ~= "CheckButton" then return false end
-    if not f:IsVisible() or f:IsProtected() then return false end
+    if not f:IsVisible() or IsSecureAction(f) then return false end
     local w, h = f:GetWidth() * f:GetEffectiveScale(), f:GetHeight() * f:GetEffectiveScale()
     if w < 10 or h < 10 or w > 130 or h > 130 then return false end
     if name:find("%d$") or Blocked(name) then return false end
@@ -760,7 +781,7 @@ ticker:SetScript("OnUpdate", function(_, dt)
         for _, key in ipairs(DB.items) do
             if not owned[key] then
                 local f = Resolve(key)
-                if f and not f:IsProtected() then Take(f, key) end
+                if f and not IsSecureAction(f) then Take(f, key) end
             end
         end
     end
@@ -829,7 +850,7 @@ SlashCmdList.REBORNDOCK = function(msg)
         DB.cols = math.max(1, math.min(16, math.floor(tonumber(arg)))); dirty = true
     elseif cmd == "add" or cmd == "what" then
         local f = UnderMouse()
-        if not f or f:IsProtected() then Say(T("nothing")); return end
+        if not f or IsSecureAction(f) then Say(T("nothing")); return end
         local key = KeyOf(f)
         if not key then Say(T("nothing")); return end
         local desc = f:GetName() and f:GetObjectType() or string.format(T("unnamed"), key)
