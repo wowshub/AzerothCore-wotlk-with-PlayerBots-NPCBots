@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1L.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1M.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -812,8 +812,15 @@ settings.vBtn = PanelButton("", 50); settings.vBtn:SetPoint("LEFT", settings.hBt
 settings.countLabel = settings:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 settings.countLabel:SetPoint("TOPLEFT", 10, -44)
 settings.minus = PanelButton("-", 22); settings.minus:SetPoint("TOPLEFT", 74, -40)
-settings.value = settings:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-settings.value:SetPoint("LEFT", settings.minus, "RIGHT", 6, 0); settings.value:SetWidth(24); settings.value:SetJustifyH("CENTER")
+-- DOCK1M: the count is an edit box: type 1-16 and press Enter (Esc reverts).
+settings.value = CreateFrame("EditBox", nil, settings, "InputBoxTemplate")
+settings.value:SetSize(26, 18)
+settings.value:SetPoint("LEFT", settings.minus, "RIGHT", 10, 0)
+settings.value:SetAutoFocus(false)
+settings.value:SetNumeric(true)
+settings.value:SetMaxLetters(2)
+settings.value:SetJustifyH("CENTER")
+settings.value:SetFontObject("GameFontHighlight")
 settings.plus = PanelButton("+", 22); settings.plus:SetPoint("LEFT", settings.value, "RIGHT", 6, 0)
 
 local function RefreshSettings()
@@ -827,14 +834,14 @@ local function RefreshSettings()
     if vertical then settings.vBtn:LockHighlight(); settings.hBtn:UnlockHighlight()
     else settings.hBtn:LockHighlight(); settings.vBtn:UnlockHighlight() end
     settings.countLabel:SetText(T(vertical and "perCol" or "perRow"))
-    settings.value:SetText(tostring(DB.cols or 8))
+    if not settings.value:HasFocus() then settings.value:SetText(tostring(DB.cols or 8)) end
     -- DOCK1L: controls start after the wider label (English "Icons per row" is
     -- wider than the fixed 64px of DOCK1K), and the panel grows to fit.
     local labelW = math.max(settings.flowLabel:GetStringWidth(), settings.countLabel:GetStringWidth())
     local x = math.floor(10 + labelW + 12)
     settings.hBtn:ClearAllPoints(); settings.hBtn:SetPoint("TOPLEFT", x, -8)
     settings.minus:ClearAllPoints(); settings.minus:SetPoint("TOPLEFT", x, -40)
-    local rowW = math.max(settings.hBtn:GetWidth() + 4 + settings.vBtn:GetWidth(), 22 + 6 + 24 + 6 + 22)
+    local rowW = math.max(settings.hBtn:GetWidth() + 4 + settings.vBtn:GetWidth(), 22 + 10 + 26 + 6 + 22)
     settings:SetWidth(x + rowW + 12)
 end
 local function SetCount(n)
@@ -843,6 +850,14 @@ end
 settings.hBtn:SetScript("OnClick", function() DB.flow = "horizontal"; dirty = true; RefreshSettings() end)
 settings.vBtn:SetScript("OnClick", function() DB.flow = "vertical"; dirty = true; RefreshSettings() end)
 settings.minus:SetScript("OnClick", function() SetCount((DB.cols or 8) - 1) end)
+local function ApplyTyped(box)
+    local n = tonumber(box:GetText())
+    if n then SetCount(math.floor(n)) else RefreshSettings() end
+    box:ClearFocus()
+end
+settings.value:SetScript("OnEnterPressed", ApplyTyped)
+settings.value:SetScript("OnEditFocusLost", function(box) local n = tonumber(box:GetText()); if n and n ~= DB.cols then SetCount(math.floor(n)) else RefreshSettings() end end)
+settings.value:SetScript("OnEscapePressed", function(box) box:SetText(tostring(DB.cols or 8)); box:ClearFocus() end)
 settings.plus:SetScript("OnClick", function() SetCount((DB.cols or 8) + 1) end)
 -- Defined after the panel: the handler needs the settings locals.
 langBtn:SetScript("OnClick", function()
