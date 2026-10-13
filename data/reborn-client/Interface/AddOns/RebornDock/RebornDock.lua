@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A/1B/1C.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1E.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -365,6 +365,17 @@ local function Pin(o)
     local bw, bh = b:GetWidth() or 0, b:GetHeight() or 0
     local sc = (bw > 1 and bh > 1) and math.min(w / bw, h / bh) or 1
     if math.abs(b:GetScale() - sc) > 0.001 then b:SetScale(sc) end
+    -- DOCK1E: a tall launcher (micro buttons 28x58, SpellDraft 32x64) scaled to
+    -- fit only covers a narrow strip of the slot; widen its click area to the
+    -- whole slot (insets are in the button's own units).
+    if bw > 1 and bh > 1 then
+        local ix = math.max(0, (w / sc - bw) / 2)
+        local iy = math.max(0, (h / sc - bh) / 2)
+        if o.insetX ~= ix or o.insetY ~= iy then
+            b:SetHitRectInsets(-ix, -ix, -iy, -iy)
+            o.insetX, o.insetY = ix, iy
+        end
+    end
     b:SetFrameStrata(box:GetFrameStrata())
     b:SetFrameLevel(box:GetFrameLevel() + 6)
     b:ClearAllPoints()
@@ -425,7 +436,7 @@ end
 
 local function Take(b, key)
     if not key or owned[key] or b:IsProtected() then return false end
-    local o = { btn = b, key = key, parent = b:GetParent(), oscale = b:GetScale(), alpha = b:GetAlpha(),
+    local o = { btn = b, key = key, parent = b:GetParent(), oscale = b:GetScale(), alpha = b:GetAlpha(), insets = { b:GetHitRectInsets() },
                 strata = b:GetFrameStrata(), level = b:GetFrameLevel(), shown = b:IsShown(), points = {} }
     for i = 1, b:GetNumPoints() do o.points[i] = { b:GetPoint(i) } end
     owned[key] = o
@@ -448,6 +459,7 @@ local function Release(key)
     b:SetParent(o.parent or UIParent)
     b:SetScale(o.oscale or 1)
     b:SetAlpha(o.alpha or 1)
+    if o.insets and #o.insets == 4 then b:SetHitRectInsets(unpack(o.insets)) end
     b:SetFrameStrata(o.strata or "MEDIUM")
     b:SetFrameLevel(o.level or 1)
     b:ClearAllPoints()
