@@ -1,0 +1,1032 @@
+[
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/CreatureDisplayInfo.dbc",
+    "bytes": 1805292,
+    "sha256": "c2ed0059dfa933ff2a9dcf92bd62d51065290968f20207472d32f8e32ec45c34"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+    "bytes": 1118061,
+    "sha256": "dc29803946eea95280e80045b435e1b2b1ae0d30a60763b9725d29a1989a4e9a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SoundEntries.dbc",
+    "bytes": 27694178,
+    "sha256": "b9f43bb8a8da9ebfa02cacae24d57460a0d9329410b522960fd328da24fbe2e1"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/Spell.dbc",
+    "bytes": 61637914,
+    "sha256": "07e52095a0e0752cfc9bb86e9afba2db5d7ec2d974050459c98d4879a13462c0"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellCastTimes.dbc",
+    "bytes": 2293,
+    "sha256": "63fbfaed8c9747fb13b7c7094e1981a6351023a7a620c63c035fe040b548c00a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellDuration.dbc",
+    "bytes": 3653,
+    "sha256": "316b711549fc99e8fb500e131df5a062079ae2eafc6ed7c7b94e897eada68af5"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellIcon.dbc",
+    "bytes": 1776581,
+    "sha256": "e305c8f7e0f9b197cf52ea7d8adfc94ad53e24e4fe94b1254d2fa03c646be3d7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellRadius.dbc",
+    "bytes": 1109,
+    "sha256": "c1a0cc23349846f81363d6ea6eb833a08d4a9d226a72e7a27f7e367574b5659c"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellRange.dbc",
+    "bytes": 28502,
+    "sha256": "c1ef25640d61cbcc62933bf84972b0fecbfd970fcf1f7e558c21df88bbddfcfc"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellVisual.dbc",
+    "bytes": 1982229,
+    "sha256": "b71dd6948352d5d4f0ec88dca93e8e51915de40f24198e2aa2780c24f3dc6775"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellVisualEffectName.dbc",
+    "bytes": 629439,
+    "sha256": "3bbeafc6e84099244f9c5bdae513371008571d5f0bcd7c7148d7910ecd5dee36"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/DBFilesClient/SpellVisualKit.dbc",
+    "bytes": 2304037,
+    "sha256": "e9f7b815cf3b6f4753f5b02fe419e24b98f775695e160e2d082762b3a4f6df60"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/6e64f414c5e93979.blp",
+    "bytes": 3916,
+    "sha256": "f5e61d1b4ceeb4d86d44af43cc3f974705bb4b5c34b6f5f971c2cddb13a54520"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Interface/AddOns/RebornWitchDoctorTalents/Icons/adca7b653c1f090f.blp",
+    "bytes": 6660,
+    "sha256": "f3578086835853c01235dba44c61c25fd12d4da2837ad0963c75c64d505e6256"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/Interface/Icons/custom_T_GhostWater_Border.blp",
+    "bytes": 3916,
+    "sha256": "ce1373913c0df6ef635ff6fc0ffc9a62a8702789863e2744f22a442b27da6f24"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/Interface/Icons/inv_enchant_alchemistcauldron.blp",
+    "bytes": 6660,
+    "sha256": "368022c7de0a46ff7b31bfb98ff2b7b0a1094174e0e1e56f0943acbacd789d13"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/Interface/Icons/Inv_Helm_Mask_ZulGurub_D_01.blp",
+    "bytes": 3916,
+    "sha256": "45f3cc072bcdb1fef6c0161e1a3e0692004b67008245cf3151c762408a570897"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/Interface/Icons/inv_tikiman2_zandalar.blp",
+    "bytes": 5268,
+    "sha256": "0373fe3344dbdf05baa3de5097dbbc5a4297a969aefc764bc10c1e4600b1e62d"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/item/objectcomponents/weapon/flare.blp",
+    "bytes": 2564,
+    "sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/sound/spells/spell_resinweave_channel.ogg",
+    "bytes": 24749,
+    "sha256": "35119bd12da5125a435f3d340518e36f683e2de6e2803ef32f9fe123753f34f1"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/10fx_cosmicflicker01_4212009.blp",
+    "bytes": 44900,
+    "sha256": "e8626fc83b7f5740dc0fc41fc5b89ef34f7c621e4ac22312e5bf3e3a9c510347"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/10fx_spell31_4219047.blp",
+    "bytes": 88580,
+    "sha256": "619a06a7c442c30bb0cea5f48a3e0d357791c9580dadf5f96d4f2e1fa4699f91"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/10fx_spell34_3738313.blp",
+    "bytes": 23044,
+    "sha256": "6c4de9c825b6d3c1542c9f97bfb881482b341e06aab2ad30940706ba71668090"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/10fx_spell42_3722811.blp",
+    "bytes": 350724,
+    "sha256": "78dbc9cf5a2d45fae08fac4d36761ebe46f2e82ab120eb0bd7c60a6100f350ab"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/10fx_verdantmagic11_4219041.blp",
+    "bytes": 88580,
+    "sha256": "e8359ca42ed9c34b7de8060cd1bc21e4d06d5afabaea19fa7ab7996341b570b3"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/11fx_greenimpact04_5778415.blp",
+    "bytes": 23044,
+    "sha256": "3090fd257d95cd61d169b021ac8a72332d35b70c202bd228359441bcf4b5dc55"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/11fx_greenshocks01_2747116.blp",
+    "bytes": 88580,
+    "sha256": "cd8882ebcfc6eca3d378852cc26ceed59836b7e9aab69d47bbe74fd590a766c5"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/11fx_greenshocks01_4572231.blp",
+    "bytes": 23044,
+    "sha256": "edb4940030b80b5ba468509a4e3c3b1a0e08dab4907b868f2641b842b4063655"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/11fx_lightcircle02_5209557.blp",
+    "bytes": 88580,
+    "sha256": "764c167db0272b34bab2deb66fc0863064b82e847ccd258085ee072c4a154228"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/8fx_explosionsmoke_a.blp",
+    "bytes": 88580,
+    "sha256": "04222d4103e9429686a92b91eb16ac104c2162fed7bf65e8e27354d2eaeb1a5c"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Archimonde_Fire_V2_Jade.M2",
+    "bytes": 9032,
+    "sha256": "8350bda2300e49e48c922af45b8d67f0d5aca358e74cb2f6a186dfe41573779f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Archimonde_Fire_V2_Jade00.skin",
+    "bytes": 156,
+    "sha256": "7d35d6d4fa8c58e48fa1a8413186a32be62d8d63583e1c59dc8d6b91da98f06a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/caustic_medfreq_holy.blp",
+    "bytes": 88580,
+    "sha256": "daf60ecb85498b588c2dbb27d02f4cee331a8fdbcaf2b0b98a3dc200ec5e875f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura.m2",
+    "bytes": 150709,
+    "sha256": "949f2bd91b2c409a0b9a12d0e7288145ef9d946939e78e3c7c868ab628e586c2"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura00.skin",
+    "bytes": 40932,
+    "sha256": "ccecb047078fe81b81212a52952db845150b229cb5b288494ffa0b33e15041f4"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura_5778414.blp",
+    "bytes": 12132,
+    "sha256": "ec19286ca880b5decb20c1ec296e2da5d1e84f4e99e354ddaf22ff26ca7ea1d6"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura_5778416.blp",
+    "bytes": 88612,
+    "sha256": "d14741031b3707a27b9e46ae94edbae190e2cc66d77b032fbc9f9438216f0237"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cfx_monk_faelinestomp_5411283.blp",
+    "bytes": 88580,
+    "sha256": "ad4793b4d4eb2f3ef39b813340b0c4237687a6e69861fa7881dbd10a145c95c3"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cloud_puffysofter_mod4x.blp",
+    "bytes": 350724,
+    "sha256": "619a78d92d1d07d851d6e2bddbd8c30627f2956686ddf6aecc187f1c14610a9e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/cloud_snowfrost_soft_mod4x.blp",
+    "bytes": 350724,
+    "sha256": "d4b27994b4bd689b712b1f67bdd6d49104459268eba0453181b5628ea0799f2e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/fx_cosmeticholdinglightorb_aura_5546572.blp",
+    "bytes": 23044,
+    "sha256": "ed9fbfd2f68e723ea54d9db7568b8767618850870b2fccc4519adde8f900d45b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/genericglow64.blp",
+    "bytes": 6660,
+    "sha256": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/grey50percentsquare16x16_a.blp",
+    "bytes": 1540,
+    "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Monk_TravelingMist_Missile.M2",
+    "bytes": 5730,
+    "sha256": "1c1936ea7b524a9df13f6d23a6b34e6219b4032217b4e29569b995772346a06a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Monk_TravelingMist_Missile00.skin",
+    "bytes": 64,
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Monk_Uplift_Impact_Base.M2",
+    "bytes": 9428,
+    "sha256": "392110848017108ba4843709a32a22352cf169e8391c5941e5e269b7f3370a54"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Monk_Uplift_Impact_Base00.skin",
+    "bytes": 156,
+    "sha256": "1e60ece76fd8047c02e21ecd1e3fc6c4916be86b77cf24cd171d4c57e27b9d7f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/nexus_firebeam_faint_square.blp",
+    "bytes": 3916,
+    "sha256": "93f319ccbc18f2ca8f064408c5d1a4a05acdb58905fe394e1bf4df2c45a76ac9"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/smoke_puffy_mask_blendadd22.blp",
+    "bytes": 88580,
+    "sha256": "47e3126d6c05ebaecf9468b2bf7a1ea088544e23bd0eb0219828bd8438c99f20"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/starfield_mask_bright.blp",
+    "bytes": 88580,
+    "sha256": "f59666f162ab133c0483be516a38aedf93a051e3ba58cb86b85e3e3fdc8cc601"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_fire_anim02_128_desat_blu.blp",
+    "bytes": 44876,
+    "sha256": "76d449802404f0853e9a72c60ae28f661c2da7c0aab3d931008152e6d1def500"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_flare05_32.blp",
+    "bytes": 1868,
+    "sha256": "624be87d6db3bb878e9d5b4a8bdc1d7b2956ee4e5dd837d678f6baa4ca9c5058"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_hero_aura_glob_orange2_ho.blp",
+    "bytes": 12108,
+    "sha256": "86f93e8d7efaaedd02cfd157dffa8da382e7a62c1be81c89e134a1c1579fa017"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_ring_bow.blp",
+    "bytes": 44876,
+    "sha256": "6daec4aa4149979cec84676d560580c5c1aa553fe19e6eba85ae62dadbbc44b6"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_ring_bow_blured_acontrast.blp",
+    "bytes": 88580,
+    "sha256": "e18e8334c37ac681404560338fc552609a4092d031c1206009adfca545587da9"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_ring_bow_blured_contrast2.blp",
+    "bytes": 44876,
+    "sha256": "b465d35ffd0ecce3912c93685500248e8ce897deff009c947e4c140ee81e61c4"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/t_vfx_smokeanim02_blured.blp",
+    "bytes": 23044,
+    "sha256": "c9452f72145a7909321a7c2a4d8479540a297a78e73286051069658992bebea5"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Warlock_BodyOfFlames_Low_State_Hands_Green.M2",
+    "bytes": 2597,
+    "sha256": "e2204a3e99388600be781b4cf77888fac69390b22bc90652eba85967db648e75"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/Warlock_BodyOfFlames_Low_State_Hands_Green00.skin",
+    "bytes": 192,
+    "sha256": "3f551f07095defcb0fe67ef2a8e5c24b58b966bbcc755818631dbd25287d5e9c"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/spells/white8x8.blp",
+    "bytes": 1228,
+    "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD138B/world/expansion01/doodads/zangar/mushroom/glowball02.blp",
+    "bytes": 1868,
+    "sha256": "f30653dffa5416a971178bfe5f70d4ee0fc8afedb97cf864111be1baae911ef7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/Interface/Icons/INV_Helmet_114.blp",
+    "bytes": 6660,
+    "sha256": "6586b50fa01a5819f92d2a5b918aa1ad825562007fe99f2835b113f59ff10a32"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/Interface/Icons/INV_Stone_05.blp",
+    "bytes": 3916,
+    "sha256": "64fccd19bc122f74899dca031b3364235981962d356f0c3e9b49e554ab451df4"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/Interface/Icons/Spell_Nature_WispSplode.blp",
+    "bytes": 6660,
+    "sha256": "edfdd81d6a952e40603dd1477f7cc245faac8774c133a74907a2f4001d3c4791"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/Interface/Icons/Spell_Shadow_GatherShadows.blp",
+    "bytes": 6660,
+    "sha256": "ae6b7094db0e71a068f4f854466e2ce32a273df18076963ab228fae60a153525"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/Interface/Icons/Spell_Shadow_SoulLeech_2.blp",
+    "bytes": 6660,
+    "sha256": "3544612e9785f57652aa4152ea1bf2b3f0b9869d3b4ea96b313876e73e56458f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/ITEM/OBJECTCOMPONENTS/WEAPON/FLARE.BLP",
+    "bytes": 2564,
+    "sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_01.ogg",
+    "bytes": 24437,
+    "sha256": "4ece4d3bcaa729f82de31139a92416b480322f65e63c295372a6149a0fff4a51"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_02.ogg",
+    "bytes": 25831,
+    "sha256": "1280fa16f1e920a10b644d721eaee760306a8691a2c5e485321208daa4aa197b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_03.ogg",
+    "bytes": 28661,
+    "sha256": "14566e66aef8393b82664f00bb5b7351fe5dc8fb25f711e1f2d1b139dcd6897f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_04.ogg",
+    "bytes": 28726,
+    "sha256": "a4246a643aea95a354f95c175f4c769e329d4a4a4a32595f217b86748411af28"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_05.ogg",
+    "bytes": 28012,
+    "sha256": "11d4a5450b5627b3d94895cd262cb294f63004f611e4cfe4c8353d49a05449ee"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_06.ogg",
+    "bytes": 29650,
+    "sha256": "8392bb57c308b21922fa6508b8e1fceafbc37581c8af0cde8d203840acfbbf1c"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_mend_impact_01.ogg",
+    "bytes": 34545,
+    "sha256": "8531e03ebcdce24294690d5cc549d9add1376b0c70e30c1b14fc5d05d5480ae5"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_mend_impact_02.ogg",
+    "bytes": 33324,
+    "sha256": "dc0602a2b83735e34a0631c2e8f7cc87d049573d879f8f378ac432123b1ff7de"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_mend_impact_03.ogg",
+    "bytes": 33030,
+    "sha256": "76c205fa382aa26e684f8acb2b854ee79556941bce430ebb74f5a91aa9b6aadd"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_alphamask_glow.blp",
+    "bytes": 23044,
+    "sha256": "e071b9e3a0f909fd587a0b49dcaab8d508a1543285d0a296226139a6b4029a15"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_alphamask_glowbright_black.blp",
+    "bytes": 23044,
+    "sha256": "0bf8ae9af1bf365f3789dfeef18371413d17eb6efeb7e5fb07721012ac18764b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_chunky_soft_a.blp",
+    "bytes": 88580,
+    "sha256": "5ea5c3dd09bebe987daa859cb23f29e227c516bdba99c54297e9de96a8f476b0"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_energyring_tilepurple_01.blp",
+    "bytes": 23044,
+    "sha256": "bbd809c2c5adc16259945bee556f3217e9244107838c5a9d7d38ca99ac560b30"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_shadow_core.blp",
+    "bytes": 23044,
+    "sha256": "14ebc93b441a09bf50dbe97bcc2776a3086ea06178353e3d09412bd0e9b0409e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_warlock_soulflame_impact.m2",
+    "bytes": 47533,
+    "sha256": "b69c7e6473c41b624291b4b457be21df64bbe7b0b5aadd6f9415aea8e902008e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/7fx_warlock_soulflame_impact00.skin",
+    "bytes": 12624,
+    "sha256": "633f7be8889ade7991f8967193f63f5a3955bd5398ed99fba3d6249321053905"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/8fx_vaultguardian_drawpower_precast_1_2126812.blp",
+    "bytes": 23044,
+    "sha256": "7078f4d4118886ba7c33e9f37cc472e8768dd5d785e6c74f900d6f415278d267"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/alpha_streak.blp",
+    "bytes": 88580,
+    "sha256": "ceab219cb864e385fd32c4d6a4e70619fb24a0037d481568461a57855d76fff3"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/alphamask_cloud_wispysoft.blp",
+    "bytes": 350724,
+    "sha256": "efcf9476fb1729cc6e415d57a4a3bcc46c1cb0ceb8c6618967cbe561c84078f1"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/alphamask_lightrays_doublesided_a.blp",
+    "bytes": 23044,
+    "sha256": "a8a4d2bc469ef5368fb407e3216251cafeaa7f6a72093d3fa2a15fe50fbb614d"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/arc_center_wispy.blp",
+    "bytes": 88580,
+    "sha256": "47523634c40a72c61a5646e135504524daac966fff8260a8f46d4ce827e43d33"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/arcane_water_purple22.blp",
+    "bytes": 44876,
+    "sha256": "2a681f75d37b472253664f934083bfc19c5c7b5545fc00a0494262b485b4a308"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/caustic_medfreq_magenta.blp",
+    "bytes": 88580,
+    "sha256": "0dac2e3cebcda95f8e47368c85c70bee73f50aee2827d2ab50995a1eb1513323"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/cfx_azerite_well_major_state_0_2974113.blp",
+    "bytes": 88580,
+    "sha256": "e7c23049f4cd1bcad1d58355fd9ab8d3bbacc038c35b44570a2bca8700b5de5a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/CFX_DeathKnight_BurstingSores_ImpactChest.m2",
+    "bytes": 7023,
+    "sha256": "63112d1ad5eb04dabd944f7f2332f3310b120bf7a1ae1db53699d0739f85fd78"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/CFX_DeathKnight_BurstingSores_ImpactChest00.skin",
+    "bytes": 64,
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/cfx_kyrian_demonhunter_3154264.blp",
+    "bytes": 88580,
+    "sha256": "b7d2c93ecfffd1918f58eaab5b2e528521bb18c8635804e13995fe899eb3a45b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/CFX_Ribbon_Void.m2",
+    "bytes": 4765,
+    "sha256": "9cbe31cc132f55b5fed041d7a326140a578c05df6759e7e950cb7dea357dc1de"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/CFX_Ribbon_Void00.skin",
+    "bytes": 64,
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/cfx_warlock_genericportalvoid_world_3_2126809.blp",
+    "bytes": 23076,
+    "sha256": "28033abdffbc46e4e5f27d13a0aafbcd9d25de9184d498707ba499fee87cff2b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/cripple_state_chest.m2",
+    "bytes": 6617,
+    "sha256": "516684d5bc5e2b946403186a44f9cbb43f8bad055100cc853d28b239aea7dc6a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/cripple_state_chest00.skin",
+    "bytes": 48,
+    "sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/electric_liquid_blue_a.blp",
+    "bytes": 88580,
+    "sha256": "fdf067e50a942937a9c8f06ec8cf4f35ee443f3852b9c1fb1b3af21e6ccacd00"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/electric_liquid_red_a.blp",
+    "bytes": 44876,
+    "sha256": "9656057f8d6aaba37297cfc703ec38565b0f193c2fc2afcb4423aeab36d06e2c"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/flare05_blendadd.blp",
+    "bytes": 88580,
+    "sha256": "e597b70371f10cad5bd2f8641faa00f06adea7b6064d132043d777fcbd542816"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/flare1_tc_shadow2.blp",
+    "bytes": 23044,
+    "sha256": "38b31c978581763febed9c6008fd5c779dc9cefff6bc0cff72523ed5ad64dd01"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/fx_fowlplay_impact.m2",
+    "bytes": 241619,
+    "sha256": "8ea931e4721123b4564107e179a5cc3146a8e5fcc905b85e33855abc3049dccf"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/fx_fowlplay_impact00.skin",
+    "bytes": 49182,
+    "sha256": "630293e86c0270e8ef9816c179ddd7732f5913008f25bb6c92c58361be3eb1f8"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/grad2d.blp",
+    "bytes": 12132,
+    "sha256": "fd9276777c618bd0dbf5d6edcc4317a20144f5e814cf93b0e7dcf6f34579253a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/GRADIENT64FLIPA.BLP",
+    "bytes": 6660,
+    "sha256": "ae014692a462d221e57ee9559b170ccf7103737e52b53762a7a5bc978c4cc8dd"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/grey50percentsquare16x16_a.blp",
+    "bytes": 1540,
+    "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/poison_blur_nova_purple.blp",
+    "bytes": 6660,
+    "sha256": "f30489a3909313c414b222500c3c77454ddd28b7f8bc9ab549c8163bbddfb6b9"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/poison_goo_purple.blp",
+    "bytes": 23044,
+    "sha256": "8fc0adc47d2f731fbde5e614133388dd3cf31c07bae4323a098b5a21f873f033"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/ribbonblur1be_bw.blp",
+    "bytes": 12132,
+    "sha256": "a6a764eb5f112a3df7e54bdc4eb1dc1786b38001be2625b3276aacc54974919a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/smoke_loose_01.blp",
+    "bytes": 350724,
+    "sha256": "721a022dc0a467eb34f4973596a71af466a9c1a99e5b5dc2fbc06f082de7a6c2"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/t_vfx_blood06b.blp",
+    "bytes": 88580,
+    "sha256": "765aa7836aad3bc4d1f52ba8bb758f11c430a041b355dd77fdba680a3229c267"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/t_vfx_fire_anim02_128_desat.blp",
+    "bytes": 88580,
+    "sha256": "074936df39efc2228a007072b7ac5c7f6f8cc8a6fab3018d3fb3aa6af044ab4a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/TOONCLOUD64AINV.BLP",
+    "bytes": 6660,
+    "sha256": "5601670050b2e072a806fe6cee5b605f5557a9b90d85d722582bd76bded72098"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/urn_mist_flipped_warlock_shadow.blp",
+    "bytes": 88580,
+    "sha256": "56752bb5c26360ee586172106d32b727a10bfa26b840cc3192f5581bec5e4588"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/white8x8.blp",
+    "bytes": 1228,
+    "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/wispymagic_hori_warlockshadow_purple_128.blp",
+    "bytes": 23044,
+    "sha256": "d846b4a5487598a71f436294c9ef454d676348c77005a5141e7463c0e78c457b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3061972.blp",
+    "bytes": 23044,
+    "sha256": "2b54e522d79c2572bbc1a75077d772e9b7b36a22e38bcf41e9e9d5dd4a9b73a4"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3061973.blp",
+    "bytes": 88580,
+    "sha256": "580991978eb3590af289837c6a5fcfdf8fdb1c529283cf037af6ff3d0eca1aee"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3062148.blp",
+    "bytes": 88580,
+    "sha256": "649a219ba204cf34e79449b46078c8f40caa8bd025201f7e24bb745b54361e2b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3062150.blp",
+    "bytes": 88580,
+    "sha256": "32a233dfbecd49d5160a983226f322af2bd551ecf63f17809175d032dbf514a9"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion07/doodads/fx/8fx_generic_shadow_cone.blp",
+    "bytes": 88580,
+    "sha256": "c31a2a41f7b70a665e6d7fda37b5ad022ec29ea2df8a3fdea086e4a9c2344824"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion07/doodads/fx/8fx_generic_shadow_debuff.m2",
+    "bytes": 5382,
+    "sha256": "be0a499fa1f0cea540ca80c0a44bbfbb7b29c25f3acdc365cc266b2daa559f3e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion07/doodads/fx/8fx_generic_shadow_debuff00.skin",
+    "bytes": 156,
+    "sha256": "7cde925b887f39d158b60a2b2bc7eb2abfb95d852c62d8eb2c61985b9487e57b"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion08/doodads/fx/smoke_soft_01_3165011.blp",
+    "bytes": 350724,
+    "sha256": "e007ed4f6e6c567816e27b78594df61b84180ce1b18716db718a96c9914dc805"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion09/doodads/fx/10fx_generic_shadow_iteminteraction_3061974.blp",
+    "bytes": 88580,
+    "sha256": "4ef1e408f3aa62a4973689d362b869690ee80e8d0a065fad5c698004e2e57037"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion09/doodads/fx/10fx_generic_shadow_iteminteraction_3061977.blp",
+    "bytes": 175972,
+    "sha256": "73c730c809aad24442af6c400569fcd4bd4fe5e81020e6058d74bebce69fc913"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD142A/world/expansion09/doodads/fx/10fx_generic_shadow_iteminteraction_3063644.blp",
+    "bytes": 23044,
+    "sha256": "e323c0951b8c79fee6dc6c50ea1c5a138144c8805964c1736fff53d72f5ac28a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/Interface/Icons/nhi_naturearrow_(2)_Border.blp",
+    "bytes": 3916,
+    "sha256": "bb140dc71ad8fad196a64c11fd127b937b3645fd10e95a0fea0c4c05dcc38e1a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/Interface/Icons/nhi_natureshot_Border.blp",
+    "bytes": 3916,
+    "sha256": "ede7046e0ef977e5359732d5295a5854613cc9e038415fa359a2ef2a2358fca6"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/Interface/Icons/ShadowHunter.blp",
+    "bytes": 3916,
+    "sha256": "9a069f7a68f982d33fda7b495d8041db0aa77cb405decba721e7dc5c7dc44aff"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_01.ogg",
+    "bytes": 26372,
+    "sha256": "8b0b63f227e4812571f0f373e47086e09598d27c62eafb751d754e0327ea8ca7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_02.ogg",
+    "bytes": 27344,
+    "sha256": "3dc57145dd7c3fbc37379a83ffbee566f36d9fe7bb8c7171f1c71517bd158983"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_03.ogg",
+    "bytes": 26956,
+    "sha256": "ef5103755c0da6456b8d84ad779c6e48c59ee3c09bab61511afd4c5e84021264"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_04.ogg",
+    "bytes": 28875,
+    "sha256": "d58a26c22c11abfbb00cdd5a0f215d26f72dbbc81628ee0935bb7939582a2c66"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_05.ogg",
+    "bytes": 30754,
+    "sha256": "0c80dbcef5ca4c0df9690ddfa5eabeb188a2ef0f9448346a47f420615f82ae85"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_06.ogg",
+    "bytes": 31102,
+    "sha256": "9bcae8ce40976f6f1f80f0737188ab14444e0afbcc4d5e1573b70e4c3a8024f6"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_07.ogg",
+    "bytes": 29614,
+    "sha256": "bf14555066f7daae46b90237f67f3bd5d0be8e41ca43b0eaa572bdaf9c1972f2"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_01.ogg",
+    "bytes": 20298,
+    "sha256": "53976fe729d89f90c0c5e62e4c918d9b9b5ba6a6a4b54e5c0b8d524c922d0225"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_02.ogg",
+    "bytes": 12989,
+    "sha256": "9754c8738bcd2cc676f0a20e07c8a7528c7a749dc142289a94132b360b8a27f4"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_03.ogg",
+    "bytes": 19454,
+    "sha256": "8a506e6200d28f145656914293312b9c3abae99c27cdc96b554a8c4968a71924"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_04.ogg",
+    "bytes": 14827,
+    "sha256": "48e8bfe6f1a91f5f25096174aa38ec05b1adc6af6d655136e346de3806cc6783"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash01.ogg",
+    "bytes": 13365,
+    "sha256": "6f1f8a01afa8e504085208b58e13e075f64a8b4bd5bf49f41f941be27193b7df"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash02.ogg",
+    "bytes": 14407,
+    "sha256": "3be9747b34a209e07ebd1556398433d82e783d15f5c417da49927165f3619c0e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash03.ogg",
+    "bytes": 13786,
+    "sha256": "5121b1992a94422a4d102e5a1be8f4619941421415ffec5ff0eed95a2bba5d56"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash04.ogg",
+    "bytes": 14483,
+    "sha256": "641f51e3fe7cbcc0a7556dc181b85450cd98a0faa6f0e072a39d250ef806321f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash05.ogg",
+    "bytes": 15627,
+    "sha256": "5856123a802e333d2ea56888c706fab87529a4f4387e2b7e3ae96c16b62c25bc"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_alphamask_glow.blp",
+    "bytes": 23044,
+    "sha256": "e071b9e3a0f909fd587a0b49dcaab8d508a1543285d0a296226139a6b4029a15"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_alphamask_glow_donut2.blp",
+    "bytes": 23044,
+    "sha256": "ed8d5c6cd3fa6bb4513846d377fa77d6d20a9931acf3f81b6e388b6116994cdb"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_alphamask_glow_fel.blp",
+    "bytes": 23044,
+    "sha256": "3750fe185eb0d58b0f5a92b7c477c25984de385a944154cb9513167a8c4337b3"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_arcane_starfield_fel.blp",
+    "bytes": 88580,
+    "sha256": "0d87aaf9cf126d2721d0dcf03403d0ca44303359f8702d3bbe63c1722294fe21"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_chunky_soft_a.blp",
+    "bytes": 88580,
+    "sha256": "5ea5c3dd09bebe987daa859cb23f29e227c516bdba99c54297e9de96a8f476b0"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_crystal_geometric.blp",
+    "bytes": 350724,
+    "sha256": "0f9584b7d0a17188130193cded24bc2ddad423065603e7e9f1b8901a916eaa46"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_ribbon_fel_brighthead_a.blp",
+    "bytes": 44900,
+    "sha256": "5c52f25d9fabafe49c67c84315e729b8c12c71ad18f69ea44e0d20207f98d237"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_shivarracoven_fel_missile.m2",
+    "bytes": 5671,
+    "sha256": "bbcf24b237ca28acd4ff9202638836806ba9a5be891fe8bf28416eef258eeb1d"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_shivarracoven_fel_missile00.skin",
+    "bytes": 588,
+    "sha256": "e4ebf28f11832786acf694234de742ee63f233e4909a45cab2ebab9d4f5b71a7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_smoke_wispymask_a.blp",
+    "bytes": 350724,
+    "sha256": "93316d5d71023ed84027a651da2a126d15910aab589dd23239f7d6c83e8bafef"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/7fx_targetfel.blp",
+    "bytes": 350724,
+    "sha256": "527f30743da978769503b5ec3153a59292d58003ec9fafa452a54fb05edc327c"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_generic_necromancy_beamemitter_0_2388006.blp",
+    "bytes": 175972,
+    "sha256": "119364c3b20cce1812d23d46e10b1eb58fde0c17cb2e5b447014e0e274e5f189"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_generic_necromancy_missile_4_2388157.blp",
+    "bytes": 44900,
+    "sha256": "80f44e309fa98f6340c21778de87a91e130ac1c68ef0295211c8aa30f24e50bb"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_generic_necromancy_missilegeo.m2",
+    "bytes": 42592,
+    "sha256": "eb5b756edf71613f7e6fd9313b40a3629d4f975050fa8591f966906113593bef"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_generic_necromancy_missilegeo00.skin",
+    "bytes": 11334,
+    "sha256": "8f0e2f3fd4c34518d5f164dea29f094230e4a3620c73afaf87407bd593689bc3"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_generic_necromancy_missilegeo_5_2388162.blp",
+    "bytes": 88580,
+    "sha256": "f6581de93c9aa9944b49396fe38954727944bd52cb46796807dac2b07a14c733"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_lightrays_doublesided_necro.blp",
+    "bytes": 23044,
+    "sha256": "ca5b99b8194e2332c8626f88b4370a67b9005afd4d237d64d8d6ed9b61977238"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/8fx_muzzleflare_stylized_a_v2.blp",
+    "bytes": 175972,
+    "sha256": "973c6475a494415de4c671f3c3d9517477fc9bdf61cc5cead339a9a93d6b571e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/be_demoncrystal_001.blp",
+    "bytes": 44876,
+    "sha256": "4a186e260f073073893e618f3778b02be0a88de1e4e72e513e891fb44108197e"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/cfx_necrolord_warlock_3521961.blp",
+    "bytes": 88580,
+    "sha256": "59b867a8534d29c2ebf5811aa0460c9ecddf904abac73335281f5808bd03c5c8"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/cfx_necrolord_warlock_3521966.blp",
+    "bytes": 88580,
+    "sha256": "5c91a9c37737c273304eef3db2d9875fed30238bf05825ff5e40b2e5b5bbe85f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/cfx_necrolord_warlock_castbetweenhands.m2",
+    "bytes": 28731,
+    "sha256": "ddb19d2b6d6ffc359e95b8e44e0f4a617e8d683d51b637d9427bddc6b9f30a15"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/cfx_necrolord_warlock_castbetweenhands00.skin",
+    "bytes": 64,
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/flare1_tc_green3.blp",
+    "bytes": 23044,
+    "sha256": "35dcbf16b0b921db36f4bb9cc9759f54bc2e7ba3fbfe895252fffde33ad412ce"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/ghost5.blp",
+    "bytes": 23076,
+    "sha256": "5381189e0b28cbf45e83d0993fb75b19940047365700c4ae89e08e05fc050ee8"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/glow128.blp",
+    "bytes": 23044,
+    "sha256": "a5f324f5fe0bab93f3f93836f2aa95a1b21260953d44fffaa23982367a43db02"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/gradient64flipa.blp",
+    "bytes": 6660,
+    "sha256": "ae014692a462d221e57ee9559b170ccf7103737e52b53762a7a5bc978c4cc8dd"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/grey50percentsquare16x16_a.blp",
+    "bytes": 1540,
+    "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/shockwavewater1.blp",
+    "bytes": 12108,
+    "sha256": "711241c0e23c2d1fdd316dfb847059580890d99c14442532a1b66c875dff41ff"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/smoke_loose_01.blp",
+    "bytes": 350724,
+    "sha256": "721a022dc0a467eb34f4973596a71af466a9c1a99e5b5dc2fbc06f082de7a6c2"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/warlock_focus_shadow_impact.m2",
+    "bytes": 7108,
+    "sha256": "8f290c9fff6e30bbcb3155ef8ba8d97f4546cf94cae6e32601ef2daf667af803"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/warlock_focus_shadow_impact00.skin",
+    "bytes": 264,
+    "sha256": "db7046c3d9c8fc9c8dabb6c12b427f42f125c881d5df5cb0e86dc9e92696b0f9"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/white8x8.blp",
+    "bytes": 1228,
+    "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/wispymagic_necro_a.blp",
+    "bytes": 23044,
+    "sha256": "7807ae36298fbba756d95ed8ea9abb3ad8dcb4db99d6da67a932023c0e5344f0"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/wispymagic_necroblur_a.blp",
+    "bytes": 88580,
+    "sha256": "3cc1ffd02783d74c0cebed0e090268f25d9c3f0a67f9edd099c85439928c5e26"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/wispymagic_necroblurh_a.blp",
+    "bytes": 88580,
+    "sha256": "da881f31728fd42431530d44673d5e94453be7976c4e3f5cea2aa9552b679de0"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/spells/wispymagic_vert_azeritemist_blue_128_greyrotate_solid.blp",
+    "bytes": 23044,
+    "sha256": "589662bdf0286c5f1fd42aa46189ed8180ec841dc5599b7c260f7dbc47c8674a"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/world/expansion07/doodads/fx/8fx_generic_ghostly_state_hostile01_3023815.blp",
+    "bytes": 88580,
+    "sha256": "a4489caa9ac5eb8f3dfdecb9f94a6e026c25532765677f1f1daa05d92e21ed55"
+  },
+  {
+    "path": "01_导入现有PATCH-XA/Spells/RebornWD143A/world/expansion07/doodads/fx/8fx_nagacouncil_decree_formranks_debuff.blp",
+    "bytes": 44900,
+    "sha256": "85f7270fbe982d72a4cc9b714810f94d622b48b6e7bf717ef6c40cf4d1f460d7"
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Data/patch-ZA.mpq",
+    "bytes": 25840,
+    "sha256": "72c4631cdf15b18970d9437191d7f72a2f706fa8352142741977a055af719643"
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "bytes": 109060,
+    "sha256": "200111e2db18d0644d9d7336767312ad90ff465047507ddb2908c0a781b9c2ec"
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "bytes": 103505,
+    "sha256": "837d7a3591c33400389f3c3215ceccef35644d7a9362c78a01bd5be20769bbfa"
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "bytes": 10930,
+    "sha256": "bf111e142c41c667e2754472acfaa7f7c420066b4aab6d72b415b8bb80c2aa6d"
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "bytes": 8807,
+    "sha256": "b825cdd9bd8f9c8ad5622ba2c25ba26312bc9df33a386d3d82b63880a8bb4c2d"
+  },
+  {
+    "path": "03_导入SQL/characters_角色数据库/01_node_reference.sql",
+    "bytes": 9244,
+    "sha256": "d31f65625b03379c3424b5aaf38a0a5239cd3dc4218913bf1025a7c11b7190c8"
+  },
+  {
+    "path": "03_导入SQL/characters_角色数据库/02_save_rows.sql",
+    "bytes": 47839,
+    "sha256": "eed6c3584df1e22629b0b26d7c82509fe5993f1c4a896900d7f4d2cc4f34c082"
+  },
+  {
+    "path": "03_导入SQL/world_世界数据库/01_WD143_world.sql",
+    "bytes": 5850,
+    "sha256": "0ce270967ef449e8231318662067a58c1588d12fedd3f27bd5f87b7814655f77"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+    "bytes": 1118061,
+    "sha256": "18d24899391aeaaff5449368e67237c6d970ce4ca5d45bb3aefc936ae46e63a5"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SoundEntries.dbc",
+    "bytes": 27688188,
+    "sha256": "bac3144a3546b1c5f4cf88c7c9a9e6122be79bdee745d907e1860048b011429f"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "bytes": 61684914,
+    "sha256": "cd736f14f0477adf9bdc00dbbe3e53ec84d796e90f37079f38a0534514ae9fde"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellCastTimes.dbc",
+    "bytes": 2149,
+    "sha256": "4724731658b5ea82788622a24d6aba516173c67cc31252a940b3ef1310d28019"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellDuration.dbc",
+    "bytes": 3653,
+    "sha256": "316b711549fc99e8fb500e131df5a062079ae2eafc6ed7c7b94e897eada68af5"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+    "bytes": 1775413,
+    "sha256": "f95e11cdf7664a7c7252e790642f60ff1537c47700c15202e5ba7a4149c64e27"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellRange.dbc",
+    "bytes": 28502,
+    "sha256": "c1ef25640d61cbcc62933bf84972b0fecbfd970fcf1f7e558c21df88bbddfcfc"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisual.dbc",
+    "bytes": 1981973,
+    "sha256": "c2b35e1a8fd5e7a80bf9f0c5a268696d1ed45a82e336d121e2e4643b3169a5ab"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualEffectName.dbc",
+    "bytes": 625894,
+    "sha256": "2884f1bbaa06365dd9c02e97ebc406c5be2b0c422bc0916c8e6a268b719ef934"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualKit.dbc",
+    "bytes": 2294613,
+    "sha256": "e79bd8492a08c12851db2ba55c7a28fa923da036326f30a658499ad9c3077c37"
+  },
+  {
+    "path": "README_先读.md",
+    "bytes": 3010,
+    "sha256": "4fb9d2ef3b3d88a002d2b1279c0e6aa80639e7dea6e6e1356cc02c5679e6a37d"
+  }
+]

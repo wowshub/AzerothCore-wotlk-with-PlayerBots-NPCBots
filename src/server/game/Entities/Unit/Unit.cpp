@@ -4562,7 +4562,7 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
                 if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL])
                 {
                     // break autorepeat if not Auto Shot
-                    if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75)
+                    if ((m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75 && m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 9003989))
                         InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
                     m_AutoRepeatFirstCast = true;
                 }
@@ -4589,7 +4589,7 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
 
                 // it also does break autorepeat if not Auto Shot
                 if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL] &&
-                        m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75)
+                        (m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75 && m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 9003989))
                     InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
                 AddUnitState(UNIT_STATE_CASTING);
 
@@ -4598,7 +4598,7 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
         case CURRENT_AUTOREPEAT_SPELL:
             {
                 // only Auto Shoot does not break anything
-                if (pSpell->m_spellInfo->Id != 75)
+                if ((pSpell->m_spellInfo->Id != 75 && pSpell->m_spellInfo->Id != 9003989))
                 {
                     // generic autorepeats break generic non-delayed and channeled non-delayed spells
                     if (Spell* s = GetCurrentSpell(CURRENT_CHANNELED_SPELL))

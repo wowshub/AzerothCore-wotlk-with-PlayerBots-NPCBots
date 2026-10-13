@@ -1,0 +1,164 @@
+﻿ID,Name,Tab,MaxPoints,AECost,TECost,RequiredLevel,Spells,RequiredIDs,正式接入
+12086,Malefic Arrow,Shadowhunting,1,0,0,0,707854,"4006,29747",否
+4505,Reclamation,Shadowhunting,1,0,0,0,806288,"4006,29747",否
+4006,Shadowhunter,Shadowhunting,1,0,0,10,92086,,否
+1969,Improved Malefic Arrow,Shadowhunting,2,0,1,0,"707855,712478",,否
+7779,Loa's Strength,Shadowhunting,2,0,1,0,"705936,705937",,否
+8574,Spirit Glaive,Shadowhunting,1,0,1,0,806289,,否
+7086,Spirit Eclipse,Shadowhunting,1,0,1,0,801607,,否
+4506,Loa Spirits,Shadowhunting,1,0,0,20,705843,,否
+30895,Soul Feeder,Shadowhunting,1,0,1,0,705894,,否
+6010,Mojo High,Shadowhunting,1,0,1,0,706488,,否
+6072,Spiritual Devotee,Shadowhunting,1,0,1,0,503727,,否
+6074,Village Wisdom,Shadowhunting,1,0,1,0,680882,,否
+6063,Vol'jin's Blessing,Shadowhunting,1,0,1,0,706577,,否
+30892,Call of Sseratus,Shadowhunting,1,0,1,0,681222,,否
+7102,Shadowstalker,Shadowhunting,1,0,1,0,807040,,否
+7103,Umbral Glaive,Shadowhunting,1,0,0,30,681242,,否
+5253,Godslayer,Shadowhunting,1,0,1,0,802714,,否
+6853,The True Spirit,Shadowhunting,1,0,1,0,802268,,否
+6069,Residual Energy,Shadowhunting,1,0,1,0,706543,,否
+6983,Voodoo Fire,Shadowhunting,2,0,1,0,"802262,803846",,否
+5303,Voodoo Hunger,Shadowhunting,1,0,1,0,705942,,否
+4177,Hex of Death,Shadowhunting,1,0,1,0,706557,,否
+11177,Spirit Hunting,Shadowhunting,1,0,1,0,707504,,否
+6073,Dark Loa's Incantation,Shadowhunting,1,0,1,0,525377,,否
+7031,Darkspear Traditionalist,Shadowhunting,1,0,1,0,503707,,否
+5164,Spirit Striker,Shadowhunting,1,0,1,0,806286,,否
+11164,Hexfire Mass,Shadowhunting,1,0,1,0,807450,,否
+29729,Strength of Da Loa,Shadowhunting,1,0,1,0,300871,,否
+29977,Spirit Shock,Shadowhunting,1,0,1,0,807743,,否
+4423,Sen'jin's Apprentice,Shadowhunting,1,0,0,40,681199,,否
+11330,Bwonsamdi's Edge,Shadowhunting,1,0,1,0,712435,,否
+29930,Dambala's Lethality,Shadowhunting,1,0,1,0,712312,,否
+4572,Eye of Kimbul,Shadowhunting,1,0,1,0,503714,,否
+29978,Berserking,Shadowhunting,1,0,1,0,705925,,否
+6011,Shadow Enchantments,Shadowhunting,2,0,1,0,"300662,301361",,否
+6388,Fool's Play,Shadowhunting,1,0,1,0,681007,,否
+5235,Viper Ward,Shadowhunting,1,0,1,0,707329,,否
+6035,Serpent Handler,Shadowhunting,1,0,1,0,705939,,否
+29981,Serpent's Guile,Shadowhunting,1,0,1,0,705928,,否
+12145,Spirit Volley,Shadowhunting,1,0,0,50,503712,,否
+6076,A Price To Pay,Shadowhunting,1,0,1,0,705948,,否
+7355,Frenzied Spirits,Shadowhunting,1,0,1,0,560748,,否
+7781,Bwonsamdi's Gift,Shadowhunting,1,0,1,0,707650,,否
+31154,Shadow Puppets,Voodoo,1,0,1,0,500015,"4004,29301",是
+4004,Puppeteer's Threads,Voodoo,1,0,0,10,92084,,是
+31345,Loa Spirits,Voodoo,2,0,1,0,"804620,807904",,是
+31344,Stranglethorn Style,Voodoo,1,0,1,0,705877,,是
+29928,Bad Juju,Voodoo,1,0,1,0,802087,,是
+31340,Zalazane's Malice,Voodoo,1,0,1,0,705902,,是
+7157,Hexfire,Voodoo,1,0,1,0,807042,,是
+4533,Voodoo Power,Voodoo,1,0,0,20,706482,,是
+6058,Dark Magic,Voodoo,1,0,1,0,705922,,是
+30973,Staff of the Coven,Voodoo,3,0,1,0,"806563,807905,807915",,是
+6062,Ritual Hexing,Voodoo,2,0,1,0,"705840,705841",,是
+30596,Puppeteer's Grasp,Voodoo,1,0,1,0,707209,,是
+6046,Jin'do's Wrath,Voodoo,1,0,1,0,707505,,是
+4532,Overflowing Juju,Voodoo,1,0,0,30,705844,,是
+31343,Overflowing Juju,Voodoo,1,0,1,0,707405,,是
+31348,Growing Malice,Voodoo,1,0,1,0,706551,,是
+6007,Beware Da Voodoo,Voodoo,2,0,1,0,"707168,707857",,是
+31347,Hexplosion,Voodoo,1,0,1,0,704495,,是
+31350,Voodoo Strings,Voodoo,1,0,1,0,705910,,是
+6644,Malignant,Voodoo,1,0,1,0,704503,,是
+6059,Voodoo Mind,Voodoo,1,0,1,0,504462,,是
+6045,Hollow Spirit,Voodoo,1,0,1,0,705917,,是
+31341,It's Da Voodoo,Voodoo,1,0,1,0,560278,,是
+5333,Voodoo Spirits,Voodoo,1,0,1,0,704511,,是
+11532,Juju Spirits,Voodoo,1,0,0,40,807296,,是
+6053,Voodoo Unleashed,Voodoo,1,0,1,0,705901,,是
+30889,Prolonged Malice,Voodoo,1,0,1,0,704505,,是
+29121,Malignant Jinx,Voodoo,1,0,1,0,803678,,是
+31349,War Golem,Voodoo,1,0,1,0,800330,,是
+5332,Dark Loa's Blessing,Voodoo,1,0,1,0,560545,,是
+29768,Voice of Bwonsamdi,Voodoo,1,0,1,0,801716,,是
+7100,Dark Effigy,Voodoo,1,0,1,0,707331,,是
+6055,Soul Marionette,Voodoo,1,0,1,0,704497,,是
+11133,Hexfire Adept,Voodoo,1,0,0,50,704500,,是
+6057,The Price of Power,Voodoo,1,0,1,0,705916,,是
+31346,De Other Side,Voodoo,1,0,1,0,802092,,是
+29929,Malicious Golems,Voodoo,1,0,1,0,705912,,是
+12645,Ingredient: Jungle Shrooms,Brewing,1,0,0,0,801660,"4005,29744",是
+12646,Potion Toss,Brewing,1,0,0,0,801661,"4005,29744",是
+4005,Cauldron Brewer,Brewing,1,0,0,10,92085,,是
+6645,Mixologist,Brewing,1,0,1,10,561069,4005,是
+7131,Potent Mixes,Brewing,2,0,1,0,"503748,504888",,是
+30884,Mojo Addiction,Brewing,2,0,1,0,"503696,504889",,是
+29736,Brewmaster,Brewing,2,0,1,0,"704512,707856",,是
+9311,Spirit Healer,Brewing,1,0,0,20,560280,,是
+5055,Presence of the Loa,Brewing,1,0,1,0,572871,,是
+7128,Splash Potion,Brewing,1,0,1,0,802710,,是
+7129,Plentiful Potions,Brewing,1,0,1,0,803463,,是
+29303,Potion Boss,Brewing,1,0,1,0,561072,,是
+6022,Splash On 'Em,Brewing,1,0,1,10,802219,7128,是
+6021,Ingredient: Bloodthistle,Brewing,1,0,1,10,801664,4005,是
+4715,Loa's Blessing,Brewing,1,0,0,30,705848,,是
+6498,Fresh Ingredients,Brewing,2,0,1,0,"705856,707858",,是
+6013,Spirit Out Of The Bottle,Brewing,1,0,1,10,301175,"29303,29738",是
+7948,Touch of the Spirits,Brewing,1,0,1,0,578295,,是
+30823,Mojo Beam,Brewing,1,0,1,29,500950,"7128,29303",是
+6015,Mojo: Fish Bones,Brewing,1,0,1,16,705850,29738,是
+4112,Spice: Peacebloom,Brewing,1,0,1,10,803700,4005,是
+7130,Spice: Earthroot,Brewing,1,0,1,10,504424,4005,是
+6016,Mojo: Frog Shrooms,Brewing,1,0,1,10,705851,29738,是
+31137,Jungle Secrets,Brewing,1,0,1,0,707212,,是
+7132,Rage Brew,Brewing,1,0,1,0,503750,,是
+29753,Arcane Brew,Brewing,1,0,1,0,801689,,是
+6009,Mojo: Jungle Thistle,Brewing,1,0,1,10,500472,6021,是
+4733,Mojo Wave,Brewing,1,0,0,40,707617,4715,是
+6020,Jungle Booms,Brewing,1,0,1,0,705859,,是
+29737,Doctor of the Jungle,Brewing,1,0,1,0,706545,,是
+6014,Sen'jin's Presence,Brewing,1,0,1,10,560544,4005,是
+29310,Base: Beast Blood,Brewing,1,0,1,0,705870,,是
+30333,Voodoo Cauldron,Brewing,1,0,1,57,804684,,是
+6026,Master of Concoctions,Brewing,1,0,1,57,801690,,是
+29754,Base: Crystal Water,Brewing,1,0,1,0,500962,29310,是
+13133,Spirit Link Idol,Brewing,1,0,0,50,706369,,是
+6027,Unstable Concoction,Brewing,1,0,1,57,802487,,是
+29740,Master Mixologist,Brewing,1,0,1,59,705864,,是
+7133,Tiki Splash,Brewing,1,0,1,24,500053,,是
+29747,Mirage,Class,1,1,0,0,501136,,否
+29301,Mimic Ward,Class,1,1,0,0,707162,,是
+29744,Healing Ward,Class,1,1,0,0,500957,,是
+7088,Juju Injection,Class,2,1,0,0,"503608,503609",,是
+6030,Chosen One,Class,1,1,0,0,503742,,是
+6054,Spiritual Traditions,Class,1,1,0,0,705911,,是
+7154,Sen'jin's Swiftness,Class,1,1,0,0,504426,,否
+11154,Sen'jin's Wisdom,Class,1,1,0,0,504774,,否
+6044,Mojo Madness,Class,1,1,0,0,705871,,否
+6047,Wizened,Class,2,1,0,0,"705903,705904",,是
+7092,Seeker,Class,1,1,0,0,705880,,是
+31118,Death Draught,Class,1,1,0,0,602220,,是
+29309,Cleansing Idol,Class,1,1,0,0,504840,,是
+12749,Jinx of Decay,Class,1,1,0,0,681465,,否
+29749,Will of the Serpent,Class,1,1,0,0,300663,,否
+6031,Amphibimorph,Class,1,1,0,0,500952,,是
+7033,Spirit Warden,Class,1,1,0,0,503774,,是
+6381,Loa Empowerment,Class,1,1,0,0,706368,,是
+30147,Alchemical Enhancement,Class,1,1,0,0,705921,,是
+6525,Gonk's Blessing,Class,1,1,0,0,806469,,是
+12525,Krag'wa's Blessing,Class,1,1,0,0,807855,,是
+6042,Vol'jin's Vigil,Class,1,1,0,0,504465,,是
+6051,Swift Idol,Class,1,1,0,0,804226,,是
+29306,Slither,Class,1,1,0,0,500947,,是
+30891,Touch of Mueh'zala,Class,1,1,0,0,706538,,是
+12264,Potent Mixes,Class,1,1,0,0,503748,,是
+9347,Spirit Walker,Class,2,1,0,0,"504459,504636",,是
+6048,Dark Mojo,Class,1,1,0,0,712396,,是
+12048,Blessing of Hir'eek,Class,1,1,0,0,572870,,是
+11323,Blatant Curse,Class,1,1,0,0,301297,,是
+29743,Latent Curse,Class,1,1,0,0,806283,,否
+4132,Hastened,Class,1,1,0,0,705899,,是
+30203,Veil of Darkness,Class,1,1,0,56,802100,,是
+29757,Devotion to Bwonsamdi,Class,1,1,0,56,802756,,是
+6050,One Armed Waltz,Class,1,1,0,0,705909,,否
+6052,Loa Communion,Class,1,1,0,58,705907,30203,是
+5113,Cursed Effigy,Class,1,1,0,0,706542,,否
+6049,For Da Loa!,Class,1,1,0,0,705906,,否
+35065,Potion Slinger,Brewing,1,0,1,10,9003897,,是
+35064,Medicine Man,Brewing,2,0,1,10,"9003898,9003899",,是
+35068,Regenerator,Brewing,1,0,1,10,9003900,,是
+29738,Ingredient: Frog Bones,Brewing,1,0,1,10,9003905,,是
+30888,Shrink Ally,Brewing,1,0,1,10,9003910,,是
+35051,Disciple of Sseratus,Brewing,1,0,1,10,9003911,,是

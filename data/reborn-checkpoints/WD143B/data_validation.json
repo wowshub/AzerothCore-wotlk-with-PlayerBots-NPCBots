@@ -1,0 +1,31 @@
+{
+  "checks": [
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SkillLineAbility.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SoundEntries.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/Spell.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellCastTimes.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellDuration.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellIcon.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellRange.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellVisual.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellVisualEffectName.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient/SpellVisualKit.dbc:old rows/prefix,header,core string offsets",
+    "开发资料/客户端MPQ内部文件/DBFilesClient:private mechanics fields verified",
+    "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SoundEntries.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/Spell.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellCastTimes.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellDuration.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellRange.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellVisual.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellVisualEffectName.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc/SpellVisualKit.dbc:old rows/prefix,header,core string offsets",
+    "04_覆盖到服务端根目录/Data/dbc:private mechanics fields verified",
+    "Reclamation all nine client casts=server base+500ms",
+    "all unrelated installed patch-ZA files byte-preserved",
+    "MPQ 193 files byte-identical readback"
+  ],
+  "mpq_files": 193,
+  "mpq_sha256": "cfaef409328cb5612323ad1e353e88ff46bf8c0b3932e4bb1a67758979ed65ef"
+}

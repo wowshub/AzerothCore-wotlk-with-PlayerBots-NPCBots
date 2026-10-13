@@ -28,6 +28,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD143Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD142Bridge { void Clear(Player*); }
 namespace WD19A { uint32 ResolveAction(Player* player, uint32 spell); void SyncBadJuju(Player* player); }
 

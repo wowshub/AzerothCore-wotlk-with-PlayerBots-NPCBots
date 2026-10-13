@@ -1,0 +1,228 @@
+{
+  "status": "candidate-not-game-tested",
+  "base_commit": "d1df26db8a580435438b83592def51bbdd31ffb3",
+  "files": [
+    {
+      "path": "01_覆盖到源代码根目录/data/customfixsql/characters/witchdoctor/WD143A/01_node_reference.sql",
+      "bytes": 9244,
+      "sha256": "d31f65625b03379c3424b5aaf38a0a5239cd3dc4218913bf1025a7c11b7190c8",
+      "input_sha256": null
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/customfixsql/characters/witchdoctor/WD143A/02_save_rows.sql",
+      "bytes": 47839,
+      "sha256": "eed6c3584df1e22629b0b26d7c82509fe5993f1c4a896900d7f4d2cc4f34c082",
+      "input_sha256": null
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/customfixsql/world/witchdoctor/WD143A/01_WD143_world.sql",
+      "bytes": 5850,
+      "sha256": "0ce270967ef449e8231318662067a58c1588d12fedd3f27bd5f87b7814655f77",
+      "input_sha256": null
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-checkpoints/witchdoctor/nodes.csv",
+      "bytes": 2465,
+      "sha256": "3f42e9e602ec49fbc9a83e6c648544ab9c6247479543202ac710d7fafd5bfad6",
+      "input_sha256": "f5594a774189afc84d2996c2f05108135de6f3755b1d611623e8f60cc851ddbb"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+      "bytes": 109060,
+      "sha256": "200111e2db18d0644d9d7336767312ad90ff465047507ddb2908c0a781b9c2ec",
+      "input_sha256": "0240df2be64be75bd1776b36fbc58e8180cb490f78ce95cd16a4c809fd7f5a4c"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+      "bytes": 103505,
+      "sha256": "837d7a3591c33400389f3c3215ceccef35644d7a9362c78a01bd5be20769bbfa",
+      "input_sha256": "c2194e9b6f2b6cc0bd895138a7f457d78a9e07c53def53531f7ad4121df9230f"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+      "bytes": 10930,
+      "sha256": "bf111e142c41c667e2754472acfaa7f7c420066b4aab6d72b415b8bb80c2aa6d",
+      "input_sha256": "8506adbbd18cf6b257519ad46de7da106c9d48e1fad68a051a924ea313c6794d"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+      "bytes": 8807,
+      "sha256": "b825cdd9bd8f9c8ad5622ba2c25ba26312bc9df33a386d3d82b63880a8bb4c2d",
+      "input_sha256": "2e81684034162ef1f5ecb4bcac4de1ca27fa568338f89ab24c8cb8acc2a2eb0c"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "bytes": 167077,
+      "sha256": "895641d221edcc4d9307c33c608c5e8767a926b461b994405d492fbe36ff38ad",
+      "input_sha256": "462751cedfbfd3655bc8a97aed78fe4a88c43b775d7446d814338ef07167ad72"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+      "bytes": 44190,
+      "sha256": "2e53cf8c5da316d4dfaaafe90a0d4cbe881ad50264aba257983516a82e5a778a",
+      "input_sha256": "379927b7cec1f52862bd99b9e350821ddd4b300f4f4365d263d8a2a0f92f67ca"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+      "bytes": 5155,
+      "sha256": "b156c7055736aa1e9cbb594d5985435647436933800f42123d3f02b6580f2b47",
+      "input_sha256": "c370c3597fab5823d631d774a77f819db1a157d09e4998e214bba72138362a92"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorRanks.h",
+      "bytes": 12532,
+      "sha256": "e05f18d75854fcea04e13dddad4c30884c80951e8bcfb265823728ee63e1ab5f",
+      "input_sha256": "0e66d4e66c816ceb7fb997be3a925e2b8617e8f2f4bd1f45218c3ca0ecab5a3a"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+      "bytes": 5255,
+      "sha256": "a604386f0009b1ac6428def4cd8860d10c0e0d8c793c7c43da3d382af7e181af",
+      "input_sha256": null
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+      "bytes": 6836,
+      "sha256": "5bd28d39351b81dc77f29c4a4d5140ca37cf91a5816dfd624e9f8a8f52ca5680",
+      "input_sha256": "9930ac0f6e54928823f49eaa8c6f984358a63a522d718281d90a420323fe716e"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "bytes": 48575,
+      "sha256": "8b46087c6ed62e1fb4f8bcd3f9d20f9af09245ccb9a81d1967b61ffae9c78bc0",
+      "input_sha256": "367250bc08290ec0ff02c891d6ff72528e962070e7f97d9c2904215509214036"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp",
+      "bytes": 637323,
+      "sha256": "4170d80cf41f7f49fd5593e83cb59f0eaa81c4a22a5cf1fa0a29e2834c11a69c",
+      "input_sha256": "34eb0052ba0c262c4299367eeeff9db76dd585326b8ff0f4d8ff2e3a09c99592"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+      "bytes": 3083,
+      "sha256": "a63b8075cadf89c2db860be07a31c5b40011ec51b1b4dfa6d6ce73e41a642eb2",
+      "input_sha256": "58a1211bd132ae034bfd477c9993d7ef43da040e09d72c93df6fdcb942a3bedf"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/src/server/game/Entities/Unit/Unit.cpp",
+      "bytes": 704102,
+      "sha256": "27fae3ccd1372fd8d50e39b09bea5759f16fc000753e4d8e5d2fc0b2bac62f5c",
+      "input_sha256": "228d6144e4a06d6f17c55f1a075fcf0a2858f229a22abd3747926b422efb668e"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/src/server/game/Spells/Spell.cpp",
+      "bytes": 411658,
+      "sha256": "07471e11821a2b358accd1e832493152ff736f7b22dada6225eca5afc1fdc5e2",
+      "input_sha256": "f79fc89a6e36155d4b0ef79f444eb377968beb77baae0419654297487ed1765a"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Data/patch-ZA.mpq",
+      "bytes": 17693164,
+      "sha256": "cfaef409328cb5612323ad1e353e88ff46bf8c0b3932e4bb1a67758979ed65ef",
+      "input_sha256": "9623aee5ee9f3e43951d3c4628145f7d6e9c4f8453aa9543f06fdd64ace5d986"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+      "bytes": 109060,
+      "sha256": "200111e2db18d0644d9d7336767312ad90ff465047507ddb2908c0a781b9c2ec",
+      "input_sha256": "0240df2be64be75bd1776b36fbc58e8180cb490f78ce95cd16a4c809fd7f5a4c"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+      "bytes": 103505,
+      "sha256": "837d7a3591c33400389f3c3215ceccef35644d7a9362c78a01bd5be20769bbfa",
+      "input_sha256": "c2194e9b6f2b6cc0bd895138a7f457d78a9e07c53def53531f7ad4121df9230f"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+      "bytes": 10930,
+      "sha256": "bf111e142c41c667e2754472acfaa7f7c420066b4aab6d72b415b8bb80c2aa6d",
+      "input_sha256": "8506adbbd18cf6b257519ad46de7da106c9d48e1fad68a051a924ea313c6794d"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+      "bytes": 8807,
+      "sha256": "b825cdd9bd8f9c8ad5622ba2c25ba26312bc9df33a386d3d82b63880a8bb4c2d",
+      "input_sha256": "2e81684034162ef1f5ecb4bcac4de1ca27fa568338f89ab24c8cb8acc2a2eb0c"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+      "bytes": 1118061,
+      "sha256": "18d24899391aeaaff5449368e67237c6d970ce4ca5d45bb3aefc936ae46e63a5",
+      "input_sha256": "c2013938bcf763c4c38d8af5bef5f11cc0ba4ee480c92a3fa65e4e53e11ce53c"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SoundEntries.dbc",
+      "bytes": 27688188,
+      "sha256": "bac3144a3546b1c5f4cf88c7c9a9e6122be79bdee745d907e1860048b011429f",
+      "input_sha256": "742d650e602b69c1e1721a42cb17e9b5f493dbfc45d222d83b0c5fb086ee448b"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+      "bytes": 61684914,
+      "sha256": "cd736f14f0477adf9bdc00dbbe3e53ec84d796e90f37079f38a0534514ae9fde",
+      "input_sha256": "20c56a4c2e5dee2aeb0c6d5c1be432af4ffbea64f671ae6ff0ec0a3aec33f227"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellCastTimes.dbc",
+      "bytes": 2149,
+      "sha256": "4724731658b5ea82788622a24d6aba516173c67cc31252a940b3ef1310d28019",
+      "input_sha256": "9a2dbe37d86dc68b35ae4447fbcd6337fa0cfd8020d69fd4813bb9c9a3deac5d"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellDuration.dbc",
+      "bytes": 3653,
+      "sha256": "316b711549fc99e8fb500e131df5a062079ae2eafc6ed7c7b94e897eada68af5",
+      "input_sha256": "d07ab097fd3996d582632636fe7cc0a029474cad3406b2b278706f78d12fe905"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+      "bytes": 1775413,
+      "sha256": "f95e11cdf7664a7c7252e790642f60ff1537c47700c15202e5ba7a4149c64e27",
+      "input_sha256": "c0ce8d436a7c2216a4295181d64b6ea812727d7423c1dd2580e2bc136e8b7f58"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellRange.dbc",
+      "bytes": 28502,
+      "sha256": "c1ef25640d61cbcc62933bf84972b0fecbfd970fcf1f7e558c21df88bbddfcfc",
+      "input_sha256": "f53adf6198eb42adcfd7fb4d35f6b5704e067006fb3f4f0acf4d91d4d53e5afa"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisual.dbc",
+      "bytes": 1981973,
+      "sha256": "c2b35e1a8fd5e7a80bf9f0c5a268696d1ed45a82e336d121e2e4643b3169a5ab",
+      "input_sha256": "e2003c1258caf968bb553641de45397f764d7fa3fd8ce4591fb70b566df25899"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualEffectName.dbc",
+      "bytes": 625894,
+      "sha256": "2884f1bbaa06365dd9c02e97ebc406c5be2b0c422bc0916c8e6a268b719ef934",
+      "input_sha256": "4a445421057bad85eec6806fa7274cf0fbc7b8f1f755a189cfe55c28c3622f21"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualKit.dbc",
+      "bytes": 2294613,
+      "sha256": "e79bd8492a08c12851db2ba55c7a28fa923da036326f30a658499ad9c3077c37",
+      "input_sha256": "7f218bb99fdb73b78935d4ff91cad54fe8dba56a0c3d0c4cbeaef49447367bf4"
+    },
+    {
+      "path": "03_导入SQL/characters_角色数据库/01_node_reference.sql",
+      "bytes": 9244,
+      "sha256": "d31f65625b03379c3424b5aaf38a0a5239cd3dc4218913bf1025a7c11b7190c8",
+      "input_sha256": null
+    },
+    {
+      "path": "03_导入SQL/characters_角色数据库/02_save_rows.sql",
+      "bytes": 47839,
+      "sha256": "eed6c3584df1e22629b0b26d7c82509fe5993f1c4a896900d7f4d2cc4f34c082",
+      "input_sha256": null
+    },
+    {
+      "path": "03_导入SQL/world_世界数据库/01_WD143_world.sql",
+      "bytes": 5850,
+      "sha256": "0ce270967ef449e8231318662067a58c1588d12fedd3f27bd5f87b7814655f77",
+      "input_sha256": null
+    }
+  ]
+}

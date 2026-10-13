@@ -5,9 +5,9 @@ namespace WD64A
 {
 struct Node { uint32 id, tree, level, maxRank, ae, te, needAE, needTE, group; bool mapped; std::vector<uint32> required; };
 static Node const Nodes[]={
-    {12086,2,0,1,0,0,0,0,0,false,{4006}},
-    {4505,2,0,1,0,0,0,0,0,false,{4006}},
-    {4006,2,10,1,0,0,0,0,0,false,{}},
+    {12086,2,10,1,0,0,0,0,0,true,{4006}},
+    {4505,2,10,1,0,0,0,0,0,true,{4006}},
+    {4006,2,10,1,0,0,0,0,0,true,{}},
     {1969,2,0,2,0,1,0,0,0,false,{}},
     {7779,2,0,2,0,1,0,0,0,true,{}},
     {8574,2,0,1,0,1,0,0,0,false,{}},

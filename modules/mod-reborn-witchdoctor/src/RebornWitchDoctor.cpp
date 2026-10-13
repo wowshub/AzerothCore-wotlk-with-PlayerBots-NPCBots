@@ -54,6 +54,11 @@ constexpr uint32 Hex = 9003104;
 constexpr uint32 Mark = 9003105;
 uint32 BestKnownRank(Player* player, WD19A::Family const& family)
 {
+    if(family.ranks[0].spell==9003100 && player->HasSpell(9003968))
+        return BestKnownRank(player,*WD19A::FindFamily(9003970));
+    if(family.ranks[0].spell==9003970 && !player->HasSpell(9003968))
+        return BestKnownRank(player,*WD19A::FindFamily(9003100));
+
     for (std::size_t i=family.count; i>0; --i)
     {
         WD19A::Rank const& rank=family.ranks[i-1];
@@ -93,6 +98,7 @@ void SyncRanks(Player* player)
     {
         if (WD67::Managed(family.ranks[0].spell) && WD67::Enrollment(player)!=0) continue;
         if (family.ranks[0].spell==9003103) continue; // WD48B: talent-owned, synchronized by WD5A after profile load.
+        if(family.ranks[0].spell==9003100 && player->HasSpell(9003968)) continue;
         int acquired=family.starter ? 0 : -1;
         for (std::size_t i=0; i<family.count; ++i)
             if (purchased.count(family.ranks[i].spell)) acquired=int(i);
@@ -3308,6 +3314,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
 #include "RebornWitchDoctorCommon142.inc"
+#include "RebornWitchDoctorShadow143.inc"
 
 // WD126: the donor spell's Dodge and Scale auras remain native 3.3.5a effects.
 class spell_reborn_wd126_shrink_ally : public SpellScript
@@ -3328,6 +3335,9 @@ class spell_reborn_wd126_shrink_ally : public SpellScript
 
 void AddRebornWitchDoctorScripts()
 {
+    RegisterSpellScript(WD143::auto_shot);
+    RegisterSpellScript(WD143::arrow);
+    RegisterSpellScript(WD143::reclamation);
     RegisterSpellScript(WD142::aura_veil);
     RegisterSpellScript(WD142::spell_pulse);
     RegisterSpellScript(WD142::aura_devotion);

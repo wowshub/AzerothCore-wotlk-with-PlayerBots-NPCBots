@@ -580,6 +580,13 @@ SpellValue::SpellValue(SpellInfo const* proto)
 // Keep the exception exact; never mutate shared SpellInfo interrupt flags at runtime.
 static bool RebornWD96CanCastWhileMoving(Unit const* caster, SpellInfo const* info)
 {
+    // WD143: Reclamation alone can move during its ranged preparation/cast.
+    if(info && info->Id>=9003980 && info->Id<=9003988)
+    {
+        Player const* p=caster?caster->ToPlayer():nullptr;
+        return p && p->getClass()==13 && p->getRace()==1 && p->IsAlive() &&
+            p->HasSpell(9003967) && p->HasSpell(info->Id);
+    }
     // WD137: timed, owned Master Mixologist permits only Spirit in a Bottle ranks.
     Player const* mixer=caster?caster->ToPlayer():nullptr;
     if(info && info->Id>=9003460 && info->Id<=9003467 && mixer && mixer->IsAlive() &&
@@ -3608,7 +3615,7 @@ SpellCastResult Spell::prepare(SpellCastTargets const* targets, AuraEffect const
     }
 
     //Prevent casting at cast another spell (ServerSide check)
-    if (!HasTriggeredCastFlag(TRIGGERED_IGNORE_CAST_IN_PROGRESS) && m_caster->IsNonMeleeSpellCast(false, true, true, m_spellInfo->Id == 75) && m_cast_count)
+    if (!HasTriggeredCastFlag(TRIGGERED_IGNORE_CAST_IN_PROGRESS) && m_caster->IsNonMeleeSpellCast(false, true, true, (m_spellInfo->Id == 75 || m_spellInfo->Id == 9003989)) && m_cast_count)
     {
         SendCastResult(SPELL_FAILED_SPELL_IN_PROGRESS);
         finish(false);
@@ -3763,8 +3770,8 @@ SpellCastResult Spell::prepare(SpellCastTargets const* targets, AuraEffect const
                 exceptSpellId = m_spellInfo->Id;
             }
 
-            m_caster->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_CAST, exceptSpellId, m_spellInfo->Id == 75);
-            m_caster->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_SPELL_ATTACK, exceptSpellId, m_spellInfo->Id == 75);
+            m_caster->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_CAST, exceptSpellId, (m_spellInfo->Id == 75 || m_spellInfo->Id == 9003989));
+            m_caster->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_SPELL_ATTACK, exceptSpellId, (m_spellInfo->Id == 75 || m_spellInfo->Id == 9003989));
         }
 
         m_caster->SetCurrentCastedSpell(this);
@@ -4085,7 +4092,7 @@ void Spell::_cast(bool skipCheck)
     if (Player* player = m_caster->ToPlayer())
     {
         if ((player->getClass() == CLASS_WITCH_DOCTOR || player->getClass() == CLASS_MONK) &&
-            (m_spellInfo->Id == 3018 || m_spellInfo->Id == 75 || m_spellInfo->Id == 5019) &&
+            (m_spellInfo->Id == 3018 || (m_spellInfo->Id == 75 || m_spellInfo->Id == 9003989) || m_spellInfo->Id == 5019) &&
             player->GetWeaponForAttack(RANGED_ATTACK, true))
         {
             player->SetSheath(SHEATH_STATE_RANGED);

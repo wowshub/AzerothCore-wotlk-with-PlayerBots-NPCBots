@@ -1,0 +1,937 @@
+[
+  {
+    "path": "DBFilesClient/CreatureDisplayInfo.dbc",
+    "sha256": "c2ed0059dfa933ff2a9dcf92bd62d51065290968f20207472d32f8e32ec45c34",
+    "live": "c2ed0059dfa933ff2a9dcf92bd62d51065290968f20207472d32f8e32ec45c34"
+  },
+  {
+    "path": "DBFilesClient/SkillLineAbility.dbc",
+    "sha256": "dc29803946eea95280e80045b435e1b2b1ae0d30a60763b9725d29a1989a4e9a",
+    "live": "dc29803946eea95280e80045b435e1b2b1ae0d30a60763b9725d29a1989a4e9a"
+  },
+  {
+    "path": "DBFilesClient/SoundEntries.dbc",
+    "sha256": "b9f43bb8a8da9ebfa02cacae24d57460a0d9329410b522960fd328da24fbe2e1",
+    "live": "b9f43bb8a8da9ebfa02cacae24d57460a0d9329410b522960fd328da24fbe2e1"
+  },
+  {
+    "path": "DBFilesClient/Spell.dbc",
+    "sha256": "07e52095a0e0752cfc9bb86e9afba2db5d7ec2d974050459c98d4879a13462c0",
+    "live": "07e52095a0e0752cfc9bb86e9afba2db5d7ec2d974050459c98d4879a13462c0"
+  },
+  {
+    "path": "DBFilesClient/SpellCastTimes.dbc",
+    "sha256": "63fbfaed8c9747fb13b7c7094e1981a6351023a7a620c63c035fe040b548c00a",
+    "live": "63fbfaed8c9747fb13b7c7094e1981a6351023a7a620c63c035fe040b548c00a"
+  },
+  {
+    "path": "DBFilesClient/SpellDuration.dbc",
+    "sha256": "316b711549fc99e8fb500e131df5a062079ae2eafc6ed7c7b94e897eada68af5",
+    "live": "316b711549fc99e8fb500e131df5a062079ae2eafc6ed7c7b94e897eada68af5"
+  },
+  {
+    "path": "DBFilesClient/SpellIcon.dbc",
+    "sha256": "e305c8f7e0f9b197cf52ea7d8adfc94ad53e24e4fe94b1254d2fa03c646be3d7",
+    "live": "e305c8f7e0f9b197cf52ea7d8adfc94ad53e24e4fe94b1254d2fa03c646be3d7"
+  },
+  {
+    "path": "DBFilesClient/SpellRadius.dbc",
+    "sha256": "c1a0cc23349846f81363d6ea6eb833a08d4a9d226a72e7a27f7e367574b5659c",
+    "live": "c1a0cc23349846f81363d6ea6eb833a08d4a9d226a72e7a27f7e367574b5659c"
+  },
+  {
+    "path": "DBFilesClient/SpellRange.dbc",
+    "sha256": "c1ef25640d61cbcc62933bf84972b0fecbfd970fcf1f7e558c21df88bbddfcfc",
+    "live": "c1ef25640d61cbcc62933bf84972b0fecbfd970fcf1f7e558c21df88bbddfcfc"
+  },
+  {
+    "path": "DBFilesClient/SpellVisual.dbc",
+    "sha256": "b71dd6948352d5d4f0ec88dca93e8e51915de40f24198e2aa2780c24f3dc6775",
+    "live": "b71dd6948352d5d4f0ec88dca93e8e51915de40f24198e2aa2780c24f3dc6775"
+  },
+  {
+    "path": "DBFilesClient/SpellVisualEffectName.dbc",
+    "sha256": "3bbeafc6e84099244f9c5bdae513371008571d5f0bcd7c7148d7910ecd5dee36",
+    "live": "3bbeafc6e84099244f9c5bdae513371008571d5f0bcd7c7148d7910ecd5dee36"
+  },
+  {
+    "path": "DBFilesClient/SpellVisualKit.dbc",
+    "sha256": "e9f7b815cf3b6f4753f5b02fe419e24b98f775695e160e2d082762b3a4f6df60",
+    "live": "e9f7b815cf3b6f4753f5b02fe419e24b98f775695e160e2d082762b3a4f6df60"
+  },
+  {
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/Icons/6e64f414c5e93979.blp",
+    "sha256": "f5e61d1b4ceeb4d86d44af43cc3f974705bb4b5c34b6f5f971c2cddb13a54520",
+    "live": "f5e61d1b4ceeb4d86d44af43cc3f974705bb4b5c34b6f5f971c2cddb13a54520"
+  },
+  {
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/Icons/adca7b653c1f090f.blp",
+    "sha256": "f3578086835853c01235dba44c61c25fd12d4da2837ad0963c75c64d505e6256",
+    "live": "f3578086835853c01235dba44c61c25fd12d4da2837ad0963c75c64d505e6256"
+  },
+  {
+    "path": "Spells/RebornWD138B/Interface/Icons/custom_T_GhostWater_Border.blp",
+    "sha256": "ce1373913c0df6ef635ff6fc0ffc9a62a8702789863e2744f22a442b27da6f24",
+    "live": "ce1373913c0df6ef635ff6fc0ffc9a62a8702789863e2744f22a442b27da6f24"
+  },
+  {
+    "path": "Spells/RebornWD138B/Interface/Icons/inv_enchant_alchemistcauldron.blp",
+    "sha256": "368022c7de0a46ff7b31bfb98ff2b7b0a1094174e0e1e56f0943acbacd789d13",
+    "live": "368022c7de0a46ff7b31bfb98ff2b7b0a1094174e0e1e56f0943acbacd789d13"
+  },
+  {
+    "path": "Spells/RebornWD138B/Interface/Icons/Inv_Helm_Mask_ZulGurub_D_01.blp",
+    "sha256": "45f3cc072bcdb1fef6c0161e1a3e0692004b67008245cf3151c762408a570897",
+    "live": "45f3cc072bcdb1fef6c0161e1a3e0692004b67008245cf3151c762408a570897"
+  },
+  {
+    "path": "Spells/RebornWD138B/Interface/Icons/inv_tikiman2_zandalar.blp",
+    "sha256": "0373fe3344dbdf05baa3de5097dbbc5a4297a969aefc764bc10c1e4600b1e62d",
+    "live": "0373fe3344dbdf05baa3de5097dbbc5a4297a969aefc764bc10c1e4600b1e62d"
+  },
+  {
+    "path": "Spells/RebornWD138B/item/objectcomponents/weapon/flare.blp",
+    "sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7",
+    "live": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+  },
+  {
+    "path": "Spells/RebornWD138B/sound/spells/spell_resinweave_channel.ogg",
+    "sha256": "35119bd12da5125a435f3d340518e36f683e2de6e2803ef32f9fe123753f34f1",
+    "live": "35119bd12da5125a435f3d340518e36f683e2de6e2803ef32f9fe123753f34f1"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/10fx_cosmicflicker01_4212009.blp",
+    "sha256": "e8626fc83b7f5740dc0fc41fc5b89ef34f7c621e4ac22312e5bf3e3a9c510347",
+    "live": "e8626fc83b7f5740dc0fc41fc5b89ef34f7c621e4ac22312e5bf3e3a9c510347"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/10fx_spell31_4219047.blp",
+    "sha256": "619a06a7c442c30bb0cea5f48a3e0d357791c9580dadf5f96d4f2e1fa4699f91",
+    "live": "619a06a7c442c30bb0cea5f48a3e0d357791c9580dadf5f96d4f2e1fa4699f91"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/10fx_spell34_3738313.blp",
+    "sha256": "6c4de9c825b6d3c1542c9f97bfb881482b341e06aab2ad30940706ba71668090",
+    "live": "6c4de9c825b6d3c1542c9f97bfb881482b341e06aab2ad30940706ba71668090"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/10fx_spell42_3722811.blp",
+    "sha256": "78dbc9cf5a2d45fae08fac4d36761ebe46f2e82ab120eb0bd7c60a6100f350ab",
+    "live": "78dbc9cf5a2d45fae08fac4d36761ebe46f2e82ab120eb0bd7c60a6100f350ab"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/10fx_verdantmagic11_4219041.blp",
+    "sha256": "e8359ca42ed9c34b7de8060cd1bc21e4d06d5afabaea19fa7ab7996341b570b3",
+    "live": "e8359ca42ed9c34b7de8060cd1bc21e4d06d5afabaea19fa7ab7996341b570b3"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/11fx_greenimpact04_5778415.blp",
+    "sha256": "3090fd257d95cd61d169b021ac8a72332d35b70c202bd228359441bcf4b5dc55",
+    "live": "3090fd257d95cd61d169b021ac8a72332d35b70c202bd228359441bcf4b5dc55"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/11fx_greenshocks01_2747116.blp",
+    "sha256": "cd8882ebcfc6eca3d378852cc26ceed59836b7e9aab69d47bbe74fd590a766c5",
+    "live": "cd8882ebcfc6eca3d378852cc26ceed59836b7e9aab69d47bbe74fd590a766c5"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/11fx_greenshocks01_4572231.blp",
+    "sha256": "edb4940030b80b5ba468509a4e3c3b1a0e08dab4907b868f2641b842b4063655",
+    "live": "edb4940030b80b5ba468509a4e3c3b1a0e08dab4907b868f2641b842b4063655"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/11fx_lightcircle02_5209557.blp",
+    "sha256": "764c167db0272b34bab2deb66fc0863064b82e847ccd258085ee072c4a154228",
+    "live": "764c167db0272b34bab2deb66fc0863064b82e847ccd258085ee072c4a154228"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/8fx_explosionsmoke_a.blp",
+    "sha256": "04222d4103e9429686a92b91eb16ac104c2162fed7bf65e8e27354d2eaeb1a5c",
+    "live": "04222d4103e9429686a92b91eb16ac104c2162fed7bf65e8e27354d2eaeb1a5c"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Archimonde_Fire_V2_Jade.M2",
+    "sha256": "8350bda2300e49e48c922af45b8d67f0d5aca358e74cb2f6a186dfe41573779f",
+    "live": "8350bda2300e49e48c922af45b8d67f0d5aca358e74cb2f6a186dfe41573779f"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Archimonde_Fire_V2_Jade00.skin",
+    "sha256": "7d35d6d4fa8c58e48fa1a8413186a32be62d8d63583e1c59dc8d6b91da98f06a",
+    "live": "7d35d6d4fa8c58e48fa1a8413186a32be62d8d63583e1c59dc8d6b91da98f06a"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/caustic_medfreq_holy.blp",
+    "sha256": "daf60ecb85498b588c2dbb27d02f4cee331a8fdbcaf2b0b98a3dc200ec5e875f",
+    "live": "daf60ecb85498b588c2dbb27d02f4cee331a8fdbcaf2b0b98a3dc200ec5e875f"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura.m2",
+    "sha256": "949f2bd91b2c409a0b9a12d0e7288145ef9d946939e78e3c7c868ab628e586c2",
+    "live": "949f2bd91b2c409a0b9a12d0e7288145ef9d946939e78e3c7c868ab628e586c2"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura00.skin",
+    "sha256": "ccecb047078fe81b81212a52952db845150b229cb5b288494ffa0b33e15041f4",
+    "live": "ccecb047078fe81b81212a52952db845150b229cb5b288494ffa0b33e15041f4"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura_5778414.blp",
+    "sha256": "ec19286ca880b5decb20c1ec296e2da5d1e84f4e99e354ddaf22ff26ca7ea1d6",
+    "live": "ec19286ca880b5decb20c1ec296e2da5d1e84f4e99e354ddaf22ff26ca7ea1d6"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cfx_monk_celestialconduit_aura_5778416.blp",
+    "sha256": "d14741031b3707a27b9e46ae94edbae190e2cc66d77b032fbc9f9438216f0237",
+    "live": "d14741031b3707a27b9e46ae94edbae190e2cc66d77b032fbc9f9438216f0237"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cfx_monk_faelinestomp_5411283.blp",
+    "sha256": "ad4793b4d4eb2f3ef39b813340b0c4237687a6e69861fa7881dbd10a145c95c3",
+    "live": "ad4793b4d4eb2f3ef39b813340b0c4237687a6e69861fa7881dbd10a145c95c3"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cloud_puffysofter_mod4x.blp",
+    "sha256": "619a78d92d1d07d851d6e2bddbd8c30627f2956686ddf6aecc187f1c14610a9e",
+    "live": "619a78d92d1d07d851d6e2bddbd8c30627f2956686ddf6aecc187f1c14610a9e"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/cloud_snowfrost_soft_mod4x.blp",
+    "sha256": "d4b27994b4bd689b712b1f67bdd6d49104459268eba0453181b5628ea0799f2e",
+    "live": "d4b27994b4bd689b712b1f67bdd6d49104459268eba0453181b5628ea0799f2e"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/fx_cosmeticholdinglightorb_aura_5546572.blp",
+    "sha256": "ed9fbfd2f68e723ea54d9db7568b8767618850870b2fccc4519adde8f900d45b",
+    "live": "ed9fbfd2f68e723ea54d9db7568b8767618850870b2fccc4519adde8f900d45b"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/genericglow64.blp",
+    "sha256": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6",
+    "live": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/grey50percentsquare16x16_a.blp",
+    "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f",
+    "live": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Monk_TravelingMist_Missile.M2",
+    "sha256": "1c1936ea7b524a9df13f6d23a6b34e6219b4032217b4e29569b995772346a06a",
+    "live": "1c1936ea7b524a9df13f6d23a6b34e6219b4032217b4e29569b995772346a06a"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Monk_TravelingMist_Missile00.skin",
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "live": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Monk_Uplift_Impact_Base.M2",
+    "sha256": "392110848017108ba4843709a32a22352cf169e8391c5941e5e269b7f3370a54",
+    "live": "392110848017108ba4843709a32a22352cf169e8391c5941e5e269b7f3370a54"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Monk_Uplift_Impact_Base00.skin",
+    "sha256": "1e60ece76fd8047c02e21ecd1e3fc6c4916be86b77cf24cd171d4c57e27b9d7f",
+    "live": "1e60ece76fd8047c02e21ecd1e3fc6c4916be86b77cf24cd171d4c57e27b9d7f"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/nexus_firebeam_faint_square.blp",
+    "sha256": "93f319ccbc18f2ca8f064408c5d1a4a05acdb58905fe394e1bf4df2c45a76ac9",
+    "live": "93f319ccbc18f2ca8f064408c5d1a4a05acdb58905fe394e1bf4df2c45a76ac9"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/smoke_puffy_mask_blendadd22.blp",
+    "sha256": "47e3126d6c05ebaecf9468b2bf7a1ea088544e23bd0eb0219828bd8438c99f20",
+    "live": "47e3126d6c05ebaecf9468b2bf7a1ea088544e23bd0eb0219828bd8438c99f20"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/starfield_mask_bright.blp",
+    "sha256": "f59666f162ab133c0483be516a38aedf93a051e3ba58cb86b85e3e3fdc8cc601",
+    "live": "f59666f162ab133c0483be516a38aedf93a051e3ba58cb86b85e3e3fdc8cc601"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_fire_anim02_128_desat_blu.blp",
+    "sha256": "76d449802404f0853e9a72c60ae28f661c2da7c0aab3d931008152e6d1def500",
+    "live": "76d449802404f0853e9a72c60ae28f661c2da7c0aab3d931008152e6d1def500"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_flare05_32.blp",
+    "sha256": "624be87d6db3bb878e9d5b4a8bdc1d7b2956ee4e5dd837d678f6baa4ca9c5058",
+    "live": "624be87d6db3bb878e9d5b4a8bdc1d7b2956ee4e5dd837d678f6baa4ca9c5058"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_hero_aura_glob_orange2_ho.blp",
+    "sha256": "86f93e8d7efaaedd02cfd157dffa8da382e7a62c1be81c89e134a1c1579fa017",
+    "live": "86f93e8d7efaaedd02cfd157dffa8da382e7a62c1be81c89e134a1c1579fa017"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_ring_bow.blp",
+    "sha256": "6daec4aa4149979cec84676d560580c5c1aa553fe19e6eba85ae62dadbbc44b6",
+    "live": "6daec4aa4149979cec84676d560580c5c1aa553fe19e6eba85ae62dadbbc44b6"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_ring_bow_blured_acontrast.blp",
+    "sha256": "e18e8334c37ac681404560338fc552609a4092d031c1206009adfca545587da9",
+    "live": "e18e8334c37ac681404560338fc552609a4092d031c1206009adfca545587da9"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_ring_bow_blured_contrast2.blp",
+    "sha256": "b465d35ffd0ecce3912c93685500248e8ce897deff009c947e4c140ee81e61c4",
+    "live": "b465d35ffd0ecce3912c93685500248e8ce897deff009c947e4c140ee81e61c4"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/t_vfx_smokeanim02_blured.blp",
+    "sha256": "c9452f72145a7909321a7c2a4d8479540a297a78e73286051069658992bebea5",
+    "live": "c9452f72145a7909321a7c2a4d8479540a297a78e73286051069658992bebea5"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Warlock_BodyOfFlames_Low_State_Hands_Green.M2",
+    "sha256": "e2204a3e99388600be781b4cf77888fac69390b22bc90652eba85967db648e75",
+    "live": "e2204a3e99388600be781b4cf77888fac69390b22bc90652eba85967db648e75"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/Warlock_BodyOfFlames_Low_State_Hands_Green00.skin",
+    "sha256": "3f551f07095defcb0fe67ef2a8e5c24b58b966bbcc755818631dbd25287d5e9c",
+    "live": "3f551f07095defcb0fe67ef2a8e5c24b58b966bbcc755818631dbd25287d5e9c"
+  },
+  {
+    "path": "Spells/RebornWD138B/spells/white8x8.blp",
+    "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "live": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "Spells/RebornWD138B/world/expansion01/doodads/zangar/mushroom/glowball02.blp",
+    "sha256": "f30653dffa5416a971178bfe5f70d4ee0fc8afedb97cf864111be1baae911ef7",
+    "live": "f30653dffa5416a971178bfe5f70d4ee0fc8afedb97cf864111be1baae911ef7"
+  },
+  {
+    "path": "Spells/RebornWD142A/Interface/Icons/INV_Helmet_114.blp",
+    "sha256": "6586b50fa01a5819f92d2a5b918aa1ad825562007fe99f2835b113f59ff10a32",
+    "live": "6586b50fa01a5819f92d2a5b918aa1ad825562007fe99f2835b113f59ff10a32"
+  },
+  {
+    "path": "Spells/RebornWD142A/Interface/Icons/INV_Stone_05.blp",
+    "sha256": "64fccd19bc122f74899dca031b3364235981962d356f0c3e9b49e554ab451df4",
+    "live": "64fccd19bc122f74899dca031b3364235981962d356f0c3e9b49e554ab451df4"
+  },
+  {
+    "path": "Spells/RebornWD142A/Interface/Icons/Spell_Nature_WispSplode.blp",
+    "sha256": "edfdd81d6a952e40603dd1477f7cc245faac8774c133a74907a2f4001d3c4791",
+    "live": "edfdd81d6a952e40603dd1477f7cc245faac8774c133a74907a2f4001d3c4791"
+  },
+  {
+    "path": "Spells/RebornWD142A/Interface/Icons/Spell_Shadow_GatherShadows.blp",
+    "sha256": "ae6b7094db0e71a068f4f854466e2ce32a273df18076963ab228fae60a153525",
+    "live": "ae6b7094db0e71a068f4f854466e2ce32a273df18076963ab228fae60a153525"
+  },
+  {
+    "path": "Spells/RebornWD142A/Interface/Icons/Spell_Shadow_SoulLeech_2.blp",
+    "sha256": "3544612e9785f57652aa4152ea1bf2b3f0b9869d3b4ea96b313876e73e56458f",
+    "live": "3544612e9785f57652aa4152ea1bf2b3f0b9869d3b4ea96b313876e73e56458f"
+  },
+  {
+    "path": "Spells/RebornWD142A/ITEM/OBJECTCOMPONENTS/WEAPON/FLARE.BLP",
+    "sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7",
+    "live": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_01.ogg",
+    "sha256": "4ece4d3bcaa729f82de31139a92416b480322f65e63c295372a6149a0fff4a51",
+    "live": "4ece4d3bcaa729f82de31139a92416b480322f65e63c295372a6149a0fff4a51"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_02.ogg",
+    "sha256": "1280fa16f1e920a10b644d721eaee760306a8691a2c5e485321208daa4aa197b",
+    "live": "1280fa16f1e920a10b644d721eaee760306a8691a2c5e485321208daa4aa197b"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_03.ogg",
+    "sha256": "14566e66aef8393b82664f00bb5b7351fe5dc8fb25f711e1f2d1b139dcd6897f",
+    "live": "14566e66aef8393b82664f00bb5b7351fe5dc8fb25f711e1f2d1b139dcd6897f"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_04.ogg",
+    "sha256": "a4246a643aea95a354f95c175f4c769e329d4a4a4a32595f217b86748411af28",
+    "live": "a4246a643aea95a354f95c175f4c769e329d4a4a4a32595f217b86748411af28"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_05.ogg",
+    "sha256": "11d4a5450b5627b3d94895cd262cb294f63004f611e4cfe4c8353d49a05449ee",
+    "live": "11d4a5450b5627b3d94895cd262cb294f63004f611e4cfe4c8353d49a05449ee"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_cast_small_06.ogg",
+    "sha256": "8392bb57c308b21922fa6508b8e1fceafbc37581c8af0cde8d203840acfbbf1c",
+    "live": "8392bb57c308b21922fa6508b8e1fceafbc37581c8af0cde8d203840acfbbf1c"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_mend_impact_01.ogg",
+    "sha256": "8531e03ebcdce24294690d5cc549d9add1376b0c70e30c1b14fc5d05d5480ae5",
+    "live": "8531e03ebcdce24294690d5cc549d9add1376b0c70e30c1b14fc5d05d5480ae5"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_mend_impact_02.ogg",
+    "sha256": "dc0602a2b83735e34a0631c2e8f7cc87d049573d879f8f378ac432123b1ff7de",
+    "live": "dc0602a2b83735e34a0631c2e8f7cc87d049573d879f8f378ac432123b1ff7de"
+  },
+  {
+    "path": "Spells/RebornWD142A/sound/spells/spell_pr_revamp_shadow_mend_impact_03.ogg",
+    "sha256": "76c205fa382aa26e684f8acb2b854ee79556941bce430ebb74f5a91aa9b6aadd",
+    "live": "76c205fa382aa26e684f8acb2b854ee79556941bce430ebb74f5a91aa9b6aadd"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_alphamask_glow.blp",
+    "sha256": "e071b9e3a0f909fd587a0b49dcaab8d508a1543285d0a296226139a6b4029a15",
+    "live": "e071b9e3a0f909fd587a0b49dcaab8d508a1543285d0a296226139a6b4029a15"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_alphamask_glowbright_black.blp",
+    "sha256": "0bf8ae9af1bf365f3789dfeef18371413d17eb6efeb7e5fb07721012ac18764b",
+    "live": "0bf8ae9af1bf365f3789dfeef18371413d17eb6efeb7e5fb07721012ac18764b"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_chunky_soft_a.blp",
+    "sha256": "5ea5c3dd09bebe987daa859cb23f29e227c516bdba99c54297e9de96a8f476b0",
+    "live": "5ea5c3dd09bebe987daa859cb23f29e227c516bdba99c54297e9de96a8f476b0"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_energyring_tilepurple_01.blp",
+    "sha256": "bbd809c2c5adc16259945bee556f3217e9244107838c5a9d7d38ca99ac560b30",
+    "live": "bbd809c2c5adc16259945bee556f3217e9244107838c5a9d7d38ca99ac560b30"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_shadow_core.blp",
+    "sha256": "14ebc93b441a09bf50dbe97bcc2776a3086ea06178353e3d09412bd0e9b0409e",
+    "live": "14ebc93b441a09bf50dbe97bcc2776a3086ea06178353e3d09412bd0e9b0409e"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_warlock_soulflame_impact.m2",
+    "sha256": "b69c7e6473c41b624291b4b457be21df64bbe7b0b5aadd6f9415aea8e902008e",
+    "live": "b69c7e6473c41b624291b4b457be21df64bbe7b0b5aadd6f9415aea8e902008e"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/7fx_warlock_soulflame_impact00.skin",
+    "sha256": "633f7be8889ade7991f8967193f63f5a3955bd5398ed99fba3d6249321053905",
+    "live": "633f7be8889ade7991f8967193f63f5a3955bd5398ed99fba3d6249321053905"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/8fx_vaultguardian_drawpower_precast_1_2126812.blp",
+    "sha256": "7078f4d4118886ba7c33e9f37cc472e8768dd5d785e6c74f900d6f415278d267",
+    "live": "7078f4d4118886ba7c33e9f37cc472e8768dd5d785e6c74f900d6f415278d267"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/alpha_streak.blp",
+    "sha256": "ceab219cb864e385fd32c4d6a4e70619fb24a0037d481568461a57855d76fff3",
+    "live": "ceab219cb864e385fd32c4d6a4e70619fb24a0037d481568461a57855d76fff3"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/alphamask_cloud_wispysoft.blp",
+    "sha256": "efcf9476fb1729cc6e415d57a4a3bcc46c1cb0ceb8c6618967cbe561c84078f1",
+    "live": "efcf9476fb1729cc6e415d57a4a3bcc46c1cb0ceb8c6618967cbe561c84078f1"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/alphamask_lightrays_doublesided_a.blp",
+    "sha256": "a8a4d2bc469ef5368fb407e3216251cafeaa7f6a72093d3fa2a15fe50fbb614d",
+    "live": "a8a4d2bc469ef5368fb407e3216251cafeaa7f6a72093d3fa2a15fe50fbb614d"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/arc_center_wispy.blp",
+    "sha256": "47523634c40a72c61a5646e135504524daac966fff8260a8f46d4ce827e43d33",
+    "live": "47523634c40a72c61a5646e135504524daac966fff8260a8f46d4ce827e43d33"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/arcane_water_purple22.blp",
+    "sha256": "2a681f75d37b472253664f934083bfc19c5c7b5545fc00a0494262b485b4a308",
+    "live": "2a681f75d37b472253664f934083bfc19c5c7b5545fc00a0494262b485b4a308"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/caustic_medfreq_magenta.blp",
+    "sha256": "0dac2e3cebcda95f8e47368c85c70bee73f50aee2827d2ab50995a1eb1513323",
+    "live": "0dac2e3cebcda95f8e47368c85c70bee73f50aee2827d2ab50995a1eb1513323"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/cfx_azerite_well_major_state_0_2974113.blp",
+    "sha256": "e7c23049f4cd1bcad1d58355fd9ab8d3bbacc038c35b44570a2bca8700b5de5a",
+    "live": "e7c23049f4cd1bcad1d58355fd9ab8d3bbacc038c35b44570a2bca8700b5de5a"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/CFX_DeathKnight_BurstingSores_ImpactChest.m2",
+    "sha256": "63112d1ad5eb04dabd944f7f2332f3310b120bf7a1ae1db53699d0739f85fd78",
+    "live": "63112d1ad5eb04dabd944f7f2332f3310b120bf7a1ae1db53699d0739f85fd78"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/CFX_DeathKnight_BurstingSores_ImpactChest00.skin",
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "live": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/cfx_kyrian_demonhunter_3154264.blp",
+    "sha256": "b7d2c93ecfffd1918f58eaab5b2e528521bb18c8635804e13995fe899eb3a45b",
+    "live": "b7d2c93ecfffd1918f58eaab5b2e528521bb18c8635804e13995fe899eb3a45b"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/CFX_Ribbon_Void.m2",
+    "sha256": "9cbe31cc132f55b5fed041d7a326140a578c05df6759e7e950cb7dea357dc1de",
+    "live": "9cbe31cc132f55b5fed041d7a326140a578c05df6759e7e950cb7dea357dc1de"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/CFX_Ribbon_Void00.skin",
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "live": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/cfx_warlock_genericportalvoid_world_3_2126809.blp",
+    "sha256": "28033abdffbc46e4e5f27d13a0aafbcd9d25de9184d498707ba499fee87cff2b",
+    "live": "28033abdffbc46e4e5f27d13a0aafbcd9d25de9184d498707ba499fee87cff2b"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/cripple_state_chest.m2",
+    "sha256": "516684d5bc5e2b946403186a44f9cbb43f8bad055100cc853d28b239aea7dc6a",
+    "live": "516684d5bc5e2b946403186a44f9cbb43f8bad055100cc853d28b239aea7dc6a"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/cripple_state_chest00.skin",
+    "sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc",
+    "live": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/electric_liquid_blue_a.blp",
+    "sha256": "fdf067e50a942937a9c8f06ec8cf4f35ee443f3852b9c1fb1b3af21e6ccacd00",
+    "live": "fdf067e50a942937a9c8f06ec8cf4f35ee443f3852b9c1fb1b3af21e6ccacd00"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/electric_liquid_red_a.blp",
+    "sha256": "9656057f8d6aaba37297cfc703ec38565b0f193c2fc2afcb4423aeab36d06e2c",
+    "live": "9656057f8d6aaba37297cfc703ec38565b0f193c2fc2afcb4423aeab36d06e2c"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/flare05_blendadd.blp",
+    "sha256": "e597b70371f10cad5bd2f8641faa00f06adea7b6064d132043d777fcbd542816",
+    "live": "e597b70371f10cad5bd2f8641faa00f06adea7b6064d132043d777fcbd542816"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/flare1_tc_shadow2.blp",
+    "sha256": "38b31c978581763febed9c6008fd5c779dc9cefff6bc0cff72523ed5ad64dd01",
+    "live": "38b31c978581763febed9c6008fd5c779dc9cefff6bc0cff72523ed5ad64dd01"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/fx_fowlplay_impact.m2",
+    "sha256": "8ea931e4721123b4564107e179a5cc3146a8e5fcc905b85e33855abc3049dccf",
+    "live": "8ea931e4721123b4564107e179a5cc3146a8e5fcc905b85e33855abc3049dccf"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/fx_fowlplay_impact00.skin",
+    "sha256": "630293e86c0270e8ef9816c179ddd7732f5913008f25bb6c92c58361be3eb1f8",
+    "live": "630293e86c0270e8ef9816c179ddd7732f5913008f25bb6c92c58361be3eb1f8"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/grad2d.blp",
+    "sha256": "fd9276777c618bd0dbf5d6edcc4317a20144f5e814cf93b0e7dcf6f34579253a",
+    "live": "fd9276777c618bd0dbf5d6edcc4317a20144f5e814cf93b0e7dcf6f34579253a"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/GRADIENT64FLIPA.BLP",
+    "sha256": "ae014692a462d221e57ee9559b170ccf7103737e52b53762a7a5bc978c4cc8dd",
+    "live": "ae014692a462d221e57ee9559b170ccf7103737e52b53762a7a5bc978c4cc8dd"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/grey50percentsquare16x16_a.blp",
+    "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f",
+    "live": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/poison_blur_nova_purple.blp",
+    "sha256": "f30489a3909313c414b222500c3c77454ddd28b7f8bc9ab549c8163bbddfb6b9",
+    "live": "f30489a3909313c414b222500c3c77454ddd28b7f8bc9ab549c8163bbddfb6b9"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/poison_goo_purple.blp",
+    "sha256": "8fc0adc47d2f731fbde5e614133388dd3cf31c07bae4323a098b5a21f873f033",
+    "live": "8fc0adc47d2f731fbde5e614133388dd3cf31c07bae4323a098b5a21f873f033"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/ribbonblur1be_bw.blp",
+    "sha256": "a6a764eb5f112a3df7e54bdc4eb1dc1786b38001be2625b3276aacc54974919a",
+    "live": "a6a764eb5f112a3df7e54bdc4eb1dc1786b38001be2625b3276aacc54974919a"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/smoke_loose_01.blp",
+    "sha256": "721a022dc0a467eb34f4973596a71af466a9c1a99e5b5dc2fbc06f082de7a6c2",
+    "live": "721a022dc0a467eb34f4973596a71af466a9c1a99e5b5dc2fbc06f082de7a6c2"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/t_vfx_blood06b.blp",
+    "sha256": "765aa7836aad3bc4d1f52ba8bb758f11c430a041b355dd77fdba680a3229c267",
+    "live": "765aa7836aad3bc4d1f52ba8bb758f11c430a041b355dd77fdba680a3229c267"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/t_vfx_fire_anim02_128_desat.blp",
+    "sha256": "074936df39efc2228a007072b7ac5c7f6f8cc8a6fab3018d3fb3aa6af044ab4a",
+    "live": "074936df39efc2228a007072b7ac5c7f6f8cc8a6fab3018d3fb3aa6af044ab4a"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/TOONCLOUD64AINV.BLP",
+    "sha256": "5601670050b2e072a806fe6cee5b605f5557a9b90d85d722582bd76bded72098",
+    "live": "5601670050b2e072a806fe6cee5b605f5557a9b90d85d722582bd76bded72098"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/urn_mist_flipped_warlock_shadow.blp",
+    "sha256": "56752bb5c26360ee586172106d32b727a10bfa26b840cc3192f5581bec5e4588",
+    "live": "56752bb5c26360ee586172106d32b727a10bfa26b840cc3192f5581bec5e4588"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/white8x8.blp",
+    "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "live": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/wispymagic_hori_warlockshadow_purple_128.blp",
+    "sha256": "d846b4a5487598a71f436294c9ef454d676348c77005a5141e7463c0e78c457b",
+    "live": "d846b4a5487598a71f436294c9ef454d676348c77005a5141e7463c0e78c457b"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3061972.blp",
+    "sha256": "2b54e522d79c2572bbc1a75077d772e9b7b36a22e38bcf41e9e9d5dd4a9b73a4",
+    "live": "2b54e522d79c2572bbc1a75077d772e9b7b36a22e38bcf41e9e9d5dd4a9b73a4"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3061973.blp",
+    "sha256": "580991978eb3590af289837c6a5fcfdf8fdb1c529283cf037af6ff3d0eca1aee",
+    "live": "580991978eb3590af289837c6a5fcfdf8fdb1c529283cf037af6ff3d0eca1aee"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3062148.blp",
+    "sha256": "649a219ba204cf34e79449b46078c8f40caa8bd025201f7e24bb745b54361e2b",
+    "live": "649a219ba204cf34e79449b46078c8f40caa8bd025201f7e24bb745b54361e2b"
+  },
+  {
+    "path": "Spells/RebornWD142A/spells/xplosion_fire_impact_noflash_twilight_3062150.blp",
+    "sha256": "32a233dfbecd49d5160a983226f322af2bd551ecf63f17809175d032dbf514a9",
+    "live": "32a233dfbecd49d5160a983226f322af2bd551ecf63f17809175d032dbf514a9"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion07/doodads/fx/8fx_generic_shadow_cone.blp",
+    "sha256": "c31a2a41f7b70a665e6d7fda37b5ad022ec29ea2df8a3fdea086e4a9c2344824",
+    "live": "c31a2a41f7b70a665e6d7fda37b5ad022ec29ea2df8a3fdea086e4a9c2344824"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion07/doodads/fx/8fx_generic_shadow_debuff.m2",
+    "sha256": "be0a499fa1f0cea540ca80c0a44bbfbb7b29c25f3acdc365cc266b2daa559f3e",
+    "live": "be0a499fa1f0cea540ca80c0a44bbfbb7b29c25f3acdc365cc266b2daa559f3e"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion07/doodads/fx/8fx_generic_shadow_debuff00.skin",
+    "sha256": "7cde925b887f39d158b60a2b2bc7eb2abfb95d852c62d8eb2c61985b9487e57b",
+    "live": "7cde925b887f39d158b60a2b2bc7eb2abfb95d852c62d8eb2c61985b9487e57b"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion08/doodads/fx/smoke_soft_01_3165011.blp",
+    "sha256": "e007ed4f6e6c567816e27b78594df61b84180ce1b18716db718a96c9914dc805",
+    "live": "e007ed4f6e6c567816e27b78594df61b84180ce1b18716db718a96c9914dc805"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion09/doodads/fx/10fx_generic_shadow_iteminteraction_3061974.blp",
+    "sha256": "4ef1e408f3aa62a4973689d362b869690ee80e8d0a065fad5c698004e2e57037",
+    "live": "4ef1e408f3aa62a4973689d362b869690ee80e8d0a065fad5c698004e2e57037"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion09/doodads/fx/10fx_generic_shadow_iteminteraction_3061977.blp",
+    "sha256": "73c730c809aad24442af6c400569fcd4bd4fe5e81020e6058d74bebce69fc913",
+    "live": "73c730c809aad24442af6c400569fcd4bd4fe5e81020e6058d74bebce69fc913"
+  },
+  {
+    "path": "Spells/RebornWD142A/world/expansion09/doodads/fx/10fx_generic_shadow_iteminteraction_3063644.blp",
+    "sha256": "e323c0951b8c79fee6dc6c50ea1c5a138144c8805964c1736fff53d72f5ac28a",
+    "live": "e323c0951b8c79fee6dc6c50ea1c5a138144c8805964c1736fff53d72f5ac28a"
+  },
+  {
+    "path": "Spells/RebornWD143A/Interface/Icons/nhi_naturearrow_(2)_Border.blp",
+    "sha256": "bb140dc71ad8fad196a64c11fd127b937b3645fd10e95a0fea0c4c05dcc38e1a",
+    "live": "bb140dc71ad8fad196a64c11fd127b937b3645fd10e95a0fea0c4c05dcc38e1a"
+  },
+  {
+    "path": "Spells/RebornWD143A/Interface/Icons/nhi_natureshot_Border.blp",
+    "sha256": "ede7046e0ef977e5359732d5295a5854613cc9e038415fa359a2ef2a2358fca6",
+    "live": "ede7046e0ef977e5359732d5295a5854613cc9e038415fa359a2ef2a2358fca6"
+  },
+  {
+    "path": "Spells/RebornWD143A/Interface/Icons/ShadowHunter.blp",
+    "sha256": "9a069f7a68f982d33fda7b495d8041db0aa77cb405decba721e7dc5c7dc44aff",
+    "live": "9a069f7a68f982d33fda7b495d8041db0aa77cb405decba721e7dc5c7dc44aff"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_01.ogg",
+    "sha256": "8b0b63f227e4812571f0f373e47086e09598d27c62eafb751d754e0327ea8ca7",
+    "live": "8b0b63f227e4812571f0f373e47086e09598d27c62eafb751d754e0327ea8ca7"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_02.ogg",
+    "sha256": "3dc57145dd7c3fbc37379a83ffbee566f36d9fe7bb8c7171f1c71517bd158983",
+    "live": "3dc57145dd7c3fbc37379a83ffbee566f36d9fe7bb8c7171f1c71517bd158983"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_03.ogg",
+    "sha256": "ef5103755c0da6456b8d84ad779c6e48c59ee3c09bab61511afd4c5e84021264",
+    "live": "ef5103755c0da6456b8d84ad779c6e48c59ee3c09bab61511afd4c5e84021264"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_04.ogg",
+    "sha256": "d58a26c22c11abfbb00cdd5a0f215d26f72dbbc81628ee0935bb7939582a2c66",
+    "live": "d58a26c22c11abfbb00cdd5a0f215d26f72dbbc81628ee0935bb7939582a2c66"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_05.ogg",
+    "sha256": "0c80dbcef5ca4c0df9690ddfa5eabeb188a2ef0f9448346a47f420615f82ae85",
+    "live": "0c80dbcef5ca4c0df9690ddfa5eabeb188a2ef0f9448346a47f420615f82ae85"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_06.ogg",
+    "sha256": "9bcae8ce40976f6f1f80f0737188ab14444e0afbcc4d5e1573b70e4c3a8024f6",
+    "live": "9bcae8ce40976f6f1f80f0737188ab14444e0afbcc4d5e1573b70e4c3a8024f6"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/fx_spell_soul_orb_release_07.ogg",
+    "sha256": "bf14555066f7daae46b90237f67f3bd5d0be8e41ca43b0eaa572bdaf9c1972f2",
+    "live": "bf14555066f7daae46b90237f67f3bd5d0be8e41ca43b0eaa572bdaf9c1972f2"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_01.ogg",
+    "sha256": "53976fe729d89f90c0c5e62e4c918d9b9b5ba6a6a4b54e5c0b8d524c922d0225",
+    "live": "53976fe729d89f90c0c5e62e4c918d9b9b5ba6a6a4b54e5c0b8d524c922d0225"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_02.ogg",
+    "sha256": "9754c8738bcd2cc676f0a20e07c8a7528c7a749dc142289a94132b360b8a27f4",
+    "live": "9754c8738bcd2cc676f0a20e07c8a7528c7a749dc142289a94132b360b8a27f4"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_03.ogg",
+    "sha256": "8a506e6200d28f145656914293312b9c3abae99c27cdc96b554a8c4968a71924",
+    "live": "8a506e6200d28f145656914293312b9c3abae99c27cdc96b554a8c4968a71924"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dh_infernalstrike_jump_04.ogg",
+    "sha256": "48e8bfe6f1a91f5f25096174aa38ec05b1adc6af6d655136e346de3806cc6783",
+    "live": "48e8bfe6f1a91f5f25096174aa38ec05b1adc6af6d655136e346de3806cc6783"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash01.ogg",
+    "sha256": "6f1f8a01afa8e504085208b58e13e075f64a8b4bd5bf49f41f941be27193b7df",
+    "live": "6f1f8a01afa8e504085208b58e13e075f64a8b4bd5bf49f41f941be27193b7df"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash02.ogg",
+    "sha256": "3be9747b34a209e07ebd1556398433d82e783d15f5c417da49927165f3619c0e",
+    "live": "3be9747b34a209e07ebd1556398433d82e783d15f5c417da49927165f3619c0e"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash03.ogg",
+    "sha256": "5121b1992a94422a4d102e5a1be8f4619941421415ffec5ff0eed95a2bba5d56",
+    "live": "5121b1992a94422a4d102e5a1be8f4619941421415ffec5ff0eed95a2bba5d56"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash04.ogg",
+    "sha256": "641f51e3fe7cbcc0a7556dc181b85450cd98a0faa6f0e072a39d250ef806321f",
+    "live": "641f51e3fe7cbcc0a7556dc181b85450cd98a0faa6f0e072a39d250ef806321f"
+  },
+  {
+    "path": "Spells/RebornWD143A/sound/spells/spell_dr_clawshreds_thrash05.ogg",
+    "sha256": "5856123a802e333d2ea56888c706fab87529a4f4387e2b7e3ae96c16b62c25bc",
+    "live": "5856123a802e333d2ea56888c706fab87529a4f4387e2b7e3ae96c16b62c25bc"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_alphamask_glow.blp",
+    "sha256": "e071b9e3a0f909fd587a0b49dcaab8d508a1543285d0a296226139a6b4029a15",
+    "live": "e071b9e3a0f909fd587a0b49dcaab8d508a1543285d0a296226139a6b4029a15"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_alphamask_glow_donut2.blp",
+    "sha256": "ed8d5c6cd3fa6bb4513846d377fa77d6d20a9931acf3f81b6e388b6116994cdb",
+    "live": "ed8d5c6cd3fa6bb4513846d377fa77d6d20a9931acf3f81b6e388b6116994cdb"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_alphamask_glow_fel.blp",
+    "sha256": "3750fe185eb0d58b0f5a92b7c477c25984de385a944154cb9513167a8c4337b3",
+    "live": "3750fe185eb0d58b0f5a92b7c477c25984de385a944154cb9513167a8c4337b3"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_arcane_starfield_fel.blp",
+    "sha256": "0d87aaf9cf126d2721d0dcf03403d0ca44303359f8702d3bbe63c1722294fe21",
+    "live": "0d87aaf9cf126d2721d0dcf03403d0ca44303359f8702d3bbe63c1722294fe21"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_chunky_soft_a.blp",
+    "sha256": "5ea5c3dd09bebe987daa859cb23f29e227c516bdba99c54297e9de96a8f476b0",
+    "live": "5ea5c3dd09bebe987daa859cb23f29e227c516bdba99c54297e9de96a8f476b0"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_crystal_geometric.blp",
+    "sha256": "0f9584b7d0a17188130193cded24bc2ddad423065603e7e9f1b8901a916eaa46",
+    "live": "0f9584b7d0a17188130193cded24bc2ddad423065603e7e9f1b8901a916eaa46"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_ribbon_fel_brighthead_a.blp",
+    "sha256": "5c52f25d9fabafe49c67c84315e729b8c12c71ad18f69ea44e0d20207f98d237",
+    "live": "5c52f25d9fabafe49c67c84315e729b8c12c71ad18f69ea44e0d20207f98d237"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_shivarracoven_fel_missile.m2",
+    "sha256": "bbcf24b237ca28acd4ff9202638836806ba9a5be891fe8bf28416eef258eeb1d",
+    "live": "bbcf24b237ca28acd4ff9202638836806ba9a5be891fe8bf28416eef258eeb1d"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_shivarracoven_fel_missile00.skin",
+    "sha256": "e4ebf28f11832786acf694234de742ee63f233e4909a45cab2ebab9d4f5b71a7",
+    "live": "e4ebf28f11832786acf694234de742ee63f233e4909a45cab2ebab9d4f5b71a7"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_smoke_wispymask_a.blp",
+    "sha256": "93316d5d71023ed84027a651da2a126d15910aab589dd23239f7d6c83e8bafef",
+    "live": "93316d5d71023ed84027a651da2a126d15910aab589dd23239f7d6c83e8bafef"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/7fx_targetfel.blp",
+    "sha256": "527f30743da978769503b5ec3153a59292d58003ec9fafa452a54fb05edc327c",
+    "live": "527f30743da978769503b5ec3153a59292d58003ec9fafa452a54fb05edc327c"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_generic_necromancy_beamemitter_0_2388006.blp",
+    "sha256": "119364c3b20cce1812d23d46e10b1eb58fde0c17cb2e5b447014e0e274e5f189",
+    "live": "119364c3b20cce1812d23d46e10b1eb58fde0c17cb2e5b447014e0e274e5f189"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_generic_necromancy_missile_4_2388157.blp",
+    "sha256": "80f44e309fa98f6340c21778de87a91e130ac1c68ef0295211c8aa30f24e50bb",
+    "live": "80f44e309fa98f6340c21778de87a91e130ac1c68ef0295211c8aa30f24e50bb"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_generic_necromancy_missilegeo.m2",
+    "sha256": "eb5b756edf71613f7e6fd9313b40a3629d4f975050fa8591f966906113593bef",
+    "live": "eb5b756edf71613f7e6fd9313b40a3629d4f975050fa8591f966906113593bef"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_generic_necromancy_missilegeo00.skin",
+    "sha256": "8f0e2f3fd4c34518d5f164dea29f094230e4a3620c73afaf87407bd593689bc3",
+    "live": "8f0e2f3fd4c34518d5f164dea29f094230e4a3620c73afaf87407bd593689bc3"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_generic_necromancy_missilegeo_5_2388162.blp",
+    "sha256": "f6581de93c9aa9944b49396fe38954727944bd52cb46796807dac2b07a14c733",
+    "live": "f6581de93c9aa9944b49396fe38954727944bd52cb46796807dac2b07a14c733"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_lightrays_doublesided_necro.blp",
+    "sha256": "ca5b99b8194e2332c8626f88b4370a67b9005afd4d237d64d8d6ed9b61977238",
+    "live": "ca5b99b8194e2332c8626f88b4370a67b9005afd4d237d64d8d6ed9b61977238"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/8fx_muzzleflare_stylized_a_v2.blp",
+    "sha256": "973c6475a494415de4c671f3c3d9517477fc9bdf61cc5cead339a9a93d6b571e",
+    "live": "973c6475a494415de4c671f3c3d9517477fc9bdf61cc5cead339a9a93d6b571e"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/be_demoncrystal_001.blp",
+    "sha256": "4a186e260f073073893e618f3778b02be0a88de1e4e72e513e891fb44108197e",
+    "live": "4a186e260f073073893e618f3778b02be0a88de1e4e72e513e891fb44108197e"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/cfx_necrolord_warlock_3521961.blp",
+    "sha256": "59b867a8534d29c2ebf5811aa0460c9ecddf904abac73335281f5808bd03c5c8",
+    "live": "59b867a8534d29c2ebf5811aa0460c9ecddf904abac73335281f5808bd03c5c8"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/cfx_necrolord_warlock_3521966.blp",
+    "sha256": "5c91a9c37737c273304eef3db2d9875fed30238bf05825ff5e40b2e5b5bbe85f",
+    "live": "5c91a9c37737c273304eef3db2d9875fed30238bf05825ff5e40b2e5b5bbe85f"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/cfx_necrolord_warlock_castbetweenhands.m2",
+    "sha256": "ddb19d2b6d6ffc359e95b8e44e0f4a617e8d683d51b637d9427bddc6b9f30a15",
+    "live": "ddb19d2b6d6ffc359e95b8e44e0f4a617e8d683d51b637d9427bddc6b9f30a15"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/cfx_necrolord_warlock_castbetweenhands00.skin",
+    "sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "live": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/flare1_tc_green3.blp",
+    "sha256": "35dcbf16b0b921db36f4bb9cc9759f54bc2e7ba3fbfe895252fffde33ad412ce",
+    "live": "35dcbf16b0b921db36f4bb9cc9759f54bc2e7ba3fbfe895252fffde33ad412ce"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/ghost5.blp",
+    "sha256": "5381189e0b28cbf45e83d0993fb75b19940047365700c4ae89e08e05fc050ee8",
+    "live": "5381189e0b28cbf45e83d0993fb75b19940047365700c4ae89e08e05fc050ee8"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/glow128.blp",
+    "sha256": "a5f324f5fe0bab93f3f93836f2aa95a1b21260953d44fffaa23982367a43db02",
+    "live": "a5f324f5fe0bab93f3f93836f2aa95a1b21260953d44fffaa23982367a43db02"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/gradient64flipa.blp",
+    "sha256": "ae014692a462d221e57ee9559b170ccf7103737e52b53762a7a5bc978c4cc8dd",
+    "live": "ae014692a462d221e57ee9559b170ccf7103737e52b53762a7a5bc978c4cc8dd"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/grey50percentsquare16x16_a.blp",
+    "sha256": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f",
+    "live": "b788d710dc88baf4fa99b585ba86e89d623ee3000ab4b3653660d3daea96e66f"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/shockwavewater1.blp",
+    "sha256": "711241c0e23c2d1fdd316dfb847059580890d99c14442532a1b66c875dff41ff",
+    "live": "711241c0e23c2d1fdd316dfb847059580890d99c14442532a1b66c875dff41ff"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/smoke_loose_01.blp",
+    "sha256": "721a022dc0a467eb34f4973596a71af466a9c1a99e5b5dc2fbc06f082de7a6c2",
+    "live": "721a022dc0a467eb34f4973596a71af466a9c1a99e5b5dc2fbc06f082de7a6c2"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/warlock_focus_shadow_impact.m2",
+    "sha256": "8f290c9fff6e30bbcb3155ef8ba8d97f4546cf94cae6e32601ef2daf667af803",
+    "live": "8f290c9fff6e30bbcb3155ef8ba8d97f4546cf94cae6e32601ef2daf667af803"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/warlock_focus_shadow_impact00.skin",
+    "sha256": "db7046c3d9c8fc9c8dabb6c12b427f42f125c881d5df5cb0e86dc9e92696b0f9",
+    "live": "db7046c3d9c8fc9c8dabb6c12b427f42f125c881d5df5cb0e86dc9e92696b0f9"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/white8x8.blp",
+    "sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "live": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/wispymagic_necro_a.blp",
+    "sha256": "7807ae36298fbba756d95ed8ea9abb3ad8dcb4db99d6da67a932023c0e5344f0",
+    "live": "7807ae36298fbba756d95ed8ea9abb3ad8dcb4db99d6da67a932023c0e5344f0"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/wispymagic_necroblur_a.blp",
+    "sha256": "3cc1ffd02783d74c0cebed0e090268f25d9c3f0a67f9edd099c85439928c5e26",
+    "live": "3cc1ffd02783d74c0cebed0e090268f25d9c3f0a67f9edd099c85439928c5e26"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/wispymagic_necroblurh_a.blp",
+    "sha256": "da881f31728fd42431530d44673d5e94453be7976c4e3f5cea2aa9552b679de0",
+    "live": "da881f31728fd42431530d44673d5e94453be7976c4e3f5cea2aa9552b679de0"
+  },
+  {
+    "path": "Spells/RebornWD143A/spells/wispymagic_vert_azeritemist_blue_128_greyrotate_solid.blp",
+    "sha256": "589662bdf0286c5f1fd42aa46189ed8180ec841dc5599b7c260f7dbc47c8674a",
+    "live": "589662bdf0286c5f1fd42aa46189ed8180ec841dc5599b7c260f7dbc47c8674a"
+  },
+  {
+    "path": "Spells/RebornWD143A/world/expansion07/doodads/fx/8fx_generic_ghostly_state_hostile01_3023815.blp",
+    "sha256": "a4489caa9ac5eb8f3dfdecb9f94a6e026c25532765677f1f1daa05d92e21ed55",
+    "live": "a4489caa9ac5eb8f3dfdecb9f94a6e026c25532765677f1f1daa05d92e21ed55"
+  },
+  {
+    "path": "Spells/RebornWD143A/world/expansion07/doodads/fx/8fx_nagacouncil_decree_formranks_debuff.blp",
+    "sha256": "85f7270fbe982d72a4cc9b714810f94d622b48b6e7bf717ef6c40cf4d1f460d7",
+    "live": "85f7270fbe982d72a4cc9b714810f94d622b48b6e7bf717ef6c40cf4d1f460d7"
+  }
+]

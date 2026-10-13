@@ -20,6 +20,8 @@ bool AESpecValid(AEMask const& mask,uint32 spec)
 { return mask.SpecValid(spec); }
 bool AEValid(AEMask const& mask,uint32 level,uint32 testAE,uint32 testTE)
 {
+    if((AERank(mask,111)||AERank(mask,112)||AERank(mask,113)) && level<10) return false;
+    if((AERank(mask,112)||AERank(mask,113)) && !AERank(mask,111)) return false;
     // WD142: only pre-existing Class investments count toward the tier-24 gate.
     if((AERank(mask,108)||AERank(mask,109)||AERank(mask,110)) &&
        (level<56 || AESpent(mask)-AERank(mask,108)-AERank(mask,109)-AERank(mask,110)<24)) return false;
@@ -151,6 +153,8 @@ void AEApply(Player* p,State* s)
     if(!s->modern || !s->loaded) return;
     AEMask mask=AESpecValid(s->aeMasks[s->active],s->specs[s->active]) && AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) ? s->aeMasks[s->active] : AEMask{};
     for(uint32 spell:{9003861u,9003862u,9003863u,9003859u,9003860u,9003857u,9003858u,9003855u,9003856u,9003853u,9003854u,9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003522u,9003530u,9003531u,9003600u,9003601u,9003610u,9003611u,9003612u,9003690u,9003700u,9003701u,9003702u,9003703u}) if(!sSpellMgr->GetSpellInfo(spell)) return;
+    for(uint32 id:{264u,266u,5011u}) if(!sSpellMgr->GetSpellInfo(id)) return;
+    for(uint32 id=9003967;id<=9003989;++id) if(id!=9003979 && !sSpellMgr->GetSpellInfo(id)) return;
     for(uint32 id=9003962;id<=9003966;++id) if(!sSpellMgr->GetSpellInfo(id)) return;
     for(auto const& rank:WD19A::BadJujuRanks) if(!sSpellMgr->GetSpellInfo(rank.spell)) return;
     for(auto const& rank:WD19A::HexfireRanks) if(!sSpellMgr->GetSpellInfo(rank.spell)) return;
@@ -213,6 +217,7 @@ void AEApply(Player* p,State* s)
     for(uint32 id:{9003937u,9003938u,9003939u}) if(!sSpellMgr->GetSpellInfo(id)) return;
     if(AERank(mask,98)) { if(!p->HasSpell(9003937)) p->learnSpell(9003937); if(!p->HasAura(9003937,p->GetGUID())) p->CastSpell(p,9003937,true); }
     else { p->RemoveAurasDueToSpell(9003937,p->GetGUID()); if(p->HasSpell(9003937)) p->removeSpell(9003937,3,false); }
+    WD143Bridge::Apply(p,AERank(mask,111),AERank(mask,112),AERank(mask,113));
     for(uint32 i=0;i<3;++i)
     {
         uint32 spell= i==0?9003962u:(i==1?9003964u:9003965u);

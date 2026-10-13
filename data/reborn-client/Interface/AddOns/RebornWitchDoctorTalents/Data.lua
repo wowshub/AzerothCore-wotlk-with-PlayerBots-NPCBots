@@ -128,3 +128,9 @@ for _,n in ipairs(RebornWDTreeData) do
  if n.ID==30203 or n.ID==6052 or n.ID==29757 then n.RequiredLevel=n.ID==6052 and 58 or 56;n.RequiredAEInvestment=24 end
  if n.ID==6052 then n.RequiredIDs={30203} end
 end
+
+-- WD143: remove stale paid cross-tree prerequisites; preserve the root.
+for _,n in ipairs(RebornWDTreeData) do
+ if n.ID==4006 or n.ID==12086 or n.ID==4505 then n.RequiredLevel=10;n.AECost=0;n.TECost=0 end
+ if n.ID==12086 or n.ID==4505 then n.RequiredIDs={4006} end
+end

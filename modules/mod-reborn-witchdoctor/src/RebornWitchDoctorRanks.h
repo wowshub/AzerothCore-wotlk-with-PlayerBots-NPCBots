@@ -8,6 +8,8 @@ namespace WD19A
 struct Rank { uint32 spell; uint8 level; };
 struct Family { Rank const* ranks; std::size_t count; bool starter; };
 // WD54A: innate class passive; native aura 98 adds +15 to Alchemy only.
+constexpr Rank Arrow143Ranks[]={{9003970,10},{9003971,18},{9003972,24},{9003973,30},{9003974,36},{9003975,42},{9003976,48},{9003977,54},{9003978,60}};
+constexpr Rank Reclamation143Ranks[]={{9003980,10},{9003981,16},{9003982,22},{9003983,28},{9003984,34},{9003985,40},{9003986,46},{9003987,52},{9003988,58}};
 constexpr Rank DarkMojoRanks[]={{9003640,32}};
 constexpr Rank WizenedRanks[]={{9003641,30},{9003642,40}};
 constexpr Rank LoaStrengthRanks[]={{9003643,30},{9003644,40}};
@@ -153,6 +155,8 @@ constexpr Family Families[] = {
     {CocktailRanks, sizeof(CocktailRanks)/sizeof(Rank), false},
     {StewRanks, sizeof(StewRanks)/sizeof(Rank), false},
 
+    {Arrow143Ranks,sizeof(Arrow143Ranks)/sizeof(Rank),false},
+    {Reclamation143Ranks,sizeof(Reclamation143Ranks)/sizeof(Rank),false},
     {WrathRanks, sizeof(WrathRanks)/sizeof(Rank), true},
     {BrewRanks, sizeof(BrewRanks)/sizeof(Rank), true},
     {HexRanks, sizeof(HexRanks)/sizeof(Rank), false},

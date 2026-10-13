@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "Shadowhunting": [
+      43,
+      0
+    ],
+    "Voodoo": [
+      37,
+      37
+    ],
+    "Brewing": [
+      45,
+      45
+    ],
+    "Class": [
+      38,
+      28
+    ]
+  },
+  "slots": 111,
+  "nodes": 110,
+  "data_sha256": "c2194e9b6f2b6cc0bd895138a7f457d78a9e07c53def53531f7ad4121df9230f"
+}
