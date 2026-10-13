@@ -1,0 +1,77 @@
+[
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "sha256": "e587fb4a8dd2e9989979f08bcab844c4e42def968598bcd3c9de48da276a86e9",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSupport144.inc",
+    "sha256": "58632d0a66229a34f70d725b680de6031688895d4c8508573a9e9d77cb926680",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "sha256": "2e7ba453d79e4878589192fee4bb718f43a9900975cc5eafea2f783a9bd5feda",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "sha256": "0d8c071425c91720821a6d26ab32070aa7479f9ef561121ffac0d03d4fa62e22",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "sha256": "a0353e363135df80a9f908619943fe0532bbc9dc48c341280d18d636ec7ddf3d",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NumericTooltip.lua",
+    "sha256": "e672f72d9dd01ce6be569f37bc1e1bbfd472de5bf7a166f173194be8b8785a78",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "sha256": "a395f8f8ea8d09f55362c5aa630c2433765a546ee1f9b334e35d47b69ca1f20d",
+    "live_matches": true
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "sha256": "590fcf1806bdcb9e5c20513ea3fdb6f1f0d0791ca9f37f3e1042bf29c97408fd",
+    "live_matches": true
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+    "sha256": "aee30b09624d22c215446381cab5579101428723d663183b5e1eccaf924c7e83",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/DBFilesClient/Spell.dbc",
+    "sha256": "cc2cfd65f79f4593b1716039326bcb14ba19a4606979a98f1acd5a0cd4f872a1",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/DBFilesClient/SpellIcon.dbc",
+    "sha256": "afa6dbeb0de43d1966767a7d6d348c605175c46770659aa23a23c5fa37fff08a",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD144_0.blp",
+    "sha256": "e1d01a5f8890b5caf7282375eeeb01198eda28c93c44cac89b20b417b2ad49dd",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD144_1.blp",
+    "sha256": "142f10a4c898da98262e0430ff5f59085ced6fb89226e60d95334dc8c2892da0",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD144_2.blp",
+    "sha256": "eb83170af78b94fe5218753eca19432067aeb4ed3b02e349d3391527bfa72e13",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD144_3.blp",
+    "sha256": "3b5d462a93a7965c22db20e92f4776959efec4c9d1c8ba41d50c6bb7eaeb9c83",
+    "live_matches": true
+  }
+]

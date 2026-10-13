@@ -1,0 +1,24 @@
+[
+  {
+    "side": "client",
+    "path": "导入PATCH-XA/DBFilesClient/Spell.dbc",
+    "input": "8c7029ee65e39308106065c313d73a50727a924de8d9edb2b14ef088c265d187",
+    "output": "cc2cfd65f79f4593b1716039326bcb14ba19a4606979a98f1acd5a0cd4f872a1",
+    "added": [
+      9003996,
+      9003997
+    ],
+    "old_rows_unchanged": true
+  },
+  {
+    "side": "server",
+    "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "input": "bb07b05677c3692203694fcfdb919fc54acc24697b7ddbe1533f26d99da75ac5",
+    "output": "590fcf1806bdcb9e5c20513ea3fdb6f1f0d0791ca9f37f3e1042bf29c97408fd",
+    "added": [
+      9003996,
+      9003997
+    ],
+    "old_rows_unchanged": true
+  }
+]

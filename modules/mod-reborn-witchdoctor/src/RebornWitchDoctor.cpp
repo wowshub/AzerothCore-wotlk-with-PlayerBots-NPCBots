@@ -3338,6 +3338,7 @@ void AddRebornWitchDoctorScripts()
 {
     new WD144::exact_mods();
     RegisterSpellScript(WD144::jinx);
+    RegisterSpellScript(WD144::marker);
     RegisterSpellScript(WD144::talent);
     RegisterSpellScript(WD143::auto_shot);
     RegisterSpellScript(WD143::arrow);

@@ -1,0 +1,14 @@
+[
+  {
+    "file": "导入PATCH-XA/DBFilesClient/Spell.dbc",
+    "old_rows": 61962,
+    "new_display_only_rows": 2,
+    "old_strings_preserved": true
+  },
+  {
+    "file": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "old_rows": 61962,
+    "new_display_only_rows": 2,
+    "old_strings_preserved": true
+  }
+]

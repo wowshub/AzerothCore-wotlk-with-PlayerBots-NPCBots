@@ -1,0 +1,18 @@
+{
+  "private_datadir": "D:\\000rebornWOW\\_wd144c_sql_20261013061551",
+  "production_touched": false,
+  "passed": [
+    "two marker bindings installed",
+    "repeat installation unchanged",
+    "parent and talent bindings preserved",
+    "foreign ownership rejected 9003996",
+    "no partial writes 9003996",
+    "foreign ownership rejected 9003997",
+    "no partial writes 9003997",
+    "foreign ownership rejected -9003996",
+    "no partial writes -9003996",
+    "foreign ownership rejected -9003997",
+    "no partial writes -9003997",
+    "clean reinstall after conflicts"
+  ]
+}

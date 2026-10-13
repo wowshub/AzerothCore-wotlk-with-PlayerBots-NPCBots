@@ -1,0 +1,14 @@
+[
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorSupport144.inc",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSupport144.inc",
+    "input": "28df29fbe2a8a08b8969189827cbc028d76d65128b815643157dae5b7b84e4dd",
+    "output": "58632d0a66229a34f70d725b680de6031688895d4c8508573a9e9d77cb926680"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "input": "ebf5db8acf5c9de3578d6b5d451de8f13947a16820a90ec7de52fad79cdbb35b",
+    "output": "e587fb4a8dd2e9989979f08bcab844c4e42def968598bcd3c9de48da276a86e9"
+  }
+]
