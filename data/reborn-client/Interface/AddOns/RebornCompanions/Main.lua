@@ -124,12 +124,154 @@ events:SetScript('OnUpdate',function()
  end
 end)
 SLASH_REBORNCOMPANIONS1='/rcompanions';SlashCmdList.REBORNCOMPANIONS=function(name)A.Open(name~=''and name or nil)end
--- Add a separate launcher next to MultiBot; no replacement of its original click actions.
-local launch=button(UIParent,'雇佣随从',0,0,95,function()if F:IsShown()then F:Hide()else A.Open()end end)
-launch:ClearAllPoints();launch:SetPoint('CENTER',UIParent,'CENTER',0,220)
-local attach=CreateFrame('Frame');local elapsed=0
+-- RebornWOW MBUI1A: the launcher is a robot icon at the right end of MultiBot's
+-- bar (same button type as MultiBot's own icons), and a small corner grip on it
+-- scales the whole MultiBot bar. MultiBot's own files are not changed.
+-- Without MultiBot, the old red button is still shown in the middle of the screen.
+local ICON='Interface\\AddOns\\RebornCompanions\\Art\\RobotIcon'
+local function Toggle() if F:IsShown() then F:Hide() else A.Open() end end
+local function DB() RebornCompanionsDB=RebornCompanionsDB or {};return RebornCompanionsDB end
+
+local fallback=button(UIParent,'雇佣随从',0,0,95,Toggle)
+fallback:ClearAllPoints();fallback:SetPoint('CENTER',UIParent,'CENTER',0,220);fallback:Hide()
+
+local function Clamp(v) if v<0.5 then return 0.5 elseif v>1.6 then return 1.6 end return v end
+
+-- Re-anchor the bar so its BOTTOMRIGHT stays at the same spot on screen after a
+-- scale change. MultiBot anchors it BOTTOMRIGHT to UIParent; SetPoint offsets are
+-- in the bar's own (scaled) units.
+local function SetBarScale(bar,scale)
+ local eff=bar:GetEffectiveScale();local ui=UIParent:GetEffectiveScale()
+ local right,bottom=bar:GetRight(),bar:GetBottom()
+ bar:SetScale(scale)
+ if not right or not bottom then return end
+ local sx=right*eff-UIParent:GetRight()*ui;local sy=bottom*eff
+ local neff=bar:GetEffectiveScale()
+ bar:ClearAllPoints()
+ if bar.setPoint then bar.setPoint(sx/neff,sy/neff) else bar:SetPoint('BOTTOMRIGHT',UIParent,'BOTTOMRIGHT',sx/neff,sy/neff) end
+end
+
+local function Install(m)
+ local bar=m.frames.MultiBar;local right=bar.frames and bar.frames.Right
+ if not right or not right.addButton then return false end
+
+ -- One slot to the right of the last button MultiBot put on the right side.
+ local x=0
+ for name,b in pairs(right.buttons) do if name~='RebornCompanions' and type(b.x)=='number' and b.x>=x then x=b.x+34 end end
+ local btn=right.addButton('RebornCompanions',x,0,ICON,'雇佣随从')
+ btn.doLeft=function() Toggle() end
+ btn.doRight=function() Toggle() end
+ -- MBUI1B: no OnClick here; MultiBot's own PostClick already calls doLeft/doRight (an extra toggle closed the window again).
+ btn:SetScript('OnEnter',function(self)
+  GameTooltip:SetOwner(self,'ANCHOR_TOP');GameTooltip:AddLine('雇佣随从',1,1,1)
+  GameTooltip:AddLine('点击打开随从名单。右下角小三角拖动可缩放 MultiBot 底栏，双击小三角恢复原大小。',.8,.8,.8,true);GameTooltip:Show()
+ end)
+ btn:SetScript('OnLeave',function() GameTooltip:Hide() end)
+
+ -- Corner grip on the robot icon: drag to scale the whole bar.
+ local grip=CreateFrame('Button',nil,btn);grip:SetSize(14,14);grip:SetPoint('BOTTOMRIGHT',btn,'BOTTOMRIGHT',6,-6)
+ grip:SetFrameLevel(btn:GetFrameLevel()+5)
+ grip:SetNormalTexture('Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up')
+ grip:SetHighlightTexture('Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight')
+ grip:SetPushedTexture('Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down')
+ grip:RegisterForClicks('LeftButtonUp')
+ grip:SetScript('OnEnter',function(self) GameTooltip:SetOwner(self,'ANCHOR_TOP');GameTooltip:AddLine('拖动缩放底栏（双击恢复）',1,1,1);GameTooltip:Show() end)
+ grip:SetScript('OnLeave',function() GameTooltip:Hide() end)
+ grip:SetScript('OnMouseDown',function(self)
+  -- Scale follows the cursor: anchor = bar's right edge on screen, the grip
+  -- sits `dist` bar-units to its right, so scale = (cursor - anchor) / dist.
+  local eff=bar:GetEffectiveScale()
+  local anchor=bar:GetRight()*eff
+  local dist=(self:GetRight()*self:GetEffectiveScale()-anchor)/eff
+  if dist<20 then return end
+  self.drag={anchor=anchor,dist=dist}
+  self:SetScript('OnUpdate',function(g)
+   local cx=GetCursorPosition()
+   local s=Clamp((cx-g.drag.anchor)/(g.drag.dist*UIParent:GetEffectiveScale()))
+   if math.abs(s-bar:GetScale())>0.01 then SetBarScale(bar,s) end
+  end)
+ end)
+ grip:SetScript('OnMouseUp',function(self)
+  self:SetScript('OnUpdate',nil);self.drag=nil
+  DB().barScale=bar:GetScale()
+ end)
+ grip:SetScript('OnDoubleClick',function() SetBarScale(bar,1);DB().barScale=1 end)
+
+ -- MultiBot saves the bar position on logout via toPoint, which assumes the bar
+ -- has UIParent's scale. Measure on screen instead, so the saved offset is in the
+ -- bar's own units and lands in the same place once the scale is reapplied.
+ if m.toPoint and not m.rebornScaledToPoint then
+  local orig=m.toPoint
+  m.toPoint=function(frame)
+   if frame==bar and bar:GetScale()~=1 then
+    local eff=bar:GetEffectiveScale()
+    local offX=(bar:GetRight()*eff-UIParent:GetRight()*UIParent:GetEffectiveScale())/eff
+    return math.floor(offX+0.5),math.floor(bar:GetBottom()+0.5)
+   end
+   return orig(frame)
+  end
+  m.rebornScaledToPoint=true
+ end
+
+ -- Saved scale: MultiBot already restored the offsets (in scaled units), so only
+ -- the scale is set here, without re-anchoring.
+ -- MBUI1C: gold frame around the bar row, styled like the NetherBot panel. It is a
+ -- child of the bar (so it scales with it), sits below the icons and takes no
+ -- clicks. It wraps only the row itself: the bar's own buttons plus the Left and
+ -- Right groups; popups (Units list, Main/Masters menus) stay outside.
+ local box=CreateFrame('Frame',nil,bar)
+ box:SetBackdrop({bgFile='Interface\\Buttons\\WHITE8X8',edgeFile='Interface\\Tooltips\\UI-Tooltip-Border',tile=true,tileSize=16,edgeSize=16,insets={left=4,right=4,top=4,bottom=4}})
+ box:SetBackdropColor(0.08,0.08,0.1,0.85);box:SetBackdropBorderColor(0.85,0.65,0.22,1)
+ box:EnableMouse(false);box:SetFrameStrata(bar:GetFrameStrata())
+ -- MBUI1D: anchor and size it at once; an unanchored frame never got laid out.
+ box:SetPoint('CENTER',bar,'CENTER',0,0);box:SetSize(40,40);box:Show()
+ local function Bounds(group,acc)
+  if not group or not group.buttons or not group:IsVisible() then return end
+  for _,b in pairs(group.buttons) do
+   if b:IsVisible() then
+    local l,r,t,bo=b:GetLeft(),b:GetRight(),b:GetTop(),b:GetBottom()
+    if l then
+     if not acc.l or l<acc.l then acc.l=l end;if not acc.r or r>acc.r then acc.r=r end
+     if not acc.t or t>acc.t then acc.t=t end;if not acc.b or bo<acc.b then acc.b=bo end
+    end
+   end
+  end
+ end
+ local last='';local tick=0;local state='init'
+ local function Layout()
+  -- Keep it just under the lowest icon frame, whatever MultiBot's Raise() did.
+  local low=bar:GetFrameLevel()
+  for _,g in pairs({bar.frames.Left,right}) do if g and g:GetFrameLevel()<low then low=g:GetFrameLevel() end end
+  if box:GetFrameLevel()~=math.max(0,low-1) then box:SetFrameLevel(math.max(0,low-1)) end
+  if box:GetFrameStrata()~=bar:GetFrameStrata() then box:SetFrameStrata(bar:GetFrameStrata()) end
+  local acc={};Bounds(bar,acc);Bounds(bar.frames.Left,acc);Bounds(right,acc)
+  local bl,bb=bar:GetLeft(),bar:GetBottom()
+  if not acc.l or not bl then state='no icons measured';return end
+  local pad=7
+  local x,y,w,h=acc.l-bl-pad,acc.b-bb-pad,acc.r-acc.l+pad*2,acc.t-acc.b+pad*2
+  local key=string.format('%.1f %.1f %.1f %.1f',x,y,w,h)
+  if key~=last then last=key;box:ClearAllPoints();box:SetPoint('BOTTOMLEFT',bar,'BOTTOMLEFT',x,y);box:SetSize(w,h) end
+  state='ok '..key
+ end
+ -- Driven by a separate always-shown frame: the box's own OnUpdate depends on it being laid out.
+ local ticker=CreateFrame('Frame',nil,UIParent)
+ ticker:SetScript('OnUpdate',function(self,dt) tick=tick+dt;if tick<0.25 then return end;tick=0;Layout() end)
+ Layout()
+ SLASH_REBORNCOMPANIONSBAR1='/rcbar'
+ SlashCmdList.REBORNCOMPANIONSBAR=function()
+  Layout()
+  DEFAULT_CHAT_FRAME:AddMessage(string.format('|cffffcc00[雇佣随从]|r 金边：%s；显示=%s 层级=%s/%s 底栏层级=%s 缩放=%.2f',
+   state,tostring(box:IsVisible()),box:GetFrameStrata(),box:GetFrameLevel(),bar:GetFrameLevel(),bar:GetScale()))
+ end
+ local saved=tonumber(DB().barScale)
+ if saved and saved~=1 then bar:SetScale(Clamp(saved)) end
+ return true
+end
+
+local attach=CreateFrame('Frame');local elapsed,waited=0,0
 attach:SetScript('OnUpdate',function(self,dt)
- elapsed=elapsed+dt;if elapsed<1 then return end;elapsed=0
- local m=MultiBot;local bar=m and m.frames and m.frames.MultiBar
- if bar then launch:SetParent(bar);launch:ClearAllPoints();launch:SetPoint('BOTTOMLEFT',bar,'TOPLEFT',0,4);self:SetScript('OnUpdate',nil)end
+ elapsed=elapsed+dt;if elapsed<1 then return end;waited=waited+elapsed;elapsed=0
+ local m=MultiBot
+ if m and m.frames and m.frames.MultiBar and Install(m) then fallback:Hide();self:SetScript('OnUpdate',nil);return end
+ if waited>=10 then fallback:Show() end
 end)
