@@ -178,6 +178,15 @@ public:
     void OnRunDisabled(std::string const& reason);
     void OnStatusPayload(std::string const& payload);
 
+    // RebornWOW DCRZ2A: the party-died bailout asks instead of disabling when
+    // nobody alive can resurrect (or the rez timed out). True = the next
+    // monitor tick (world thread) revives the party at the entrance and the
+    // run continues; false = out of regroups / no entrance known, so the
+    // caller takes the classic disable. Any thread (takes _obsMutex).
+    bool RequestRegroup(std::string const& why);
+    static constexpr uint32 kMaxTestRegroups = 3;
+    static constexpr uint32 kTestRegroupWipeDelayMs = 5 * 1000;
+
     ObjectGuid TankGuid() const { return _tankGuid; }
     ObjectGuid GmGuid() const { return _gmGuid; }
     std::string const& RunId() const { return _record.runId; }
@@ -495,6 +504,8 @@ private:
     uint32 _pausedForMs = 0;
     uint32 _stalledForMs = 0;
     uint32 _wipedForMs = 0;
+    // RebornWOW DCRZ2A: world-thread side of the entrance regroup.
+    void MaybeRegroup(Player* tank, bool anyAlive);
     // Who was still standing the tick before the wipe latched — the last dead
     // member's name is the one worth naming in the fail reason.
     std::string _lastAliveMember;
@@ -534,6 +545,11 @@ private:
     bool _disableAllCleared = false;
     std::string _disableReason;
     std::string _lastStatusState;
+    // RebornWOW DCRZ2A (guarded by _obsMutex).
+    bool _regroupRequested = false;
+    bool _regroupRefused = false;   // RegroupAtEntrance found no entrance row
+    std::string _regroupWhy;
+    uint32 _regroupsDone = 0;
 };
 
 #endif  // _PLAYERBOT_DCTESTRUNJOB_H

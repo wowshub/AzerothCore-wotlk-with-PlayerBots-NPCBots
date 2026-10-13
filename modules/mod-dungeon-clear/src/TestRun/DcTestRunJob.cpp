@@ -51,6 +51,7 @@
 #include "Ai/Dungeon/DungeonClear/DcPullContext.h"
 #include "Ai/Dungeon/DungeonClear/DcValueKeys.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRunWing.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcTargeting.h"
@@ -2230,7 +2231,10 @@ void DcTestRunJob::TickMonitoring(uint32 dt)
             _wipedForMs = 0;
         else
             _wipedForMs += dt;
-        obs.partyWiped = !anyAlive;
+        // RebornWOW DCRZ2A: a test party nobody can raise regroups at the
+        // entrance instead of failing (bounded; recorded in testRegroups).
+        MaybeRegroup(tank, anyAlive);
+        obs.partyWiped = _wipedForMs > 0;
         obs.wipedForMs = _wipedForMs;
 
         stallReason = ctx->GetValue<std::string&>(DcKey::StallReason)->Get();
@@ -2620,6 +2624,76 @@ void DcTestRunJob::OnRunDisabled(std::string const& reason)
     _disableFired = true;
     _disableReason = reason;
     _disableAllCleared = reason == DcActionShared::kReasonAllCleared;
+}
+
+// RebornWOW DCRZ2A ---------------------------------------------------------
+// A `.dc test` party is a measuring instrument: ending the run on the first wipe
+// or on the first death nobody alive can raise measures one fight and nothing
+// after it. Instead the harness revives the party at the entrance (the raid
+// regroup, DcRezRecovery::RegroupAtEntrance) and lets the run continue, at most
+// kMaxTestRegroups times, and records every one so the result can be told
+// apart from a clean run. Player-led runs are untouched (DCRZ2B).
+bool DcTestRunJob::RequestRegroup(std::string const& why)
+{
+    if (_stage.load() != Stage::Monitoring)
+        return false;
+    std::lock_guard<std::mutex> lock(_obsMutex);
+    if (_regroupRefused || _regroupsDone >= kMaxTestRegroups)
+        return false;
+    if (!_regroupRequested)
+    {
+        _regroupRequested = true;
+        _regroupWhy = why;
+    }
+    return true;
+}
+
+void DcTestRunJob::MaybeRegroup(Player* tank, bool anyAlive)
+{
+    std::string why;
+    {
+        std::lock_guard<std::mutex> lock(_obsMutex);
+        if (_regroupRefused || _regroupsDone >= kMaxTestRegroups)
+        {
+            _regroupRequested = false;
+            return;
+        }
+        if (_regroupRequested)
+            why = _regroupWhy;
+        else if (!anyAlive && _wipedForMs >= kTestRegroupWipeDelayMs)
+            why = "wipe";
+        else
+            return;
+        _regroupRequested = false;
+    }
+
+    // World thread: revive + teleport are safe here (never from a bot tick).
+    if (!DcRezRecovery::RegroupAtEntrance(tank))
+    {
+        std::lock_guard<std::mutex> lock(_obsMutex);
+        _regroupRefused = true;
+        LOG_INFO("playerbots.dungeonclear",
+                 "TESTRUN {} DCRZ2A regroup ({}) refused: no entrance row for map {} -- "
+                 "falling back to the classic end", _record.runId, why, tank->GetMapId());
+        return;
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(_obsMutex);
+        ++_regroupsDone;
+    }
+    ++_record.testRegroups;
+    DcTestRunRecord::Record::RegroupEntry e;
+    e.t = _totalMs / 1000;
+    e.why = why;
+    _record.testRegroupLog.push_back(e);
+    _wipedForMs = 0;
+    _stalledForMs = 0;
+    _sinceProgressMs = 0;  // the walk back from the entrance is a fresh leg
+    LOG_INFO("playerbots.dungeonclear",
+             "TESTRUN {} DCRZ2A regroup {}/{} at {}s ({}): party revived at the entrance, "
+             "run continues", _record.runId, _record.testRegroups, kMaxTestRegroups,
+             e.t, why);
 }
 
 void DcTestRunJob::OnStatusPayload(std::string const& payload)

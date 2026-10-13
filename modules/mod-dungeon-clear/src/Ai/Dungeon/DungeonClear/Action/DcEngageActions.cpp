@@ -55,6 +55,7 @@
 #include "Ai/Dungeon/DungeonClear/Util/ChunkedPathfinder.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcDoorPolicy.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcLeaderSignal.h"
+#include "TestRun/DcTestRunManager.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcMovement.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcPartyState.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcBreadcrumb.h"
@@ -2510,6 +2511,23 @@ bool DungeonClearDisableOnDeathAction::Execute(Event /*event*/)
     if (plan.verdict.outcome == DcRezDecision::Outcome::Regroup &&
         DcRezRecovery::RegroupAtEntrance(bot))
         return true;
+
+    // RebornWOW DCRZ2A: a `.dc test` party nobody alive can raise (or whose rez
+    // timed out) is revived at the entrance by the harness on the world thread
+    // and keeps going, instead of ending the run. Player-led runs fall through.
+    {
+        char const* why = nullptr;
+        switch (plan.verdict.reason)
+        {
+            case DcRezDecision::Reason::Wipe:     why = "wipe"; break;
+            case DcRezDecision::Reason::NoRezzer: why = "noRezzer"; break;
+            case DcRezDecision::Reason::TimedOut: why = "timedOut"; break;
+            default: break;
+        }
+        Player* const owner = why ? DcLeaderSignal::FindRunOwner(bot) : nullptr;
+        if (owner && DcTestRunManager::Instance().RequestRegroup(owner->GetGUID(), why))
+            return true;
+    }
 
     std::string reason;
     switch (plan.verdict.reason)

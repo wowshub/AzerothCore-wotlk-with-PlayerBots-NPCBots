@@ -144,7 +144,12 @@ namespace DcTestRunRecord
         //     running event filled — DcRunState::SetTestExtra). On a scenario
         //     run bossesTotal / bossRoster count the FOCUS only, so do not
         //     compare them with a full-dungeon run of the same map.
-        std::uint32_t schema = 13;
+        // 14: RebornWOW DCRZ2A -- testRegroups / testRegroupLog: how many
+        //     times the harness revived the party at the entrance and let the
+        //     run continue (a wipe, or nobody alive able to resurrect). A run
+        //     with testRegroups > 0 was rescued by the test flow, not by the
+        //     party: never rank it against a clean run without checking this.
+        std::uint32_t schema = 14;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -191,6 +196,14 @@ namespace DcTestRunRecord
         // COUNTED rather than silently dropped — a fat number here means the log
         // below is a prefix, not the whole run.
         std::uint32_t pullsElided = 0;
+        // RebornWOW DCRZ2A (schema 14): entrance regroups the test flow did.
+        struct RegroupEntry
+        {
+            std::uint32_t t = 0;   // run seconds
+            std::string why;       // "wipe" | "noRezzer" | "timedOut"
+        };
+        std::uint32_t testRegroups = 0;
+        std::vector<RegroupEntry> testRegroupLog;
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

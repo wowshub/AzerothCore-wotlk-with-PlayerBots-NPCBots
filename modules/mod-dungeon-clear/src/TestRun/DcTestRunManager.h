@@ -198,6 +198,11 @@ public:
     // job whose leader tank matches (no-op otherwise).
     void OnRunDisabled(Player* leader, std::string const& reason);
 
+    // RebornWOW DCRZ2A: routed to the monitoring job whose tank is `tank`.
+    // False when `tank` leads no live test run (a player-led run) or that run
+    // is out of entrance regroups -- the caller then disables as before.
+    bool RequestRegroup(ObjectGuid tank, std::string const& why);
+
     // Observer: DcStatusPublisher pushes each changed STATUS payload here;
     // routed to the job whose tank matches.
     void OnStatusPayload(ObjectGuid tank, std::string const& payload);

@@ -783,8 +783,11 @@ namespace DcRezRecovery
 
         if (PlayerbotAI* botAI = GET_PLAYERBOT_AI(bot))
             DcStatusPublisher::SendAddonMessage(
-                botAI, "CHAT	The raid wiped â regrouping at the entrance "
-                       "and continuing.");
+                botAI, map->IsRaid()
+                           ? "CHAT\tThe raid wiped \xe2\x80\x94 regrouping at the entrance "
+                             "and continuing."
+                           : "CHAT\tNo one could be resurrected \xe2\x80\x94 regrouping at "
+                             "the entrance and continuing.");
         return true;
     }
 

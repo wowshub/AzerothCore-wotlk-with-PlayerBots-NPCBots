@@ -200,6 +200,12 @@ namespace DcTestRunRecord
               << ",\"wipedHere\":" << (p.wipedHere ? "true" : "false") << '}';
         }
         s << "],\"pullsElided\":" << rec.pullsElided
+          << ",\"testRegroups\":" << rec.testRegroups
+          << ",\"testRegroupLog\":[";
+        for (std::size_t i = 0; i < rec.testRegroupLog.size(); ++i)
+            s << (i ? "," : "") << "{\"t\":" << rec.testRegroupLog[i].t
+              << ",\"why\":\"" << rec.testRegroupLog[i].why << "\"}";
+        s << "]"
           << ",\"statusTimeline\":[";
         {
             std::vector<StatusEntry> const& st = rec.statusTimeline;

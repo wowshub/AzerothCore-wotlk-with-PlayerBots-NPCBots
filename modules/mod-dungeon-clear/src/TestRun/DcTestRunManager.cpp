@@ -662,6 +662,15 @@ void DcTestRunManager::OnRunDisabled(Player* leader, std::string const& reason)
         }
 }
 
+bool DcTestRunManager::RequestRegroup(ObjectGuid tank, std::string const& why)
+{
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    for (auto const& job : _runs)
+        if (job->TankGuid() == tank && job->IsMonitoring())
+            return job->RequestRegroup(why);
+    return false;
+}
+
 void DcTestRunManager::OnStatusPayload(ObjectGuid tank, std::string const& payload)
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
