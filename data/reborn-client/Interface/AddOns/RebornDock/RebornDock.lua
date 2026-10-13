@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A/DOCK1B.
 -- A gold-framed box that holds the addon icons the player chooses. Click "+" to
 -- enter collect mode: every eligible named icon on screen gets a green frame;
 -- drag it into the box (or click it) to add it. Icons in the box get a red x in
@@ -8,7 +8,7 @@
 -- and columns are saved (account-wide). Bilingual (中文 / EN).
 
 local DB
-local CELL, GAP, PAD, HEADER = 32, 5, 8, 22
+local CELL, GAP, PAD, HEADER = 32, 1, 7, 22
 local MIN_SCALE, MAX_SCALE = 0.5, 2.0
 local RESTORE_SECONDS = 120   -- AIO icons (Heritage Horizons) arrive late
 
@@ -19,7 +19,7 @@ local STR = {
         gripTip = "拖动缩放收藏盒（双击恢复）", headerTip = "左键拖动移动收藏盒\n滚轮调整每行个数（当前 %d）",
         added = "已收进：%s", removed = "已放回：%s", notFound = "（图标 %s 暂未加载，加载后会自动收进来）",
         combat = "战斗中不能调整，请脱战后再试。", reset = "已把所有图标放回原处。",
-        help = "/rdock 显示或隐藏收藏盒；/rdock reset 全部放回；/rdock cols 数字 设置每行个数",
+        help = "/rdock 显示或隐藏收藏盒；/rdock reset 全部放回；/rdock cols 数字 设置每行个数；/rdock list 列出已收图标",
     },
     en = {
         title = "Addon Dock", collect = "Collect mode", collectTip = "Click to enter/leave collect mode:\nGreen frame = can be added (drag into the box, or click)\nRed x = click to send it back",
@@ -27,7 +27,7 @@ local STR = {
         gripTip = "Drag to scale the dock (double-click resets)", headerTip = "Left-drag to move the dock\nMouse wheel: icons per row (now %d)",
         added = "Added: %s", removed = "Sent back: %s", notFound = "(%s is not loaded yet; it is added when it appears)",
         combat = "Not in combat; try again after the fight.", reset = "All icons sent back.",
-        help = "/rdock show or hide; /rdock reset send all back; /rdock cols N icons per row",
+        help = "/rdock show or hide; /rdock reset send all back; /rdock cols N icons per row; /rdock list collected icons",
     },
 }
 local function IsZh() return DB and DB.lang == "zh" end
@@ -41,7 +41,9 @@ local BLOCK = { "^ActionButton", "^MultiBar", "^BonusAction", "^Shapeshift", "^P
     "^Compact", "^Chat", "^GeneralDocking", "^Friends", "^StaticPopup", "^DropDownList", "^Minimap",
     "^MiniMap", "^GameMenu", "^RebornDock", "^Watch", "^Quest", "^Interface", "^Video", "^Audio",
     "^Macro", "^KeyBinding", "^Gossip", "^Merchant", "^Mail", "^Trade", "^Loot", "^Group",
-    "^Raid", "^Arena", "^Battlefield", "^Durability", "^Vehicle", "^TimeManager", "^GameTime" }
+    "^Raid", "^Arena", "^Battlefield", "^Durability", "^Vehicle", "^TimeManager", "^GameTime",
+    "^BuffButton", "^DebuffButton", "^TempEnchant", "^ConsolidatedBuff", "^Bagnon", "^ContainerFrame",
+    "^Details", "^Skada", "^Recount", "^MBF", "^Totem", "^Rune", "^Stance", "^Aura" }
 
 local owned, ownedOrder = {}, nil
 local pinning = false
@@ -176,13 +178,70 @@ local function MBFIgnore(name, add)
     if add then table.insert(list, name); DB.mbfAdded = DB.mbfAdded or {}; DB.mbfAdded[name] = true end
 end
 
+-- Visible extent of a button in its own units: the frame plus every shown
+-- texture and child frame (Heritage Horizons draws a ring outside its frame).
+-- Returns size and the offset of the artwork's centre from the frame's centre.
+local function Measure(btn)
+    local eff = btn:GetEffectiveScale()
+    local bl, br, bt, bb = btn:GetLeft(), btn:GetRight(), btn:GetTop(), btn:GetBottom()
+    if not bl then return nil end
+    local L, R, T, B = bl * eff, br * eff, bt * eff, bb * eff
+    local function grow(tex, e)
+        if not tex.IsShown or not tex:IsShown() then return end
+        local l, r, t, b = tex:GetLeft(), tex:GetRight(), tex:GetTop(), tex:GetBottom()
+        if not l then return end
+        if tex.GetAlpha and tex:GetAlpha() <= 0.05 then return end
+        -- The classic minimap ring (MiniMap-TrackingBorder) only fills the
+        -- top-left ~60% of its texture; the rest is transparent.
+        local path = tex:GetTexture()
+        if type(path) == "string" and path:lower():find("trackingborder") then
+            r = l + (r - l) * 0.6; b = t - (t - b) * 0.6
+        end
+        L, R, T, B = math.min(L, l * e), math.max(R, r * e), math.max(T, t * e), math.min(B, b * e)
+    end
+    local function textures(frame, e)
+        for _, r in ipairs({ frame:GetRegions() }) do
+            if r.GetObjectType and r:GetObjectType() == "Texture" and r:GetTexture()
+               and r:GetDrawLayer() ~= "HIGHLIGHT" then grow(r, e) end
+        end
+    end
+    textures(btn, eff)
+    -- Child frames count by their artwork only (a 53px ring holder is mostly empty).
+    for _, c in ipairs({ btn:GetChildren() }) do
+        if c:IsShown() then textures(c, c:GetEffectiveScale()) end
+    end
+    local size = math.max(R - L, T - B) / eff
+    local dx = ((L + R) / 2 - (bl + br) / 2 * eff) / eff
+    local dy = ((T + B) / 2 - (bt + bb) / 2 * eff) / eff
+    if size < 4 then return nil end
+    return size, dx, dy
+end
+
+local function Fit(o)
+    local size, dx, dy = Measure(o.btn)
+    o.fitOk = size ~= nil
+    if not size then
+        size = math.max(o.btn:GetWidth() or 0, o.btn:GetHeight() or 0); dx, dy = 0, 0
+    end
+    o.fitOk = (size ~= nil) and o.fitOk ~= false
+    o.scale = (size > 1) and (CELL / size) or 1
+    o.dx, o.dy = dx, dy
+end
+
 local function Layout()
     dirty = false
     local cols = DB.cols or 8
     local shown = {}
     for _, name in ipairs(DB.items) do
         local o = owned[name]
-        if o and o.btn:IsShown() then shown[#shown + 1] = o end
+        if o then
+            -- DOCK1B: the user collected it, so keep it visible even if its addon
+            -- hides or fades it (Equipment Vault re-attaches, DragonUI/MBF fade).
+            if not o.btn:IsShown() then pinning = true; o.btn:Show(); pinning = false end
+            if o.btn:GetAlpha() < 1 then o.btn:SetAlpha(1) end
+            if not o.fitOk then Fit(o) end
+            shown[#shown + 1] = o
+        end
     end
     local n = #shown
     local perRow = math.max(1, math.min(cols, math.max(n, 1)))
@@ -207,7 +266,7 @@ local function Layout()
         if b:GetScale() ~= s then b:SetScale(s) end
         b:SetFrameStrata(box:GetFrameStrata())
         b:SetFrameLevel(box:GetFrameLevel() + 3)
-        o.px, o.py = x / s, y / s
+        o.px, o.py = x / s - (o.dx or 0), y / s - (o.dy or 0)
         b:ClearAllPoints()
         b:SetPoint("CENTER", box, "TOPLEFT", o.px, o.py)
     end
@@ -233,7 +292,8 @@ local function HookOnce(btn)
     hooksecurefunc(btn, "SetParent", Pin)
     hooksecurefunc(btn, "SetScale", Pin)
     btn:HookScript("OnShow", function(self) if self.rdockOwned then dirty = true end end)
-    btn:HookScript("OnHide", function(self) if self.rdockOwned then dirty = true end end)
+    btn:HookScript("OnHide", function(self) if self.rdockOwned and not pinning then dirty = true end end)
+    hooksecurefunc(btn, "SetAlpha", function(self, a) if self.rdockOwned and not pinning and a < 1 then pinning = true; self:SetAlpha(1); pinning = false end end)
 end
 
 local function Take(btn)
@@ -242,8 +302,8 @@ local function Take(btn)
     local o = { btn = btn, parent = btn:GetParent(), oscale = btn:GetScale(), strata = btn:GetFrameStrata(),
                 level = btn:GetFrameLevel(), points = {} }
     for i = 1, btn:GetNumPoints() do o.points[i] = { btn:GetPoint(i) } end
-    local size = math.max(btn:GetWidth() or 0, btn:GetHeight() or 0)
-    o.scale = (size > 1) and (CELL / size) or 1
+    o.btn = btn
+    Fit(o)
     owned[name] = o
     btn.rdockOwned = true
     btn.DragonUI_CollectorManaged = nil
@@ -314,7 +374,9 @@ local function Eligible(f)
     if kind ~= "Button" and kind ~= "CheckButton" then return false end
     if not f:IsVisible() or f:IsProtected() then return false end
     local w, h = f:GetWidth() * f:GetEffectiveScale(), f:GetHeight() * f:GetEffectiveScale()
-    if w < 10 or h < 10 or w > 72 or h > 72 then return false end
+    if w < 10 or h < 10 or w > 110 or h > 110 then return false end
+    if name:find("%d$") then return false end          -- list items: BuffButton1, slot12...
+    if not IconTexture(f) then return false end          -- empty squares have no artwork
     for _, pat in ipairs(BLOCK) do if name:find(pat) then return false end end
     return true
 end
@@ -451,7 +513,7 @@ local ticker = CreateFrame("Frame")
 ticker:SetScript("OnUpdate", function(_, dt)
     if not DB then return end
     elapsed = elapsed + dt
-    if elapsed < 0.3 then return end
+    if elapsed < 0.1 then return end
     sinceLogin = sinceLogin + elapsed
     elapsed = 0
     if not InCombatLockdown() then
@@ -461,6 +523,13 @@ ticker:SetScript("OnUpdate", function(_, dt)
                     local f = _G[name]
                     if type(f) == "table" and f.GetObjectType and not f:IsProtected() then Take(f) end
                 end
+            end
+        end
+        if not dirty then
+            for _, o in pairs(owned) do
+                local b = o.btn
+                local _, rel = b:GetPoint(1)
+                if b:GetParent() ~= box or rel ~= box or not b:IsShown() or b:GetNumPoints() ~= 1 then dirty = true; break end
             end
         end
         if dirty then Layout(); if collecting then RefreshOverlays() end end
@@ -496,6 +565,13 @@ SlashCmdList.REBORNDOCK = function(msg)
         wipe(DB.items); Layout(); RefreshOverlays(); Say(T("reset"))
     elseif cmd == "cols" and tonumber(arg) then
         DB.cols = math.max(1, math.min(16, math.floor(tonumber(arg)))); dirty = true
+    elseif cmd == "list" then
+        for i, name in ipairs(DB.items) do
+            local o = owned[name]
+            local state = o and string.format("shown=%s alpha=%.2f scale=%.2f", tostring(o.btn:IsShown()), o.btn:GetAlpha(), o.scale or 0)
+                or (IsZh() and "未加载" or "not loaded")
+            Say(i .. ". " .. name .. "  " .. state)
+        end
     elseif cmd == "help" then
         Say(T("help"))
     else
