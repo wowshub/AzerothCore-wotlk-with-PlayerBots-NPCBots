@@ -142,11 +142,12 @@ function G.Refresh()
   b.name:SetText(x.kind..' · '..x.name..(installed[x.spell]and' |cff77ff77已装|r'or''));b.why:SetText(x.why)
  end
  if G.showGlyphs then G.scroll:Hide();G.glyphPanel:Show()else G.scroll:Show();G.glyphPanel:Hide()end
+ if G.tabDesc then G.tabDesc:SetNavSelected(not G.showGlyphs);G.tabGlyph:SetNavSelected(G.showGlyphs and true or false)end
  G.url:SetText(p.url)
  local job,err;if G.fromBot then job,err=G.BotCheck()else job,err=G.Check(p)end;G.apply:SetText(G.fromBot and('应用到机器人 '..(G.botName or'?'))or'应用到自己的当前专精');enabled(G.apply,not G.job and job~=nil);enabled(G.stop,G.job~=nil)
  G.status:SetText(G.message or why or err or (G.fromBot and '应用会重置该机器人当前天赋；雕文仅参考。当前数值来自MultiBot面板。') or '可查看方案并补齐加点；应用前会再次核对自己的当前专精')
 end
--- RebornWOW TGL1A/TGL1B: compact, aligned layout (1220x680, was 1410x760). Four
+-- RebornWOW TGL1A/TGL1B/TGL1C: compact, aligned layout (1220x680, was 1410x760). Four
 -- regions with one margin system: left navigation (classes | categories and
 -- plans), three talent trees, right description/glyph panel. Logic unchanged.
 local W,H=1220,680
@@ -249,8 +250,8 @@ function G.Create()
  end end
  -- Right: description / glyphs
  local tabW=math.floor((SIDE_W-4)/2)
- button(f,SIDE_X,-TOP,tabW,'方案说明 / 加点清单',function()G.showGlyphs=false;G.Refresh()end)
- button(f,SIDE_X+tabW+4,-TOP,tabW,'雕文推荐 / 已装对照',function()G.showGlyphs=true;G.Refresh()end)
+ G.tabDesc=nav(SIDE_X,-TOP,tabW,'方案说明 / 加点清单',function()G.showGlyphs=false;G.Refresh()end);G.tabDesc:SetHeight(26)
+ G.tabGlyph=nav(SIDE_X+tabW+4,-TOP,tabW,'雕文推荐 / 已装对照',function()G.showGlyphs=true;G.Refresh()end);G.tabGlyph:SetHeight(26)
  local side=CreateFrame('Frame',nil,f);side:SetPoint('TOPLEFT',SIDE_X,-(TOP+30));side:SetSize(SIDE_W,410)
  side:SetBackdrop({bgFile='Interface\\Buttons\\WHITE8X8',edgeFile='Interface\\Tooltips\\UI-Tooltip-Border',edgeSize=12,insets={left=3,right=3,top=3,bottom=3}});side:SetBackdropColor(.02,.045,.065,.94);side:SetBackdropBorderColor(.55,.44,.22,1)
  local scroll=CreateFrame('ScrollFrame','RebornTalentGuideScroll',side,'UIPanelScrollFrameTemplate');G.scroll=scroll;scroll:SetPoint('TOPLEFT',8,-8);scroll:SetSize(SIDE_W-34,394)
