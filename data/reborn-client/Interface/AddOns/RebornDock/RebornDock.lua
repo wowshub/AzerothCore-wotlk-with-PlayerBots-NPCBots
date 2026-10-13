@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1O.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1P.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -928,6 +928,11 @@ settings:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP"); GameTooltip:AddLine(T("panelTip"), 1, 1, 1, true); GameTooltip:Show()
 end)
 settings:SetScript("OnLeave", function() GameTooltip:Hide() end)
+-- DOCK1P: close button in the top-right corner.
+settings.close = CreateFrame("Button", nil, settings, "UIPanelCloseButton")
+settings.close:SetSize(24, 24)
+settings.close:SetPoint("TOPRIGHT", settings, "TOPRIGHT", 1, 1)
+settings.close:SetScript("OnClick", function() settings:Hide() end)
 
 local function RefreshSettings()
     local vertical = DB.flow == "vertical"
@@ -961,7 +966,7 @@ local function RefreshSettings()
     settings.sideBtn:ClearAllPoints(); settings.sideBtn:SetPoint("LEFT", settings.topBtn, "RIGHT", 4, 0)
     local rowW = math.max(settings.hBtn:GetWidth() + 4 + settings.vBtn:GetWidth(), 22 + 10 + 26 + 6 + 22 + 6 + 40,
                           settings.topBtn:GetWidth() + 4 + settings.sideBtn:GetWidth())
-    settings:SetWidth(x + rowW + 12)
+    settings:SetWidth(x + rowW + 12 + 20)
 end
 local function SetCount(n)
     DB.cols = math.max(1, math.min(16, n)); dirty = true; RefreshSettings()
