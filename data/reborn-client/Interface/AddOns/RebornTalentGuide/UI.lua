@@ -134,7 +134,7 @@ function G.Refresh()
    b.star:SetText(x.changed and'*'or'');b:Show()
   else b:Hide()end
  end
- G.description:SetText(detailText(p));G.content:SetHeight(math.max(475,G.description:GetStringHeight()+16))
+ G.description:SetText(detailText(p));G.content:SetHeight(math.max(394,G.description:GetStringHeight()+16));if G.scroll.UpdateScrollChildRect then G.scroll:UpdateScrollChildRect()end
  local installed={};local _,class=UnitClass('player')
  if not G.fromBot and class=='WARRIOR'and GetGlyphSocketInfo then for i=1,6 do local _,_,id=GetGlyphSocketInfo(i,GetActiveTalentGroup(false,false));if id then installed[id]=true end end end
  for i,b in ipairs(G.glyphRows)do
@@ -146,7 +146,7 @@ function G.Refresh()
  local job,err;if G.fromBot then job,err=G.BotCheck()else job,err=G.Check(p)end;G.apply:SetText(G.fromBot and('应用到机器人 '..(G.botName or'?'))or'应用到自己的当前专精');enabled(G.apply,not G.job and job~=nil);enabled(G.stop,G.job~=nil)
  G.status:SetText(G.message or why or err or (G.fromBot and '应用会重置该机器人当前天赋；雕文仅参考。当前数值来自MultiBot面板。') or '可查看方案并补齐加点；应用前会再次核对自己的当前专精')
 end
--- RebornWOW TGL1A: compact, aligned layout (1220x680, was 1410x760). Four
+-- RebornWOW TGL1A/TGL1B: compact, aligned layout (1220x680, was 1410x760). Four
 -- regions with one margin system: left navigation (classes | categories and
 -- plans), three talent trees, right description/glyph panel. Logic unchanged.
 local W,H=1220,680
@@ -253,10 +253,10 @@ function G.Create()
  button(f,SIDE_X+tabW+4,-TOP,tabW,'雕文推荐 / 已装对照',function()G.showGlyphs=true;G.Refresh()end)
  local side=CreateFrame('Frame',nil,f);side:SetPoint('TOPLEFT',SIDE_X,-(TOP+30));side:SetSize(SIDE_W,410)
  side:SetBackdrop({bgFile='Interface\\Buttons\\WHITE8X8',edgeFile='Interface\\Tooltips\\UI-Tooltip-Border',edgeSize=12,insets={left=3,right=3,top=3,bottom=3}});side:SetBackdropColor(.02,.045,.065,.94);side:SetBackdropBorderColor(.55,.44,.22,1)
- local scroll=CreateFrame('ScrollFrame','RebornTalentGuideScroll',side,'UIPanelScrollFrameTemplate');G.scroll=scroll;scroll:SetPoint('TOPLEFT',8,-8);scroll:SetPoint('BOTTOMRIGHT',-26,8)
+ local scroll=CreateFrame('ScrollFrame','RebornTalentGuideScroll',side,'UIPanelScrollFrameTemplate');G.scroll=scroll;scroll:SetPoint('TOPLEFT',8,-8);scroll:SetSize(SIDE_W-34,394)
  local content=CreateFrame('Frame',nil,scroll);G.content=content;content:SetSize(SIDE_W-36,900);scroll:SetScrollChild(content)
  G.description=label(content,2,-2,SIDE_W-40,'');G.description:SetFont(STANDARD_TEXT_FONT,12,'');G.description:SetSpacing(3)
- local gp=CreateFrame('Frame',nil,side);G.glyphPanel=gp;gp:SetPoint('TOPLEFT',8,-8);gp:SetPoint('BOTTOMRIGHT',-8,8);G.glyphRows={}
+ local gp=CreateFrame('Frame',nil,side);G.glyphPanel=gp;gp:SetPoint('TOPLEFT',8,-8);gp:SetSize(SIDE_W-16,394);G.glyphRows={}
  for i=1,6 do
   local b=CreateFrame('Button',nil,gp);b:SetPoint('TOPLEFT',0,-(i-1)*66);b:SetSize(SIDE_W-16,62)
   b.icon=b:CreateTexture(nil,'ARTWORK');b.icon:SetPoint('TOPLEFT',2,-4);b.icon:SetSize(28,28);b.icon:SetTexCoord(.07,.93,.07,.93)
