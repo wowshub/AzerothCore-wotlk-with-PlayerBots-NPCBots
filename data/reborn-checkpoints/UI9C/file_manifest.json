@@ -1,0 +1,37 @@
+[
+  {
+    "path": "Interface/AddOns/Cooldowns/Cooldowns.lua",
+    "sha256": "ddb97968865f36abb00fe273e54549ea9c90231d5ad0019638c310ca783b004b",
+    "source_package": "codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号"
+  },
+  {
+    "path": "Interface/AddOns/DragonUI/DragonUI.toc",
+    "sha256": "21fb422a134c50805e0ee3a54684e5c3e0ced55b3c4068ff89780f68f53a3b71",
+    "source_package": "codexfix_20261012_191912_阶段UI9B_冷却统一秒数与提示框修正"
+  },
+  {
+    "path": "Interface/AddOns/DragonUI/modules/cooldowns.lua",
+    "sha256": "7eb0ddc9c8033485d3d295f0dfb23edb893b0ab646f6a71cc7f0bd9a0f30ee49",
+    "source_package": "codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号"
+  },
+  {
+    "path": "Interface/AddOns/DragonUI/modules/precisecooldowns.lua",
+    "sha256": "db0ed2eeb956d33e975923b276b9710d648ffb3f5fd532f7e880e697daf57f36",
+    "source_package": "codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号"
+  },
+  {
+    "path": "Interface/AddOns/RebornCooldownDisplay/RebornCooldownDisplay.lua",
+    "sha256": "db0ed2eeb956d33e975923b276b9710d648ffb3f5fd532f7e880e697daf57f36",
+    "source_package": "codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号"
+  },
+  {
+    "path": "Interface/AddOns/RebornCooldownDisplay/RebornCooldownDisplay.toc",
+    "sha256": "e78c241d92d0e7154c097585915b4e17e349f6299fa23e998e9d0f8274bf182c",
+    "source_package": "codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号"
+  },
+  {
+    "path": "Interface/AddOns/OmniCC/cc.lua",
+    "sha256": "f70ff7c5f57cb1b067af415843562878601fdc49a5adc1d920a0ec612f81dd6f",
+    "source_package": "codexfix_20261012_194511_阶段UI9C_图标纯秒数与小字号"
+  }
+]

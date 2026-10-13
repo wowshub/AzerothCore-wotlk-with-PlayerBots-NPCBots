@@ -1,0 +1,2 @@
+PASS UI9C base: both real overlay formatters, tooltip action/book/link/fallbacks, locale/colon/color/right-line, expiry/disabled/item isolation, independent timer, duplicate-load guard, threshold settings
+PASS UI9C OmniCC actual file: 90/81/60/59.1/5/4.9/expiry, tick interval, 18->13.5 font, non-action unchanged
