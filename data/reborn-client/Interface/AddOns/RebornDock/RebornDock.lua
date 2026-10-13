@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1K.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1L.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -820,10 +820,22 @@ local function RefreshSettings()
     local vertical = DB.flow == "vertical"
     settings.flowLabel:SetText(T("flow"))
     settings.hBtn:SetText(T("horizontal")); settings.vBtn:SetText(T("vertical"))
+    for _, b in ipairs({ settings.hBtn, settings.vBtn }) do
+        local fs = b:GetFontString()
+        b:SetWidth(math.max(50, math.ceil((fs and fs:GetStringWidth() or 30) + 16)))
+    end
     if vertical then settings.vBtn:LockHighlight(); settings.hBtn:UnlockHighlight()
     else settings.hBtn:LockHighlight(); settings.vBtn:UnlockHighlight() end
     settings.countLabel:SetText(T(vertical and "perCol" or "perRow"))
     settings.value:SetText(tostring(DB.cols or 8))
+    -- DOCK1L: controls start after the wider label (English "Icons per row" is
+    -- wider than the fixed 64px of DOCK1K), and the panel grows to fit.
+    local labelW = math.max(settings.flowLabel:GetStringWidth(), settings.countLabel:GetStringWidth())
+    local x = math.floor(10 + labelW + 12)
+    settings.hBtn:ClearAllPoints(); settings.hBtn:SetPoint("TOPLEFT", x, -8)
+    settings.minus:ClearAllPoints(); settings.minus:SetPoint("TOPLEFT", x, -40)
+    local rowW = math.max(settings.hBtn:GetWidth() + 4 + settings.vBtn:GetWidth(), 22 + 6 + 24 + 6 + 22)
+    settings:SetWidth(x + rowW + 12)
 end
 local function SetCount(n)
     DB.cols = math.max(1, math.min(16, n)); dirty = true; RefreshSettings()
