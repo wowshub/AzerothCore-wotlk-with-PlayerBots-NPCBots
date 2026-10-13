@@ -1,4 +1,4 @@
--- RebornWindowScale (窗口缩放), RebornWOW WSC1A-1D.
+-- RebornWindowScale (窗口缩放), RebornWOW WSC1A-1E.
 -- Adds a corner grip (drag to scale, double-click to reset), Ctrl + mouse wheel
 -- scaling, dragging and remembered size/position to addon windows -- without
 -- changing those addons. Known windows are listed below; any other window can
@@ -52,8 +52,27 @@ end)
 -- WSC1C: page views that fill a managed window and hide its corner grip.
 -- view name -> window it belongs to.
 local VIEWS = {
-    SpellDraftMysticCatalogView = "SpellDraftBookFrame",   -- 神秘附魔 page of the SpellDraft book
+    SpellDraftMysticCatalogView = "SpellDraftBookFrame",        -- 神秘附魔 page of the SpellDraft book
+    SpellDraftGlyphCollectionBookView = "SpellDraftBookFrame",  -- 雕纹收藏 page (server AIO UI)
 }
+-- WSC1E: grip inset for windows whose art sits inside a larger frame
+-- (the SpellDraft parchment is drawn 18 px inside SpellDraftBookFrame).
+local GRIP_INSET = { SpellDraftBookFrame = 21 }
+local viewGrips = {}       -- owner name -> { [view frame] = grip }
+
+-- One grip per window: the topmost shown page's grip, else the window's own.
+local GetDecorated   -- set below, once `decorated` exists
+local function UpdateGrips(owner)
+    local d = GetDecorated and GetDecorated(owner)
+    local list = viewGrips[owner]
+    if not list then return end
+    local top, topLevel
+    for v in pairs(list) do
+        if v:IsVisible() and (not topLevel or v:GetFrameLevel() > topLevel) then top, topLevel = v, v:GetFrameLevel() end
+    end
+    for v, g in pairs(list) do if v == top then g:Show() else g:Hide() end end
+    if d and d.grip then if top then d.grip:Hide() else d.grip:Show() end end
+end
 local viewDone = {}
 local AddViewGrip
 
@@ -91,6 +110,7 @@ end
 local function Say(m) DEFAULT_CHAT_FRAME:AddMessage("|cffd9a638[" .. T("title") .. "]|r " .. m) end
 
 local decorated = {}      -- name -> { frame, native = scale before ours }
+GetDecorated = function(name) return decorated[name] end
 
 local function Entry(name)
     DB.frames[name] = DB.frames[name] or {}
@@ -145,7 +165,8 @@ local function Decorate(name, f)
     local grip = CreateFrame("Button", nil, f)
     d.grip = grip
     grip:SetSize(16, 16)
-    grip:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -3, 3)
+    local inset = GRIP_INSET[name] or 3
+    grip:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -inset, inset)
     grip:SetFrameStrata(f:GetFrameStrata())
     grip:SetFrameLevel(f:GetFrameLevel() + 60)
     grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
@@ -225,6 +246,10 @@ AddViewGrip = function(view, v, owner, f)
     local grip = CreateFrame("Button", nil, v)
     grip:SetSize(16, 16)
     grip:SetPoint("BOTTOMRIGHT", v, "BOTTOMRIGHT", -3, 3)
+    viewGrips[owner] = viewGrips[owner] or {}
+    viewGrips[owner][v] = grip
+    v:HookScript("OnShow", function() UpdateGrips(owner) end)
+    v:HookScript("OnHide", function() UpdateGrips(owner) end)
     grip:SetFrameStrata(v:GetFrameStrata())
     grip:SetFrameLevel(v:GetFrameLevel() + 60)
     grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
@@ -286,8 +311,10 @@ waiter:SetScript("OnUpdate", function(_, dt)
         if not viewDone[view] and type(v) == "table" and v.GetObjectType and d then
             viewDone[view] = true
             AddViewGrip(view, v, owner, d.frame)
+            UpdateGrips(owner)
         end
     end
+    for owner in pairs(viewGrips) do UpdateGrips(owner) end
     -- WSC1B: automatic pick-up of these addons' popups (every 2 s).
     scanTick = (scanTick or 0) + 1
     if scanTick % 2 == 0 then
