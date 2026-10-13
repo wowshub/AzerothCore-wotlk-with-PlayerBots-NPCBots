@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1G.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1H.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -22,7 +22,7 @@ local SHAPES = { "square", "round", "tall" }
 local STR = {
     zh = {
         title = "插件收藏盒", collect = "收纳模式",
-        collectTip = "点一下进入/退出收纳模式：\n绿框 = 可以收进来（拖进盒子或直接点）\n红框 × = 点一下放回原处",
+        collectTip = "点一下进入/退出收纳模式：\n绿框 = 可以收进来（拖进盒子或直接点）\n红框 × = 点一下放回原处；按住拖到别的格子 = 调整顺序",
         empty = "点 ＋ 进入收纳模式，把绿框图标拖进来；\n或鼠标指着图标输入 /rdock add",
         lang = "EN", langTip = "切换语言",
         shape = "外观", shapeTip = "切换图标外观：方形 / 圆形 / 竖长方形",
@@ -36,7 +36,7 @@ local STR = {
     },
     en = {
         title = "Addon Dock", collect = "Collect mode",
-        collectTip = "Click to enter/leave collect mode:\nGreen frame = can be added (drag into the box, or click)\nRed frame x = click to send it back",
+        collectTip = "Click to enter/leave collect mode:\nGreen frame = can be added (drag into the box, or click)\nRed frame x = click to send it back; drag onto another slot to reorder",
         empty = "Click + for collect mode and drag icons in,\nor point at an icon and type /rdock add",
         lang = "中", langTip = "Switch language",
         shape = "Style", shapeTip = "Icon style: square / round / tall",
@@ -627,6 +627,30 @@ local function SendBack(key)
     Layout(); RefreshOverlays()
 end
 
+-- DOCK1H: index (1-based, in DB.items order of the entries that are laid out)
+-- of the slot under the cursor, or nil.
+local function SlotUnderCursor()
+    for i, s in ipairs(slots) do
+        if s:IsShown() and s.owner and MouseIsOver(s) then return i end
+    end
+end
+
+local function MoveKey(key, toSlot)
+    -- Slots show only loaded entries; map the target slot to its key, then move
+    -- `key` to that key's position in the saved list.
+    local target = slots[toSlot] and slots[toSlot].owner and slots[toSlot].owner.key
+    if not target or target == key then return false end
+    local from, to
+    for i, k in ipairs(DB.items) do
+        if k == key then from = i end
+        if k == target then to = i end
+    end
+    if not from or not to then return false end
+    table.remove(DB.items, from)
+    table.insert(DB.items, to, key)
+    return true
+end
+
 RefreshOverlays = function()
     for _, o in ipairs(overlays) do o:Hide(); o.target = nil end
     if not collecting then return end
@@ -663,7 +687,23 @@ RefreshOverlays = function()
             o:SetBackdropBorderColor(1, 0.25, 0.2, 1)
             o.mark:SetText("|cffff4040×|r")
             o:SetScript("OnClick", function(self) SendBack(self.targetKey) end)
-            o:SetScript("OnDragStart", nil); o:SetScript("OnDragStop", nil)
+            -- DOCK1H: drag a boxed icon onto another slot to reorder.
+            o:SetScript("OnDragStart", function(self)
+                local ow2 = owned[self.targetKey]
+                ghost.tex:SetTexture((ow2 and IconOf(ow2.btn)) or "Interface\\Icons\\INV_Misc_QuestionMark")
+                ghost.tex:SetTexCoord(0, 1, 0, 1)
+                ghost:Show()
+                self:SetAlpha(0.4)
+                ghost:SetScript("OnUpdate", function(g)
+                    local x, y = GetCursorPosition(); local sc = UIParent:GetEffectiveScale()
+                    g:ClearAllPoints(); g:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x / sc, y / sc)
+                end)
+            end)
+            o:SetScript("OnDragStop", function(self)
+                ghost:SetScript("OnUpdate", nil); ghost:Hide(); self:SetAlpha(1)
+                local to = SlotUnderCursor()
+                if to and MoveKey(self.targetKey, to) then Layout(); RefreshOverlays() end
+            end)
             o:Show()
         end
     end
