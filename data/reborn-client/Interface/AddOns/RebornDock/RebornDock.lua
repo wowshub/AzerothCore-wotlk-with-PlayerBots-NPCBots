@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1N.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1O.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -33,6 +33,7 @@ local STR = {
         headerStyle = "标题栏", top = "顶部", side = "左侧",
         sideTip = "插件收藏盒：把喜欢的插件小图标收在一起。\n鼠标移到这里会弹出按钮（收纳、语言、外观、设置）。\n左键拖动移动盒子；滚轮调整%s（当前 %d）。",
         panelTip = "按住拖动可移动此面板；右键放回盒子下方",
+        ok = "确定",
         added = "已收进：%s", removed = "已放回：%s",
         combat = "战斗中不能调整，请脱战后再试。", reset = "已把所有图标放回原处。",
         nothing = "鼠标下面没有可以收的按钮（技能/宏这类安全动作按钮不能收）。",
@@ -52,6 +53,7 @@ local STR = {
         headerStyle = "Title bar", top = "Top", side = "Side",
         sideTip = "Addon Dock: keeps your favourite addon icons together.\nHover here for the buttons (collect, language, style, settings).\nLeft-drag moves the dock; mouse wheel: %s (now %d).",
         panelTip = "Drag to move this panel; right-click puts it back under the dock",
+        ok = "OK",
         added = "Added: %s", removed = "Sent back: %s",
         combat = "Not in combat; try again after the fight.", reset = "All icons sent back.",
         nothing = "Nothing collectable under the mouse (secure action buttons such as spells/macros are excluded).",
@@ -890,6 +892,8 @@ settings.value:SetMaxLetters(2)
 settings.value:SetJustifyH("CENTER")
 settings.value:SetFontObject("GameFontHighlight")
 settings.plus = PanelButton("+", 22); settings.plus:SetPoint("LEFT", settings.value, "RIGHT", 6, 0)
+-- DOCK1O: explicit confirm button; typing also applies as soon as the number is valid.
+settings.okBtn = PanelButton("", 40); settings.okBtn:SetPoint("LEFT", settings.plus, "RIGHT", 6, 0)
 -- DOCK1N: title bar style row.
 settings.styleLabel = settings:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 settings.styleLabel:SetPoint("TOPLEFT", 10, -76)
@@ -939,6 +943,7 @@ local function RefreshSettings()
     if not settings.value:HasFocus() then settings.value:SetText(tostring(DB.cols or 8)) end
     -- DOCK1L: controls start after the wider label (English "Icons per row" is
     -- wider than the fixed 64px of DOCK1K), and the panel grows to fit.
+    settings.okBtn:SetText(T("ok"))
     settings.styleLabel:SetText(T("headerStyle"))
     settings.topBtn:SetText(T("top")); settings.sideBtn:SetText(T("side"))
     for _, b in ipairs({ settings.topBtn, settings.sideBtn }) do
@@ -954,7 +959,7 @@ local function RefreshSettings()
     settings.minus:ClearAllPoints(); settings.minus:SetPoint("TOPLEFT", x, -40)
     settings.topBtn:ClearAllPoints(); settings.topBtn:SetPoint("TOPLEFT", x, -72)
     settings.sideBtn:ClearAllPoints(); settings.sideBtn:SetPoint("LEFT", settings.topBtn, "RIGHT", 4, 0)
-    local rowW = math.max(settings.hBtn:GetWidth() + 4 + settings.vBtn:GetWidth(), 22 + 10 + 26 + 6 + 22,
+    local rowW = math.max(settings.hBtn:GetWidth() + 4 + settings.vBtn:GetWidth(), 22 + 10 + 26 + 6 + 22 + 6 + 40,
                           settings.topBtn:GetWidth() + 4 + settings.sideBtn:GetWidth())
     settings:SetWidth(x + rowW + 12)
 end
@@ -970,6 +975,13 @@ local function ApplyTyped(box)
     box:ClearFocus()
 end
 settings.value:SetScript("OnEnterPressed", ApplyTyped)
+settings.okBtn:SetScript("OnClick", function() ApplyTyped(settings.value) end)
+-- Live: each keystroke that leaves a valid 1-16 number re-lays the dock.
+settings.value:SetScript("OnTextChanged", function(box, userInput)
+    if not userInput then return end
+    local n = tonumber(box:GetText())
+    if n and n >= 1 and n <= 16 and n ~= DB.cols then DB.cols = math.floor(n); dirty = true end
+end)
 settings.value:SetScript("OnEditFocusLost", function(box) local n = tonumber(box:GetText()); if n and n ~= DB.cols then SetCount(math.floor(n)) else RefreshSettings() end end)
 settings.value:SetScript("OnEscapePressed", function(box) box:SetText(tostring(DB.cols or 8)); box:ClearFocus() end)
 settings.plus:SetScript("OnClick", function() SetCount((DB.cols or 8) + 1) end)
