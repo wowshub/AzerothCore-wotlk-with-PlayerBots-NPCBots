@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1I.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1J.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -510,6 +510,11 @@ local function Take(b, key)
     for i = 1, b:GetNumPoints() do o.points[i] = { b:GetPoint(i) } end
     if IsBarMicroButton(b) or b:IsProtected() then
         o.mirror = true
+        -- DOCK1J: a floating shortcut original (not inside a menu bar) is hidden
+        -- from the screen: transparent and click-through. Our shortcut still
+        -- calls :Click() on it. A bar button keeps its place (no gap).
+        o.hideOrig = not IsBarMicroButton(b)
+        o.mouse = b:IsMouseEnabled()
         owned[key] = o
         dirty = true
         return true
@@ -529,7 +534,14 @@ local function Release(key)
     local b = o.btn
     owned[key] = nil
     if o.slot then o.slot.hl:Hide(); o.slot.click:Hide() end
-    if o.mirror then dirty = true; return end
+    if o.mirror then
+        if o.hideOrig and not InCombatLockdown() then
+            b:SetAlpha(o.alpha or 1)
+            if o.mouse ~= nil then b:EnableMouse(o.mouse and true or false) end
+        end
+        dirty = true
+        return
+    end
     b.rdockOwned, b.rdockKey = nil, nil
     pinning = true
     b:SetParent(o.parent or UIParent)
@@ -792,6 +804,13 @@ ticker:SetScript("OnUpdate", function(_, dt)
             local b = o.btn
             local _, rel = b:GetPoint(1)
             if not o.mirror and (b:GetParent() ~= box or rel ~= o.slot or not b:IsShown() or b:GetNumPoints() ~= 1) then dirty = true; break end
+        end
+    end
+    for _, o in pairs(owned) do
+        if o.hideOrig then
+            local b = o.btn
+            if b:GetAlpha() > 0 then b:SetAlpha(0) end
+            if b:IsMouseEnabled() then b:EnableMouse(false) end
         end
     end
     if dirty then Layout(); if collecting then RefreshOverlays() end end
