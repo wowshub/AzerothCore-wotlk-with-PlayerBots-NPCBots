@@ -1,4 +1,4 @@
--- RebornDock (插件收藏盒), RebornWOW DOCK1A-1J.
+-- RebornDock (插件收藏盒), RebornWOW DOCK1A-1K.
 -- A gold-framed box that holds the addon icons the player chooses.
 --
 -- DOCK1C: every collected icon is shown in our own uniform slot (square, round
@@ -27,7 +27,9 @@ local STR = {
         lang = "EN", langTip = "切换语言",
         shape = "外观", shapeTip = "切换图标外观：方形 / 圆形 / 竖长方形",
         square = "方形", round = "圆形", tall = "竖长方形",
-        gripTip = "拖动缩放收藏盒（双击恢复）", headerTip = "左键拖动移动收藏盒\n滚轮调整每行个数（当前 %d）",
+        gripTip = "拖动缩放收藏盒（双击恢复）", headerTip = "左键拖动移动收藏盒\n滚轮调整%s（当前 %d）",
+        settings = "排列设置", settingsTip = "设置横排或竖排，以及每行/每列放几个图标",
+        flow = "排列方向", horizontal = "横排", vertical = "竖排", perRow = "每行个数", perCol = "每列个数",
         added = "已收进：%s", removed = "已放回：%s",
         combat = "战斗中不能调整，请脱战后再试。", reset = "已把所有图标放回原处。",
         nothing = "鼠标下面没有可以收的按钮（技能/宏这类安全动作按钮不能收）。",
@@ -41,7 +43,9 @@ local STR = {
         lang = "中", langTip = "Switch language",
         shape = "Style", shapeTip = "Icon style: square / round / tall",
         square = "square", round = "round", tall = "tall",
-        gripTip = "Drag to scale the dock (double-click resets)", headerTip = "Left-drag to move the dock\nMouse wheel: icons per row (now %d)",
+        gripTip = "Drag to scale the dock (double-click resets)", headerTip = "Left-drag to move the dock\nMouse wheel: %s (now %d)",
+        settings = "Layout", settingsTip = "Fill by rows or by columns, and how many icons per row/column",
+        flow = "Direction", horizontal = "Rows", vertical = "Columns", perRow = "Icons per row", perCol = "Icons per column",
         added = "Added: %s", removed = "Sent back: %s",
         combat = "Not in combat; try again after the fight.", reset = "All icons sent back.",
         nothing = "Nothing collectable under the mouse (secure action buttons such as spells/macros are excluded).",
@@ -117,6 +121,12 @@ local langBtn = SmallButton("EN", 26)
 langBtn:SetPoint("RIGHT", addBtn, "LEFT", -2, 0)
 local shapeBtn = SmallButton("□", 22)
 shapeBtn:SetPoint("RIGHT", langBtn, "LEFT", -2, 0)
+-- DOCK1K: layout settings (direction and count) behind a gear.
+local gearBtn = CreateFrame("Button", nil, box)
+gearBtn:SetSize(16, 16)
+gearBtn:SetPoint("RIGHT", shapeBtn, "LEFT", -4, 0)
+gearBtn:SetNormalTexture("Interface\\Icons\\INV_Misc_Gear_01")
+gearBtn:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
 
 local function Tip(frame, textFn)
     frame:SetScript("OnEnter", function(self)
@@ -129,15 +139,16 @@ end
 Tip(addBtn, function() return T("collect") .. "\n" .. T("collectTip") end)
 Tip(langBtn, function() return T("langTip") end)
 Tip(shapeBtn, function() return T("shapeTip") .. "\n" .. T(DB and DB.shape or "square") end)
+Tip(gearBtn, function() return T("settings") .. "\n" .. T("settingsTip") end)
 
 local header = CreateFrame("Frame", nil, box)
 header:SetPoint("TOPLEFT", box, "TOPLEFT", 4, -4)
-header:SetPoint("RIGHT", shapeBtn, "LEFT", -2, 0)
+header:SetPoint("RIGHT", gearBtn, "LEFT", -2, 0)
 header:SetHeight(HEADER - 4)
 header:EnableMouse(true)
 header:EnableMouseWheel(true)
 header:RegisterForDrag("LeftButton")
-Tip(header, function() return string.format(T("headerTip"), DB and DB.cols or 8) end)
+Tip(header, function() return string.format(T("headerTip"), T((DB and DB.flow == "vertical") and "perCol" or "perRow"), DB and DB.cols or 8) end)
 
 local grip = CreateFrame("Button", nil, box)
 grip:SetSize(14, 14)
@@ -455,8 +466,15 @@ local function Layout()
     end
     local n = #list
     local w, h = SlotSize()
-    local perRow = math.max(1, math.min(cols, math.max(n, 1)))
-    local rows = math.max(1, math.ceil(n / cols))
+    local vertical = DB.flow == "vertical"
+    local perRow, rows
+    if vertical then
+        rows = math.max(1, math.min(cols, math.max(n, 1)))
+        perRow = math.max(1, math.ceil(n / cols))
+    else
+        perRow = math.max(1, math.min(cols, math.max(n, 1)))
+        rows = math.max(1, math.ceil(n / cols))
+    end
     local bw = PAD * 2 + perRow * w + (perRow - 1) * GAP
     local bh = HEADER + PAD + rows * h + (rows - 1) * GAP + PAD
     if n == 0 then
@@ -466,10 +484,11 @@ local function Layout()
     else
         hint:Hide()
     end
-    box:SetSize(math.max(bw, title:GetStringWidth() + 96), bh)
+    box:SetSize(math.max(bw, title:GetStringWidth() + 116), bh)
     for i, o in ipairs(list) do
         local s = Slot(i)
         local col, row = (i - 1) % cols, math.floor((i - 1) / cols)
+        if vertical then col, row = row, col end
         s:ClearAllPoints()
         s:SetPoint("TOPLEFT", box, "TOPLEFT", PAD + col * (w + GAP), -(HEADER + PAD + row * (h + GAP)))
         s.owner = o
@@ -770,8 +789,61 @@ shapeBtn:SetScript("OnClick", function()
     Say(T("shape") .. "：" .. T(DB.shape))
 end)
 
+local settings = CreateFrame("Frame", nil, box)
+settings:SetSize(190, 74)
+settings:SetPoint("TOPRIGHT", box, "BOTTOMRIGHT", 0, -2)
+settings:SetFrameStrata("DIALOG")
+settings:EnableMouse(true)
+settings:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = true, tileSize = 16, edgeSize = 14, insets = { left = 3, right = 3, top = 3, bottom = 3 } })
+settings:SetBackdropColor(0.08, 0.08, 0.1, 0.95)
+settings:SetBackdropBorderColor(0.85, 0.65, 0.22, 1)
+settings:Hide()
+settings.flowLabel = settings:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+settings.flowLabel:SetPoint("TOPLEFT", 10, -12)
+local function PanelButton(text, w)
+    local b = CreateFrame("Button", nil, settings, "UIPanelButtonTemplate")
+    b:SetSize(w, 18); b:SetText(text)
+    local fs = b:GetFontString(); if fs then fs:SetFont(STANDARD_TEXT_FONT, 10) end
+    return b
+end
+settings.hBtn = PanelButton("", 50); settings.hBtn:SetPoint("TOPLEFT", 74, -8)
+settings.vBtn = PanelButton("", 50); settings.vBtn:SetPoint("LEFT", settings.hBtn, "RIGHT", 4, 0)
+settings.countLabel = settings:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+settings.countLabel:SetPoint("TOPLEFT", 10, -44)
+settings.minus = PanelButton("-", 22); settings.minus:SetPoint("TOPLEFT", 74, -40)
+settings.value = settings:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+settings.value:SetPoint("LEFT", settings.minus, "RIGHT", 6, 0); settings.value:SetWidth(24); settings.value:SetJustifyH("CENTER")
+settings.plus = PanelButton("+", 22); settings.plus:SetPoint("LEFT", settings.value, "RIGHT", 6, 0)
+
+local function RefreshSettings()
+    local vertical = DB.flow == "vertical"
+    settings.flowLabel:SetText(T("flow"))
+    settings.hBtn:SetText(T("horizontal")); settings.vBtn:SetText(T("vertical"))
+    if vertical then settings.vBtn:LockHighlight(); settings.hBtn:UnlockHighlight()
+    else settings.hBtn:LockHighlight(); settings.vBtn:UnlockHighlight() end
+    settings.countLabel:SetText(T(vertical and "perCol" or "perRow"))
+    settings.value:SetText(tostring(DB.cols or 8))
+end
+local function SetCount(n)
+    DB.cols = math.max(1, math.min(16, n)); dirty = true; RefreshSettings()
+end
+settings.hBtn:SetScript("OnClick", function() DB.flow = "horizontal"; dirty = true; RefreshSettings() end)
+settings.vBtn:SetScript("OnClick", function() DB.flow = "vertical"; dirty = true; RefreshSettings() end)
+settings.minus:SetScript("OnClick", function() SetCount((DB.cols or 8) - 1) end)
+settings.plus:SetScript("OnClick", function() SetCount((DB.cols or 8) + 1) end)
+-- Defined after the panel: the handler needs the settings locals.
+langBtn:SetScript("OnClick", function()
+    DB.lang = IsZh() and "en" or "zh"; ApplyLanguage()
+    if settings:IsShown() then RefreshSettings() end
+end)
+gearBtn:SetScript("OnClick", function()
+    if settings:IsShown() then settings:Hide() else RefreshSettings(); settings:Show() end
+end)
+
 header:SetScript("OnMouseWheel", function(_, delta)
     DB.cols = math.max(1, math.min(16, (DB.cols or 8) + (delta > 0 and 1 or -1)))
+    if settings:IsShown() then RefreshSettings() end
     dirty = true
     if GameTooltip:IsOwned(header) then header:GetScript("OnEnter")(header) end
 end)
