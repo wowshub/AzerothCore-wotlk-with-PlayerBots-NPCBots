@@ -236,6 +236,12 @@ local function IconOf(btn)
     end
     local p, c = from(btn.icon or btn.Icon)
     if p then return p, c end
+    -- DOCK1D: the button's own picture comes next. Equipment Vault re-skins
+    -- micro-menu launchers with a larger dark slot texture from DragonUI's atlas,
+    -- which the "largest texture" rule below picked (the icon showed black).
+    local nt = btn.GetNormalTexture and btn:GetNormalTexture()
+    local np = nt and nt:GetTexture()
+    if type(np) == "string" and np ~= "" and not IsDecor(np) then return np, { nt:GetTexCoord() } end
     local best, bestArea, bestIsIcon
     local function consider(r)
         if not (r.GetObjectType and r:GetObjectType() == "Texture") then return end
