@@ -1,4 +1,4 @@
--- RebornWindowScale (窗口缩放), RebornWOW WSC1A.
+-- RebornWindowScale (窗口缩放), RebornWOW WSC1A/WSC1B.
 -- Adds a corner grip (drag to scale, double-click to reset), Ctrl + mouse wheel
 -- scaling, dragging and remembered size/position to addon windows -- without
 -- changing those addons. Known windows are listed below; any other window can
@@ -14,12 +14,49 @@ local KNOWN = {
     "NPCBotsRTSFrame", "NPCBotsRTSHelpFrame",
     "GObjectEditorUIFrame",
     "DungeonClearFrame",                  -- 副本自动清理
-    "RebornWDSpecHome", "RebornWDTreePreview", "RebornWDRecommendedBuilds", "RebornWD8EquipmentMenu",
+    "RebornWDSpecHome", "RebornWDTreePreview",
     "SpellDraftBookFrame", "SpellDraftMysticOverviewFrame", "SpellDraftMysticConfirmFrame",
     "SpellDraftPrestigeShopFrame", "SpellDraftTalentRefundDialog",
 }
 -- Windows that already scale themselves (RebornTalentGuide has its own grip).
 local SKIP = { RebornTalentGuideFrame = true, RebornDockFrame = true }
+
+-- WSC1B: popups of these addons are picked up automatically -- any named panel
+-- that is a direct child of UIParent and starts with one of these prefixes
+-- (DungeonClear's test / queue / GPS / bot-detail windows, EV, SpellDraft, ...),
+-- so new popups need no list update.
+local PREFIXES = { "DungeonClear", "RebornEquipmentVault", "RebornEV", "RebornSpectator", "NPCBotsRTS",
+                   "GObjectEditor", "RebornWD", "SpellDraft" }
+-- Not windows: menus, option panels, buttons, overlays.
+local NOT_A_WINDOW = { "Menu$", "OptionsPanel$", "Button$", "Tooltip", "Blocker$", "Flash$", "HUD$", "_CD$", "Hit$" }
+local MIN_W, MIN_H = 160, 100
+
+-- WSC1B: closing a main window must not close the sub-windows the player has
+-- open. Dialogs that belong to an operation in the main window still close.
+local KEEP_CLOSING = { "Confirm", "Dialog", "Blocker", "Refund" }
+local function KeepsOpen(name)
+    for _, w in ipairs(KEEP_CLOSING) do if name:find(w) then return false end end
+    return true
+end
+local cascade = 0                    -- >0 while a managed window runs its OnHide
+local reopen = {}                    -- frames to show again next frame
+local reopener = CreateFrame("Frame")
+reopener:Hide()
+reopener:SetScript("OnUpdate", function(self)
+    self:Hide()
+    for f in pairs(reopen) do if not f:IsShown() then f:Show() end end
+    wipe(reopen)
+end)
+
+local function LooksLikeWindow(f, name)
+    local prefixed = false
+    for _, p in ipairs(PREFIXES) do if name:sub(1, #p) == p then prefixed = true; break end end
+    if not prefixed then return false end
+    for _, pat in ipairs(NOT_A_WINDOW) do if name:find(pat) then return false end end
+    if f:GetObjectType() ~= "Frame" then return false end
+    local w, h = f:GetWidth() or 0, f:GetHeight() or 0
+    return w >= MIN_W and h >= MIN_H
+end
 
 local STR = {
     zh = {
@@ -138,6 +175,29 @@ local function Decorate(name, f)
         f:HookScript("OnDragStop", function(self) SavePlace(name, self) end)
     end
 
+    -- WSC1B: a sub-window hanging off another frame would vanish with it; move
+    -- it to UIParent, keeping its place on screen.
+    local parent = f:GetParent()
+    if parent and parent ~= UIParent and KeepsOpen(name) and f:GetObjectType() == "Frame" then
+        local l, t = f:GetLeft(), f:GetTop()
+        local eff = f:GetEffectiveScale()
+        f:SetParent(UIParent)
+        if l and t then
+            local k = eff / f:GetEffectiveScale()
+            f:ClearAllPoints(); f:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", l * k, t * k)
+        end
+    end
+    -- Mark hides that happen inside this window's own OnHide (cascaded closes).
+    local own = f:GetScript("OnHide")
+    f:SetScript("OnHide", function(...)
+        cascade = cascade + 1
+        if own then pcall(own, ...) end
+        cascade = cascade - 1
+    end)
+    f:HookScript("OnHide", function(self)
+        if cascade > 0 and KeepsOpen(name) then reopen[self] = true; reopener:Show() end
+    end)
+
     -- Re-apply after the addon shows (some reset their own scale each time they open).
     f:HookScript("OnShow", function(self)
         local e = DB.frames[name]
@@ -156,7 +216,7 @@ end
 
 -- Windows are often created on first open: keep looking.
 local waiter = CreateFrame("Frame")
-local acc = 0
+local acc, scanTick = 0, 0
 waiter:SetScript("OnUpdate", function(_, dt)
     if not DB then return end
     acc = acc + dt
@@ -166,6 +226,17 @@ waiter:SetScript("OnUpdate", function(_, dt)
         if not decorated[n] and not SKIP[n] and not DB.removed[n] then
             local f = _G[n]
             if type(f) == "table" and f.GetObjectType and f.SetScale and not f:IsProtected() then Decorate(n, f) end
+        end
+    end
+    -- WSC1B: automatic pick-up of these addons' popups (every 2 s).
+    scanTick = (scanTick or 0) + 1
+    if scanTick % 2 == 0 then
+        for _, c in ipairs({ UIParent:GetChildren() }) do
+            local n = c.GetName and c:GetName()
+            if n and not decorated[n] and not SKIP[n] and not DB.removed[n] and not c:IsProtected()
+               and LooksLikeWindow(c, n) then
+                Decorate(n, c)
+            end
         end
     end
 end)

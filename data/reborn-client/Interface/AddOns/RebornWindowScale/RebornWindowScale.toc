@@ -3,7 +3,7 @@
 ## Title-zhCN: RebornWindowScale 窗口缩放
 ## Notes: Corner grip, Ctrl+wheel scaling and remembered size/position for addon windows.
 ## Notes-zhCN: 给各插件窗口加右下角缩放小三角、Ctrl+滚轮缩放，并记住大小和位置。
-## Version: WSC1A
+## Version: WSC1B
 ## Author: RebornWOW
 ## SavedVariables: RebornWindowScaleDB
 ## OptionalDeps: RebornEquipmentVault, RebornSpectatorAutoWatch, NPCBotsRTS, GObjectEditorUI, DungeonClear, RebornWitchDoctorTalents, SpellDraft
