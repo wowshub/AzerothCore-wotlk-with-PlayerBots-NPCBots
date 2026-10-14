@@ -28,6 +28,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD145Bridge { void Apply(Player*,bool,bool,bool,bool); }
 namespace WD144Bridge { void Apply(Player*,uint32,uint32,bool,bool); }
 namespace WD143Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD142Bridge { void Clear(Player*); }
@@ -754,6 +755,40 @@ bool Check144(ChatHandler* h,uint32 id)
     return true;
 }
 
+// WD145: read-only saved-build/spirit evidence; no grant, reset or aura mutation.
+bool Check145(ChatHandler* h)
+{
+    Player* p=h->GetSession()->GetPlayer();if(!Doctor(p))return true;
+    State* state=p->CustomData.GetDefault<State>(Key);
+    auto now=std::chrono::steady_clock::now();
+    if(now-state->numberRequest<std::chrono::milliseconds(400))return true;
+    state->numberRequest=now;
+    Aura* spirit=p->GetAura(9003574,p->GetGUID());uint32 count=spirit?std::min<uint32>(5,spirit->GetStackAmount()):0;
+    bool loa=p->HasSpell(9004010)&&p->HasAura(9004010,p->GetGUID());
+    bool devotee=p->HasSpell(9004011)&&p->HasAura(9004011,p->GetGUID());
+    h->PSendSysMessage("WD145A: spirits={} next_cast_echo_chance_pct={} mana_per_spirit={} max_mana={}",count,loa?count*5:0,devotee?p->GetMaxPower(POWER_MANA)*3/100:0,p->GetMaxPower(POWER_MANA));
+    for(uint32 id : {9004010u,9004011u,9004012u})
+        h->PSendSysMessage("WD145A: passive={} learned={} own_aura={}",id,p->HasSpell(id)?1:0,p->HasAura(id,p->GetGUID())?1:0);
+    for(uint32 id=9004000;id<=9004006;++id)if(p->HasSpell(id))
+        h->PSendSysMessage("WD145A: eclipse={} pulses_if_cast_now={} remaining_ms={}",id,count,p->GetSpellCooldownDelay(id));
+    AuraEffect* effect=p->GetAuraEffect(9004012,EFFECT_0,p->GetGUID());SpellModifier* mod=effect?effect->GetSpellModifier():nullptr;
+    SpellInfo const* reclaim=sSpellMgr->GetSpellInfo(9003988);SpellInfo const* arrow=sSpellMgr->GetSpellInfo(9003978);
+    h->PSendSysMessage("WD145A: wisdom_damage_pct={} reclaim_match={} arrow_match={}",effect?effect->GetAmount():0,mod&&reclaim&&p->IsAffectedBySpellmod(reclaim,mod)?1:0,mod&&arrow&&p->IsAffectedBySpellmod(arrow,mod)?1:0);
+    return true;
+}
+
+// WD145B: self-only, read-only hit aura query. Never changes combat ratings.
+bool Hit145(ChatHandler* h,uint32 sequence)
+{
+    Player* p=h->GetSession()->GetPlayer();if(!Doctor(p))return true;
+    State* s=p->CustomData.GetDefault<State>(Key);auto now=std::chrono::steady_clock::now();
+    if(now-s->numberRequest<std::chrono::milliseconds(400))return true;s->numberRequest=now;
+    Aura* aura=p->GetAura(9004012,p->GetGUID());
+    auto amount=[&](SpellEffIndex i)->int32 { AuraEffect* e=aura?aura->GetEffect(i):nullptr;return e?e->GetAmount():0; };
+    h->PSendSysMessage("WD145H|{}|{}|{}|{}|{}|{}",sequence,amount(EFFECT_1),amount(EFFECT_2),p->GetTotalAuraModifier(SPELL_AURA_MOD_HIT_CHANCE),p->GetTotalAuraModifier(SPELL_AURA_MOD_SPELL_HIT_CHANCE),p->HasSpell(9004012)?1:0);
+    return true;
+}
+
 class Commands : public CommandScript
 {
 public:
@@ -764,6 +799,8 @@ public:
             {"wd141quote",PanelUnlockQuote,SEC_PLAYER,Console::No},
             {"wd141buy",PanelUnlockBuy,SEC_PLAYER,Console::No},
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
+            {"wd145hit",Hit145,SEC_PLAYER,Console::No},
+            {"wd145check",Check145,SEC_PLAYER,Console::No},
             {"wd144check",Check144,SEC_PLAYER,Console::No},
             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
             {"wd67join",AEJoin,SEC_PLAYER,Console::No},

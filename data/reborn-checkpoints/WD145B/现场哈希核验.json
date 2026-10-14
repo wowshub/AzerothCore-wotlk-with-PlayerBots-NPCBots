@@ -1,0 +1,127 @@
+[
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "sha256": "7476278af88116dcdcfc46bba5bb499fb90fa75365e10cc3781c481a71f87324",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+    "sha256": "5dcc06c4fcfff9815a00005987ff7c5932d9a32921dd903f8a1273156125d460",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+    "sha256": "22fbbdb43f47b03885ef3c971904cb12ecbe929dc95d4a0fa6b73776d23c86e9",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+    "sha256": "40017b66fb4878e640d18a1cb362944e7b3027e0895485c02539089a852e530c",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc",
+    "sha256": "93a0d345f7efb4d9e9faba72475f7275eb5feb3ec35c8000fcace26d73983beb",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+    "sha256": "4696f21b2b37e1f0872368f4ca7f63eb11e9a22b2bc0c6c9763af56f268cd3ef",
+    "live_matches": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "sha256": "5d0ac3e00e3abac34cdbb95861e1560e9295b93ea268331a3b2e0b7809d4d792",
+    "live_matches": true
+  },
+  {
+    "path": "src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+    "sha256": "f082fdf0b54365ae276fbf9c4cda7f179d08139dc6c96b21a027aa97dcde1f00",
+    "live_matches": true
+  },
+  {
+    "path": "src/server/game/Spells/SpellInfo.cpp",
+    "sha256": "188e98d2fe4584438afef00daf3801b5bfa7fea6073d1a0cdd34e54b6a582b91",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "sha256": "2ec385bf313bc084b7ef787d612d54d9412dd018d440b37b7e31e4b963d8d8d7",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "sha256": "38288f9447e51bb7c61d108f9b40dc40a516f0db2b22f1a6b3d6486e46f6943b",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "sha256": "7bfcfae9d3e102126e2ccbf8d94ec6c0cf7e6b280275682a9a16308b4f701c10",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "sha256": "3e929b679237dcf0be34323ca3dc94a5a0832740b1ad547b862c4927ec5adbdc",
+    "live_matches": true
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+    "sha256": "bd902e49a4d4980e2ffe6df3ed1a7529a3ecac12ab4750e35736e2a04eb54756",
+    "live_matches": true
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "sha256": "54aff9bd4d66240f682668b1d827a77246b2929d1562df6e8b58639dcb04ed55",
+    "live_matches": true
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+    "sha256": "e5e46da5a36585a3c98ae771313f629ac07cc8a90bf3485089e7986785d30f9e",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+    "sha256": "4c0e96b53b65e83fd5201f642693a53f46fe761db0c11f53d76d125d022bc6ee",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/DBFilesClient/Spell.dbc",
+    "sha256": "075fe0e85fa4ab375810c7f3b355b1e33f11083666ad039285f65dab80fbd87f",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/DBFilesClient/SpellIcon.dbc",
+    "sha256": "135397d16a16b1b333b11123233a16b6e53e03c4a85d07a4b201ac051aca4c0f",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD145_0.blp",
+    "sha256": "296425d0649a3ea7f1c97e21e69255470d7b384794ccebf4f01addeaebe77fdc",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD145_1.blp",
+    "sha256": "c19576ac1173279b20165d83de86c509da7d49bf404456faf58c645a4d8ade7d",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD145_2.blp",
+    "sha256": "5e538dc3c6bac7256b4fbde86178603165805c80e2334736a666a609f6f9ae51",
+    "live_matches": true
+  },
+  {
+    "path": "导入PATCH-XA/Interface/Icons/RebornWD145_3.blp",
+    "sha256": "e13dd6d3262cce86c12e9bb718aa1a11beafedb4fe1ce81d48ff0a601322ccc7",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/HitRating.lua",
+    "sha256": "8639d44275cce32354e9c55c5bcff1935e10b8d0ca4232dcb36b3d4e19016114",
+    "live_matches": true
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "sha256": "501090faac69f23dac5674fa92fbbe0ef2daba85767701faf0c8690ca988c0e3",
+    "live_matches": true
+  }
+]

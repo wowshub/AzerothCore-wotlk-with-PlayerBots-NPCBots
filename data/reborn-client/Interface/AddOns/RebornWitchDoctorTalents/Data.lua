@@ -141,3 +141,11 @@ for _,n in ipairs(RebornWDTreeData) do
  if n.ID==7779 then n.RequiredLevel=11;n.RequiredIDs={4505} end
  if n.ID==12749 or n.ID==29749 then n.RequiredLevel=26;n.RequiredIDs={31118};n.RequiredAEInvestment=9 end
 end
+
+-- WD145: explicit dependencies; other nodes remain previews.
+for _,n in ipairs(RebornWDTreeData) do
+ if n.ID==7086 then n.RequiredLevel=15;n.RequiredIDs={7779} end
+ if n.ID==4506 then n.RequiredLevel=20;n.RequiredIDs={4006} end
+ if n.ID==6072 then n.RequiredLevel=15;n.RequiredIDs={7086} end
+ if n.ID==6074 then n.RequiredLevel=15;n.RequiredIDs={7086} end
+end

@@ -1,0 +1,557 @@
+{
+  "status": "candidate_not_game_tested",
+  "baseline_commit": "eec65cee6188c5c141b956ec105db4a0161dade6",
+  "upstream": "ee5b6e9825e3157ae994f7e643719bc45ac46071",
+  "files": [
+    {
+      "path": "01_覆盖到源代码根目录/data/customfixsql/characters/witchdoctor/WD145A/01_node_reference.sql",
+      "size": 10189,
+      "sha256": "85d9f0ea2da5934dacaf80327dea130c745bb1f9705d395a74aef7d522b2ecf2"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/customfixsql/characters/witchdoctor/WD145A/02_save_rows.sql",
+      "size": 49987,
+      "sha256": "d350a0323790353b13bf2f700ac34fbcc77b1ee89f71a60f96fe6beb079a1ade"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/customfixsql/world/witchdoctor/WD145A/01_WD145_world.sql",
+      "size": 3774,
+      "sha256": "62d5734b0c63f6eb3afdb7f224801a784fc20a9eab7a970a8a321186675dd2a2"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-checkpoints/witchdoctor/nodes.csv",
+      "size": 2647,
+      "sha256": "3eae048b40bf17904c47cefe045b2b58ff03a93b95137295b27b0d05ad352f50"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+      "size": 114210,
+      "sha256": "2ec385bf313bc084b7ef787d612d54d9412dd018d440b37b7e31e4b963d8d8d7"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+      "size": 104218,
+      "sha256": "38288f9447e51bb7c61d108f9b40dc40a516f0db2b22f1a6b3d6486e46f6943b"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+      "size": 11698,
+      "sha256": "7bfcfae9d3e102126e2ccbf8d94ec6c0cf7e6b280275682a9a16308b4f701c10"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+      "size": 9269,
+      "sha256": "3e929b679237dcf0be34323ca3dc94a5a0832740b1ad547b862c4927ec5adbdc"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "size": 167332,
+      "sha256": "7476278af88116dcdcfc46bba5bb499fb90fa75365e10cc3781c481a71f87324"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+      "size": 45766,
+      "sha256": "5dcc06c4fcfff9815a00005987ff7c5932d9a32921dd903f8a1273156125d460"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+      "size": 5335,
+      "sha256": "22fbbdb43f47b03885ef3c971904cb12ecbe929dc95d4a0fa6b73776d23c86e9"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+      "size": 5880,
+      "sha256": "40017b66fb4878e640d18a1cb362944e7b3027e0895485c02539089a852e530c"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc",
+      "size": 5969,
+      "sha256": "93a0d345f7efb4d9e9faba72475f7275eb5feb3ec35c8000fcace26d73983beb"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+      "size": 6871,
+      "sha256": "4696f21b2b37e1f0872368f4ca7f63eb11e9a22b2bc0c6c9763af56f268cd3ef"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "size": 52411,
+      "sha256": "7f159234ea5b55f67bf140dbf4db612cdfafd2127c6cc763c26793255629312d"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+      "size": 3197,
+      "sha256": "f082fdf0b54365ae276fbf9c4cda7f179d08139dc6c96b21a027aa97dcde1f00"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/src/server/game/Spells/SpellInfo.cpp",
+      "size": 151654,
+      "sha256": "188e98d2fe4584438afef00daf3801b5bfa7fea6073d1a0cdd34e54b6a582b91"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+      "size": 114210,
+      "sha256": "2ec385bf313bc084b7ef787d612d54d9412dd018d440b37b7e31e4b963d8d8d7"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+      "size": 104218,
+      "sha256": "38288f9447e51bb7c61d108f9b40dc40a516f0db2b22f1a6b3d6486e46f6943b"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+      "size": 11698,
+      "sha256": "7bfcfae9d3e102126e2ccbf8d94ec6c0cf7e6b280275682a9a16308b4f701c10"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+      "size": 9269,
+      "sha256": "3e929b679237dcf0be34323ca3dc94a5a0832740b1ad547b862c4927ec5adbdc"
+    },
+    {
+      "path": "03_导入SQL/characters_角色数据库/01_node_reference.sql",
+      "size": 10189,
+      "sha256": "85d9f0ea2da5934dacaf80327dea130c745bb1f9705d395a74aef7d522b2ecf2"
+    },
+    {
+      "path": "03_导入SQL/characters_角色数据库/02_save_rows.sql",
+      "size": 49987,
+      "sha256": "d350a0323790353b13bf2f700ac34fbcc77b1ee89f71a60f96fe6beb079a1ade"
+    },
+    {
+      "path": "03_导入SQL/world_世界数据库/01_WD145_world.sql",
+      "size": 3774,
+      "sha256": "62d5734b0c63f6eb3afdb7f224801a784fc20a9eab7a970a8a321186675dd2a2"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+      "size": 1118453,
+      "sha256": "27ffdcd024dae0e8b2267991ce619184b61d5f00275710552e87a6495adbafc6"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+      "size": 61714509,
+      "sha256": "54aff9bd4d66240f682668b1d827a77246b2929d1562df6e8b58639dcb04ed55"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+      "size": 1775717,
+      "sha256": "e5e46da5a36585a3c98ae771313f629ac07cc8a90bf3485089e7986785d30f9e"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/data/reborn-checkpoints/witchdoctor/nodes.csv",
+      "size": 2557,
+      "sha256": "b96be4a234a2ec43ea92b479feaf7c1ed7eeffb6e1bd7b0f544bb8a59b2e032f"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "size": 167267,
+      "sha256": "e587fb4a8dd2e9989979f08bcab844c4e42def968598bcd3c9de48da276a86e9"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+      "size": 45022,
+      "sha256": "b0c80e1f2970092a85be605a53fb446dd0f948b942790ce441f305d76864090c"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+      "size": 5247,
+      "sha256": "427fb055fe081345c366365128d5f9d5ffdaeb457c29ed10b90f5411dacf5c99"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+      "size": 5255,
+      "sha256": "a604386f0009b1ac6428def4cd8860d10c0e0d8c793c7c43da3d382af7e181af"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+      "size": 6856,
+      "sha256": "02c02869fbd06da4fd6c84d9f35bdf253bb92c4cbcbca1cdd6f3a61e4581d979"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "size": 50573,
+      "sha256": "1e8b309b5cea28d38b98af1febfdb834eed5a0229501dafb1e0eeb11f144caa5"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+      "size": 3121,
+      "sha256": "5e0232bfb04b040effbcb34076674ef9f87f5f1064f8255d0b603226d362a0c4"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/src/server/game/Spells/SpellInfo.cpp",
+      "size": 151581,
+      "sha256": "e5ec4bba16d0cdb878365142dde75aa5a78fb1a78082edc0f117face29e1a5e1"
+    },
+    {
+      "path": "backup_原文件/02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+      "size": 111851,
+      "sha256": "2e7ba453d79e4878589192fee4bb718f43a9900975cc5eafea2f783a9bd5feda"
+    },
+    {
+      "path": "backup_原文件/02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+      "size": 103856,
+      "sha256": "0d8c071425c91720821a6d26ab32070aa7479f9ef561121ffac0d03d4fa62e22"
+    },
+    {
+      "path": "backup_原文件/02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+      "size": 11318,
+      "sha256": "a0353e363135df80a9f908619943fe0532bbc9dc48c341280d18d636ec7ddf3d"
+    },
+    {
+      "path": "backup_原文件/02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+      "size": 9020,
+      "sha256": "a395f8f8ea8d09f55362c5aa630c2433765a546ee1f9b334e35d47b69ca1f20d"
+    },
+    {
+      "path": "backup_原文件/04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+      "size": 1118061,
+      "sha256": "18d24899391aeaaff5449368e67237c6d970ce4ca5d45bb3aefc936ae46e63a5"
+    },
+    {
+      "path": "backup_原文件/04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+      "size": 61695369,
+      "sha256": "590fcf1806bdcb9e5c20513ea3fdb6f1f0d0791ca9f37f3e1042bf29c97408fd"
+    },
+    {
+      "path": "backup_原文件/04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+      "size": 1775565,
+      "sha256": "aee30b09624d22c215446381cab5579101428723d663183b5e1eccaf924c7e83"
+    },
+    {
+      "path": "backup_原文件/导入PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+      "size": 1118061,
+      "sha256": "dc29803946eea95280e80045b435e1b2b1ae0d30a60763b9725d29a1989a4e9a"
+    },
+    {
+      "path": "backup_原文件/导入PATCH-XA/DBFilesClient/Spell.dbc",
+      "size": 61648369,
+      "sha256": "cc2cfd65f79f4593b1716039326bcb14ba19a4606979a98f1acd5a0cd4f872a1"
+    },
+    {
+      "path": "backup_原文件/导入PATCH-XA/DBFilesClient/SpellIcon.dbc",
+      "size": 1776733,
+      "sha256": "afa6dbeb0de43d1966767a7d6d348c605175c46770659aa23a23c5fa37fff08a"
+    },
+    {
+      "path": "checks/binding-validation.json",
+      "size": 298,
+      "sha256": "aac33f975118ad48e329b69de5a2f71fb54c295edc91f7d14db4add02144a5b1"
+    },
+    {
+      "path": "checks/data-validation.json",
+      "size": 999,
+      "sha256": "fb17d84ef0df15c9f6dcdb01bdf33e5e3fad78e3b783636ccf756b56680e8649"
+    },
+    {
+      "path": "checks/generated/layout.json",
+      "size": 20681,
+      "sha256": "f2067e3ce46abe31503347197133bb20cdba569ecbce84b496bfad63acb58bf1"
+    },
+    {
+      "path": "checks/generated/node_reference.sql",
+      "size": 3193,
+      "sha256": "3795c9fb57f13f6d66eb493da6e908388cb75809c34faf141241e59c869ec7e8"
+    },
+    {
+      "path": "checks/generated/node_sql_reads.inc.sql",
+      "size": 18581,
+      "sha256": "0f2814aa0f4848a136273ff3beaa34877f84ad843c2bfd3e039a5396fe0b4849"
+    },
+    {
+      "path": "checks/generated/node_sql_variables.inc.sql",
+      "size": 3550,
+      "sha256": "2ea8a58a2ebfab06822fe896d811c3a3e1c67270ec80a14bbe08484b43812e15"
+    },
+    {
+      "path": "checks/generated/NodeLayout.lua",
+      "size": 11944,
+      "sha256": "fea3c577ddb86602002d99bfd1f541119f9ddaef1c9d13ffcef6d0015a22e01c"
+    },
+    {
+      "path": "checks/generated/RebornWitchDoctorNodeLayout.h",
+      "size": 5526,
+      "sha256": "cdf18428fe8c4cb8bfb640b196107880814081805357be8b8bff919383658151"
+    },
+    {
+      "path": "checks/input-output.json",
+      "size": 5842,
+      "sha256": "63424625f624d392765bbd40df1797ec8b2472a0a59d868cb390b1aa62422d70"
+    },
+    {
+      "path": "checks/isolated_mysql.log",
+      "size": 2241,
+      "sha256": "ffea37ff2ecfde057da2f2b88a171e76be6cfc2ff8b6351d490cb805d863a327"
+    },
+    {
+      "path": "checks/mysql_results.json",
+      "size": 11433,
+      "sha256": "3dadabc8e0d00707aa5600f012ebb2228ebf57e4facc4b2b3cdd21c5a68dd918"
+    },
+    {
+      "path": "checks/native_visual_closure.json",
+      "size": 19067,
+      "sha256": "f31739ca44a095f85212c7921448d669f4984511ca5fc50d0d40517930b5d4e1"
+    },
+    {
+      "path": "checks/prepackage-baselines.json",
+      "size": 3405,
+      "sha256": "f57cf6fd471d959dc81faae15717fbf144118b0eb741763b55ed3b17ad4b9706"
+    },
+    {
+      "path": "checks/syntax-final.log",
+      "size": 227,
+      "sha256": "7479fe3521f8ae0d55ca4198bd3136ca33f31d90ed8914d454f46fe2af710137"
+    },
+    {
+      "path": "checks/syntax.log",
+      "size": 212,
+      "sha256": "09dd466b6d123e3921293f6522238066adbba85817d48e4466fde5ac066594f2"
+    },
+    {
+      "path": "checks/test_listener.lua",
+      "size": 8812,
+      "sha256": "23fb07e8656f242c3e2adb8f7d34117185300ea236e0009725f0edb84ca285eb"
+    },
+    {
+      "path": "checks/test_sources/test_mysql145.py",
+      "size": 41889,
+      "sha256": "0b2405a1f288f9b2a06d3d0921c9c1f5af88cacfeda92cf747319b31fb7cc0c6"
+    },
+    {
+      "path": "checks/test_sources/wd145_build.py",
+      "size": 18252,
+      "sha256": "78cf329b1051e8fc9648280c01a5679fc1727bd7b842edc2e0dc748b33f362c4"
+    },
+    {
+      "path": "checks/test_sources/wd145_checks.py",
+      "size": 10588,
+      "sha256": "fc859aaa0e1aaa2ea397c44dcfab3eb493aec8b8071ee55252f0e95735003463"
+    },
+    {
+      "path": "checks/test_sources/wd145_document.py",
+      "size": 21742,
+      "sha256": "de03c3aaedce45fd3bf6b571d1e72ef40742cfdf2a709656f90d0c6af006537e"
+    },
+    {
+      "path": "checks/test_sources/wd145_resources.py",
+      "size": 6685,
+      "sha256": "f2936991f5d2718078fd62aa5e7e500f96bb3e70ad17f41883eca8968d4adf2d"
+    },
+    {
+      "path": "checks/test_sources/wd145_visual.py",
+      "size": 3593,
+      "sha256": "7f475051e63833362fbbbf5e4f3df2a8df4335a41c7ca8099012ddcd4f311722"
+    },
+    {
+      "path": "checks/test_sources/说明.md",
+      "size": 260,
+      "sha256": "e026759f9ca0562307055eea4f94c30aa74ab5d8ee8a8c2d20cb16c6832d34f2"
+    },
+    {
+      "path": "memory.md",
+      "size": 1884,
+      "sha256": "320eee3f6f490ca3c2306b422102bec7ae2de6c9de4028a5a04d2e1ba49ffa86"
+    },
+    {
+      "path": "phaseFixForNewChat.md",
+      "size": 1356,
+      "sha256": "11b6dd5bcbce1849c66c1f9af7da763f7673d63feb23e474b471d46826b029f7"
+    },
+    {
+      "path": "README_覆盖与测试说明.md",
+      "size": 7840,
+      "sha256": "6dfd780de1de56888d64974c7fc98a0a4639b269af52370f39ea0de836647f41"
+    },
+    {
+      "path": "research/AscensionClassMechanics12To17.cpp",
+      "size": 7009,
+      "sha256": "89234e729bcb69162db19eeddf9eed163002849bbfab31ed59aabaf19bc34296"
+    },
+    {
+      "path": "research/AscensionWitchDoctorAbilities.cpp",
+      "size": 20141,
+      "sha256": "50d9baecb69eaa155bd665f0f43421c3324c912300b8fdc8e11c2257c2cd6ab2"
+    },
+    {
+      "path": "research/AscensionWitchDoctorAuras.cpp",
+      "size": 19585,
+      "sha256": "51e7e03d31480bcb88610f9b09b4bbb051d29932c7aaa62583f80f23024695b4"
+    },
+    {
+      "path": "research/AscensionWitchDoctorCoefficients.h",
+      "size": 11213,
+      "sha256": "618f283c7fcd971bef2ce61b46dc6fbabe3e79234c34d02c5316a128124f88b3"
+    },
+    {
+      "path": "research/AscensionWitchDoctorCompletion.cpp",
+      "size": 24082,
+      "sha256": "58917ea38674a51d04424bc8ef6dfcd5f351c98e420dc4bd8969930daa8686fc"
+    },
+    {
+      "path": "research/AscensionWitchDoctorCompletion.h",
+      "size": 11032,
+      "sha256": "0cf7fe2f5e3f69da6ef9b4a782230be8ff4519ec6c3eea371922943d4a4c0f04"
+    },
+    {
+      "path": "research/AscensionWitchDoctorEvents.cpp",
+      "size": 9160,
+      "sha256": "da6b2636a17adb0cd1d1d091b3bf507d36ba6b78a64c76d811ebb322631f76b9"
+    },
+    {
+      "path": "research/donor-families.json",
+      "size": 80407,
+      "sha256": "1c8eeeada4be8f417afc6462fdebb4cfc067842b9d6e95eaf6c59f2bca76c06c"
+    },
+    {
+      "path": "research/donor-options.json",
+      "size": 25024,
+      "sha256": "a321c1fe1a697280d5788d5ac91f6f4899b474e616f273c0235a18e51160fc14"
+    },
+    {
+      "path": "research/issue272.json",
+      "size": 5758,
+      "sha256": "4392f3ed59b56f37f5fe082d6f6bfbc294b70e0e44235d3f734b38bff9e89bcd"
+    },
+    {
+      "path": "research/issue273.json",
+      "size": 5628,
+      "sha256": "a4c963ac95e660497b104c09c30292fa1c65e90db0a85369a127f63426a12117"
+    },
+    {
+      "path": "research/issue6173.json",
+      "size": 7431,
+      "sha256": "2671a31884500bead749a734ededc591d4af6c928ee670ccb74bafc2eea6642e"
+    },
+    {
+      "path": "research/issue7401.json",
+      "size": 4036,
+      "sha256": "63cf0a4a2d9f45bf77d44898ea94d4028032e38457b01a59042f29c1a493c8de"
+    },
+    {
+      "path": "research/PR4253.json",
+      "size": 24981,
+      "sha256": "1ffd7970e5df9522d84e741d05fd69d21436ad392b01b66271c6f6aa1973759a"
+    },
+    {
+      "path": "research/PR4753.json",
+      "size": 32863,
+      "sha256": "89c6582412635c48424df69cac940bf6151c4eb1ca59ffe57ced25265c75986e"
+    },
+    {
+      "path": "research/PR7167.json",
+      "size": 28434,
+      "sha256": "d2fe5bbf59d87f5c3ae2b267fdecbe7c78261672383370ef46cbecde64c24b34"
+    },
+    {
+      "path": "research/resource-report.json",
+      "size": 2324,
+      "sha256": "c5ca8d583272f449acfb5eeb4419407cef669c35d3a2f2383e55bc95fa859606"
+    },
+    {
+      "path": "research/search_0.json",
+      "size": 891019,
+      "sha256": "61f3a50b42e7733cbfe1e555e5fbd5c09fee98ae59a5c1093c4377fe683dbf1f"
+    },
+    {
+      "path": "research/search_1.json",
+      "size": 196996,
+      "sha256": "ab1e4281d3b6b5c4c14bcc0b53f850208244ebfe74456e68082eb189272fba4a"
+    },
+    {
+      "path": "research/search_2.json",
+      "size": 104768,
+      "sha256": "0dc8f0c8263e28f89b41a52cf2835c803faf06206dc9f022f50f1ff2ca0af045"
+    },
+    {
+      "path": "research/search_3.json",
+      "size": 79,
+      "sha256": "c9938edecb99d754b2d039ac9eec320a94c769b6a6417921e2dcbef9e2fe01a0"
+    },
+    {
+      "path": "research/search_devotee.json",
+      "size": 79,
+      "sha256": "c9938edecb99d754b2d039ac9eec320a94c769b6a6417921e2dcbef9e2fe01a0"
+    },
+    {
+      "path": "research/search_loa.json",
+      "size": 27768,
+      "sha256": "2690ff310275d66097ddccf8c294fe5ec77322cdb8cff1ae77196a3f14dc9358"
+    },
+    {
+      "path": "research/search_wisdom.json",
+      "size": 33290,
+      "sha256": "6111ec675a8d36cec17d5a2924f316277a1433bcacfc37541d7280888f0ab3cd"
+    },
+    {
+      "path": "research/upstream_commit.txt",
+      "size": 40,
+      "sha256": "869abf430b101d6315943bd96ba1a6a47c7bac71f2a1019b9018c80253f5221f"
+    },
+    {
+      "path": "research/依赖边.csv",
+      "size": 185,
+      "sha256": "73c8c7ccc8e482a433f90fd03ae1fd252d8bd4d47662e25a4cd9396794fca181"
+    },
+    {
+      "path": "research/当前台账计数.json",
+      "size": 1089,
+      "sha256": "54d1d34a232c506dce4a88eb566aad8ec28282d0c93f930ad4257b900d272dbf"
+    },
+    {
+      "path": "research/当前节点实现台账.csv",
+      "size": 18608,
+      "sha256": "2740fe9924c05a70be1549805f422eb3a1c5ece68d009e6146029f25eef69b69"
+    },
+    {
+      "path": "research/本批能力台账.csv",
+      "size": 2890,
+      "sha256": "f5be124782a240243e46e6f8fa53921c427e44b006aa63f98782513f6907c529"
+    },
+    {
+      "path": "tutor.md",
+      "size": 4022,
+      "sha256": "8af2614a3cd5be1621086273ce71c4c8f396b768b2513742144b9038e8e7326a"
+    },
+    {
+      "path": "导入PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+      "size": 1118453,
+      "sha256": "ec1cc28b7f05cb6b85bfc42354ef34622a1e3e209641e2b5506664b386ed70ac"
+    },
+    {
+      "path": "导入PATCH-XA/DBFilesClient/Spell.dbc",
+      "size": 61667509,
+      "sha256": "075fe0e85fa4ab375810c7f3b355b1e33f11083666ad039285f65dab80fbd87f"
+    },
+    {
+      "path": "导入PATCH-XA/DBFilesClient/SpellIcon.dbc",
+      "size": 1776885,
+      "sha256": "135397d16a16b1b333b11123233a16b6e53e03c4a85d07a4b201ac051aca4c0f"
+    },
+    {
+      "path": "导入PATCH-XA/Interface/Icons/RebornWD145_0.blp",
+      "size": 5636,
+      "sha256": "296425d0649a3ea7f1c97e21e69255470d7b384794ccebf4f01addeaebe77fdc"
+    },
+    {
+      "path": "导入PATCH-XA/Interface/Icons/RebornWD145_1.blp",
+      "size": 3916,
+      "sha256": "c19576ac1173279b20165d83de86c509da7d49bf404456faf58c645a4d8ade7d"
+    },
+    {
+      "path": "导入PATCH-XA/Interface/Icons/RebornWD145_2.blp",
+      "size": 5268,
+      "sha256": "5e538dc3c6bac7256b4fbde86178603165805c80e2334736a666a609f6f9ae51"
+    },
+    {
+      "path": "导入PATCH-XA/Interface/Icons/RebornWD145_3.blp",
+      "size": 6660,
+      "sha256": "e13dd6d3262cce86c12e9bb718aa1a11beafedb4fe1ce81d48ff0a601322ccc7"
+    },
+    {
+      "path": "来源与适配说明.md",
+      "size": 4267,
+      "sha256": "e00ccd32c6143529315e0d1d559c45bf1748a03ceb32724e6a677dd93e0de62f"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "status": "candidate",
+  "depends": "WD145A",
+  "files": [
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/HitRating.lua",
+      "sha256": "8639d44275cce32354e9c55c5bcff1935e10b8d0ca4232dcb36b3d4e19016114"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "sha256": "501090faac69f23dac5674fa92fbbe0ef2daba85767701faf0c8690ca988c0e3"
+    },
+    {
+      "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "sha256": "5d0ac3e00e3abac34cdbb95861e1560e9295b93ea268331a3b2e0b7809d4d792"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/HitRating.lua",
+      "sha256": "8639d44275cce32354e9c55c5bcff1935e10b8d0ca4232dcb36b3d4e19016114"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "sha256": "501090faac69f23dac5674fa92fbbe0ef2daba85767701faf0c8690ca988c0e3"
+    },
+    {
+      "path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+      "sha256": "bd902e49a4d4980e2ffe6df3ed1a7529a3ecac12ab4750e35736e2a04eb54756"
+    },
+    {
+      "path": "backup_原文件/01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "sha256": "7f159234ea5b55f67bf140dbf4db612cdfafd2127c6cc763c26793255629312d"
+    },
+    {
+      "path": "backup_原文件/02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "sha256": "dc10719966dc5caa7c132d6bf922385c69e8c95e1d5a31d2d14f014e73a45986"
+    },
+    {
+      "path": "backup_原文件/04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+      "sha256": "27ffdcd024dae0e8b2267991ce619184b61d5f00275710552e87a6495adbafc6"
+    },
+    {
+      "path": "backup_原文件/导入PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+      "sha256": "ec1cc28b7f05cb6b85bfc42354ef34622a1e3e209641e2b5506664b386ed70ac"
+    },
+    {
+      "path": "checks/inputs.json",
+      "sha256": "30beee1cf47ee433c92d714fd2caefd7d85927ce51e7b877a266139b135e178e"
+    },
+    {
+      "path": "checks/native_hit_calculation.txt",
+      "sha256": "aa040b02a456a483274df15a1ef089f14b049524b11224e16018ffaa9e5c31c8"
+    },
+    {
+      "path": "checks/resources.json",
+      "sha256": "9a48c3781a80c412f2d9f6a93d949a5d73d390473c9f3af60922dfe6f062ffeb"
+    },
+    {
+      "path": "checks/syntax.log",
+      "sha256": "7418b3bd8ecc09684b77bbc2d6fbac7018d0f3a19892a8a3261fab9e88254e78"
+    },
+    {
+      "path": "checks/test_hit_rating.lua",
+      "sha256": "e03571caf1bda0d9115d3eacdb459c0ef52c507af14d1b72c70f6a13cfd4ade8"
+    },
+    {
+      "path": "checks/validation.json",
+      "sha256": "cd6217d996f001a3aa9f5f1bad2d6033e8b8fb0245fad2b37acf42ea92b8c484"
+    },
+    {
+      "path": "memory.md",
+      "sha256": "a518e867102a1ef9e927ee7f0599f35e31b192ad3b1469ef6ac0fc195e3a55b9"
+    },
+    {
+      "path": "README_覆盖与测试说明.md",
+      "sha256": "86ef1c61e207b4607804ba426c1845dc3e84de9e725b82d21462639184f83c48"
+    },
+    {
+      "path": "tutor.md",
+      "sha256": "cf1a23c6467ccc485a7bdc218687e18b9d7413be9a84cf858e603a4f0a10e6c0"
+    },
+    {
+      "path": "导入PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+      "sha256": "4c0e96b53b65e83fd5201f642693a53f46fe761db0c11f53d76d125d022bc6ee"
+    }
+  ]
+}

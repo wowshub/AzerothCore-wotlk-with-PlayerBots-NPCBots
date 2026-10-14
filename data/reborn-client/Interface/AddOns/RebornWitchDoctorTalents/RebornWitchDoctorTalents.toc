@@ -23,3 +23,5 @@ Panel.lua
 Routing.lua
 
 NumericTooltip.lua
+
+HitRating.lua

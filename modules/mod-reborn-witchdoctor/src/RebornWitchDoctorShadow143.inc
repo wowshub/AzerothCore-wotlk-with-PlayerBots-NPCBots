@@ -50,6 +50,8 @@ class arrow : public SpellScript
 class reclamation : public SpellScript
 {
     PrepareSpellScript(reclamation);
+    uint32 spiritsBefore=0;
+    void Snapshot() { spiritsBefore=WD145::Count(GetCaster()->ToPlayer()); }
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({Identity,9003574}); }
     SpellCastResult Check()
     {
@@ -59,11 +61,18 @@ class reclamation : public SpellScript
     void Cast()
     {
         Player* p=GetCaster()->ToPlayer();
-        if(Owns(p)) p->CastSpell(p,9003574,true);
+        if(!Owns(p) || GetSpell()->IsTriggered()) return;
+        p->CastSpell(p,9003574,true);
+        Unit* target=GetExplTargetUnit();
+        if(WD145::Owns(p,WD145::Loa) && p->HasAura(WD145::Loa,p->GetGUID()) && target && target->IsAlive() &&
+           p->IsValidAttackTarget(target) && p->IsWithinDistInMap(target,30.0f) && p->IsWithinLOSInMap(target) && roll_chance_i(spiritsBefore*5))
+            p->CastSpell(target,GetSpellInfo()->Id,true); // one echo; triggered casts never recurse or gain spirits
+
     }
     void Register() override
     {
         OnCheckCast += SpellCheckCastFn(reclamation::Check);
+        BeforeCast += SpellCastFn(reclamation::Snapshot);
         AfterCast += SpellCastFn(reclamation::Cast);
     }
 };
