@@ -1415,6 +1415,7 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     // An unclaimed exact modifier must NOT reach that fallback. Other spells retain it.
     switch (mod->spellId)
     {
+        case 9004040: // WD146 Soul Feeder: exact Arrow/Eclipse damage only
         case 9004012: // WD145 Village Wisdom exact Reclamation modifier
         case 9003990: case 9003991: case 9003994: case 9003995: // WD144 exact Arrow/Jinx modifiers
         case 9003510: case 9003511: // exact critical modifiers
@@ -2867,6 +2868,9 @@ uint32 SpellInfo::CalcCastTime(Unit* caster, Spell* spell) const
     if (HasAttribute(SPELL_ATTR0_USES_RANGED_SLOT) && (!IsAutoRepeatRangedSpell()))
         castTime += 500;
 
+    // WD146: upstream Spirit Glaive agility divisor, private learned family only.
+    if (caster && caster->getClass()==13 && Id>=9004030 && Id<=9004036)
+        castTime=int32(castTime/(1.0f+std::max(0.0f,caster->GetStat(STAT_AGILITY))/1000.0f));
     if (caster)
         caster->ModSpellCastTime(this, castTime, spell);
 

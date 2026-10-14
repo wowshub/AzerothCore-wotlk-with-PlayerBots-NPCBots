@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "DatabaseEnv.h"
 #include "DataMap.h"
+#include "RebornWitchDoctorSpiritVisualState.h"
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "RebornWitchDoctorRanks.h"
@@ -28,6 +29,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD146Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD145Bridge { void Apply(Player*,bool,bool,bool,bool); }
 namespace WD144Bridge { void Apply(Player*,uint32,uint32,bool,bool); }
 namespace WD143Bridge { void Apply(Player*,bool,bool,bool); }
@@ -656,7 +658,7 @@ bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
     bool const jinx=base==9003150 || base==9003200 || base==9003210 || base==9003220 || id==9003762;
     bool const walkerTarget=id==9003855 || id==9003432;
     bool const arrow=id>=9003970 && id<=9003978;
-    bool const allowed=arrow || (id>=9003922 && id<=9003928) || (id>=9003460 && id<=9003467) || id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
+    bool const allowed=arrow || (id>=9004030 && id<=9004036) || (id>=9003922 && id<=9003928) || (id>=9003460 && id<=9003467) || id==WD120A::Shrooms || (WD120A::IsToss(id) || WD120A::IsSplash(id)) || id==9003861 || id==9003859 || walkerTarget || wuju || jinx || base==9003240 || base==9003101;
     SpellInfo const* info=sSpellMgr->GetSpellInfo(id);
     if(!Enabled() || !allowed || !info || !p->HasSpell(id) || !s->loaded)
     {
@@ -709,7 +711,8 @@ bool SpellNumbers(ChatHandler* h,uint32 sequence,uint32 id)
         else h->PSendSysMessage("WD114|{}|{}|ok|{}|{}|{}|{}|{}|{}|{}|{}",sequence,id,cost,lo,hi,s->revision,s->active,0,0,std::max(0,cooldown));
         return true;
     }
-    if(id==9003861 || arrow)
+    // WD146C: Glaive must use cast-time calculation, not the default effect-value branch.
+    if(id==9003861 || arrow || (id>=9004030 && id<=9004036))
     {
         int32 cooldown=info->RecoveryTime;
         p->ApplySpellMod(id,SPELLMOD_COOLDOWN,cooldown);
@@ -789,6 +792,45 @@ bool Hit145(ChatHandler* h,uint32 sequence)
     return true;
 }
 
+// WD146: read-only evidence for the active player and owned target aura.
+bool Check146(ChatHandler* h)
+{
+    Player* p=h->GetSession()->GetPlayer();if(!Doctor(p))return true;
+    State* state=p->CustomData.GetDefault<State>(Key);auto now=std::chrono::steady_clock::now();
+    if(now-state->numberRequest<std::chrono::milliseconds(400))return true;state->numberRequest=now;
+    Aura* spirits=p->GetAura(9003574,p->GetGUID());
+    AuraEffect* feeder=p->GetAuraEffect(9004040,EFFECT_0,p->GetGUID());
+    h->PSendSysMessage("WD146A: spirits={} feeder_learned={} feeder_damage_pct={} blessing={} avatar={}",spirits?spirits->GetStackAmount():0,p->HasSpell(9004040)?1:0,feeder?feeder->GetAmount():0,p->HasSpell(9004041)&&p->HasAura(9004041,p->GetGUID())?1:0,p->HasAura(9003270,p->GetGUID())?1:0);
+    Aura* avatar=p->GetAura(9003270,p->GetGUID());
+    Aura* blessing=p->GetAura(9004041,p->GetGUID());
+    AuraEffect* pulse=blessing?blessing->GetEffect(EFFECT_0):nullptr;
+    h->PSendSysMessage("WD146C: avatar_spell=9003270 known={} own_aura={} any_aura={} remaining_ms={} blessing_period_ms={} blessing_ticks={}",p->HasSpell(9003270)?1:0,avatar?1:0,p->HasAura(9003270)?1:0,avatar?avatar->GetDuration():0,pulse?pulse->GetAmplitude():0,pulse?pulse->GetTickNumber():0);
+    for(uint32 id=9004030;id<=9004036;++id)if(p->HasSpell(id))
+    {
+        SpellInfo const* info=sSpellMgr->GetSpellInfo(id);Unit* target=p->GetSelectedUnit();
+        AuraEffect* debuff=target?target->GetAuraEffect(id,EFFECT_2,p->GetGUID()):nullptr;
+        h->PSendSysMessage("WD146A: glaive={} cast_ms={} cooldown_ms={} own_target_shadow_resistance={}",id,info?info->CalcCastTime(p):0,p->GetSpellCooldownDelay(id),debuff?debuff->GetAmount():0);
+    }
+    return true;
+}
+
+// One read-only snapshot: no delay between parent and child queries.
+bool Check147(ChatHandler* h)
+{
+    Player* p=h->GetSession()->GetPlayer();
+    if(!Doctor(p))return true;
+    Aura* spirit=p->GetAura(9003574,p->GetGUID());
+    uint32 mask=0,known=0;
+    for(uint32 i=0;i<5;++i) {
+        if(p->GetAura(9004050+i,p->GetGUID()))mask|=1u<<i;
+        if(sSpellMgr->GetSpellInfo(9004050+i))known|=1u<<i;
+    }
+    auto* d=p->CustomData.Get<WD147Diagnostic::State>(WD147Diagnostic::Key);
+    h->PSendSysMessage("WD147B spirit={} ms={} orbs={} dbc={}",spirit?spirit->GetStackAmount():0,spirit?spirit->GetDuration():0,mask,known);
+    h->PSendSysMessage("WD147B updates={} add={} failed={} missing={}",d?d->updates:0,d?d->attempts:0,d?d->failures:0,d?d->missing:0);
+    return true;
+}
+
 class Commands : public CommandScript
 {
 public:
@@ -799,7 +841,9 @@ public:
             {"wd141quote",PanelUnlockQuote,SEC_PLAYER,Console::No},
             {"wd141buy",PanelUnlockBuy,SEC_PLAYER,Console::No},
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
+            {"wd147check",Check147,SEC_PLAYER,Console::No},
             {"wd145hit",Hit145,SEC_PLAYER,Console::No},
+            {"wd146check",Check146,SEC_PLAYER,Console::No},
             {"wd145check",Check145,SEC_PLAYER,Console::No},
             {"wd144check",Check144,SEC_PLAYER,Console::No},
             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},

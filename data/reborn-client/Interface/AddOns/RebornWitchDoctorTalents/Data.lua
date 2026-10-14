@@ -149,3 +149,10 @@ for _,n in ipairs(RebornWDTreeData) do
  if n.ID==6072 then n.RequiredLevel=15;n.RequiredIDs={7086} end
  if n.ID==6074 then n.RequiredLevel=15;n.RequiredIDs={7086} end
 end
+
+-- WD146: explicit available paths, preserve closed branches.
+for _,n in ipairs(RebornWDTreeData) do
+ if n.ID==8574 then n.RequiredLevel=15;n.RequiredIDs={1969} end
+ if n.ID==30895 then n.RequiredLevel=15;n.RequiredIDs={8574} end
+ if n.ID==6063 then n.RequiredLevel=20;n.RequiredIDs={30895} end
+end

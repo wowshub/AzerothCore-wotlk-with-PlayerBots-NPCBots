@@ -23,6 +23,7 @@
 #include "Player.h"
 #include "ObjectAccessor.h"
 #include "DataMap.h"
+#include "RebornWitchDoctorSpiritVisualState.h"
 #include "DatabaseEnv.h"
 #include "ScriptedGossip.h"
 #include "Creature.h"
@@ -3314,6 +3315,8 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
 #include "RebornWitchDoctorCommon142.inc"
+#include "RebornWitchDoctorShadow146.inc"
+#include "RebornWitchDoctorSpiritVisual147.inc"
 #include "RebornWitchDoctorShadow145.inc"
 #include "RebornWitchDoctorShadow143.inc"
 #include "RebornWitchDoctorSupport144.inc"
@@ -3337,6 +3340,8 @@ class spell_reborn_wd126_shrink_ally : public SpellScript
 
 void AddRebornWitchDoctorScripts()
 {
+    WD146::Register();
+    WD147::Register();
     WD145::Register();
     new WD144::exact_mods();
     RegisterSpellScript(WD144::jinx);

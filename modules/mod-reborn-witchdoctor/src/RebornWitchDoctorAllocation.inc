@@ -14,12 +14,17 @@ uint32 TEFoundation(AEMask const& mask)
 }
 uint32 TESpent(AEMask const& mask)
 {
-    return AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,114)+AERank(mask,115)+TEFoundation(mask)+AERank(mask,15)+AERank(mask,16)+AERank(mask,17)+AERank(mask,18)+AERank(mask,19)+AERank(mask,20)+AERank(mask,21)+AERank(mask,22)+AERank(mask,23)+AERank(mask,24)+AERank(mask,25)+AERank(mask,26)+AERank(mask,27)+AERank(mask,28)+AERank(mask,30)+AERank(mask,33)+AERank(mask,34)+AERank(mask,35)+AERank(mask,36)+AERank(mask,37)+AERank(mask,38)+AERank(mask,42)+AERank(mask,43)+AERank(mask,44)+AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)+AERank(mask,56)+AERank(mask,57)+AERank(mask,61)+AERank(mask,62)+AERank(mask,77)+AERank(mask,78)+AERank(mask,79)+AERank(mask,80)+AERank(mask,81)+AERank(mask,82)+AERank(mask,83)+AERank(mask,84)+AERank(mask,85)+AERank(mask,86)+AERank(mask,87)+AERank(mask,88)+AERank(mask,89)+AERank(mask,90)+AERank(mask,91)+AERank(mask,92)+AERank(mask,93)+AERank(mask,94)+AERank(mask,95)+AERank(mask,96)+AERank(mask,97)+AERank(mask,99)+AERank(mask,100)+AERank(mask,101)+AERank(mask,102)+AERank(mask,103)+AERank(mask,105)+AERank(mask,106)+AERank(mask,107);
+    return AERank(mask,122)+AERank(mask,123)+AERank(mask,124)+AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,114)+AERank(mask,115)+TEFoundation(mask)+AERank(mask,15)+AERank(mask,16)+AERank(mask,17)+AERank(mask,18)+AERank(mask,19)+AERank(mask,20)+AERank(mask,21)+AERank(mask,22)+AERank(mask,23)+AERank(mask,24)+AERank(mask,25)+AERank(mask,26)+AERank(mask,27)+AERank(mask,28)+AERank(mask,30)+AERank(mask,33)+AERank(mask,34)+AERank(mask,35)+AERank(mask,36)+AERank(mask,37)+AERank(mask,38)+AERank(mask,42)+AERank(mask,43)+AERank(mask,44)+AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)+AERank(mask,56)+AERank(mask,57)+AERank(mask,61)+AERank(mask,62)+AERank(mask,77)+AERank(mask,78)+AERank(mask,79)+AERank(mask,80)+AERank(mask,81)+AERank(mask,82)+AERank(mask,83)+AERank(mask,84)+AERank(mask,85)+AERank(mask,86)+AERank(mask,87)+AERank(mask,88)+AERank(mask,89)+AERank(mask,90)+AERank(mask,91)+AERank(mask,92)+AERank(mask,93)+AERank(mask,94)+AERank(mask,95)+AERank(mask,96)+AERank(mask,97)+AERank(mask,99)+AERank(mask,100)+AERank(mask,101)+AERank(mask,102)+AERank(mask,103)+AERank(mask,105)+AERank(mask,106)+AERank(mask,107);
 }
 bool AESpecValid(AEMask const& mask,uint32 spec)
 { return mask.SpecValid(spec); }
 bool AEValid(AEMask const& mask,uint32 level,uint32 testAE,uint32 testTE)
 {
+    // WD146: the tier-eight gate counts only the existing Shadow foundation.
+    if((AERank(mask,122)||AERank(mask,123)||AERank(mask,124)) && !AERank(mask,111)) return false;
+    if(AERank(mask,122) && (level<15 || !AERank(mask,114))) return false;
+    if(AERank(mask,123) && (level<15 || !AERank(mask,122))) return false;
+    if(AERank(mask,124) && (level<20 || !AERank(mask,123) || AERank(mask,114)+AERank(mask,115)+AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,122)+AERank(mask,123)<8)) return false;
     // WD145: preserve the authored Eclipse dependency and free level-20 passive.
     if((AERank(mask,118)||AERank(mask,119)||AERank(mask,120)||AERank(mask,121)) && !AERank(mask,111)) return false;
     if(AERank(mask,118) && (level<15 || !AERank(mask,115))) return false;
@@ -165,6 +170,7 @@ void AEApply(Player* p,State* s)
     AEMask mask=AESpecValid(s->aeMasks[s->active],s->specs[s->active]) && AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE) ? s->aeMasks[s->active] : AEMask{};
     for(uint32 spell:{9003861u,9003862u,9003863u,9003859u,9003860u,9003857u,9003858u,9003855u,9003856u,9003853u,9003854u,9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003522u,9003530u,9003531u,9003600u,9003601u,9003610u,9003611u,9003612u,9003690u,9003700u,9003701u,9003702u,9003703u}) if(!sSpellMgr->GetSpellInfo(spell)) return;
     for(uint32 id : {9004000u,9004001u,9004002u,9004003u,9004004u,9004005u,9004006u,9004010u,9004011u,9004012u,9004020u,9004021u,9004022u}) if(!sSpellMgr->GetSpellInfo(id)) return;
+    for(uint32 id : {9004030u,9004031u,9004032u,9004033u,9004034u,9004035u,9004036u,9004040u,9004041u}) if(!sSpellMgr->GetSpellInfo(id)) return;
     for(uint32 id=9003990;id<=9003995;++id) if(!sSpellMgr->GetSpellInfo(id)) return;
     for(uint32 id:{264u,266u,5011u}) if(!sSpellMgr->GetSpellInfo(id)) return;
     for(uint32 id=9003967;id<=9003989;++id) if(id!=9003979 && !sSpellMgr->GetSpellInfo(id)) return;
@@ -233,6 +239,7 @@ void AEApply(Player* p,State* s)
     WD145Bridge::Apply(p,AERank(mask,118),AERank(mask,119),AERank(mask,120),AERank(mask,121));
     WD144Bridge::Apply(p,AERank(mask,114),AERank(mask,115),AERank(mask,116),AERank(mask,117));
     WD143Bridge::Apply(p,AERank(mask,111),AERank(mask,112),AERank(mask,113));
+    WD146Bridge::Apply(p,AERank(mask,122),AERank(mask,123),AERank(mask,124));
     for(uint32 i=0;i<3;++i)
     {
         uint32 spell= i==0?9003962u:(i==1?9003964u:9003965u);

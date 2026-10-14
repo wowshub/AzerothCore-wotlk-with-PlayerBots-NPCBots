@@ -581,7 +581,7 @@ SpellValue::SpellValue(SpellInfo const* proto)
 static bool RebornWD96CanCastWhileMoving(Unit const* caster, SpellInfo const* info)
 {
     // WD143: Reclamation alone can move during its ranged preparation/cast.
-    if(info && info->Id>=9003980 && info->Id<=9003988)
+    if(info && ((info->Id>=9003980 && info->Id<=9003988) || (info->Id>=9004030 && info->Id<=9004036)))
     {
         Player const* p=caster?caster->ToPlayer():nullptr;
         return p && p->getClass()==13 && p->getRace()==1 && p->IsAlive() &&

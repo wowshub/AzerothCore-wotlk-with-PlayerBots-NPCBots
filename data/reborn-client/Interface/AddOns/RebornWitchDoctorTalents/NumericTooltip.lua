@@ -7,8 +7,11 @@ for _,id in ipairs({9003190,9003280,9003290,9003300,9003150,9003200,9003210,9003
 range(9003220,9003225);range(9003130,9003138)
 for id=9003180,9003185 do power[id]=true end;power[9003300]=true
 range(9003922,9003928);range(9003460,9003467);allowed[9003865]=true;range(9003870,9003876);range(9003890,9003896);allowed[9003861]=true;allowed[9003859]=true;allowed[9003855]=true;allowed[9003432]=true
+range(9004030,9004036) -- WD146 server cast-time query
 range(9003970,9003978) -- WD144B: all Malefic Arrow ranks
 local function arrow(id) return id and id>=9003970 and id<=9003978 end
+local function glaive(id) return id and id>=9004030 and id<=9004036 end
+local glaiveLast={}
 local en=GetLocale()~="zhCN" and GetLocale()~="zhTW"
 local frame=CreateFrame("Frame")
 local cache,pending={},nil
@@ -16,10 +19,34 @@ local seq,epoch,nextSend,elapsed,failures=0,0,0,0,0
 local function doctor()
  local _,token,id=UnitClass("player");return token=="WITCHDOCTOR" or tonumber(id)==13
 end
-local function invalidate()
+local function invalidate(soft)
  epoch=epoch+1;cache={};pending=nil
+ if not soft then glaiveLast={} end
 end
 local function plain(s) return s:gsub("|c%x%x%x%x%x%x%x%x",""):gsub("|r","") end
+-- WD146B: protect only the identified Glaive cast-time FontString. Native
+-- tooltip rebuilding must not display an intermediate Instant between polls.
+local function castLine(text)
+ if type(text)~="string" then return false end
+ local s=plain(text)
+ return s=="Instant" or s=="瞬发" or s=="瞬发法术" or
+  s:match("^%s*[%d%.]+%s*sec cast%s*$") or s:match("^%s*[%d%.]+%s*秒施法时间%s*$") or
+  s:match("^%s*[%d%.]+%s*秒施放时间%s*$") or s:match("^%s*[%d%.]+%s*秒施法%s*$") or
+  s:match("^%s*[%d%.]+%s*秒施放%s*$") or s=="Cast time: syncing" or s=="施法时间同步中"
+end
+local function setGlaiveLine(font,id,rendered)
+ font.wd146Spell=id;font.wd146Text=rendered
+ if not font.wd146Hooked then
+  font.wd146Hooked=true
+  hooksecurefunc(font,"SetText",function(self,text)
+   if self.wd146Writing or not doctor() or not tip:IsShown() or tip.wd114Spell~=self.wd146Spell or not glaive(tip.wd114Spell) then return end
+   if text~=self.wd146Text and castLine(text) then
+    self.wd146Writing=true;self:SetText(self.wd146Text);self.wd146Writing=nil
+   end
+  end)
+ end
+ if font:GetText()~=rendered then font:SetText(rendered) end
+end
 local function failed()
  failures=failures+1
  if failures>=3 then nextSend=GetTime()+60;failures=0 end
@@ -52,6 +79,10 @@ local function draw(self,forced)
   seq=seq+1;pending={seq=seq,id=id,epoch=epoch,time=now};nextSend=now+1
   SendChatMessage(".wd114numbers "..seq.." "..id,"SAY")
  end
+ if glaive(id) and not value then
+  local last=glaiveLast[id]
+  if last and now-last.time<=10 and (not state or (state.loaded and not state.pending and last.rev==state.revision and last.active==state.active)) then value=last end
+ end
  self.wd114Lines=self.wd114Lines or {}
  for i=2,self:NumLines() do
   for _,side in ipairs({"Left","Right"}) do
@@ -62,7 +93,11 @@ local function draw(self,forced)
     local record=self.wd114Lines[key]
     local original=(record and text==record.rendered) and record.original or text
     local clean=plain(original)
-    if (id==9003855 or id==9003432) and side=="Left" and (clean:find("基础（未计灵魂行者）",1,true) or clean:find("基础 (未计灵魂行者)",1,true) or clean:find("Base values; current values shown below.",1,true) or clean:find("Base values: current values shown below.",1,true)) then
+    if glaive(id) and castLine(clean) then
+     local rendered=value and (value.a==0 and (en and "Instant" or "瞬发法术") or string.format(en and "%.2f sec cast" or "%.2f秒施法",value.a/1000)) or (en and "Cast time: syncing" or "施法时间同步中")
+     self.wd114Lines[key]={original=original,rendered=rendered}
+     setGlaiveLine(font,id,rendered)
+    elseif (id==9003855 or id==9003432) and side=="Left" and (clean:find("基础（未计灵魂行者）",1,true) or clean:find("基础 (未计灵魂行者)",1,true) or clean:find("Base values; current values shown below.",1,true) or clean:find("Base values: current values shown below.",1,true)) then
      local rendered=walkerDescription(id,value)
      self.wd114Lines[key]={original=original,rendered=rendered}
      if text~=rendered then font:SetText(rendered);changed=true end
@@ -117,7 +152,7 @@ local function draw(self,forced)
    local font=_G[self:GetName().."TextLeft"..self.wd114EffectLine];if font and font:GetText()~=text then font:SetText(text);changed=true end
   end
  end
- if changed and self.Show and self:IsShown() then self:Show() end
+ if changed and not glaive(id) and self.Show and self:IsShown() then self:Show() end
 end
 local function refresh(self,forced)
  -- Show() and other tooltip hooks may synchronously request another refresh.
@@ -141,14 +176,15 @@ local function receive(message)
  if state and state.loaded and (state.pending or tonumber(rev)~=state.revision or tonumber(active)~=state.active) then return end
  failures=0
  cache[id]={e=tonumber(e),d=tonumber(d),c=tonumber(c),cost=tonumber(cost),a=tonumber(a),b=tonumber(b),rev=tonumber(rev),active=tonumber(active),time=GetTime()}
+ if glaive(id) then glaiveLast[id]=cache[id] end
  if tip:IsShown() and tip.wd114Spell==id then refresh(tip) end
 end
 for _,event in ipairs({"CHAT_MSG_SYSTEM","PLAYER_ENTERING_WORLD","UNIT_AURA","UNIT_STATS","UNIT_INVENTORY_CHANGED","PLAYER_LEVEL_UP"}) do frame:RegisterEvent(event) end
 frame:SetScript("OnEvent",function(_,event,arg)
  if event=="CHAT_MSG_SYSTEM" then
   if type(arg)=="string" and arg:match("^WD114|") then receive(arg)
-  elseif type(arg)=="string" and arg:match("^WD16|") then invalidate() end
- elseif event:match("^UNIT_") then if arg=="player" then invalidate() end
+  elseif type(arg)=="string" and (arg:match("^WD16|") or arg:match("^WD139")) then invalidate() end
+ elseif event:match("^UNIT_") then if arg=="player" then invalidate(true) end
  else invalidate() end
 end)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM",function(_,_,text) return type(text)=="string" and text:match("^WD114|")~=nil end)
