@@ -3316,6 +3316,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing131.inc"
 #include "RebornWitchDoctorCommon142.inc"
 #include "RebornWitchDoctorShadow146.inc"
+#include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
 #include "RebornWitchDoctorShadow145.inc"
 #include "RebornWitchDoctorShadow143.inc"
@@ -3341,6 +3342,7 @@ class spell_reborn_wd126_shrink_ally : public SpellScript
 void AddRebornWitchDoctorScripts()
 {
     WD146::Register();
+    WD148::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

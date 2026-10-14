@@ -29,6 +29,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD148Bridge { void Apply(Player*,bool); }
 namespace WD146Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD145Bridge { void Apply(Player*,bool,bool,bool,bool); }
 namespace WD144Bridge { void Apply(Player*,uint32,uint32,bool,bool); }
@@ -831,6 +832,18 @@ bool Check147(ChatHandler* h)
     return true;
 }
 
+bool Check148(ChatHandler* h)
+{
+    Player* p=h->GetSession()->GetPlayer();if(!Doctor(p))return true;
+    Aura* lesser=p->GetAura(9004061,p->GetGUID());
+    AuraEffect* damage=lesser?lesser->GetEffect(EFFECT_2):nullptr;
+    AuraEffect* pulse=lesser?lesser->GetEffect(EFFECT_1):nullptr;
+    uint32 remaining=0;
+    for(uint32 id=9004030;id<=9004036;++id)if(p->HasSpell(id))remaining=std::max(remaining,p->GetSpellCooldownDelay(id));
+    h->PSendSysMessage("WD148 talent={} avatar={} lesser_ms={} magic_pct={} ticks={} glaive_ms={}",p->HasAura(9004060,p->GetGUID())?1:0,p->HasAura(9003270,p->GetGUID())?1:0,lesser?lesser->GetDuration():0,damage?damage->GetAmount():0,pulse?pulse->GetTickNumber():0,remaining);
+    return true;
+}
+
 class Commands : public CommandScript
 {
 public:
@@ -842,6 +855,7 @@ public:
             {"wd141buy",PanelUnlockBuy,SEC_PLAYER,Console::No},
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
             {"wd147check",Check147,SEC_PLAYER,Console::No},
+            {"wd148check",Check148,SEC_PLAYER,Console::No},
             {"wd145hit",Hit145,SEC_PLAYER,Console::No},
             {"wd146check",Check146,SEC_PLAYER,Console::No},
             {"wd145check",Check145,SEC_PLAYER,Console::No},

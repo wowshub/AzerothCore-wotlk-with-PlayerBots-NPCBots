@@ -156,3 +156,6 @@ for _,n in ipairs(RebornWDTreeData) do
  if n.ID==30895 then n.RequiredLevel=15;n.RequiredIDs={8574} end
  if n.ID==6063 then n.RequiredLevel=20;n.RequiredIDs={30895} end
 end
+
+-- WD148: natural-expiration follow-up to Voljin Blessing.
+for _,n in ipairs(RebornWDTreeData) do if n.ID==6069 then n.RequiredLevel=20;n.RequiredIDs={6063} end end
