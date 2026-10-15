@@ -33,7 +33,14 @@ class eclipse_cast : public SpellScript
     SpellCastResult Check()
     {
         Player* p=GetCaster()->ToPlayer();
-        return Owns(p,GetSpellInfo()->Id) && Count(p)>0 ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+        if(!Owns(p,GetSpellInfo()->Id)) return SPELL_FAILED_CASTER_AURASTATE;
+        if(Count(p)==0)
+        {
+            if(p->GetSession()) ChatHandler(p->GetSession()).SendNotification(
+                "灵魂蚀需要至少1层灵魂。请先用灵魂回收（Reclamation）等方式获取灵魂。");
+            return SPELL_FAILED_DONT_REPORT;
+        }
+        return SPELL_CAST_OK;
     }
     void Register() override { OnCheckCast += SpellCheckCastFn(eclipse_cast::Check); }
 };

@@ -2779,11 +2779,14 @@ class spell_reborn_wd53a_recall : public SpellScript
     }
 };
 
+namespace WD152 { uint32 TakeReady(Player*); }
 // WD55A: Shadowflare is a direct ground AoE in current CoA, not a channel.
 // Spirit's native periodic heal/energize and stack lifecycle remain in the DBC.
 class spell_reborn_wd55a_shadowflare : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd55a_shadowflare);
+    uint32 readyPercent=0;
+    void SnapshotReady() {if(!GetSpell()->IsTriggered())readyPercent=WD152::TakeReady(GetCaster()->ToPlayer());}
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003574}); }
     SpellCastResult CheckDoctor()
     {
@@ -2800,7 +2803,7 @@ class spell_reborn_wd55a_shadowflare : public SpellScript
         if (!IsDoctor(player)) return;
         float shadow=float(std::max(0,player->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW)));
         float ranged=std::max(0.0f,player->GetTotalAttackPowerValue(RANGED_ATTACK));
-        SetEffectValue(int32(float(GetEffectValue())+0.35f*shadow*WD84A::PowerScale(player)+0.10f*ranged));
+        SetEffectValue(int32((float(GetEffectValue())+0.35f*shadow*WD84A::PowerScale(player)+0.10f*ranged)*(100+readyPercent)/100.f));
     }
     void RewardKill()
     {
@@ -2814,6 +2817,7 @@ class spell_reborn_wd55a_shadowflare : public SpellScript
     }
     void Register() override
     {
+        OnCast += SpellCastFn(spell_reborn_wd55a_shadowflare::SnapshotReady);
         OnCheckCast += SpellCheckCastFn(spell_reborn_wd55a_shadowflare::CheckDoctor);
         OnEffectLaunchTarget += SpellEffectFn(spell_reborn_wd55a_shadowflare::Scale,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
         AfterHit += SpellHitFn(spell_reborn_wd55a_shadowflare::RewardKill);
@@ -3323,6 +3327,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorShadow149.inc"
 #include "RebornWitchDoctorSerpent150.inc"
 #include "RebornWitchDoctorCurse151.inc"
+#include "RebornWitchDoctorShadow152.inc"
 #include "RebornWitchDoctorShadow146.inc"
 #include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
@@ -3354,6 +3359,7 @@ void AddRebornWitchDoctorScripts()
     WD149::Register();
     WD150::Register();
     WD151::Register();
+    WD152::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();
