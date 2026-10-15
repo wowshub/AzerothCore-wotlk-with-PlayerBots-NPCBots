@@ -1,0 +1,12 @@
+[
+  {
+    "path": "modules\\mod-playerbots\\src\\Bot\\Engine\\Value\\Value.h",
+    "input": "c1b1a781effdcbd6a8f41bac76052b7f54ed2daee2c7f559e28297b8b16a4645",
+    "output": "c36365bcd96dca1fb0809239f89df876f0cf409943a977f2b396ef0da419730e"
+  },
+  {
+    "path": "modules\\mod-playerbots\\src\\Bot\\Engine\\Value\\Value.cpp",
+    "input": "64d5193a0366ae074e94e13eb380c539093dfd29c7b414d49df9901d70d88f8d",
+    "output": "1f657c083fb8ae7ae21b36300c40fae9628312257c0913ed93a85b5cbb7285e1"
+  }
+]
