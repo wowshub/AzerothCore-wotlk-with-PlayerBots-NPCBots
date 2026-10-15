@@ -1,0 +1,82 @@
+[
+  {
+    "path": "02_\u8986\u76d6\u5230\u5ba2\u6237\u7aef\u6839\u76ee\u5f55/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "sha256": "93bca033f260bd30fd4ff13eb1cd1e5d1de3874857de8cd15f1bcc4f6291283a",
+    "matched_tested_A": true
+  },
+  {
+    "path": "02_\u8986\u76d6\u5230\u5ba2\u6237\u7aef\u6839\u76ee\u5f55/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "sha256": "61521bd0b2c7dd0a4a8d88832854ad734d98bd874ee1c90266cd064f41ec1fcf",
+    "matched_tested_A": true
+  },
+  {
+    "path": "02_\u8986\u76d6\u5230\u5ba2\u6237\u7aef\u6839\u76ee\u5f55/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "sha256": "dff83fbdfcc477af93e68c68533dfc07ca98c442e8a16d4c1524ed5592f42115",
+    "matched_tested_A": true
+  },
+  {
+    "path": "02_\u8986\u76d6\u5230\u5ba2\u6237\u7aef\u6839\u76ee\u5f55/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "sha256": "215b46d62eae1cfee82730daa3f07b05a9d7d033192c58aa365b525a0592f2fd",
+    "matched_tested_A": true
+  },
+  {
+    "path": "04_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc/SkillLineAbility.dbc",
+    "sha256": "dc92f939dd0805ac9b804996d872ded0f870b4e455d79061860762f7ce9c5327",
+    "matched_tested_A": true
+  },
+  {
+    "path": "04_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc/Spell.dbc",
+    "sha256": "381817cd760b68c67ead095cb1e6eb7771552228e10c6d3a82cd9e79f82cc7c9",
+    "matched_tested_A": true
+  },
+  {
+    "path": "04_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc/SpellIcon.dbc",
+    "sha256": "b4cbfc8c5da73c0d235c805a064adbf82fb8f66e394ebf6edcaaa703e3179c6a",
+    "matched_tested_A": true
+  },
+  {
+    "path": "04_\u8986\u76d6\u5230\u670d\u52a1\u7aef\u6839\u76ee\u5f55/Data/dbc/SpellRadius.dbc",
+    "sha256": "e2bede3719dc05ab3a1529692a2cea28249ad6eba988a41ee90e26d28908ea11",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+    "sha256": "161bc89542a7faeee4afe5e7ecfc9d6e443355dafdf5bdd1a916371b9d9bf315",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/DBFilesClient/Spell.dbc",
+    "sha256": "84f352ff8eb6282c91cb62017bb3145eb00a8443e394149122cec4387007efb6",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/DBFilesClient/SpellIcon.dbc",
+    "sha256": "6de0b5d76dc7de12aabb1706a1575673372dd1f60c1bf0408e6c0158b5af2570",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/DBFilesClient/SpellRadius.dbc",
+    "sha256": "e2bede3719dc05ab3a1529692a2cea28249ad6eba988a41ee90e26d28908ea11",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/Interface/Icons/RebornWD151_0.blp",
+    "sha256": "97f8a944225a006cd135d46252ceb236c31781e0a34c30de596a7b8eb89d5f5b",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/Interface/Icons/RebornWD151_1.blp",
+    "sha256": "e0fd90e6cedec2b91c62925633693e9849a72674e0267c4516cea2b5da719cbe",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/Interface/Icons/RebornWD151_2.blp",
+    "sha256": "e45160a3cff516121754153689b9e8eb9f255b30ba34c46f8ae08c4e2e916510",
+    "matched_tested_A": true
+  },
+  {
+    "path": "\u5bfc\u5165\u73b0\u6709PATCH-XA/Interface/Icons/RebornWD151_3.blp",
+    "sha256": "de0c700e07a7ecd5ee8d1b4a00793598926f35e2ff63a00eeded023cd39f5514",
+    "matched_tested_A": true
+  }
+]

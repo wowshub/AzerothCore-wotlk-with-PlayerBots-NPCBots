@@ -165,3 +165,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==5253 or n.ID==6853 then n.Require
 
 -- WD150 connected ward/proc branch.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==30892 then n.RequiredLevel=20;n.RequiredIDs={6072}elseif n.ID==6983 then n.RequiredLevel=20;n.RequiredIDs={30892}elseif n.ID==5164 then n.RequiredLevel=20;n.RequiredIDs={6983}end end
+
+-- WD151 connected curse branch.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==6011 then n.RequiredLevel=20;n.RequiredIDs={29729}elseif n.ID==29729 then n.RequiredLevel=20;n.RequiredIDs={6983}elseif n.ID==6073 then n.RequiredLevel=20;n.RequiredIDs={5253,6069,6853}elseif n.ID==29743 then n.RequiredLevel=26;n.RequiredIDs={12264,30891}end end

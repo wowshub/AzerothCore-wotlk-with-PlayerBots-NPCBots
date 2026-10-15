@@ -13,16 +13,21 @@ function M.AERank(id,mask)
  return M.MaskRank(mask,Shift(i),L.nodes[i].width)
 end
 function M.AESpent(mask)
- local total=0;for id,i in pairs(index) do if i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=73) or (i>=116 and i<=117) or (i>=108 and i<=110) then total=total+M.AERank(id,mask) end end;return total
+ local total=0;for id,i in pairs(index) do if i==133 or i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=73) or (i>=116 and i<=117) or (i>=108 and i<=110) then total=total+M.AERank(id,mask) end end;return total
 end
 function M.TEFoundation(mask) return M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31345,mask) end
 function M.BrewingFoundation(mask) return M.AERank(7128,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask) end
 function M.BrewingSpent(mask) return M.AERank(7133,mask)+M.AERank(29740,mask)+M.AERank(6026,mask)+M.AERank(30333,mask)+M.AERank(6027,mask)+M.AERank(6015,mask)+M.AERank(29310,mask)+M.AERank(29754,mask)+M.AERank(6016,mask)+M.AERank(6009,mask)+ M.AERank(30823,mask)+M.AERank(6022,mask)+M.AERank(6013,mask)+ M.AERank(6021,mask)+M.AERank(6014,mask)+ M.AERank(6645,mask)+M.AERank(4112,mask)+M.AERank(7130,mask)+ M.AERank(35051,mask)+M.AERank(30888,mask)+M.AERank(29738,mask)+ M.AERank(35065,mask)+M.AERank(35064,mask)+M.AERank(35068,mask)+ M.AERank(7128,mask)+ M.AERank(6020,mask)+M.AERank(29737,mask)+ M.AERank(6498,mask)+M.AERank(29303,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask)+M.AERank(7948,mask)+M.AERank(31137,mask)+M.AERank(7132,mask)+M.AERank(29753,mask) end
-function M.TESpent(mask) return M.AERank(30892,mask)+M.AERank(6983,mask)+M.AERank(5164,mask)+ M.AERank(5253,mask)+M.AERank(6853,mask)+ M.AERank(6069,mask)+ M.AERank(8574,mask)+M.AERank(30895,mask)+M.AERank(6063,mask)+ M.AERank(7086,mask)+M.AERank(6072,mask)+M.AERank(6074,mask)+ M.AERank(1969,mask)+M.AERank(7779,mask)+ M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
+function M.TESpent(mask) return M.AERank(6011,mask)+M.AERank(6073,mask)+M.AERank(29729,mask)+ M.AERank(30892,mask)+M.AERank(6983,mask)+M.AERank(5164,mask)+ M.AERank(5253,mask)+M.AERank(6853,mask)+ M.AERank(6069,mask)+ M.AERank(8574,mask)+M.AERank(30895,mask)+M.AERank(6063,mask)+ M.AERank(7086,mask)+M.AERank(6072,mask)+M.AERank(6074,mask)+ M.AERank(1969,mask)+M.AERank(7779,mask)+ M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
 function M.AEValid(mask)
  if M.MaskRank(mask,67,1)>0 or not M.LayoutValid(mask) or (M.AERank(35064,mask)>2 or M.AERank(6498,mask)>2 or M.AERank(9347,mask)>2 or M.AERank(6047,mask)>2 or M.AERank(6062,mask)>2 or M.AERank(31345,mask)>2 or M.AERank(6007,mask)>2 or M.AERank(7088,mask)>2 or M.AERank(7131,mask)>2 or M.AERank(30884,mask)>2 or M.AERank(29736,mask)>2) then return false,"加点数据无效，请刷新方案" end
  if M.TESpent(mask)>(M.teBudget or 0) then return false,"专精点数TE不足；AE不能代替TE" end
  local function rank(id) return M.AERank(id,mask) end
+ if (rank(6011)>0 or rank(6073)>0 or rank(29729)>0) and (M.level<20 or M.specs[M.slot+1]~=2 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)<8)then return false,"需要20级、暗影方案和8点此前暗影TE"end
+ if rank(6011)>0 and rank(29729)==0 then return false,"需要洛阿之力（团队）前置"end
+ if rank(29729)>0 and rank(6983)==0 then return false,"需要巫毒之火前置"end
+ if rank(6073)>0 and rank(5253)+rank(6069)+rank(6853)==0 then return false,"需要弑神者、残余能量或真灵魂中的一个前置"end
+ if rank(29743)>0 and (M.level<26 or rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)<9 or rank(12264)+rank(30891)==0 or rank(11323)>0)then return false,"需要26级、9基础AE和相连前置；与显性诅咒互斥"end
  if rank(30892)>0 and (M.level<20 or M.specs[M.slot+1]~=2 or rank(6072)==0 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)<8)then return false,"需要20级、灵魂信徒和8点既有暗影TE"end
  if rank(6983)>0 and rank(30892)==0 then return false,"需要瑟拉图斯的召唤"end
  if rank(5164)>0 and rank(6983)==0 then return false,"需要巫毒之火"end
@@ -74,7 +79,7 @@ function M.AEValid(mask)
  if (rank(6047)>0 or rank(7092)>0) and rank(6054)==0 then return false,"睿智／寻觅者需要灵性传统" end
  if rank(29309)>0 and M.level<16 then return false,"净化神像需要角色等级16" end
  if rank(29309)>0 and rank(6047)==0 and rank(7092)==0 then return false,"净化神像需要睿智或寻觅者" end
- if (rank(4004)>0 or rank(4533)>0 or rank(11532)>0 or rank(4532)>0 or rank(11133)>0 or M.TESpent(mask)-M.BrewingSpent(mask)-rank(1969)-rank(7779)-rank(7086)-rank(6072)-rank(6074)-rank(8574)-rank(30895)-rank(6063)-rank(6069)-rank(5253)-rank(6853)-rank(30892)-rank(6983)-rank(5164)>0) and M.specs[M.slot+1]~=0 then return false,"本方案需要绑定巫毒专精" end
+ if (rank(4004)>0 or rank(4533)>0 or rank(11532)>0 or rank(4532)>0 or rank(11133)>0 or M.TESpent(mask)-M.BrewingSpent(mask)-rank(1969)-rank(7779)-rank(7086)-rank(6072)-rank(6074)-rank(8574)-rank(30895)-rank(6063)-rank(6069)-rank(5253)-rank(6853)-rank(30892)-rank(6983)-rank(5164)-rank(6011)-rank(6073)-rank(29729)>0) and M.specs[M.slot+1]~=0 then return false,"本方案需要绑定巫毒专精" end
  if (M.BrewingSpent(mask)>0 or rank(9311)>0 or rank(4715)>0) and M.specs[M.slot+1]~=1 then return false,"本方案需要绑定酿造专精" end
  if (rank(4005)>0 or rank(12645)>0 or rank(12646)>0) and M.specs[M.slot+1]~=1 then return false,"本方案需要绑定酿造专精" end
  if (rank(12645)>0 or rank(12646)>0) and rank(4005)==0 and rank(29744)==0 then return false,"需要大锅酿造或治疗守卫" end
@@ -88,7 +93,7 @@ function M.AEValid(mask)
  if (rank(7948)>0 or rank(31137)>0) and M.BrewingFoundation(mask)<8 then return false,"需要先投入8点基础酿造TE；这两个节点不能互相凑前置" end
  if rank(7948)>0 and M.level<16 then return false,"灵魂之触需要16级" end
  if rank(31137)>0 and M.level<30 then return false,"丛林秘法需要30级" end
- if (rank(5113)>0 or rank(30891)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
+ if (rank(5113)>0 or rank(30891)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)-rank(29743)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
  if rank(5113)>0 and M.level<58 then return false,"诅咒雕像需要58级" end
  if rank(30891)>0 and M.level<30 then return false,"穆厄扎拉之触需要30级" end
  if (rank(7132)>0 or rank(29753)>0) and M.level<31 then return false,"佳酿需要31级" end
@@ -107,7 +112,7 @@ function M.AEValid(mask)
   if rank(4004)==0 then return false,"暗影傀儡缺少前置：傀儡师之线（巫毒最右竖列顶部，免费）" end
   if (M.teBudget or 0)<1 then return false,"暗影傀儡需要1点TE" end
  end
- if (rank(30147)>0 or rank(4132)>0 or rank(7033)>0 or rank(6051)>0 or rank(6048)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)<9 then return false,"需要先投入9 AE；同层节点不能互相凑前置" end
+ if (rank(30147)>0 or rank(4132)>0 or rank(7033)>0 or rank(6051)>0 or rank(6048)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)-rank(29743)<9 then return false,"需要先投入9 AE；同层节点不能互相凑前置" end
  if rank(6051)>0 and M.level<28 then return false,"迅捷神像需要等级28" end
  if rank(6048)>0 and M.level<32 then return false,"黑暗魔精需要等级32" end
  if rank(30147)>0 and M.level<28 then return false,"炼金强化需要等级28" end
@@ -442,6 +447,10 @@ details[6853]={zh="真灵魂",en="The True Spirit",level=20,early="29",kind="暗
 details[30892]={zh="瑟拉图斯的召唤",en="Call of Sseratus",level=20,early="27",kind="暗影天赋 / Shadow talent",effects={{"召唤4个蛇守卫，持续15秒。40秒冷却，消耗28%基础法力；只召唤一组，支持真灵魂。","Summon 4 Serpent Wards for 15 sec. 40 sec cooldown; costs 28% base mana. Successful summons support The True Spirit."}},limit={"仅当前保存方案。","Active saved build only."},path={"需相连前置及8点既有暗影TE。","Requires connected prerequisite and 8 prior Shadow TE."}}
 details[6983]={zh="巫毒之火",en="Voodoo Fire",level=20,early="29",kind="暗影天赋 / Shadow talent",effects={{"蛇守卫每次攻击有20%几率释放巫毒之火，对目标周围10码内最多3名敌人造成火焰伤害。灵魂打击者使几率提高至30%。","Each ward attack has a 20% Voodoo Fire chance; up to 3 enemies within 10 yards. Spirit Striker raises it to 30%."},{"蛇守卫每次攻击有40%几率释放巫毒之火，对目标周围10码内最多3名敌人造成火焰伤害。灵魂打击者使几率提高至50%。","Each ward attack has a 40% Voodoo Fire chance; up to 3 enemies within 10 yards. Spirit Striker raises it to 50%."}},limit={"仅当前保存方案。","Active saved build only."},path={"需相连前置及8点既有暗影TE。","Requires connected prerequisite and 8 prior Shadow TE."}}
 details[5164]={zh="灵魂打击者",en="Spirit Striker",level=20,early="31",kind="暗影天赋 / Shadow talent",effects={{"巫毒之火的触发几率增加10个百分点：巫毒之火1级时为30%，2级时为50%。灵魂打击者本身只有1级。","This talent has 1 rank. Voodoo Fire gains 10 percentage points: 30% at Voodoo Fire rank 1, 50% at rank 2."}},limit={"仅当前保存方案。","Active saved build only."},path={"需相连前置及8点既有暗影TE。","Requires connected prerequisite and 8 prior Shadow TE."}}
+details[6011]={zh="暗影附魔",en="Shadow Enchantments",level=20,early="33",kind="天赋 / Talent",effects={{"Jinx类诅咒的持续时间和效果提高25%。","Jinx duration and effectiveness increase by 25%."},{"Jinx类诅咒的持续时间和效果提高50%。","Jinx duration and effectiveness increase by 50%."}},limit={"适用于迟缓、希里克、法力、缩小诅咒及其关联效果；不包括恶意妖术（Hex of Malice）。法力恢复抑制最高100%；仅当前已保存激活方案。","Affects Lethargy, Hir'eek's, Mana and Shrinking Jinx and linked effects; excludes Hex of Malice. Mana regeneration suppression is capped at 100%. Active saved build only."},path={"需要洛阿之力（团队）；每级1 TE。","Requires the displayed connected prerequisite and investment."}}
+details[6073]={zh="黑暗洛阿咒语",en="Dark Loa Incantation",level=20,early="31",kind="天赋 / Talent",effects={{"暗影爆发一次造成实际伤害的敌人达到3名后，对这些敌人附加已学会的最高级恶毒妖术；免疫或零伤害不计数。","Shadowflare damaging at least 3 enemies applies your highest learned Hex of Malice to the damaged enemies."}},limit={"仅当前已保存激活方案。","Active saved build only."},path={"需弑神者、残余能量或真灵魂之一；1 TE。","Requires the displayed connected prerequisite and investment."}}
+details[29743]={zh="潜伏诅咒",en="Latent Curse",level=26,early="30",kind="天赋 / Talent",effects={{"你施放的缩小妖术被敌人驱散时，对驱散者施加5秒苦难：沉默并每秒造成暗影伤害。自然结束、取消或死亡不触发。","An enemy dispelling your Shrinking Jinx suffers 5 sec of Misery: silence and Shadow damage each second. Natural expiry, cancellation and death do not trigger it."}},limit={"仅当前已保存激活方案。","Active saved build only."},path={"需9基础AE及相连前置；与显性诅咒互斥；1 AE。","Requires the displayed connected prerequisite and investment."}}
+details[29729]={zh="洛阿之力（团队）",en="Strength of Da Loa",level=20,early="31",kind="天赋 / Talent",effects={{"队伍及团队成员攻击强度提高5%，同类百分比攻击强度取更高效果。你自己的灵魂恢复间隔缩短50%。","Party/raid attack power increases by 5%; the strongest equivalent effect applies. Your Spirit restoration interval is reduced by 50%."}},limit={"仅当前已保存激活方案。","Active saved build only."},path={"需巫毒之火；1 TE。","Requires the displayed connected prerequisite and investment."}}
 local function Pair(zh,en,r,g,b,sameColor)
  -- Both languages remain visible; the language switch chooses which comes first.
  if RebornWDLanguage=="en" then zh,en=en,zh end
@@ -449,6 +458,10 @@ local function Pair(zh,en,r,g,b,sameColor)
  GameTooltip:AddLine(en,sameColor and (r or 1) or .7,sameColor and (g or .82) or .75,sameColor and (b or 0) or .8,true)
 end
 local function PathReady(id)
+ if id==6011 then return M.AERank(29729)>0 end
+ if id==29729 then return M.AERank(6983)>0 end
+ if id==6073 then return M.AERank(5253)+M.AERank(6069)+M.AERank(6853)>0 end
+ if id==29743 then return M.AERank(12264)+M.AERank(30891)>0 and M.AERank(11323)==0 end
  if id==6031 or id==6525 or id==12525 then
   local foundation=M.AERank(29744)+M.AERank(6054)+M.AERank(6047)+M.AERank(7092)+M.AERank(29309)+M.AERank(29301)+M.AERank(7088)+M.AERank(6030)+M.AERank(31118)
   return M.level>=26 and foundation>=9 and (id==6031 or M.AERank(6031)>0) and (id~=6525 or M.AERank(12525)==0) and (id~=12525 or M.AERank(6525)==0)
@@ -456,7 +469,7 @@ local function PathReady(id)
  if id==29306 then return M.level>=30 and M.AERank(29744)+M.AERank(6054)+M.AERank(6047)+M.AERank(7092)+M.AERank(29309)+M.AERank(29301)+M.AERank(7088)+M.AERank(6030)+M.AERank(31118)>=9 end
  if id==6381 or id==12048 or id==11323 or id==12264 or id==6042 or id==9347 then return M.AERank(29744)+M.AERank(6054)+M.AERank(6047)+M.AERank(7092)+M.AERank(29309)+M.AERank(29301)+M.AERank(7088)+M.AERank(6030)+M.AERank(31118)>=9 end
  if id==6030 then return true end
- if id==30891 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)-M.AERank(12264)-M.AERank(6042)-M.AERank(9347)-M.AERank(29306)-M.AERank(6031)-M.AERank(6525)-M.AERank(12525)>=9 end
+ if id==30891 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)-M.AERank(12264)-M.AERank(6042)-M.AERank(9347)-M.AERank(29306)-M.AERank(6031)-M.AERank(6525)-M.AERank(12525)-M.AERank(29743)>=9 end
  if id==7132 or id==29753 then return M.specs[M.slot+1]==1 and M.BrewingFoundation(M.draftAE)>=8 end
  if id==7948 or id==31137 then return (id~=7948 or M.AERank(6013)==0) and M.specs[M.slot+1]==1 and M.BrewingFoundation(M.draftAE)>=8 end
  if id==7133 or id==29740 or id==6026 or id==30333 or id==6027 or id==6015 or id==29310 or id==29754 then local m=M.MaskSet(M.draftAE,Shift(index[id]),1,1);return M.AEValid(m) end
@@ -479,7 +492,7 @@ local function PathReady(id)
  if id==11133 then return M.specs[M.slot+1]==0 and M.level>=50 end
  if id==31349 then return M.specs[M.slot+1]==0 and M.level>=59 and M.TEFoundation(M.draftAE)>=8 end
  if id==29929 or id==6055 then return M.specs[M.slot+1]==0 and M.level>=(id==6055 and 59 or 57) and M.TESpent(M.draftAE)-M.AERank(31346)-M.AERank(7100)-M.AERank(29768)-M.AERank(6057)-M.AERank(29929)-M.AERank(6055)>=23 end
- if id==30147 or id==4132 or id==7033 or id==6051 or id==6048 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)-M.AERank(12264)-M.AERank(6042)-M.AERank(9347)-M.AERank(29306)-M.AERank(6031)-M.AERank(6525)-M.AERank(12525)>=9 and ((id~=30147 and id~=6051) or M.level>=28) and (id~=6048 or M.level>=32) end
+ if id==30147 or id==4132 or id==7033 or id==6051 or id==6048 then return M.AESpent(M.draftAE)-M.AERank(30147)-M.AERank(4132)-M.AERank(7033)-M.AERank(6051)-M.AERank(6048)-M.AERank(5113)-M.AERank(30891)-M.AERank(6381)-M.AERank(12048)-M.AERank(11323)-M.AERank(12264)-M.AERank(6042)-M.AERank(9347)-M.AERank(29306)-M.AERank(6031)-M.AERank(6525)-M.AERank(12525)-M.AERank(29743)>=9 and ((id~=30147 and id~=6051) or M.level>=28) and (id~=6048 or M.level>=32) end
  if id==30596 then return M.specs[M.slot+1]==0 and M.level>=27 and M.TEFoundation(M.draftAE)>=8 end
  if id==29768 or id==6057 then return M.specs[M.slot+1]==0 and M.level>=57 and M.TESpent(M.draftAE)-M.AERank(31346)-M.AERank(7100)-M.AERank(29768)-M.AERank(6057)-M.AERank(29929)-M.AERank(6055)>=23 and (id==29768 or M.AERank(29768)>0) end
  if id==7100 then return M.specs[M.slot+1]==0 and M.TESpent(M.draftAE)-M.AERank(31346)-M.AERank(7100)-M.AERank(29768)-M.AERank(6057)-M.AERank(29929)-M.AERank(6055)>=23 end

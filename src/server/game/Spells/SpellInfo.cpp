@@ -1415,6 +1415,7 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     // An unclaimed exact modifier must NOT reach that fallback. Other spells retain it.
     switch (mod->spellId)
     {
+        case 9004090: case 9004091: case 9004095: // WD151 exact Jinx/Spirit modifiers
         case 9004040: // WD146 Soul Feeder: exact Arrow/Eclipse damage only
         case 9004012: // WD145 Village Wisdom exact Reclamation modifier
         case 9003990: case 9003991: case 9003994: case 9003995: // WD144 exact Arrow/Jinx modifiers

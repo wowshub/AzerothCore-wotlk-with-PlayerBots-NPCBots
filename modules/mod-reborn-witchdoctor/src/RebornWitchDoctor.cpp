@@ -3322,6 +3322,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorCommon142.inc"
 #include "RebornWitchDoctorShadow149.inc"
 #include "RebornWitchDoctorSerpent150.inc"
+#include "RebornWitchDoctorCurse151.inc"
 #include "RebornWitchDoctorShadow146.inc"
 #include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
@@ -3352,6 +3353,7 @@ void AddRebornWitchDoctorScripts()
     WD148::Register();
     WD149::Register();
     WD150::Register();
+    WD151::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();
