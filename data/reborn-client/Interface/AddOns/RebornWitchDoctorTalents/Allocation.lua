@@ -18,11 +18,16 @@ end
 function M.TEFoundation(mask) return M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31345,mask) end
 function M.BrewingFoundation(mask) return M.AERank(7128,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask) end
 function M.BrewingSpent(mask) return M.AERank(7133,mask)+M.AERank(29740,mask)+M.AERank(6026,mask)+M.AERank(30333,mask)+M.AERank(6027,mask)+M.AERank(6015,mask)+M.AERank(29310,mask)+M.AERank(29754,mask)+M.AERank(6016,mask)+M.AERank(6009,mask)+ M.AERank(30823,mask)+M.AERank(6022,mask)+M.AERank(6013,mask)+ M.AERank(6021,mask)+M.AERank(6014,mask)+ M.AERank(6645,mask)+M.AERank(4112,mask)+M.AERank(7130,mask)+ M.AERank(35051,mask)+M.AERank(30888,mask)+M.AERank(29738,mask)+ M.AERank(35065,mask)+M.AERank(35064,mask)+M.AERank(35068,mask)+ M.AERank(7128,mask)+ M.AERank(6020,mask)+M.AERank(29737,mask)+ M.AERank(6498,mask)+M.AERank(29303,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask)+M.AERank(7948,mask)+M.AERank(31137,mask)+M.AERank(7132,mask)+M.AERank(29753,mask) end
-function M.TESpent(mask) return M.AERank(6069,mask)+ M.AERank(8574,mask)+M.AERank(30895,mask)+M.AERank(6063,mask)+ M.AERank(7086,mask)+M.AERank(6072,mask)+M.AERank(6074,mask)+ M.AERank(1969,mask)+M.AERank(7779,mask)+ M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
+function M.TESpent(mask) return M.AERank(30892,mask)+M.AERank(6983,mask)+M.AERank(5164,mask)+ M.AERank(5253,mask)+M.AERank(6853,mask)+ M.AERank(6069,mask)+ M.AERank(8574,mask)+M.AERank(30895,mask)+M.AERank(6063,mask)+ M.AERank(7086,mask)+M.AERank(6072,mask)+M.AERank(6074,mask)+ M.AERank(1969,mask)+M.AERank(7779,mask)+ M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
 function M.AEValid(mask)
  if M.MaskRank(mask,67,1)>0 or not M.LayoutValid(mask) or (M.AERank(35064,mask)>2 or M.AERank(6498,mask)>2 or M.AERank(9347,mask)>2 or M.AERank(6047,mask)>2 or M.AERank(6062,mask)>2 or M.AERank(31345,mask)>2 or M.AERank(6007,mask)>2 or M.AERank(7088,mask)>2 or M.AERank(7131,mask)>2 or M.AERank(30884,mask)>2 or M.AERank(29736,mask)>2) then return false,"加点数据无效，请刷新方案" end
  if M.TESpent(mask)>(M.teBudget or 0) then return false,"专精点数TE不足；AE不能代替TE" end
  local function rank(id) return M.AERank(id,mask) end
+ if rank(30892)>0 and (M.level<20 or M.specs[M.slot+1]~=2 or rank(6072)==0 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)<8)then return false,"需要20级、灵魂信徒和8点既有暗影TE"end
+ if rank(6983)>0 and rank(30892)==0 then return false,"需要瑟拉图斯的召唤"end
+ if rank(5164)>0 and rank(6983)==0 then return false,"需要巫毒之火"end
+ if rank(5253)>0 and rank(6853)>0 then return false,"弑神者和真灵魂互斥" end
+ if (rank(5253)>0 or rank(6853)>0) and (M.specs[M.slot+1]~=2 or M.level<20 or rank(6063)==0) then return false,"需要20级、暗影方案和沃金的祝福" end
  if rank(6069)>0 and (M.specs[M.slot+1]~=2 or M.level<20 or rank(6063)==0) then return false,"需要20级、暗影方案和沃金的祝福" end
  if (rank(8574)>0 or rank(30895)>0 or rank(6063)>0) and (M.specs[M.slot+1]~=2 or rank(4006)==0) then return false,"需要暗影猎手方案" end
  if rank(8574)>0 and (M.level<15 or rank(1969)==0) then return false,"需要15级和强化恶毒箭" end
@@ -69,7 +74,7 @@ function M.AEValid(mask)
  if (rank(6047)>0 or rank(7092)>0) and rank(6054)==0 then return false,"睿智／寻觅者需要灵性传统" end
  if rank(29309)>0 and M.level<16 then return false,"净化神像需要角色等级16" end
  if rank(29309)>0 and rank(6047)==0 and rank(7092)==0 then return false,"净化神像需要睿智或寻觅者" end
- if (rank(4004)>0 or rank(4533)>0 or rank(11532)>0 or rank(4532)>0 or rank(11133)>0 or M.TESpent(mask)-M.BrewingSpent(mask)-rank(1969)-rank(7779)-rank(7086)-rank(6072)-rank(6074)-rank(8574)-rank(30895)-rank(6063)-rank(6069)>0) and M.specs[M.slot+1]~=0 then return false,"本方案需要绑定巫毒专精" end
+ if (rank(4004)>0 or rank(4533)>0 or rank(11532)>0 or rank(4532)>0 or rank(11133)>0 or M.TESpent(mask)-M.BrewingSpent(mask)-rank(1969)-rank(7779)-rank(7086)-rank(6072)-rank(6074)-rank(8574)-rank(30895)-rank(6063)-rank(6069)-rank(5253)-rank(6853)-rank(30892)-rank(6983)-rank(5164)>0) and M.specs[M.slot+1]~=0 then return false,"本方案需要绑定巫毒专精" end
  if (M.BrewingSpent(mask)>0 or rank(9311)>0 or rank(4715)>0) and M.specs[M.slot+1]~=1 then return false,"本方案需要绑定酿造专精" end
  if (rank(4005)>0 or rank(12645)>0 or rank(12646)>0) and M.specs[M.slot+1]~=1 then return false,"本方案需要绑定酿造专精" end
  if (rank(12645)>0 or rank(12646)>0) and rank(4005)==0 and rank(29744)==0 then return false,"需要大锅酿造或治疗守卫" end
@@ -432,6 +437,11 @@ details[8574]={zh="灵魂战刃",en="Spirit Glaive",level=15,early="15",kind="�
 details[30895]={zh="噬魂者",en="Soul Feeder",level=15,early="15",kind="暗影天赋 / Shadow talent",effects={{"每个自身灵魂使恶毒箭和灵魂蚀伤害提高5%，最多25%；不消耗灵魂。","Arrow and Eclipse deal 5% more damage per active Spirit."}},limit={"只对当前已保存方案生效。","Active saved build only."},path={"按界面前置，每项1 TE；沃金祝福需8基础暗影TE。","Requires the displayed prerequisite."}}
 details[6063]={zh="沃金的祝福",en="Voljin Blessing",level=20,early="27",kind="暗影天赋 / Shadow talent",effects={{"暗影化身期间，每秒将灵魂战刃当前剩余冷却缩短20%；不是固定减4秒。","During Shadow Avatar, reduce remaining Glaive cooldown by 20% each second."}},limit={"只对当前已保存方案生效。","Active saved build only."},path={"按界面前置，每项1 TE；沃金祝福需8基础暗影TE。","Requires the displayed prerequisite."}}
 details[6069]={zh="残余能量",en="Residual Energy",level=20,early="29",kind="暗影天赋 / Shadow talent",effects={{"暗影化身自然结束后获得8秒次级化身：魔法伤害提高10%，每秒缩短战刃剩余冷却20%。取消、驱散、死亡不触发。","After Shadow Avatar expires naturally: 8 seconds of +10% magic damage and 20% remaining Glaive cooldown reduction each second."}},limit={"仅当前保存方案；主动取消不触发。","Active saved build; natural expiration only."},path={"沃金的祝福前置，再花1 TE。","Requires Voljin Blessing, costs 1 TE."}}
+details[5253]={zh="弑神者",en="Godslayer",level=20,early="29",kind="暗影天赋 / Shadow talent",effects={{"灵魂战刃降低暗影抗性的效果持续5秒；正常结束时，对目标及其周围10码内敌人造成额外暗影伤害。基础伤害随角色等级提高，另加40%暗影法强和25%远程攻击强度。","Natural expiration: Shadow explosion within 10 yards; 315×level scaling +40% Shadow SP +25% RAP."}},limit={"与真灵魂互斥；驱散、死亡或提前移除不触发。","Exclusive with The True Spirit; natural expiration only."},path={"沃金的祝福前置，1 TE。","Requires Voljin Blessing; 1 TE."}}
+details[6853]={zh="真灵魂",en="The True Spirit",level=20,early="29",kind="暗影天赋 / Shadow talent",effects={{"每次获得灵魂或成功召唤蛇守卫，获得10秒增伤Buff：每层6%，最多5层；下一次战刃或整次灵魂蚀消耗并获得增伤。","Spirit gain or Serpent Ward summon: 6% per stack, max 5, for 10 sec; consumed by next Glaive or Eclipse."}},limit={"与弑神者互斥；不增强其他技能。","Exclusive with Godslayer; Glaive/Eclipse only."},path={"沃金的祝福前置，1 TE。","Requires Voljin Blessing; 1 TE."}}
+details[30892]={zh="瑟拉图斯的召唤",en="Call of Sseratus",level=20,early="27",kind="暗影天赋 / Shadow talent",effects={{"召唤4个蛇守卫，持续15秒。40秒冷却，消耗28%基础法力；只召唤一组，支持真灵魂。","Summon 4 Serpent Wards for 15 sec. 40 sec cooldown; costs 28% base mana. Successful summons support The True Spirit."}},limit={"仅当前保存方案。","Active saved build only."},path={"需相连前置及8点既有暗影TE。","Requires connected prerequisite and 8 prior Shadow TE."}}
+details[6983]={zh="巫毒之火",en="Voodoo Fire",level=20,early="29",kind="暗影天赋 / Shadow talent",effects={{"蛇守卫每次攻击有20%几率释放巫毒之火，对目标周围10码内最多3名敌人造成火焰伤害。灵魂打击者使几率提高至30%。","Each ward attack has a 20% Voodoo Fire chance; up to 3 enemies within 10 yards. Spirit Striker raises it to 30%."},{"蛇守卫每次攻击有40%几率释放巫毒之火，对目标周围10码内最多3名敌人造成火焰伤害。灵魂打击者使几率提高至50%。","Each ward attack has a 40% Voodoo Fire chance; up to 3 enemies within 10 yards. Spirit Striker raises it to 50%."}},limit={"仅当前保存方案。","Active saved build only."},path={"需相连前置及8点既有暗影TE。","Requires connected prerequisite and 8 prior Shadow TE."}}
+details[5164]={zh="灵魂打击者",en="Spirit Striker",level=20,early="31",kind="暗影天赋 / Shadow talent",effects={{"巫毒之火的触发几率增加10个百分点：巫毒之火1级时为30%，2级时为50%。灵魂打击者本身只有1级。","This talent has 1 rank. Voodoo Fire gains 10 percentage points: 30% at Voodoo Fire rank 1, 50% at rank 2."}},limit={"仅当前保存方案。","Active saved build only."},path={"需相连前置及8点既有暗影TE。","Requires connected prerequisite and 8 prior Shadow TE."}}
 local function Pair(zh,en,r,g,b,sameColor)
  -- Both languages remain visible; the language switch chooses which comes first.
  if RebornWDLanguage=="en" then zh,en=en,zh end
@@ -526,17 +536,24 @@ function M.AETooltip(n)
  end
  GameTooltip:SetText(d.zh.." / "..d.en,1,.82,0)
  GameTooltip:AddLine(d.kind,.8,.8,.8)
+ local maxRank=tonumber(n.MaxPoints) or #d.effects
+ local function EffectAt(rank)
+  return d.effects[rank] or {"该等级说明缺失，请反馈此节点。","Rank description unavailable; please report this node."}
+ end
  local saved=M.AERank(n.ID,M.aeMasks[M.slot+1] or 0)
  local draft=M.AERank(n.ID)
  local dirty=draft~=saved
- Pair("当前选择："..draft.." / "..#d.effects..(dirty and "（未保存）" or "（已保存）"),
-  "Selected: "..draft.." / "..#d.effects..(dirty and " (unsaved)" or " (saved)"),dirty and .3 or 1,dirty and .8 or 1,1)
- Pair("服务器已保存："..saved.." / "..#d.effects,"Server-saved: "..saved.." / "..#d.effects,.7,.7,.7)
+ Pair("当前选择："..draft.." / "..maxRank..(dirty and "（未保存）" or "（已保存）"),
+  "Selected: "..draft.." / "..maxRank..(dirty and " (unsaved)" or " (saved)"),dirty and .3 or 1,dirty and .8 or 1,1)
+ Pair("服务器已保存："..saved.." / "..maxRank,"Server-saved: "..saved.." / "..maxRank,.7,.7,.7)
  if dirty then
   local zh,en
   if n.ID==7131 or n.ID==30884 or n.ID==29736 then
    zh="本天赋等级："..saved.." → "..draft.."；各级总收益见下方。"
    en="Talent rank: "..saved.." -> "..draft.."; total bonuses for each rank are listed below."
+  elseif n.ID==6983 then
+   zh="巫毒之火等级："..saved.." → "..draft.."；每级触发几率见下方。"
+   en="Voodoo Fire rank: "..saved.." -> "..draft.."; chance for each rank is shown below."
   elseif n.ID==6062 then
    zh="本天赋变化：条件增伤 "..(saved*10).."% → "..(draft*10).."%。"
    en="Change: conditional damage "..(saved*10).."% -> "..(draft*10).."%."
@@ -561,13 +578,13 @@ function M.AETooltip(n)
   Pair("正在保存，等待服务器确认…","Saving; awaiting server confirmation...",1,.82,0)
  end
  if saved>0 then
-  Pair("当前"..saved.."级收益："..d.effects[saved][1],"Current rank "..saved..": "..d.effects[saved][2],.3,1,.4)
+  Pair("当前"..saved.."级收益："..EffectAt(saved)[1],"Current rank "..saved..": "..EffectAt(saved)[2],.3,1,.4)
  end
  if draft~=saved and draft>0 then
-  Pair("待保存"..draft.."级收益："..d.effects[draft][1],"Draft rank "..draft.." (not saved): "..d.effects[draft][2],.3,.8,1)
- elseif saved<#d.effects then
+  Pair("待保存"..draft.."级收益："..EffectAt(draft)[1],"Draft rank "..draft.." (not saved): "..EffectAt(draft)[2],.3,.8,1)
+ elseif saved<maxRank then
   local nextRank=saved+1
-  Pair("加至"..nextRank.."级后："..d.effects[nextRank][1],"At rank "..nextRank..": "..d.effects[nextRank][2],.3,1,.4)
+  Pair("加至"..nextRank.."级后："..EffectAt(nextRank)[1],"At rank "..nextRank..": "..EffectAt(nextRank)[2],.3,1,.4)
  end
  Pair("限制："..d.limit[1],"Limits: "..d.limit[2],1,.3,.3,true)
  if n.ID==31154 then

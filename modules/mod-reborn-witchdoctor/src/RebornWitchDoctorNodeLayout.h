@@ -5,8 +5,8 @@
 #include <string>
 #include <string_view>
 namespace WD139 {
-inline constexpr unsigned Version=1, Capacity=256, LegacyBits=120, Count=126, Bits=140, HexSize=35;
-inline constexpr char Hash[]="b67f52210ad1c33db8474b84d789b88ff31c36f8f281c0fb3b681840a1e09768";
+inline constexpr unsigned Version=1, Capacity=256, LegacyBits=120, Count=131, Bits=146, HexSize=37;
+inline constexpr char Hash[]="42d4255ae1b357d11f9713454202626eb7387ea3c792e1bbf0526d2b3c98c318";
 struct Node { unsigned id, maximum, offset, width; int spec; };
 inline constexpr std::array<Node,Count> Nodes={{
     {29744,1,0,1,-1},
@@ -134,7 +134,12 @@ inline constexpr std::array<Node,Count> Nodes={{
     {8574,1,136,1,2},
     {30895,1,137,1,2},
     {6063,1,138,1,2},
-    {6069,1,139,1,2}
+    {6069,1,139,1,2},
+    {5253,1,140,1,2},
+    {6853,1,141,1,2},
+    {30892,1,142,1,2},
+    {6983,2,143,2,2},
+    {5164,1,145,1,2}
 }};
 inline constexpr auto Ids=[] {
     std::array<unsigned,Count> ids{};

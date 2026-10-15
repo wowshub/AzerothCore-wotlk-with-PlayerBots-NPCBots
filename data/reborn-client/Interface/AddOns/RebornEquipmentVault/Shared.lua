@@ -86,6 +86,7 @@ local function Ribbon(parent,guid,side)
  end
  f:ClearAllPoints()
  if side=='left'then f:SetPoint('TOPRIGHT',parent,'TOPLEFT',-2,-1)
+ elseif side=='trinketbottom'then f:SetPoint('TOPRIGHT',parent,'BOTTOMRIGHT',0,-2)
  elseif side=='bottom'then f:SetPoint('TOPLEFT',parent,'BOTTOMLEFT',0,-2)
  else f:SetPoint('TOPLEFT',parent,'TOPRIGHT',2,-1)end
  f:Show()
@@ -106,7 +107,7 @@ function M.RefreshBadges(stale)
    if not b.evSharedMark then b.evSharedMark=b:CreateFontString(nil,'OVERLAY','GameFontNormalSmall');b.evSharedMark:SetPoint('TOPRIGHT',b,'TOPRIGHT',0,0)end
    local guid
    if not stale then for g,c in pairs(M.carry)do if c.state==2 and c.slot==slot then guid=g;break end end end
-   b.evSharedMark:SetText('');Ribbon(b,guid,slot>=16 and slot<=18 and'bottom'or'left');b.evSharedGuid=guid
+   b.evSharedMark:SetText('');Ribbon(b,guid,slot==14 and'trinketbottom'or(slot>=16 and slot<=18 and'bottom'or'left'));b.evSharedGuid=guid
    if not b.evSharedHook then b.evSharedHook=true;b:HookScript('OnEnter',function(self)
     if self.evSharedGuid then local a=packs(self.evSharedGuid);local labels={};for _,p in ipairs(a)do labels[#labels+1]=('#'..p..' '..M.Name(p))end
      if #a>0 then GameTooltip:AddLine(en('搭配：','Outfits: ')..table.concat(labels,' / '),1,.8,.25,true);GameTooltip:Show()end

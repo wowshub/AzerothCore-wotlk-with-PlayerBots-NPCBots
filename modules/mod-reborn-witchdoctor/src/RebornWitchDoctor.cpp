@@ -44,6 +44,8 @@
 #include "Trainer.h"
 #include <algorithm>
 
+namespace WD149 { void Gain(Player*);uint32 ReadyPct(Player*);void Consume(Player*); }
+namespace WD150 { bool OwnedMass(Player*,ObjectGuid);void Shot(Creature*,ObjectGuid); }
 namespace WD5A { uint32 RitualHexingRank(Player* player); bool CanUseHexTalent(Player* player,uint32 spell); bool CanUseHollow(Player* player); bool CanCastBadJuju(Player* player); void TrainerOptions(Player* player); void TrainerPurchase(Player* player); }
 
 namespace
@@ -1086,6 +1088,7 @@ class spell_reborn_wd21a_serpent : public SpellScript
         WD21A::Clear(player);
         player->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid=ward->GetGUID();
         WD53A::Track(player,GetSpell(),ward->GetGUID());
+        if(entry==WD21A::Entry)WD149::Gain(player);
     }
     void Register() override
     {
@@ -1184,7 +1187,7 @@ public:
             Player* player=ObjectAccessor::GetPlayer(*me,owner);
             if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
                 !player->IsInMap(me) || !player->InSamePhase(me) ||
-                player->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid!=me->GetGUID())
+                (player->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid!=me->GetGUID()&&!WD150::OwnedMass(player,me->GetGUID())))
             {
                 me->DespawnOrUnsummon();return;
             }
@@ -1204,7 +1207,9 @@ public:
                 me->SetFacingToObject(target);
                 // Keep donor base/per-level damage in DBC, evaluated once by core.
                 // Credit the owner as upstream does; do not add a second SP formula.
+                ObjectGuid victim=target->GetGUID();
                 me->CastSpell(target,WD21A::Attack,true,nullptr,nullptr,owner);
+                WD150::Shot(me,victim);
             }
         }
     };
@@ -3315,6 +3320,8 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorBrewing130.inc"
 #include "RebornWitchDoctorBrewing131.inc"
 #include "RebornWitchDoctorCommon142.inc"
+#include "RebornWitchDoctorShadow149.inc"
+#include "RebornWitchDoctorSerpent150.inc"
 #include "RebornWitchDoctorShadow146.inc"
 #include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
@@ -3343,6 +3350,8 @@ void AddRebornWitchDoctorScripts()
 {
     WD146::Register();
     WD148::Register();
+    WD149::Register();
+    WD150::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

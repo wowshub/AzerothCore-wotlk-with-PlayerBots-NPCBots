@@ -51,6 +51,9 @@ class eclipse_aura : public AuraScript
         damage=uint32(std::max(0,effect->GetAmount())+rap*.07f+sp*.15f);
         // Official parent tooltip: splash coefficients 15% RAP + 15% Shadow SP.
         splash=uint32(130*WD120A::Scaling(p->GetLevel())+rap*.15f+sp*.15f);
+        uint32 pct=WD149::ReadyPct(p);
+        damage=uint32(uint64(damage)*(100+pct)/100);splash=uint32(uint64(splash)*(100+pct)/100);
+        if(pct)WD149::Consume(p);
         GetAura()->SetMaxDuration(remaining*250);GetAura()->SetDuration(remaining*250);
     }
     void Tick(AuraEffect const*)

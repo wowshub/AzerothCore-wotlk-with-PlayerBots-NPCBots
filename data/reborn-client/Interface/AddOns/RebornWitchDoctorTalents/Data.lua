@@ -159,3 +159,9 @@ end
 
 -- WD148: natural-expiration follow-up to Voljin Blessing.
 for _,n in ipairs(RebornWDTreeData) do if n.ID==6069 then n.RequiredLevel=20;n.RequiredIDs={6063} end end
+
+-- WD149 explicit choice and authored prerequisite.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==5253 or n.ID==6853 then n.RequiredLevel=20;n.RequiredIDs={6063};n.Group=345232 end end
+
+-- WD150 connected ward/proc branch.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==30892 then n.RequiredLevel=20;n.RequiredIDs={6072}elseif n.ID==6983 then n.RequiredLevel=20;n.RequiredIDs={30892}elseif n.ID==5164 then n.RequiredLevel=20;n.RequiredIDs={6983}end end

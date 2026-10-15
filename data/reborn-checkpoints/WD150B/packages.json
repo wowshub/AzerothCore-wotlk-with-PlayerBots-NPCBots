@@ -1,0 +1,26 @@
+[
+  {
+    "package": "codexfix_20261014_201116_阶段WD149A_弑神者与真灵魂双技能",
+    "sha256": "4ef337d3013bc118751ced483010eb2b09a348bc9ba27b69d07ca0e462659800"
+  },
+  {
+    "package": "codexfix_20261014_215757_阶段UI10A_WD149C_装备槽与技能说明优化",
+    "sha256": "60d4867dab60c0a5eba8af3af956521e3263ea83b477ed4d272130170d2c19fd"
+  },
+  {
+    "package": "codexfix_20261014_231500_阶段UI10C_战斗按钮与武器栏累计修正",
+    "sha256": "a29f86ced70537bc654c738547538b081b86d407c04efef4385d552f19cb7b77"
+  },
+  {
+    "package": "codexfix_20261014_233935_阶段WD150A_群蛇守卫与巫毒火三技能联动",
+    "sha256": "58a3c7115c5465380bf71ad3ef0e655de9130869111b48210a007c61abd25db4"
+  },
+  {
+    "package": "codexfix_20261015_003457_阶段UI10E_原生弹药回调停止移动主手",
+    "sha256": "c95480ee6892ba2e56a28fbbae4467d70146cb4af2782b1bba37487c9ad55d9a"
+  },
+  {
+    "package": "codexfix_20261015_011431_阶段UI10F_WD150B_饰品条带与群蛇守卫栏",
+    "sha256": "b73dfe650758c314e10ca89905746c469cbbb9313ad15f5dea14964ba8083f0c"
+  }
+]

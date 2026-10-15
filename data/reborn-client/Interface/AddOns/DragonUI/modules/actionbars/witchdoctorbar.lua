@@ -5,7 +5,7 @@ local _, class, classID = UnitClass('player')
 if class ~= 'WITCHDOCTOR' and class ~= 'WITCH_DOCTOR' and classID ~= 13 then return end
 
 local groups = {
-    {label = '守卫 / Ward', ids = {9003160, 9003170, 9003450, 9003400}},
+    {label = '守卫 / Ward', ids = {9003160, 9003170, 9003450, 9003400, 9004080}},
     {label = '神像 / Idol', ids = {9003370, 9003440, 9003432, 9003382, 9003380, 9003390, 9003953}},
     {label = '雕像 / Effigy', ids = {9003410, 9003420, 9003422, 9003430}},
 }
@@ -52,10 +52,28 @@ local MAIN = [[
 ]]
 
 -- Only transmit this character's selection to the server; a secure spell button casts.
+-- UI10F: the ward flyout also casts the independent mass summon. Ritual metadata
+-- retains an ordinary ward; it must not silently change ritual/recall semantics.
+local function RitualWard(id)
+    local store=Store()
+    if id~=9004080 then
+        if store and id and id~=0 then store.ritualWard=id end
+        return id or 0
+    end
+    local previous=store and store.ritualWard
+    for _,candidate in ipairs(groups[1].ids)do
+        if candidate~=9004080 and candidate==previous and IsSpellKnown(candidate)then return candidate end
+    end
+    for _,candidate in ipairs(groups[1].ids)do
+        if candidate~=9004080 and IsSpellKnown(candidate)then return candidate end
+    end
+    return 0
+end
+
 local lastSelection
 local function SendSelection(force)
     if not slots[3] then return end
-    local message = 'S ' .. (slots[1]:GetAttribute('selectedID') or 0) .. ' ' ..
+    local message = 'S ' .. RitualWard(slots[1]:GetAttribute('selectedID')) .. ' ' ..
         (slots[2]:GetAttribute('selectedID') or 0) .. ' ' .. (slots[3]:GetAttribute('selectedID') or 0)
     if force or lastSelection ~= message then
         SendAddonMessage('RBWD53', message, 'WHISPER', UnitName('player'))
@@ -94,6 +112,10 @@ local function Tooltip(self)
     elseif self.utilityID then
         GameTooltip:AddLine(self.utilityID == 9003540 and '一次施放当前三个槽选中的召唤技能；仍需足够法力且技能冷却完毕。' or '回收自己的三类召唤物，返还成功召唤时实际法力费用的50%。', 1, 1, 1, true)
         if not IsSpellKnown(self.utilityID) then GameTooltip:AddLine('30级向巫医导师学习。', 1, .3, .3) end
+    elseif id == 9004080 then
+        GameTooltip:AddLine('群蛇守卫：选入守卫槽后左键施放。', .3, 1, .6, true)
+        GameTooltip:AddLine('一键放置与回收仍使用普通守卫；群蛇独立施放。', 1, .82, 0, true)
+        GameTooltip:AddLine('Mass Serpent Wards: cast from this slot. Ritual/Recall retain the ordinary ward.', 1, .82, 0, true)
     elseif self.isMain then
         GameTooltip:AddLine(self.category, .3, 1, .6)
         GameTooltip:AddLine('左键施放；右键或上方箭头展开选择。', 1, 1, 1, true)

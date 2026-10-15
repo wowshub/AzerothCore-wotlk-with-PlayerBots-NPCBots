@@ -48,6 +48,9 @@ class spirit_sync : public AuraScript
 class glaive : public SpellScript
 {
     PrepareSpellScript(glaive);
+    uint32 readyPct=0;
+    void Snapshot() { readyPct=WD149::ReadyPct(GetCaster()->ToPlayer()); }
+    void Consume() { if(readyPct)WD149::Consume(GetCaster()->ToPlayer()); }
     SpellCastResult Check()
     {
         Player* p=GetCaster()->ToPlayer();return Owns(p,GetSpellInfo()->Id)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
@@ -55,10 +58,13 @@ class glaive : public SpellScript
     void Damage(SpellEffIndex)
     {
         Player* p=GetCaster()->ToPlayer();if(!Owns(p,GetSpellInfo()->Id)) { SetEffectValue(0);return; }
-        SetEffectValue(GetEffectValue()+int32(.5f*std::max(0.0f,p->GetTotalAttackPowerValue(RANGED_ATTACK))+.5f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW))));
+        int32 base=GetEffectValue()+int32(.5f*std::max(0.0f,p->GetTotalAttackPowerValue(RANGED_ATTACK))+.5f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW)));
+        SetEffectValue(int32(int64(base)*(100+readyPct)/100));
     }
     void Register() override
     {
+        OnCast += SpellCastFn(glaive::Snapshot);
+        AfterCast += SpellCastFn(glaive::Consume);
         OnCheckCast += SpellCheckCastFn(glaive::Check);
         OnEffectHitTarget += SpellEffectFn(glaive::Damage,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
     }
