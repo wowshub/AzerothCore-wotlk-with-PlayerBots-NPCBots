@@ -1,0 +1,9 @@
+{
+  "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261015\\codexfix_20261015_223251_阶段WD154A_幻象与森金二选一累计测试包.zip",
+  "sha256": "659b2cfc6a28926a68ba5bf60752cb02516b78340736e9fc54996487be13bf07",
+  "bytes": 33370795,
+  "files": 179,
+  "status": "cumulative candidate153+154; user game test pending",
+  "baseline": "2c3693e395b5d9ca3d20d6276314cb3632645629",
+  "upstream": "8b9c72b5c4c7d48473351959c4454bd82215adb9"
+}

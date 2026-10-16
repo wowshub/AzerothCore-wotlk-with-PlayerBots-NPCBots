@@ -1,6 +1,8 @@
 // WD3: isolated level-one Witch Doctor mechanics adapted from local CoA.
 // CoA AscensionWitchDoctorAbilities.cpp: previousBrew, effective healing / 2.
 #include "ScriptMgr.h"
+#include "MotionMaster.h"
+#include "ThreatManager.h"
 #include "Log.h" // WD101 clone initialization diagnostic
 #include "WorldPacket.h"
 #include "ScriptDefines/AllSpellScript.h"
@@ -3335,6 +3337,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorCurse151.inc"
 #include "RebornWitchDoctorShadow152.inc"
 #include "RebornWitchDoctorWard153.inc"
+#include "RebornWitchDoctorMirage154.inc"
 #include "RebornWitchDoctorShadow146.inc"
 #include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
@@ -3368,6 +3371,7 @@ void AddRebornWitchDoctorScripts()
     WD151::Register();
     WD152::Register();
     WD153::Register();
+    WD154::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

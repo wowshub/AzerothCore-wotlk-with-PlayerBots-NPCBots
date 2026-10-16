@@ -29,6 +29,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD154Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD153Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD152Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD151Bridge { void Apply(Player*,uint32,bool,bool,bool); }

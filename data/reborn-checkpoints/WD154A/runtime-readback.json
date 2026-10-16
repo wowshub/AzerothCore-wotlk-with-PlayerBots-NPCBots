@@ -1,0 +1,556 @@
+[
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorMimicStatus.inc",
+    "runtime_source_match": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorMirage154.inc",
+    "runtime_source_match": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSerpent150.inc",
+    "runtime_source_match": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSpiritTalents.inc",
+    "runtime_source_match": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorVoice.inc",
+    "runtime_source_match": true
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorWard153.inc",
+    "runtime_source_match": true
+  },
+  {
+    "path": "src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "src/server/game/Handlers/SpellHandler.cpp",
+    "runtime_source_match": true
+  },
+  {
+    "path": "src/server/game/Spells/SpellInfo.cpp",
+    "runtime_source_match": false,
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "runtime_match": false,
+    "runtime_sha256": "45361d70934b70d99fb58cd96f21af1adb4a3815a5f7ea79374a27a5ee10329b",
+    "accepted_sha256": "2db477268ef4f950dedefa1a7a8753e2de8853bb0b1655477e75c80e1a1e75f6",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "runtime_match": false,
+    "runtime_sha256": "7eb72b785a53cfacd703a4839d71dccef4e831494a5b8903a05db2f4d63ce7fa",
+    "accepted_sha256": "24359c7414e40a3b20ce8717b7130f8aa8be8bf60a4c04ca5623876a8de9748d",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "runtime_match": false,
+    "runtime_sha256": "33f628c20ac4c5b04e8451f3dbb63767cc135edb437c38f02f2b11ee914956b5",
+    "accepted_sha256": "bf178a398f93a7fd68a0ec2cb0e888e6cc59596fe0a6d0dd6730726089020061",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "runtime_match": false,
+    "runtime_sha256": "e2342554cdaedbe004a7d24b0edc40be12fd2e492960b7ac7b4b183162e94825",
+    "accepted_sha256": "024dcf377daae423b5f4ad257347211aef63b79e3e4e3eed4eb325a09580b4b3",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+    "runtime_match": false,
+    "runtime_sha256": "41814f6b2b9a54f5b3fdbee9c1594c00bc2fb2cd4d89636969847583ec6409c1",
+    "accepted_sha256": "55b15d51e374a189c80382b71db38d32aea4cb7cae247f354f7ffd3a83e6498a",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SoundEntries.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "fda9330a2d4f45474c682e3858f6087fd859c249135bf6afc709ac31862f5bf5",
+    "accepted_sha256": "fda9330a2d4f45474c682e3858f6087fd859c249135bf6afc709ac31862f5bf5"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/Spell.dbc",
+    "runtime_match": false,
+    "runtime_sha256": "6f9cab712d341f8c3a0e5e8c0209f46271531ab94f161d11364662c04b6ec8eb",
+    "accepted_sha256": "067407c9545a4fa312f5dd58f84bf8f6632ec11b2fa52bb7e4f7130ca491463d",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellIcon.dbc",
+    "runtime_match": false,
+    "runtime_sha256": "9d67b2bb4d9e4519ecd25e02732d84c405dbc7a21c47de8761a61ca6b2b4da50",
+    "accepted_sha256": "4adf105c62d1d3e86ffa3620a3d5f3c7987d425c60601130ef26a43bc970a32f",
+    "matches_later_candidate": [
+      "WD155A"
+    ]
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisual.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "bd91a6b053e3c8217d5290d0e57a7ad9cc912fe6a7c4094b9d94c244cb2dc045",
+    "accepted_sha256": "bd91a6b053e3c8217d5290d0e57a7ad9cc912fe6a7c4094b9d94c244cb2dc045"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualEffectName.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "9c23833e92670e931c7e8a3d154d5700301c6ce56e24beff3a91ae478808d87a",
+    "accepted_sha256": "9c23833e92670e931c7e8a3d154d5700301c6ce56e24beff3a91ae478808d87a"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualKit.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "37398bae4e39eb672b44af826a2fc8c950b3ded0d479fb53b1f424efc84c78b1",
+    "accepted_sha256": "37398bae4e39eb672b44af826a2fc8c950b3ded0d479fb53b1f424efc84c78b1"
+  },
+  {
+    "path": "04_覆盖到服务端根目录/Data/dbc/SpellVisualKitModelAttach.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "1b2c64a0c7657f95d10e5cb72a1e5954b6cd4ff37ef4bd30086fedf2266c8cf8",
+    "accepted_sha256": "1b2c64a0c7657f95d10e5cb72a1e5954b6cd4ff37ef4bd30086fedf2266c8cf8"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "9060bec6f4106200613301cfeb09101e2c49d93240e73fcbef5c95b0c883a2a8",
+    "accepted_sha256": "9060bec6f4106200613301cfeb09101e2c49d93240e73fcbef5c95b0c883a2a8"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SoundEntries.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "34841487fd148b009d4982d2fe984da786b3d3d87adb034ba6ae8574cbcfb688",
+    "accepted_sha256": "34841487fd148b009d4982d2fe984da786b3d3d87adb034ba6ae8574cbcfb688"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/Spell.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "73b6b60eebfe6886ed15a915486c22593c4736e4755b6e4abafb92804fb53935",
+    "accepted_sha256": "73b6b60eebfe6886ed15a915486c22593c4736e4755b6e4abafb92804fb53935"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SpellIcon.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "8bba016d06d89cb741b0b1d580e881df726065229b6706fba9b6cf99876eba16",
+    "accepted_sha256": "8bba016d06d89cb741b0b1d580e881df726065229b6706fba9b6cf99876eba16"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SpellVisual.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "d7b4afd9821b4b427dc3e18caed9a882bbc4fde704eda79c29a380ce57f5678a",
+    "accepted_sha256": "d7b4afd9821b4b427dc3e18caed9a882bbc4fde704eda79c29a380ce57f5678a"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SpellVisualEffectName.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "61bddef06ba8e51ffc0c058376238dd3d56d55b00974c26aa5c2ebe2279ff2c8",
+    "accepted_sha256": "61bddef06ba8e51ffc0c058376238dd3d56d55b00974c26aa5c2ebe2279ff2c8"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SpellVisualKit.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "54065369246d50c681c5cc5235277dfbc6b61ee95f81388b812dc48683add0ba",
+    "accepted_sha256": "54065369246d50c681c5cc5235277dfbc6b61ee95f81388b812dc48683add0ba"
+  },
+  {
+    "path": "导入现有PATCH-XA/DBFilesClient/SpellVisualKitModelAttach.dbc",
+    "runtime_match": true,
+    "runtime_sha256": "c321c8305bfe09b2d05e08fda39d3d6cd9b9553680472f4fefaab496c1c9ba35",
+    "accepted_sha256": "c321c8305bfe09b2d05e08fda39d3d6cd9b9553680472f4fefaab496c1c9ba35"
+  },
+  {
+    "path": "导入现有PATCH-XA/Interface/Icons/RebornWD153_0.blp",
+    "runtime_match": true,
+    "runtime_sha256": "1eab5a3fd79d97402afe9d918ec877e73e9242194a7a984f592d97e5730e5bdd",
+    "accepted_sha256": "1eab5a3fd79d97402afe9d918ec877e73e9242194a7a984f592d97e5730e5bdd"
+  },
+  {
+    "path": "导入现有PATCH-XA/Interface/Icons/RebornWD153_1.blp",
+    "runtime_match": true,
+    "runtime_sha256": "9449c3904a37700d38c1e75bc6a4a9d0242a0649b07000a64de82380ccdd0a75",
+    "accepted_sha256": "9449c3904a37700d38c1e75bc6a4a9d0242a0649b07000a64de82380ccdd0a75"
+  },
+  {
+    "path": "导入现有PATCH-XA/Interface/Icons/RebornWD153_2.blp",
+    "runtime_match": true,
+    "runtime_sha256": "54ffe294913b8cd58314add9225b18c7f0d9da4e4458c047363ce9ddab114124",
+    "accepted_sha256": "54ffe294913b8cd58314add9225b18c7f0d9da4e4458c047363ce9ddab114124"
+  },
+  {
+    "path": "导入现有PATCH-XA/Interface/Icons/RebornWD154_0.blp",
+    "runtime_match": true,
+    "runtime_sha256": "4d4c19bd59fbf7fcb78b9a28e3e69ebec2224e7e2a40fb9c0101af9266ebff9f",
+    "accepted_sha256": "4d4c19bd59fbf7fcb78b9a28e3e69ebec2224e7e2a40fb9c0101af9266ebff9f"
+  },
+  {
+    "path": "导入现有PATCH-XA/Interface/Icons/RebornWD154_1.blp",
+    "runtime_match": true,
+    "runtime_sha256": "e0df13d30f74f882b4340a7bd4a540dc9cc20928e38fe3fb3a373998329da4a1",
+    "accepted_sha256": "e0df13d30f74f882b4340a7bd4a540dc9cc20928e38fe3fb3a373998329da4a1"
+  },
+  {
+    "path": "导入现有PATCH-XA/Interface/Icons/RebornWD154_2.blp",
+    "runtime_match": true,
+    "runtime_sha256": "d8e75a24b89c2d4171ebdada97fc8157b791d78f67afc084ea82d9695f8b032b",
+    "accepted_sha256": "d8e75a24b89c2d4171ebdada97fc8157b791d78f67afc084ea82d9695f8b032b"
+  },
+  {
+    "path": "导入现有PATCH-XA/Sound/RebornWD153/304953_3.ogg",
+    "runtime_match": true,
+    "runtime_sha256": "5b8a6d45373213ac4a3543ad278acd1f3992d1f9831d552008c46bba25ecad51",
+    "accepted_sha256": "5b8a6d45373213ac4a3543ad278acd1f3992d1f9831d552008c46bba25ecad51"
+  },
+  {
+    "path": "导入现有PATCH-XA/Sound/RebornWD153/310631_3.wav",
+    "runtime_match": true,
+    "runtime_sha256": "55f748c32be5638ba212f7af859400171339521abafca9f1941b3a752dd84455",
+    "accepted_sha256": "55f748c32be5638ba212f7af859400171339521abafca9f1941b3a752dd84455"
+  },
+  {
+    "path": "导入现有PATCH-XA/Sound/RebornWD154/305076_3.ogg",
+    "runtime_match": true,
+    "runtime_sha256": "9a21a22b5059df306cd99929b6884947733aec84758ffeaef4355e80f2efdb5a",
+    "accepted_sha256": "9a21a22b5059df306cd99929b6884947733aec84758ffeaef4355e80f2efdb5a"
+  },
+  {
+    "path": "导入现有PATCH-XA/Sound/RebornWD154/305272_3.wav",
+    "runtime_match": true,
+    "runtime_sha256": "75f8aebb98ba10f18a9d3418b94d8410d1d3d70a182513e8df530739f0b82dda",
+    "accepted_sha256": "75f8aebb98ba10f18a9d3418b94d8410d1d3d70a182513e8df530739f0b82dda"
+  },
+  {
+    "path": "导入现有PATCH-XA/Sound/RebornWD154/314502_3.wav",
+    "runtime_match": true,
+    "runtime_sha256": "1bcae113a06dc711697b19b4410f6855c1509343326ff6495f99ac3ac94f8362",
+    "accepted_sha256": "1bcae113a06dc711697b19b4410f6855c1509343326ff6495f99ac3ac94f8362"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx0.m2",
+    "runtime_match": true,
+    "runtime_sha256": "aa462a3bfba5adbe1b68780b3b0ae0f29bdb7b2b7949d5a9f48dbe904fb2f233",
+    "accepted_sha256": "aa462a3bfba5adbe1b68780b3b0ae0f29bdb7b2b7949d5a9f48dbe904fb2f233"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx000.skin",
+    "runtime_match": true,
+    "runtime_sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc",
+    "accepted_sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx1.m2",
+    "runtime_match": true,
+    "runtime_sha256": "e73bdc9b256978ef4739de0b33fc648b9308b5d8d3477ae1cc6d862d778df159",
+    "accepted_sha256": "e73bdc9b256978ef4739de0b33fc648b9308b5d8d3477ae1cc6d862d778df159"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx100.skin",
+    "runtime_match": true,
+    "runtime_sha256": "9861e17ff3936b74d365dcd7d412b3bd5ce4cf25603cf14c8e3d028719fc6d50",
+    "accepted_sha256": "9861e17ff3936b74d365dcd7d412b3bd5ce4cf25603cf14c8e3d028719fc6d50"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx2.m2",
+    "runtime_match": true,
+    "runtime_sha256": "2f58da86eeab44de681ee613bd52161db463ae034bf1dad5be458ba46e519d98",
+    "accepted_sha256": "2f58da86eeab44de681ee613bd52161db463ae034bf1dad5be458ba46e519d98"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx200.skin",
+    "runtime_match": true,
+    "runtime_sha256": "96cb15f4b44f7d90a34e1bf767adb070bb2cdcdca2225d21660c91b24240509e",
+    "accepted_sha256": "96cb15f4b44f7d90a34e1bf767adb070bb2cdcdca2225d21660c91b24240509e"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx3.m2",
+    "runtime_match": true,
+    "runtime_sha256": "f34b8a42db58b7adc782c65ad5a718b38eb16b56348d97f949b903b45d868042",
+    "accepted_sha256": "f34b8a42db58b7adc782c65ad5a718b38eb16b56348d97f949b903b45d868042"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx300.skin",
+    "runtime_match": true,
+    "runtime_sha256": "96cb15f4b44f7d90a34e1bf767adb070bb2cdcdca2225d21660c91b24240509e",
+    "accepted_sha256": "96cb15f4b44f7d90a34e1bf767adb070bb2cdcdca2225d21660c91b24240509e"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx4.m2",
+    "runtime_match": true,
+    "runtime_sha256": "da0d14cae54ce55bab64f7a2f5ac6e46c2c3c6f1d62feb1aa258e8b02cedb647",
+    "accepted_sha256": "da0d14cae54ce55bab64f7a2f5ac6e46c2c3c6f1d62feb1aa258e8b02cedb647"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/fx400.skin",
+    "runtime_match": true,
+    "runtime_sha256": "5963a5af2fa42e182184681ecaf59e041e7d75d1e0d6dddb6aeeeab7ad8e4bf2",
+    "accepted_sha256": "5963a5af2fa42e182184681ecaf59e041e7d75d1e0d6dddb6aeeeab7ad8e4bf2"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex1.blp",
+    "runtime_match": true,
+    "runtime_sha256": "1101fa4e121faf67b18eab3b62771906facbccb808856fe954ee3bb0365d5618",
+    "accepted_sha256": "1101fa4e121faf67b18eab3b62771906facbccb808856fe954ee3bb0365d5618"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex10.blp",
+    "runtime_match": true,
+    "runtime_sha256": "ca8b696decd917b1c827b9ea46824ed071926afa71ca837356e0163bcb8e869e",
+    "accepted_sha256": "ca8b696decd917b1c827b9ea46824ed071926afa71ca837356e0163bcb8e869e"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex13.blp",
+    "runtime_match": true,
+    "runtime_sha256": "4122be78fa908afe9ed35ef0baf98ec4ab9358956753fd64eb039a45f7ba09e6",
+    "accepted_sha256": "4122be78fa908afe9ed35ef0baf98ec4ab9358956753fd64eb039a45f7ba09e6"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex14.blp",
+    "runtime_match": true,
+    "runtime_sha256": "d446d383048f44cc5a3f92151a57aeb9cdd5c9d8fb659ae056b5451d137089f5",
+    "accepted_sha256": "d446d383048f44cc5a3f92151a57aeb9cdd5c9d8fb659ae056b5451d137089f5"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex15.blp",
+    "runtime_match": true,
+    "runtime_sha256": "dc81da74a65a3d904efc448e055599a5345e898eae40a1168a0ca64a45a6ba43",
+    "accepted_sha256": "dc81da74a65a3d904efc448e055599a5345e898eae40a1168a0ca64a45a6ba43"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex2.blp",
+    "runtime_match": true,
+    "runtime_sha256": "38c93181bd16c3f42119cc3c1e16878a2f9ca69b36e9f4807f5b0a7efd1bef45",
+    "accepted_sha256": "38c93181bd16c3f42119cc3c1e16878a2f9ca69b36e9f4807f5b0a7efd1bef45"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex3.blp",
+    "runtime_match": true,
+    "runtime_sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7",
+    "accepted_sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex5.blp",
+    "runtime_match": true,
+    "runtime_sha256": "c03ae44a51dac02f225981a72c4fe4c918850af00b90c6aa027e09990c622ed2",
+    "accepted_sha256": "c03ae44a51dac02f225981a72c4fe4c918850af00b90c6aa027e09990c622ed2"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex7.blp",
+    "runtime_match": true,
+    "runtime_sha256": "35e9dc439cc743b3fb63b5df201175d4a234b33bd3d0ab2c9fd1246b17aeb1c6",
+    "accepted_sha256": "35e9dc439cc743b3fb63b5df201175d4a234b33bd3d0ab2c9fd1246b17aeb1c6"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex8.blp",
+    "runtime_match": true,
+    "runtime_sha256": "939d05ab89305fdbb2d961652c1f439e2d10059a5baf60da8dd9110ecd0b38fe",
+    "accepted_sha256": "939d05ab89305fdbb2d961652c1f439e2d10059a5baf60da8dd9110ecd0b38fe"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD153/tex9.blp",
+    "runtime_match": true,
+    "runtime_sha256": "f48d00a3f16ca45266110268572c57567e7b7b9b38abb9544d60557b81a5b76c",
+    "accepted_sha256": "f48d00a3f16ca45266110268572c57567e7b7b9b38abb9544d60557b81a5b76c"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx0.m2",
+    "runtime_match": true,
+    "runtime_sha256": "f51eefa9a55071dadb107591052b09abd4d0d1cfe98f1934ef553424a75f8b88",
+    "accepted_sha256": "f51eefa9a55071dadb107591052b09abd4d0d1cfe98f1934ef553424a75f8b88"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx000.skin",
+    "runtime_match": true,
+    "runtime_sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc",
+    "accepted_sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx1.m2",
+    "runtime_match": true,
+    "runtime_sha256": "1b13810e10fa0149a557b509360e9e5cd0337e093a1970f52034fccc389745bd",
+    "accepted_sha256": "1b13810e10fa0149a557b509360e9e5cd0337e093a1970f52034fccc389745bd"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx100.skin",
+    "runtime_match": true,
+    "runtime_sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "accepted_sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx2.m2",
+    "runtime_match": true,
+    "runtime_sha256": "aaeca95d1f697a5f8dc263e362de35b1f47c1c5cb6cf5a65b8d93114418901c8",
+    "accepted_sha256": "aaeca95d1f697a5f8dc263e362de35b1f47c1c5cb6cf5a65b8d93114418901c8"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx200.skin",
+    "runtime_match": true,
+    "runtime_sha256": "686e2765cc75b5bc66ffb00b40f44a63d4205ebe6f8114b11a888f3921ea1828",
+    "accepted_sha256": "686e2765cc75b5bc66ffb00b40f44a63d4205ebe6f8114b11a888f3921ea1828"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx3.m2",
+    "runtime_match": true,
+    "runtime_sha256": "06b763f1407b65647ee53cf56cc3819849c07b0ff562c2726a7af6d7d7adc6fb",
+    "accepted_sha256": "06b763f1407b65647ee53cf56cc3819849c07b0ff562c2726a7af6d7d7adc6fb"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/fx300.skin",
+    "runtime_match": true,
+    "runtime_sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "accepted_sha256": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex1.blp",
+    "runtime_match": true,
+    "runtime_sha256": "6116de3f1b1dfc28e2e7d15a62ca32419c3e98aaff1f383da6d963f544fcfc9d",
+    "accepted_sha256": "6116de3f1b1dfc28e2e7d15a62ca32419c3e98aaff1f383da6d963f544fcfc9d"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex10.blp",
+    "runtime_match": true,
+    "runtime_sha256": "882871dc36baf215cb4166385e16be327c10f84b0f66f6937d84f7a7ea63c202",
+    "accepted_sha256": "882871dc36baf215cb4166385e16be327c10f84b0f66f6937d84f7a7ea63c202"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex11.blp",
+    "runtime_match": true,
+    "runtime_sha256": "03e2dd71684ce71a93551111d81a756e9cb7620b62b8cce8875e53facbe9c7c5",
+    "accepted_sha256": "03e2dd71684ce71a93551111d81a756e9cb7620b62b8cce8875e53facbe9c7c5"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex12.blp",
+    "runtime_match": true,
+    "runtime_sha256": "fca46a352edae31528d031224aa0aad89a54ce72ab69f14c495922ef223c0bec",
+    "accepted_sha256": "fca46a352edae31528d031224aa0aad89a54ce72ab69f14c495922ef223c0bec"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex13.blp",
+    "runtime_match": true,
+    "runtime_sha256": "45669f7d037c2ecbb1d28e87d4f819bb18d1658bb2864c4f18d87c66bf4b90f2",
+    "accepted_sha256": "45669f7d037c2ecbb1d28e87d4f819bb18d1658bb2864c4f18d87c66bf4b90f2"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex14.blp",
+    "runtime_match": true,
+    "runtime_sha256": "f98021194b23b9c3465c33ac6df8e103af48124c8f00a8aa75727e3f089db9cc",
+    "accepted_sha256": "f98021194b23b9c3465c33ac6df8e103af48124c8f00a8aa75727e3f089db9cc"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex16.blp",
+    "runtime_match": true,
+    "runtime_sha256": "2858147f4b457bf99de4be69345607ee189182c0358cb6db3c7d619d78661352",
+    "accepted_sha256": "2858147f4b457bf99de4be69345607ee189182c0358cb6db3c7d619d78661352"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex17.blp",
+    "runtime_match": true,
+    "runtime_sha256": "a13a3552d90cd24dec0098e3f25bf55684505f910178dbcedeb10a6729516386",
+    "accepted_sha256": "a13a3552d90cd24dec0098e3f25bf55684505f910178dbcedeb10a6729516386"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex18.blp",
+    "runtime_match": true,
+    "runtime_sha256": "b0e0a4642de4ee1bd1990b24a4c8dc05724c5a6bfc4aa6ab8cb7430834ee4f16",
+    "accepted_sha256": "b0e0a4642de4ee1bd1990b24a4c8dc05724c5a6bfc4aa6ab8cb7430834ee4f16"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex19.blp",
+    "runtime_match": true,
+    "runtime_sha256": "d4b27994b4bd689b712b1f67bdd6d49104459268eba0453181b5628ea0799f2e",
+    "accepted_sha256": "d4b27994b4bd689b712b1f67bdd6d49104459268eba0453181b5628ea0799f2e"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex3.blp",
+    "runtime_match": true,
+    "runtime_sha256": "5fc9f2d6a3a627bed604912d923ceb490dc289f6bba9e893249d29347d29424f",
+    "accepted_sha256": "5fc9f2d6a3a627bed604912d923ceb490dc289f6bba9e893249d29347d29424f"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex4.blp",
+    "runtime_match": true,
+    "runtime_sha256": "43bc719d0c68f84ba13b24a8a999a7dce26c172e3aa7590eae80c33658826835",
+    "accepted_sha256": "43bc719d0c68f84ba13b24a8a999a7dce26c172e3aa7590eae80c33658826835"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex5.blp",
+    "runtime_match": true,
+    "runtime_sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7",
+    "accepted_sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex6.blp",
+    "runtime_match": true,
+    "runtime_sha256": "035d2ea6bbe4f35cf551ecc791343a85a6dd61895ac3cde29f9efbaf65ea3ba1",
+    "accepted_sha256": "035d2ea6bbe4f35cf551ecc791343a85a6dd61895ac3cde29f9efbaf65ea3ba1"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex8.blp",
+    "runtime_match": true,
+    "runtime_sha256": "16b56d11266c678ebbe3460ba1663ed026d4362084e0e020fd483aff21aaea5e",
+    "accepted_sha256": "16b56d11266c678ebbe3460ba1663ed026d4362084e0e020fd483aff21aaea5e"
+  },
+  {
+    "path": "导入现有PATCH-XA/Spells/RebornWD154/tex9.blp",
+    "runtime_match": true,
+    "runtime_sha256": "074936df39efc2228a007072b7ac5c7f6f8cc8a6fab3018d3fb3aa6af044ab4a",
+    "accepted_sha256": "074936df39efc2228a007072b7ac5c7f6f8cc8a6fab3018d3fb3aa6af044ab4a"
+  }
+]

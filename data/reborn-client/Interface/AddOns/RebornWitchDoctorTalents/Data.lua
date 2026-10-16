@@ -174,3 +174,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==7031 then n.RequiredLevel=20;n.Re
 
 -- WD153 connected ward/poison branch.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==6010 then n.RequiredLevel=15;n.RequiredIDs={8574}elseif n.ID==11164 then n.RequiredLevel=20;n.RequiredIDs={6983}elseif n.ID==29981 then n.RequiredLevel=20;n.RequiredIDs={6011}end end
+
+-- WD154 general Mirage and authored choice.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==29747 then n.RequiredLevel=10;n.RequiredIDs={}elseif n.ID==7154 or n.ID==11154 then n.RequiredLevel=10;n.RequiredIDs={7088}end end

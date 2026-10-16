@@ -13,7 +13,7 @@ function M.AERank(id,mask)
  return M.MaskRank(mask,Shift(i),L.nodes[i].width)
 end
 function M.AESpent(mask)
- local total=0;for id,i in pairs(index) do if i==133 or i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=73) or (i>=116 and i<=117) or (i>=108 and i<=110) then total=total+M.AERank(id,mask) end end;return total
+ local total=0;for id,i in pairs(index) do if i==141 or i==142 or i==143 or i==133 or i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=73) or (i>=116 and i<=117) or (i>=108 and i<=110) then total=total+M.AERank(id,mask) end end;return total
 end
 function M.TEFoundation(mask) return M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31345,mask) end
 function M.BrewingFoundation(mask) return M.AERank(7128,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask) end
@@ -23,6 +23,9 @@ function M.AEValid(mask)
  if M.MaskRank(mask,67,1)>0 or not M.LayoutValid(mask) or (M.AERank(35064,mask)>2 or M.AERank(6498,mask)>2 or M.AERank(9347,mask)>2 or M.AERank(6047,mask)>2 or M.AERank(6062,mask)>2 or M.AERank(31345,mask)>2 or M.AERank(6007,mask)>2 or M.AERank(7088,mask)>2 or M.AERank(7131,mask)>2 or M.AERank(30884,mask)>2 or M.AERank(29736,mask)>2) then return false,"加点数据无效，请刷新方案" end
  if M.TESpent(mask)>(M.teBudget or 0) then return false,"专精点数TE不足；AE不能代替TE" end
  local function rank(id) return M.AERank(id,mask) end
+ if (rank(29747)+rank(7154)+rank(11154)>0)and M.level<10 then return false,"需要10级"end
+ if rank(7154)>0 and rank(11154)>0 then return false,"森金的迅捷与智慧二选一"end
+ if rank(7154)+rank(11154)>0 and rank(7088)==0 then return false,"需要相连通用前置"end
  if rank(6010)>0 and (M.level<15 or M.specs[M.slot+1]~=2 or rank(8574)==0)then return false,"需要15级、暗影方案和灵魂战刃"end
  if rank(11164)>0 and (M.level<20 or M.specs[M.slot+1]~=2 or rank(6983)==0 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)<8)then return false,"需要巫毒之火和8点此前暗影TE"end
  if rank(29981)>0 and (M.level<20 or M.specs[M.slot+1]~=2 or rank(6011)==0 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)<23)then return false,"需要暗影附魔和23点此前暗影TE"end
@@ -34,7 +37,7 @@ function M.AEValid(mask)
  if rank(6011)>0 and rank(29729)==0 then return false,"需要洛阿之力（团队）前置"end
  if rank(29729)>0 and rank(6983)==0 then return false,"需要巫毒之火前置"end
  if rank(6073)>0 and rank(5253)+rank(6069)+rank(6853)==0 then return false,"需要弑神者、残余能量或真灵魂中的一个前置"end
- if rank(29743)>0 and (M.level<26 or rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)<9 or rank(12264)+rank(30891)==0 or rank(11323)>0)then return false,"需要26级、9基础AE和相连前置；与显性诅咒互斥"end
+ if rank(29743)>0 and (M.level<26 or rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)+rank(29747)+rank(7154)+rank(11154)<9 or rank(12264)+rank(30891)==0 or rank(11323)>0)then return false,"需要26级、9基础AE和相连前置；与显性诅咒互斥"end
  if rank(30892)>0 and (M.level<20 or M.specs[M.slot+1]~=2 or rank(6072)==0 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)<8)then return false,"需要20级、灵魂信徒和8点既有暗影TE"end
  if rank(6983)>0 and rank(30892)==0 then return false,"需要瑟拉图斯的召唤"end
  if rank(5164)>0 and rank(6983)==0 then return false,"需要巫毒之火"end
@@ -110,7 +113,7 @@ function M.AEValid(mask)
  if (rank(6525)>0 or rank(12525)>0) and rank(6031)==0 then return false,"需先学习蛙变术" end
  if rank(6525)>0 and rank(12525)>0 then return false,"贡克与克拉格瓦祝福二选一" end
  if rank(29306)>0 and M.level<30 then return false,"化蛇需要角色等级30" end
- if (rank(6381)>0 or rank(12048)>0 or rank(11323)>0 or rank(12264)>0 or rank(6042)>0 or rank(9347)>0 or rank(29306)>0 or rank(6031)>0 or rank(6525)>0 or rank(12525)>0) and rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
+ if (rank(6381)>0 or rank(12048)>0 or rank(11323)>0 or rank(12264)>0 or rank(6042)>0 or rank(9347)>0 or rank(29306)>0 or rank(6031)>0 or rank(6525)>0 or rank(12525)>0) and rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)+rank(29747)+rank(7154)+rank(11154)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
  if rank(12048)>0 and rank(6048)>0 then return false,"希里克的祝福与黑暗魔精二选一" end
  if rank(31154)>0 then
   if M.level<11 then return false,"暗影傀儡需要角色等级11" end
@@ -464,6 +467,9 @@ details[29930]={zh="丹巴拉的致命",en="Dambala's Lethality",level=20,early=
 details[6010]={zh="魔精高涨",en="Mojo High",level=15,early="15",kind="天赋 / Talent",effects={{"额外召唤1个拟态守卫，全部拟态守卫持续时间延长3秒。与天选之人叠加：基础1个，任一项2个，两项都有3个。","Summons one additional Mimic Ward and extends all Mimic Wards by 3 sec. Base 1; either Mojo High or Chosen One 2; both 3."}},limit={"仅当前已保存激活方案。","Active saved build only."},path={"需灵魂战刃；1 TE。","Requires connected prerequisite and investment; 1 TE."}}
 details[11164]={zh="妖火群蛇",en="Hexfire Mass",level=20,early="33",kind="天赋 / Talent",effects={{"自己的恶意妖术（Hex of Malice）每次实际周期伤害有30%几率，在受伤敌人位置召唤一个持续10秒的蛇守卫；每3秒最多触发一次。额外守卫不替换普通守卫或群蛇，可触发巫毒之火。","Each actual periodic damage from your Hex of Malice has a 30% chance to summon a 10-sec Serpent Ward at the target. Can occur once every 3 sec. Independent of your normal ward and Call; may trigger Voodoo Fire."}},limit={"仅当前已保存激活方案。","Active saved build only."},path={"需巫毒之火及8点此前暗影TE；1 TE。","Requires connected prerequisite and investment; 1 TE."}}
 details[29981]={zh="巨蛇诡计",en="Serpent's Guile",level=20,early="57",kind="天赋 / Talent",effects={{"恶毒箭（Malefic Arrow）造成伤害后，每秒额外造成该次实际伤害15%的自然伤害，持续4秒。同一施法者重新命中刷新毒伤，不叠加；不额外获得暴击等级。","After Malefic Arrow deals damage, deals 15% of that damage each second as Nature damage for 4 sec. A new hit refreshes your poison; does not stack. Does not grant critical strike rating."}},limit={"仅当前已保存激活方案。","Active saved build only."},path={"需暗影附魔及23点此前暗影TE；1 TE。","Requires connected prerequisite and investment; 1 TE."}}
+details[29747]={zh="幻象",en="Mirage",level=10,early="10",kind="主动技能 / Ability",effects={{"隐身20秒，立即获得5层灵魂并留下向前跑开的自身分身。移速提高50%；每秒使附近100码内敌人对你的当前威胁降低20%。自己造成非触发的直接伤害或有效直接治疗会结束隐身，已有周期效果和灵魂恢复不会结束。基础冷却180秒。","Become invisible for 20 sec, gain 5 Spirits and leave a fleeing copy. Movement speed +50%; every second reduce nearby enemies current threat toward you by 20%. Non-triggered direct damage or effective direct healing ends invisibility; periodic effects and Spirit restoration do not. Base cooldown 180 sec."}},limit={"仅当前已保存激活方案；通用树，各专精可选。","Active saved build; general tree, all specs."},path={"每项1 AE；增强需相连前置；含幻象共3 AE自然最早14级。","1 AE each; enhancement requires prerequisite; Mirage plus prerequisite and enhancement needs3 AE, naturally level14."}}
+details[7154]={zh="森金的迅捷",en="Sen'jin's Swiftness",level=10,early="12",kind="天赋 / Talent",effects={{"幻象的基础冷却缩短60秒：180秒变为120秒。与森金的智慧二选一；不直接重置已经在计时的冷却。","Reduces Mirage base cooldown by 60 sec: 180 to 120 sec. Choose this or Senjin Wisdom; does not reset a running cooldown."}},limit={"仅当前已保存激活方案；通用树，各专精可选。","Active saved build; general tree, all specs."},path={"每项1 AE；增强需相连前置；含幻象共3 AE自然最早14级。","1 AE each; enhancement requires prerequisite; Mirage plus prerequisite and enhancement needs3 AE, naturally level14."}}
+details[11154]={zh="森金的智慧",en="Sen'jin's Wisdom",level=10,early="12",kind="天赋 / Talent",effects={{"幻象的隐身、移动加速和分身持续时间从20秒延长至40秒。与森金的迅捷二选一。","Extends Mirage invisibility, movement speed and clone duration from 20 to 40 sec. Choose this or Senjin Swiftness."}},limit={"仅当前已保存激活方案；通用树，各专精可选。","Active saved build; general tree, all specs."},path={"每项1 AE；增强需相连前置；含幻象共3 AE自然最早14级。","1 AE each; enhancement requires prerequisite; Mirage plus prerequisite and enhancement needs3 AE, naturally level14."}}
 local function Pair(zh,en,r,g,b,sameColor)
  -- Both languages remain visible; the language switch chooses which comes first.
  if RebornWDLanguage=="en" then zh,en=en,zh end
@@ -471,6 +477,8 @@ local function Pair(zh,en,r,g,b,sameColor)
  GameTooltip:AddLine(en,sameColor and (r or 1) or .7,sameColor and (g or .82) or .75,sameColor and (b or 0) or .8,true)
 end
 local function PathReady(id)
+ if id==29747 then return true end
+ if id==7154 or id==11154 then return M.AERank(7088)>0 end
  if id==6010 then return M.AERank(8574)>0 end
  if id==11164 then return M.AERank(6983)>0 end
  if id==29981 then return M.AERank(6011)>0 and M.TESpent(M.draftAE)-M.AERank(29981)>=23 end

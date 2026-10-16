@@ -1415,6 +1415,7 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     // An unclaimed exact modifier must NOT reach that fallback. Other spells retain it.
     switch (mod->spellId)
     {
+        case 9004111: case 9004112: // WD154 only Mirage cooldown/duration
         case 9004100: // WD153 exact Mimic duration only
         case 9004097: // WD152 Edge only Eclipse splash
         case 9004090: case 9004091: case 9004095: // WD151 exact Jinx/Spirit modifiers

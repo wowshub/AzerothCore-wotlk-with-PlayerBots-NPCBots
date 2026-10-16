@@ -931,6 +931,14 @@ void WorldSession::HandleMirrorImageDataRequest(WorldPacket& recvData)
                 uint32 displayInfoId = item->GetTemplate()->DisplayInfoID;
 
                 sScriptMgr->OnGlobalMirrorImageDisplayItem(item, displayInfoId);
+                // WD154: this owned Mirage clone follows the player's currently visible wardrobe entry.
+                if(unit->GetEntry()==900254 && unit->HasAura(9004113,player->GetGUID()))
+                {
+                    uint32 appearance=player->GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID+uint32(*itr)*2);
+                    if(!appearance)displayInfoId=0;
+                    else if(ItemTemplate const* visible=sObjectMgr->GetItemTemplate(appearance))
+                        displayInfoId=visible->DisplayInfoID;
+                }
 
                 data << uint32(displayInfoId);
             }

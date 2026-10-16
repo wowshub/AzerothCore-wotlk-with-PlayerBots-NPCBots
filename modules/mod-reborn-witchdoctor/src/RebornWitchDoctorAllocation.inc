@@ -5,7 +5,7 @@ uint32 AERank(AEMask const& mask,uint32 index)
 { return index<WD139::Count?mask.ranks[index]:0; }
 uint32 AESpent(AEMask const& mask)
 {
-    uint32 total=0;for(uint32 i=0;i<6;++i) total+=AERank(mask,i);return AERank(mask,133)+AERank(mask,116)+AERank(mask,117)+AERank(mask,108)+AERank(mask,109)+AERank(mask,110)+total+AERank(mask,39)+AERank(mask,40)+AERank(mask,41)+AERank(mask,46)+AERank(mask,47)+AERank(mask,48)+AERank(mask,58)+AERank(mask,59)+AERank(mask,60)+AERank(mask,63)+AERank(mask,64)+AERank(mask,65)+AERank(mask,66)+AERank(mask,67)+AERank(mask,68)+AERank(mask,69)+AERank(mask,70)+AERank(mask,71)+AERank(mask,72)+AERank(mask,73);
+    uint32 total=0;for(uint32 i=0;i<6;++i) total+=AERank(mask,i);return AERank(mask,141)+AERank(mask,142)+AERank(mask,143)+AERank(mask,133)+AERank(mask,116)+AERank(mask,117)+AERank(mask,108)+AERank(mask,109)+AERank(mask,110)+total+AERank(mask,39)+AERank(mask,40)+AERank(mask,41)+AERank(mask,46)+AERank(mask,47)+AERank(mask,48)+AERank(mask,58)+AERank(mask,59)+AERank(mask,60)+AERank(mask,63)+AERank(mask,64)+AERank(mask,65)+AERank(mask,66)+AERank(mask,67)+AERank(mask,68)+AERank(mask,69)+AERank(mask,70)+AERank(mask,71)+AERank(mask,72)+AERank(mask,73);
 }
 // WD82A: threshold talents cannot bootstrap each other with circular pending points.
 uint32 TEFoundation(AEMask const& mask)
@@ -20,6 +20,9 @@ bool AESpecValid(AEMask const& mask,uint32 spec)
 { return mask.SpecValid(spec); }
 bool AEValid(AEMask const& mask,uint32 level,uint32 testAE,uint32 testTE)
 {
+    if((AERank(mask,141)||AERank(mask,142)||AERank(mask,143))&&level<10)return false;
+    if((AERank(mask,142)||AERank(mask,143))&&!AERank(mask,39))return false;
+    if(AERank(mask,142)&&AERank(mask,143))return false;
     if(AERank(mask,138)&&(level<15||!AERank(mask,122)))return false;
     if(AERank(mask,139)&&(level<20||!AERank(mask,129)||AERank(mask,114)+AERank(mask,115)+AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,122)+AERank(mask,123)+AERank(mask,124)+AERank(mask,125)+AERank(mask,126)+AERank(mask,127)+AERank(mask,128)+AERank(mask,129)+AERank(mask,130)+AERank(mask,131)+AERank(mask,132)+AERank(mask,134)+AERank(mask,135)+AERank(mask,136)+AERank(mask,137)<8))return false;
     if(AERank(mask,140)&&(level<20||!AERank(mask,131)||AERank(mask,114)+AERank(mask,115)+AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,122)+AERank(mask,123)+AERank(mask,124)+AERank(mask,125)+AERank(mask,126)+AERank(mask,127)+AERank(mask,128)+AERank(mask,129)+AERank(mask,130)+AERank(mask,131)+AERank(mask,132)+AERank(mask,134)+AERank(mask,135)+AERank(mask,136)+AERank(mask,137)+AERank(mask,138)+AERank(mask,139)<23))return false;
@@ -31,7 +34,7 @@ bool AEValid(AEMask const& mask,uint32 level,uint32 testAE,uint32 testTE)
     if(AERank(mask,131)&&!AERank(mask,134))return false;
     if(AERank(mask,134)&&!AERank(mask,129))return false;
     if(AERank(mask,132)&&!(AERank(mask,125)||AERank(mask,126)||AERank(mask,127)))return false;
-    if(AERank(mask,133)&&(level<26||AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)<9||!(AERank(mask,67)||AERank(mask,59))||AERank(mask,65)))return false;
+    if(AERank(mask,133)&&(level<26||AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)+AERank(mask,141)+AERank(mask,142)+AERank(mask,143)<9||!(AERank(mask,67)||AERank(mask,59))||AERank(mask,65)))return false;
     if(AERank(mask,128) && (level<20 || !AERank(mask,120) || AERank(mask,114)+AERank(mask,115)+AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,122)+AERank(mask,123)+AERank(mask,124)+AERank(mask,125)+AERank(mask,126)+AERank(mask,127)<8))return false;
     if(AERank(mask,129) && !AERank(mask,128))return false;
     if(AERank(mask,130) && !AERank(mask,129))return false;
@@ -53,7 +56,7 @@ bool AEValid(AEMask const& mask,uint32 level,uint32 testAE,uint32 testTE)
     if(AERank(mask,114) && !AERank(mask,112)) return false;
     if(AERank(mask,115) && !AERank(mask,113)) return false;
     if(AERank(mask,116) && AERank(mask,117)) return false;
-    if((AERank(mask,116)||AERank(mask,117)) && (level<26 || !AERank(mask,66) || AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)<9)) return false;
+    if((AERank(mask,116)||AERank(mask,117)) && (level<26 || !AERank(mask,66) || AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)+AERank(mask,141)+AERank(mask,142)+AERank(mask,143)<9)) return false;
     if((AERank(mask,111)||AERank(mask,112)||AERank(mask,113)) && level<10) return false;
     if((AERank(mask,112)||AERank(mask,113)) && !AERank(mask,111)) return false;
     // WD142: only pre-existing Class investments count toward the tier-24 gate.
@@ -120,7 +123,7 @@ bool AEValid(AEMask const& mask,uint32 level,uint32 testAE,uint32 testTE)
     if((AERank(mask,61) || AERank(mask,62)) && AERank(mask,49)+AERank(mask,50)+AERank(mask,51)+AERank(mask,53)+AERank(mask,55)+AERank(mask,81)<8) return false;
     // WD113: tier-nine Class nodes cannot bootstrap one another.
     if((AERank(mask,63) || AERank(mask,64) || AERank(mask,65) || AERank(mask,67) || AERank(mask,68) || AERank(mask,69) || AERank(mask,70) || AERank(mask,71) || AERank(mask,72) || AERank(mask,73)) &&
-       AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)<9) return false;
+       AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,60)+AERank(mask,66)+AERank(mask,141)+AERank(mask,142)+AERank(mask,143)<9) return false;
     if(AERank(mask,64) && AERank(mask,48)) return false; // Hir'eek / Dark Mojo choice.
     // WD100: the five tier-9 Class talents cannot count themselves toward nine AE.
     if((AERank(mask,40) || AERank(mask,41) || AERank(mask,46) || AERank(mask,47) || AERank(mask,48)) && AESpent(mask)-AERank(mask,40)-AERank(mask,41)-AERank(mask,46)-AERank(mask,47)-AERank(mask,48)-AERank(mask,58)-AERank(mask,59)-AERank(mask,63)-AERank(mask,64)-AERank(mask,65)-AERank(mask,67)-AERank(mask,68)-AERank(mask,69)-AERank(mask,70)-AERank(mask,71)-AERank(mask,72)-AERank(mask,73)-AERank(mask,133)<9) return false;
@@ -189,6 +192,7 @@ void AEApply(Player* p,State* s)
     for(uint32 spell:{9003861u,9003862u,9003863u,9003859u,9003860u,9003857u,9003858u,9003855u,9003856u,9003853u,9003854u,9003850u,9003851u,9003852u,9003430u,9003452u,9003840u,9003841u,9003842u,9003843u,9003830u,9003470u,9003481u,9003630u,9003631u,9003480u,9003620u,9003621u,9003622u,9003623u,9003624u,9003625u,9003660u,9003663u,9003432u,9003433u,9003640u,9003800u,9003801u,9003810u,9003650u,9003651u,9003633u,9003653u,9003790u,9003780u,9003781u,9003782u,9003770u,9003760u,9003761u,9003762u,9003763u,9003764u,9003765u,9003750u,9003751u,9003752u,9003753u,9003754u,9003740u,9003741u,9003730u,9003731u,9003732u,9003720u,9003721u,9003511u,9003710u,9003711u,9003712u,9003520u,9003521u,9003522u,9003530u,9003531u,9003600u,9003601u,9003610u,9003611u,9003612u,9003690u,9003700u,9003701u,9003702u,9003703u}) if(!sSpellMgr->GetSpellInfo(spell)) return;
     for(uint32 id : {9004000u,9004001u,9004002u,9004003u,9004004u,9004005u,9004006u,9004010u,9004011u,9004012u,9004020u,9004021u,9004022u}) if(!sSpellMgr->GetSpellInfo(id)) return;
     for(uint32 id : {9004030u,9004031u,9004032u,9004033u,9004034u,9004035u,9004036u,9004040u,9004041u}) if(!sSpellMgr->GetSpellInfo(id)) return;
+    for(uint32 id=9004110;id<=9004114;++id)if(!sSpellMgr->GetSpellInfo(id))return;
     for(uint32 id=9004100;id<=9004104;++id)if(!sSpellMgr->GetSpellInfo(id))return;
     for(uint32 id=9004096;id<=9004099;++id)if(!sSpellMgr->GetSpellInfo(id))return;
     for(uint32 id=9004090;id<=9004095;++id)if(!sSpellMgr->GetSpellInfo(id))return;
@@ -270,6 +274,7 @@ void AEApply(Player* p,State* s)
     WD151Bridge::Apply(p,AERank(mask,131),AERank(mask,132),AERank(mask,133),AERank(mask,134));
     WD152Bridge::Apply(p,AERank(mask,135),AERank(mask,136),AERank(mask,137));
     WD153Bridge::Apply(p,AERank(mask,138),AERank(mask,139),AERank(mask,140));
+    WD154Bridge::Apply(p,AERank(mask,141),AERank(mask,142),AERank(mask,143));
     for(uint32 i=0;i<3;++i)
     {
         uint32 spell= i==0?9003962u:(i==1?9003964u:9003965u);
