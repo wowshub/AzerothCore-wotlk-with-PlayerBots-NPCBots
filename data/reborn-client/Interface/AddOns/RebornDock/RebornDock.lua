@@ -591,6 +591,35 @@ local function IsBarMicroButton(b)
     return name:find("MicroButton$") ~= nil and parent ~= nil and parent ~= UIParent
 end
 
+-- DOCK1Q: a hidden shortcut original (o.hideOrig) is put back to transparent and
+-- click-through the moment another addon shows it again. SpellDraft's mode switch
+-- calls SetAlpha(1) / Show() / EnableMouse(true) on its button at login and logout;
+-- waiting for the 0.1s upkeep let it flash on screen (and stay up while in combat).
+local mirrorPin = false
+local function HookMirror(b)
+    if b.rdockMirrorHooked then return end
+    b.rdockMirrorHooked = true
+    local function hidden(self)
+        local o = self.rdockMirrorKey and owned[self.rdockMirrorKey]
+        return o and o.hideOrig
+    end
+    hooksecurefunc(b, "SetAlpha", function(self, a)
+        if not mirrorPin and a and a > 0 and hidden(self) then
+            mirrorPin = true; self:SetAlpha(0); mirrorPin = false
+        end
+    end)
+    hooksecurefunc(b, "Show", function(self)
+        if not mirrorPin and hidden(self) and self:GetAlpha() > 0 then
+            mirrorPin = true; self:SetAlpha(0); mirrorPin = false
+        end
+    end)
+    hooksecurefunc(b, "EnableMouse", function(self, on)
+        if not mirrorPin and on and hidden(self) and not InCombatLockdown() then
+            mirrorPin = true; self:EnableMouse(false); mirrorPin = false
+        end
+    end)
+end
+
 local function Take(b, key)
     if not key or owned[key] or IsSecureAction(b) then return false end
     local o = { btn = b, key = key, parent = b:GetParent(), oscale = b:GetScale(), alpha = b:GetAlpha(), insets = { b:GetHitRectInsets() },
@@ -604,6 +633,14 @@ local function Take(b, key)
         o.hideOrig = not IsBarMicroButton(b)
         o.mouse = b:IsMouseEnabled()
         owned[key] = o
+        if o.hideOrig then
+            b.rdockMirrorKey = key
+            HookMirror(b)
+            mirrorPin = true
+            b:SetAlpha(0)
+            if not InCombatLockdown() then b:EnableMouse(false) end
+            mirrorPin = false
+        end
         dirty = true
         return true
     end
@@ -623,6 +660,7 @@ local function Release(key)
     owned[key] = nil
     if o.slot then o.slot.hl:Hide(); o.slot.click:Hide() end
     if o.mirror then
+        b.rdockMirrorKey = nil
         if o.hideOrig and not InCombatLockdown() then
             b:SetAlpha(o.alpha or 1)
             if o.mouse ~= nil then b:EnableMouse(o.mouse and true or false) end
@@ -1016,7 +1054,9 @@ local ticker = CreateFrame("Frame")
 ticker:SetScript("OnUpdate", function(_, dt)
     if not DB then return end
     elapsed = elapsed + dt
-    if elapsed < 0.1 then return end
+    -- DOCK1Q: every frame for the first seconds, so a launcher created at login is
+    -- taken (and hidden) before it is ever drawn; then the usual 0.1s upkeep.
+    if elapsed < 0.1 and sinceLogin >= 10 then return end
     sinceLogin = sinceLogin + elapsed
     repaint = repaint + elapsed
     elapsed = 0
