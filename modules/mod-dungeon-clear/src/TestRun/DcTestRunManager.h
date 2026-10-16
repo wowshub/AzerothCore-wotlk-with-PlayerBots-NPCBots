@@ -7,6 +7,7 @@
 #define _PLAYERBOT_DCTESTRUNMANAGER_H
 
 #include <cstddef>
+#include <deque>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -172,6 +173,12 @@ public:
     };
     std::vector<AddonRunView> AddonRunViews() const;
 
+    // RebornWOW DCTEST6A: the records of the last kFinishedKeep finished runs,
+    // newest first, so the addon's list keeps them after the run ends (until a
+    // server restart; the addon also saves its own copy). Any thread.
+    static constexpr std::size_t kFinishedKeep = 20;
+    std::vector<DcTestRunRecord::Record> FinishedRuns() const;
+
     // DCTEST3A: one live run's boss timeline and deaths so far, for the addon's
     // "run stats". False when no live run has that id. World thread.
     bool AddonRunDetail(std::string const& runId,
@@ -225,6 +232,7 @@ private:
     std::string ListActiveRuns() const;
 
     std::vector<std::unique_ptr<DcTestRunJob>> _runs;
+    std::deque<DcTestRunRecord::Record> _finished;  // DCTEST6A, guarded by _runsMutex
     mutable std::mutex _runsMutex;                  // guards _runs vs observer threads
     std::unordered_set<ObjectGuid> _reservedGuids;  // world-thread only
     uint32 _liveAccumMs = 0;                        // live-file throttle

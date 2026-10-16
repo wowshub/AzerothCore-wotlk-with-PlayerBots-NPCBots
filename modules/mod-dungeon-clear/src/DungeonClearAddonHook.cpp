@@ -138,6 +138,26 @@ namespace
                     cheats.empty() ? std::string("-") : cheats));
             }
         }
+        // RebornWOW DCTEST6A: finished runs, newest first. TRF = outcome and
+        // replay data, TRFC = party (name:role:class:level), TRFR = fail reason
+        // and end time (unix seconds).
+        for (DcTestRunRecord::Record const& f : DcTestRunManager::Instance().FinishedRuns())
+        {
+            SendAddonPayload(player, ClipPayload(Acore::StringFormat(
+                "DC\tTRF\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                AddonField(f.runId), AddonField(f.dungeon), f.heroic ? 1 : 0, AddonField(f.result),
+                f.durationS, f.bossesKilled, f.bossesTotal, uint32(f.deaths.size()), f.testRegroups,
+                uint32(f.cheats.size()), f.level, f.compSeed, f.gearIlvl, f.gearQuality,
+                f.roster ? 1 : 0)));
+            std::string comp;
+            for (auto const& c : f.comp)
+                comp += (comp.empty() ? "" : ",") + AddonField(c.name) + ":" + AddonField(c.role) +
+                        ":" + AddonField(c.className) + ":" + std::to_string(c.level);
+            SendAddonPayload(player, ClipPayload("DC\tTRFC\t" + AddonField(f.runId) + "\t" + comp));
+            SendAddonPayload(player, ClipPayload("DC\tTRFR\t" + AddonField(f.runId) + "\t" +
+                                                 std::to_string(f.endedAtMs / 1000) + "\t" +
+                                                 AddonField(f.failReason)));
+        }
         SendAddonPayload(player, "DC\tTR_END");
     }
 

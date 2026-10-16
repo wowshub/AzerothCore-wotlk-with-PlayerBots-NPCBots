@@ -545,6 +545,10 @@ void DcTestRunManager::Tick(uint32 diff)
                     DcTestPlanManager::Instance().OnRunFinished((*it)->PlanId(),
                                                                 std::move(outcome));
                 }
+                // RebornWOW DCTEST6A: keep the finished record for the addon's list.
+                _finished.push_front((*it)->RecordData());
+                if (_finished.size() > kFinishedKeep)
+                    _finished.pop_back();
                 for (ObjectGuid const& g : (*it)->BotGuids())
                     _reservedGuids.erase(g);
                 it = _runs.erase(it);
@@ -629,7 +633,24 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *deaths = job->RecordData().deaths;
         return true;
     }
+    // RebornWOW DCTEST6A: a finished run's stats stay readable.
+    for (DcTestRunRecord::Record const& rec : _finished)
+    {
+        if (rec.runId != runId)
+            continue;
+        if (kills)
+            *kills = rec.bossTimeline;
+        if (deaths)
+            *deaths = rec.deaths;
+        return true;
+    }
     return false;
+}
+
+std::vector<DcTestRunRecord::Record> DcTestRunManager::FinishedRuns() const
+{
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    return std::vector<DcTestRunRecord::Record>(_finished.begin(), _finished.end());
 }
 
 void DcTestRunManager::WriteLiveStatus()
