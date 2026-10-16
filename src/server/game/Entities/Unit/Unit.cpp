@@ -11049,6 +11049,8 @@ uint32 Unit::MeleeDamageBonusTaken(Unit* attacker, uint32 pdamage, WeaponAttackT
     //end npcbot
 #endif
 
+    // WD156 Eye: native271 already handles spells; white attacks need the same owner-only aura once.
+    if(!spellProto) TakenTotalMod *= GetTotalAuraMultiplier(SPELL_AURA_MOD_DAMAGE_FROM_CASTER,[attacker](AuraEffect const* a){return a->GetId()==9004133&&a->GetCasterGUID()==attacker->GetGUID();});
     // .. taken pct (special attacks)
     if (spellProto)
     {

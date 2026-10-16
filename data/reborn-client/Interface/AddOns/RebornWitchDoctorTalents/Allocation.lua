@@ -13,16 +13,25 @@ function M.AERank(id,mask)
  return M.MaskRank(mask,Shift(i),L.nodes[i].width)
 end
 function M.AESpent(mask)
- local total=0;for id,i in pairs(index) do if i==141 or i==142 or i==143 or i==133 or i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=73) or (i>=116 and i<=117) or (i>=108 and i<=110) then total=total+M.AERank(id,mask) end end;return total
+ local total=0;for id,i in pairs(index) do if i==144 or i==145 or i==146 or i==141 or i==142 or i==143 or i==133 or i<6 or (i>=39 and i<=41) or (i>=46 and i<=48) or (i>=58 and i<=60) or (i>=63 and i<=73) or (i>=116 and i<=117) or (i>=108 and i<=110) then total=total+M.AERank(id,mask) end end;return total
 end
 function M.TEFoundation(mask) return M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31345,mask) end
 function M.BrewingFoundation(mask) return M.AERank(7128,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask) end
 function M.BrewingSpent(mask) return M.AERank(7133,mask)+M.AERank(29740,mask)+M.AERank(6026,mask)+M.AERank(30333,mask)+M.AERank(6027,mask)+M.AERank(6015,mask)+M.AERank(29310,mask)+M.AERank(29754,mask)+M.AERank(6016,mask)+M.AERank(6009,mask)+ M.AERank(30823,mask)+M.AERank(6022,mask)+M.AERank(6013,mask)+ M.AERank(6021,mask)+M.AERank(6014,mask)+ M.AERank(6645,mask)+M.AERank(4112,mask)+M.AERank(7130,mask)+ M.AERank(35051,mask)+M.AERank(30888,mask)+M.AERank(29738,mask)+ M.AERank(35065,mask)+M.AERank(35064,mask)+M.AERank(35068,mask)+ M.AERank(7128,mask)+ M.AERank(6020,mask)+M.AERank(29737,mask)+ M.AERank(6498,mask)+M.AERank(29303,mask)+ M.AERank(7131,mask)+M.AERank(30884,mask)+M.AERank(29736,mask)+M.AERank(5055,mask)+M.AERank(7129,mask)+M.AERank(7948,mask)+M.AERank(31137,mask)+M.AERank(7132,mask)+M.AERank(29753,mask) end
-function M.TESpent(mask) return M.AERank(6010,mask)+M.AERank(11164,mask)+M.AERank(29981,mask)+ M.AERank(7031,mask)+M.AERank(11330,mask)+M.AERank(29930,mask)+ M.AERank(6011,mask)+M.AERank(6073,mask)+M.AERank(29729,mask)+ M.AERank(30892,mask)+M.AERank(6983,mask)+M.AERank(5164,mask)+ M.AERank(5253,mask)+M.AERank(6853,mask)+ M.AERank(6069,mask)+ M.AERank(8574,mask)+M.AERank(30895,mask)+M.AERank(6063,mask)+ M.AERank(7086,mask)+M.AERank(6072,mask)+M.AERank(6074,mask)+ M.AERank(1969,mask)+M.AERank(7779,mask)+ M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
+function M.TESpent(mask) return M.AERank(4572,mask)+M.AERank(6035,mask)+M.AERank(7355,mask)+ M.AERank(6010,mask)+M.AERank(11164,mask)+M.AERank(29981,mask)+ M.AERank(7031,mask)+M.AERank(11330,mask)+M.AERank(29930,mask)+ M.AERank(6011,mask)+M.AERank(6073,mask)+M.AERank(29729,mask)+ M.AERank(30892,mask)+M.AERank(6983,mask)+M.AERank(5164,mask)+ M.AERank(5253,mask)+M.AERank(6853,mask)+ M.AERank(6069,mask)+ M.AERank(8574,mask)+M.AERank(30895,mask)+M.AERank(6063,mask)+ M.AERank(7086,mask)+M.AERank(6072,mask)+M.AERank(6074,mask)+ M.AERank(1969,mask)+M.AERank(7779,mask)+ M.BrewingSpent(mask)+ M.AERank(31154,mask)+M.AERank(31344,mask)+M.AERank(31340,mask)+M.AERank(7157,mask)+M.AERank(6058,mask)+M.AERank(29928,mask)+M.AERank(30973,mask)+M.AERank(31341,mask)+M.AERank(6045,mask)+M.AERank(31347,mask)+M.AERank(31348,mask)+M.AERank(6644,mask)+M.AERank(6046,mask)+M.AERank(6062,mask)+M.AERank(30889,mask)+M.AERank(31343,mask)+M.AERank(6053,mask)+M.AERank(31350,mask)+M.AERank(5333,mask)+M.AERank(6059,mask)+M.AERank(5332,mask)+M.AERank(31345,mask)+M.AERank(6007,mask)+M.AERank(29121,mask)+M.AERank(31346,mask)+M.AERank(7100,mask)+M.AERank(29768,mask)+M.AERank(6057,mask)+M.AERank(30596,mask)+M.AERank(31349,mask)+M.AERank(29929,mask)+M.AERank(6055,mask) end
 function M.AEValid(mask)
  if M.MaskRank(mask,67,1)>0 or not M.LayoutValid(mask) or (M.AERank(35064,mask)>2 or M.AERank(6498,mask)>2 or M.AERank(9347,mask)>2 or M.AERank(6047,mask)>2 or M.AERank(6062,mask)>2 or M.AERank(31345,mask)>2 or M.AERank(6007,mask)>2 or M.AERank(7088,mask)>2 or M.AERank(7131,mask)>2 or M.AERank(30884,mask)>2 or M.AERank(29736,mask)>2) then return false,"加点数据无效，请刷新方案" end
  if M.TESpent(mask)>(M.teBudget or 0) then return false,"专精点数TE不足；AE不能代替TE" end
  local function rank(id) return M.AERank(id,mask) end
+ if rank(4572)+rank(6035)+rank(7355)>0 and (M.level<20 or M.specs[M.slot+1]~=2)then return false,"需要20级暗影方案"end
+ if rank(4572)>0 and (rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)<8 or rank(5164)+rank(11164)==0)then return false,"需要相连前置及8点此前暗影TE"end
+ if rank(6035)+rank(7355)>0 and rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)<23 then return false,"需要23点前层暗影TE；本层不计入"end
+ if rank(6035)>0 and rank(4572)+rank(29978)==0 then return false,"需要金布尔之眼或相连前置"end
+ if rank(7355)>0 and rank(6035)==0 then return false,"需要驭蛇者"end
+ if rank(6044)>0 and (M.level<10 or rank(6030)+rank(7088)==0)then return false,"需要相连通用前置"end
+ if rank(6050)+rank(6049)>0 and (M.level<56 or rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(30147)+rank(4132)+rank(7033)+rank(6051)+rank(6048)+rank(30891)+rank(6030)+rank(6381)+rank(12048)+rank(11323)+rank(31118)+rank(12264)+rank(6042)+rank(9347)+rank(29306)+rank(6031)+rank(6525)+rank(12525)+rank(12749)+rank(29749)+rank(29743)+rank(29747)+rank(7154)+rank(11154)+rank(6044)<24)then return false,"需要56级及24点此前通用AE，本层不计入"end
+ if rank(6050)>0 and rank(4132)+rank(11323)+rank(29743)==0 then return false,"需要加速或相连诅咒前置"end
+ if rank(6049)>0 and rank(6050)==0 then return false,"需要独臂华尔兹"end
  if (rank(29747)+rank(7154)+rank(11154)>0)and M.level<10 then return false,"需要10级"end
  if rank(7154)>0 and rank(11154)>0 then return false,"森金的迅捷与智慧二选一"end
  if rank(7154)+rank(11154)>0 and rank(7088)==0 then return false,"需要相连通用前置"end
@@ -37,7 +46,7 @@ function M.AEValid(mask)
  if rank(6011)>0 and rank(29729)==0 then return false,"需要洛阿之力（团队）前置"end
  if rank(29729)>0 and rank(6983)==0 then return false,"需要巫毒之火前置"end
  if rank(6073)>0 and rank(5253)+rank(6069)+rank(6853)==0 then return false,"需要弑神者、残余能量或真灵魂中的一个前置"end
- if rank(29743)>0 and (M.level<26 or rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)+rank(29747)+rank(7154)+rank(11154)<9 or rank(12264)+rank(30891)==0 or rank(11323)>0)then return false,"需要26级、9基础AE和相连前置；与显性诅咒互斥"end
+ if rank(29743)>0 and (M.level<26 or rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)+rank(29747)+rank(7154)+rank(11154)+rank(6044)<9 or rank(12264)+rank(30891)==0 or rank(11323)>0)then return false,"需要26级、9基础AE和相连前置；与显性诅咒互斥"end
  if rank(30892)>0 and (M.level<20 or M.specs[M.slot+1]~=2 or rank(6072)==0 or rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)<8)then return false,"需要20级、灵魂信徒和8点既有暗影TE"end
  if rank(6983)>0 and rank(30892)==0 then return false,"需要瑟拉图斯的召唤"end
  if rank(5164)>0 and rank(6983)==0 then return false,"需要巫毒之火"end
@@ -59,7 +68,7 @@ function M.AEValid(mask)
  if (rank(12749)>0 or rank(29749)>0) and (M.level<26 or rank(31118)==0 or rank(29744)+rank(7088)+rank(6030)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(31118)<9) then return false,"需要26级、死亡药剂和9点基础通用AE" end
  if (rank(4006)>0 or rank(12086)>0 or rank(4505)>0) and (M.level<10 or M.specs[M.slot+1]~=2) then return false,"暗影起始能力需要10级和暗影方案" end
  if (rank(12086)>0 or rank(4505)>0) and rank(4006)==0 then return false,"需要暗影猎手；不需要付费幻影" end
- if (rank(30203)>0 or rank(6052)>0 or rank(29757)>0) and (M.level<56 or M.AESpent(mask)-rank(30203)-rank(6052)-rank(29757)<24) then return false,"需要56级和24点既有通用AE（本层不计入）" end
+ if (rank(30203)>0 or rank(6052)>0 or rank(29757)>0) and (M.level<56 or M.AESpent(mask)-rank(30203)-rank(6052)-rank(29757)-rank(6050)-rank(6049)<24) then return false,"需要56级和24点既有通用AE（本层不计入）" end
  if rank(6052)>0 and (M.level<58 or rank(30203)==0) then return false,"洛阿共鸣需要58级和黑暗帷幕" end
  if (rank(30333)>0 or rank(6027)>0) and (M.level<57 or M.specs[M.slot+1]~=1 or rank(4005)==0 or M.BrewingSpent(mask)-rank(7133)-rank(29740)-rank(30333)-rank(6027)<23) then return false,"需要57级、大锅及23点既有酿造TE" end
  if rank(30333)>0 and rank(6014)==0 and rank(6020)==0 and rank(29737)==0 then return false,"需要相连酿造前置" end
@@ -89,7 +98,7 @@ function M.AEValid(mask)
  if (rank(6047)>0 or rank(7092)>0) and rank(6054)==0 then return false,"睿智／寻觅者需要灵性传统" end
  if rank(29309)>0 and M.level<16 then return false,"净化神像需要角色等级16" end
  if rank(29309)>0 and rank(6047)==0 and rank(7092)==0 then return false,"净化神像需要睿智或寻觅者" end
- if (rank(4004)>0 or rank(4533)>0 or rank(11532)>0 or rank(4532)>0 or rank(11133)>0 or M.TESpent(mask)-M.BrewingSpent(mask)-rank(1969)-rank(7779)-rank(7086)-rank(6072)-rank(6074)-rank(8574)-rank(30895)-rank(6063)-rank(6069)-rank(5253)-rank(6853)-rank(30892)-rank(6983)-rank(5164)-rank(6011)-rank(6073)-rank(29729)-rank(7031)-rank(11330)-rank(29930)-rank(6010)-rank(11164)-rank(29981)>0) and M.specs[M.slot+1]~=0 then return false,"本方案需要绑定巫毒专精" end
+ if (rank(4004)>0 or rank(4533)>0 or rank(11532)>0 or rank(4532)>0 or rank(11133)>0 or M.TESpent(mask)-M.BrewingSpent(mask)-rank(1969)-rank(7779)-rank(7086)-rank(6072)-rank(6074)-rank(8574)-rank(30895)-rank(6063)-rank(6069)-rank(5253)-rank(6853)-rank(30892)-rank(6983)-rank(5164)-rank(6011)-rank(6073)-rank(29729)-rank(7031)-rank(11330)-rank(29930)-rank(6010)-rank(11164)-rank(29981)-rank(4572)-rank(6035)-rank(7355)>0) and M.specs[M.slot+1]~=0 then return false,"本方案需要绑定巫毒专精" end
  if (M.BrewingSpent(mask)>0 or rank(9311)>0 or rank(4715)>0) and M.specs[M.slot+1]~=1 then return false,"本方案需要绑定酿造专精" end
  if (rank(4005)>0 or rank(12645)>0 or rank(12646)>0) and M.specs[M.slot+1]~=1 then return false,"本方案需要绑定酿造专精" end
  if (rank(12645)>0 or rank(12646)>0) and rank(4005)==0 and rank(29744)==0 then return false,"需要大锅酿造或治疗守卫" end
@@ -103,7 +112,7 @@ function M.AEValid(mask)
  if (rank(7948)>0 or rank(31137)>0) and M.BrewingFoundation(mask)<8 then return false,"需要先投入8点基础酿造TE；这两个节点不能互相凑前置" end
  if rank(7948)>0 and M.level<16 then return false,"灵魂之触需要16级" end
  if rank(31137)>0 and M.level<30 then return false,"丛林秘法需要30级" end
- if (rank(5113)>0 or rank(30891)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)-rank(29743)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
+ if (rank(5113)>0 or rank(30891)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)-rank(29743)-rank(6050)-rank(6049)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
  if rank(5113)>0 and M.level<58 then return false,"诅咒雕像需要58级" end
  if rank(30891)>0 and M.level<30 then return false,"穆厄扎拉之触需要30级" end
  if (rank(7132)>0 or rank(29753)>0) and M.level<31 then return false,"佳酿需要31级" end
@@ -113,7 +122,7 @@ function M.AEValid(mask)
  if (rank(6525)>0 or rank(12525)>0) and rank(6031)==0 then return false,"需先学习蛙变术" end
  if rank(6525)>0 and rank(12525)>0 then return false,"贡克与克拉格瓦祝福二选一" end
  if rank(29306)>0 and M.level<30 then return false,"化蛇需要角色等级30" end
- if (rank(6381)>0 or rank(12048)>0 or rank(11323)>0 or rank(12264)>0 or rank(6042)>0 or rank(9347)>0 or rank(29306)>0 or rank(6031)>0 or rank(6525)>0 or rank(12525)>0) and rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)+rank(29747)+rank(7154)+rank(11154)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
+ if (rank(6381)>0 or rank(12048)>0 or rank(11323)>0 or rank(12264)>0 or rank(6042)>0 or rank(9347)>0 or rank(29306)>0 or rank(6031)>0 or rank(6525)>0 or rank(12525)>0) and rank(29744)+rank(6054)+rank(6047)+rank(7092)+rank(29309)+rank(29301)+rank(7088)+rank(6030)+rank(31118)+rank(29747)+rank(7154)+rank(11154)+rank(6044)<9 then return false,"先投入9点基础AE；同层不能互相凑点" end
  if rank(12048)>0 and rank(6048)>0 then return false,"希里克的祝福与黑暗魔精二选一" end
  if rank(31154)>0 then
   if M.level<11 then return false,"暗影傀儡需要角色等级11" end
@@ -122,7 +131,7 @@ function M.AEValid(mask)
   if rank(4004)==0 then return false,"暗影傀儡缺少前置：傀儡师之线（巫毒最右竖列顶部，免费）" end
   if (M.teBudget or 0)<1 then return false,"暗影傀儡需要1点TE" end
  end
- if (rank(30147)>0 or rank(4132)>0 or rank(7033)>0 or rank(6051)>0 or rank(6048)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)-rank(29743)<9 then return false,"需要先投入9 AE；同层节点不能互相凑前置" end
+ if (rank(30147)>0 or rank(4132)>0 or rank(7033)>0 or rank(6051)>0 or rank(6048)>0) and M.AESpent(mask)-rank(30147)-rank(4132)-rank(7033)-rank(6051)-rank(6048)-rank(5113)-rank(30891)-rank(6381)-rank(12048)-rank(11323)-rank(12264)-rank(6042)-rank(9347)-rank(29306)-rank(6031)-rank(6525)-rank(12525)-rank(29743)-rank(6050)-rank(6049)<9 then return false,"需要先投入9 AE；同层节点不能互相凑前置" end
  if rank(6051)>0 and M.level<28 then return false,"迅捷神像需要等级28" end
  if rank(6048)>0 and M.level<32 then return false,"黑暗魔精需要等级32" end
  if rank(30147)>0 and M.level<28 then return false,"炼金强化需要等级28" end
@@ -470,6 +479,12 @@ details[29981]={zh="巨蛇诡计",en="Serpent's Guile",level=20,early="57",kind=
 details[29747]={zh="幻象",en="Mirage",level=10,early="10",kind="主动技能 / Ability",effects={{"隐身20秒，立即获得5层灵魂并留下向前跑开的自身分身。移速提高50%；每秒使附近100码内敌人对你的当前威胁降低20%。自己造成非触发的直接伤害或有效直接治疗会结束隐身，已有周期效果和灵魂恢复不会结束。基础冷却180秒。","Become invisible for 20 sec, gain 5 Spirits and leave a fleeing copy. Movement speed +50%; every second reduce nearby enemies current threat toward you by 20%. Non-triggered direct damage or effective direct healing ends invisibility; periodic effects and Spirit restoration do not. Base cooldown 180 sec."}},limit={"仅当前已保存激活方案；通用树，各专精可选。","Active saved build; general tree, all specs."},path={"每项1 AE；增强需相连前置；含幻象共3 AE自然最早14级。","1 AE each; enhancement requires prerequisite; Mirage plus prerequisite and enhancement needs3 AE, naturally level14."}}
 details[7154]={zh="森金的迅捷",en="Sen'jin's Swiftness",level=10,early="12",kind="天赋 / Talent",effects={{"幻象的基础冷却缩短60秒：180秒变为120秒。与森金的智慧二选一；不直接重置已经在计时的冷却。","Reduces Mirage base cooldown by 60 sec: 180 to 120 sec. Choose this or Senjin Wisdom; does not reset a running cooldown."}},limit={"仅当前已保存激活方案；通用树，各专精可选。","Active saved build; general tree, all specs."},path={"每项1 AE；增强需相连前置；含幻象共3 AE自然最早14级。","1 AE each; enhancement requires prerequisite; Mirage plus prerequisite and enhancement needs3 AE, naturally level14."}}
 details[11154]={zh="森金的智慧",en="Sen'jin's Wisdom",level=10,early="12",kind="天赋 / Talent",effects={{"幻象的隐身、移动加速和分身持续时间从20秒延长至40秒。与森金的迅捷二选一。","Extends Mirage invisibility, movement speed and clone duration from 20 to 40 sec. Choose this or Senjin Swiftness."}},limit={"仅当前已保存激活方案；通用树，各专精可选。","Active saved build; general tree, all specs."},path={"每项1 AE；增强需相连前置；含幻象共3 AE自然最早14级。","1 AE each; enhancement requires prerequisite; Mirage plus prerequisite and enhancement needs3 AE, naturally level14."}}
+details[6044]={zh="魔精狂乱",en="Mojo Madness",level=10,early="12",kind="通用天赋 / General talent",effects={{"自己的实际伤害或有效治疗有5%几率获得10秒魔精狂乱：下一次成功的非触发技能标准资源消耗降低100%。周期伤害和治疗可触发，灵魂恢复及派生回声不触发；取消或失败不消耗，零费用技能成功也会消耗。","Your actual damage or effective healing has a5% chance to grant10 sec of Mojo Madness: your next successful non-triggered spell costs100% less normal power. Periodic events count; Spirit restoration and derived echoes do not. Cancel/failure does not consume; a successful zero-cost ability also consumes."}},limit={"仅当前已保存激活方案；每项1 AE。","Active saved build only;1 AE each."},path={"需要相连前置；高层需24点此前通用AE。","Requires connected prerequisite; tier talents require24 prior Class AE."}}
+details[6050]={zh="独臂华尔兹",en="One Armed Waltz",level=56,early="58",kind="通用天赋 / General talent",effects={{"大巫毒对自己的伤害和治疗惩罚由50%降为25%；受保护队友的减伤由20%提高至25%。自己的伤害免疫保持；只影响自己的大巫毒。","Big Bad Voodoo reduces your damage/healing by25% instead of50%; protected allies take25% less damage instead of20%. Your damage immunity stays. Only your Big Bad Voodoo is affected."}},limit={"仅当前已保存激活方案；每项1 AE。","Active saved build only;1 AE each."},path={"需要相连前置；高层需24点此前通用AE。","Requires connected prerequisite; tier talents require24 prior Class AE."}}
+details[6049]={zh="为了洛阿！",en="For Da Loa!",level=56,early="60",kind="通用天赋 / General talent",effects={{"将已学习的万灵药替换为群体万灵药：净化30码内自己及队伍/团队成员的毒、疾病、诅咒，并免疫这些效果3秒；120秒冷却，11%基础法力。与普通万灵药共享冷却；取消天赋恢复普通按钮，旧版已购买群体技能保留。","Replaces learned Allcure with Mass Allcure: removes poison/disease/curse from you and party/raid members within30 yd and grants3 sec immunity.120 sec cooldown;11% base mana; shared cooldown. Removing talent restores ordinary button and preserves a separately learned legacy mass spell."}},limit={"仅当前已保存激活方案；每项1 AE。","Active saved build only;1 AE each."},path={"需要相连前置；高层需24点此前通用AE。","Requires connected prerequisite; tier talents require24 prior Class AE."}}
+details[4572]={zh="金布尔之眼",en="Eye of Kimbul",level=20,early="33",kind="暗影天赋 / Shadow talent",effects={{"你的实际伤害暴击使目标获得金布尔之眼，持续15秒，最多5层；每层使你对该目标伤害提高1%、暴击几率提高1个百分点。目标不能潜行或隐形，其他施法者不共享层数。","Your damaging critical hits mark the target for 15 sec, up to 5 stacks. Each stack increases your damage by 1% and critical strike chance by 1 percentage point against that target. Prevents stealth/invisibility; stacks belong to you."}},limit={"仅当前已保存激活方案；每项1 TE。","Active saved build only; 1 TE each."},path={"需要相连前置与此前暗影TE。","Requires connected prerequisite and prior Shadow TE."}}
+details[6035]={zh="驭蛇者",en="Serpent Handler",level=20,early="57",kind="暗影天赋 / Shadow talent",effects={{"瑟拉图斯的召唤额外召唤2个蛇守卫（4个变6个），冷却延长5秒。只增强群蛇召唤，不增加普通或妖火触发守卫数量。","Call of Sseratus summons 2 additional Serpent Wards (4 to 6), but its cooldown increases by 5 sec. Does not increase normal or Hexfire Mass ward counts."}},limit={"仅当前已保存激活方案；每项1 TE。","Active saved build only; 1 TE each."},path={"需要相连前置与此前暗影TE。","Requires connected prerequisite and prior Shadow TE."}}
+details[7355]={zh="狂乱灵魂",en="Frenzied Spirits",level=20,early="59",kind="暗影天赋 / Shadow talent",effects={{"消耗当前全部灵魂，每层提供10点远程暴击等级、5%暴击伤害增幅，以及实际伤害2%的自我治疗；每层使效果持续4秒。期间每秒获得1层灵魂，最多5层；至少需要1层灵魂。20秒冷却，14%基础法力。","Consumes all Spirits. Each grants 10 ranged critical strike rating, 5% critical damage and self-healing for 2% of actual damage dealt, lasting 4 sec per Spirit. Gains 1 Spirit every second while active, capped at 5. Requires at least 1 Spirit; 20 sec cooldown; 14% base mana."}},limit={"仅当前已保存激活方案；每项1 TE。","Active saved build only; 1 TE each."},path={"需要相连前置与此前暗影TE。","Requires connected prerequisite and prior Shadow TE."}}
 local function Pair(zh,en,r,g,b,sameColor)
  -- Both languages remain visible; the language switch chooses which comes first.
  if RebornWDLanguage=="en" then zh,en=en,zh end
@@ -477,6 +492,12 @@ local function Pair(zh,en,r,g,b,sameColor)
  GameTooltip:AddLine(en,sameColor and (r or 1) or .7,sameColor and (g or .82) or .75,sameColor and (b or 0) or .8,true)
 end
 local function PathReady(id)
+ if id==4572 then return M.AERank(5164)+M.AERank(11164)>0 end
+ if id==6035 then return M.AERank(4572)+M.AERank(29978)>0 end
+ if id==7355 then return M.AERank(6035)>0 end
+ if id==6044 then return M.AERank(6030)+M.AERank(7088)>0 end
+ if id==6050 then return M.AERank(4132)+M.AERank(11323)+M.AERank(29743)>0 end
+ if id==6049 then return M.AERank(6050)>0 end
  if id==29747 then return true end
  if id==7154 or id==11154 then return M.AERank(7088)>0 end
  if id==6010 then return M.AERank(8574)>0 end

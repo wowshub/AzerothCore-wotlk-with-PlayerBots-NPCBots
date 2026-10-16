@@ -1,0 +1,16 @@
+[
+  {
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261016\\codexfix_20261016_061258_阶段WD156C_技能书安全点击与拟态守卫存在BUFF累计测试包.zip",
+    "sha256": "958348db1894e1c8ccd9e125d20e0adfd519682427841604f5f1a79f539a6954",
+    "bytes": 28121830,
+    "files": 243,
+    "status": "candidate offline passed; real protected click and buff game pending"
+  },
+  {
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261016\\codexfix_20261016_085915_阶段WD156D_技能书LuaXML配对与主动点击回调修复.zip",
+    "sha256": "5d684248c035d6ea562f0433d80d364d276482757bb2b2a9635e272aec4c18f9",
+    "bytes": 133851,
+    "files": 26,
+    "status": "nil cause confirmed; repair offline passed game pending"
+  }
+]

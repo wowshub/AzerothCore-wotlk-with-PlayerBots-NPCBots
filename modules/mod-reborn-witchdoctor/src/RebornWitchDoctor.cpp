@@ -46,6 +46,7 @@
 #include "Trainer.h"
 #include <algorithm>
 
+namespace WD155 { bool Owns(Player*,uint32); }
 namespace WD149 { void Gain(Player*);uint32 ReadyPct(Player*);void Consume(Player*); }
 namespace WD150 { bool OwnedMass(Player*,ObjectGuid);void Shot(Creature*,ObjectGuid); }
 namespace WD5A { uint32 RitualHexingRank(Player* player); bool CanUseHexTalent(Player* player,uint32 spell); bool CanUseHollow(Player* player); bool CanCastBadJuju(Player* player); void TrainerOptions(Player* player); void TrainerPurchase(Player* player); }
@@ -261,6 +262,7 @@ void Clear(Player* p)
     if(Creature* c=ObjectAccessor::GetCreature(*p,s->mojo))
         if(c->GetEntry()==MimicEntry&&c->GetOwnerGUID()==p->GetGUID())c->DespawnOrUnsummon();
     s->mojo.Clear();s->extra.Clear();s->mimic.Clear();
+    p->RemoveAurasDueToSpell(9004140,p->GetGUID());
 }
 void Mirror(Player* p,Unit* target,uint32 spell)
 {
@@ -315,6 +317,7 @@ class spell_reborn_wd68a_summon : public SpellScript
         if(chosen) state->extra=fresh[1]->GetGUID();
         if(mojo) state->mojo=fresh[count-1]->GetGUID();
         p->CustomData.GetDefault<WD87B::Status>(WD87B::Key)->lifetime=fresh[0]->GetTimer();
+        WD87B::StartPresence(p,fresh[0]->GetTimer());
         WD87B::Snapshot(p);
     }
     void Register() override
@@ -1337,8 +1340,8 @@ class spell_reborn_wd29a_allcure : public SpellScript
     void SharedCooldown()
     {
         if(Player* player=GetCaster()->ToPlayer())
-            if(player->HasSpell(9003442))
-                player->AddSpellCooldown(9003442,0,GameTime::GetGameTime().count()+GetSpellInfo()->RecoveryTime/1000,true);
+            for(uint32 id:{9003442u,9004124u})if(player->HasSpell(id))
+                player->AddSpellCooldown(id,0,GameTime::GetGameTime().count()+GetSpellInfo()->RecoveryTime/1000,true);
     }
     void Register() override
     {
@@ -2042,7 +2045,8 @@ class spell_reborn_wd44a_mass_allcure : public SpellScript
     SpellCastResult CheckDoctor()
     {
         Player* player=GetCaster()->ToPlayer();
-        return IsDoctor(player) && player->HasSpell(9003442) && player->HasSpell(9003250) && player->GetLevel()>=58
+        return IsDoctor(player) && player->HasSpell(GetSpellInfo()->Id) && player->HasSpell(9003250) &&
+            ((GetSpellInfo()->Id==9003442 && player->GetLevel()>=58)||(WD155::Owns(player,9004122)&&player->GetLevel()>=28))
             ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
     void Allies(std::list<WorldObject*>& targets)
@@ -2068,7 +2072,10 @@ class spell_reborn_wd44a_mass_allcure : public SpellScript
     void SharedCooldown()
     {
         if(Player* player=GetCaster()->ToPlayer())
-            player->AddSpellCooldown(9003250,0,GameTime::GetGameTime().count()+GetSpellInfo()->RecoveryTime/1000,true);
+        {
+            for(uint32 id:{9003250u,9003442u,9004124u})if(id!=GetSpellInfo()->Id&&player->HasSpell(id))
+                player->AddSpellCooldown(id,0,GameTime::GetGameTime().count()+GetSpellInfo()->RecoveryTime/1000,true);
+        }
     }
     void Register() override
     {
@@ -3338,6 +3345,8 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorShadow152.inc"
 #include "RebornWitchDoctorWard153.inc"
 #include "RebornWitchDoctorMirage154.inc"
+#include "RebornWitchDoctorGeneral155.inc"
+#include "RebornWitchDoctorShadow156.inc"
 #include "RebornWitchDoctorShadow146.inc"
 #include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
@@ -3372,6 +3381,8 @@ void AddRebornWitchDoctorScripts()
     WD152::Register();
     WD153::Register();
     WD154::Register();
+    WD155::Register();
+    WD156::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

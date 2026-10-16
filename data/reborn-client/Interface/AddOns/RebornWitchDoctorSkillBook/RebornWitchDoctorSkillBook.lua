@@ -55,6 +55,7 @@ end)
 SlashCmdList.REBORNWDBOOK=function(arg)
  if not isDoctor() then return end
  local text=(arg or ''):match('^%s*(.-)%s*$')
+ print("[WD156D] FrameXML version="..tostring(REBORN_WD_BOOK_VERSION or "旧版/未加载"))
  local id=tonumber(text) or names[text]
  if not id then previous() end
  local native=scan()
@@ -64,5 +65,18 @@ SlashCmdList.REBORNWDBOOK=function(arg)
  end
  print('[WD119B] 只读定位：请手动点击对应分类和页码；左右列交替计格。')
  if lastBlocked then print('[WD119B] 最近受保护操作：'..table.concat(lastBlocked,' / ')) end
+ -- WD156C: reads only. No SetAttribute, hook installation or protected action.
+ if issecurevariable then
+  for _,key in ipairs({"SecureActionButton_OnClick","RebornBookBindSpell","RebornBookPostClick"})do
+   local secure,owner=issecurevariable(key)
+   print('[WD156C] '..key..' secure='..tostring(secure)..' owner='..tostring(owner))
+  end
+ end
+ for i=1,12 do local button=_G['SpellButton'..i]
+  if button and button.data and (not id or button.data==id)then
+   print('[WD156C] slot='..i..' id='..button.data..' spell='..tostring(button:GetAttribute('spell'))..' type1='..tostring(button:GetAttribute('type1'))..' type2='..tostring(button:GetAttribute('type2')))
+  end
+ end
+
 end
 return {locate=locate,scan=scan}

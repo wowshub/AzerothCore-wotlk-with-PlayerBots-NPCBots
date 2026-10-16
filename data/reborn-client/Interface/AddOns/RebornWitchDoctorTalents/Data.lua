@@ -177,3 +177,9 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==6010 then n.RequiredLevel=15;n.Re
 
 -- WD154 general Mirage and authored choice.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==29747 then n.RequiredLevel=10;n.RequiredIDs={}elseif n.ID==7154 or n.ID==11154 then n.RequiredLevel=10;n.RequiredIDs={7088}end end
+
+-- WD155 general nodes; connected prerequisites are OR paths.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==6044 then n.RequiredLevel=10;n.RequiredIDs={}elseif n.ID==6050 then n.RequiredLevel=56;n.RequiredIDs={}elseif n.ID==6049 then n.RequiredLevel=56;n.RequiredIDs={6050}end end
+
+-- WD156 Shadow prerequisites, OR paths represented by connected graph.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==4572 or n.ID==6035 then n.RequiredLevel=20;n.RequiredIDs={}elseif n.ID==7355 then n.RequiredLevel=20;n.RequiredIDs={6035}end end

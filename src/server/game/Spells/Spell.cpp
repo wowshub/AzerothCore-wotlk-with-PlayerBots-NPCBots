@@ -1,3 +1,5 @@
+#include <mutex>
+#include <unordered_set>
 /*
  * This file is part of the AzerothCore Project. See AUTHORS file for Copyright information
  *
@@ -600,6 +602,25 @@ static bool RebornWD96CanCastWhileMoving(Unit const* caster, SpellInfo const* in
         p->HasSpell(9003790) && p->HasAura(9003790,p->GetGUID());
 }
 
+// WD155B: process-local, mutex-protected cast snapshots. Spell keeps its WD154 layout.
+namespace WD155CastSnapshot
+{
+struct Registry { std::mutex mutex; std::unordered_set<Spell const*> ready; };
+Registry& Store() { static Registry* state=new Registry; return *state; } // Alive through shutdown destructors.
+void Set(Spell const* spell,bool ready)
+{
+    Registry& state=Store();std::lock_guard<std::mutex> lock(state.mutex);
+    if(ready)state.ready.insert(spell);else state.ready.erase(spell);
+}
+bool Take(Spell const* spell)
+{
+    Registry& state=Store();std::lock_guard<std::mutex> lock(state.mutex);
+    return state.ready.erase(spell)!=0;
+}
+}
+void Spell::SetRebornWD155MojoSnapshot(bool ready) { WD155CastSnapshot::Set(this,ready); }
+bool Spell::TakeRebornWD155MojoSnapshot() { return WD155CastSnapshot::Take(this); }
+
 Spell::Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags, ObjectGuid originalCasterGUID, bool skipCheck) :
 #ifdef MOD_NPCERBOTS
 //npcbot: override spellInfo
@@ -752,6 +773,7 @@ Spell::Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags,
 
 Spell::~Spell()
 {
+    TakeRebornWD155MojoSnapshot(); // Also clears failed prepares and destroyed cancelled casts.
     // unload scripts
     while (!m_loadedScripts.empty())
     {

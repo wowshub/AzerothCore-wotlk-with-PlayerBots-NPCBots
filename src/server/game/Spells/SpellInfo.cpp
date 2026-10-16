@@ -1415,6 +1415,8 @@ bool SpellInfo::IsAffectedBySpellMod(SpellModifier const* mod) const
     // An unclaimed exact modifier must NOT reach that fallback. Other spells retain it.
     switch (mod->spellId)
     {
+        case 9004131: // WD156 only Call of Sseratus cooldown
+        case 9004121: // WD155 only Big Bad Voodoo field effects
         case 9004111: case 9004112: // WD154 only Mirage cooldown/duration
         case 9004100: // WD153 exact Mimic duration only
         case 9004097: // WD152 Edge only Eclipse splash

@@ -7,6 +7,39 @@ struct Status : DataMap::Base
     std::chrono::steady_clock::time_point lastRequest{};
 };
 constexpr char Key[]="RebornWD87B.Status";
+
+// WD156C: a real, zero-stat owner aura follows the longest living owned Mimic.
+constexpr uint32 Presence=9004140;
+uint32 PresenceRemaining(Player* player)
+{
+    if(!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() || !player->HasSpell(WD68A::Mimic))return 0;
+    auto* slot=player->CustomData.Get<WD68A::State>(WD68A::Key);
+    if(!slot)return 0;
+    uint32 remaining=0;
+    for(ObjectGuid guid:{slot->mimic,slot->extra,slot->mojo})
+        if(Creature* c=ObjectAccessor::GetCreature(*player,guid))
+            if(c->GetEntry()==WD68A::MimicEntry && c->GetOwnerGUID()==player->GetGUID() &&
+               c->IsAlive() && c->IsInWorld() && c->IsInMap(player) && c->InSamePhase(player))
+                if(TempSummon* summon=c->ToTempSummon())remaining=std::max(remaining,summon->GetTimer());
+    return remaining;
+}
+void StartPresence(Player* player,uint32 lifetime)
+{
+    if(!lifetime || !PresenceRemaining(player))return;
+    // Use AddAura, not a triggered cast: this display cannot generate combat procs.
+    if(Aura* aura=player->AddAura(Presence,player))
+    {aura->SetMaxDuration(int32(lifetime));aura->SetDuration(int32(lifetime));}
+}
+void SyncPresence(Player* player)
+{
+    Aura* aura=player->GetAura(Presence,player->GetGUID());
+    if(!aura)return; // Do not recreate or refresh a cancelled/expired display each tick.
+    uint32 remaining=PresenceRemaining(player);
+    if(!remaining){player->RemoveAurasDueToSpell(Presence,player->GetGUID());return;}
+    // Only shorten when a longer-lived ward was removed; never prolong the summon.
+    if(aura->GetDuration()>int32(remaining)+250)aura->SetDuration(int32(remaining));
+}
+
 void Snapshot(Player* player)
 {
     SpellInfo const* info=sSpellMgr->GetSpellInfo(WD68A::Mimic);
@@ -40,6 +73,10 @@ class StatusScript : public PlayerScript
 {
 public:
     StatusScript():PlayerScript("reborn_wd87b_mimic_status") { }
+    void OnPlayerUpdate(Player* player,uint32) override {if(IsDoctor(player))SyncPresence(player);}
+    void OnPlayerLogout(Player* player) override {if(IsDoctor(player))player->RemoveAurasDueToSpell(Presence,player->GetGUID());}
+    void OnPlayerMapChanged(Player* player) override {if(IsDoctor(player))player->RemoveAurasDueToSpell(Presence,player->GetGUID());}
+    void OnPlayerJustDied(Player* player) override {if(IsDoctor(player))player->RemoveAurasDueToSpell(Presence,player->GetGUID());}
     bool OnPlayerCanUseChat(Player* player,uint32,uint32 language,std::string& message,Player* receiver) override
     {
         if (language!=LANG_ADDON || message.compare(0,8,"RBWD87B\t")!=0) return true;

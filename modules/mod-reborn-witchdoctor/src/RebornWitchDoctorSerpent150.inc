@@ -24,9 +24,10 @@ class call : public AuraScript
         if(made)return;made=true;Player* p=GetTarget()->ToPlayer();if(!Owns(p,Call)||GetCasterGUID()!=p->GetGUID())return;
         int32 duration=15000;p->ApplySpellMod(9003160,SPELLMOD_DURATION,duration);
         std::vector<ObjectGuid> fresh;
-        for(uint32 i=0;i<4;++i)
+uint32 count=p->HasSpell(9004131)&&p->HasAura(9004131,p->GetGUID())?6:4;
+        for(uint32 i=0;i<count;++i)
         {
-            Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,2.5f,float(i)*1.5707963f);
+            Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,2.5f,float(i)*6.2831853f/float(count));
             if(TempSummon* c=p->SummonCreature(900190,pos,TEMPSUMMON_TIMED_DESPAWN,std::max(1,duration)))fresh.push_back(c->GetGUID());
         }
         if(fresh.empty())return;

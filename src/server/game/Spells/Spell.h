@@ -600,6 +600,8 @@ public:
     Unit* GetOriginalTarget() const;
     SpellInfo const* GetSpellInfo() const { return m_spellInfo; }
     int32 GetPowerCost() const { return m_powerCost; }
+    void SetRebornWD155MojoSnapshot(bool ready);
+    bool TakeRebornWD155MojoSnapshot(); // External registry; no Spell layout change.
 
     bool UpdatePointers();                              // must be used at call Spell code after time delay (non triggered spell cast/update spell call/etc)
 

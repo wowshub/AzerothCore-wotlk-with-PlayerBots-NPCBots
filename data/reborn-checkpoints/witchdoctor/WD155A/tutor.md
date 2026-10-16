@@ -1,0 +1,9 @@
+# WD155A 教程与复用边界
+
+下一次技能减耗不能只用OnSpellPrepare快照：当前核心瞬发cast(true)早于该回调。采用CanPrepare（成本计算前）存Spell实例bool，在成功OnCast消费，取消仅清快照。避免指针map泄漏及失败施法误消费，也避免施法中刚触发的新Ready被没有旧快照的施法消耗。成功零费用也消费与当前上游一致。
+
+移植多效果修正不能只按描述抄一项。One Armed Waltz官方DBC实际含自身伤害、自身治疗、队友减伤三项。local保护的减伤在Effect0，故donor Effect2操作转本地SPELLMOD_EFFECT1。服务器精确Hook和客户端Family私有mask共同限制目标；旧local Family0必须适配，不能直接搬donor masks。对别人观察到的队友Buff，文字条件要基于施法者语义，不能用观察者是否学天赋来声称当前值。
+
+替换技能区分天然/购买来源与天赋授予来源。已有群体3442继续使用，否则授予4124；退天赋恢复Base映射，只撤私有4124。旧WD44净化与组队函数复用，不复制改造NpcBots。新private及legacy和普通共享冷却，避免拖旧技能或宏绕过。
+
+本记录为候选经验，未实机，不升级永久成功方法。完整装包、测试、回滚和不足见README、完整移植检查表及checks。

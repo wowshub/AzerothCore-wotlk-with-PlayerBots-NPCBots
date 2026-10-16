@@ -1,0 +1,391 @@
+{
+  "paths": {
+    "world\\expansion07\\doodads\\fx\\8fx_ambient_pink_ripple.m2": "Spells\\RebornWD156\\fx0.m2",
+    "world\\expansion07\\doodads\\fx\\water_tide_mod2x_blurred.blp": "Spells\\RebornWD156\\tex1.blp",
+    "world\\expansion07\\doodads\\fx\\7fx_lightraysup_r.blp": "Spells\\RebornWD156\\tex2.blp",
+    "world\\expansion07\\doodads\\fx\\water_tide_mod2x_vert.blp": "Spells\\RebornWD156\\tex3.blp",
+    "world\\expansion07\\doodads\\fx\\8fx_ambient_waterfall_ripple01_misty_2_2904633.blp": "Spells\\RebornWD156\\tex4.blp",
+    "world\\expansion07\\doodads\\fx\\6ng_waterfall_mod2x_01.blp": "Spells\\RebornWD156\\tex5.blp",
+    "spells\\fixated_state_purple.m2": "Spells\\RebornWD156\\fx1.m2",
+    "spells\\evileyegrey_03.blp": "Spells\\RebornWD156\\tex7.blp",
+    "spells\\evileyegrey_04.blp": "Spells\\RebornWD156\\tex8.blp",
+    "spells\\evileyegrey_02.blp": "Spells\\RebornWD156\\tex9.blp",
+    "spells\\evileyegrey_01.blp": "Spells\\RebornWD156\\tex10.blp",
+    "spells\\warlock_bodyofflames_low_state_hands_purple.m2": "Spells\\RebornWD156\\fx2.m2",
+    "spells\\genericglow64.blp": "Spells\\RebornWD156\\tex12.blp",
+    "spells\\t_vfx_fire_anim02_128_desat_blu.blp": "Spells\\RebornWD156\\tex13.blp",
+    "spells\\haunt_impact.m2": "Spells\\RebornWD156\\fx3.m2",
+    "spells\\aura_01.blp": "Spells\\RebornWD156\\tex15.blp",
+    "creature\\boneworm\\boneworm_bone02.blp": "Spells\\RebornWD156\\tex16.blp",
+    "spells\\t_vfx_smoke_cigarette4.blp": "Spells\\RebornWD156\\tex17.blp",
+    "spells\\flare09.blp": "Spells\\RebornWD156\\tex18.blp",
+    "spells\\t_vfx_explosion01_alpha.blp": "Spells\\RebornWD156\\tex19.blp",
+    "spells\\shoulder_robe_raidpriest_f_01aa.blp": "Spells\\RebornWD156\\tex20.blp",
+    "world\\expansion02\\doodads\\dalaran\\smokewispy01c.blp": "Spells\\RebornWD156\\tex21.blp",
+    "world\\kalimdor\\diremaul\\activedoodads\\nightmaresummoning\\genericglow2a.blp": "Spells\\RebornWD156\\tex22.blp",
+    "spells\\aura_02_h2.blp": "Spells\\RebornWD156\\tex23.blp",
+    "spells\\shadow_strikes_state_hand.m2": "Spells\\RebornWD156\\fx4.m2",
+    "world\\generic\\activedoodads\\spellportals\\flare.blp": "Spells\\RebornWD156\\tex25.blp",
+    "spells\\genericglow2b.blp": "Spells\\RebornWD156\\tex26.blp",
+    "spells\\genericglow_black.blp": "Spells\\RebornWD156\\tex27.blp"
+  },
+  "sources": {
+    "world\\expansion07\\doodads\\fx\\8fx_ambient_pink_ripple.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "45b9d0c09b4ea90421d942da87fc0dc223ad6a3cc702ad157fd941f87ba1cbe5"
+      }
+    ],
+    "world\\expansion07\\doodads\\fx\\water_tide_mod2x_blurred.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "22358a24d7d80d7f4f006c3c23a1fcc3f9277d2e4f1ac7cbc0f8841fcf30d49d"
+      }
+    ],
+    "world\\expansion07\\doodads\\fx\\7fx_lightraysup_r.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "7f08799bc230b10dd0dd63efe8ce681ca07dea2ed320e1852d380c2d6e75e482"
+      }
+    ],
+    "world\\expansion07\\doodads\\fx\\water_tide_mod2x_vert.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "e3d317456bcf2de658e6a58067043e6ae72873f3d4d0805d7cd7a34dc1ca1985"
+      }
+    ],
+    "world\\expansion07\\doodads\\fx\\8fx_ambient_waterfall_ripple01_misty_2_2904633.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "167c3ac03606748bde4be57ec19ba71ceff0a47b41d055734f4609b709b8a13a"
+      }
+    ],
+    "world\\expansion07\\doodads\\fx\\6ng_waterfall_mod2x_01.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "dd5f7dc3c3711c6a541a133a1c5ec9a8fbc3307993b183e4d851658240286251"
+      }
+    ],
+    "world\\expansion07\\doodads\\fx\\8fx_ambient_pink_ripple00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "5cb71ef3919161017cce47d33747881d7251799e4772a54fde50499df5e7d352"
+      }
+    ],
+    "spells\\fixated_state_purple.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "0faa6169ef5ba7026d02ac87979bea6a28917c9f1a7299c870611332ae8fbeb8"
+      }
+    ],
+    "spells\\evileyegrey_03.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "9d609315fb74c5ab45124d905878a52226ff88cde2203b9bb35697d643246e0e"
+      }
+    ],
+    "spells\\evileyegrey_04.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "1883592087f649ea8fe4e48dfcb3ae54fb774a163f52fb9540a181f9dd73f45d"
+      }
+    ],
+    "spells\\evileyegrey_02.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "ecb0fefa61f017ad1ae4b7b37033e7c7a9226be162b83d6d0c3b6952c56de4c4"
+      }
+    ],
+    "spells\\evileyegrey_01.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "d856df80c9da1635dd56b9e6d5aea1932faae695c18a027e888438258196627f"
+      }
+    ],
+    "spells\\fixated_state_purple00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "e8086d8aa55a8574621ef027b811b81e78376f68792ab9e80168ae3bde4761de"
+      }
+    ],
+    "spells\\warlock_bodyofflames_low_state_hands_purple.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "bd275829de0b2c76daf70aba6a4a9930685788bd8af511217e23397b3a8f0d01"
+      }
+    ],
+    "spells\\genericglow64.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "1ecc61e323a43891c43ec1ac250e31358041bbde51d1dc218482457a382e890c"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "c598742dc8332bb37f016d9d68fdd0ad872ec91dce85c1ddb1580d76f6926843"
+      }
+    ],
+    "spells\\t_vfx_fire_anim02_128_desat_blu.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "76d449802404f0853e9a72c60ae28f661c2da7c0aab3d931008152e6d1def500"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "d4089e3fa9dd5547d29f71a474ae61a1e30e276d26f6f2d96efa606fc22131cc"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "76d449802404f0853e9a72c60ae28f661c2da7c0aab3d931008152e6d1def500"
+      }
+    ],
+    "spells\\warlock_bodyofflames_low_state_hands_purple00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "3f551f07095defcb0fe67ef2a8e5c24b58b966bbcc755818631dbd25287d5e9c"
+      }
+    ],
+    "spells\\haunt_impact.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "6a4ae374da7ee9159a8d5f07ae57c3d6f845c317c78ad94476002c4a120961e3"
+      }
+    ],
+    "spells\\aura_01.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "179770fab62190692d135c92e9914638bbedf1a956c11be6b06c8e761cc888e1"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "34e96bfaf8ba53585a35f7ba93851940b9573bccea275dd3051b1921d094aedd"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "283bfaa9b6b9b98d16c656fa576af80040367b9351958f5eeace7fc9021b5540"
+      }
+    ],
+    "creature\\boneworm\\boneworm_bone02.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-CB.MPQ",
+        "sha256": "d143e2b5cc0eeb78c9bf880a58ec04590572f0e5e53c856e461848802115a207"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "46a02e4cb85c722c0a92c418e21bad91789e0962dc1839ccb5caddc77a469b91"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "7d9c06ae5aa7d1803d25314e63983fad37beb9547e2bd8b86600fc556a5982ca"
+      }
+    ],
+    "spells\\t_vfx_smoke_cigarette4.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "1f100e4edfefc4f454e8778d15980401039014cf8af218674d5eb0f75b8d869b"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "5411161c6480f9ee478950a689ca8bdb620e8cfce2c3a781ec0d348196392568"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "1f100e4edfefc4f454e8778d15980401039014cf8af218674d5eb0f75b8d869b"
+      }
+    ],
+    "spells\\flare09.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "e022a9d73e3180e7c74874f8e20f999d5e08fbcd73276cdee7c6db8d4492455f"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "a918bb20babcf949e9f755aa071474b2bf1c607707c87cbdf91d6432266a744e"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "ac72816f91ee88bd6b4a615756e8b788481849643a9d63ab5494c08d64dc4bd5"
+      }
+    ],
+    "spells\\t_vfx_explosion01_alpha.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "214ec876b66ecf369c45a2fcc2ec231f6dc8e4b529b6c48479c5702806abaf02"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "214ec876b66ecf369c45a2fcc2ec231f6dc8e4b529b6c48479c5702806abaf02"
+      }
+    ],
+    "spells\\shoulder_robe_raidpriest_f_01aa.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "09b311d8fe5905c91064c29129dd0eaa231b1d9f7b4fdbb144a77ecbb40be4ae"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "09b311d8fe5905c91064c29129dd0eaa231b1d9f7b4fdbb144a77ecbb40be4ae"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "94ee47e68d06cdc8527df4481e92d417397837d6b4419ba4f850269d005018d8"
+      }
+    ],
+    "world\\expansion02\\doodads\\dalaran\\smokewispy01c.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "700716d4f9a60b9abfd955cb18159102dbed5317f708b71efc69a9efd65d5318"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "700716d4f9a60b9abfd955cb18159102dbed5317f708b71efc69a9efd65d5318"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "912736e14ab3ecd7705bb2f58f3d911755f54c2951e6185152de38adc128e0a8"
+      }
+    ],
+    "world\\kalimdor\\diremaul\\activedoodads\\nightmaresummoning\\genericglow2a.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC3.MPQ",
+        "sha256": "0dd60064b64b7dcbb855a7db4532db27dafb90df303b1470cae86fe6e8c03249"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "0dd60064b64b7dcbb855a7db4532db27dafb90df303b1470cae86fe6e8c03249"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "44de659406702eec140dbfcb46572a660d465d445543bdf755c09d714f082bd8"
+      }
+    ],
+    "spells\\aura_02_h2.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "a73177e2fc66409b591e0a82ea555db03208be03152ac11d5a4424d23cb60531"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "a73177e2fc66409b591e0a82ea555db03208be03152ac11d5a4424d23cb60531"
+      }
+    ],
+    "spells\\haunt_impact00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "d217cd746055ab9d1086476a5f86329d6e11e9979b63db7231883a7a86d98488"
+      }
+    ],
+    "spells\\shadow_strikes_state_hand.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "c9277a284f6161ab064d76802e8224ecd16906e73d367c7ec22d75acb3b7bbd2"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "b653071ada6392057923f9aa5f6a3fc459969912802a6eb52a05e3a181cef15b"
+      }
+    ],
+    "world\\generic\\activedoodads\\spellportals\\flare.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-3.MPQ",
+        "sha256": "20ef5e726bf050a7fa082377d5ce72f09b7fc8532b256b8b8e31731f5c5b6c16"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-2.MPQ",
+        "sha256": "1161244ab8da6bb39d4d80b0a173f9597acd65827fddbbb76a07869e0195e7dc"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "a0f396921f2737d9d0f77050f788a48345031c78f8a9b745633543d4d7908660"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "c1d69f749e35cbcd5b3097c9246024049100c4e4d4257e02da01ed964e119d12"
+      }
+    ],
+    "spells\\genericglow2b.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "43bc719d0c68f84ba13b24a8a999a7dce26c172e3aa7590eae80c33658826835"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "abb4d4507d39d05db4dd7d6717937625c87b806ad739ec80937e0ef834704e38"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "c7b300c18ca1cca804fed3d744ce62ac318ce6fb24d113b4fc9c8747ba4674e1"
+      }
+    ],
+    "spells\\genericglow_black.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "5a98c459bf727b9925077a8f10880b0017c5af6c1d7b3f7e2a1bb10ae8587890"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "e9819a8b97cc1e72a8d61f7869112aa61c586e0de96938db5ecad884e4b0b5a6"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "9c55831e9613db5b28f4884524c633c5387abd82814383cc5d337f0663629d76"
+      }
+    ],
+    "spells\\shadow_strikes_state_hand00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "95b138b43b5f7c0880649cc7a0657b5d2c8f30eeb0ddb0b08f84eecf087b24d8"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "2c315ebac66df1b76bd58193562a237940427f887f4e363910d2b6b9e1391b53"
+      }
+    ],
+    "spells\\shadow_strikes_state_hand01.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "c3c4f27e139f69c72f9f3bba461338626c1aee8b18186a2aea20e20cc19949ee"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "cd0e1de56cfb35323afe22b93b1fd0fdef306548f0970e7ad38cd9f27a1a6c35"
+      }
+    ],
+    "sound\\spell\\fx_spirit_cast01.ogg": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-O.MPQ",
+        "sha256": "6b91cdc71b664026b5e1a16b64565ca51faeac5f66dcec46094106d6bb9f75d1"
+      }
+    ],
+    "sound\\spell\\fx_spirit_cast02.ogg": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-O.MPQ",
+        "sha256": "12dc3bbaa1126090a645e91a9a2467e721d1149e52b4fb956b524b03b18a1978"
+      }
+    ],
+    "sound\\spell\\fx_spirit_cast03.ogg": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-O.MPQ",
+        "sha256": "89e13de452ab985a5cc5eb999359c28b904ca78e3c203d56928f94e640cfd4dd"
+      }
+    ]
+  },
+  "kits": [
+    3113,
+    3779,
+    3780
+  ],
+  "effects": [
+    832,
+    136822,
+    138441,
+    141828,
+    142321
+  ],
+  "sounds": [
+    357953
+  ]
+}

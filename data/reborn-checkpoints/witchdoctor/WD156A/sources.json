@@ -1,0 +1,13 @@
+{
+  "sha": "3e0a8c93c0fb099fe4b0d6963bcc47fa86b612f5",
+  "files": {
+    "AscensionWitchDoctorCompletion.cpp": "58917ea38674a51d04424bc8ef6dfcd5f351c98e420dc4bd8969930daa8686fc",
+    "AscensionWitchDoctorCompletion.h": "0cf7fe2f5e3f69da6ef9b4a782230be8ff4519ec6c3eea371922943d4a4c0f04",
+    "AscensionWitchDoctorAuras.cpp": "51e7e03d31480bcb88610f9b09b4bbb051d29932c7aaa62583f80f23024695b4",
+    "AscensionWitchDoctorAbilities.cpp": "50d9baecb69eaa155bd665f0f43421c3324c912300b8fdc8e11c2257c2cd6ab2",
+    "AscensionWitchDoctorEvents.cpp": "da6b2636a17adb0cd1d1d091b3bf507d36ba6b78a64c76d811ebb322631f76b9",
+    "AscensionWitchDoctorSummons.cpp": "60ae7e8e29cee20b44d764e0d3b5039289f50ea9757d298047d44e2aff7ffeec",
+    "src/server/coa/AscensionWitchDoctorBrewing.cpp": "bc62a8f156dc6dc30b6e57caafc751277dd2379bec1e3d8d7fa6cd1704032d3f",
+    "src/server/coa/AscensionWitchDoctorCoefficients.h": "618f283c7fcd971bef2ce61b46dc6fbabe3e79234c34d02c5316a128124f88b3"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261013beAscend\\Data\\patch-XA.mpq",
+  "visual": 887965,
+  "donor_visual": 1228,
+  "kits": [
+    824054,
+    824055,
+    824056
+  ],
+  "effects": [
+    813059,
+    813060,
+    813061
+  ],
+  "sounds": [
+    9001627,
+    9001628
+  ],
+  "assets": {
+    "Spells\\RebornWD44A\\SPELLS\\Nature_Cast_Hand_Purple.M2": "c927448abc7e39712305e4c0a6f5dffb8fbf8a74c482154d2812c7b38617a9ba",
+    "Spells\\RebornWD44A\\SPELLS\\SHOCKWAVEWATER1.BLP": "711241c0e23c2d1fdd316dfb847059580890d99c14442532a1b66c875dff41ff",
+    "Spells\\RebornWD44A\\SPELLS\\YELLOW_GLOW2.BLP": "0021865c91cc30bc224aa16a5728bac776a500c8e186c73322d2ba0c945c57c0",
+    "Spells\\RebornWD44A\\SPELLS\\YELLOW_GLOW3.BLP": "f67e594c5f2cf0efae5855e234559e76283b418f056037b07f48ed76b547870a",
+    "Spells\\RebornWD44A\\SPELLS\\Nature_Cast_Hand_Purple00.skin": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc",
+    "Spells\\RebornWD44A\\SPELLS\\7fx_deathtitan_nature_scan.m2": "3ef61cc2bdd4edc16e85c12a203b31a1be9855c428e4f0d3b519cc7121b6c226",
+    "Spells\\RebornWD44A\\spells\\flare_perfect23.blp": "9a6f465779dd2d1f009505fe1700a85d86fefcd20f884f81d73de32ffd0f4a65",
+    "Spells\\RebornWD44A\\spells\\arcane_wisps_desat_ghostly_eonar2.blp": "ec729924eab68987e277277aa84c6e5fce52bee55a5e3c4030979d4bc9952227",
+    "Spells\\RebornWD44A\\spells\\dirt_scroll_wispy_rejuv_softer01.blp": "a8bb30e9fe2953c2fd2a70317be500b46f8327501317f4d48b83b1d12786816f",
+    "Spells\\RebornWD44A\\spells\\aurarune_032.blp": "bff0de2c557420b49bab0b547c2ff3ce86de356b6b5e352c4cf4a7763e0e76fd",
+    "Spells\\RebornWD44A\\spells\\7fx_alphamask_glow_fel.blp": "3750fe185eb0d58b0f5a92b7c477c25984de385a944154cb9513167a8c4337b3",
+    "Spells\\RebornWD44A\\spells\\black64.blp": "7214f13d95e74ce858181f25f0de5c4d19a52a6adbd7b197b7257feca96cf171",
+    "Spells\\RebornWD44A\\spells\\7fx_alphamask_flairblur_a.blp": "442a0edb719a1e29f1a8ab28bc4856160c7264c13ed5c500152b263152725ea6",
+    "Spells\\RebornWD44A\\spells\\arcane_wisps_desat_ghostly_eonar.blp": "8bf6c1591f7dd1bd22b368493f98276822c9383f4e38afed1b3ad16c676adf29",
+    "Spells\\RebornWD44A\\spells\\7fx_runefire.blp": "33295d40f94e9e01ad8997354495f0ed3db3858cd40704358f2c6ce64709d30e",
+    "Spells\\RebornWD44A\\spells\\aurarune_02.blp": "c7328c8324aa589925a5586b0e555e119cfe80813645ed3ef665d5ffc3278c16",
+    "Spells\\RebornWD44A\\spells\\leaves_v2.blp": "ab2a323c2a28366a57c8c48ec2c63cca27249ce1a6ccb3d64b1da09fae3b63ee",
+    "Spells\\RebornWD44A\\SPELLS\\7fx_deathtitan_nature_scan00.skin": "f78c7473f016321b8135060db923c943f781858343316aa15f9224a06aa8cb2e",
+    "Spells\\RebornWD44A\\SPELLS\\heat_signature.m2": "0348e41f1f3c9d6f162b5873d1559a51e62d38ab17a97879a138283763407378",
+    "Spells\\RebornWD44A\\spells\\t_heat_signature.blp": "c0afa9e41e814f7f78037d706c4097979c2cbaf8a0674853bdad15bb6132f3fb",
+    "Spells\\RebornWD44A\\spells\\t_vfx_flare05_dark_64.blp": "d2b41a33372c3b2c8367f57c7b6649c37f779a0915519912d4c884ca4a5e2024",
+    "Spells\\RebornWD44A\\spells\\t_vfx_ring_bow_blured.blp": "1dd534f436a758371a262de476f5ca1b7f97ffe6beba7f4f53b7166da5505881",
+    "Spells\\RebornWD44A\\creature\\kiljaeden\\t_vfx_sun_64.blp": "a075c1bafd4b041af2e67118f8e501d2c34bf87863849fbfdadf466f0574bafa",
+    "Spells\\RebornWD44A\\SPELLS\\heat_signature00.skin": "ebf6d6702daa7e4953d4a7a9c05bbfa624f9cd7028df93d482707c985d12c1f7",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_cast_01.ogg": "52af2889a57a66e54e693133b832b1b8742dddc7db18974ba74a39a193d998c0",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_cast_02.ogg": "482ab36bffb7e2f94dc3926cdcc3ff0b357e54a45d0156e1b9bb04e92a00c4b0",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_10.ogg": "cfd5eb32c4d70b174895693803ec280bc5f461676f08c8fdf20b7adcc59e8ea3",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_09.ogg": "848effebffb216325ca3d74df061d90abe6882ee8a8ff07c102c9ba2d95736b4",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_08.ogg": "e08a76d67b0c235fc096033e9bacaa744836e71b1c6c27362cc54162a896af46",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_07.ogg": "bf4c8c6682b5c39db31181fa8594d976d4f80d4425b56d701d90457af6a4519b",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_06.ogg": "a3ef46dde51530e7e416ded9f91bb2d5009724968440f094aff454383ccb2d2c",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_05.ogg": "e789ad09edbfb1780c42df666ee565af84441783a3517de50318ce2271c51b54",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_04.ogg": "897c8cb1da18406da00917e1628d849dea81f5fd9265b7397615ec63d3623b60",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_03.ogg": "dfc5ecc89129e59e33cbcb0baf4ee8788c0b53dfb676d67bc010cfc36738048c",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_02.ogg": "f56a9af10c49b00b6463abba51819532c31f0dc962b312885b4b4320029f6be2",
+    "Spells\\RebornWD44A\\sound\\spells\\fx_brewbubblefizz_impact_01.ogg": "4ffcb5c6177074610def97f21de4c3dc736bf04d658995480911def3fe43d68e"
+  },
+  "scope": "Reused already installed WD44 visual; no native model files changed"
+}
