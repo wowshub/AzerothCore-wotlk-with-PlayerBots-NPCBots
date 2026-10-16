@@ -22,6 +22,7 @@
 #include "Ai/Dungeon/DungeonClear/Util/DcBossStandDown.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcEscapeLeap.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcFlightLeg.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcLeaderSignal.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcOculusPlan.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcSmartRest.h"
 #include "Ai/Dungeon/DungeonClear/Util/DungeonClearUtil.h"
@@ -232,6 +233,17 @@ float DungeonClearMultiplier::GetValue(Action* action)
     // Halls of Reflection's escape: no backwards movement, ever. See
     // HorEscapeBackwardsBanned above.
     if (HorEscapeBackwardsBanned(bot, name))
+        return 0.0f;
+
+    // RebornWOW DCMOV3A: no chasing the master through a portal while a clear
+    // runs (paused included). Stock playerbots answers the master's own
+    // CMSG_AREATRIGGER with "reach area trigger" + "area trigger": the bot walks
+    // to that trigger and uses it. On a `.dc test` run the master is the GM
+    // watcher, so a GM leaving and re-entering the instance sent the whole party
+    // on a straight 300yd line across Halls of Lightning's pit (mid-air, the
+    // floor there is not in the server's height data) and out of the entrance —
+    // "Left the dungeon", tr-20261016-070707-2. DC moves the party itself.
+    if ((name == "reach area trigger" || name == "area trigger") && DcLeaderSignal::FindRunOwner(bot))
         return 0.0f;
 
     if (OculusMountBanned(bot, name))
@@ -453,6 +465,17 @@ float DungeonClearCombatMultiplier::GetValue(Action* action)
     // and that path returns 1.0 for everything that is not a DC action or
     // `drop target`. See HorEscapeBackwardsBanned above.
     if (HorEscapeBackwardsBanned(bot, name))
+        return 0.0f;
+
+    // RebornWOW DCMOV3A: no chasing the master through a portal while a clear
+    // runs (paused included). Stock playerbots answers the master's own
+    // CMSG_AREATRIGGER with "reach area trigger" + "area trigger": the bot walks
+    // to that trigger and uses it. On a `.dc test` run the master is the GM
+    // watcher, so a GM leaving and re-entering the instance sent the whole party
+    // on a straight 300yd line across Halls of Lightning's pit (mid-air, the
+    // floor there is not in the server's height data) and out of the entrance —
+    // "Left the dungeon", tr-20261016-070707-2. DC moves the party itself.
+    if ((name == "reach area trigger" || name == "area trigger") && DcLeaderSignal::FindRunOwner(bot))
         return 0.0f;
 
     // Above the fast path for the same reason: `check mount state` and `occ drake
