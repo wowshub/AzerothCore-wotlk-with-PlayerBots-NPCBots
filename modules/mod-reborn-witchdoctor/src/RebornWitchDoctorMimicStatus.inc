@@ -15,12 +15,12 @@ void Snapshot(Player* player)
     // Reading modifiers must not call ApplySpellMod: that can consume charges.
     int32 bonus=0;
     for (SpellModifier const* mod:player->GetSpellModList(SPELLMOD_DURATION))
-        if (mod && (mod->spellId==9003752 || mod->spellId==9003753) && mod->type==SPELLMOD_FLAT)
+        if (mod && (mod->spellId==9003752 || mod->spellId==9003753 || mod->spellId==9004100) && mod->type==SPELLMOD_FLAT)
             bonus+=mod->value;
     uint32 remaining=0, lifetime=0;
     auto* slot=player->CustomData.Get<WD68A::State>(WD68A::Key);
     if (slot && player->IsAlive() && player->HasSpell(WD68A::Mimic))
-        for (ObjectGuid guid : {slot->mimic,slot->extra})
+        for (ObjectGuid guid : {slot->mimic,slot->extra,slot->mojo})
         if (Creature* creature=ObjectAccessor::GetCreature(*player,guid))
             if (creature->GetEntry()==WD68A::MimicEntry && creature->GetOwnerGUID()==player->GetGUID() &&
                 creature->IsAlive() && creature->IsInWorld() && creature->IsInMap(player) && creature->InSamePhase(player))

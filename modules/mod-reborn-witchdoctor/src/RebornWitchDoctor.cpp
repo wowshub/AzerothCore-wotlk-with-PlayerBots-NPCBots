@@ -228,13 +228,14 @@ int32 Duration(Player* p,int32 duration)
     return int32(std::min<int64>(2147483647,value));
 }
 }
+namespace WD153 { bool OwnedWard(Player*,ObjectGuid); constexpr uint32 MimicCount(bool chosen,bool mojo){return 1u+uint32(chosen)+uint32(mojo);} constexpr int32 PoisonTick(int32 damage){return damage>0?int32(uint64(damage)*15/100):0;} }
 // WD68A: owned Mimic slot and Voodoo entry effects. No legacy character conversion.
 namespace WD68A
 {
 constexpr uint32 Puppeteer=9003670, Threads=9003671, Burst=9003672, Mimic=9003673;
 constexpr uint32 PuppetFirst=9003680, PuppetLast=9003689, PuppetHit=9003695, PuppetVisual=9003696;
 constexpr uint32 MimicEntry=900213;
-struct State : DataMap::Base { ObjectGuid mimic, extra; std::unordered_set<ObjectGuid> marked; };
+struct State : DataMap::Base { ObjectGuid mimic, extra, mojo; std::unordered_set<ObjectGuid> marked; };
 char const* const Key="RebornWD68A";
 Player* Caster(Unit* unit)
 {
@@ -245,7 +246,8 @@ Player* Caster(Unit* unit)
     Player* p=ObjectAccessor::GetPlayer(*c,c->GetOwnerGUID());
     return IsDoctor(p) && p->IsAlive() && p->HasSpell(Mimic) &&
         (p->CustomData.GetDefault<State>(Key)->mimic==c->GetGUID() ||
-         (p->HasSpell(9003840) && p->HasAura(9003840) && p->CustomData.GetDefault<State>(Key)->extra==c->GetGUID())) ? p : nullptr;
+         (p->HasSpell(9003840) && p->HasAura(9003840) && p->CustomData.GetDefault<State>(Key)->extra==c->GetGUID()) ||
+         (p->HasSpell(9004100) && p->HasAura(9004100,p->GetGUID()) && p->CustomData.GetDefault<State>(Key)->mojo==c->GetGUID())) ? p : nullptr;
 }
 void Clear(Player* p)
 {
@@ -254,13 +256,15 @@ void Clear(Player* p)
         if(c->GetEntry()==MimicEntry && c->GetOwnerGUID()==p->GetGUID()) c->DespawnOrUnsummon();
     if (Creature* c=ObjectAccessor::GetCreature(*p,s->extra))
         if(c->GetEntry()==MimicEntry && c->GetOwnerGUID()==p->GetGUID()) c->DespawnOrUnsummon();
-    s->extra.Clear();s->mimic.Clear();
+    if(Creature* c=ObjectAccessor::GetCreature(*p,s->mojo))
+        if(c->GetEntry()==MimicEntry&&c->GetOwnerGUID()==p->GetGUID())c->DespawnOrUnsummon();
+    s->mojo.Clear();s->extra.Clear();s->mimic.Clear();
 }
 void Mirror(Player* p,Unit* target,uint32 spell)
 {
     if (!IsDoctor(p) || !target || !p->IsAlive() || !p->HasSpell(Mimic)) return;
     State* state=p->CustomData.GetDefault<State>(Key);
-    for(ObjectGuid guid : {state->mimic,state->extra})
+    for(ObjectGuid guid : {state->mimic,state->extra,state->mojo})
     {
         Creature* c=ObjectAccessor::GetCreature(*p,guid);
         if (!c || Caster(c)!=p || !c->IsInMap(target) || !c->InSamePhase(target) ||
@@ -287,11 +291,12 @@ class spell_reborn_wd68a_summon : public SpellScript
         int32 duration=GetSpellInfo()->GetDuration();p->ApplySpellMod(GetSpellInfo()->Id,SPELLMOD_DURATION,duration);
         // Allocate the new group first; a partial failure preserves the previous group.
         bool const chosen=p->HasSpell(9003840) && p->HasAura(9003840);
-        TempSummon* fresh[2]={nullptr,nullptr};
-        uint32 count=chosen?2u:1u;
+        bool const mojo=p->HasSpell(9004100)&&p->HasAura(9004100,p->GetGUID());
+        TempSummon* fresh[3]={nullptr,nullptr,nullptr};
+        uint32 count=WD153::MimicCount(chosen,mojo);
         for(uint32 i=0;i<count;++i)
         {
-            Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,i?5.48f:0.8f);
+            Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,count==3?0.8f+float(i)*2.094395f:(i?5.48f:0.8f));
             fresh[i]=p->SummonCreature(WD68A::MimicEntry,pos,TEMPSUMMON_TIMED_DESPAWN,uint32(std::max(1,duration)));
             if(!fresh[i])
             {
@@ -306,6 +311,7 @@ class spell_reborn_wd68a_summon : public SpellScript
         auto* state=p->CustomData.GetDefault<WD68A::State>(WD68A::Key);
         state->mimic=fresh[0]->GetGUID();
         if(chosen) state->extra=fresh[1]->GetGUID();
+        if(mojo) state->mojo=fresh[count-1]->GetGUID();
         p->CustomData.GetDefault<WD87B::Status>(WD87B::Key)->lifetime=fresh[0]->GetTimer();
         WD87B::Snapshot(p);
     }
@@ -1187,7 +1193,7 @@ public:
             Player* player=ObjectAccessor::GetPlayer(*me,owner);
             if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
                 !player->IsInMap(me) || !player->InSamePhase(me) ||
-                (player->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid!=me->GetGUID()&&!WD150::OwnedMass(player,me->GetGUID())))
+                (player->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid!=me->GetGUID()&&!WD150::OwnedMass(player,me->GetGUID())&&!WD153::OwnedWard(player,me->GetGUID())))
             {
                 me->DespawnOrUnsummon();return;
             }
@@ -3328,6 +3334,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorSerpent150.inc"
 #include "RebornWitchDoctorCurse151.inc"
 #include "RebornWitchDoctorShadow152.inc"
+#include "RebornWitchDoctorWard153.inc"
 #include "RebornWitchDoctorShadow146.inc"
 #include "RebornWitchDoctorResidual148.inc"
 #include "RebornWitchDoctorSpiritVisual147.inc"
@@ -3360,6 +3367,7 @@ void AddRebornWitchDoctorScripts()
     WD150::Register();
     WD151::Register();
     WD152::Register();
+    WD153::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

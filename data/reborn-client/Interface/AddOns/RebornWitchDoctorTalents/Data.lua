@@ -171,3 +171,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==6011 then n.RequiredLevel=20;n.Re
 
 -- WD152 authored connected Shadow talents.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==7031 then n.RequiredLevel=20;n.RequiredIDs={6069,6983}elseif n.ID==11330 or n.ID==29930 then n.RequiredLevel=20;n.RequiredIDs={6073,7031}end end
+
+-- WD153 connected ward/poison branch.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==6010 then n.RequiredLevel=15;n.RequiredIDs={8574}elseif n.ID==11164 then n.RequiredLevel=20;n.RequiredIDs={6983}elseif n.ID==29981 then n.RequiredLevel=20;n.RequiredIDs={6011}end end

@@ -31,6 +31,7 @@ bool Derived(SpellInfo const* info)
     // Local counterparts of upstream derived echoes, stored releases and Spirit restoration.
     switch (info->Id)
     {
+        case 9004103: // Derived Guile poison must not generate recursive spirit procs.
         case 9003102: case 9003468: case 9003486: case 9003574: case 9003672: case 9003732:
             return true;
         default: return false;

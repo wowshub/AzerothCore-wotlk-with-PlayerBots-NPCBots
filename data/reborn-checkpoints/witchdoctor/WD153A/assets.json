@@ -1,0 +1,241 @@
+{
+  "paths": {
+    "spells\\bestowdisease_impact_chest.m2": "Spells\\RebornWD153\\fx0.m2",
+    "spells\\stargradient64.blp": "Spells\\RebornWD153\\tex1.blp",
+    "spells\\clouds8x8fade.blp": "Spells\\RebornWD153\\tex2.blp",
+    "item\\objectcomponents\\weapon\\flare.blp": "Spells\\RebornWD153\\tex3.blp",
+    "spells\\aspectsnake_impact_head.m2": "Spells\\RebornWD153\\fx1.m2",
+    "spells\\aspect_snake.blp": "Spells\\RebornWD153\\tex5.blp",
+    "spells\\voljin_serpentward_impact.m2": "Spells\\RebornWD153\\fx2.m2",
+    "world\\expansion02\\doodads\\nexus\\nexus_firebeam.blp": "Spells\\RebornWD153\\tex7.blp",
+    "spells\\t_vfx_strikes02.blp": "Spells\\RebornWD153\\tex8.blp",
+    "creature\\ridingphoenix\\ember.blp": "Spells\\RebornWD153\\tex9.blp",
+    "creature\\spells\\red_glow1.blp": "Spells\\RebornWD153\\tex10.blp",
+    "spells\\voljin_serpentward_missile.m2": "Spells\\RebornWD153\\fx3.m2",
+    "spells\\poisonshot_missile.m2": "Spells\\RebornWD153\\fx4.m2",
+    "particles\\genericglow5.blp": "Spells\\RebornWD153\\tex13.blp",
+    "spells\\gradient128.blp": "Spells\\RebornWD153\\tex14.blp",
+    "item\\objectcomponents\\ammo\\blue_glow2.blp": "Spells\\RebornWD153\\tex15.blp"
+  },
+  "sources": {
+    "spells\\bestowdisease_impact_chest.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "7e6c72efdded0ed6784ec73192af74c1b285966c6e98f1957aad8b2cf9b046cf"
+      }
+    ],
+    "spells\\stargradient64.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "1101fa4e121faf67b18eab3b62771906facbccb808856fe954ee3bb0365d5618"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "1101fa4e121faf67b18eab3b62771906facbccb808856fe954ee3bb0365d5618"
+      }
+    ],
+    "spells\\clouds8x8fade.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "38c93181bd16c3f42119cc3c1e16878a2f9ca69b36e9f4807f5b0a7efd1bef45"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "c0241c36223bedf531ad54ada8e51bc6f24758a634911fe50caaa3f10acd6f22"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "b3b24ef2b458683abd0377190ee140dcbdab0a6b99d8f835c1df007a795537cc"
+      }
+    ],
+    "item\\objectcomponents\\weapon\\flare.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-TW.MPQ",
+        "sha256": "3b6e2eac35d8735ba746ec1464d2518c48ffc20c55a8fabf576245cacef8c5c7"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "535f082bb9b69b15d5efa9e22e464e658ac3b5f706b155a12740c33fa8c4b664"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-3.MPQ",
+        "sha256": "20ef5e726bf050a7fa082377d5ce72f09b7fc8532b256b8b8e31731f5c5b6c16"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "a0f396921f2737d9d0f77050f788a48345031c78f8a9b745633543d4d7908660"
+      }
+    ],
+    "spells\\bestowdisease_impact_chest00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "9072ee77b5418d95da7f7aab3c7c05f57e5f5771b8792f133c18014d98b612bc"
+      }
+    ],
+    "spells\\aspectsnake_impact_head.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "a0da048ab9675c4964d6eea6e1a8f9a664fe1a327bfc20c333a0df5c4d65c50a"
+      }
+    ],
+    "spells\\aspect_snake.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "c03ae44a51dac02f225981a72c4fe4c918850af00b90c6aa027e09990c622ed2"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "91e13facf24f3c57f1a96897c0eed267f0d233cd0e8810822fefcfa7486ea6c4"
+      }
+    ],
+    "spells\\aspectsnake_impact_head00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "9861e17ff3936b74d365dcd7d412b3bd5ce4cf25603cf14c8e3d028719fc6d50"
+      }
+    ],
+    "spells\\voljin_serpentward_impact.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "6666b7b6ffa53ae82e7ade95385478b0132610859fc1796eeeb1f4d93691b72c"
+      }
+    ],
+    "world\\expansion02\\doodads\\nexus\\nexus_firebeam.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-WC2.MPQ",
+        "sha256": "35e9dc439cc743b3fb63b5df201175d4a234b33bd3d0ab2c9fd1246b17aeb1c6"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "23445466ce810f89ed8ecbaa66fae953ea1f32bc27a33d188b64dbf6f07c6a1f"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "35e9dc439cc743b3fb63b5df201175d4a234b33bd3d0ab2c9fd1246b17aeb1c6"
+      }
+    ],
+    "spells\\t_vfx_strikes02.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "939d05ab89305fdbb2d961652c1f439e2d10059a5baf60da8dd9110ecd0b38fe"
+      }
+    ],
+    "creature\\ridingphoenix\\ember.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-CR.MPQ",
+        "sha256": "f48d00a3f16ca45266110268572c57567e7b7b9b38abb9544d60557b81a5b76c"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "f48d00a3f16ca45266110268572c57567e7b7b9b38abb9544d60557b81a5b76c"
+      }
+    ],
+    "creature\\spells\\red_glow1.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-CS.MPQ",
+        "sha256": "ca8b696decd917b1c827b9ea46824ed071926afa71ca837356e0163bcb8e869e"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "9f9ff61524469c33bfbc59ff4665e4f7f9590ca7d922027fd22769ff75e7b065"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "ca8b696decd917b1c827b9ea46824ed071926afa71ca837356e0163bcb8e869e"
+      }
+    ],
+    "spells\\voljin_serpentward_impact00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "96cb15f4b44f7d90a34e1bf767adb070bb2cdcdca2225d21660c91b24240509e"
+      }
+    ],
+    "spells\\voljin_serpentward_missile.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "89afe4a6f464060722ad0964393beb3618445568fd899c1128ef5736f98246f6"
+      }
+    ],
+    "spells\\voljin_serpentward_missile00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "96cb15f4b44f7d90a34e1bf767adb070bb2cdcdca2225d21660c91b24240509e"
+      }
+    ],
+    "spells\\poisonshot_missile.m2": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "787a8f843a41858a7a4091c44051f60b09e4cfb457e1f22821b47f67038f0143"
+      }
+    ],
+    "particles\\genericglow5.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-O.MPQ",
+        "sha256": "4122be78fa908afe9ed35ef0baf98ec4ab9358956753fd64eb039a45f7ba09e6"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "6361771bf2eb4d1a59942648b104fab1a66e8efe817a0326faed557445505c4f"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "90a0546a0e94ca9c8891a763c9d8c1bc488020e3244fdd659a66648ffdfe1a45"
+      }
+    ],
+    "spells\\gradient128.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-N.MPQ",
+        "sha256": "d446d383048f44cc5a3f92151a57aeb9cdd5c9d8fb659ae056b5451d137089f5"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "179b58275abf4f538eca7d568fdc859084d7a0b530e1ea31778875f1fae88899"
+      },
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch.MPQ",
+        "sha256": "ef474aee98417ecd197560d3b66cf5242c269b26c54e0206607578d2eb5dada9"
+      }
+    ],
+    "item\\objectcomponents\\ammo\\blue_glow2.blp": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "dc81da74a65a3d904efc448e055599a5345e898eae40a1168a0ca64a45a6ba43"
+      }
+    ],
+    "spells\\poisonshot_missile00.skin": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common-2.MPQ",
+        "sha256": "5963a5af2fa42e182184681ecaf59e041e7d75d1e0d6dddb6aeeeab7ad8e4bf2"
+      }
+    ],
+    "sound\\spells\\spell_mk_serpentstance_cast.ogg": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\patch-O.MPQ",
+        "sha256": "5b8a6d45373213ac4a3543ad278acd1f3992d1f9831d552008c46bba25ecad51"
+      }
+    ],
+    "sound\\spells\\bestowdiseaseimpact.wav": [
+      {
+        "archive": "D:\\game\\ascend\\COALauncher\\coawowClinet20260930OFFICIAL\\Data\\common.MPQ",
+        "sha256": "55f748c32be5638ba212f7af859400171339521abafca9f1941b3a752dd84455"
+      }
+    ]
+  },
+  "kits": [
+    80523,
+    999100,
+    999101,
+    999102
+  ],
+  "effects": [
+    276,
+    1503,
+    14967,
+    21757,
+    239294
+  ],
+  "sounds": [
+    304953,
+    310631
+  ]
+}

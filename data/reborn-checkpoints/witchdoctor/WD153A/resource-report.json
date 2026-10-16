@@ -1,0 +1,176 @@
+[
+  {
+    "side": "client",
+    "table": "Spell",
+    "input": "f5df21a48850707b02c8ef8fcd03ddeea2a8c3a2a2467a12a406056849e40b84",
+    "output": "6f2d02a678e9ce5bda3925d0a846906df99da6e1fb2a63dc1673d36583199a62",
+    "added": [
+      9004100,
+      9004101,
+      9004102,
+      9004103,
+      9004104
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SpellIcon",
+    "input": "439cb7e645c4d3fa194eb5531c4b10201b9a289c85a3694884629fc6bc17d391",
+    "output": "c656b0508771ce1c69844d87fbe0b79ac10273e9c577b6562e65146778c6dd97",
+    "added": [
+      910183,
+      910184,
+      910185
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SkillLineAbility",
+    "input": "39a22322c49b4f23f50d6021a055ce764ece98df02919c84d1cdd014fc271d0f",
+    "output": "becbd49a6424eb5474f4a7ff89ab083de9d1379b1e2ff5a16f6175d81ce35fc1",
+    "added": [
+      56264,
+      56265,
+      56266
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SpellVisual",
+    "input": "30a262823b562f2a1c9fb583f03d4fc6ef0534e16335dbb0707dad34532474f9",
+    "output": "f6118cb96b26ab2db6a63a2c08181ff52641cbffd2b18757c748911d547a17e9",
+    "added": [
+      888153,
+      888154
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SpellVisualKit",
+    "input": "e96b52bcc062e63ac3441d6dfde8d6e71bbdb259623fc46c24e768cccce595d1",
+    "output": "b3635cb670d1aa7a67b85830e7c276c9968422b7bb5d889812fe3a781156801e",
+    "added": [
+      824530,
+      824531,
+      824532,
+      824533
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SpellVisualEffectName",
+    "input": "d8ea4ddf62f12b0e5c1cc97fef01384bbeb15b3569a5f264b498bc54dd2cf28d",
+    "output": "3d5b258a461c5ca56a8cdc6c7b8a263debcdfc23ebef89e3676d66b4a2198385",
+    "added": [
+      813530,
+      813531,
+      813532,
+      813533,
+      813534
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SoundEntries",
+    "input": "1c0143a0b2a9cd44d9b876296212fcd8f05cafe19d454c3b230a453a21fa5702",
+    "output": "c97aba19dcc7945b945c70e2bc7504a81232db61c82e537c05c5a037ff256c51",
+    "added": [
+      9001679,
+      9001680
+    ]
+  },
+  {
+    "side": "client",
+    "table": "SpellVisualKitModelAttach",
+    "input": "c321c8305bfe09b2d05e08fda39d3d6cd9b9553680472f4fefaab496c1c9ba35",
+    "output": "c321c8305bfe09b2d05e08fda39d3d6cd9b9553680472f4fefaab496c1c9ba35",
+    "added": []
+  },
+  {
+    "side": "server",
+    "table": "Spell",
+    "input": "b5a5b87277fb3e99668dc25e15d0ae2d2a735977448531e6ea58efd0539f0bba",
+    "output": "2551cb7c32f364322c26c5f8712a9e408a8e722562862f2a96a7fb350a3cfb18",
+    "added": [
+      9004100,
+      9004101,
+      9004102,
+      9004103,
+      9004104
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SpellIcon",
+    "input": "e796ec9e8b6e0060754660373644eb53d9cea4e9c6436d7a08554e963fdc5dfc",
+    "output": "afc6c14cfb7ef9925be1634632b3d3006b0483fd5c3d653d18b3a2d5911fe629",
+    "added": [
+      910183,
+      910184,
+      910185
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SkillLineAbility",
+    "input": "b51390f4f3f14925b3632924fc3503d4442f487688f783eeb6552ea814a51d8c",
+    "output": "c4f01771bf80574a6b6bf59c5422e07fd6d8ced71a9c8dd974c221b01c59c0b5",
+    "added": [
+      56164,
+      56165,
+      56166
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SpellVisual",
+    "input": "e3b98416150b687011277505dbb8bcacb205889063c0a6acab9f5e2e4f2af5e8",
+    "output": "7daba08207ed4e0079f9534586d40ddd496e459da6bb58bc182bc47d6745fa2d",
+    "added": [
+      888153,
+      888154
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SpellVisualKit",
+    "input": "18bbcec9e8d8c0516229942367685f71cf3a257d5c815081f0f6b5cee1c51d36",
+    "output": "a582f47b29597e1f5903e490a8b1d710450c0053f4b27f744650257bca943d3c",
+    "added": [
+      824530,
+      824531,
+      824532,
+      824533
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SpellVisualEffectName",
+    "input": "be9660d32cc1227b2908935a6da337fca4a2e3d29889281cafba537d9f79a4fd",
+    "output": "4924da8ebf478099ea406b20713d7123655268cc50e0522f8a4ccf633fdcffe4",
+    "added": [
+      813530,
+      813531,
+      813532,
+      813533,
+      813534
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SoundEntries",
+    "input": "75d48715be43be38b8b05d3dce5be6620c4308cbbb44f5666912a5c20fc607cb",
+    "output": "2eb233734b4937e718f3952a1fad459adcc8ec098d7fcc04786fbf2192da329f",
+    "added": [
+      9001679,
+      9001680
+    ]
+  },
+  {
+    "side": "server",
+    "table": "SpellVisualKitModelAttach",
+    "input": "1b2c64a0c7657f95d10e5cb72a1e5954b6cd4ff37ef4bd30086fedf2266c8cf8",
+    "output": "1b2c64a0c7657f95d10e5cb72a1e5954b6cd4ff37ef4bd30086fedf2266c8cf8",
+    "added": []
+  }
+]

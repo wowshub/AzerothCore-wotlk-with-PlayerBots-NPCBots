@@ -34,7 +34,7 @@ class aura_wd93_voice : public AuraScript
         SpellInfo const* info=e.GetSpellInfo();
         return !executing && IsDoctor(p) && p->IsAlive() && p->HasSpell(Voice) &&
             GetCasterGUID()==p->GetGUID() && e.GetActor()==p && target && target!=p &&
-            target->IsAlive() && p->IsValidAttackTarget(target) && info && info->Id!=Explosion &&
+            target->IsAlive() && p->IsValidAttackTarget(target) && info && info->Id!=Explosion && info->Id!=9004103 &&
             (e.GetTypeMask() & PROC_FLAG_DONE_PERIODIC) && e.GetDamageInfo() && e.GetDamageInfo()->GetDamage();
     }
     void Proc(ProcEventInfo& e)
