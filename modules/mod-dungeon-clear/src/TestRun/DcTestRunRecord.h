@@ -149,7 +149,10 @@ namespace DcTestRunRecord
         //     run continue (a wipe, or nobody alive able to resurrect). A run
         //     with testRegroups > 0 was rescued by the test flow, not by the
         //     party: never rank it against a clean run without checking this.
-        std::uint32_t schema = 14;
+        // 15: RebornWOW DCGM1A -- cheats: every GM intervention on the run's
+        //     bots (.dc test bot: die / rez / god / power / tele / clear), with
+        //     time and target. A run with any entry is not a clean measurement.
+        std::uint32_t schema = 15;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -204,6 +207,14 @@ namespace DcTestRunRecord
         };
         std::uint32_t testRegroups = 0;
         std::vector<RegroupEntry> testRegroupLog;
+        // RebornWOW DCGM1A (schema 15): GM interventions on this run's bots.
+        struct CheatEntry
+        {
+            std::uint32_t t = 0;   // run seconds
+            std::string who;       // bot name
+            std::string what;      // "die" | "rez" | "god on" | "power off" | ...
+        };
+        std::vector<CheatEntry> cheats;
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

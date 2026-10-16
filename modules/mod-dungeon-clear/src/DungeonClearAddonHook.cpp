@@ -125,10 +125,17 @@ namespace
                 uint32 const level = bot ? bot->GetLevel() : 0;
                 uint32 const ilvl = bot ? uint32(bot->GetAverageItemLevel() + 0.5f) : 0;
                 uint32 const spec = bot ? uint32(AiFactory::GetPlayerSpecTab(bot)) : 0;
+                // RebornWOW DCGM1A: trailing field = active GM cheats (g = god, p = power).
+                std::string cheats;
+                if (bot && bot->GetCommandStatus(CHEAT_GOD))
+                    cheats += 'g';
+                if (bot && bot->GetCommandStatus(CHEAT_POWER))
+                    cheats += 'p';
                 SendAddonPayload(player, Acore::StringFormat(
-                    "DC\tTRM\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    "DC\tTRM\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                     AddonField(s.runId), AddonField(b.name), uint32(b.classId), AddonField(b.role),
-                    level, ilvl, uint32(b.hp), int32(b.mp), b.alive ? 1 : 0, b.inCombat ? 1 : 0, spec));
+                    level, ilvl, uint32(b.hp), int32(b.mp), b.alive ? 1 : 0, b.inCombat ? 1 : 0, spec,
+                    cheats.empty() ? std::string("-") : cheats));
             }
         }
         SendAddonPayload(player, "DC\tTR_END");

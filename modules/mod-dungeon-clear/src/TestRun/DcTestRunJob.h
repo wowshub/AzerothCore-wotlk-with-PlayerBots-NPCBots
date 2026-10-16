@@ -187,6 +187,10 @@ public:
     static constexpr uint32 kMaxTestRegroups = 3;
     static constexpr uint32 kTestRegroupWipeDelayMs = 5 * 1000;
 
+    // RebornWOW DCGM1A: log one GM intervention (.dc test bot) into the record.
+    // World thread (chat commands run there, like Tick).
+    void NoteCheat(std::string const& who, std::string const& what);
+
     ObjectGuid TankGuid() const { return _tankGuid; }
     ObjectGuid GmGuid() const { return _gmGuid; }
     std::string const& RunId() const { return _record.runId; }

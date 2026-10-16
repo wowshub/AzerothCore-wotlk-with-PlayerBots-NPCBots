@@ -205,6 +205,11 @@ namespace DcTestRunRecord
         for (std::size_t i = 0; i < rec.testRegroupLog.size(); ++i)
             s << (i ? "," : "") << "{\"t\":" << rec.testRegroupLog[i].t
               << ",\"why\":\"" << rec.testRegroupLog[i].why << "\"}";
+        s << "],\"cheats\":[";
+        for (std::size_t i = 0; i < rec.cheats.size(); ++i)
+            s << (i ? "," : "") << "{\"t\":" << rec.cheats[i].t
+              << ",\"who\":\"" << rec.cheats[i].who
+              << "\",\"what\":\"" << rec.cheats[i].what << "\"}";
         s << "]"
           << ",\"statusTimeline\":[";
         {

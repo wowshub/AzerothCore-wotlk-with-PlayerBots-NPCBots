@@ -2504,6 +2504,15 @@ void DcTestRunJob::Teardown()
     if (_stage.exchange(Stage::TearingDown) == Stage::TearingDown)
         return;
 
+    // RebornWOW DCGM1A: never let a bot leave a test with GM cheats still on
+    // (roster runs use real characters that go back to the world).
+    for (ObjectGuid const& guid : BotGuids())
+        if (Player* p = ObjectAccessor::FindConnectedPlayer(guid))
+        {
+            p->SetCommandStatusOff(CHEAT_GOD);
+            p->SetCommandStatusOff(CHEAT_POWER);
+        }
+
     // Report the relay's tally before Disarm() drops the volume list. Logged
     // whenever the map had anything to relay, INCLUDING zero fires — "0 of 1"
     // is the party never reaching the volume, which is a different failure from
@@ -2646,6 +2655,15 @@ bool DcTestRunJob::RequestRegroup(std::string const& why)
         _regroupWhy = why;
     }
     return true;
+}
+
+void DcTestRunJob::NoteCheat(std::string const& who, std::string const& what)
+{
+    DcTestRunRecord::Record::CheatEntry c;
+    c.t = _totalMs / 1000;
+    c.who = who;
+    c.what = what;
+    _record.cheats.push_back(c);
 }
 
 void DcTestRunJob::MaybeRegroup(Player* tank, bool anyAlive)

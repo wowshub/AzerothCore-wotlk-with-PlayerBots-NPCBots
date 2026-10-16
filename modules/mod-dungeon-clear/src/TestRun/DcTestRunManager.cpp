@@ -5,7 +5,9 @@
 
 #include "TestRun/DcTestRunManager.h"
 
+#include <algorithm>
 #include <atomic>
+#include <cctype>
 #include <ctime>
 #include <fstream>
 #include <limits>
@@ -17,6 +19,7 @@
 #include "Player.h"
 
 #include "Playerbots.h"
+#include "PlayerbotAI.h"
 #include "PlayerbotMgr.h"
 
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
@@ -660,6 +663,149 @@ void DcTestRunManager::OnRunDisabled(Player* leader, std::string const& reason)
             job->OnRunDisabled(reason);
             return;
         }
+}
+
+bool DcTestRunManager::BotCommand(std::string const& selector, std::string const& who,
+                                  std::string const& action, std::string const& arg,
+                                  std::string* msg)
+{
+    auto lower = [](std::string s)
+    {
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+        return s;
+    };
+    std::string const act = lower(action);
+    std::string const target = lower(who);
+    std::string const onoff = lower(arg);
+    if (act != "die" && act != "rez" && act != "god" && act != "power" && act != "tele" &&
+        act != "clear")
+    {
+        *msg = "usage: .dc test bot <run> <name|all|tank|allbuttank|healers|rezzers> "
+               "<die|rez|god|power|tele|clear> [on|off]";
+        return false;
+    }
+
+    std::vector<DcTestRunSelect::RunRef> refs;
+    refs.reserve(_runs.size());
+    for (auto const& job : _runs)
+        refs.push_back({job->RunId(), job->DungeonToken()});
+    DcTestRunSelect::Result const res = DcTestRunSelect::Resolve(selector, refs);
+    if (res.kind != DcTestRunSelect::Kind::Matched || res.indices.size() != 1)
+    {
+        *msg = res.kind == DcTestRunSelect::Kind::NoRuns
+                   ? std::string("no test run active")
+                   : "pick exactly one run (runId or dungeon token) -- active runs:\n" +
+                         ListActiveRuns();
+        return false;
+    }
+    DcTestRunJob* job = _runs[res.indices.front()].get();
+    if (job->Done() || !job->IsMonitoring())
+    {
+        *msg = job->RunId() + " is not running (still setting up, or finished)";
+        return false;
+    }
+
+    ObjectGuid const tankGuid = job->TankGuid();
+    Player* const tank = ObjectAccessor::FindConnectedPlayer(tankGuid);
+    std::vector<Player*> picked;
+    for (ObjectGuid const& guid : job->BotGuids())
+    {
+        Player* p = ObjectAccessor::FindConnectedPlayer(guid);
+        if (!p || !p->IsInWorld())
+            continue;
+        bool want = false;
+        if (target == "all")
+            want = true;
+        else if (target == "tank")
+            want = guid == tankGuid;
+        else if (target == "allbuttank")
+            want = guid != tankGuid;
+        else if (target == "healers")
+            want = PlayerbotAI::IsHeal(p);
+        else if (target == "rezzers")
+        {
+            uint8 const cls = p->getClass();
+            want = cls == CLASS_PRIEST || cls == CLASS_PALADIN || cls == CLASS_SHAMAN ||
+                   cls == CLASS_DRUID;
+        }
+        else
+            want = lower(p->GetName()) == target;
+        if (want)
+            picked.push_back(p);
+    }
+    if (picked.empty())
+    {
+        *msg = "no bot of " + job->RunId() + " matches '" + who + "'";
+        return false;
+    }
+
+    std::string done;
+    auto note = [&](Player* p, std::string const& what)
+    {
+        job->NoteCheat(p->GetName(), what);
+        done += (done.empty() ? "" : ", ") + p->GetName() + " " + what;
+    };
+    auto toggle = [&](Player* p, PlayerCommandStates flag, char const* name)
+    {
+        bool const on = onoff == "on" ? true : onoff == "off" ? false : !p->GetCommandStatus(flag);
+        if (on)
+            p->SetCommandStatusOn(flag);
+        else
+            p->SetCommandStatusOff(flag);
+        note(p, std::string(name) + (on ? " on" : " off"));
+        return on;
+    };
+
+    for (Player* p : picked)
+    {
+        if (act == "die")
+        {
+            if (p->IsAlive())
+            {
+                Unit::Kill(p, p);
+                note(p, "die");
+            }
+        }
+        else if (act == "rez")
+        {
+            if (!p->IsAlive() || p->HasPlayerFlag(PLAYER_FLAGS_GHOST))
+            {
+                p->RemoveAurasDueToSpell(27827);  // Spirit of Redemption
+                p->ResurrectPlayer(1.0f, /*applySickness*/ false);
+                p->SpawnCorpseBones();
+                note(p, "rez");
+            }
+        }
+        else if (act == "god")
+            toggle(p, CHEAT_GOD, "god");
+        else if (act == "power")
+        {
+            if (toggle(p, CHEAT_POWER, "power"))
+                p->SetPower(p->getPowerType(), p->GetMaxPower(p->getPowerType()));
+        }
+        else if (act == "tele")
+        {
+            if (tank && p != tank && p->IsAlive() && tank->IsInWorld() &&
+                p->GetMapId() == tank->GetMapId())
+            {
+                p->NearTeleportTo(tank->GetPositionX(), tank->GetPositionY(),
+                                  tank->GetPositionZ(), tank->GetOrientation());
+                note(p, "tele");
+            }
+        }
+        else  // clear
+        {
+            p->SetCommandStatusOff(CHEAT_GOD);
+            p->SetCommandStatusOff(CHEAT_POWER);
+            note(p, "clear");
+        }
+    }
+
+    *msg = done.empty() ? "nothing to do (" + act + ": nobody in that state)"
+                        : "[" + job->RunId() + "] " + done;
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1A {} {} {}: {}", job->RunId(), who,
+             act, arg, done.empty() ? std::string("nothing to do") : done);
+    return !done.empty();
 }
 
 bool DcTestRunManager::RequestRegroup(ObjectGuid tank, std::string const& why)

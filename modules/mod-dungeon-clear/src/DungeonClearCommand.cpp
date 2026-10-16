@@ -324,6 +324,8 @@ public:
             { "stop",   HandleTestStop,   SEC_GAMEMASTER, Console::Yes },
             { "list",   HandleTestList,   SEC_GAMEMASTER, Console::Yes },
             { "gear",   HandleTestGear,   SEC_GAMEMASTER, Console::Yes },
+            // RebornWOW DCGM1A: GM interventions on a running test's bots.
+            { "bot",    HandleTestBot,    SEC_GAMEMASTER, Console::Yes },
             // Console::No — a camera needs a session to attach to.
             { "watch",  HandleTestWatch,  SEC_GAMEMASTER, Console::No },
             { "plan",   dcTestPlanTable },
@@ -791,6 +793,22 @@ public:
     // runs when >1 active); "all"; an exact runId; or a dungeon token (all its
     // runs). See DcTestRunSelect. "all" also stops every active plan first —
     // otherwise the plan scheduler would relaunch the runs it just aborted.
+    // RebornWOW DCGM1A: `.dc test bot <run> <who> <action> [on|off]` -- kill,
+    // raise, make invincible / give unlimited power to, or pull to the tank, the
+    // bots of one running test. GM only; logged into the run record (cheats).
+    static bool HandleTestBot(ChatHandler* handler, Tail args)
+    {
+        if (DcDisabledNotice(handler))
+            return true;
+        std::istringstream in{std::string(args)};
+        std::string run, who, action, arg;
+        in >> run >> who >> action >> arg;
+        std::string msg;
+        DcTestRunManager::Instance().BotCommand(run, who, action, arg, &msg);
+        handler->SendSysMessage(msg);
+        return true;
+    }
+
     static bool HandleTestStop(ChatHandler* handler, Tail selector)
     {
         if (DcDisabledNotice(handler))

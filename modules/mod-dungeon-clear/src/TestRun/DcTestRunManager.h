@@ -203,6 +203,14 @@ public:
     // is out of entrance regroups -- the caller then disables as before.
     bool RequestRegroup(ObjectGuid tank, std::string const& why);
 
+    // RebornWOW DCGM1A: `.dc test bot <run> <who> <action> [on|off]` -- GM
+    // interventions on one live run's bots. who = a bot name | all | tank |
+    // allbuttank | healers | rezzers; action = die | rez | god | power | tele |
+    // clear. god/power toggle per bot unless on/off is given. Every change is
+    // logged in the run record (cheats). World thread.
+    bool BotCommand(std::string const& selector, std::string const& who,
+                    std::string const& action, std::string const& arg, std::string* msg);
+
     // Observer: DcStatusPublisher pushes each changed STATUS payload here;
     // routed to the job whose tank matches.
     void OnStatusPayload(ObjectGuid tank, std::string const& payload);
