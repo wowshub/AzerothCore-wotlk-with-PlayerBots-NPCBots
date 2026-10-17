@@ -1162,11 +1162,11 @@ float AuraEffect::CalcPeriodicCritChance(Unit const* caster, Unit const* target)
         }
     }
     // WD99: only the private Hexfire curse gains native periodic critical settlement.
-    if(caster && GetId()==9003822)
+    if(caster && (GetId()==9003822 || GetId()==9004164))
         if(Player* owner=caster->GetSpellModOwner())
-            critChance=owner->SpellDoneCritChance(nullptr,GetSpellInfo(),GetSpellInfo()->GetSchoolMask(),BASE_ATTACK,true);
+            critChance=owner->SpellDoneCritChance(nullptr,GetSpellInfo(),GetSpellInfo()->GetSchoolMask(),GetId()==9004164?RANGED_ATTACK:BASE_ATTACK,true);
     if (target && critChance > 0.0f)
-        critChance = target->SpellTakenCritChance(caster, GetSpellInfo(), GetSpellInfo()->GetSchoolMask(), critChance, BASE_ATTACK, true);
+        critChance = target->SpellTakenCritChance(caster, GetSpellInfo(), GetSpellInfo()->GetSchoolMask(), critChance, GetId()==9004164?RANGED_ATTACK:BASE_ATTACK, true);
 
     return std::max(0.0f, critChance);
 }

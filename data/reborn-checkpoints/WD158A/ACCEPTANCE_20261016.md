@@ -1,0 +1,12 @@
+# WD158A 用户批次发布授权与验收范围
+
+2026-10-16 用户确认本轮只发现少数收尾问题，并明确“你可以把这前的几次的技能都可以一个一个推送了”。按依赖先发布WD157/WD158；WD159灵魂齐射减冷却和技能书UI候选不借此发布。WD157死亡妖术额外明确保存后目标减益显示通过。此前WD159代价完整联动专项通过，不属于本提交。
+
+这是基本玩法及发布授权，非全部等级、多人/PvP/机器人或概率统计全矩阵通过。原包的candidate-status与README属于冻结时历史状态，以本验收记录更新现状。保留失败证据，不改原包。
+
+来源原包：D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261016\codexfix_20261016_120319_阶段WD158A_幽影战刃森金学徒灵魂震击累计测试包.zip
+SHA256 2b2e330d87d30fbd7355d49cf1a38a0094fe0fb830eb7f0a6a6a4e7a1b689ef2
+
+源码/Characters/World SQL及客户端可编辑文件匹配本阶段。资源原ZIP包含双端独立DBC与XA导入目录，作为Release附件；Git不存整表二进制。已有最终162累计安装者无需回退到旧资源或重复执行旧SQL。待测UI及齐射不随本提交发布。
+
+未替用户部署、执行生产SQL或构建worldserver。Claude的DOCK1Q祖先与playerbots保持，无关工作区修改不暂存。远端/tag/Release状态由发布读回后更新。

@@ -5855,6 +5855,8 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     {
         m_temporarySpellReplacements.erase(original);
         replacement = original;
+        // WD158 restore the highest active Hex even when a rank was learned during readiness.
+        if(previous==9004164)for(uint32 id:{9003112u,9003111u,9003110u,9003109u,9003108u,9003107u,9003106u,9003104u})if(HasActiveSpell(id)){replacement=id;break;}
     }
     else
     {
@@ -5882,6 +5884,8 @@ uint32 Player::GetTemporarySpellReplacement(uint32 original) const
 
 uint32 Player::GetCanonicalTemporarySpell(uint32 replacement) const
 {
+    // WD158 temporary proc buttons never persist as a low-rank or unusable Umbral button.
+    if(replacement==9004164)for(uint32 id:{9003112u,9003111u,9003110u,9003109u,9003108u,9003107u,9003106u,9003104u})if(HasActiveSpell(id))return id;
     for(auto const& pair:m_temporarySpellReplacements)
         if(pair.second==replacement && HasActiveSpell(pair.first)) return pair.first;
     // WD99: old queued/saved temporary buttons also canonicalize after aura expiry.

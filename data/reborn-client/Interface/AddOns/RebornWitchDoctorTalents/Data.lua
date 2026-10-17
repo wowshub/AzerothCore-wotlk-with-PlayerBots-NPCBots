@@ -186,3 +186,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==4572 or n.ID==6035 then n.Require
 
 -- WD157 connected Shadow path and exclusive choice164323.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==7102 then n.RequiredLevel=27;n.RequiredIDs={}elseif n.ID==5303 or n.ID==4177 or n.ID==11177 then n.RequiredLevel=27;n.RequiredIDs={7102}end end
+
+-- WD158 exact learning gates, preserve authored graph.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==7103 then n.RequiredLevel=30;n.RequiredIDs={4506}elseif n.ID==4423 then n.RequiredLevel=40;n.RequiredIDs={7103}elseif n.ID==29977 then n.RequiredLevel=31;n.RequiredIDs={}end end

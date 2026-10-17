@@ -9531,7 +9531,7 @@ uint32 Unit::SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, ui
                 uint32 id=spellProto->Id;
                 return damagetype==DOT && aurEff->GetCasterGUID()==caster->GetGUID() &&
                     caster->HasAura(9003530) && (id==9003104 || id==9003106 || id==9003107 ||
-                    id==9003108 || id==9003109 || id==9003110 || id==9003111 || id==9003112);
+                    id==9003108 || id==9003109 || id==9003110 || id==9003111 || id==9003112 || id==9004164);
             }
             if (aurEff->GetCasterGUID() == caster->GetGUID() && aurEff->IsAffectedOnSpell(spellProto))
                 return true;

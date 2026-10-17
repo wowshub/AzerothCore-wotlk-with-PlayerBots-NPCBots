@@ -1,0 +1,21 @@
+{
+  "accepted_baseline": "WD156D",
+  "candidate_batches": [
+    "WD157A",
+    "WD158A"
+  ],
+  "new_nodes": [
+    7103,
+    4423,
+    29977
+  ],
+  "remaining_unmapped": [
+    12145,
+    7781,
+    6076,
+    5235,
+    6388
+  ],
+  "layout_hash": "f221c187a25ed30f7da7b005794222480345c83dfa7405f81ac09518a5b973bd",
+  "game": "pending"
+}
