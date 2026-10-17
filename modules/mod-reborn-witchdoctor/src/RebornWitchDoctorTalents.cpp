@@ -29,6 +29,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD157Bridge { void Apply(Player*,bool,bool,bool,bool); }
 namespace WD156Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD155Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD154Bridge { void Apply(Player*,bool,bool,bool); }
@@ -626,6 +627,11 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
     {
         level=n->id==12646?14:10;
         if(n->id!=4005) missing=(rank(4005) || rank(29744))?0:1;
+    }
+    if(s->modern && (n->id==7102 || n->id==5303 || n->id==4177 || n->id==11177))
+    {
+        level=27;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355);
+        missing=n->id==7102?((rank(6072)||rank(6074))?0:1):(rank(7102)?0:1);
     }
     if(s->modern && n->id==29306) level=30;
     if(s->modern && n->id==31349) { level=59;te=TEFoundation(s->aeMasks[slot]); }

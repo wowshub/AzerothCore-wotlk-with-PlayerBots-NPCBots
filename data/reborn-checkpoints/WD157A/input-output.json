@@ -1,0 +1,74 @@
+[
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\data\\reborn-checkpoints\\witchdoctor\\nodes.csv",
+    "path": "01_覆盖到源代码根目录/data/reborn-checkpoints/witchdoctor/nodes.csv",
+    "input": "f86e003789cde4438225ecaed80efc559219bf0570e2eef586379ffac10d0816",
+    "output": "558c8eb77d56b981401534c85dcfd6114ce039754a01693d42119bfa7ba4c283"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNodeLayout.h",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNodeLayout.h",
+    "input": "b215da047ecc2f8b81d82486876150f9c54151bc93e147cbe687fafcadd18e2a",
+    "output": "e635175ce0dca865b4d725632e4167a4d63c16d3022a51c0fd39ba4dda462fa8"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\NodeLayout.lua",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/NodeLayout.lua",
+    "input": "ecdbda8f3fbbb90d628d67fb6b4054bad0fcefb340057526d53a2248df1cfc92",
+    "output": "146798e6bba1d4ac51d02316d3e9868dcf2d841c8e477d52f45e6463e219d292"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalentNodes.h",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalentNodes.h",
+    "input": "048eea875dd630acf481db0cfbd44ca7da9fe8151c9320520a24e985d4b2bcf1",
+    "output": "b292f655185516a7a41983d9d638918070c3f84a4a0f1ed04c6aab0a630c4ddc"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorAllocation.inc",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorAllocation.inc",
+    "input": "ba7a67d781a0b90570e8218e7c51e9e8ebd1135bef2c195fe927c5d7d57d5b59",
+    "output": "543b1b1ade8ea164c2bbf2fdba46e925db1f6931b2efe208b1dcaaa36938709f"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "input": "cb573a1863d6b8453ecfe014eeee1798a179380531fe82e1141d8ece3448ca1a",
+    "output": "3453f99904dc1a33ce55f533bae16ac951dca403e4f2188b8a6a2a4b79da0954"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\src\\server\\game\\Entities\\Player\\WitchDoctorTalentPolicy.h",
+    "path": "01_覆盖到源代码根目录/src/server/game/Entities/Player/WitchDoctorTalentPolicy.h",
+    "input": "51edd1683ce253eaed09c83759cc3ce983a5ebef36ce5372901e5158a727834a",
+    "output": "3342f20fa69306dd6cd01e1868de0a0681bc3fae1ba5fc2c330559be54ecde21"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "input": "67d718f12e9e05b0ae4489cf9769ce8998aee5b17023cdaaa7c22a2f9b188f2b",
+    "output": "3ee370af5d2446960b1f55ddebd75e1adbc5b32f63f66750659e6d9d37e6edf0"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorShadow143.inc",
+    "path": "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+    "input": "40017b66fb4878e640d18a1cb362944e7b3027e0895485c02539089a852e530c",
+    "output": "0324d7c4f6e78edd236ad9607403aa460fc3dfae90b7a92ac1d6df6987353a4e"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Allocation.lua",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Allocation.lua",
+    "input": "eb7983a325797256a2a7f62085d65258ef03e12c16289d226a3bf472180885f2",
+    "output": "1885bf2ea2b8741a03879ff14e2432902f36dbd57f3c3f8acf02ffd7ec187fe6"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Data.lua",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Data.lua",
+    "input": "2cf92cbaab44d7fe468a728db11038075d31905fcfaf7b82c1d65d6407db38fe",
+    "output": "9ff25ce0157d77801c5dc35e6f680f8cb13f72fee2f4a69d4d0fde5063d61c94"
+  },
+  {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\codex-release-wd139-20261012\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\Progress.lua",
+    "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchDoctorTalents/Progress.lua",
+    "input": "5bf81010788835da828367db310fefadc9ec4df84b0fd607a8ea620e8768c5c9",
+    "output": "9e8fcec8ee7e034a436b06f2d10b5a3ef80005f19cc855eafb2f270b5500a794"
+  }
+]

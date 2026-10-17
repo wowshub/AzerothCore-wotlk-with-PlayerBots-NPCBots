@@ -16,6 +16,9 @@ class auto_shot : public SpellScript
 class arrow : public SpellScript
 {
     PrepareSpellScript(arrow);
+    uint32 hungerBefore=0,spiritsBefore=0;
+    void Snapshot(){Player* p=GetCaster()->ToPlayer();if(!GetSpell()->IsTriggered()){hungerBefore=WD157::HungerCount(p);spiritsBefore=WD87A::Count(p);}}
+    void Done(){if(!GetSpell()->IsTriggered())WD157::ArrowCast(GetCaster()->ToPlayer(),hungerBefore,spiritsBefore);}
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({Identity,ArrowTalent,Heal}); }
     SpellCastResult Check()
     {
@@ -28,12 +31,13 @@ class arrow : public SpellScript
         if(!Owns(p)) { SetEffectValue(0);return; }
         float extra=0.20f*std::max(0.0f,p->GetTotalAttackPowerValue(RANGED_ATTACK))+
             0.25f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE));
-        SetEffectValue(GetEffectValue()+int32(extra));
+        SetEffectValue(WD157::ArrowDamage(GetEffectValue()+int32(extra),hungerBefore));
     }
     void Hit()
     {
         Player* p=GetCaster()->ToPlayer();
         if(!Owns(p) || GetHitDamage()<=0) return;
+        WD157::ArrowHit(p,GetHitUnit());
         SpellInfo const* info=sSpellMgr->GetSpellInfo(Heal);
         uint32 amount=uint64(GetHitDamage())*40/100;
         amount=p->SpellHealingBonusTaken(p,info,amount,HEAL);
@@ -43,6 +47,8 @@ class arrow : public SpellScript
     void Register() override
     {
         OnCheckCast += SpellCheckCastFn(arrow::Check);
+        BeforeCast += SpellCastFn(arrow::Snapshot);
+        AfterCast += SpellCastFn(arrow::Done);
         OnEffectHitTarget += SpellEffectFn(arrow::Damage,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
         AfterHit += SpellHitFn(arrow::Hit);
     }

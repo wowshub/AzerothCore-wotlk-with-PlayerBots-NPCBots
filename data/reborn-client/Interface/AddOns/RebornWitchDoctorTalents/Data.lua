@@ -183,3 +183,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==6044 then n.RequiredLevel=10;n.Re
 
 -- WD156 Shadow prerequisites, OR paths represented by connected graph.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==4572 or n.ID==6035 then n.RequiredLevel=20;n.RequiredIDs={}elseif n.ID==7355 then n.RequiredLevel=20;n.RequiredIDs={6035}end end
+
+-- WD157 connected Shadow path and exclusive choice164323.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==7102 then n.RequiredLevel=27;n.RequiredIDs={}elseif n.ID==5303 or n.ID==4177 or n.ID==11177 then n.RequiredLevel=27;n.RequiredIDs={7102}end end
