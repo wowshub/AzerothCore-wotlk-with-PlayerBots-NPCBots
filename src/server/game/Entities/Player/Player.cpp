@@ -5886,6 +5886,7 @@ uint32 Player::GetTemporarySpellReplacement(uint32 original) const
 uint32 Player::GetCanonicalTemporarySpell(uint32 replacement) const
 {
     // WD158 temporary proc buttons never persist as a low-rank or unusable Umbral button.
+    if(replacement==9004182 && HasActiveSpell(9004080))return 9004080; // WD160 persistent identity is the original Call.
     if(replacement==9004174)for(uint32 id:{9003988u,9003987u,9003986u,9003985u,9003984u,9003983u,9003982u,9003981u,9003980u})if(HasActiveSpell(id))return id;
     if(replacement==9004164)for(uint32 id:{9003112u,9003111u,9003110u,9003109u,9003108u,9003107u,9003106u,9003104u})if(HasActiveSpell(id))return id;
     for(auto const& pair:m_temporarySpellReplacements)

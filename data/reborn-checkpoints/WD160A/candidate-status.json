@@ -1,0 +1,20 @@
+{
+  "accepted_baseline": "WD156D",
+  "candidate_batches": [
+    "WD157A",
+    "WD158A",
+    "WD159A",
+    "WD160A"
+  ],
+  "new_nodes": [
+    5235,
+    6388
+  ],
+  "legacy_acquisition_audit_pending": [
+    29978,
+    5113
+  ],
+  "layout_hash": "fdd5ef377c3ef9ab57332b55dd791e7fbcdade00405f98662d8cc6174fad14c1",
+  "game": "pending",
+  "whole_class": "not accepted"
+}

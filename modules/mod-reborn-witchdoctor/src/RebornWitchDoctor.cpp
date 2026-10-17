@@ -48,6 +48,7 @@
 
 namespace WD155 { bool Owns(Player*,uint32); }
 namespace WD149 { void Gain(Player*);uint32 ReadyPct(Player*);void Consume(Player*); }
+namespace WD160 { Creature* Viper(Player*);bool OwnedViper(Player*,ObjectGuid); }
 namespace WD150 { bool OwnedMass(Player*,ObjectGuid);void Shot(Creature*,ObjectGuid); }
 namespace WD5A { uint32 RitualHexingRank(Player* player); bool CanUseHexTalent(Player* player,uint32 spell); bool CanUseHollow(Player* player); bool CanCastBadJuju(Player* player); void TrainerOptions(Player* player); void TrainerPurchase(Player* player); }
 
@@ -2595,7 +2596,7 @@ class aura_reborn_wd51a_periodic : public AuraScript
             !player->IsInMap(target) || !player->InSamePhase(target)) return false;
         if (GetId()==WD51A::Growth)
             return event.GetSpellInfo() && WD51A::IsHex(event.GetSpellInfo()->Id) && WD50A::OwnedHex(player,target);
-        return GetId()==WD51A::Berserking && WD51A::OwnedSerpent(player);
+        return GetId()==WD51A::Berserking && (WD51A::OwnedSerpent(player)||WD160::Viper(player));
     }
     void Proc(ProcEventInfo& event)
     {
@@ -2613,9 +2614,7 @@ class aura_reborn_wd51a_periodic : public AuraScript
                     targets.push_back(target->GetGUID());
             }
         }
-        else if (Creature* ward=WD51A::OwnedSerpent(player))
-            // Bounded owned summon, native apply-aura; no CoA Effect190/area targeting.
-            player->AddAura(WD51A::WardHaste,ward);
+        else {if(Creature* ward=WD51A::OwnedSerpent(player))player->AddAura(WD51A::WardHaste,ward);if(Creature* ward=WD160::Viper(player))player->AddAura(WD51A::WardHaste,ward);}
     }
     void Remove(AuraEffect const*, AuraEffectHandleModes)
     {
@@ -2629,9 +2628,7 @@ class aura_reborn_wd51a_periodic : public AuraScript
                         target->RemoveAurasDueToSpell(WD51A::GrowthDebuff,player->GetGUID());
             }
         if (GetId()==WD51A::Berserking)
-            if (Player* player=GetTarget()->ToPlayer())
-                if (Creature* ward=WD51A::OwnedSerpent(player))
-                    ward->RemoveAurasDueToSpell(WD51A::WardHaste,player->GetGUID());
+            if (Player* player=GetTarget()->ToPlayer()) {if(Creature* ward=WD51A::OwnedSerpent(player))ward->RemoveAurasDueToSpell(WD51A::WardHaste,player->GetGUID());if(Creature* ward=WD160::Viper(player))ward->RemoveAurasDueToSpell(WD51A::WardHaste,player->GetGUID());}
     }
     void Register() override
     {
@@ -3356,6 +3353,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorShadow157.inc"
 #include "RebornWitchDoctorShadow158.inc"
 #include "RebornWitchDoctorShadow159.inc"
+#include "RebornWitchDoctorShadow160.inc"
 #include "RebornWitchDoctorShadow143.inc"
 #include "RebornWitchDoctorSupport144.inc"
 
@@ -3391,6 +3389,7 @@ void AddRebornWitchDoctorScripts()
     WD157::Register();
     WD158::Register();
     WD159::Register();
+    WD160::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

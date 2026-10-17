@@ -38,9 +38,9 @@ uint32 count=p->HasSpell(9004131)&&p->HasAura(9004131,p->GetGUID())?6:4;
 };
 void Shot(Creature* ward,ObjectGuid centerGuid)
 {
-    if(!ward||ward->GetEntry()!=900190)return;Player* p=ObjectAccessor::GetPlayer(*ward,ward->GetOwnerGUID());
+    if(!ward||(ward->GetEntry()!=900190&&ward->GetEntry()!=900255))return;Player* p=ObjectAccessor::GetPlayer(*ward,ward->GetOwnerGUID());
     if(!IsDoctor(p)||!p->IsAlive()||(!Owns(p,FireOne)&&!Owns(p,FireTwo)))return;
-    if(!OwnedMass(p,ward->GetGUID())&&!WD153::OwnedWard(p,ward->GetGUID())&&p->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid!=ward->GetGUID())return;
+    if(!OwnedMass(p,ward->GetGUID())&&!WD160::OwnedViper(p,ward->GetGUID())&&!WD153::OwnedWard(p,ward->GetGUID())&&p->CustomData.GetDefault<WD21A::State>(WD21A::Key)->guid!=ward->GetGUID())return;
     uint32 chance=Owns(p,FireTwo)?40:20;if(Owns(p,Striker))chance+=10;
     auto* state=p->CustomData.GetDefault<State>(Key);++state->attacks;
     if(!roll_chance_i(chance))return;

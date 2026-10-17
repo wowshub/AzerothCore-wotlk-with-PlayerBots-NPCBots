@@ -1,0 +1,15 @@
+{
+  "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261017\\codexrelease_20261017_WD160A_accepted_resources.zip",
+  "sha256": "2be9fcfec80d7ad3161af9dc820535cf73913c748506e5da4f130287b7f20491",
+  "bytes": 26453820,
+  "files": 396,
+  "original_frozen": {
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261016\\codexfix_20261016_142253_阶段WD160A_毒蛇守卫与愚者把戏累计测试包.zip",
+    "bytes": 44169919,
+    "sha256": "ae493fd1a59166c2a89081ade574e20db99d7abcbddb0511a964015214aac261",
+    "files": 529,
+    "base": "035ce516063ae81d250a0fa1f1a3db92213a5631",
+    "candidate": "WD157A+WD158A+WD159A+WD160A"
+  },
+  "source_modifications": "G diagnostic only; for160/161 B presence source and dual Spell.dbc; no FrameXML"
+}

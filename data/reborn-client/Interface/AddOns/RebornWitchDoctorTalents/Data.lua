@@ -192,3 +192,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==7103 then n.RequiredLevel=30;n.Re
 
 -- WD159 exact available parents; authored connections retained for final batch.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==12145 then n.RequiredLevel=50;n.RequiredIDs={4423};n.TECost=0 elseif n.ID==7781 or n.ID==6076 then n.RequiredLevel=20;n.RequiredIDs={}end end
+
+-- WD160 final two native authored nodes.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==5235 then n.RequiredLevel=20;n.RequiredIDs={};n.Group=783222 elseif n.ID==6388 then n.RequiredLevel=31;n.RequiredIDs={}end end
