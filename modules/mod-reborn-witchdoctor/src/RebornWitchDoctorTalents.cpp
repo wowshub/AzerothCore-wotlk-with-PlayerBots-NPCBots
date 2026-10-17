@@ -29,6 +29,7 @@
 #include <mutex>
 #include <unordered_map>
 using namespace Acore::ChatCommands;
+namespace WD161Bridge { void Apply(Player*,bool,bool); }
 namespace WD160Bridge { void Apply(Player*,bool,bool); }
 namespace WD159Bridge { void Apply(Player*,bool,bool,bool); }
 namespace WD158Bridge { void Apply(Player*,bool,bool,bool); }
@@ -193,6 +194,7 @@ bool CanCastBadJuju(Player* p)
 }
 void ClearEffects(Player* p,State* s)
 {
+    if(s->modern) WD161Bridge::Apply(p,false,false);
     Remove(p,s);
     if (Doctor(p)) {
         for (auto const& rank:WD19A::BadJujuRanks) if(p->HasSpell(rank.spell)) p->removeSpell(rank.spell,3,false);
@@ -636,8 +638,10 @@ bool AuditNode(ChatHandler* h,uint32 expected,uint32 slot,uint32 nodeID)
         level=27;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355);
         missing=n->id==7102?((rank(6072)||rank(6074))?0:1):(rank(7102)?0:1);
     }
-    if(s->modern && (n->id==5235||n->id==6388)){level=n->id==5235?20:31;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355)+rank(7102)+rank(5303)+rank(4177)+rank(11177)+rank(7103)+rank(4423)+rank(29977)+rank(7781)+rank(6076);missing=(n->id==5235?(rank(4572)||rank(29978)):(rank(4572)||rank(11330)||rank(29930)))?0:1;}
-    if(s->modern && (n->id==7781||n->id==6076)){level=20;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355)+rank(7102)+rank(5303)+rank(4177)+rank(11177)+rank(7103)+rank(4423)+rank(29977);missing=(n->id==7781?(rank(6035)||rank(29981)||rank(5235)):(rank(6035)||rank(5235)||rank(6388)))?0:1;}
+    if(s->modern&&n->id==29978){level=30;auto mask=s->aeMasks[slot];te=AERank(mask,114)+AERank(mask,115)+AERank(mask,118)+AERank(mask,120)+AERank(mask,121)+AERank(mask,122)+AERank(mask,123)+AERank(mask,124)+AERank(mask,125)+AERank(mask,126)+AERank(mask,127)+AERank(mask,128)+AERank(mask,129)+AERank(mask,130)+AERank(mask,131)+AERank(mask,132)+AERank(mask,134)+AERank(mask,135)+AERank(mask,136)+AERank(mask,137)+AERank(mask,138)+AERank(mask,139)+AERank(mask,140);missing=0;}
+    if(s->modern&&n->id==5113){level=58;auto mask=s->aeMasks[slot];ae=AERank(mask,0)+AERank(mask,1)+AERank(mask,2)+AERank(mask,3)+AERank(mask,4)+AERank(mask,5)+AERank(mask,39)+AERank(mask,40)+AERank(mask,41)+AERank(mask,46)+AERank(mask,47)+AERank(mask,48)+AERank(mask,59)+AERank(mask,60)+AERank(mask,63)+AERank(mask,64)+AERank(mask,65)+AERank(mask,66)+AERank(mask,67)+AERank(mask,68)+AERank(mask,69)+AERank(mask,70)+AERank(mask,71)+AERank(mask,72)+AERank(mask,73)+AERank(mask,116)+AERank(mask,117)+AERank(mask,133)+AERank(mask,141)+AERank(mask,142)+AERank(mask,143)+AERank(mask,144);missing=0;}
+    if(s->modern && (n->id==5235||n->id==6388)){level=n->id==5235?20:31;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355)+rank(7102)+rank(5303)+rank(4177)+rank(11177)+rank(7103)+rank(4423)+rank(29977)+rank(7781)+rank(6076)+rank(29978);missing=(n->id==5235?(rank(4572)||rank(29978)):(rank(4572)||rank(11330)||rank(29930)))?0:1;}
+    if(s->modern && (n->id==7781||n->id==6076)){level=20;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355)+rank(7102)+rank(5303)+rank(4177)+rank(11177)+rank(7103)+rank(4423)+rank(29977)+rank(29978);missing=(n->id==7781?(rank(6035)||rank(29981)||rank(5235)):(rank(6035)||rank(5235)||rank(6388)))?0:1;}
     if(s->modern && n->id==29977){level=31;te=rank(1969)+rank(7779)+rank(7086)+rank(6072)+rank(6074)+rank(8574)+rank(30895)+rank(6063)+rank(6069)+rank(5253)+rank(6853)+rank(30892)+rank(6983)+rank(5164)+rank(6011)+rank(6073)+rank(29729)+rank(7031)+rank(11330)+rank(29930)+rank(6010)+rank(11164)+rank(29981)+rank(4572)+rank(6035)+rank(7355)+rank(7102)+rank(5303)+rank(4177)+rank(11177);missing=(rank(4177)||rank(5303)||rank(11177))?0:1;}
     if(s->modern && n->id==29306) level=30;
     if(s->modern && n->id==31349) { level=59;te=TEFoundation(s->aeMasks[slot]); }

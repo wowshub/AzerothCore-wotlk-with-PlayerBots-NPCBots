@@ -1,0 +1,14 @@
+{
+  "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261017\\codexrelease_20261017_WD161A_accepted_resources.zip",
+  "sha256": "c1a95c264c8783c6e598dd8e62e62ca34aabebbdf955d988e3d5e831b51eecb1",
+  "bytes": 26480560,
+  "files": 405,
+  "original_frozen": {
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261016\\codexfix_20261016_151350_阶段WD161A_狂暴与诅咒雕像现代接入累计测试包.zip",
+    "bytes": 26756368,
+    "sha256": "0f6afb2c384064ed0c3be6fd2b39ad7f169e32486f60aea8dd8d4ef7885ab12a",
+    "files": 498,
+    "candidate": "WD157A—WD161A"
+  },
+  "source_modifications": "G diagnostic only; for160/161 B presence source and dual Spell.dbc; no FrameXML"
+}

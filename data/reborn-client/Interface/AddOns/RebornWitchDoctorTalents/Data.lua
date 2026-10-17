@@ -195,3 +195,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==12145 then n.RequiredLevel=50;n.R
 
 -- WD160 final two native authored nodes.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==5235 then n.RequiredLevel=20;n.RequiredIDs={};n.Group=783222 elseif n.ID==6388 then n.RequiredLevel=31;n.RequiredIDs={}end end
+
+-- WD161 existing authored nodes, acquisition now saved in modern builds.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==29978 then n.RequiredLevel=30 elseif n.ID==5113 then n.RequiredLevel=58 end end

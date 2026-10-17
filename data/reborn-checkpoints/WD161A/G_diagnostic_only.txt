@@ -1,0 +1,44 @@
+--- original159
++++ tested-G-diagnostics
+@@ -3,11 +3,12 @@
+ {
+ constexpr uint32 Talent=9004170,Gift=9004171,Price=9004172,Ready=9004173,Volley=9004174,PriceReady=9004175,Haste=9004176;
+ constexpr char Key[]="RebornWD159.Spirit";
+-struct State:DataMap::Base{uint32 original=0;uint64 volleyGeneration=0,priceGeneration=0;};
++struct State:DataMap::Base{uint32 original=0;uint64 volleyGeneration=0,priceGeneration=0;uint32 volleyCompleted=0,lastBefore=0,lastAfter=0,lastVolleyAt=0,generatorCompleted=0,lastGenerator=0;};
+ State* Data(Player* p){return p->CustomData.GetDefault<State>(Key);}
+ bool Owns(Player* p,uint32 id){return IsDoctor(p)&&p->IsAlive()&&p->HasSpell(id)&&p->HasAura(id,p->GetGUID());}
+ bool Mimic(Player* p){return WD87B::PresenceRemaining(p)>0;}
+ bool Available(Player* p){return IsDoctor(p)&&p->IsAlive()&&p->HasSpell(Volley)&&((Owns(p,Talent)&&p->HasAura(Ready,p->GetGUID()))||(Owns(p,Gift)&&Mimic(p)));}
++uint32 GlaiveRemaining(Player* p){uint32 remaining=0;for(uint32 id=9004030;id<=9004036;++id)if(p->HasSpell(id))remaining=std::max(remaining,p->GetSpellCooldownDelay(id));return remaining;}
+ void Reduce(Player* p,int32 milliseconds){for(uint32 id=9004030;id<=9004036;++id)if(p->HasSpell(id)&&p->GetSpellCooldownDelay(id))p->ModifySpellCooldown(id,-std::min<int32>(milliseconds,p->GetSpellCooldownDelay(id)));}
+ void Sync(Player* p)
+ {
+@@ -30,7 +31,7 @@
+ class generator:public SpellScript
+ {
+     PrepareSpellScript(generator);
+-    void Done(){if(!GetSpell()->IsTriggered())Proc(GetCaster()->ToPlayer());}
++    void Done(){if(!GetSpell()->IsTriggered())if(Player* p=GetCaster()->ToPlayer())if(IsDoctor(p)){State* state=Data(p);++state->generatorCompleted;state->lastGenerator=GetSpellInfo()->Id;Proc(p);}}
+     void Register()override{AfterCast+=SpellCastFn(generator::Done);}
+ };
+ class volley:public SpellScript
+@@ -54,7 +55,8 @@
+     void Done()
+     {
+         Player* p=GetCaster()->ToPlayer();if(GetSpell()->IsTriggered()||!IsDoctor(p)||!p->IsAlive())return;
+-        p->CastSpell(p,9003574,true);Reduce(p,3000);
++        State* state=Data(p);++state->volleyCompleted;state->lastVolleyAt=getMSTime();state->lastBefore=GlaiveRemaining(p);
++        p->CastSpell(p,9003574,true);Reduce(p,3000);state->lastAfter=GlaiveRemaining(p);
+         if(Data(p)->volleyGeneration==generation)p->RemoveAurasDueToSpell(Ready,p->GetGUID());
+         if(Unit* target=GetExplTargetUnit())WD68A::Mirror(p,target,Volley);
+         Sync(p); // copies neither grant Spirits nor reduce cooldowns nor generate new readiness
+@@ -96,7 +98,7 @@
+ class diagnostics:public CommandScript
+ {
+ public:diagnostics():CommandScript("reborn_wd159_diagnostics"){}
+-    static bool Check(ChatHandler* h){Player* p=h->GetSession()->GetPlayer();if(!IsDoctor(p))return false;uint32 best=0;for(auto const& r:WD19A::Reclamation143Ranks)if(p->HasActiveSpell(r.spell))best=r.spell;Aura* ready=p->GetAura(Ready,p->GetGUID());Aura* price=p->GetAura(PriceReady,p->GetGUID());SpellInfo const* info=sSpellMgr->GetSpellInfo(Volley);h->PSendSysMessage("WD159 volley={} gift={} price={} spirits={} mimic_remaining_ms={} ready_ms={} original={} replacement={} volley_cast_ms={} gift_haste_pct={} gift_damage_pct={} price_ms={} stalker_remaining_ms={}",Owns(p,Talent)?1:0,Owns(p,Gift)?1:0,Owns(p,Price)?1:0,WD87A::Count(p),WD87B::PresenceRemaining(p),ready?ready->GetDuration():0,best,best?p->GetTemporarySpellReplacement(best):0,info?info->CalcCastTime(p):0,p->HasAura(Haste,p->GetGUID())?15:0,Owns(p,Gift)?2*WD87A::Count(p):0,price?price->GetDuration():0,p->GetSpellCooldownDelay(9004150));for(uint32 id=9004030;id<=9004036;++id)if(p->HasSpell(id))h->PSendSysMessage("WD159 glaive={} remaining_ms={}",id,p->GetSpellCooldownDelay(id));return true;}
++    static bool Check(ChatHandler* h){Player* p=h->GetSession()->GetPlayer();if(!IsDoctor(p))return false;State* state=Data(p);h->PSendSysMessage("WD162G generator_completed={} last_generator_spell={} volley_completed={} last_before_ms={} last_after_ms={} last_reduced_ms={} last_volley_age_ms={}",state->generatorCompleted,state->lastGenerator,state->volleyCompleted,state->lastBefore,state->lastAfter,state->lastBefore>state->lastAfter?state->lastBefore-state->lastAfter:0,state->volleyCompleted?getMSTimeDiff(state->lastVolleyAt,getMSTime()):0);uint32 best=0;for(auto const& r:WD19A::Reclamation143Ranks)if(p->HasActiveSpell(r.spell))best=r.spell;Aura* ready=p->GetAura(Ready,p->GetGUID());Aura* price=p->GetAura(PriceReady,p->GetGUID());SpellInfo const* info=sSpellMgr->GetSpellInfo(Volley);h->PSendSysMessage("WD159 volley={} gift={} price={} spirits={} mimic_remaining_ms={} ready_ms={} original={} replacement={} volley_cast_ms={} gift_haste_pct={} gift_damage_pct={} price_ms={} stalker_remaining_ms={}",Owns(p,Talent)?1:0,Owns(p,Gift)?1:0,Owns(p,Price)?1:0,WD87A::Count(p),WD87B::PresenceRemaining(p),ready?ready->GetDuration():0,best,best?p->GetTemporarySpellReplacement(best):0,info?info->CalcCastTime(p):0,p->HasAura(Haste,p->GetGUID())?15:0,Owns(p,Gift)?2*WD87A::Count(p):0,price?price->GetDuration():0,p->GetSpellCooldownDelay(9004150));for(uint32 id=9004030;id<=9004036;++id)if(p->HasSpell(id))h->PSendSysMessage("WD159 glaive={} remaining_ms={}",id,p->GetSpellCooldownDelay(id));return true;}
+     Acore::ChatCommands::ChatCommandTable GetCommands()const override{using namespace Acore::ChatCommands;static ChatCommandTable t={{"wd159check",Check,SEC_PLAYER,Console::No}};return t;}
+ };
+ void Register(){new lifecycle();new diagnostics();new modifiers();RegisterSpellScript(WD159::ready);RegisterSpellScript(WD159::generator);RegisterSpellScript(WD159::volley);RegisterSpellScript(WD159::eclipse);RegisterSpellScript(WD159::glaive);}
