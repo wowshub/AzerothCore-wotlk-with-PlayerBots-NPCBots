@@ -422,7 +422,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     if(mover==_player)
     {
         uint32 replacement=_player->GetTemporarySpellReplacement(spellId);
-        if(replacement!=spellId && replacement!=9004164) // WD158 visual-only replacement: an explicit Hex macro remains Hex.
+        if(replacement!=spellId && replacement!=9004164 && replacement!=9004174) // WD158 visual-only replacement: an explicit Hex macro remains Hex.
         {
             spellInfo=sSpellMgr->GetSpellInfo(replacement);
             if(!spellInfo) { recvPacket.rfinish();return; }

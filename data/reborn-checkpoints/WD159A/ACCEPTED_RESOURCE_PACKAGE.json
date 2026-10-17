@@ -1,0 +1,15 @@
+{
+  "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261017\\codexrelease_20261017_WD159A_accepted_resources.zip",
+  "sha256": "763dc5af212e294b4da3367e660dcf996d2b8cb8a55f5dc34a5652bb1a24a742",
+  "bytes": 22996643,
+  "files": 307,
+  "original_frozen": {
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261016\\codexfix_20261016_131309_阶段WD159A_灵魂齐射赠礼与代价三技能累计测试包.zip",
+    "bytes": 39737161,
+    "sha256": "8707f4b52e95e19c1f6cda0a142788fe2bc90cbcc4b87aba48c78e30ed2679b9",
+    "files": 429,
+    "base": "035ce516063ae81d250a0fa1f1a3db92213a5631",
+    "candidate": "WD157A+WD158A+WD159A"
+  },
+  "source_modifications": "G diagnostic only; for160/161 B presence source and dual Spell.dbc; no FrameXML"
+}

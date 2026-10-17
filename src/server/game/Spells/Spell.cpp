@@ -618,6 +618,15 @@ bool Take(Spell const* spell)
     return state.ready.erase(spell)!=0;
 }
 }
+namespace WD159CastSnapshot
+{
+struct Registry { std::mutex mutex; std::unordered_set<Spell const*> ready; };
+Registry& Store(){static Registry* state=new Registry;return *state;}
+void Set(Spell const* spell,bool ready){Registry& state=Store();std::lock_guard<std::mutex> lock(state.mutex);if(ready)state.ready.insert(spell);else state.ready.erase(spell);}
+bool Has(Spell const* spell){Registry& state=Store();std::lock_guard<std::mutex> lock(state.mutex);return state.ready.count(spell)!=0;}
+}
+void Spell::SetRebornWD159PriceSnapshot(bool ready){WD159CastSnapshot::Set(this,ready);}
+bool Spell::HasRebornWD159PriceSnapshot() const{return WD159CastSnapshot::Has(this);}
 void Spell::SetRebornWD155MojoSnapshot(bool ready) { WD155CastSnapshot::Set(this,ready); }
 bool Spell::TakeRebornWD155MojoSnapshot() { return WD155CastSnapshot::Take(this); }
 
@@ -773,6 +782,7 @@ Spell::Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags,
 
 Spell::~Spell()
 {
+    SetRebornWD159PriceSnapshot(false); // Cancelled/failed casts cannot leak a recycled pointer.
     TakeRebornWD155MojoSnapshot(); // Also clears failed prepares and destroyed cancelled casts.
     // unload scripts
     while (!m_loadedScripts.empty())
@@ -8957,6 +8967,7 @@ void Spell::DoAllEffectOnLaunchTarget(TargetInfo& targetInfo, float* multiplier)
 
     float critChance = caster->SpellDoneCritChance(unit, m_spellInfo, m_spellSchoolMask, m_attackType, false);
     critChance = unit->SpellTakenCritChance(caster, m_spellInfo, m_spellSchoolMask, critChance, m_attackType, false);
+    if(m_caster->getClass()==13 && m_spellInfo->Id>=9004030 && m_spellInfo->Id<=9004036 && HasRebornWD159PriceSnapshot())critChance=100.f; // WD159 accepted Price cast survives ready expiry; native miss/immune still applies.
     targetInfo.crit = !caster->HasAura(9003431) && !m_caster->HasAura(9003431) && roll_chance_f(std::max(0.0f, critChance)); // WD43A: includes owner-credited totems
 }
 

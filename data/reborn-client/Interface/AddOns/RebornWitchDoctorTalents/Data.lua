@@ -189,3 +189,6 @@ for _,n in ipairs(RebornWDTreeData)do if n.ID==7102 then n.RequiredLevel=27;n.Re
 
 -- WD158 exact learning gates, preserve authored graph.
 for _,n in ipairs(RebornWDTreeData)do if n.ID==7103 then n.RequiredLevel=30;n.RequiredIDs={4506}elseif n.ID==4423 then n.RequiredLevel=40;n.RequiredIDs={7103}elseif n.ID==29977 then n.RequiredLevel=31;n.RequiredIDs={}end end
+
+-- WD159 exact available parents; authored connections retained for final batch.
+for _,n in ipairs(RebornWDTreeData)do if n.ID==12145 then n.RequiredLevel=50;n.RequiredIDs={4423};n.TECost=0 elseif n.ID==7781 or n.ID==6076 then n.RequiredLevel=20;n.RequiredIDs={}end end

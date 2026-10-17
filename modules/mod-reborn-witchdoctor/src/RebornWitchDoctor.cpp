@@ -273,7 +273,7 @@ void Mirror(Player* p,Unit* target,uint32 spell)
         Creature* c=ObjectAccessor::GetCreature(*p,guid);
         if (!c || Caster(c)!=p || !c->IsInMap(target) || !c->InSamePhase(target) ||
             !c->IsWithinDistInMap(target,40.0f) || !c->IsWithinLOSInMap(target)) continue;
-        if(spell==9003822 || spell==9004164) c->CastSpell(target,spell,true,nullptr,nullptr,p->GetGUID());
+        if(spell==9003822 || spell==9004164 || spell==9004174) c->CastSpell(target,spell,true,nullptr,nullptr,p->GetGUID());
         else c->CastSpell(target,spell,true);
     }
 }
@@ -3032,6 +3032,7 @@ namespace WD59A
     constexpr uint32 Style=9003610, Zalazane=9003611, Voodoo=9003612;
     uint32 FamilyBase(uint32 id)
     {
+        if(id==9004174) return 9003980; // WD159 inherits exact Reclamation spell modifiers.
         if(id==9004164) return 9003104; // WD158 Umbral inherits precise Hex threat and DOT modifiers.
         if(id==9003822) return 9003100; // WD99 inherits Wrath threat modifiers.
         WD19A::Family const* family=WD19A::FindFamily(id);
@@ -3354,6 +3355,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorShadow145.inc"
 #include "RebornWitchDoctorShadow157.inc"
 #include "RebornWitchDoctorShadow158.inc"
+#include "RebornWitchDoctorShadow159.inc"
 #include "RebornWitchDoctorShadow143.inc"
 #include "RebornWitchDoctorSupport144.inc"
 
@@ -3388,6 +3390,7 @@ void AddRebornWitchDoctorScripts()
     WD156::Register();
     WD157::Register();
     WD158::Register();
+    WD159::Register();
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();

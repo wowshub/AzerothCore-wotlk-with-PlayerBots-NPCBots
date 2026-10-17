@@ -600,6 +600,8 @@ public:
     Unit* GetOriginalTarget() const;
     SpellInfo const* GetSpellInfo() const { return m_spellInfo; }
     int32 GetPowerCost() const { return m_powerCost; }
+    void SetRebornWD159PriceSnapshot(bool ready);
+    bool HasRebornWD159PriceSnapshot() const; // External registry: no member or ABI changes.
     void SetRebornWD155MojoSnapshot(bool ready);
     bool TakeRebornWD155MojoSnapshot(); // External registry; no Spell layout change.
 
