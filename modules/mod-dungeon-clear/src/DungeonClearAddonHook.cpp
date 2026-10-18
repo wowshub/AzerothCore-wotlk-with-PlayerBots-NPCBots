@@ -166,7 +166,8 @@ namespace
     {
         std::vector<DcTestRunRecord::BossKill> kills;
         std::vector<DcTestRunRecord::DeathEntry> deaths;
-        if (!DcTestRunManager::Instance().AddonRunDetail(runId, &kills, &deaths))
+        std::vector<DcTestRunManager::ChecklistRow> checklist;  // DCTEST7A
+        if (!DcTestRunManager::Instance().AddonRunDetail(runId, &kills, &deaths, &checklist))
         {
             SendAddonPayload(player, "DC\tTI_ERR\t" + AddonField(runId));
             return;
@@ -182,6 +183,10 @@ namespace
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTID\t{}\t{}\t{}\t{}",
                 deaths[i].t, AddonField(deaths[i].name), deaths[i].onBoss ? 1 : 0,
                 AddonField(deaths[i].opponent))));
+        // RebornWOW DCTEST7A: the boss/objective checklist, in clear order.
+        for (DcTestRunManager::ChecklistRow const& row : checklist)
+            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIL\t{}\t{}\t{}",
+                AddonField(row.name), row.objective ? 1 : 0, AddonField(row.status))));
         SendAddonPayload(player, "DC\tTI_END\t" + AddonField(runId));
     }
 

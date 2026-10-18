@@ -181,9 +181,19 @@ public:
 
     // DCTEST3A: one live run's boss timeline and deaths so far, for the addon's
     // "run stats". False when no live run has that id. World thread.
+    // RebornWOW DCTEST7A: one row of the boss/objective checklist the addon shows
+    // in "run stats" -- the run's roster in clear order with the panel's status
+    // rules (kill bit / cleared latch / skipped / next target).
+    struct ChecklistRow
+    {
+        std::string name;
+        bool objective = false;
+        std::string status;  // "dead" | "current" | "skipped" | "alive"
+    };
     bool AddonRunDetail(std::string const& runId,
                         std::vector<DcTestRunRecord::BossKill>* kills,
-                        std::vector<DcTestRunRecord::DeathEntry>* deaths) const;
+                        std::vector<DcTestRunRecord::DeathEntry>* deaths,
+                        std::vector<ChecklistRow>* checklist = nullptr) const;
     bool IsActive() const { return !_runs.empty(); }
 
     // Remaining global-cap headroom for the plan scheduler's launch decision

@@ -11,6 +11,7 @@
 #include <ctime>
 #include <fstream>
 #include <limits>
+#include <optional>
 
 #include "CharacterCache.h"
 #include "ObjectAccessor.h"
@@ -23,6 +24,10 @@
 #include "PlayerbotMgr.h"
 
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
+#include "Ai/Dungeon/DungeonClear/Data/DungeonBossInfo.h"
+#include "Ai/Dungeon/DungeonClear/DcValueKeys.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcTargeting.h"
+#include "InstanceScript.h"
 
 #include "TestRun/DcTestComp.h"
 #include "TestRun/DcTestDungeonRegistry.h"
@@ -618,9 +623,69 @@ std::vector<DcTestRunManager::AddonRunView> DcTestRunManager::AddonRunViews() co
     return out;
 }
 
+namespace
+{
+    // RebornWOW DCTEST7A: the live checklist off the run tank's own DC state, by
+    // the boss panel's rules (DungeonClearBossListAction): a boss is dead by its
+    // encounter kill bit, an objective by its cleared-anchor latch or by sitting
+    // before a killed boss; skipped is the run's skip set; the next target is
+    // marked current. World thread (addon request).
+    void BuildChecklist(ObjectGuid tankGuid, std::vector<DcTestRunManager::ChecklistRow>& out)
+    {
+        Player* tank = ObjectAccessor::FindConnectedPlayer(tankGuid);
+        PlayerbotAI* ai = tank ? GET_PLAYERBOT_AI(tank) : nullptr;
+        if (!ai || !tank->IsInWorld())
+            return;
+        AiObjectContext* ctx = ai->GetAiObjectContext();
+        std::vector<DungeonBossInfo> bosses =
+            ctx->GetValue<std::vector<DungeonBossInfo>>(DcKey::DungeonBosses)->Get();
+        auto const& skipped = ctx->GetValue<std::unordered_set<uint32>&>(DcKey::Skipped)->Get();
+        auto const& cleared = ctx->GetValue<std::unordered_set<uint32>&>(DcKey::ClearedAnchors)->Get();
+        std::optional<DungeonBossInfo> const next =
+            ctx->GetValue<std::optional<DungeonBossInfo>>(DcKey::NextDungeonBoss)->Get();
+        InstanceScript* inst = DcTargeting::GetInstanceScript(tank);
+        uint32 const mask = inst ? inst->GetCompletedEncounterMask() : 0u;
+
+        std::stable_sort(bosses.begin(), bosses.end(),
+                         [](DungeonBossInfo const& a, DungeonBossInfo const& b)
+                         { return BossOrderKey(a) < BossOrderKey(b); });
+        uint32 lastKilledOrder = 0;
+        bool anyKilled = false;
+        for (DungeonBossInfo const& b : bosses)
+            if (b.kind == DungeonAnchorKind::Boss && b.encounterIndex < 32 &&
+                (mask & (1u << b.encounterIndex)))
+            {
+                anyKilled = true;
+                lastKilledOrder = std::max(lastKilledOrder, BossOrderKey(b));
+            }
+
+        for (DungeonBossInfo const& b : bosses)
+        {
+            DcTestRunManager::ChecklistRow row;
+            row.name = b.name;
+            row.objective = b.kind != DungeonAnchorKind::Boss;
+            bool dead;
+            if (row.objective)
+                dead = cleared.count(b.entry) || (anyKilled && BossOrderKey(b) < lastKilledOrder);
+            else
+                dead = b.encounterIndex < 32 && (mask & (1u << b.encounterIndex));
+            if (dead)
+                row.status = "dead";
+            else if (next && next->entry == b.entry)
+                row.status = "current";
+            else if (skipped.count(b.entry))
+                row.status = "skipped";
+            else
+                row.status = "alive";
+            out.push_back(row);
+        }
+    }
+}
+
 bool DcTestRunManager::AddonRunDetail(std::string const& runId,
                                       std::vector<DcTestRunRecord::BossKill>* kills,
-                                      std::vector<DcTestRunRecord::DeathEntry>* deaths) const
+                                      std::vector<DcTestRunRecord::DeathEntry>* deaths,
+                                      std::vector<ChecklistRow>* checklist) const
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
     for (auto const& job : _runs)
@@ -631,6 +696,8 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *kills = job->RecordData().bossTimeline;
         if (deaths)
             *deaths = job->RecordData().deaths;
+        if (checklist)
+            BuildChecklist(job->TankGuid(), *checklist);
         return true;
     }
     // RebornWOW DCTEST6A: a finished run's stats stay readable.
@@ -642,6 +709,18 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *kills = rec.bossTimeline;
         if (deaths)
             *deaths = rec.deaths;
+        // DCTEST7A: the tank is gone; the record's boss roster against its kills.
+        if (checklist)
+            for (std::string const& name : rec.bossRoster)
+            {
+                ChecklistRow row;
+                row.name = name;
+                row.status = "alive";
+                for (DcTestRunRecord::BossKill const& k : rec.bossTimeline)
+                    if (k.name == name)
+                        row.status = "dead";
+                checklist->push_back(row);
+            }
         return true;
     }
     return false;
