@@ -620,6 +620,7 @@ std::vector<DcTestRunManager::AddonRunView> DcTestRunManager::AddonRunViews() co
         v.pulls = static_cast<uint32>(rec.pulls.size());
         for (DcTestRunRecord::CompEntry const& c : rec.comp)
             v.comp.emplace_back(c.name, c.role);
+        v.cheatTier = job->CheatTier();  // RebornWOW DCGM1B2
         out.push_back(std::move(v));
     }
     return out;
@@ -780,10 +781,18 @@ bool DcTestRunManager::BotCommand(std::string const& selector, std::string const
     std::string const target = lower(who);
     std::string const onoff = lower(arg);
     if (act != "die" && act != "rez" && act != "god" && act != "power" && act != "tele" &&
-        act != "clear")
+        act != "clear" && act != "tier")
     {
         *msg = "usage: .dc test bot <run> <name|all|tank|allbuttank|healers|rezzers> "
-               "<die|rez|god|power|tele|clear> [on|off]";
+               "<die|rez|god|power|tele|clear> [on|off]  |  .dc test bot <run> all tier "
+               "<normal|story|casual|speed>";
+        return false;
+    }
+    // RebornWOW DCGM1B2: `tier` switches the whole party of a running test.
+    if (act == "tier" && onoff != "normal" && onoff != "story" && onoff != "casual" &&
+        onoff != "speed")
+    {
+        *msg = "usage: .dc test bot <run> all tier <normal|story|casual|speed>";
         return false;
     }
 
@@ -805,6 +814,12 @@ bool DcTestRunManager::BotCommand(std::string const& selector, std::string const
     {
         *msg = job->RunId() + " is not running (still setting up, or finished)";
         return false;
+    }
+    if (act == "tier")  // RebornWOW DCGM1B2
+    {
+        job->SwitchCheatTier(onoff);
+        *msg = "[" + job->RunId() + "] cheat tier -> " + onoff;
+        return true;
     }
 
     ObjectGuid const tankGuid = job->TankGuid();

@@ -117,9 +117,10 @@ namespace
             for (auto const& c : r.comp)
                 comp += (comp.empty() ? "" : ",") + AddonField(c.first) + ":" + AddonField(c.second);
             SendAddonPayload(player, ClipPayload(Acore::StringFormat(
-                "DC\tTRX\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                "DC\tTRX\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 AddonField(s.runId), r.seed, r.gearIlvl, r.gearQuality, r.roster ? 1 : 0,
-                r.deaths, r.pulls, comp)));
+                r.deaths, r.pulls, comp,
+                r.cheatTier.empty() ? std::string("-") : AddonField(r.cheatTier))));  // DCGM1B2
             for (DcTestRunLive::BotPos const& b : s.bots)
             {
                 Player* bot = ObjectAccessor::FindPlayerByName(b.name, false);
@@ -145,11 +146,12 @@ namespace
         for (DcTestRunRecord::Record const& f : DcTestRunManager::Instance().FinishedRuns())
         {
             SendAddonPayload(player, ClipPayload(Acore::StringFormat(
-                "DC\tTRF\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                "DC\tTRF\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 AddonField(f.runId), AddonField(f.dungeon), f.heroic ? 1 : 0, AddonField(f.result),
                 f.durationS, f.bossesKilled, f.bossesTotal, uint32(f.deaths.size()), f.testRegroups,
                 uint32(f.cheats.size()), f.level, f.compSeed, f.gearIlvl, f.gearQuality,
-                f.roster ? 1 : 0)));
+                f.roster ? 1 : 0,
+                f.cheatTier.empty() ? std::string("-") : AddonField(f.cheatTier))));  // DCGM1B2
             std::string comp;
             for (auto const& c : f.comp)
                 comp += (comp.empty() ? "" : ",") + AddonField(c.name) + ":" + AddonField(c.role) +

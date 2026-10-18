@@ -195,6 +195,10 @@ public:
     // start (`.dc test start ... cheat=story|casual|speed`) and applied once every
     // bot is in the world. World thread.
     void SetCheatTier(std::string const& tier) { _cheatTier = tier; }
+    // RebornWOW DCGM1B2: the tier in force ("" = normal), and a GM switch of a
+    // running test's tier (normal | story | casual | speed). World thread.
+    std::string const& CheatTier() const { return _cheatTier; }
+    void SwitchCheatTier(std::string const& tier);
 
     ObjectGuid TankGuid() const { return _tankGuid; }
     ObjectGuid GmGuid() const { return _gmGuid; }
@@ -517,6 +521,7 @@ private:
     void MaybeRegroup(Player* tank, bool anyAlive);
     // RebornWOW DCGM1B
     void ApplyCheatTier();
+    void NoteTierInRecord(std::string const& tier);  // DCGM1B2
     std::string _cheatTier;
     bool _cheatApplied = false;
     // Who was still standing the tick before the wipe latched — the last dead

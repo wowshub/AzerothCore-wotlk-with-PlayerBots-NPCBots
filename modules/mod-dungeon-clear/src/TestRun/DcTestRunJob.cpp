@@ -2681,6 +2681,51 @@ void DcTestRunJob::NoteCheat(std::string const& who, std::string const& what)
 // damage halved; speed = also no cooldowns / instant casts and 10x damage, for
 // route checks only (a boss can die before its script finishes). Damage is
 // scaled by DungeonClearTestCheatDamageScript off DcTestRunManager's table.
+// RebornWOW DCGM1B2: the record keeps every tier a run used, in order ("story",
+// or "normal>casual" when a GM switched it mid-run), so a mixed run never passes
+// for a clean one.
+void DcTestRunJob::NoteTierInRecord(std::string const& tier)
+{
+    std::string& rec = _record.cheatTier;
+    std::size_t const cut = rec.rfind('>');
+    std::string const last = cut == std::string::npos ? rec : rec.substr(cut + 1);
+    if (last == tier)
+        return;
+    rec += (rec.empty() ? "" : ">") + tier;
+}
+
+void DcTestRunJob::SwitchCheatTier(std::string const& tier)
+{
+    std::string const want = tier == "normal" ? std::string() : tier;
+    bool const changed = want != _cheatTier;
+    // A run that started without a tier says so before its first real switch
+    // (normal -> normal leaves a clean run clean).
+    if (changed && _record.cheatTier.empty())
+        NoteTierInRecord(_cheatTier.empty() ? std::string("normal") : _cheatTier);
+    // Drop everything the old tier (or a GM action) put on the bots; the new
+    // tier is applied by the normal path on the next tick, once every bot is in.
+    for (ObjectGuid const& guid : BotGuids())
+    {
+        if (Player* p = ObjectAccessor::FindConnectedPlayer(guid))
+        {
+            p->SetCommandStatusOff(CHEAT_GOD);
+            p->SetCommandStatusOff(CHEAT_POWER);
+            p->SetCommandStatusOff(CHEAT_COOLDOWN);
+            p->SetCommandStatusOff(CHEAT_CASTTIME);
+        }
+        DcTestRunManager::SetCheatDamagePct(guid, 0);
+    }
+    _cheatTier = want;
+    _cheatApplied = want.empty();
+    if (want.empty() && changed)
+    {
+        NoteTierInRecord("normal");
+        NoteCheat("party", "tier normal");
+    }
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1B2 cheat tier switched to '{}' ({})",
+             _record.runId, tier, _record.cheatTier);
+}
+
 void DcTestRunJob::ApplyCheatTier()
 {
     uint32 const pct = _cheatTier == "casual" ? 50u : _cheatTier == "speed" ? 1000u : 100u;
@@ -2705,7 +2750,7 @@ void DcTestRunJob::ApplyCheatTier()
     if (found < guids.size())
         return;  // a bot still logging in: try again next tick
     _cheatApplied = true;
-    _record.cheatTier = _cheatTier;
+    NoteTierInRecord(_cheatTier);
     NoteCheat("party", "tier " + _cheatTier);
     LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1B cheat tier '{}' on {} bot(s), damage {}%",
              _record.runId, _cheatTier, found, pct);

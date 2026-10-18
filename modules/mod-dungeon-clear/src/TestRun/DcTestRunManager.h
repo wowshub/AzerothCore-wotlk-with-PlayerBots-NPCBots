@@ -170,6 +170,7 @@ public:
         uint32 deaths = 0;
         uint32 pulls = 0;
         std::vector<std::pair<std::string, std::string>> comp;  // name, role
+        std::string cheatTier;  // RebornWOW DCGM1B2: tier in force, "" = normal
     };
     std::vector<AddonRunView> AddonRunViews() const;
 

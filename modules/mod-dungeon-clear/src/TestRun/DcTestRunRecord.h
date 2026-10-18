@@ -154,6 +154,7 @@ namespace DcTestRunRecord
         //     time and target. A run with any entry is not a clean measurement.
         // 16: RebornWOW DCGM1B -- cheatTier ("" | story | casual | speed): the
         //     cheat tier the whole party ran under. Any tier = not a clean run.
+        //     DCGM1B2: a tier switched mid-run is kept as a chain, "normal>casual".
         std::uint32_t schema = 16;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
