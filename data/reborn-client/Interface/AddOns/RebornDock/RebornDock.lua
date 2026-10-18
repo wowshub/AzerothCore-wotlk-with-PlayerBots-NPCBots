@@ -521,6 +521,14 @@ local function Pin(o)
     pinning = false
 end
 
+-- DOCK1R: the per-row count goes up to the number of docked icons (so they can all
+-- sit in one row), never below the old 16, never above 60.
+local function MaxCols()
+    local n = 0
+    for _, key in ipairs(DB and DB.items or {}) do if owned[key] then n = n + 1 end end
+    return math.min(60, math.max(16, n))
+end
+
 local function Layout()
     dirty = false
     local cols = DB.cols or 8
@@ -920,7 +928,8 @@ settings.vBtn = PanelButton("", 50); settings.vBtn:SetPoint("LEFT", settings.hBt
 settings.countLabel = settings:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 settings.countLabel:SetPoint("TOPLEFT", 10, -44)
 settings.minus = PanelButton("-", 22); settings.minus:SetPoint("TOPLEFT", 74, -40)
--- DOCK1M: the count is an edit box: type 1-16 and press Enter (Esc reverts).
+-- DOCK1M: the count is an edit box: type a number and press Enter (Esc reverts).
+-- DOCK1R: up to MaxCols() (16, or the number of docked icons, at most 60).
 settings.value = CreateFrame("EditBox", nil, settings, "InputBoxTemplate")
 settings.value:SetSize(26, 18)
 settings.value:SetPoint("LEFT", settings.minus, "RIGHT", 10, 0)
@@ -1007,7 +1016,7 @@ local function RefreshSettings()
     settings:SetWidth(x + rowW + 12 + 20)
 end
 local function SetCount(n)
-    DB.cols = math.max(1, math.min(16, n)); dirty = true; RefreshSettings()
+    DB.cols = math.max(1, math.min(MaxCols(), n)); dirty = true; RefreshSettings()
 end
 settings.hBtn:SetScript("OnClick", function() DB.flow = "horizontal"; dirty = true; RefreshSettings() end)
 settings.vBtn:SetScript("OnClick", function() DB.flow = "vertical"; dirty = true; RefreshSettings() end)
@@ -1019,11 +1028,11 @@ local function ApplyTyped(box)
 end
 settings.value:SetScript("OnEnterPressed", ApplyTyped)
 settings.okBtn:SetScript("OnClick", function() ApplyTyped(settings.value) end)
--- Live: each keystroke that leaves a valid 1-16 number re-lays the dock.
+-- Live: each keystroke that leaves a valid number (1 to MaxCols) re-lays the dock.
 settings.value:SetScript("OnTextChanged", function(box, userInput)
     if not userInput then return end
     local n = tonumber(box:GetText())
-    if n and n >= 1 and n <= 16 and n ~= DB.cols then DB.cols = math.floor(n); dirty = true end
+    if n and n >= 1 and n <= MaxCols() and n ~= DB.cols then DB.cols = math.floor(n); dirty = true end
 end)
 settings.value:SetScript("OnEditFocusLost", function(box) local n = tonumber(box:GetText()); if n and n ~= DB.cols then SetCount(math.floor(n)) else RefreshSettings() end end)
 settings.value:SetScript("OnEscapePressed", function(box) box:SetText(tostring(DB.cols or 8)); box:ClearFocus() end)
@@ -1040,7 +1049,7 @@ gearBtn:SetScript("OnClick", function()
 end)
 
 header:SetScript("OnMouseWheel", function(_, delta)
-    DB.cols = math.max(1, math.min(16, (DB.cols or 8) + (delta > 0 and 1 or -1)))
+    DB.cols = math.max(1, math.min(MaxCols(), (DB.cols or 8) + (delta > 0 and 1 or -1)))
     if settings:IsShown() then RefreshSettings() end
     dirty = true
     if GameTooltip:IsOwned(header) then header:GetScript("OnEnter")(header) end
@@ -1140,7 +1149,7 @@ SlashCmdList.REBORNDOCK = function(msg)
         for _, key in ipairs(DB.items) do Release(key) end
         wipe(DB.items); Layout(); RefreshOverlays(); Say(T("reset"))
     elseif cmd == "cols" and tonumber(arg) then
-        DB.cols = math.max(1, math.min(16, math.floor(tonumber(arg)))); dirty = true
+        DB.cols = math.max(1, math.min(MaxCols(), math.floor(tonumber(arg)))); dirty = true
     elseif cmd == "add" or cmd == "what" then
         local f = UnderMouse()
         if not f or IsSecureAction(f) then Say(T("nothing")); return end
