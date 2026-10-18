@@ -266,7 +266,15 @@ namespace DcStrandedRecovery
                 continue;                       // dead members are the rez recovery's job
             if (member->GetMapId() != leader->GetMapId())
                 continue;
-            if (!GET_PLAYERBOT_AI(member))       // bots only, never a human
+            PlayerbotAI* const memberAI = GET_PLAYERBOT_AI(member);
+            if (!memberAI)                       // bots only, never a human
+                continue;
+            // RebornWOW DCSTR1A: ...and never a SELF-BOTTED human either. "Auto-play"
+            // (DCSB1A) gives the player's own character a PlayerbotAI, so the check
+            // above let it through: in Halls of Lightning the user's character was
+            // teleported into the Slag Furnace and then onto a ramp edge, and fell
+            // (2026-10-18). The person at the keyboard decides where they stand.
+            if (memberAI->IsRealPlayer())
                 continue;
             // Never a rider. NearTeleportTo ejects a passenger and leaves the
             // vehicle where it stood — on Trial of the Champion that is a horse at
@@ -283,8 +291,22 @@ namespace DcStrandedRecovery
             // them straight back toward wherever they were stuck.
             float const angle = leader->GetOrientation() + static_cast<float>(moved) * 0.7f;
             float const off = 1.5f + 0.5f * static_cast<float>(moved);
-            float const tx = lx + std::cos(angle) * off;
-            float const ty = ly + std::sin(angle) * off;
+            float tx = lx + std::cos(angle) * off;
+            float ty = ly + std::sin(angle) * off;
+            // RebornWOW DCSTR1A: fan out only onto ground at the tank's height. On a
+            // ramp, a bridge or a ledge the fan-out spot can be thin air (the HoL Slag
+            // Furnace ramp, 2026-10-18: a stray set down 2.6yd off the edge fell 20yd);
+            // there the stray goes onto the tank's own spot instead -- stacked, but
+            // standing where the tank stands.
+            {
+                float const groundZ = leader->GetMap()->GetHeight(leader->GetPhaseMask(), tx, ty,
+                                                                  lz + 2.0f, true, 6.0f);
+                if (groundZ <= INVALID_HEIGHT + 1.0f || std::fabs(groundZ - lz) > 1.5f)
+                {
+                    tx = lx;
+                    ty = ly;
+                }
+            }
 
             member->GetMotionMaster()->Clear();
             member->NearTeleportTo(tx, ty, lz, member->GetOrientation(),
