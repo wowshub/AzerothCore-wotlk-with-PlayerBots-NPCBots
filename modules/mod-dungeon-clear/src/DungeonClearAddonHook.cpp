@@ -41,6 +41,10 @@
 #include "DBCStores.h"
 #include "SharedDefines.h"
 #include "ObjectAccessor.h"
+#include "CharacterCache.h"   // MBR1A
+#include "DatabaseEnv.h"
+#include <set>
+#include <sstream>
 #include "WorldSession.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettingsRegistry.h"
@@ -162,6 +166,66 @@ namespace
                                                  AddonField(f.failReason)));
         }
         SendAddonPayload(player, "DC\tTR_END");
+    }
+
+    // --- RebornWOW MBR1A: level / race / faction / online for the MultiBot units list
+    //
+    // "botinfo" param = "a|Name,Name,...": "a" = the sender's own account characters,
+    // then up to 40 named characters (favourites that are random bots, party members).
+    // Only what /who would show. One line per character, then BI_END.
+    void SendBotInfo(Player* player, std::string const& param)
+    {
+        if (!player->GetSession())
+            return;
+        uint32 const account = player->GetSession()->GetAccountId();
+        auto line = [player](std::string const& name, uint32 cls, uint32 level, uint32 race,
+                             bool online, bool mine)
+        {
+            SendAddonPayload(player, Acore::StringFormat("DC\tBI\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                AddonField(name), cls, level, race,
+                Player::TeamIdForRace(static_cast<uint8>(race)) == TEAM_HORDE ? 1 : 0,
+                online ? 1 : 0, mine ? 1 : 0));
+        };
+        std::size_t const bar = param.find('|');
+        bool const withAccount = bar != std::string::npos && param.substr(0, bar) == "a";
+        std::string const names = bar == std::string::npos ? param : param.substr(bar + 1);
+        std::set<std::string> sent;
+        if (withAccount)
+        {
+            if (QueryResult r = CharacterDatabase.Query(
+                    "SELECT guid, name, class, level, race FROM characters WHERE account = {}", account))
+            {
+                do
+                {
+                    Field* f = r->Fetch();
+                    ObjectGuid const guid = ObjectGuid::Create<HighGuid::Player>(f[0].Get<uint32>());
+                    if (guid == player->GetGUID())
+                        continue;
+                    std::string const name = f[1].Get<std::string>();
+                    Player* p = ObjectAccessor::FindConnectedPlayer(guid);
+                    line(name, f[2].Get<uint8>(), p ? p->GetLevel() : f[3].Get<uint8>(), f[4].Get<uint8>(),
+                         p != nullptr, true);
+                    sent.insert(name);
+                } while (r->NextRow());
+            }
+        }
+        std::istringstream in(names);
+        std::string n;
+        uint32 count = 0;
+        while (std::getline(in, n, ',') && count < 40)
+        {
+            if (n.empty() || sent.count(n))
+                continue;
+            ++count;
+            CharacterCacheEntry const* c = sCharacterCache->GetCharacterCacheByName(n);
+            if (!c)
+                continue;
+            Player* p = ObjectAccessor::FindConnectedPlayer(c->Guid);
+            line(c->Name, c->Class, p ? p->GetLevel() : c->Level, c->Race, p != nullptr,
+                 c->AccountId == account);
+            sent.insert(c->Name);
+        }
+        SendAddonPayload(player, "DC\tBI_END");
     }
 
     // DCTEST3A: one run's boss kills and deaths so far (the most recent 30 / 40).
@@ -608,6 +672,13 @@ public:
         if (subCmd == "queue")
         {
             DcDungeonQueue::HandleAddon(player, param);
+            return;
+        }
+
+        // RebornWOW MBR1A: facts for the MultiBot units list (any player, read-only).
+        if (subCmd == "botinfo")
+        {
+            SendBotInfo(player, param);
             return;
         }
 
