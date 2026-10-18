@@ -435,11 +435,14 @@ public:
 
         static constexpr char const* kUsage =
             "Usage: .dc test start <dungeon> [heroic] [size=N|10|25] [level=N] [seed=N] "
-            "[ilvl=N|none] [quality=normal|uncommon|rare|epic|legendary] [trace=1]\n"
-            "   or: .dc test start <dungeon> party=Tank,Heal,Dps1,Dps2,... [heroic] [trace=1]";
+            "[ilvl=N|none] [quality=normal|uncommon|rare|epic|legendary] [trace=1] "
+            "[cheat=story|casual|speed]\n"
+            "   or: .dc test start <dungeon> party=Tank,Heal,Dps1,Dps2,... [heroic] [trace=1] "
+            "[cheat=story|casual|speed]";
 
         std::string token;
         std::string party;
+        std::string cheat;  // RebornWOW DCGM1B
         uint32 level = 0;
         uint32 seed = 0;  // 0 = roll a random comp; seed=N replays a specific one
         uint32 size = 0;  // 0 = classic 5-man; size=N (or bare 10/25) fields a raid comp
@@ -482,6 +485,18 @@ public:
                 heroic = true;
             else if (word.rfind("trace=", 0) == 0)
                 trace = word.substr(6) == "1" || word.substr(6) == "on";
+            // RebornWOW DCGM1B: cheat tier for the whole party.
+            else if (word.rfind("cheat=", 0) == 0)
+            {
+                cheat = word.substr(6);
+                if (cheat == "none" || cheat == "normal")
+                    cheat.clear();
+                else if (cheat != "story" && cheat != "casual" && cheat != "speed")
+                {
+                    handler->SendSysMessage("cheat must be story|casual|speed (or none).");
+                    return true;
+                }
+            }
             else if (token.empty())
                 token = word;
             // Raid-size presets: a bare 10/25 AFTER the dungeon token reads as
@@ -530,6 +545,8 @@ public:
         }
         if (trace && !runId.empty() && DcTestRunManager::Instance().EnableTrace(runId))
             msg += " [trace armed: oracles scored at teardown]";
+        if (!cheat.empty() && !runId.empty() && DcTestRunManager::Instance().SetCheatTier(runId, cheat))
+            msg += " [cheat tier: " + cheat + "]";
         handler->SendSysMessage(msg);
         return true;
     }

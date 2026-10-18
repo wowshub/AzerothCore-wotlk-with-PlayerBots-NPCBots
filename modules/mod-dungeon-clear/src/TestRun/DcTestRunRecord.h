@@ -152,7 +152,9 @@ namespace DcTestRunRecord
         // 15: RebornWOW DCGM1A -- cheats: every GM intervention on the run's
         //     bots (.dc test bot: die / rez / god / power / tele / clear), with
         //     time and target. A run with any entry is not a clean measurement.
-        std::uint32_t schema = 15;
+        // 16: RebornWOW DCGM1B -- cheatTier ("" | story | casual | speed): the
+        //     cheat tier the whole party ran under. Any tier = not a clean run.
+        std::uint32_t schema = 16;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -215,6 +217,7 @@ namespace DcTestRunRecord
             std::string what;      // "die" | "rez" | "god on" | "power off" | ...
         };
         std::vector<CheatEntry> cheats;
+        std::string cheatTier;  // RebornWOW DCGM1B (schema 16)
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

@@ -191,6 +191,11 @@ public:
     // World thread (chat commands run there, like Tick).
     void NoteCheat(std::string const& who, std::string const& what);
 
+    // RebornWOW DCGM1B: the cheat tier for the whole party, set right after the
+    // start (`.dc test start ... cheat=story|casual|speed`) and applied once every
+    // bot is in the world. World thread.
+    void SetCheatTier(std::string const& tier) { _cheatTier = tier; }
+
     ObjectGuid TankGuid() const { return _tankGuid; }
     ObjectGuid GmGuid() const { return _gmGuid; }
     std::string const& RunId() const { return _record.runId; }
@@ -510,6 +515,10 @@ private:
     uint32 _wipedForMs = 0;
     // RebornWOW DCRZ2A: world-thread side of the entrance regroup.
     void MaybeRegroup(Player* tank, bool anyAlive);
+    // RebornWOW DCGM1B
+    void ApplyCheatTier();
+    std::string _cheatTier;
+    bool _cheatApplied = false;
     // Who was still standing the tick before the wipe latched — the last dead
     // member's name is the one worth naming in the fail reason.
     std::string _lastAliveMember;

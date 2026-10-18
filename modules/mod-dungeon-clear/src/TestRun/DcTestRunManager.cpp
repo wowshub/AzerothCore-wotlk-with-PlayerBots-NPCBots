@@ -7,6 +7,8 @@
 
 #include <algorithm>
 #include <atomic>
+#include <mutex>
+#include <unordered_map>
 #include <cctype>
 #include <ctime>
 #include <fstream>
@@ -906,6 +908,43 @@ bool DcTestRunManager::BotCommand(std::string const& selector, std::string const
     LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1A {} {} {}: {}", job->RunId(), who,
              act, arg, done.empty() ? std::string("nothing to do") : done);
     return !done.empty();
+}
+
+namespace
+{
+    std::mutex g_cheatDmgMutex;
+    std::unordered_map<ObjectGuid, uint32> g_cheatDmg;
+    std::atomic<bool> g_cheatDmgAny{false};
+}
+
+uint32 DcTestRunManager::CheatDamagePct(ObjectGuid attacker)
+{
+    if (!g_cheatDmgAny.load(std::memory_order_relaxed))
+        return 0;
+    std::lock_guard<std::mutex> lock(g_cheatDmgMutex);
+    auto const it = g_cheatDmg.find(attacker);
+    return it == g_cheatDmg.end() ? 0u : it->second;
+}
+
+void DcTestRunManager::SetCheatDamagePct(ObjectGuid bot, uint32 pct)
+{
+    std::lock_guard<std::mutex> lock(g_cheatDmgMutex);
+    if (pct == 0 || pct == 100)
+        g_cheatDmg.erase(bot);
+    else
+        g_cheatDmg[bot] = pct;
+    g_cheatDmgAny.store(!g_cheatDmg.empty(), std::memory_order_relaxed);
+}
+
+bool DcTestRunManager::SetCheatTier(std::string const& runId, std::string const& tier)
+{
+    for (auto const& job : _runs)
+        if (job->RunId() == runId)
+        {
+            job->SetCheatTier(tier);
+            return true;
+        }
+    return false;
 }
 
 bool DcTestRunManager::RequestRegroup(ObjectGuid tank, std::string const& why)

@@ -52,6 +52,7 @@
 #include "Ai/Dungeon/DungeonClear/DcValueKeys.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
+#include "TestRun/DcTestRunManager.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRunWing.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcTargeting.h"
@@ -2231,6 +2232,9 @@ void DcTestRunJob::TickMonitoring(uint32 dt)
             _wipedForMs = 0;
         else
             _wipedForMs += dt;
+        // RebornWOW DCGM1B: the party's cheat tier, once every bot is in.
+        if (!_cheatApplied && !_cheatTier.empty())
+            ApplyCheatTier();
         // RebornWOW DCRZ2A: a test party nobody can raise regroups at the
         // entrance instead of failing (bounded; recorded in testRegroups).
         MaybeRegroup(tank, anyAlive);
@@ -2507,11 +2511,16 @@ void DcTestRunJob::Teardown()
     // RebornWOW DCGM1A: never let a bot leave a test with GM cheats still on
     // (roster runs use real characters that go back to the world).
     for (ObjectGuid const& guid : BotGuids())
+    {
         if (Player* p = ObjectAccessor::FindConnectedPlayer(guid))
         {
             p->SetCommandStatusOff(CHEAT_GOD);
             p->SetCommandStatusOff(CHEAT_POWER);
+            p->SetCommandStatusOff(CHEAT_COOLDOWN);  // DCGM1B speed tier
+            p->SetCommandStatusOff(CHEAT_CASTTIME);
         }
+        DcTestRunManager::SetCheatDamagePct(guid, 0);
+    }
 
     // Report the relay's tally before Disarm() drops the volume list. Logged
     // whenever the map had anything to relay, INCLUDING zero fires — "0 of 1"
@@ -2664,6 +2673,42 @@ void DcTestRunJob::NoteCheat(std::string const& who, std::string const& what)
     c.who = who;
     c.what = what;
     _record.cheats.push_back(c);
+}
+
+// RebornWOW DCGM1B -----------------------------------------------------------
+// Cheat tiers (GM tests only): story = invincible + unlimited power, damage as
+// is (the encounter plays out at its own pace); casual = the same with the bots'
+// damage halved; speed = also no cooldowns / instant casts and 10x damage, for
+// route checks only (a boss can die before its script finishes). Damage is
+// scaled by DungeonClearTestCheatDamageScript off DcTestRunManager's table.
+void DcTestRunJob::ApplyCheatTier()
+{
+    uint32 const pct = _cheatTier == "casual" ? 50u : _cheatTier == "speed" ? 1000u : 100u;
+    std::vector<ObjectGuid> const guids = BotGuids();
+    uint32 found = 0;
+    for (ObjectGuid const& guid : guids)
+    {
+        Player* p = ObjectAccessor::FindConnectedPlayer(guid);
+        if (!p || !p->IsInWorld())
+            continue;
+        ++found;
+        p->SetCommandStatusOn(CHEAT_GOD);
+        p->SetCommandStatusOn(CHEAT_POWER);
+        if (_cheatTier == "speed")
+        {
+            p->SetCommandStatusOn(CHEAT_COOLDOWN);
+            p->SetCommandStatusOn(CHEAT_CASTTIME);
+        }
+        p->SetPower(p->getPowerType(), p->GetMaxPower(p->getPowerType()));
+        DcTestRunManager::SetCheatDamagePct(guid, pct);
+    }
+    if (found < guids.size())
+        return;  // a bot still logging in: try again next tick
+    _cheatApplied = true;
+    _record.cheatTier = _cheatTier;
+    NoteCheat("party", "tier " + _cheatTier);
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1B cheat tier '{}' on {} bot(s), damage {}%",
+             _record.runId, _cheatTier, found, pct);
 }
 
 void DcTestRunJob::MaybeRegroup(Player* tank, bool anyAlive)

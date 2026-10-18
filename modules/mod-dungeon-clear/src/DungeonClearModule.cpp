@@ -49,6 +49,7 @@
  *     dispatches the action directly.
  */
 
+#include <algorithm>
 #include "ScriptMgr.h"
 #include "AllCreatureScript.h"
 #include "Cell.h"
@@ -481,6 +482,30 @@ public:
     }
 };
 
+// RebornWOW DCGM1B: a `.dc test` bot's damage under its cheat tier (casual 50%,
+// speed 1000%). Pets and totems count as their owner. One relaxed atomic read per
+// hit while no tier is live.
+class DungeonClearTestCheatDamageScript : public UnitScript
+{
+public:
+    DungeonClearTestCheatDamageScript()
+        : UnitScript("DungeonClearTestCheatDamageScript", true, {
+            UNITHOOK_ON_DAMAGE
+        }) {}
+
+    void OnDamage(Unit* attacker, Unit* victim, uint32& damage) override
+    {
+        if (!damage || !attacker || !victim || victim->IsPlayer())
+            return;
+        Player* owner = attacker->GetCharmerOrOwnerPlayerOrPlayerItself();
+        if (!owner)
+            return;
+        uint32 const pct = DcTestRunManager::CheatDamagePct(owner->GetGUID());
+        if (pct)
+            damage = static_cast<uint32>(std::min<uint64>(uint64(damage) * pct / 100, 0x7FFFFFFF));
+    }
+};
+
 // Threat lead: stamp the DC leader's first hit of each fight, which the damage
 // hold for DPS followers measures from (DcLeaderSignal::NoteLeaderHit). Cheap for
 // every other hit in the world: a player check, an AI lookup, one flag test.
@@ -783,6 +808,7 @@ void AddSC_dungeon_clear_module()
     new DungeonClearSpectatorPlayerScript();
     new DungeonClearSpectatorDeathGuardScript();
     new DungeonClearLeaderFirstHitScript();
+    new DungeonClearTestCheatDamageScript();  // RebornWOW DCGM1B
     new DungeonClearReaperScript();
     new DungeonClearZfStraySummonScript();
     new DungeonClearStratFallenCritterScript();

@@ -228,6 +228,13 @@ public:
     bool BotCommand(std::string const& selector, std::string const& who,
                     std::string const& action, std::string const& arg, std::string* msg);
 
+    // RebornWOW DCGM1B: cheat tier for a just-started run (story|casual|speed).
+    bool SetCheatTier(std::string const& runId, std::string const& tier);
+    // Damage percent a test bot deals under its tier (0 = none set). Any thread:
+    // read on every hit, so an atomic flag short-circuits when no tier is live.
+    static uint32 CheatDamagePct(ObjectGuid attacker);
+    static void SetCheatDamagePct(ObjectGuid bot, uint32 pct);  // 0 clears
+
     // Observer: DcStatusPublisher pushes each changed STATUS payload here;
     // routed to the job whose tank matches.
     void OnStatusPayload(ObjectGuid tank, std::string const& payload);
