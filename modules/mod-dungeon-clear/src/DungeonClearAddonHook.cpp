@@ -676,6 +676,17 @@ public:
             return;
         }
 
+        // RebornWOW DCGM1G: the GM party menu (kill / raise / tier) comes over the addon
+        // channel, which still works while the player is dead -- the client refuses to
+        // send chat (and so a typed .dc party) from a corpse. Same command, same rules:
+        // ParseCommands applies the command table's GM-only security level.
+        if (subCmd == "gmparty")
+        {
+            std::string const line = ".dc party " + param;
+            ChatHandler(player->GetSession()).ParseCommands(line);
+            return;
+        }
+
         // RebornWOW DCGM1F: the cheat tier for the panel's tag -- the test run the
         // player is watching (same map as its tank), else the party it is in.
         if (subCmd == "tier")
