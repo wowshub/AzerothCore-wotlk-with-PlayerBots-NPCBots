@@ -507,6 +507,24 @@ public:
     }
 };
 
+// RebornWOW DCGM1D: the cheat flags are runtime-only and go with the session, but
+// the damage multiplier table is keyed by guid -- drop a character's entry when it
+// logs out so it cannot come back scaled (`.dc party bots tier` has no teardown).
+class DungeonClearCheatLogoutScript : public PlayerScript
+{
+public:
+    DungeonClearCheatLogoutScript()
+        : PlayerScript("DungeonClearCheatLogoutScript", {
+            PLAYERHOOK_ON_LOGOUT
+        }) {}
+
+    void OnPlayerLogout(Player* player) override
+    {
+        if (DcTestRunManager::CheatDamagePct(player->GetGUID()))
+            DcTestRunManager::SetCheatDamagePct(player->GetGUID(), 0);
+    }
+};
+
 // Threat lead: stamp the DC leader's first hit of each fight, which the damage
 // hold for DPS followers measures from (DcLeaderSignal::NoteLeaderHit). Cheap for
 // every other hit in the world: a player check, an AI lookup, one flag test.
@@ -813,6 +831,7 @@ void AddSC_dungeon_clear_module()
     new DungeonClearSpectatorDeathGuardScript();
     new DungeonClearLeaderFirstHitScript();
     new DungeonClearTestCheatDamageScript();  // RebornWOW DCGM1B
+    new DungeonClearCheatLogoutScript();      // RebornWOW DCGM1D
     new DungeonClearReaperScript();
     new DungeonClearZfStraySummonScript();
     new DungeonClearStratFallenCritterScript();

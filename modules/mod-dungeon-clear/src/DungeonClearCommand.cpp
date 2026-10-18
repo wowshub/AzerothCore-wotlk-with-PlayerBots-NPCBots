@@ -32,6 +32,9 @@
 #include <vector>
 
 #include "PlayerbotAIConfig.h"
+#include "Playerbots.h"   // DCGM1D: GET_PLAYERBOT_AI
+#include "PlayerbotAI.h"
+#include "Log.h"
 
 #include "DcModuleEnable.h"
 #include "DungeonClearDispatch.h"
@@ -372,6 +375,7 @@ public:
             { "wing",   HandleWing,   SEC_PLAYER, Console::No },
             { "config", HandleConfig, SEC_PLAYER, Console::No },
             { "spectate", HandleSpectate, SEC_PLAYER, Console::No },
+            { "party",  HandleParty,  SEC_GAMEMASTER, Console::No },  // RebornWOW DCGM1D
             { "test",   dcTestTable },
             { "lab",    dcLabTable },
             { "dungeonqueuefill", dcQueueFillTable },
@@ -813,6 +817,128 @@ public:
     // RebornWOW DCGM1A: `.dc test bot <run> <who> <action> [on|off]` -- kill,
     // raise, make invincible / give unlimited power to, or pull to the tank, the
     // bots of one running test. GM only; logged into the run record (cheats).
+    // RebornWOW DCGM1D: `.dc party <who> <die|rez>` -- GM helper for YOUR OWN party
+    // (not a `.dc test` run): kill or raise its bots, or yourself, to exercise the
+    // player-led death flow (DCRZ2B) on demand. Only playerbots in the GM's group
+    // and the GM are ever touched; other real players never are.
+    //   who: bots | all (bots and you) | me | rezzers | healers | allbuttank | <name>
+    static bool HandleParty(ChatHandler* handler, Tail args)
+    {
+        Player* gm = handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
+        if (!gm)
+            return false;
+        auto lower = [](std::string s)
+        {
+            std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+            return s;
+        };
+        std::istringstream in{std::string(args)};
+        std::string who, act, arg;
+        in >> who >> act >> arg;
+        who = lower(who);
+        act = lower(act);
+        arg = lower(arg);
+        bool const tierOk = arg == "normal" || arg == "story" || arg == "casual" || arg == "speed";
+        if (who.empty() || (act != "die" && act != "rez" && act != "tier") || (act == "tier" && !tierOk))
+        {
+            handler->SendSysMessage("usage: .dc party <bots|all|me|rezzers|healers|allbuttank|name> <die|rez>"
+                                    "  |  .dc party bots tier <normal|story|casual|speed>");
+            return true;
+        }
+
+        std::vector<Player*> members;
+        if (Group* group = gm->GetGroup())
+        {
+            for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                if (Player* m = ref->GetSource())
+                    members.push_back(m);
+        }
+        else
+            members.push_back(gm);
+
+        std::string done;
+        for (Player* m : members)
+        {
+            if (!m->IsInWorld())
+                continue;
+            bool const isMe = m == gm;
+            PlayerbotAI* ai = GET_PLAYERBOT_AI(m);
+            bool const isBot = !isMe && ai && !ai->IsRealPlayer();
+            if (!isMe && !isBot)
+                continue;  // another real player: never
+            bool want = false;
+            if (who == "me")
+                want = isMe;
+            else if (who == "all")
+                want = true;
+            else if (who == "bots")
+                want = isBot;
+            else if (who == "rezzers")
+            {
+                uint8 const cls = m->getClass();
+                want = isBot && (cls == CLASS_PRIEST || cls == CLASS_PALADIN || cls == CLASS_SHAMAN ||
+                                 cls == CLASS_DRUID);
+            }
+            else if (who == "healers")
+                want = isBot && PlayerbotAI::IsHeal(m);
+            else if (who == "allbuttank")
+                want = isBot && !PlayerbotAI::IsTank(m);
+            else
+                want = lower(m->GetName()) == who;
+            if (!want)
+                continue;
+
+            if (act == "die")
+            {
+                if (!m->IsAlive())
+                    continue;
+                Unit::Kill(m, m);
+            }
+            else if (act == "tier")
+            {
+                // The `.dc test` cheat tiers (DCGM1B) on your own bots: story = god +
+                // unlimited power; casual = the same, half damage; speed = also no
+                // cooldowns / instant casts, 10x damage; normal = all off. Bots only.
+                if (!isBot)
+                    continue;
+                m->SetCommandStatusOff(CHEAT_GOD);
+                m->SetCommandStatusOff(CHEAT_POWER);
+                m->SetCommandStatusOff(CHEAT_COOLDOWN);
+                m->SetCommandStatusOff(CHEAT_CASTTIME);
+                uint32 pct = 0;
+                if (arg != "normal")
+                {
+                    m->SetCommandStatusOn(CHEAT_GOD);
+                    m->SetCommandStatusOn(CHEAT_POWER);
+                    if (arg == "speed")
+                    {
+                        m->SetCommandStatusOn(CHEAT_COOLDOWN);
+                        m->SetCommandStatusOn(CHEAT_CASTTIME);
+                    }
+                    m->SetPower(m->getPowerType(), m->GetMaxPower(m->getPowerType()));
+                    pct = arg == "casual" ? 50u : arg == "speed" ? 1000u : 0u;
+                }
+                DcTestRunManager::SetCheatDamagePct(m->GetGUID(), pct);
+            }
+            else
+            {
+                if (m->IsAlive() && !m->HasPlayerFlag(PLAYER_FLAGS_GHOST))
+                    continue;
+                m->RemoveAurasDueToSpell(27827);  // Spirit of Redemption
+                m->ResurrectPlayer(1.0f, /*applySickness*/ false);
+                m->SpawnCorpseBones();
+            }
+            done += (done.empty() ? "" : ", ") + m->GetName();
+        }
+
+        std::string const what = act == "tier" ? "tier " + arg : act;
+        handler->SendSysMessage(done.empty() ? "[party] nothing to do (" + who + " " + what + ")"
+                                             : "[party] " + what + ": " + done);
+        LOG_INFO("playerbots.dungeonclear", "DCGM1D party {} {} by {}: {}", who, what, gm->GetName(),
+                 done.empty() ? std::string("nothing to do") : done);
+        return true;
+    }
+
     static bool HandleTestBot(ChatHandler* handler, Tail args)
     {
         if (DcDisabledNotice(handler))
