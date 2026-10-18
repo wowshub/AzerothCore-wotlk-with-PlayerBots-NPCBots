@@ -35,6 +35,7 @@
 #include "DcInstanceReset.h"
 #include "DcDungeonQueue.h"
 #include "TestRun/DcTestRunManager.h"
+#include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 #include "AiFactory.h"
 #include "Item.h"
@@ -672,6 +673,21 @@ public:
         if (subCmd == "queue")
         {
             DcDungeonQueue::HandleAddon(player, param);
+            return;
+        }
+
+        // RebornWOW DCGM1F: the cheat tier for the panel's tag -- the test run the
+        // player is watching (same map as its tank), else the party it is in.
+        if (subCmd == "tier")
+        {
+            std::string tier;
+            std::string source = "test";
+            if (!DcTestRunManager::Instance().ViewerRunTier(player, &tier))
+            {
+                tier = DcPartyTier::TierFor(player);
+                source = "party";
+            }
+            SendAddonPayload(player, "DC\tTIER\t" + tier + "\t" + source);
             return;
         }
 

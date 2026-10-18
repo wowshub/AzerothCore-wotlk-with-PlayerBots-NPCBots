@@ -222,6 +222,9 @@ public:
     bool RequestRegroup(ObjectGuid tank, std::string const& why);
     // RebornWOW DCRZ2B: does `tank` lead a live `.dc test` run? Any thread.
     bool IsTestTank(ObjectGuid tank) const;
+    // RebornWOW DCGM1F: the cheat tier of the run `viewer` is watching (same map as
+    // its tank): "normal" when the run has none. False when it watches no run.
+    bool ViewerRunTier(Player* viewer, std::string* tier) const;
 
     // RebornWOW DCGM1A: `.dc test bot <run> <who> <action> [on|off]` -- GM
     // interventions on one live run's bots. who = a bot name | all | tank |

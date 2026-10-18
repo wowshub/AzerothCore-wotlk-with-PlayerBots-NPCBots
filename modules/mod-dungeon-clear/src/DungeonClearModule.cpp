@@ -101,6 +101,7 @@
 #include "TestRun/DcTestPlanManager.h"
 #include "Lab/DcLabManager.h"
 #include "TestRun/DcTestRunManager.h"
+#include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 
 namespace
@@ -496,14 +497,60 @@ public:
 
     void OnDamage(Unit* attacker, Unit* victim, uint32& damage) override
     {
-        if (!damage || !attacker || !victim || victim->IsPlayer())
+        if (!damage || !attacker || !victim)
             return;
-        Player* owner = attacker->GetCharmerOrOwnerPlayerOrPlayerItself();
-        if (!owner)
+        // RebornWOW DCGM1F: an NPCBot under a party tier is invincible here (the
+        // core god flag only exists for players).
+        if (victim->GetTypeId() == TYPEID_UNIT && DcPartyTier::IsNpcBotGod(victim->GetGUID()))
+        {
+            damage = 0;
             return;
-        uint32 const pct = DcTestRunManager::CheatDamagePct(owner->GetGUID());
+        }
+        if (victim->IsPlayer())
+            return;
+        // DCGM1F: an NPCBot's multiplier is keyed by its own guid -- keying it by
+        // the owner would scale the owner's damage as well.
+        uint32 pct = attacker->GetTypeId() == TYPEID_UNIT ? DcTestRunManager::CheatDamagePct(attacker->GetGUID()) : 0;
+        if (!pct)
+        {
+            Player* owner = attacker->GetCharmerOrOwnerPlayerOrPlayerItself();
+            if (!owner)
+                return;
+            pct = DcTestRunManager::CheatDamagePct(owner->GetGUID());
+        }
         if (pct)
             damage = static_cast<uint32>(std::min<uint64>(uint64(damage) * pct / 100, 0x7FFFFFFF));
+    }
+};
+
+// RebornWOW DCGM1F: every dungeon boss a party you lead kills goes to the log
+// with the party's cheat tier ("tier=normal" when none), so the log can be sorted
+// by tier. `.dc test` runs log their own (TESTRUN ... in the run record).
+class DungeonClearBossTierLogScript : public UnitScript
+{
+public:
+    DungeonClearBossTierLogScript()
+        : UnitScript("DungeonClearBossTierLogScript", true, {
+            UNITHOOK_ON_UNIT_DEATH
+        }) {}
+
+    void OnUnitDeath(Unit* unit, Unit* killer) override
+    {
+        Creature* boss = unit ? unit->ToCreature() : nullptr;
+        if (!boss || !killer || !boss->IsDungeonBoss())
+            return;
+        Player* p = killer->GetCharmerOrOwnerPlayerOrPlayerItself();
+        if (!p)
+            return;
+        if (Group* group = p->GetGroup())
+        {
+            for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                if (Player* m = ref->GetSource())
+                    if (DcTestRunManager::Instance().IsTestTank(m->GetGUID()))
+                        return;
+        }
+        LOG_INFO("playerbots.dungeonclear", "DCGM1F BOSS {} (entry {}) map={} killed by {} tier={}",
+                 boss->GetName(), boss->GetEntry(), boss->GetMapId(), p->GetName(), DcPartyTier::TierFor(p));
     }
 };
 
@@ -618,6 +665,9 @@ public:
         // RebornWOW DCRZ2B: corpse-run countdowns and the full-bot-wipe watch for
         // player-led runs (revives/teleports must run on the world thread).
         DcRezRecovery::TickCorpseRuns(diff);
+        // RebornWOW DCGM1F: keep each leader's party tier on the bots actually in
+        // the party (joiners get it, leavers and dismissed NPCBots lose it).
+        DcPartyTier::Tick(diff);
 
         // Unreachable-holder combat purge: break a run out of a fight that can
         // never end — a registered mob stranded off the navmesh holding the party
@@ -832,6 +882,7 @@ void AddSC_dungeon_clear_module()
     new DungeonClearLeaderFirstHitScript();
     new DungeonClearTestCheatDamageScript();  // RebornWOW DCGM1B
     new DungeonClearCheatLogoutScript();      // RebornWOW DCGM1D
+    new DungeonClearBossTierLogScript();      // RebornWOW DCGM1F
     new DungeonClearReaperScript();
     new DungeonClearZfStraySummonScript();
     new DungeonClearStratFallenCritterScript();

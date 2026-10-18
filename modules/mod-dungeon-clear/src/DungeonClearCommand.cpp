@@ -35,6 +35,9 @@
 #include "Playerbots.h"   // DCGM1D: GET_PLAYERBOT_AI
 #include "PlayerbotAI.h"
 #include "Log.h"
+#include "DcPartyTier.h"   // DCGM1F
+#include "botmgr.h"
+#include "bot_ai.h"
 
 #include "DcModuleEnable.h"
 #include "DungeonClearDispatch.h"
@@ -846,6 +849,20 @@ public:
             return true;
         }
 
+        // RebornWOW DCGM1F: the tier belongs to the party you lead and is kept by
+        // DcPartyTier (playerbots and NPCBots; joiners get it, leavers lose it).
+        if (act == "tier")
+        {
+            std::vector<std::string> const names = DcPartyTier::Apply(gm, arg);
+            std::string list;
+            for (std::string const& n : names)
+                list += (list.empty() ? "" : ", ") + n;
+            handler->SendSysMessage(names.empty()
+                ? "[party] tier " + arg + ": no bots in your party yet (bots that join get it)"
+                : "[party] tier " + arg + ": " + list);
+            return true;
+        }
+
         std::vector<Player*> members;
         if (Group* group = gm->GetGroup())
         {
@@ -894,32 +911,6 @@ public:
                     continue;
                 Unit::Kill(m, m);
             }
-            else if (act == "tier")
-            {
-                // The `.dc test` cheat tiers (DCGM1B) on your own bots: story = god +
-                // unlimited power; casual = the same, half damage; speed = also no
-                // cooldowns / instant casts, 10x damage; normal = all off. Bots only.
-                if (!isBot)
-                    continue;
-                m->SetCommandStatusOff(CHEAT_GOD);
-                m->SetCommandStatusOff(CHEAT_POWER);
-                m->SetCommandStatusOff(CHEAT_COOLDOWN);
-                m->SetCommandStatusOff(CHEAT_CASTTIME);
-                uint32 pct = 0;
-                if (arg != "normal")
-                {
-                    m->SetCommandStatusOn(CHEAT_GOD);
-                    m->SetCommandStatusOn(CHEAT_POWER);
-                    if (arg == "speed")
-                    {
-                        m->SetCommandStatusOn(CHEAT_COOLDOWN);
-                        m->SetCommandStatusOn(CHEAT_CASTTIME);
-                    }
-                    m->SetPower(m->getPowerType(), m->GetMaxPower(m->getPowerType()));
-                    pct = arg == "casual" ? 50u : arg == "speed" ? 1000u : 0u;
-                }
-                DcTestRunManager::SetCheatDamagePct(m->GetGUID(), pct);
-            }
             else
             {
                 if (m->IsAlive() && !m->HasPlayerFlag(PLAYER_FLAGS_GHOST))
@@ -929,6 +920,45 @@ public:
                 m->SpawnCorpseBones();
             }
             done += (done.empty() ? "" : ", ") + m->GetName();
+        }
+
+        // RebornWOW DCGM1F: your NPCBots too (they are creatures, not group players).
+        if (BotMgr* mgr = gm->GetBotMgr())
+        {
+            for (auto const& kv : *mgr->GetBotMap())
+            {
+                Creature* bot = kv.second;
+                if (!bot || !bot->IsInWorld())
+                    continue;
+                bot_ai const* bai = bot->GetBotAI();
+                uint8 const cls = bai ? bai->GetBotClass() : 0;
+                bool want = false;
+                if (who == "all" || who == "bots")
+                    want = true;
+                else if (who == "rezzers")
+                    want = cls == CLASS_PRIEST || cls == CLASS_PALADIN || cls == CLASS_SHAMAN || cls == CLASS_DRUID;
+                else if (who == "healers")
+                    want = bai && bai->HasRole(NPC_BOT_ROLE_HEAL);
+                else if (who == "allbuttank")
+                    want = !(bai && bai->IsTank());
+                else
+                    want = lower(bot->GetName()) == who;
+                if (!want)
+                    continue;
+                if (act == "die")
+                {
+                    if (!bot->IsAlive())
+                        continue;
+                    Unit::Kill(bot, bot);
+                }
+                else
+                {
+                    if (bot->IsAlive())
+                        continue;
+                    BotMgr::ReviveBot(bot);
+                }
+                done += (done.empty() ? "" : ", ") + bot->GetName();
+            }
         }
 
         std::string const what = act == "tier" ? "tier " + arg : act;

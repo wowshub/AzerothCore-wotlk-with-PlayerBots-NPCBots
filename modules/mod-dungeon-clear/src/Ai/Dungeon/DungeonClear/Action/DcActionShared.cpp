@@ -7,6 +7,7 @@
 #include "Ai/Dungeon/DungeonClear/Data/HealLeashRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "TestRun/DcTestRunManager.h"
+#include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "DcDungeonQueue.h"
 
 #include <algorithm>
@@ -270,6 +271,11 @@ namespace DcActionShared
     {
         AiObjectContext* ctx = botAI->GetAiObjectContext();
         Player* bot = botAI->GetBot();
+        // RebornWOW DCGM1F: a party you lead cleared the dungeon -- log it with its
+        // cheat tier (`.dc test` runs have their own TESTRUN END line).
+        if (bot && reason == kReasonAllCleared && !DcTestRunManager::Instance().IsTestTank(bot->GetGUID()))
+            LOG_INFO("playerbots.dungeonclear", "DCGM1F CLEARED map={} tank={} tier={}", bot->GetMapId(),
+                     bot->GetName(), DcPartyTier::TierFor(bot));
         // One reset clears the whole run-level state — enabled flag, the pause
         // cluster (paused / reason / auto-paused door), the selected-boss override,
         // and the two leader-fight latches (leader-combat-since / party-engaged) —

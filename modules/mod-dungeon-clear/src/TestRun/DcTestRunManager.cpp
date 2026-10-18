@@ -962,6 +962,23 @@ bool DcTestRunManager::SetCheatTier(std::string const& runId, std::string const&
     return false;
 }
 
+bool DcTestRunManager::ViewerRunTier(Player* viewer, std::string* tier) const
+{
+    if (!viewer || !viewer->IsInWorld())
+        return false;
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    for (auto const& job : _runs)
+    {
+        Player* tank = ObjectAccessor::FindConnectedPlayer(job->TankGuid());
+        if (tank && tank != viewer && tank->IsInWorld() && tank->GetMap() == viewer->GetMap())
+        {
+            *tier = job->CheatTier().empty() ? std::string("normal") : job->CheatTier();
+            return true;
+        }
+    }
+    return false;
+}
+
 bool DcTestRunManager::IsTestTank(ObjectGuid tank) const
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
