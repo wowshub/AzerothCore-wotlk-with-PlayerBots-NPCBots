@@ -229,6 +229,73 @@ namespace
         return false;
     }
 
+    // ---- RebornWOW DCENC1A: a boss fight nobody is having ----------------------
+    // The core refuses every out-of-combat resurrect while the instance reports an
+    // encounter IN_PROGRESS and a party member still has an in-combat victim
+    // (Spell::CheckCast, "Xinef: exploit protection"). A boss that keeps its combat
+    // with nobody able to reach it -- the tank knocked into a wall (Bjarngrim's Knock
+    // Away), a boss stranded off its platform -- therefore blocks every rez for good
+    // and the run limps on short-handed. When the block has lasted kStuckRezBlockMs,
+    // an in-combat dungeon boss whose health has not moved for kStuckBossHpMs and
+    // which is not hitting anyone in melee range is made to evade: its script resets
+    // the encounter, the block lifts, and the normal rez path raises the dead.
+    constexpr uint32 kStuckRezBlockMs = 45000;
+    constexpr uint32 kStuckBossHpMs = 20000;
+    constexpr uint32 kStuckCooldownMs = 60000;
+
+    std::mutex g_stuckMutex;  // bots of different maps update on different threads
+    std::map<ObjectGuid, std::pair<uint32, uint32>> g_bossHp;  // boss -> (hp, unchanged since)
+    std::map<uint32, uint32> g_stuckFiredAt;                    // instance id -> last evade
+
+    // True when it made at least one boss evade; *names lists them.
+    bool UnstickEncounter(Player* bot, uint32 now, std::string* names)
+    {
+        Map* map = bot->GetMap();
+        if (!map || !map->IsDungeon())
+            return false;
+        uint32 const instanceId = map->GetInstanceId();
+        std::vector<Creature*> stuck;
+        {
+            std::lock_guard<std::mutex> lock(g_stuckMutex);
+            auto fired = g_stuckFiredAt.find(instanceId);
+            if (fired != g_stuckFiredAt.end() && getMSTimeDiff(fired->second, now) < kStuckCooldownMs)
+                return false;
+            for (auto const& kv : map->GetCreatureBySpawnIdStore())
+            {
+                Creature* boss = kv.second;
+                if (!boss || !boss->IsAlive() || !boss->IsInCombat() || !boss->IsDungeonBoss())
+                    continue;
+                uint32 const hp = boss->GetHealth();
+                auto it = g_bossHp.find(boss->GetGUID());
+                if (it == g_bossHp.end() || it->second.first != hp)
+                {
+                    g_bossHp[boss->GetGUID()] = { hp, now };
+                    continue;  // still losing health (or first look): a real fight
+                }
+                if (getMSTimeDiff(it->second.second, now) < kStuckBossHpMs)
+                    continue;
+                Unit* victim = boss->GetVictim();
+                if (victim && victim->IsAlive() && boss->IsWithinMeleeRange(victim))
+                    continue;  // it is beating on somebody: that is a fight, not a hang
+                stuck.push_back(boss);
+            }
+            if (stuck.empty())
+                return false;
+            g_stuckFiredAt[instanceId] = now;
+            for (Creature* boss : stuck)
+                g_bossHp.erase(boss->GetGUID());
+        }
+        for (Creature* boss : stuck)
+        {
+            if (boss->IsAIEnabled && boss->AI())
+                boss->AI()->EnterEvadeMode();
+            else
+                boss->CombatStop(true);
+            *names += (names->empty() ? "" : ", ") + boss->GetName();
+        }
+        return true;
+    }
+
     DcRezRecovery::Plan EvaluateImpl(Player* bot, bool mutate)
     {
         DcRezRecovery::Plan plan;
@@ -351,6 +418,29 @@ namespace
             if (m.isDead && !m.corpseUnsafe)
                 allCorpsesUnsafe = false;
         bool const partyEngaged = AnyMemberEngaged(players);
+        // RebornWOW DCENC1A: the rez has been refused for a long time -- check for a
+        // boss fight nobody is having and release it (see UnstickEncounter). Only the
+        // run owner's tick does it (dead owners tick too); a per-instance cooldown
+        // stops a second try while the first evade is still walking home.
+        if (mutate && rezBlocked && run.rezBlockedSinceMs && bot == owner &&
+            getMSTimeDiff(run.rezBlockedSinceMs, now) >= kStuckRezBlockMs)
+        {
+            std::string names;
+            if (UnstickEncounter(bot, now, &names))
+            {
+                LOG_INFO("playerbots.dungeonclear",
+                         "[DC:{}] DCENC1A stuck encounter: rez blocked {}s, {} out of reach with no "
+                         "health lost -> evade (encounter resets, resurrects allowed again)",
+                         owner->GetName(), getMSTimeDiff(run.rezBlockedSinceMs, now) / 1000, names);
+                if (ownerAI)
+                    DcStatusPublisher::SendAddonMessage(ownerAI, "CHAT\t" + names +
+                        " \xe5\x8d\xa1\xe4\xbd\x8f\xe4\xba\x86\xef\xbc\x88\xe6\xb2\xa1\xe4\xba\xba\xe6\x89\x93"
+                        "\xe5\xbe\x97\xe5\x88\xb0\xef\xbc\x89\xef\xbc\x8c\xe5\xb7\xb2\xe8\xae\xa9\xe5\xae\x83"
+                        "\xe8\x84\xb1\xe6\x88\x98\xe9\x87\x8d\xe7\xbd\xae\xef\xbc\x8c\xe7\x8e\xb0\xe5\x9c\xa8"
+                        "\xe5\x8f\xaf\xe4\xbb\xa5\xe5\xa4\x8d\xe6\xb4\xbb\xe4\xba\x86\xe3\x80\x82");
+                run.rezBlockedSinceMs = 0;
+            }
+        }
         if (mutate)
         {
             if (partyEngaged || rezBlocked || allCorpsesUnsafe || DcKarazhan::ChessIsOn(bot))
