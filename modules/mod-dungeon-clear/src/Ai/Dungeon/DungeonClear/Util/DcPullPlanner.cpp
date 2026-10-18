@@ -73,6 +73,54 @@
 
 namespace
 {
+    // ---- RebornWOW DCHOL2A: a PATROLLING BOSS about to walk into a trash pull ----
+    // Bjarngrim (Halls of Lightning) laps his hall with an escort, and a trash pull
+    // on his lap line turns into a boss fight with the trash still up: live
+    // 2026-10-18, "OBJECTIVE JOINED AN ONGOING FIGHT: Bjarngrim ... with no pull in
+    // flight", a dead DPS, a tank knocked into the wall and a fight that never
+    // ended. The stock patrol wait cannot see him: it only weighs lone trash
+    // patrollers that change a pack's size, and only for PullPatrolWaitSec.
+    // A row here holds the pull at commit range (the existing PatrolHold verdict)
+    // while the boss, out of combat, is within `radius` of the pack -- unless the
+    // pack IS his escort (pulling him is then the plan) -- for at most
+    // kBossPatrolWaitMs, after which the pull goes ahead as before.
+    struct PatrolBossRow
+    {
+        uint32 mapId;
+        uint32 entry;
+        float radius;
+    };
+    constexpr PatrolBossRow kPatrolBosses[] = {
+        { 602, 28586, 60.0f },  // Bjarngrim, Halls of Lightning
+    };
+    constexpr uint32 kBossPatrolWaitMs = 90000;
+    std::mutex g_bossPatrolMutex;                          // map threads
+    std::unordered_map<ObjectGuid, uint32> g_bossPatrolSince;  // tank -> hold start
+
+    Creature* PatrolBossNear(Player* bot, Unit* target, float* distOut)
+    {
+        for (PatrolBossRow const& r : kPatrolBosses)
+        {
+            if (bot->GetMapId() != r.mapId || target->GetEntry() == r.entry)
+                continue;
+            Creature* boss = bot->FindNearestCreature(r.entry, 250.0f, /*alive*/ true);
+            if (!boss || boss->IsInCombat())
+                continue;
+            float const d = boss->GetExactDist2d(target);
+            if (d < 10.0f)
+                continue;  // the pack is his escort: pulling him is the plan
+            if (d < r.radius)
+            {
+                *distOut = d;
+                return boss;
+            }
+        }
+        return nullptr;
+    }
+}
+
+namespace
+{
     // Camp/trail reachability probe. Now a thin alias for the shared
     // DcEngageGeometry::IsNavReachable (was a byte-identical file-local twin here
     // and in DcLeaderSignal). Kept as a local name so the many call sites below
@@ -874,6 +922,47 @@ void DcPullPlanner::UpdateDynamicPullMode(PlayerbotAI* botAI, AiObjectContext* c
         pull.predictedThirds  = cls.fullCount;
         pull.predictedCount   = cls.bodyCount;
         pull.predictedCeiling = cls.ceiling;
+
+        // RebornWOW DCHOL2A: hold at commit range while a patrolling boss is about to
+        // walk into this pull (see PatrolBossNear). Bounded: after kBossPatrolWaitMs
+        // the normal verdict below goes ahead.
+        {
+            float const commitRange =
+                DcEngageGeometry::PullCommitRange(bot, target, DC_PULL_START_RANGE);
+            float bossDist = 0.0f;
+            Creature* const boss = bot->GetExactDist2d(target) <= commitRange + 5.0f
+                                       ? PatrolBossNear(bot, target, &bossDist)
+                                       : nullptr;
+            uint32 const now = getMSTime();
+            bool hold = false;
+            bool fresh = false;
+            {
+                std::lock_guard<std::mutex> lock(g_bossPatrolMutex);
+                if (boss)
+                {
+                    uint32& since = g_bossPatrolSince[bot->GetGUID()];
+                    if (since == 0)
+                    {
+                        since = now ? now : 1;
+                        fresh = true;
+                    }
+                    hold = getMSTimeDiff(since, now) < kBossPatrolWaitMs;
+                }
+                else
+                    g_bossPatrolSince.erase(bot->GetGUID());
+            }
+            if (hold)
+            {
+                if (fresh)
+                    LOG_INFO("playerbots.dungeonclear",
+                             "[DC:{}] DCHOL2A boss patrol: {} is {:.0f}yd from the pack {} and not in "
+                             "combat -> holding the pull until it walks on (max {}s)",
+                             bot->GetName(), boss->GetName(), bossDist, target->GetName(),
+                             kBossPatrolWaitMs / 1000);
+                apply(false, DcPullDecisionCode::PatrolHold);
+                return;
+            }
+        }
 
         // Build the pure observation, run the latch math where the live gate did,
         // then let DecidePull arbitrate. Routing every commit through the pure

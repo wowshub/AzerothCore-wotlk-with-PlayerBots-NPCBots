@@ -102,6 +102,7 @@
 #include "Lab/DcLabManager.h"
 #include "TestRun/DcTestRunManager.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
+#include "DcUnderFloorRescue.h"   // RebornWOW DCHOL2A
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 
 namespace
@@ -668,6 +669,8 @@ public:
         // RebornWOW DCGM1F: keep each leader's party tier on the bots actually in
         // the party (joiners get it, leavers and dismissed NPCBots lose it).
         DcPartyTier::Tick(diff);
+        // RebornWOW DCHOL2A: members under the dungeon (phantom navmesh floors).
+        DcUnderFloorRescue::Tick(diff);
 
         // Unreachable-holder combat purge: break a run out of a fight that can
         // never end — a registered mob stranded off the navmesh holding the party
