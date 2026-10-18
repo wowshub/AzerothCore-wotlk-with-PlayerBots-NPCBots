@@ -108,6 +108,7 @@ namespace DcTestRunLive
         std::uint32_t bossesKilled = 0;
         std::uint32_t bossesTotal = 0;
         std::int32_t mapId = -1;           // party's current map; -1 = none resolved
+        std::string cheatTier = "normal";  // RebornWOW DCGM1B3: tier in force
 
         // Live "why is it sitting there" fields. A run watched on the dashboard
         // is most often waiting on exactly one of these: a stall the ladder has

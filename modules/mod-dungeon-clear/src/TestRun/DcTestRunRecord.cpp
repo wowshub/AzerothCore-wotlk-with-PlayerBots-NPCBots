@@ -93,6 +93,15 @@ namespace DcTestRunRecord
         return out;
     }
 
+    std::string TierClass(Record const& rec)
+    {
+        if (rec.cheatTier.empty())
+            return "normal";
+        if (rec.cheatTier.find('>') != std::string::npos)
+            return "mixed";
+        return rec.cheatTier;
+    }
+
     std::string ToJsonl(Record const& rec)
     {
         std::ostringstream s;
@@ -205,7 +214,10 @@ namespace DcTestRunRecord
         for (std::size_t i = 0; i < rec.testRegroupLog.size(); ++i)
             s << (i ? "," : "") << "{\"t\":" << rec.testRegroupLog[i].t
               << ",\"why\":\"" << rec.testRegroupLog[i].why << "\"}";
-        s << "],\"cheatTier\":\"" << rec.cheatTier << "\",\"cheats\":[";
+        s << "],\"cheatTier\":\"" << rec.cheatTier << '"'
+          << ",\"tierClass\":\"" << TierClass(rec) << '"'  // RebornWOW DCGM1B3
+          << ",\"clean\":" << (rec.cheatTier.empty() && rec.cheats.empty() ? "true" : "false")
+          << ",\"cheats\":[";
         for (std::size_t i = 0; i < rec.cheats.size(); ++i)
             s << (i ? "," : "") << "{\"t\":" << rec.cheats[i].t
               << ",\"who\":\"" << rec.cheats[i].who

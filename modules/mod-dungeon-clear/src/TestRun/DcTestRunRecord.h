@@ -155,7 +155,10 @@ namespace DcTestRunRecord
         // 16: RebornWOW DCGM1B -- cheatTier ("" | story | casual | speed): the
         //     cheat tier the whole party ran under. Any tier = not a clean run.
         //     DCGM1B2: a tier switched mid-run is kept as a chain, "normal>casual".
-        std::uint32_t schema = 16;
+        // 17: RebornWOW DCGM1B3 -- tierClass ("normal" | story | casual | speed |
+        //     "mixed" = switched mid-run) and clean (no tier, no GM action): the
+        //     two fields to group and filter runs by.
+        std::uint32_t schema = 17;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -301,6 +304,8 @@ namespace DcTestRunRecord
     // when this holds).
     bool IsJsonNumber(std::string_view v);
     std::string ToJsonl(Record const& rec);
+    // RebornWOW DCGM1B3: the run's tier category (see schema 17).
+    std::string TierClass(Record const& rec);
 
     std::string CapturePath();
     void Append(Record const& rec);

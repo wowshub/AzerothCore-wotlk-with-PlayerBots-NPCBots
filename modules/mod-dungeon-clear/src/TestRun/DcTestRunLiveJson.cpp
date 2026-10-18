@@ -84,6 +84,7 @@ namespace DcTestRunLive
               << ",\"bossesTotal\":" << run.bossesTotal
               << ",\"state\":\"" << EscapeJson(run.state) << '"'
               << ",\"mapId\":" << run.mapId
+              << ",\"cheatTier\":\"" << EscapeJson(run.cheatTier) << '"'  // RebornWOW DCGM1B3
               << ",\"stall\":\"" << EscapeJson(run.stall) << '"'
               << ",\"bossName\":\"" << EscapeJson(run.bossName) << '"'
               << ",\"sinceProgressS\":" << run.sinceProgressS

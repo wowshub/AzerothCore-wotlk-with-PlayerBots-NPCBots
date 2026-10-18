@@ -671,6 +671,7 @@ DcTestRunLive::RunSnapshot DcTestRunJob::Snapshot() const
     s.elapsedS = _totalMs / 1000;
     s.bossesKilled = _record.bossesKilled;
     s.bossesTotal = _record.bossesTotal;
+    s.cheatTier = _cheatTier.empty() ? std::string("normal") : _cheatTier;  // RebornWOW DCGM1B3
 
     // Live positions for the dashboard map overlay. Snapshot() is called from
     // the manager's world-thread tick (WriteLiveStatus), so resolving guids to
@@ -2614,9 +2615,12 @@ void DcTestRunJob::Teardown()
     if (!_lab)
         DcTestRunRecord::Append(_record);
 
-    LOG_INFO("playerbots.dungeonclear", "TESTRUN END {} result={} reason={} bosses={}/{} duration={}s",
+    // RebornWOW DCGM1B3: tier on the END line so grep "tier=casual" sorts the log.
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN END {} result={} reason={} bosses={}/{} duration={}s tier={}{}",
              _record.runId, _record.result, _record.failReason,
-             _record.bossesKilled, _record.bossesTotal, _record.durationS);
+             _record.bossesKilled, _record.bossesTotal, _record.durationS,
+             DcTestRunRecord::TierClass(_record),
+             _record.cheatTier.find('>') != std::string::npos ? " (" + _record.cheatTier + ")" : std::string());
 
     if (gm && _lab)
         ChatHandler(gm->GetSession()).SendSysMessage(Acore::StringFormat(
@@ -2624,8 +2628,9 @@ void DcTestRunJob::Teardown()
             _record.failReason.empty() ? "" : (" — " + _record.failReason)));
     else if (gm)
         ChatHandler(gm->GetSession()).SendSysMessage(Acore::StringFormat(
-            "Test run {}: {} ({}/{} bosses, {}s){}", _record.dungeon, _record.result,
+            "Test run {}: {} ({}/{} bosses, {}s) [tier {}]{}", _record.dungeon, _record.result,
             _record.bossesKilled, _record.bossesTotal, _record.durationS,
+            _record.cheatTier.empty() ? std::string("normal") : _record.cheatTier,  // DCGM1B3
             _record.failReason.empty() ? "" : (" — " + _record.failReason)));
 
     _done = true;  // manager erases this job (and releases its reservations) next tick
