@@ -1876,6 +1876,17 @@ bool DungeonClearBreakStuckCombatTrigger::IsActive()
         return false;
     }
 
+    // RebornWOW DCAST1A: a groupmate being hit nearby is a real fight, not phantom
+    // combat -- even with nothing on this bot. Clearing the tank's combat here (rel 65)
+    // used to beat "leader assist" (rel 24) every time, so the tank never went back
+    // to take the pack off the healer (HoL 2026-10-18).
+    if (DcLeaderSignal::IsPartyMemberUnderAttack(bot))
+    {
+        stuckCombatSinceMs = 0;
+        holderCloseWatch.Reset();
+        return false;
+    }
+
     // Phantom signature: nothing meleeing us, no victim of our own, and no unit holding
     // us in combat that is both LEGITIMATE (reachable, alive, non-evading, allowed by
     // its own AI to attack us — or the opaque no-reference case) and PROSECUTING the

@@ -1030,6 +1030,33 @@ bool DcLeaderSignal::ShouldHoldDpsDamage(Player* bot)
         leader->GetHealthPct(), DcSettings::GetFloat(leader, "PullThreatLeadPanicHp"));
 }
 
+bool DcLeaderSignal::IsPartyMemberUnderAttack(Player* bot, float range)
+{
+    if (!bot || !bot->IsInWorld())
+        return false;
+    Group* group = bot->GetGroup();
+    if (!group)
+        return false;
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* m = ref->GetSource();
+        if (!m || m == bot || !m->IsAlive() || !m->IsInWorld() || m->GetMap() != bot->GetMap())
+            continue;
+        if (bot->GetExactDist(m) > range)
+            continue;
+        for (Unit* a : m->getAttackers())
+        {
+            if (!a || !a->IsAlive())
+                continue;
+            if (Creature* c = a->ToCreature())
+                if (c->IsInEvadeMode())
+                    continue;
+            return true;
+        }
+    }
+    return false;
+}
+
 bool DcLeaderSignal::IsLeaderShouldAssistFight(Player* bot)
 {
     // The leader-side mirror of IsLeaderFightAssistWanted. The followers' gate
@@ -1066,9 +1093,14 @@ bool DcLeaderSignal::IsLeaderShouldAssistFight(Player* bot)
     // A pull maneuver that is actively holding the party at camp / dragging owns
     // the tank's positioning — don't divert it mid-drag. (At phase Idle/Engage the
     // tank is free to rejoin a stray fight, exactly as the followers' gate allows.)
+    // RebornWOW DCAST1A: ...unless there is nothing to drag. A hold with nothing on
+    // the tank while a groupmate is being hit is a scout-aggro stamp whose pack went
+    // for the healer: the drag-back can never happen, so the assist goes ahead
+    // (HoL 2026-10-18: the tank stood 50yd off while three mobs beat the shaman).
     DcPullContext const& pull =
         ctx->GetValue<DcPullContext&>(DcKey::PullContext)->Get();
-    if (IsPullPhaseHolding(static_cast<uint32>(pull.phase)))
+    if (IsPullPhaseHolding(static_cast<uint32>(pull.phase)) &&
+        !(bot->getAttackers().empty() && !bot->GetVictim() && IsPartyMemberUnderAttack(bot)))
         return false;
 
     // No stand-down for a fight the tank can SEE. It used to leave visible

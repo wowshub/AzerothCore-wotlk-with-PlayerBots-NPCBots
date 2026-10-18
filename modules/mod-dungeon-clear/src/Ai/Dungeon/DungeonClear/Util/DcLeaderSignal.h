@@ -224,6 +224,10 @@ public:
     // both sides ride out the combat-flicker TOCTOU consistently. Drives
     // DungeonClearLeaderAssistTrigger.
     static bool IsLeaderShouldAssistFight(Player* bot);
+    // RebornWOW DCAST1A: is a living groupmate within `range` of `bot` (same map)
+    // being attacked right now by a live, non-evading unit? The fight is real for
+    // the tank too even when nothing is on the tank itself.
+    static bool IsPartyMemberUnderAttack(Player* bot, float range = 60.0f);
 
     // True when `bot`'s elected leader is running DYNAMIC pull (pull setting == 2)
     // and is still scouting/deciding the next pack — i.e. out of combat with the
