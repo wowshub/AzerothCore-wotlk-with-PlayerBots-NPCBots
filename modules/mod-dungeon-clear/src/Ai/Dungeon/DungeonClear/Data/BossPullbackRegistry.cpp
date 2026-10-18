@@ -56,6 +56,17 @@ namespace
     {
         static std::vector<BossPullback> const rows = {
             // map  entry  anchor x  y  z  forceAggro  summonIfStuck
+            //
+            // RebornWOW DCHOL2B -- General Bjarngrim, Halls of Lightning. He laps an
+            // OPEN ring of platforms (waypoint path 1269810: (1262,-26.6) <->
+            // (1395.1,36.6), three floors, the ring's centre (1330,30) has no floor at
+            // all) and his Knock Away sends the tank flying: live 2026-10-18 the tank
+            // died wedged in the wall mid-pull, and the fight never released. The camp
+            // is in the walled corridor 50yd north of his northernmost point, measured
+            // in game by the user standing there (.gps 1445.72 40.80 58.77, map 602):
+            // walls both sides, off his lap, and a knock-back from the south only
+            // pushes the tank further into the corridor. Normal tag (no force-aggro).
+            { 602, 28586, 1445.72f, 40.80f, 58.77f, 0.0f, false },
         };
         return rows;
     }

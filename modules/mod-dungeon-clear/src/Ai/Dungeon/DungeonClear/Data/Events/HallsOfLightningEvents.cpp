@@ -5,6 +5,8 @@
 
 #include "Ai/Dungeon/DungeonClear/Data/DungeonClearRouteRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Data/Events/DungeonEventTables.h"
+#include "Ai/Dungeon/DungeonClear/Data/Events/DungeonRosterBuilders.h"  // DCHOL2B
+#include "Ai/Dungeon/DungeonClear/Overrides/BossRosterRegistry.h"
 
 #include "InstanceScript.h"
 #include "Player.h"
@@ -292,4 +294,33 @@ void RegisterHallsOfLightningRoute()
             { 1337.19f, -116.73f, 57.45f },       // 27
             { 1332.38f, -102.08f, 56.98f },       // 28  Volkhan
         });
+}
+
+// --- the roster (RebornWOW DCHOL2B) -----------------------------------------
+//
+// The note at the top of DcHallsOfLightning says this map needs NO roster patch,
+// and for the boss LIST that stays true: the DBC order is the walking order and
+// nothing is added, removed or reordered here. This patch only MOVES Bjarngrim's
+// anchor, because a pull-back boss is navigated to by its roster anchor (Advance
+// and the boss-range test read the anchor, never the live boss -- see
+// BossPullbackRegistry): left on his DB spawn the anchor would park the party on
+// the open ring he patrols, which is exactly where he must not be fought. The
+// anchor is the pull-back camp, the same point as the BossPullbackRegistry row;
+// the kill-bit is his own (inheritCompletionFrom 28586).
+//
+// Route note: the Bjarngrim -> Volkhan leg (RegisterHallsOfLightningRoute) starts
+// at his spawn; killed at the camp, the party re-joins that route from the north
+// corridor, ~140yd of ordinary hall floor -- the same "he can die anywhere in the
+// hall" case the route's header already calls out.
+void RegisterHallsOfLightningRoster(std::vector<BossRosterPatch>& t)
+{
+    using namespace DcRoster;
+    BossRosterPatch p;
+    p.mapId = DcHallsOfLightning::MAP_ID;
+    p.remove = { DcHallsOfLightning::NPC_BJARNGRIM };
+    p.add = {
+        MakeBoss(DcHallsOfLightning::NPC_BJARNGRIM, DcHallsOfLightning::MAP_ID, "General Bjarngrim",
+                 1445.72f, 40.80f, 58.77f, /*completionFrom*/ DcHallsOfLightning::NPC_BJARNGRIM),
+    };
+    t.push_back(std::move(p));
 }

@@ -5347,6 +5347,9 @@ void RegisterOculusRoster(std::vector<BossRosterPatch>& t);
 // spawn), skips Chess and Prince, and replaces Barnes and the Nightbane perch
 // with the event anchors that summon them. See KarazhanEvents.cpp.
 void RegisterKarazhanRoster(std::vector<BossRosterPatch>& t);
+// RebornWOW DCHOL2B: Halls of Lightning (602) -- Bjarngrim's anchor moved to
+// his pull-back camp (BossPullbackRegistry). See HallsOfLightningEvents.cpp.
+void RegisterHallsOfLightningRoster(std::vector<BossRosterPatch>& t);
 
 // --- wing layouts (one appender per split map) ---------------------------
 // Records which boss credit-entries belong to which wing of a multi-wing map;

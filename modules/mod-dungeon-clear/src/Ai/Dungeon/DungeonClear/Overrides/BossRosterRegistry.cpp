@@ -73,6 +73,7 @@ namespace
             RegisterTrialOfTheChampionRoster(t);
             RegisterOculusRoster(t);
             RegisterKarazhanRoster(t);
+            RegisterHallsOfLightningRoster(t);  // RebornWOW DCHOL2B
             return t;
         }();
         return kPatches;
