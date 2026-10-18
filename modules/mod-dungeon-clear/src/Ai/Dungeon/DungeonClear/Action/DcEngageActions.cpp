@@ -2527,6 +2527,11 @@ bool DungeonClearDisableOnDeathAction::Execute(Event /*event*/)
         Player* const owner = why ? DcLeaderSignal::FindRunOwner(bot) : nullptr;
         if (owner && DcTestRunManager::Instance().RequestRegroup(owner->GetGUID(), why))
             return true;
+        // RebornWOW DCRZ2B: a player-led run gets a corpse run (countdown +
+        // wait / run now / stop on the panel) instead of ending here.
+        if (owner && !DcTestRunManager::Instance().IsTestTank(owner->GetGUID()) &&
+            DcRezRecovery::RequestCorpseRun(owner, why))
+            return true;
     }
 
     std::string reason;

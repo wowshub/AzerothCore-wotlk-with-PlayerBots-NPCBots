@@ -35,6 +35,7 @@
 #include "DcInstanceReset.h"
 #include "DcDungeonQueue.h"
 #include "TestRun/DcTestRunManager.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 #include "AiFactory.h"
 #include "Item.h"
 #include "DBCStores.h"
@@ -605,6 +606,13 @@ public:
         if (subCmd == "queue")
         {
             DcDungeonQueue::HandleAddon(player, param);
+            return;
+        }
+
+        // RebornWOW DCRZ2B: the player's answer to a corpse-run announcement.
+        if (subCmd == "rezchoice")
+        {
+            DcRezRecovery::HandleCorpseRunChoice(player, param);
             return;
         }
 

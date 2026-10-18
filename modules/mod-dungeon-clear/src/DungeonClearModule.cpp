@@ -101,6 +101,7 @@
 #include "TestRun/DcTestPlanManager.h"
 #include "Lab/DcLabManager.h"
 #include "TestRun/DcTestRunManager.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 
 namespace
 {
@@ -596,6 +597,9 @@ public:
         // the global tick (not a per-bot one) so it keeps firing through boss
         // fights, when the bot's non-combat strategy engine is dormant.
         DcStatusPublisher::TickStatusPushes(diff);
+        // RebornWOW DCRZ2B: corpse-run countdowns and the full-bot-wipe watch for
+        // player-led runs (revives/teleports must run on the world thread).
+        DcRezRecovery::TickCorpseRuns(diff);
 
         // Unreachable-holder combat purge: break a run out of a fight that can
         // never end — a registered mob stranded off the navmesh holding the party

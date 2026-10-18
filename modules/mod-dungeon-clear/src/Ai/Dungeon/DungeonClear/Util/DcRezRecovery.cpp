@@ -20,6 +20,11 @@
 #include "Ai/Dungeon/DungeonClear/Util/ChunkedPathfinder.h"
 #include "TestRun/DcTestDungeonRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Util/DungeonClearTuning.h"
+#include "Ai/Dungeon/DungeonClear/Action/DcActionShared.h"
+#include "TestRun/DcTestRunManager.h"
+#include "ObjectAccessor.h"
+#include <map>
+#include <mutex>
 
 #include <algorithm>
 #include <string>
@@ -802,5 +807,206 @@ namespace DcRezRecovery
             return "Can't resurrect " + plan.targetName +
                    " while the encounter is in progress.";
         return plan.rezzerName + " is coming to resurrect " + plan.targetName + ".";
+    }
+
+    // RebornWOW DCRZ2B -------------------------------------------------------
+    namespace
+    {
+        struct CorpseRun
+        {
+            uint32 dueMs = 0;       // 0 = waiting on the player (no countdown)
+            std::string why;
+        };
+        std::mutex g_corpseMutex;
+        std::map<ObjectGuid, CorpseRun> g_corpseRuns;      // run owner -> pending corpse run
+        std::map<ObjectGuid, uint32> g_botWipeSinceMs;     // run owner -> all bots dead since
+
+        void Announce(Player* owner, std::string const& payload, std::string const& chat)
+        {
+            PlayerbotAI* ai = owner ? GET_PLAYERBOT_AI(owner) : nullptr;
+            if (!ai)
+                return;
+            DcStatusPublisher::SendAddonMessage(ai, payload);
+            if (!chat.empty())
+                DcStatusPublisher::SendAddonMessage(ai, "CHAT\t" + chat);
+        }
+
+        // Bots on the owner's map: how many, how many dead (ghosts count dead).
+        void CountBots(Player* owner, uint32& bots, uint32& dead)
+        {
+            bots = dead = 0;
+            Group* group = owner->GetGroup();
+            auto look = [&](Player* m)
+            {
+                if (!m || !m->IsInWorld() || m->GetMapId() != owner->GetMapId() || !GET_PLAYERBOT_AI(m))
+                    return;
+                ++bots;
+                if (!m->IsAlive() || m->HasPlayerFlag(PLAYER_FLAGS_GHOST))
+                    ++dead;
+            };
+            if (!group)
+            {
+                look(owner);
+                return;
+            }
+            for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                look(ref->GetSource());
+        }
+    }
+
+    bool RequestCorpseRun(Player* owner, std::string const& why)
+    {
+        if (!owner)
+            return false;
+        uint32 dueMs = 0;
+        {
+            std::lock_guard<std::mutex> lock(g_corpseMutex);
+            if (g_corpseRuns.count(owner->GetGUID()))
+                return true;  // already counting / waiting
+            CorpseRun& cr = g_corpseRuns[owner->GetGUID()];
+            cr.why = why;
+            cr.dueMs = getMSTime() + kCorpseRunSeconds * 1000;
+            dueMs = cr.dueMs;
+        }
+        (void)dueMs;
+        LOG_INFO("playerbots.dungeonclear", "[DC:{}] DCRZ2B corpse run announced ({}), {}s", owner->GetName(),
+                 why, kCorpseRunSeconds);
+        Announce(owner, "RZ\tcount\t" + std::to_string(kCorpseRunSeconds) + "\t" + why,
+                 "No one can resurrect \xe2\x80\x94 corpse run in " + std::to_string(kCorpseRunSeconds) +
+                 "s: the dead bots revive at the entrance and the clear continues. Choose on the panel: "
+                 "wait for me / run now / stop.");
+        return true;
+    }
+
+    void HandleCorpseRunChoice(Player* human, std::string const& choice)
+    {
+        Player* owner = human ? DcLeaderSignal::FindRunOwner(human) : nullptr;
+        if (!owner)
+            return;
+        bool stop = false;
+        {
+            std::lock_guard<std::mutex> lock(g_corpseMutex);
+            auto it = g_corpseRuns.find(owner->GetGUID());
+            if (it == g_corpseRuns.end())
+                return;
+            if (choice == "wait")
+                it->second.dueMs = 0;
+            else if (choice == "run")
+                it->second.dueMs = getMSTime();
+            else if (choice == "stop")
+            {
+                g_corpseRuns.erase(it);
+                stop = true;
+            }
+            else
+                return;
+        }
+        LOG_INFO("playerbots.dungeonclear", "[DC:{}] DCRZ2B corpse run: {} chose '{}'", owner->GetName(),
+                 human->GetName(), choice);
+        if (stop)
+        {
+            Announce(owner, "RZ\tend", "");
+            if (PlayerbotAI* ai = GET_PLAYERBOT_AI(owner))
+                DcActionShared::DisableDungeonClear(
+                    ai, "Stopped after the deaths \xe2\x80\x94 dungeon clear disabled. Type 'dc on' when ready to resume.");
+        }
+        else if (choice == "wait")
+            Announce(owner, "RZ\twait", "Waiting for you to resurrect the party.");
+    }
+
+    void TickCorpseRuns(uint32 diff)
+    {
+        static uint32 acc = 0;
+        acc += diff;
+        if (acc < 500)
+            return;
+        acc = 0;
+        uint32 const now = getMSTime();
+
+        // 1. A full bot wipe on a player-led run: no living bot is left to run the
+        //    party-died bailout (corpses run no DC strategy), so watch for it here.
+        for (ObjectGuid const& g : DcStatusPublisher::ActiveTanks())
+        {
+            Player* tank = ObjectAccessor::FindConnectedPlayer(g);
+            PlayerbotAI* ai = tank ? GET_PLAYERBOT_AI(tank) : nullptr;
+            if (!ai || !tank->IsInWorld() || !DcRun::Of(ai).enabled || !tank->GetMap() ||
+                !tank->GetMap()->IsDungeon() || DcTestRunManager::Instance().IsTestTank(g))
+            {
+                std::lock_guard<std::mutex> lock(g_corpseMutex);
+                g_botWipeSinceMs.erase(g);
+                continue;
+            }
+            uint32 bots = 0, dead = 0;
+            CountBots(tank, bots, dead);
+            bool fire = false;
+            {
+                std::lock_guard<std::mutex> lock(g_corpseMutex);
+                if (bots == 0 || dead < bots)
+                    g_botWipeSinceMs.erase(g);
+                else if (!g_botWipeSinceMs.count(g))
+                    g_botWipeSinceMs[g] = now;
+                else if (getMSTimeDiff(g_botWipeSinceMs[g], now) >= 5000 && !g_corpseRuns.count(g))
+                    fire = true;
+            }
+            if (fire)
+                RequestCorpseRun(tank, "wipe");
+        }
+
+        // 2. Countdowns and cleanup.
+        std::vector<ObjectGuid> owners;
+        {
+            std::lock_guard<std::mutex> lock(g_corpseMutex);
+            for (auto const& kv : g_corpseRuns)
+                owners.push_back(kv.first);
+        }
+        for (ObjectGuid const& g : owners)
+        {
+            Player* owner = ObjectAccessor::FindConnectedPlayer(g);
+            PlayerbotAI* ai = owner ? GET_PLAYERBOT_AI(owner) : nullptr;
+            bool drop = !ai || !owner->IsInWorld() || !DcRun::Of(ai).enabled;
+            uint32 bots = 0, dead = 0;
+            if (!drop)
+                CountBots(owner, bots, dead);
+            if (!drop && dead == 0)
+            {
+                // Everyone is up again (the player raised them, or a soulstone):
+                // nothing left to run for.
+                Announce(owner, "RZ\tend", "");  // no dead bot left (raised, or only a human died)
+                drop = true;
+            }
+            bool fire = false;
+            {
+                std::lock_guard<std::mutex> lock(g_corpseMutex);
+                auto it = g_corpseRuns.find(g);
+                if (it == g_corpseRuns.end())
+                    continue;
+                if (drop)
+                {
+                    g_corpseRuns.erase(it);
+                    continue;
+                }
+                if (it->second.dueMs && getMSTimeDiff(it->second.dueMs, now) < 0x80000000u)
+                {
+                    fire = true;
+                    g_corpseRuns.erase(it);
+                }
+            }
+            if (fire)
+            {
+                LOG_INFO("playerbots.dungeonclear", "[DC:{}] DCRZ2B corpse run done: reviving {} dead bot(s) "
+                         "at the entrance", owner->GetName(), dead);
+                bool const ok = RegroupAtEntrance(owner);
+                Announce(owner, "RZ\tend", ok ? "" : "No entrance known for this map \xe2\x80\x94 "
+                                                      "resurrect the party yourself or stop the clear.");
+                if (!ok)
+                {
+                    // No entrance row: fall back to waiting on the player.
+                    std::lock_guard<std::mutex> lock(g_corpseMutex);
+                    g_corpseRuns[g].dueMs = 0;
+                }
+                std::lock_guard<std::mutex> lock(g_corpseMutex);
+                g_botWipeSinceMs.erase(g);
+            }
+        }
     }
 }

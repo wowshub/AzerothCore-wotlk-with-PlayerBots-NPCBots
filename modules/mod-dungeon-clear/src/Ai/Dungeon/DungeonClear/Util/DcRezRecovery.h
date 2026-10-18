@@ -111,6 +111,22 @@ namespace DcRezRecovery
     // Bib." — one status-panel sentence for the current recovery, empty when
     // none is in progress. Read-only (no clock side effects).
     std::string DescribeWait(Player* bot);
+
+    // RebornWOW DCRZ2B: a PLAYER-LED run (not `.dc test`) that nobody alive can
+    // resurrect, whose rez timed out, or whose bots all died, is not ended. A
+    // corpse run is announced with a countdown (kCorpseRunSeconds); the human picks
+    // on the panel: wait (hold until they raise someone themselves), run now, or
+    // stop. When the countdown ends the dead bots are revived at the entrance
+    // (RegroupAtEntrance, world thread) and the run continues. Humans are never
+    // revived or moved -- a dead player releases and runs back as usual.
+    constexpr uint32 kCorpseRunSeconds = 30;
+    // Any thread (the party-died bailout runs on the map thread). True = handled,
+    // the caller must not disable; false = the player chose stop (or no owner).
+    bool RequestCorpseRun(Player* owner, std::string const& why);
+    // World thread (addon "rezchoice"): "wait" | "run" | "stop".
+    void HandleCorpseRunChoice(Player* human, std::string const& choice);
+    // World thread, global tick: countdowns, the full-bot-wipe watch, cleanup.
+    void TickCorpseRuns(uint32 diff);
 }
 
 #endif  // _PLAYERBOT_DCREZRECOVERY_H

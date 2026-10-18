@@ -219,6 +219,8 @@ public:
     // False when `tank` leads no live test run (a player-led run) or that run
     // is out of entrance regroups -- the caller then disables as before.
     bool RequestRegroup(ObjectGuid tank, std::string const& why);
+    // RebornWOW DCRZ2B: does `tank` lead a live `.dc test` run? Any thread.
+    bool IsTestTank(ObjectGuid tank) const;
 
     // RebornWOW DCGM1A: `.dc test bot <run> <who> <action> [on|off]` -- GM
     // interventions on one live run's bots. who = a bot name | all | tank |
