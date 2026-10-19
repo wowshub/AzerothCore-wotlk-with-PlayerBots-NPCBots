@@ -36,6 +36,8 @@ namespace DcPanelData
     // near their level, chosen by the roles the group is missing (tank / healer / DPS).
     // Replies FILL <name> <t|h|d> lines and FILL_END <found> <needed>; the addon invites.
     void SendFill(Player* player, std::string const& param, Send const& send);
+    // RebornWOW DCUI3C5: "partyroles" -- PR_START, PR <name> <t|h|d> per group member, PR_END.
+    void SendPartyRoles(Player* player, Send const& send);
 }
 
 #endif

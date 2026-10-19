@@ -340,6 +340,30 @@ namespace DcPanelData
         send(Acore::StringFormat("DC\tRO_END\t{}\t{}", cat, v.size()));
     }
 
+    // RebornWOW DCUI3C5: each group member's role for the panel's party column (sorting
+    // and the role tag): playerbots' own test -- a bot by its tank / heal strategy, a
+    // real player by talents.
+    void SendPartyRoles(Player* player, Send const& send)
+    {
+        if (!player)
+            return;
+        send("DC\tPR_START");
+        auto one = [&](Player* m)
+        {
+            char const* role = PlayerbotAI::IsTank(m) ? "t" : (PlayerbotAI::IsHeal(m) ? "h" : "d");
+            send(Acore::StringFormat("DC\tPR\t{}\t{}", Clean(m->GetName()), role));
+        };
+        if (Group* g = player->GetGroup())
+        {
+            for (GroupReference* r = g->GetFirstMember(); r; r = r->next())
+                if (Player* m = r->GetSource())
+                    one(m);
+        }
+        else
+            one(player);
+        send("DC\tPR_END");
+    }
+
     // RebornWOW DCUI3C3: candidates for "fill". Roles by playerbots' own test (a bot by
     // its tank / heal strategy, a real player by talent spec).
     void SendFill(Player* player, std::string const& param, Send const& send)
