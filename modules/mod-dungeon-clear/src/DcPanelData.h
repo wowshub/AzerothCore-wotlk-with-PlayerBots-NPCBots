@@ -32,6 +32,10 @@ namespace DcPanelData
 
     void SendDungeons(Player* player, Send const& send);
     void SendRoster(Player* player, std::string const& param, Send const& send);
+    // RebornWOW DCUI3C3: "fill <size>" -- free online playerbots of the player's faction
+    // near their level, chosen by the roles the group is missing (tank / healer / DPS).
+    // Replies FILL <name> <t|h|d> lines and FILL_END <found> <needed>; the addon invites.
+    void SendFill(Player* player, std::string const& param, Send const& send);
 }
 
 #endif

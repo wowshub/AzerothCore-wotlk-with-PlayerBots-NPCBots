@@ -705,11 +705,13 @@ public:
 
         // RebornWOW DCUI3B: the five-column panel -- every dungeon (with dungeon-clear
         // support) and the invite roster by category. Any player, read-only.
-        if (subCmd == "dungeons" || subCmd == "roster")
+        if (subCmd == "dungeons" || subCmd == "roster" || subCmd == "fill")  // fill: RebornWOW DCUI3C3
         {
             auto send = [player](std::string const& payload) { SendAddonPayload(player, payload); };
             if (subCmd == "dungeons")
                 DcPanelData::SendDungeons(player, send);
+            else if (subCmd == "fill")
+                DcPanelData::SendFill(player, param, send);
             else
                 DcPanelData::SendRoster(player, param, send);
             return;

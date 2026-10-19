@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <cstdlib>  // DCUI3C3: std::abs(int)
 #include <map>
 #include <set>
 #include <vector>
@@ -294,5 +295,100 @@ namespace DcPanelData
         for (Cand const& c : kept)
             Emit(send, cat, c);
         send(Acore::StringFormat("DC\tRO_END\t{}\t{}", cat, v.size()));
+    }
+
+    // RebornWOW DCUI3C3: candidates for "fill". Roles by playerbots' own test (a bot by
+    // its tank / heal strategy, a real player by talent spec).
+    void SendFill(Player* player, std::string const& param, Send const& send)
+    {
+        if (!player || !player->GetSession())
+            return;
+        uint32 size = 5;
+        try { size = static_cast<uint32>(std::stoul(param)); } catch (...) {}
+        // wanted tanks / healers per group size
+        uint32 wantT = 1, wantH = 1;
+        if (size >= 40) { size = 40; wantT = 4; wantH = 10; }
+        else if (size >= 25) { size = 25; wantT = 3; wantH = 6; }
+        else if (size >= 20) { size = 20; wantT = 3; wantH = 5; }
+        else if (size >= 10) { size = 10; wantT = 2; wantH = 3; }
+        else size = 5;
+
+        uint32 have = 1, tanks = 0, heals = 0;
+        auto countRole = [&](Player* m)
+        {
+            if (PlayerbotAI::IsTank(m))
+                ++tanks;
+            else if (PlayerbotAI::IsHeal(m))
+                ++heals;
+        };
+        if (Group* g = player->GetGroup())
+        {
+            have = g->GetMembersCount();
+            for (GroupReference* itr = g->GetFirstMember(); itr; itr = itr->next())
+                if (Player* m = itr->GetSource())
+                    countRole(m);
+        }
+        else
+            countRole(player);
+        if (have >= size)
+        {
+            send(Acore::StringFormat("DC\tFILL_END\t0\t0"));
+            return;
+        }
+        uint32 const need = size - have;
+        uint32 needT = wantT > tanks ? wantT - tanks : 0;
+        uint32 needH = wantH > heals ? wantH - heals : 0;
+
+        // free bots: online, same faction, alive, no group, nobody's alt, not in a battleground
+        TeamId const team = player->GetTeamId();
+        int const myLevel = int(player->GetLevel());
+        std::vector<Player*> pool;
+        for (auto const& kv : ObjectAccessor::GetPlayers())
+        {
+            Player* p = kv.second;
+            if (!p || p == player || !p->IsInWorld() || !p->IsAlive() || p->GetGroup() || p->GetTeamId() != team ||
+                p->InBattleground())
+                continue;
+            PlayerbotAI* ai = GET_PLAYERBOT_AI(p);
+            if (!ai || ai->IsRealPlayer())
+                continue;
+            Player* master = ai->GetMaster();
+            if (master && master != p)
+                continue;  // somebody's own bot
+            if (std::abs(int(p->GetLevel()) - myLevel) > 10)
+                continue;
+            pool.push_back(p);
+        }
+        std::sort(pool.begin(), pool.end(), [myLevel](Player* a, Player* b)
+        {
+            int const da = std::abs(int(a->GetLevel()) - myLevel), db = std::abs(int(b->GetLevel()) - myLevel);
+            if (da != db)
+                return da < db;
+            return a->GetName() < b->GetName();
+        });
+
+        std::vector<std::pair<Player*, char>> picked;
+        std::set<Player*> used;
+        auto take = [&](char role, uint32 count, auto&& test)
+        {
+            for (Player* p : pool)
+            {
+                if (count == 0 || picked.size() >= need)
+                    return;
+                if (used.count(p) || !test(p))
+                    continue;
+                used.insert(p);
+                picked.emplace_back(p, role);
+                --count;
+            }
+        };
+        take('t', needT, [](Player* p) { return PlayerbotAI::IsTank(p); });
+        take('h', needH, [](Player* p) { return PlayerbotAI::IsHeal(p); });
+        take('d', need, [](Player* p) { return !PlayerbotAI::IsTank(p) && !PlayerbotAI::IsHeal(p); });
+        take('d', need, [](Player*) { return true; });  // short of pure DPS: anyone left
+
+        for (auto const& pr : picked)
+            send(Acore::StringFormat("DC\tFILL\t{}\t{}", Clean(pr.first->GetName()), std::string(1, pr.second)));
+        send(Acore::StringFormat("DC\tFILL_END\t{}\t{}", picked.size(), need));
     }
 }
