@@ -1183,6 +1183,8 @@ function MultiBot.BuildFilterUI(tControl)
     { key="Shaman",      icon="filter_shaman"      },
     { key="Warlock",     icon="filter_warlock"     },
     { key="Warrior",     icon="filter_warrior"     },
+    { key="WitchDoctor", icon="filter_witchdoctor" },   -- RebornWOW MBC1A
+    { key="Monk",        icon="filter_monk"        },   -- RebornWOW MBC1A
     { key="none",        icon="filter_none"        },   -- « None » = reset
   }
 

@@ -683,6 +683,17 @@ if MultiBot.ShouldLoadLocale("zhCN") then
 		.. "|cffff0000左键单击筛选战士|r\n"
 		.. "|cff999999(执行命令: 系统)|r"
 
+	-- RebornWOW MBC1A
+	MultiBot.tips.units.witchdoctor = "职业筛选器\n|cffffffff"
+		.. "将单位筛选为巫医。|r\n\n"
+		.. "|cffff0000左键单击筛选巫医|r\n"
+		.. "|cff999999(执行命令: 系统)|r"
+
+	MultiBot.tips.units.monk = "职业筛选器\n|cffffffff"
+		.. "将单位筛选为武僧。|r\n\n"
+		.. "|cffff0000左键单击筛选武僧|r\n"
+		.. "|cff999999(执行命令: 系统)|r"
+
 	MultiBot.tips.units.none = "职业筛选器\n|cffffffff"
 		.. "移除单位的职业筛选器。|r\n\n"
 		.. "|cffff0000左键单击移除筛选器|r\n"

@@ -25,7 +25,8 @@ end
 local function L(en, zh) return ZH() and zh or en end
 
 local CLASS_BY_ID = { [1] = "Warrior", [2] = "Paladin", [3] = "Hunter", [4] = "Rogue", [5] = "Priest",
-                      [6] = "DeathKnight", [7] = "Shaman", [8] = "Mage", [9] = "Warlock", [11] = "Druid" }
+                      [6] = "DeathKnight", [7] = "Shaman", [8] = "Mage", [9] = "Warlock", [11] = "Druid",
+                      [13] = "WitchDoctor", [14] = "Monk" }  -- RebornWOW MBC1A
 local STAR = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_1"
 
 local info = {}               -- name -> { cls, level, race, team (0 alliance / 1 horde), online, mine }
