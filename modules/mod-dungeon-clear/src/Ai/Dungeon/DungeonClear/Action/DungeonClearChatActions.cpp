@@ -28,6 +28,7 @@
 #include "Ai/Dungeon/DungeonClear/Util/ChunkedPathfinder.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcPlayerbotCompat.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
+#include "DcPlayerRuns.h"  // RebornWOW DCRUN1A
 #include "Ai/Dungeon/DungeonClear/Util/DcRunWing.h"
 #include "Ai/Dungeon/DungeonClear/Util/DungeonClearUtil.h"
 #include "Ai/Dungeon/DungeonClear/Util/DungeonEventExecutor.h"
@@ -340,6 +341,8 @@ bool DcOnAction::Execute(Event event)
 
     // Reset transient state and enable.
     DcRun::Of(context).enabled = true;
+    // RebornWOW DCRUN1A: the player's run record (no-op for `.dc test` / bot-only parties)
+    DcPlayerRuns::OnRunStarted(bot, static_cast<uint32>(bosses.size()));
     // Raid runs flip the non-interference contract (boss stand-down; see
     // DcRunState). Map::IsDungeon() was verified above, so this is the honest
     // map type, stamped once for the run session.

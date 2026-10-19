@@ -8,6 +8,7 @@
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "TestRun/DcTestRunManager.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
+#include "DcPlayerRuns.h"  // RebornWOW DCRUN1A
 #include "DcDungeonQueue.h"
 
 #include <algorithm>
@@ -355,6 +356,9 @@ namespace DcActionShared
 
         // Continuous clear (RebornWOW DCQ1A): queued to the world thread.
         DcDungeonQueue::OnRunDisabled(bot, reason);
+
+        // RebornWOW DCRUN1A: close the player's run record.
+        DcPlayerRuns::OnRunEnded(bot, reason);
     }
 
 

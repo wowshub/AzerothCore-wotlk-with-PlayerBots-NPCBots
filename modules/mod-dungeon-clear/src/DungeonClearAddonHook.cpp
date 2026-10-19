@@ -37,6 +37,7 @@
 #include "TestRun/DcTestRunManager.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "DcPanelData.h"   // RebornWOW DCUI3B
+#include "DcPlayerRuns.h"  // RebornWOW DCRUN1A
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 #include "AiFactory.h"
 #include "Item.h"
@@ -714,6 +715,19 @@ public:
                 DcPanelData::SendFill(player, param, send);
             else
                 DcPanelData::SendRoster(player, param, send);
+            return;
+        }
+
+        // RebornWOW DCRUN1A: the player's own run records (the panel's column 2).
+        if (subCmd == "myruns" || subCmd == "myrun" || subCmd == "myrundel")
+        {
+            auto send = [player](std::string const& payload) { SendAddonPayload(player, payload); };
+            if (subCmd == "myruns")
+                DcPlayerRuns::SendList(player, send);
+            else if (subCmd == "myrun")
+                DcPlayerRuns::SendDetail(player, param, send);
+            else
+                DcPlayerRuns::Delete(player, param);
             return;
         }
 
