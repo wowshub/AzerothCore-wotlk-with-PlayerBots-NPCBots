@@ -25,6 +25,8 @@
 #include <vector>
 
 #include <mutex>
+#include "Timer.h"
+#include <algorithm>
 #include <unordered_map>
 
 namespace
@@ -189,7 +191,18 @@ namespace
 {
     std::mutex g_grantLock;
     std::unordered_map<uint32, uint32> g_granted;    // player (low guid) -> 1 while granted
-    std::unordered_map<uint32, ObjectGuid> g_asked;  // player (low guid) -> the tank it was asked for
+    // RebornWOW DCSB2C: one ask per run = tank + its instance; resent until answered.
+    struct Asked
+    {
+        ObjectGuid tank;
+        uint32 instance = 0;
+        uint32 sentAt = 0;     // getMSTime() of the last send
+        uint8 sends = 0;
+        bool answered = false; // the player pressed an auto-play button (Manual included)
+    };
+    constexpr uint8 kAskSends = 3;
+    constexpr uint32 kAskResendMs = 6000;
+    std::unordered_map<uint32, Asked> g_asked;  // player (low guid) -> the current ask
 
     void SendAddon(Player* player, std::string const& payload)
     {
@@ -287,7 +300,16 @@ namespace
             }
 
             // 2. ask real players in a party with a running clear
-            for (ObjectGuid const& tankGuid : DcStatusPublisher::ActiveTanks())
+            std::vector<ObjectGuid> const tanks = DcStatusPublisher::ActiveTanks();
+            {
+                // RebornWOW DCSB2C: a finished clear forgets its asks, so the next run
+                // (even with the same bot tank) asks again
+                std::lock_guard<std::mutex> lock(g_grantLock);
+                for (auto it = g_asked.begin(); it != g_asked.end();)
+                    it = std::find(tanks.begin(), tanks.end(), it->second.tank) == tanks.end() ? g_asked.erase(it) : std::next(it);
+            }
+            uint32 const nowMs = getMSTime();
+            for (ObjectGuid const& tankGuid : tanks)
             {
                 Player* tank = ObjectAccessor::FindConnectedPlayer(tankGuid);
                 Group* g = tank ? tank->GetGroup() : nullptr;
@@ -296,17 +318,25 @@ namespace
                 for (GroupReference* ref = g->GetFirstMember(); ref; ref = ref->next())
                 {
                     Player* m = ref->GetSource();
-                    if (!m || m == tank || GET_PLAYERBOT_AI(m) || m->GetMap() != tank->GetMap() || !m->IsInWorld())
-                        continue;  // bots, players already on auto-play, members elsewhere
+                    if (!m || m == tank || GET_PLAYERBOT_AI(m) || m->GetMap() != tank->GetMap() || !m->IsInWorld() ||
+                        m->IsBeingTeleported())
+                        continue;  // bots, players already on auto-play, members elsewhere or loading
                     if (g->IsLeader(m->GetGUID()))
                         continue;  // the leader runs the clear from the panel
                     uint32 const low = m->GetGUID().GetCounter();
                     {
+                        // RebornWOW DCSB2C: per run (tank + instance); resend a few times
+                        // until answered -- a message during the loading screen is lost
                         std::lock_guard<std::mutex> lock(g_grantLock);
-                        auto it = g_asked.find(low);
-                        if (it != g_asked.end() && it->second == tankGuid)
+                        uint32 const inst = tank->GetInstanceId();
+                        Asked& a = g_asked[low];
+                        if (a.tank != tankGuid || a.instance != inst)
+                            a = Asked{ tankGuid, inst, 0, 0, false };
+                        if (a.answered || a.sends >= kAskSends ||
+                            (a.sends > 0 && getMSTimeDiff(a.sentAt, nowMs) < kAskResendMs))
                             continue;
-                        g_asked[low] = tankGuid;
+                        ++a.sends;
+                        a.sentAt = nowMs;
                     }
                     SendAddon(m, Acore::StringFormat("DC\tSBASK\t{}\t{}", SuggestRole(m), tank->GetName()));
                 }
@@ -362,6 +392,15 @@ void DcSelfBot::Handle(Player* player, std::string const& param, Reply const& re
 {
     if (!player)
         return;
+
+    if (param == "off" || param == "tank" || param == "heal" || param == "dps")
+    {
+        // RebornWOW DCSB2C: the player answered; stop resending the question
+        std::lock_guard<std::mutex> lock(g_grantLock);
+        auto it = g_asked.find(player->GetGUID().GetCounter());
+        if (it != g_asked.end())
+            it->second.answered = true;
+    }
 
     if (param == "off")
     {
