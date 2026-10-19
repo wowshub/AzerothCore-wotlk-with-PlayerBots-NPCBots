@@ -166,6 +166,12 @@ namespace
         // Back to the tank when this character is still fighting after the party stopped.
         ai->ChangeStrategy("+avoid aoe,+dungeon clear combat,+dc selfbot regroup", BOT_STATE_COMBAT);
         ai->ChangeStrategy("+dungeon clear", BOT_STATE_NON_COMBAT);
+        // RebornWOW DCSB2B: the talent defaults also put tank strategies in the
+        // NON-combat engine (a protection paladin: "tank assist", "pull", "bthreat").
+        // Left there, a DPS / healer still reads as a tank (PlayerbotAI::IsTank checks
+        // every engine), pulls between packs and buffs threat.
+        if (role != "tank")
+            ai->ChangeStrategy("-tank assist,-pull,-bthreat", BOT_STATE_NON_COMBAT);
         return note;
     }
 }

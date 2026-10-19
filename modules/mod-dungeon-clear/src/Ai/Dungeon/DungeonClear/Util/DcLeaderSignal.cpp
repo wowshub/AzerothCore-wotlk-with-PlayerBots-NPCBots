@@ -65,6 +65,7 @@
 #include "Ai/Dungeon/DungeonClear/DcValueKeys.h"
 #include "Ai/Dungeon/DungeonClear/DcRunState.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcPlayerbotCompat.h"  // RebornWOW DCSB2B
 
 namespace
 {
@@ -382,6 +383,7 @@ Player* DcLeaderSignal::FindLeaderTank(Player* reference)
     }
 
     Player* leader = nullptr;
+    Player* selfLeader = nullptr;  // RebornWOW DCSB2B: best self-bot, used only without a tank bot
     uint32 bestGearScore = 0;
     for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
     {
@@ -398,6 +400,18 @@ Player* DcLeaderSignal::FindLeaderTank(Player* reference)
         PlayerbotAI* memberAI = GET_PLAYERBOT_AI(member);
         if (!memberAI)
             continue;
+        // RebornWOW DCSB2B: a real player on auto-play (self-bot) never takes the run
+        // from a tank bot. A teammate who turns auto-play on mid-run (DCSB2A) can read
+        // as a tank -- talents, or a tank strategy left in an engine -- and with a lower
+        // GUID than the bot it won the election: the bot stopped driving, the party
+        // stood still and the panel said "not running". A self-bot still leads when no
+        // ordinary tank bot is on this map (a GM driving with their own character).
+        if (DcPlayerbotCompat::IsSelfBot(member))
+        {
+            if (!selfLeader || member->GetGUID() < selfLeader->GetGUID())
+                selfLeader = member;
+            continue;
+        }
 
         if (!isRaid)
         {
@@ -425,6 +439,9 @@ Player* DcLeaderSignal::FindLeaderTank(Player* reference)
             bestGearScore = gearScore;
         }
     }
+
+    if (!leader)
+        leader = selfLeader;  // RebornWOW DCSB2B
 
     {
         std::lock_guard<std::mutex> lock(g_leaderCacheMutex);
