@@ -12,6 +12,7 @@
 #include "AiFactory.h"
 #include "Chat.h"                 // DCSB2A
 #include "Group.h"
+#include "Log.h"                  // PBSELF1A
 #include "Map.h"
 #include "ObjectAccessor.h"
 #include "PlayerbotAIConfig.h"
@@ -317,9 +318,30 @@ namespace
     };
 }
 
+// RebornWOW PBSELF1A: a player who logged out on auto-play was saved with the taxi
+// cheat the bot AI set (the save runs before the logout hooks), so on the next login a
+// non-GM without a bot AI loses it. A GM keeps a .taxicheat of their own.
+namespace
+{
+    class DcSelfBotLoginScript : public PlayerScript
+    {
+    public:
+        DcSelfBotLoginScript() : PlayerScript("DcSelfBotLoginScript", { PLAYERHOOK_ON_LOGIN }) {}
+
+        void OnPlayerLogin(Player* player) override
+        {
+            if (!player || player->CanBeGameMaster() || GET_PLAYERBOT_AI(player) || !player->isTaxiCheater())
+                return;
+            player->SetTaxiCheater(false);
+            LOG_INFO("module", "mod-dungeon-clear PBSELF1A: cleared a leftover auto-play taxi cheat on {}", player->GetName());
+        }
+    };
+}
+
 void DcSelfBot::RegisterScripts()
 {
     new DcSelfBotRunScript();
+    new DcSelfBotLoginScript();  // RebornWOW PBSELF1A
 }
 
 std::string DcSelfBot::StateLine(Player* player)
