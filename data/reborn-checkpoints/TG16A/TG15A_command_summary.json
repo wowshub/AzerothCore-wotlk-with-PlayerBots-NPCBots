@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "runtime": "Lua5.1 actual TOC and real WD139 decoder/listener, simulated game API/server packets",
+  "cases": [
+    "GM-style UnitLevel-only 25->26 follows within 0.5s, no event dispatched",
+    "partial WD139 header withheld; complete packet atomically reveals current used/budget",
+    "server bonus totals29/28 honoured, not replaced by formula9/8",
+    "current saved mask distinguished from blank collection editor",
+    "unsaved editor name, level, ranks, identity and dirty retained",
+    "idle samples perform no repeated rebuilds or queries",
+    "fixed20 preserved through next command level27",
+    "original draft and pending query protection",
+    "bounded at most3 requests per mismatched level, 6second spacing",
+    "classical collection hides AE/TE and restores detail height",
+    "hidden windows stop sampler, never auto-open",
+    "zero save/reset/learn commands"
+  ],
+  "snapshot_queries": 5,
+  "real_game_visuals": "pending"
+}

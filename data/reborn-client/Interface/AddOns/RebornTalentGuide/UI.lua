@@ -7,7 +7,7 @@ local function label(p,x,y,w,s,font)
  local f=p:CreateFontString(nil,'OVERLAY',font or'GameFontHighlightSmall');f:SetPoint('TOPLEFT',x,y);f:SetWidth(w);f:SetJustifyH('LEFT');f:SetText(s or'');return f
 end
 local function button(p,x,y,w,s,fn)
- local b=CreateFrame('Button',nil,p,'UIPanelButtonTemplate');b:SetPoint('TOPLEFT',x,y);b:SetSize(w,25);b:SetText(s);b:SetScript('OnClick',fn);return b
+ return RebornTalentGuideTheme.Button(p,x,y,w,25,s,fn)
 end
 local function enabled(b,on)if on then b:Enable()else b:Disable()end end
 local function detailText(p)
@@ -136,7 +136,7 @@ function G.Refresh()
  end
  G.description:SetText(detailText(p));G.content:SetHeight(math.max(394,G.description:GetStringHeight()+16));if G.scroll.UpdateScrollChildRect then G.scroll:UpdateScrollChildRect()end
  local installed={};local _,class=UnitClass('player')
- if not G.fromBot and class=='WARRIOR'and GetGlyphSocketInfo then for i=1,6 do local _,_,id=GetGlyphSocketInfo(i,GetActiveTalentGroup(false,false));if id then installed[id]=true end end end
+ if G.Evidence then installed=G.Evidence.Sockets('WARRIOR').installed elseif not G.fromBot and class=='WARRIOR'and GetGlyphSocketInfo then for i=1,6 do local _,_,id=GetGlyphSocketInfo(i,GetActiveTalentGroup(false,false));if id then installed[id]=true end end end
  for i,b in ipairs(G.glyphRows)do
   local x=p.glyphList[i];b.data=x;local _,_,icon=GetSpellInfo(x.spell);b.icon:SetTexture(icon or'Interface\\Icons\\INV_Glyph_MajorWarrior')
   b.name:SetText(x.kind..' · '..x.name..(installed[x.spell]and' |cff77ff77已装|r'or''));b.why:SetText(x.why)
@@ -173,28 +173,15 @@ function G.Create()
  f:SetBackdrop({bgFile='Interface\\Buttons\\WHITE8X8',edgeFile='Interface\\DialogFrame\\UI-DialogBox-Border',tile=true,tileSize=32,edgeSize=24,insets={left=6,right=6,top=6,bottom=6}});f:SetBackdropColor(.03,.04,.06,.97)
  f:SetMovable(true);f:EnableMouse(true);f:RegisterForDrag('LeftButton');f:SetScript('OnDragStart',function(self)self:StartMoving()end);f:SetScript('OnDragStop',function(self)self:StopMovingOrSizing()end)
  f:SetScale(math.min(1,(UIParent:GetWidth()-24)/W,(UIParent:GetHeight()-24)/H))
- local art=f:CreateTexture(nil,'BACKGROUND');art:SetPoint('TOPLEFT',8,-8);art:SetPoint('BOTTOMRIGHT',-8,8);art:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\Backdrop');art:SetTexCoord(0,1,170/1024,853/1024);art:SetAlpha(.22)
+ local art=f:CreateTexture(nil,'BORDER');art:SetPoint('TOPLEFT',8,-8);art:SetPoint('BOTTOMRIGHT',-8,8);art:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\GuideGrimoireTG6B_blp');art:SetTexCoord(0,1,0,1);RebornTalentGuideTheme.Surface(f,art,true)
  table.insert(UISpecialFrames,'RebornTalentGuideFrame')
  local close=CreateFrame('Button',nil,f,'UIPanelCloseButton');close:SetPoint('TOPRIGHT',-6,-5)
  -- Header
- local titleText=label(f,M+6,-16,700,'天赋与雕文推荐 · 职业图鉴','GameFontNormalLarge');titleText:SetTextColor(1,.82,.3)
+ local titleText=label(f,M+6,-16,700,'天赋与雕文推荐 · 职业图鉴','GameFontNormalLarge');titleText:SetTextColor(1,.82,.3);G.titleText=titleText
  G.context=label(f,M+6,-40,900,'');G.context:SetTextColor(.72,.74,.78)
  divider(f,M,-60,W-2*M)
  local function nav(x,y,w,text,fn)
-  -- No UIPanelButtonTemplate: its inherited segmented regions cover custom backgrounds.
-  local b=CreateFrame('Button',nil,f);b:SetPoint('TOPLEFT',x,y);b:SetSize(w,24)
-  b:SetNormalFontObject(GameFontNormalSmall);b:SetHighlightFontObject(GameFontHighlightSmall);b:SetDisabledFontObject(GameFontDisableSmall)
-  b:SetText(text);b:SetScript('OnClick',fn)
-  local bg=b:CreateTexture(nil,'BACKGROUND');bg:SetPoint('TOPLEFT',2,-2);bg:SetPoint('BOTTOMRIGHT',-2,2);bg:SetTexture(.24,.05,.06,.95)
-  b.navBackground=bg
-  b:SetBackdrop({edgeFile='Interface\\Tooltips\\UI-Tooltip-Border',edgeSize=10})
-  b:SetBackdropBorderColor(.45,.34,.18,1)
-  local hi=b:CreateTexture(nil,'HIGHLIGHT');hi:SetPoint('TOPLEFT',2,-2);hi:SetPoint('BOTTOMRIGHT',-2,2);hi:SetTexture(1,.65,.20,.14);b:SetHighlightTexture(hi)
-  function b:SetNavSelected(on)
-   self.navBackground:SetTexture(on and .46 or .24,on and .08 or .05,.06,.95)
-   self:SetBackdropBorderColor(on and 1 or .45,on and .82 or .34,on and .25 or .18,1)
-  end
-  return b
+  return RebornTalentGuideTheme.Button(f,x,y,w,24,text,fn)
  end
  -- Left navigation: classes
  G.classButtons={};section(f,NAV_X,-70,CLS_W,'职业')
@@ -214,10 +201,10 @@ function G.Create()
  end
  section(f,PLAN_X,-182,PLAN_W,'方案')
  G.plans={};for i,p in ipairs(D.plans)do local n=i;local b=nav(PLAN_X,G.layout.planTop,PLAN_W,p.title,function()G.selected=n;G.category=D.plans[n].category;G.message=nil;G.scroll:SetVerticalScroll(0);G.Refresh()end);b:SetHeight(40);G.plans[i]=b end
- nav(PLAN_X,-472,28,'<',function()G.planPage=math.max(1,G.planPage-1);G.Refresh()end)
- nav(PLAN_X+PLAN_W-28,-472,28,'>',function()G.planPage=G.planPage+1;G.Refresh()end)
+ G.planPrev=nav(PLAN_X,-472,28,'<',function()G.planPage=math.max(1,G.planPage-1);G.Refresh()end)
+ G.planNext=nav(PLAN_X+PLAN_W-28,-472,28,'>',function()G.planPage=G.planPage+1;G.Refresh()end)
  G.planPageLabel=label(f,PLAN_X+30,-478,PLAN_W-60,'');G.planPageLabel:SetJustifyH('CENTER')
- local legend=label(f,NAV_X,-508,NAV_W,'|cffffd24d金字|r 推荐 / 上限    |cffbfc7d0灰字|r 当前点数    |cffff8040*|r 本服改动\n其他职业方案待适配。');legend:SetTextColor(.7,.72,.76)
+ local legend=label(f,NAV_X,-508,NAV_W,'|cffffd24d金字|r 推荐 / 上限    |cffbfc7d0灰字|r 当前点数    |cffff8040*|r 本服改动\n不同职业采用各自点数与保存规则。');legend:SetTextColor(.7,.72,.76)
  -- Center: three trees
  G.heading=label(f,TREE_X,-70,3*TREE_W+2*TREE_GAP,'','GameFontNormal');G.heading:SetTextColor(1,.82,.3)
  G.treePanels={};G.treeTitles={}
@@ -274,8 +261,14 @@ function G.Create()
  G.apply=button(f,NAV_X,by,NAV_W,'应用到自己的当前专精',function()
   if G.catalogClass~='战士' or (G.category~='PVE' and G.category~='PVP')then return end
   if G.fromBot then G.ConfirmBot();return end
-  local chosen=G.selected;local check,why=G.Check(D.plans[chosen]);if not check then G.Message(why);return end
-  StaticPopupDialogs.REBORN_TG_APPLY={text='补齐自己的当前专精为「'..D.plans[chosen].title..'」？将花费 '..#check.rows..' 点。不会洗点或安装雕文；中途停止时已加点保留。',button1=ACCEPT,button2=CANCEL,timeout=0,whileDead=false,hideOnEscape=true,OnAccept=function()if G.catalogClass=='战士' and not G.fromBot then G.Start(chosen)end end}
+  local epoch=G.Lifecycle and G.Lifecycle.epoch or 0;local guid=UnitGUID('player');local chosen=G.selected;local check,why=G.Check(D.plans[chosen]);if not check then G.Message(why);return end
+  StaticPopupDialogs.REBORN_TG_APPLY={text='补齐自己的当前专精为「'..D.plans[chosen].title..'」？将花费 '..#check.rows..' 点。不会洗点或安装雕文；中途停止时已加点保留。',button1=ACCEPT,button2=CANCEL,timeout=0,whileDead=false,hideOnEscape=true,OnAccept=function()
+   if(G.Lifecycle and not G.Lifecycle.Current(epoch))or G.catalogClass~='战士'or G.fromBot or G.selected~=chosen or UnitGUID('player')~=guid then G.Message('角色或推荐状态已改变，请重新确认');return end
+   local current,reason=G.Check(D.plans[chosen]);local same=current and current.group==check.group
+   if same then for t,row in ipairs(check.ranks)do for i,rank in ipairs(row)do if current.ranks[t][i]~=rank then same=false end end end end
+   if not same then G.Message(reason or'点数或专精已改变，请重新确认');return end
+   G.Start(chosen)
+  end}
   StaticPopup_Show('REBORN_TG_APPLY')
  end)
  G.stop=button(f,NAV_X,by-28,NAV_W,'停止后续加点',function()G.Stop()end)
@@ -291,7 +284,7 @@ function G.Open(fromBot)
 end
 local function entry(parent,bot)
  local _,class=UnitClass('player')
- if (bot and (not MultiBot or MultiBot.talent.class~='Warrior'))or(not bot and class~='WARRIOR')then
+ if (bot and (not MultiBot or MultiBot.talent.class~='Warrior'))or(not bot and class~='WARRIOR'and not(G.WD and G.WD.IsDoctor()))then
   StaticPopupDialogs.REBORN_TG_UNSUPPORTED={text='当前职业尚未适配推荐。巫医等新职业需要单独接入其加点系统。要浏览战士参考方案吗？',button1='浏览战士参考',button2=CANCEL,timeout=0,whileDead=true,hideOnEscape=true,OnAccept=function()G.Open(bot)end}
   StaticPopup_Show('REBORN_TG_UNSUPPORTED');return
  end

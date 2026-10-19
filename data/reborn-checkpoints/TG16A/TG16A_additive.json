@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "runtime": "actual Lua5.1 validator and UI; no game/server",
+  "reproduced_old_false_conflict": true,
+  "seed_ae": 6,
+  "seed_te": 1,
+  "budget_ae": 9,
+  "budget_te": 9,
+  "compatible_extra_node": 29309,
+  "compatible_extra_name": "净化神像",
+  "addedAE": 3,
+  "addedTE": 8,
+  "cases": [
+    "all saved ranks retained",
+    "budget and actual validator respected",
+    "confirmation lists retained name and additions",
+    "accept changes draft only; no network/write",
+    "original dirty/pending/combat/spec/preview/slot/snapshot guards",
+    "disabled overlay explains without granting",
+    "same revision changed baseline rechecked",
+    "no addition refuses without reset",
+    "pure recommendation unchanged",
+    "cache copies do not leak metadata or list mutations"
+  ],
+  "real_user_snapshot": "not read; screenshot exact blocking node not asserted",
+  "game": "pending"
+}

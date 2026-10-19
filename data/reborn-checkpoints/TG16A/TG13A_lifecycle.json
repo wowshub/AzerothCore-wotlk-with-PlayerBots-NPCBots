@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "runtime": "Lua5.1 actual TOC plus real production UI and guards; API/snapshot fixtures, not a game/server run",
+  "coverage": [
+    "PLAYER_LEVEL_UP before UnitLevel settles, then UNIT_LEVEL; current preview follows; fixed20 preserved",
+    "exactly one original read-only wd139state query for visible level mismatch, never during pending operation",
+    "200 trainer/spell events coalesce to one local refresh; timer removed when idle",
+    "unsaved local collection editor identity/fingerprint/name/dirty preserved",
+    "closed windows remain closed, no automatic queries",
+    "native group A-B-A invalidates old recommendation and collection confirmations",
+    "fresh confirmation still creates original native queue; logout stops remaining work",
+    "visible collection refreshes after point reset/talent update; unrelated chat and pet level ignored"
+  ],
+  "original_query_commands": 1,
+  "automatic_learning_calls": 0,
+  "actual_trainer_purchase_reset_fees_relog_persistence": "not tested in game"
+}

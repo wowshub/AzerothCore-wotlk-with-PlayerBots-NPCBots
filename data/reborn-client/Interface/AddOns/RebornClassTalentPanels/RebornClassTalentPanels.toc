@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: Reborn Class Talent Panels | 职业天赋大面板
+## Notes: CT1C 战士/圣骑士独立对照与统一导航；独立入口，不替换经典面板或保存系统
+## Version: CT1C
+## Dependencies: RebornTalentGuide
+Panels.lua

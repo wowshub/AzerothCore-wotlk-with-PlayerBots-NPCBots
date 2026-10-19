@@ -1,11 +1,12 @@
 ## Interface: 30300
 ## Title: Reborn Talent Guide | 天赋与雕文推荐
-## Notes: TG1F talent guide and unified quick entries
-## Version: TG1F
-## OptionalDeps: MultiBot, DragonUI, RebornEquipmentVault, RebornSpectatorAutoWatch
-## SavedVariables: RebornTGEntrySettings, RebornTGScaleDB
+## Notes: TG16A 战士、圣骑士与巫医多方案收藏、版本编辑、差异校验及确认应用
+## Version: TG16A
+## OptionalDeps: MultiBot, DragonUI, RebornEquipmentVault, RebornSpectatorAutoWatch, RebornWitchDoctorTalents
+## SavedVariables: RebornTGEntrySettings, RebornTGScaleDB, RebornTGViewSettings, RebornTalentCollectionsDB
 Data.lua
 Core.lua
+Theme.lua
 UI.lua
 Scale.lua
 MultiBotCompat.lua
@@ -13,3 +14,37 @@ MultiBotCompat.lua
 EntryPoints.lua
 
 BotPresentation.lua
+
+WitchDoctorData.lua
+WitchDoctor.lua
+WitchDoctorUI.lua
+
+PaladinData.lua
+PaladinPVPData.lua
+Paladin.lua
+PaladinUI.lua
+
+
+TalentPanelWindows.lua
+TalentTreeCanvas.lua
+TalentTreeViews.lua
+WarriorCollection.lua
+CollectionStore.lua
+CollectionDetails.lua
+CollectionApply.lua
+CollectionUI.lua
+CollectionShare.lua
+CollectionShareUI.lua
+
+UnifiedNavigation.lua
+
+RecommendationEvidenceData.lua
+RecommendationEvidence.lua
+
+ClassTalentEntry.lua
+ClassicSpecHome.lua
+
+PointSummary.lua
+Lifecycle.lua
+
+ApplyFeedback.lua

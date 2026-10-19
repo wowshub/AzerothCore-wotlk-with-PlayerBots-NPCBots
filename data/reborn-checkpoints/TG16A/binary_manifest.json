@@ -1,0 +1,74 @@
+[
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp",
+    "sha256": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp",
+    "sha256": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp",
+    "sha256": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp",
+    "sha256": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp",
+    "sha256": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp",
+    "sha256": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp",
+    "sha256": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp",
+    "sha256": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp",
+    "sha256": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp",
+    "sha256": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp",
+    "sha256": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp",
+    "sha256": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp",
+    "sha256": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp",
+    "sha256": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp",
+    "sha256": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp",
+    "sha256": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp",
+    "sha256": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp",
+    "sha256": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257"
+  }
+]

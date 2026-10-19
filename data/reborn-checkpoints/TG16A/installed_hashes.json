@@ -1,0 +1,277 @@
+[
+  {
+    "path": "Interface/AddOns/RebornClassTalentPanels/Panels.lua",
+    "expected": "704f06c1493bd55d0da94e912b7a1c538a10ad79e253d78cf2d6bcc426799e6c",
+    "installed": "704f06c1493bd55d0da94e912b7a1c538a10ad79e253d78cf2d6bcc426799e6c"
+  },
+  {
+    "path": "Interface/AddOns/RebornClassTalentPanels/RebornClassTalentPanels.toc",
+    "expected": "cf7071964abd841d8bb06074ff1a58ef9fa834a2c1068ae05656532b71876a17",
+    "installed": "cf7071964abd841d8bb06074ff1a58ef9fa834a2c1068ae05656532b71876a17"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/ApplyFeedback.lua",
+    "expected": "80e4172a7fee5f4c29f972797feb98d2c8de216e8c6b0e40e70475e9fda4e8b8",
+    "installed": "80e4172a7fee5f4c29f972797feb98d2c8de216e8c6b0e40e70475e9fda4e8b8"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp",
+    "expected": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5",
+    "installed": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp",
+    "expected": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4",
+    "installed": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp",
+    "expected": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce",
+    "installed": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp",
+    "expected": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618",
+    "installed": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp",
+    "expected": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae",
+    "installed": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp",
+    "expected": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2",
+    "installed": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp",
+    "expected": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5",
+    "installed": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp",
+    "expected": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9",
+    "installed": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp",
+    "expected": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52",
+    "installed": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp",
+    "expected": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3",
+    "installed": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp",
+    "expected": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db",
+    "installed": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp",
+    "expected": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd",
+    "installed": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp",
+    "expected": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9",
+    "installed": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp",
+    "expected": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d",
+    "installed": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp",
+    "expected": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67",
+    "installed": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp",
+    "expected": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9",
+    "installed": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp",
+    "expected": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d",
+    "installed": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp",
+    "expected": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257",
+    "installed": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/BotPresentation.lua",
+    "expected": "186d95625d264175c10694d3c0c121ad16715da053c7e4ef4985e274d63065ae",
+    "installed": "186d95625d264175c10694d3c0c121ad16715da053c7e4ef4985e274d63065ae"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/ClassicSpecHome.lua",
+    "expected": "5ae0511b874b8e3ad250e17b477c2674a8e00e1b729b4728f7b219ed967a98f8",
+    "installed": "5ae0511b874b8e3ad250e17b477c2674a8e00e1b729b4728f7b219ed967a98f8"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/ClassTalentEntry.lua",
+    "expected": "fbf25b32e2e6c3c4a668b39a0955427ff160eadf42b6620401816bfec0aa1d08",
+    "installed": "fbf25b32e2e6c3c4a668b39a0955427ff160eadf42b6620401816bfec0aa1d08"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/CollectionApply.lua",
+    "expected": "99bb40e20e8f83f23e47e59084a221a54eee4547a4b41cb2c564f178888f238e",
+    "installed": "99bb40e20e8f83f23e47e59084a221a54eee4547a4b41cb2c564f178888f238e"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/CollectionDetails.lua",
+    "expected": "1a531210a9d6a95fbfc09356c3991d98508a331bfb665c73ea5b0cda4f3cddf8",
+    "installed": "1a531210a9d6a95fbfc09356c3991d98508a331bfb665c73ea5b0cda4f3cddf8"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/CollectionShare.lua",
+    "expected": "4e36c5dc660cbf3db0a082e5a56e8217a7f23da4225a82a8f32525089c7761e3",
+    "installed": "4e36c5dc660cbf3db0a082e5a56e8217a7f23da4225a82a8f32525089c7761e3"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/CollectionShareUI.lua",
+    "expected": "191a7fbb2bc679af83647bc566b8d9c67eb8c6e5bcc42740b8739715201fe75e",
+    "installed": "191a7fbb2bc679af83647bc566b8d9c67eb8c6e5bcc42740b8739715201fe75e"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+    "expected": "00231950259440ab8018497bdc80038764f69f56908cf83f9e9e8d26c93c7831",
+    "installed": "00231950259440ab8018497bdc80038764f69f56908cf83f9e9e8d26c93c7831"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/CollectionUI.lua",
+    "expected": "86e81edf3df92de7e049f9e5aecfd884a59473772750a832c63f867d5759b4bd",
+    "installed": "86e81edf3df92de7e049f9e5aecfd884a59473772750a832c63f867d5759b4bd"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Core.lua",
+    "expected": "4d135cce7929e5cb9a801eee1c14d3fb2f125f6c5d1edf6e0b66ae5dfda0805c",
+    "installed": "4d135cce7929e5cb9a801eee1c14d3fb2f125f6c5d1edf6e0b66ae5dfda0805c"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Data.lua",
+    "expected": "b7cad2f7f202781876d21ca48ca9e0cae6c8b5d2df8b8c380ae64edd0b00504a",
+    "installed": "b7cad2f7f202781876d21ca48ca9e0cae6c8b5d2df8b8c380ae64edd0b00504a"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/EntryPoints.lua",
+    "expected": "16649d4f8b82cbf43d4e4484bf3976e796c21de9a1d57a246c669b95718f78af",
+    "installed": "16649d4f8b82cbf43d4e4484bf3976e796c21de9a1d57a246c669b95718f78af"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+    "expected": "f7467bdb543bed2de995d14b084e81360a822dd9f9c249ff14e8d0b2a505773e",
+    "installed": "f7467bdb543bed2de995d14b084e81360a822dd9f9c249ff14e8d0b2a505773e"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/MultiBotCompat.lua",
+    "expected": "5196620a75a3cb9ff0d677d98025091124751f387ae5baea65eda865bed15304",
+    "installed": "5196620a75a3cb9ff0d677d98025091124751f387ae5baea65eda865bed15304"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Paladin.lua",
+    "expected": "a8847e266768e87403f58597a5dafb12b2b1bf5459d356250f29be279c5f49e3",
+    "installed": "a8847e266768e87403f58597a5dafb12b2b1bf5459d356250f29be279c5f49e3"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/PaladinData.lua",
+    "expected": "98177a98b5a0301f2cb51a01d535df96e15f6d7160ec77956bdf9d267a772422",
+    "installed": "98177a98b5a0301f2cb51a01d535df96e15f6d7160ec77956bdf9d267a772422"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/PaladinPVPData.lua",
+    "expected": "ed63a1d73a6fb6c9beb6efab4d38cb9ab04c19a1bbeba1a64736df5a3189fc55",
+    "installed": "ed63a1d73a6fb6c9beb6efab4d38cb9ab04c19a1bbeba1a64736df5a3189fc55"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/PaladinUI.lua",
+    "expected": "e595a2d47e521071dbc368b6eb75702a9fdaa56dba2182949ef0e1dbc126277e",
+    "installed": "e595a2d47e521071dbc368b6eb75702a9fdaa56dba2182949ef0e1dbc126277e"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/PointSummary.lua",
+    "expected": "7854d3a104807d0578e69e0e0f89709b1c9b0aafe361a905171dca3c05ef8707",
+    "installed": "7854d3a104807d0578e69e0e0f89709b1c9b0aafe361a905171dca3c05ef8707"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+    "expected": "77bb29e87be018e83ef3743fa0ac105c7bd69298339af8856d8f8222de080ab9",
+    "installed": "77bb29e87be018e83ef3743fa0ac105c7bd69298339af8856d8f8222de080ab9"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/RecommendationEvidence.lua",
+    "expected": "a2fc49df15418b0a9619276bbd1c279bd0c932d29f165da9cb9d0abcde1a9165",
+    "installed": "a2fc49df15418b0a9619276bbd1c279bd0c932d29f165da9cb9d0abcde1a9165"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/RecommendationEvidenceData.lua",
+    "expected": "9a5219abd96251fb88a0d04a57a3c49ea4f9a7b471eb7271aeadf14fa967d99f",
+    "installed": "9a5219abd96251fb88a0d04a57a3c49ea4f9a7b471eb7271aeadf14fa967d99f"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Scale.lua",
+    "expected": "7743e419f23b2f794bf9be13a022e4a60a503c2683e861e7dd30ffe88ed32f68",
+    "installed": "7743e419f23b2f794bf9be13a022e4a60a503c2683e861e7dd30ffe88ed32f68"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/TalentPanelWindows.lua",
+    "expected": "fd4e61044bc2169a08fed8c3689a5ccb180f08d8fb5a7bfc330230b272ecc870",
+    "installed": "fd4e61044bc2169a08fed8c3689a5ccb180f08d8fb5a7bfc330230b272ecc870"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/TalentTreeCanvas.lua",
+    "expected": "6114b581c0311f0105cde1e4bd8364be63490fb8c7e606254e107518778582ec",
+    "installed": "6114b581c0311f0105cde1e4bd8364be63490fb8c7e606254e107518778582ec"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/TalentTreeViews.lua",
+    "expected": "fcce42760cfccc02cd8eae11bd0773813d310066a7ac1d8cf7d3d64ca1cc716d",
+    "installed": "fcce42760cfccc02cd8eae11bd0773813d310066a7ac1d8cf7d3d64ca1cc716d"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/Theme.lua",
+    "expected": "ff12ee241b22d503e7107f2e737968122f169a1f94fd27a2421f79cd0aeab752",
+    "installed": "ff12ee241b22d503e7107f2e737968122f169a1f94fd27a2421f79cd0aeab752"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/UI.lua",
+    "expected": "3c2de62e2281c187c1a03b10b837a5b3fde970b50ebc1360988728a39c82f03c",
+    "installed": "3c2de62e2281c187c1a03b10b837a5b3fde970b50ebc1360988728a39c82f03c"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/UnifiedNavigation.lua",
+    "expected": "fdf1e4d2216954395161dfba06b9b35c31a0cfb5c8fa65086bbd6ccda541d62e",
+    "installed": "fdf1e4d2216954395161dfba06b9b35c31a0cfb5c8fa65086bbd6ccda541d62e"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/WarriorCollection.lua",
+    "expected": "efd7b6deaad08ce8ac7593eccad89c7d719a495099da0845ce0f7511c3aac423",
+    "installed": "efd7b6deaad08ce8ac7593eccad89c7d719a495099da0845ce0f7511c3aac423"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/WitchDoctor.lua",
+    "expected": "8bd8bad1624b3cb6ffcc6d2f5a90a087a07cdc70b733e38cfa3bad3ae1d9d37d",
+    "installed": "8bd8bad1624b3cb6ffcc6d2f5a90a087a07cdc70b733e38cfa3bad3ae1d9d37d"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua",
+    "expected": "a0deeb9cd03b25479c951637e6edbc110352dcf990c82b7e70f31f32be473345",
+    "installed": "a0deeb9cd03b25479c951637e6edbc110352dcf990c82b7e70f31f32be473345"
+  },
+  {
+    "path": "Interface/AddOns/RebornTalentGuide/WitchDoctorUI.lua",
+    "expected": "37abeed7c7096110d887f8a83f08446f66da7c0f6488ab67c7a64f77ed97d9b2",
+    "installed": "37abeed7c7096110d887f8a83f08446f66da7c0f6488ab67c7a64f77ed97d9b2"
+  },
+  {
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/Routing.lua",
+    "expected": "05ae0f48271d458a4a0a2be49086f4a2b1b10fb57fb19b6758a36e2b97d7ac65",
+    "installed": "05ae0f48271d458a4a0a2be49086f4a2b1b10fb57fb19b6758a36e2b97d7ac65"
+  }
+]

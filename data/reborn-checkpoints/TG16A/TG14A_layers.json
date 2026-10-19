@@ -1,0 +1,82 @@
+{
+  "status": "passed",
+  "runtime": "Lua5.1 actual TOC + tracked texture layers, not live renderer",
+  "home_tree_reopen_cases": 30,
+  "theme_cycles": 120,
+  "six_original_spec_assets_preserved": true,
+  "collection_quiet_setting_preserved": true,
+  "outbound": 0,
+  "art": [
+    {
+      "file": "ClassicSpecShellTG10A_blp.blp",
+      "sha256": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5",
+      "all_mips_decoded": 13,
+      "mean_rgb": [
+        26.618543222123602,
+        27.11023874994924,
+        26.618543222123602
+      ]
+    },
+    {
+      "file": "WarriorSpec1TG10A_blp.blp",
+      "sha256": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d",
+      "all_mips_decoded": 12,
+      "mean_rgb": [
+        49.51320522438302,
+        44.462303877251365,
+        37.663302844942
+      ]
+    },
+    {
+      "file": "WarriorSpec2TG10A_blp.blp",
+      "sha256": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67",
+      "all_mips_decoded": 12,
+      "mean_rgb": [
+        51.63374978359975,
+        27.98078526041767,
+        18.729272061605144
+      ]
+    },
+    {
+      "file": "WarriorSpec3TG10A_blp.blp",
+      "sha256": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9",
+      "all_mips_decoded": 12,
+      "mean_rgb": [
+        53.62575659940626,
+        59.73557091195876,
+        63.057373317688395
+      ]
+    },
+    {
+      "file": "PaladinSpec1TG10A_blp.blp",
+      "sha256": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618",
+      "all_mips_decoded": 12,
+      "mean_rgb": [
+        72.27891828726412,
+        60.475993998499625,
+        43.03926622681311
+      ]
+    },
+    {
+      "file": "PaladinSpec2TG10A_blp.blp",
+      "sha256": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae",
+      "all_mips_decoded": 12,
+      "mean_rgb": [
+        43.05042366360821,
+        46.91757715069793,
+        49.348772289226154
+      ]
+    },
+    {
+      "file": "PaladinSpec3TG10A_blp.blp",
+      "sha256": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2",
+      "all_mips_decoded": 12,
+      "mean_rgb": [
+        48.79360545264521,
+        30.51218173133027,
+        24.002075037990267
+      ]
+    }
+  ],
+  "game_visual": "pending"
+}
