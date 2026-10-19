@@ -12,6 +12,8 @@
  * `dc on` again in the same instance within 30 minutes of an unfinished end (a wipe,
  * a stop) continues the same record ("restarts"), so a wipe does not leave two rows.
  * `.dc test` runs and bot-only parties (no real player to own it) are not recorded.
+ * DCRUN1B: every real player in the party at a `dc on` (start or restart) is a viewer
+ * of the run and gets their own copy of the finished record (deleted per player).
  * Finished runs are appended to dc_playerruns.jsonl (a continued run is appended
  * again; the last line of an id wins) and the last 20 per owner are kept in memory.
  * Everything is behind one mutex; the addon requests are answered from it on the

@@ -21,6 +21,7 @@
 #include "bot_ai.h"
 #include "botmgr.h"
 
+#include <algorithm>
 #include <ctime>
 #include <deque>
 #include <fstream>
@@ -55,6 +56,7 @@ namespace
         std::vector<RunEvent> bosses, deaths;
         std::vector<Member> members;
         std::string tier, result = "running", reason;
+        std::vector<uint32> viewers;  // DCRUN1B: real players who get the record (owner first)
     };
 
     constexpr std::size_t kKeep = 20;          // finished runs kept per owner
@@ -63,7 +65,7 @@ namespace
 
     std::mutex gMtx;
     std::map<ObjectGuid, Run> gActive;                 // by DC tank
-    std::map<uint32, std::deque<Run>> gDone;           // by owner, newest first
+    std::map<uint32, std::deque<Run>> gDone;           // by viewer (DCRUN1B; was owner), newest first
 
     std::string Clean(std::string s)
     {
@@ -95,6 +97,41 @@ namespace
                 if (Player* p = r->GetSource(); p && IsReal(p))
                     return p;
         return IsReal(tank) ? tank : nullptr;
+    }
+
+    // RebornWOW DCRUN1B: the real players of the tank's party (owner first).
+    std::vector<uint32> ViewersOf(Player* tank, Player* owner)
+    {
+        std::vector<uint32> out{ owner->GetGUID().GetCounter() };
+        if (Group* g = tank->GetGroup())
+            for (GroupReference* r = g->GetFirstMember(); r; r = r->next())
+                if (Player* p = r->GetSource(); p && IsReal(p))
+                {
+                    uint32 const low = p->GetGUID().GetCounter();
+                    if (std::find(out.begin(), out.end(), low) == out.end())
+                        out.push_back(low);
+                }
+        return out;
+    }
+
+    bool Sees(Run const& r, uint32 low)
+    {
+        return r.owner == low || std::find(r.viewers.begin(), r.viewers.end(), low) != r.viewers.end();
+    }
+
+    void AddViewers(Run& r, std::vector<uint32> const& more)
+    {
+        for (uint32 low : more)
+            if (std::find(r.viewers.begin(), r.viewers.end(), low) == r.viewers.end())
+                r.viewers.push_back(low);
+    }
+
+    // Called with gMtx held: drop every viewer's copy of this run id (it runs again).
+    void ForgetDoneLocked(std::string const& id)
+    {
+        for (auto& kv : gDone)
+            for (auto it = kv.second.begin(); it != kv.second.end();)
+                it = it->id == id ? kv.second.erase(it) : it + 1;
     }
 
     std::string Classify(std::string const& reason)
@@ -159,7 +196,10 @@ namespace
         std::ostringstream s;
         s << "{\"id\":";
         Esc(s, r.id);
-        s << ",\"owner\":" << r.owner << ",\"map\":" << r.map << ",\"instance\":" << r.instance
+        s << ",\"owner\":" << r.owner << ",\"viewers\":[";  // viewers: DCRUN1B
+        for (std::size_t i = 0; i < r.viewers.size(); ++i)
+            s << (i ? "," : "") << r.viewers[i];
+        s << "],\"map\":" << r.map << ",\"instance\":" << r.instance
           << ",\"heroic\":" << (r.heroic ? "true" : "false") << ",\"start\":" << r.start << ",\"end\":" << r.end
           << ",\"result\":";
         Esc(s, r.result);
@@ -195,10 +235,18 @@ namespace
         r.reason = reason;
         r.result = Classify(reason);
         AppendFile(r);
-        std::deque<Run>& done = gDone[r.owner];
-        done.push_front(std::move(r));
-        while (done.size() > kKeep)
-            done.pop_back();
+        // RebornWOW DCRUN1B: a copy for every viewer (the owner included)
+        std::vector<uint32> viewers = r.viewers;
+        if (std::find(viewers.begin(), viewers.end(), r.owner) == viewers.end())
+            viewers.insert(viewers.begin(), r.owner);
+        ForgetDoneLocked(r.id);
+        for (uint32 low : viewers)
+        {
+            std::deque<Run>& done = gDone[low];
+            done.push_front(r);
+            while (done.size() > kKeep)
+                done.pop_back();
+        }
     }
 
     std::vector<Member> Snapshot(Player* tank, Player* owner)
@@ -243,7 +291,7 @@ namespace
     Run const* FindLocked(uint32 owner, std::string const& id)
     {
         for (auto const& kv : gActive)
-            if (kv.second.owner == owner && kv.second.id == id)
+            if (Sees(kv.second, owner) && kv.second.id == id)  // DCRUN1B: viewers too
                 return &kv.second;
         auto it = gDone.find(owner);
         if (it != gDone.end())
@@ -306,6 +354,7 @@ namespace DcPlayerRuns
         uint32 const inst = tank->GetInstanceId(), map = tank->GetMapId();
         std::string const tier = DcPartyTier::TierFor(owner);
         std::vector<Member> members = Snapshot(tank, owner);
+        std::vector<uint32> const viewers = ViewersOf(tank, owner);  // DCRUN1B
 
         std::lock_guard<std::mutex> lock(gMtx);
         auto it = gActive.find(tank->GetGUID());
@@ -314,6 +363,7 @@ namespace DcPlayerRuns
             if (it->second.instance == inst && it->second.map == map)
             {
                 ++it->second.restarts;           // `dc on` again mid-run
+                AddViewers(it->second, viewers);  // DCRUN1B: whoever joined since
                 return;
             }
             FinishLocked(it, "Left the dungeon (a new run started).");
@@ -326,8 +376,9 @@ namespace DcPlayerRuns
             if (last.instance == inst && last.map == map && last.result != "clear" &&
                 time(nullptr) - last.end < kContinueWindow)
             {
-                Run r = std::move(last);
-                done.pop_front();
+                Run r = last;
+                ForgetDoneLocked(r.id);          // DCRUN1B: every viewer's copy
+                AddViewers(r, viewers);
                 r.result = "running";
                 r.reason.clear();
                 r.end = 0;
@@ -346,6 +397,7 @@ namespace DcPlayerRuns
         r.total = bossTotal;
         r.tier = tier.empty() ? "normal" : tier;
         r.members = std::move(members);
+        r.viewers = viewers;                     // DCRUN1B
         gActive[tank->GetGUID()] = std::move(r);
     }
 
@@ -373,7 +425,7 @@ namespace DcPlayerRuns
         {
             std::lock_guard<std::mutex> lock(gMtx);
             for (auto const& kv : gActive)
-                if (kv.second.owner == owner)
+                if (Sees(kv.second, owner))      // DCRUN1B: viewers too
                     rows.push_back(kv.second);
             auto it = gDone.find(owner);
             if (it != gDone.end())
