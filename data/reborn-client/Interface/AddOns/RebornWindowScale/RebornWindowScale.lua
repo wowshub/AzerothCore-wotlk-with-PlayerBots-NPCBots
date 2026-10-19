@@ -19,7 +19,9 @@ local KNOWN = {
     "SpellDraftPrestigeShopFrame", "SpellDraftTalentRefundDialog",
 }
 -- Windows that already scale themselves (RebornTalentGuide has its own grip).
-local SKIP = { RebornTalentGuideFrame = true, RebornDockFrame = true }
+-- WSC1F: DungeonClearFrame is the centre of DungeonClear's five-column panel, which has
+-- its own scale triangle at the panel's corner (DCUI3B5); two scalers would fight.
+local SKIP = { RebornTalentGuideFrame = true, RebornDockFrame = true, DungeonClearFrame = true }
 
 -- WSC1B: popups of these addons are picked up automatically -- any named panel
 -- that is a direct child of UIParent and starts with one of these prefixes
