@@ -46,6 +46,22 @@
 # "<key>" -> built-in default.
 
 ########################################
+# PANEL: INVITE ROSTER (RebornWOW DCUI3B)
+########################################
+
+#
+#    DungeonClear.PartyPicker.RealPlayers
+#        Which online REAL players the panel's "Real players" / "Search" lists may
+#        show (name, class, level only -- what /who shows).
+#        0: none.  1: only your friends and guild members.  2 (default): everyone.
+#        Bots are never counted as real players. Honoured live on `.reload config`.
+#
+#        Default: 2
+#
+
+DungeonClear.PartyPicker.RealPlayers = 2
+
+########################################
 # MODULE MASTER SWITCH
 ########################################
 

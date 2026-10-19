@@ -36,6 +36,7 @@
 #include "DcDungeonQueue.h"
 #include "TestRun/DcTestRunManager.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
+#include "DcPanelData.h"   // RebornWOW DCUI3B
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 #include "AiFactory.h"
 #include "Item.h"
@@ -699,6 +700,18 @@ public:
                 source = "party";
             }
             SendAddonPayload(player, "DC\tTIER\t" + tier + "\t" + source);
+            return;
+        }
+
+        // RebornWOW DCUI3B: the five-column panel -- every dungeon (with dungeon-clear
+        // support) and the invite roster by category. Any player, read-only.
+        if (subCmd == "dungeons" || subCmd == "roster")
+        {
+            auto send = [player](std::string const& payload) { SendAddonPayload(player, payload); };
+            if (subCmd == "dungeons")
+                DcPanelData::SendDungeons(player, send);
+            else
+                DcPanelData::SendRoster(player, param, send);
             return;
         }
 
