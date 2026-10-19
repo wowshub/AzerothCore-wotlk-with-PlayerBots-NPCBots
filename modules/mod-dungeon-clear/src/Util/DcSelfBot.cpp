@@ -10,6 +10,18 @@
 #include "PlayerbotAI.h"
 #include "PlayerbotMgr.h"
 #include "AiFactory.h"
+#include "Chat.h"                 // DCSB2A
+#include "Group.h"
+#include "Map.h"
+#include "ObjectAccessor.h"
+#include "PlayerbotAIConfig.h"
+#include "PlayerbotRepository.h"
+#include "ScriptMgr.h"
+#include "ServerFacade.h"
+#include "StringFormat.h"
+#include "WorldPacket.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcStatusPublisher.h"
+#include <vector>
 
 #include <mutex>
 #include <unordered_map>
@@ -158,6 +170,152 @@ namespace
     }
 }
 
+// RebornWOW DCSB2A ---------------------------------------------------------------
+// Auto-play for ordinary players, but only where design doc §10 allows it: inside a
+// dungeon while their party runs dungeon clear (AiPlayerbot.SelfBotLevel stays 1 =
+// GMs only everywhere else; 0 still disables it for everybody). Every 3 s:
+//   - a real player in a party with a running clear, in the same dungeon, who has not
+//     been asked for this run yet, gets "DC\tSBASK\t<suggested role>\t<tank>" and the
+//     addon pops "auto (tank / heal / dps) or manual";
+//   - a granted player who left the dungeon or the party is handed back (AI off).
+namespace
+{
+    std::mutex g_grantLock;
+    std::unordered_map<uint32, uint32> g_granted;    // player (low guid) -> 1 while granted
+    std::unordered_map<uint32, ObjectGuid> g_asked;  // player (low guid) -> the tank it was asked for
+
+    void SendAddon(Player* player, std::string const& payload)
+    {
+        if (!player || !player->GetSession())
+            return;
+        WorldPacket data;
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_PARTY, LANG_ADDON, player->GetGUID(), ObjectGuid::Empty, payload,
+                                     CHAT_TAG_NONE, player->GetName());
+        ServerFacade::instance().SendPacket(player, &data);
+    }
+
+    // The party's running dungeon-clear tank in the player's own dungeon copy, if any.
+    Player* ActiveTankOf(Player* player)
+    {
+        Group* g = player->GetGroup();
+        if (!g || !player->GetMap() || !player->GetMap()->IsDungeon())
+            return nullptr;
+        for (ObjectGuid const& guid : DcStatusPublisher::ActiveTanks())
+            if (Player* tank = ObjectAccessor::FindConnectedPlayer(guid))
+                if (tank->GetGroup() == g && tank->GetMap() == player->GetMap())
+                    return tank;
+        return nullptr;
+    }
+
+    // Turn the AI on: the stock rule, or (SelfBotLevel 1, not a GM) the dungeon-clear one.
+    std::string EnableSelf(Player* player)
+    {
+        if (sPlayerbotAIConfig.selfBotLevel != 1 || player->CanBeGameMaster())
+            return ToggleSelf(player);
+        if (!ActiveTankOf(player))
+            return "Auto-play is only available inside a dungeon while your party runs dungeon clear.";
+        PlayerbotsMgr::instance().AddPlayerbotData(player, true);
+        PlayerbotAI* ai = GET_PLAYERBOT_AI(player);
+        if (!ai)
+            return "playerbots could not start the AI for this character.";
+        ai->SetMaster(player);
+        PlayerbotRepository::instance().Load(ai);
+        std::lock_guard<std::mutex> lock(g_grantLock);
+        g_granted[player->GetGUID().GetCounter()] = 1;
+        return "";
+    }
+
+    void Ungrant(Player* player)
+    {
+        std::lock_guard<std::mutex> lock(g_grantLock);
+        g_granted.erase(player->GetGUID().GetCounter());
+    }
+
+    char const* SuggestRole(Player* player)
+    {
+        if (PlayerbotAI::IsTank(player, true))
+            return "tank";
+        if (PlayerbotAI::IsHeal(player, true))
+            return "heal";
+        return "dps";
+    }
+
+    class DcSelfBotRunScript : public WorldScript
+    {
+    public:
+        DcSelfBotRunScript() : WorldScript("DcSelfBotRunScript") {}
+
+        void OnUpdate(uint32 diff) override
+        {
+            _accum += diff;
+            if (_accum < 3000)
+                return;
+            _accum = 0;
+
+            // 1. hand back players who left the dungeon or the party
+            std::vector<uint32> granted;
+            {
+                std::lock_guard<std::mutex> lock(g_grantLock);
+                for (auto const& kv : g_granted)
+                    granted.push_back(kv.first);
+            }
+            for (uint32 low : granted)
+            {
+                Player* p = ObjectAccessor::FindConnectedPlayer(ObjectGuid::Create<HighGuid::Player>(low));
+                if (!p || !GET_PLAYERBOT_AI(p))
+                {
+                    std::lock_guard<std::mutex> lock(g_grantLock);
+                    g_granted.erase(low);
+                    continue;
+                }
+                if (!p->IsInWorld() || p->IsBeingTeleported())
+                    continue;
+                if (p->GetGroup() && p->GetMap() && p->GetMap()->IsDungeon())
+                    continue;
+                ToggleSelf(p);  // AI off
+                SetRole(p, "");
+                Ungrant(p);
+                SendAddon(p, "DC\tSELFBOT_MSG\trevoked\t");
+                SendAddon(p, DcSelfBot::StateLine(p));
+            }
+
+            // 2. ask real players in a party with a running clear
+            for (ObjectGuid const& tankGuid : DcStatusPublisher::ActiveTanks())
+            {
+                Player* tank = ObjectAccessor::FindConnectedPlayer(tankGuid);
+                Group* g = tank ? tank->GetGroup() : nullptr;
+                if (!g || !tank->GetMap() || !tank->GetMap()->IsDungeon())
+                    continue;
+                for (GroupReference* ref = g->GetFirstMember(); ref; ref = ref->next())
+                {
+                    Player* m = ref->GetSource();
+                    if (!m || m == tank || GET_PLAYERBOT_AI(m) || m->GetMap() != tank->GetMap() || !m->IsInWorld())
+                        continue;  // bots, players already on auto-play, members elsewhere
+                    if (g->IsLeader(m->GetGUID()))
+                        continue;  // the leader runs the clear from the panel
+                    uint32 const low = m->GetGUID().GetCounter();
+                    {
+                        std::lock_guard<std::mutex> lock(g_grantLock);
+                        auto it = g_asked.find(low);
+                        if (it != g_asked.end() && it->second == tankGuid)
+                            continue;
+                        g_asked[low] = tankGuid;
+                    }
+                    SendAddon(m, Acore::StringFormat("DC\tSBASK\t{}\t{}", SuggestRole(m), tank->GetName()));
+                }
+            }
+        }
+
+    private:
+        uint32 _accum = 0;
+    };
+}
+
+void DcSelfBot::RegisterScripts()
+{
+    new DcSelfBotRunScript();
+}
+
 std::string DcSelfBot::StateLine(Player* player)
 {
     if (!player)
@@ -186,6 +344,7 @@ void DcSelfBot::Handle(Player* player, std::string const& param, Reply const& re
                 reply("DC\tSELFBOT_MSG\tfail\t" + why);
         }
         SetRole(player, "");
+        Ungrant(player);  // RebornWOW DCSB2A
         reply(StateLine(player));
         return;
     }
@@ -194,7 +353,7 @@ void DcSelfBot::Handle(Player* player, std::string const& param, Reply const& re
     {
         if (!IsSelfBot(player))
         {
-            std::string const why = ToggleSelf(player);
+            std::string const why = EnableSelf(player);  // RebornWOW DCSB2A: the dungeon-clear rule
             if (!IsSelfBot(player))
             {
                 reply("DC\tSELFBOT_MSG\tfail\t" + why);

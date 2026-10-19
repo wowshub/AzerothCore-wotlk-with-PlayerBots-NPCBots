@@ -39,6 +39,9 @@ namespace DcSelfBot
 
     // Forget the remembered role (logout).
     void Forget(Player* player);
+
+    // RebornWOW DCSB2A: the run-time watcher (asks real teammates, hands back on leaving).
+    void RegisterScripts();
 }
 
 #endif

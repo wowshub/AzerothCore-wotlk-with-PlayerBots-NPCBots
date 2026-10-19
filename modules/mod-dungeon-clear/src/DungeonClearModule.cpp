@@ -103,6 +103,7 @@
 #include "TestRun/DcTestRunManager.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "DcPlayerRuns.h"  // RebornWOW DCRUN1A
+#include "Util/DcSelfBot.h"  // RebornWOW DCSB2A
 #include "DcUnderFloorRescue.h"   // RebornWOW DCHOL2A
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 
@@ -888,6 +889,7 @@ void AddSC_dungeon_clear_module()
     new DungeonClearCheatLogoutScript();      // RebornWOW DCGM1D
     new DungeonClearBossTierLogScript();      // RebornWOW DCGM1F
     DcPlayerRuns::RegisterScripts();           // RebornWOW DCRUN1A
+    DcSelfBot::RegisterScripts();              // RebornWOW DCSB2A
     new DungeonClearReaperScript();
     new DungeonClearZfStraySummonScript();
     new DungeonClearStratFallenCritterScript();
