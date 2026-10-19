@@ -443,7 +443,7 @@ public:
         static constexpr char const* kUsage =
             "Usage: .dc test start <dungeon> [heroic] [size=N|10|25] [level=N] [seed=N] "
             "[ilvl=N|none] [quality=normal|uncommon|rare|epic|legendary] [trace=1] "
-            "[cheat=story|casual|speed]\n"
+            "[cheat=story|casual|speed] [withme|withmegod]\n"
             "   or: .dc test start <dungeon> party=Tank,Heal,Dps1,Dps2,... [heroic] [trace=1] "
             "[cheat=story|casual|speed]";
 
@@ -456,6 +456,7 @@ public:
         DcTestGearTiers::Spec gear;
         bool heroic = false;
         bool trace = false;  // Pull Lab trace + oracles (lab_traces/<runId>.jsonl)
+        bool withMe = false, withMeGod = false;  // RebornWOW DCGM1C: mode 2, the GM joins
         std::istringstream in{std::string(args)};
         std::string word;
         while (in >> word)
@@ -504,6 +505,12 @@ public:
                     return true;
                 }
             }
+            // RebornWOW DCGM1C: mode 2 -- you join the bot party (one bot fewer)
+            else if (word == "withme" || word == "withmegod")
+            {
+                withMe = true;
+                withMeGod = word == "withmegod";
+            }
             else if (token.empty())
                 token = word;
             // Raid-size presets: a bare 10/25 AFTER the dungeon token reads as
@@ -525,6 +532,22 @@ public:
 
         std::string msg;
         std::string runId;
+        if (withMe && !party.empty())
+        {
+            handler->SendSysMessage("withme works with random bot parties only (party= already names the whole party).");
+            return true;
+        }
+        if (withMe)
+        {
+            if (!size)
+                size = 5;
+            if (size < 3)
+            {
+                handler->SendSysMessage("withme needs size 3 or more (you plus at least a tank and a healer).");
+                return true;
+            }
+            size -= 1;  // you take one of the places
+        }
         if (!party.empty())
         {
             // Reject rather than silently ignore: somebody passing level= with a
@@ -554,6 +577,8 @@ public:
             msg += " [trace armed: oracles scored at teardown]";
         if (!cheat.empty() && !runId.empty() && DcTestRunManager::Instance().SetCheatTier(runId, cheat))
             msg += " [cheat tier: " + cheat + "]";
+        if (withMe && !runId.empty() && DcTestRunManager::Instance().JoinPlayer(runId, issuer, withMeGod))
+            msg += withMeGod ? " [you join the party, invincible]" : " [you join the party]";
         handler->SendSysMessage(msg);
         return true;
     }

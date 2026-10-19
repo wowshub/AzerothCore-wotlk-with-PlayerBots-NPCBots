@@ -236,6 +236,8 @@ public:
 
     // RebornWOW DCGM1B: cheat tier for a just-started run (story|casual|speed).
     bool SetCheatTier(std::string const& runId, std::string const& tier);
+    // RebornWOW DCGM1C: `player` joins the run's bot party (mode 2); god = invincible.
+    bool JoinPlayer(std::string const& runId, Player* player, bool god);
     // Damage percent a test bot deals under its tier (0 = none set). Any thread:
     // read on every hit, so an atomic flag short-circuits when no tier is live.
     static uint32 CheatDamagePct(ObjectGuid attacker);

@@ -962,6 +962,20 @@ bool DcTestRunManager::SetCheatTier(std::string const& runId, std::string const&
     return false;
 }
 
+// RebornWOW DCGM1C
+bool DcTestRunManager::JoinPlayer(std::string const& runId, Player* player, bool god)
+{
+    if (!player)
+        return false;
+    for (auto const& job : _runs)
+        if (job->RunId() == runId)
+        {
+            job->SetJoinPlayer(player->GetGUID(), god);
+            return true;
+        }
+    return false;
+}
+
 bool DcTestRunManager::ViewerRunTier(Player* viewer, std::string* tier) const
 {
     if (!viewer || !viewer->IsInWorld())

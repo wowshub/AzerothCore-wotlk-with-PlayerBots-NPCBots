@@ -195,6 +195,9 @@ public:
     // start (`.dc test start ... cheat=story|casual|speed`) and applied once every
     // bot is in the world. World thread.
     void SetCheatTier(std::string const& tier) { _cheatTier = tier; }
+    // RebornWOW DCGM1C: mode 2 -- a real player (the GM) joins this bot party.
+    void SetJoinPlayer(ObjectGuid player, bool god) { _joinGuid = player; _joinGod = god; }
+    ObjectGuid JoinGuid() const { return _joinGuid; }
     // RebornWOW DCGM1B2: the tier in force ("" = normal), and a GM switch of a
     // running test's tier (normal | story | casual | speed). World thread.
     std::string const& CheatTier() const { return _cheatTier; }
@@ -522,7 +525,17 @@ private:
     // RebornWOW DCGM1B
     void ApplyCheatTier();
     void NoteTierInRecord(std::string const& tier);  // DCGM1B2
+    bool JoinPlayerReady();  // RebornWOW DCGM1C: false while the joining player is on the way
+    void ReleaseJoinPlayer();  // RebornWOW DCGM1C: teardown side
     std::string _cheatTier;
+    // RebornWOW DCGM1C: the joining player and where to send it back
+    ObjectGuid _joinGuid;
+    bool _joinGod = false;
+    bool _joinIssued = false;
+    uint32 _joinIssuedAtMs = 0;
+    bool _joinPosSaved = false;
+    uint32 _joinMap = 0;
+    float _joinX = 0.f, _joinY = 0.f, _joinZ = 0.f, _joinO = 0.f;
     bool _cheatApplied = false;
     // Who was still standing the tick before the wipe latched — the last dead
     // member's name is the one worth naming in the fail reason.

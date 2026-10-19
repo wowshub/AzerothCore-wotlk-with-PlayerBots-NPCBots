@@ -1440,6 +1440,9 @@ void DcTestRunJob::TickTeleporting()
 
     if (allThere)
     {
+        // RebornWOW DCGM1C: mode 2 -- the GM joins once the bots are in.
+        if (!_lab && !_joinGuid.IsEmpty() && !JoinPlayerReady())
+            return;
         // A Lab party never starts a clear: the driver stages it from here.
         EnterStage(_lab ? Stage::Lab : Stage::Starting);
         return;
@@ -2523,6 +2526,9 @@ void DcTestRunJob::Teardown()
         DcTestRunManager::SetCheatDamagePct(guid, 0);
     }
 
+    // RebornWOW DCGM1C: the joined player leaves first (before the party is dissolved).
+    ReleaseJoinPlayer();
+
     // Report the relay's tally before Disarm() drops the volume list. Logged
     // whenever the map had anything to relay, INCLUDING zero fires — "0 of 1"
     // is the party never reaching the volume, which is a different failure from
@@ -2669,6 +2675,89 @@ bool DcTestRunJob::RequestRegroup(std::string const& why)
         _regroupWhy = why;
     }
     return true;
+}
+
+// RebornWOW DCGM1C -----------------------------------------------------------
+// Mode 2 "me + bots": once every bot stands in the dungeon, the joining player is put
+// into the bot party (the tank stays the leader) and teleported to the tank. The clear
+// starts when the player has arrived in the same copy, or after 30 s without them.
+bool DcTestRunJob::JoinPlayerReady()
+{
+    Player* p = ObjectAccessor::FindConnectedPlayer(_joinGuid);
+    Player* tank = FindTank();
+    if (!p || !tank || !tank->GetGroup())
+    {
+        _joinGuid.Clear();
+        return true;
+    }
+    if (!_joinIssued)
+    {
+        _joinIssued = true;
+        _joinIssuedAtMs = _stageMs;
+        Group* group = tank->GetGroup();
+        if (p->GetGroup() && p->GetGroup() != group)
+            p->RemoveFromGroup();
+        if (!p->GetGroup())
+        {
+            if (!group->isRaidGroup() && group->GetMembersCount() >= 5)
+                group->ConvertToRaid();
+            if (!group->AddMember(p))
+            {
+                ChatHandler(p->GetSession()).SendSysMessage(
+                    "|cff33ccff[DC test]|r Could not add you to the bot party; the run starts without you.");
+                _joinGuid.Clear();
+                return true;
+            }
+        }
+        _joinMap = p->GetMapId();
+        _joinX = p->GetPositionX();
+        _joinY = p->GetPositionY();
+        _joinZ = p->GetPositionZ();
+        _joinO = p->GetOrientation();
+        _joinPosSaved = true;
+        if (_joinGod)
+            p->SetCommandStatusOn(CHEAT_GOD);
+        _record.extras.push_back({"withPlayer", p->GetName(), false});
+        NoteCheat("player", std::string("joined the party") + (_joinGod ? " (invincible)" : ""));
+        LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1C {} joins the party{}", _record.runId, p->GetName(),
+                 _joinGod ? " (god)" : "");
+        p->TeleportTo(_mapId, tank->GetPositionX(), tank->GetPositionY(), tank->GetPositionZ(), tank->GetOrientation());
+        return false;
+    }
+    if (p->IsInWorld() && !p->IsBeingTeleported() && p->GetMapId() == _mapId && p->GetInstanceId() == _destInstanceId)
+        return true;
+    if (_stageMs - _joinIssuedAtMs >= 30000)
+    {
+        ChatHandler(p->GetSession()).SendSysMessage(
+            "|cff33ccff[DC test]|r You did not reach the party's dungeon copy in 30 s; the run starts anyway.");
+        return true;
+    }
+    return false;
+}
+
+// Teardown side: invincibility off, out of the bot party (revived if dead), back to
+// where the test started (design 9.3 item 4).
+void DcTestRunJob::ReleaseJoinPlayer()
+{
+    if (_joinGuid.IsEmpty())
+        return;
+    Player* p = ObjectAccessor::FindConnectedPlayer(_joinGuid);
+    _joinGuid.Clear();
+    if (!p)
+        return;
+    if (_joinGod)
+        p->SetCommandStatusOff(CHEAT_GOD);
+    Player* tank = FindTank();
+    if (p->GetGroup() && (!tank || p->GetGroup() == tank->GetGroup()))
+        p->RemoveFromGroup();
+    if (!p->IsAlive())
+    {
+        p->ResurrectPlayer(1.0f);
+        p->SpawnCorpseBones();
+    }
+    if (_joinPosSaved)
+        p->TeleportTo(_joinMap, _joinX, _joinY, _joinZ, _joinO);
+    ChatHandler(p->GetSession()).SendSysMessage("|cff33ccff[DC test]|r The test run ended; you left the bot party.");
 }
 
 void DcTestRunJob::NoteCheat(std::string const& who, std::string const& what)
