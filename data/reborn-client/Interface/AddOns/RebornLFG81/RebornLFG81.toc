@@ -1,0 +1,5 @@
+## Interface: 30300
+## Title: RebornLFG81
+## Notes: RebornWOW LFG81B - 81级以上显示巫妖王普通副本和随机普通
+## Version: LFG81B
+RebornLFG81.lua
