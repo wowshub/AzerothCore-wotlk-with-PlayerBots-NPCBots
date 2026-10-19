@@ -13,6 +13,7 @@
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "PlayerbotAI.h"
+#include "PlayerbotAIConfig.h"  // DCTEST8A
 #include "Playerbots.h"
 #include "SocialMgr.h"
 #include "StringFormat.h"
@@ -185,6 +186,38 @@ namespace
             out.push_back(c);
         }
     }
+
+    // RebornWOW DCTEST8A: OFFLINE random-bot characters of the player's faction within 3
+    // levels of `level` (0 = the player's own) -- what a `.dc test ... party=` roster can
+    // use. The server still checks each name when the run starts.
+    void Pool(Player* me, uint32 level, std::vector<Cand>& out)
+    {
+        int const lv = int(level ? level : me->GetLevel());
+        TeamId const team = me->GetTeamId();
+        if (QueryResult r = CharacterDatabase.Query(
+                "SELECT guid, name, class, level, race, account FROM characters "
+                "WHERE online = 0 AND level BETWEEN {} AND {} LIMIT 600",
+                std::max(1, lv - 3), lv + 3))
+        {
+            do
+            {
+                Field* f = r->Fetch();
+                if (!sPlayerbotAIConfig.IsInRandomAccountList(f[5].Get<uint32>()))
+                    continue;
+                uint8 const race = f[4].Get<uint8>();
+                if (Player::TeamIdForRace(race) != team)
+                    continue;
+                Cand c;
+                c.name = f[1].Get<std::string>();
+                c.cls = f[2].Get<uint8>();
+                c.level = f[3].Get<uint8>();
+                c.race = race;
+                c.online = false;
+                c.extra = "o";
+                out.push_back(c);
+            } while (r->NextRow());
+        }
+    }
 }
 
 namespace DcPanelData
@@ -261,6 +294,14 @@ namespace DcPanelData
         std::size_t const tab = param.find('\t');
         std::string const cat = tab == std::string::npos ? param : param.substr(0, tab);
         std::string const q = tab == std::string::npos ? "" : param.substr(tab + 1);
+        // RebornWOW DCTEST8A: "pool" takes "<name fragment>\t<level>"
+        std::string frag = q;
+        uint32 poolLevel = 0;
+        if (std::size_t const t2 = q.find('\t'); t2 != std::string::npos)
+        {
+            frag = q.substr(0, t2);
+            poolLevel = static_cast<uint32>(std::strtoul(q.c_str() + t2 + 1, nullptr, 10));
+        }
 
         std::vector<Cand> v;
         if (cat == "account")
@@ -271,6 +312,8 @@ namespace DcPanelData
             NpcBots(player, v);
         else if (cat == "players")
             RealPlayers(player, v);
+        else if (cat == "pool")
+            Pool(player, poolLevel, v);
         else if (cat == "search")
         {
             Account(player, v);
@@ -286,7 +329,7 @@ namespace DcPanelData
         }
         std::vector<Cand> kept;
         for (Cand const& c : v)
-            if (NameMatches(c.name, q))
+            if (NameMatches(c.name, frag))
                 kept.push_back(c);
         SortByLevel(kept, player->GetLevel());
         if (kept.size() > 40)
