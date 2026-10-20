@@ -1826,11 +1826,15 @@ namespace
             SpellInfo const* si = sSpellMgr->GetSpellInfo(entry.first);
             if (!si || si->IsPassive() || !si->HasEffect(SPELL_EFFECT_HEAL) || si->PowerType != POWER_MANA)
                 continue;
+            // RebornWOW DCBOSS1C2: a heal with its own cooldown (Riptide) says nothing about the
+            // global cooldown -- probe a cooldown-free one
+            if (si->RecoveryTime > 0 || si->CategoryRecoveryTime > 0)
+                continue;
             if (!heal || si->SpellLevel > heal->SpellLevel)
                 heal = si;
         }
         if (!heal)
-            return "no heal spell known";
+            return "no cooldown-free heal known";
         uint32 result[2] = { 0, 0 };
         for (int i = 0; i < 2; ++i)
         {
