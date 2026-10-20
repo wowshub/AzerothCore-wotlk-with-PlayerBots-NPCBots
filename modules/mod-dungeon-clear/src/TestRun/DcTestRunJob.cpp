@@ -2784,12 +2784,14 @@ void DcTestRunJob::CatchUpJoinPlayer(uint32 dt)
     Player* p = ObjectAccessor::FindConnectedPlayer(_joinGuid);
     Player* tank = FindTank();
     if (!p || !tank || !p->IsInWorld() || !tank->IsInWorld() || p->IsBeingTeleported() ||
-        !p->IsAlive() || p->IsInCombat() || p->GetMap() != tank->GetMap() || p->GetGroup() != tank->GetGroup())
+        !p->IsAlive() || p->IsInCombat() || tank->IsInCombat() ||  // DCGM1C4: never into a pull
+        p->GetMap() != tank->GetMap() || p->GetGroup() != tank->GetGroup())
     {
         _joinFarMs = 0;
         return;
     }
-    if (p->GetExactDist(tank) <= 50.0f)
+    // DCGM1C4: 30 yd -- the trail keeps ~15; stuck spots seen at 44.9 and 51.3 yd
+    if (p->GetExactDist(tank) <= 30.0f)
     {
         _joinFarMs = 0;
         return;
@@ -2798,6 +2800,8 @@ void DcTestRunJob::CatchUpJoinPlayer(uint32 dt)
     if (_joinFarMs < 8000)
         return;
     _joinFarMs = 0;
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1C4 {} stuck at ({:.1f}, {:.1f}, {:.1f}) {:.1f} yd behind the tank",
+             _record.runId, p->GetName(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetExactDist(tank));
     p->NearTeleportTo(tank->GetPositionX(), tank->GetPositionY(), tank->GetPositionZ(), tank->GetOrientation());
     ChatHandler(p->GetSession()).SendSysMessage(
         "|cff33ccff[DC test]|r You fell behind the party; you were moved to the tank.");
