@@ -303,6 +303,36 @@ namespace
         SendAddonPayload(player, "DC\tTI_END\t" + AddonField(runId));
     }
 
+    // RebornWOW DCGM3A: "gmcmd <text>" -- a GM command typed from the panel by a player who cannot
+    // speak (dead): chat is refused to the dead, the addon channel is not. Run through the
+    // ordinary command parser of the player's own session, so every command still checks its own
+    // security level; GM accounts only, and only what the panel itself sends.
+    void HandleGmCommand(Player* player, std::string const& param)
+    {
+        WorldSession* session = player->GetSession();
+        if (!session || session->GetSecurity() < SEC_GAMEMASTER)
+        {
+            SendAddonPayload(player, "DC\tTR_ERR\tgm");
+            return;
+        }
+        static char const* const allowed[] = { ".dc ", ".gps", ".go xyz ", ".groupsummon " };
+        bool ok = false;
+        for (char const* prefix : allowed)
+            if (param.rfind(prefix, 0) == 0)
+            {
+                ok = true;
+                break;
+            }
+        if (!ok)
+        {
+            LOG_WARN("module", "mod-dungeon-clear: {} sent a gmcmd the panel does not send: '{}'", player->GetName(), param);
+            return;
+        }
+        ChatHandler handler(session);
+        if (!handler.ParseCommands(param))
+            handler.SendSysMessage("Unknown command.");
+    }
+
     // DCTEST4A: "testcap" [N|reset] -- show or set the concurrent-run cap from the panel.
     void HandleTestCap(Player* player, std::string const& param)
     {
@@ -792,6 +822,13 @@ public:
         if (subCmd == "rezchoice")
         {
             DcRezRecovery::HandleCorpseRunChoice(player, param);
+            return;
+        }
+
+        // RebornWOW DCGM3A: a panel GM command from a player who is dead (chat is refused to the dead)
+        if (subCmd == "gmcmd")
+        {
+            HandleGmCommand(player, param);
             return;
         }
 
