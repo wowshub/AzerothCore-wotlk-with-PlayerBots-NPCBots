@@ -822,6 +822,7 @@ void DcTestRunJob::Tick(uint32 diff)
                 uint32 const dt = _monitorAccumMs;
                 _monitorAccumMs = 0;
                 TickMonitoring(dt);
+                CatchUpJoinPlayer(dt);  // RebornWOW DCGM1C3
             }
             break;
         default:
@@ -2770,6 +2771,37 @@ void DcTestRunJob::ReleaseJoinPlayer()
     if (_joinPosSaved)
         p->TeleportTo(_joinMap, _joinX, _joinY, _joinZ, _joinO);
     ChatHandler(p->GetSession()).SendSysMessage("|cff33ccff[DC test]|r The test run ended; you left the bot party.");
+}
+
+// RebornWOW DCGM1C3: "Me: in" is riding along -- a joined player who falls far behind
+// (out of combat, alive, in the run's dungeon copy, > 50 yd from the bot tank for 8 s) is
+// put next to the tank. Otherwise the tank waits on him "out of range" and the run stands
+// still (2026-10-19: Apris 44.9 yd behind, follow failing, the run frozen).
+void DcTestRunJob::CatchUpJoinPlayer(uint32 dt)
+{
+    if (_joinGuid.IsEmpty())
+        return;
+    Player* p = ObjectAccessor::FindConnectedPlayer(_joinGuid);
+    Player* tank = FindTank();
+    if (!p || !tank || !p->IsInWorld() || !tank->IsInWorld() || p->IsBeingTeleported() ||
+        !p->IsAlive() || p->IsInCombat() || p->GetMap() != tank->GetMap() || p->GetGroup() != tank->GetGroup())
+    {
+        _joinFarMs = 0;
+        return;
+    }
+    if (p->GetExactDist(tank) <= 50.0f)
+    {
+        _joinFarMs = 0;
+        return;
+    }
+    _joinFarMs += dt;
+    if (_joinFarMs < 8000)
+        return;
+    _joinFarMs = 0;
+    p->NearTeleportTo(tank->GetPositionX(), tank->GetPositionY(), tank->GetPositionZ(), tank->GetOrientation());
+    ChatHandler(p->GetSession()).SendSysMessage(
+        "|cff33ccff[DC test]|r You fell behind the party; you were moved to the tank.");
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1C3 {} fell behind, moved to the tank", _record.runId, p->GetName());
 }
 
 void DcTestRunJob::NoteCheat(std::string const& who, std::string const& what)

@@ -527,6 +527,7 @@ private:
     void NoteTierInRecord(std::string const& tier);  // DCGM1B2
     bool JoinPlayerReady();  // RebornWOW DCGM1C: false while the joining player is on the way
     void ReleaseJoinPlayer();  // RebornWOW DCGM1C: teardown side
+    void CatchUpJoinPlayer(uint32 dt);  // RebornWOW DCGM1C3: a joined player left behind
     std::string _cheatTier;
     // RebornWOW DCGM1C: the joining player and where to send it back
     ObjectGuid _joinGuid;
@@ -534,6 +535,7 @@ private:
     bool _joinIssued = false;
     uint32 _joinIssuedAtMs = 0;
     bool _joinPosSaved = false;
+    uint32 _joinFarMs = 0;  // RebornWOW DCGM1C3: how long the joined player has been far behind
     uint32 _joinMap = 0;
     float _joinX = 0.f, _joinY = 0.f, _joinZ = 0.f, _joinO = 0.f;
     bool _cheatApplied = false;
