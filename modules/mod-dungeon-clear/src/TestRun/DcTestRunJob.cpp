@@ -29,6 +29,7 @@
 #include "StringFormat.h"
 #include "Util/DcPlayerbotsConfig.h"
 #include "World.h"
+#include "TestRun/DcDeathLog.h"  // RebornWOW DCBOSS1A
 
 #include "AiFactory.h"
 #include "Playerbots.h"
@@ -1689,6 +1690,7 @@ void DcTestRunJob::TrackDeaths(Player* tank)
     {
         if (!member || !member->IsInWorld())
             return;
+        DcDeathLog::Track(member->GetGUID(), _record.runId);  // RebornWOW DCBOSS1A: idempotent
         bool const alive = member->IsAlive();
         auto const [it, fresh] = _aliveLast.emplace(member->GetGUID(), alive);
         if (fresh)
@@ -1705,6 +1707,52 @@ void DcTestRunJob::TrackDeaths(Player* tank)
         death.opponent = _engaged.name;
         death.opponentEntry = _engaged.entry;
         death.onBoss = _engaged.isBoss;
+        // RebornWOW DCBOSS1A: what actually killed them, from the damage log
+        death.x = static_cast<int>(member->GetPositionX());
+        death.y = static_cast<int>(member->GetPositionY());
+        death.z = static_cast<int>(member->GetPositionZ());
+        for (auto const& c : _record.comp)
+            if (c.name == death.name)
+            {
+                death.role = c.role;
+                break;
+            }
+        if (death.role.empty())
+            death.role = "player";
+        DcDeathLog::Detail const cause = DcDeathLog::TakeDeath(member->GetGUID());
+        if (cause.any)
+        {
+            death.killer = cause.killer;
+            death.killerSpell = cause.killerSpell;
+            death.killerSpellId = cause.killerSpellId;
+            death.killerAmount = cause.killerAmount;
+            death.killerOverkill = cause.killerOverkill;
+            death.killerHpPct = cause.killerHpPct;
+            death.killerBoss = cause.killerBoss;
+            death.dmg5s = cause.dmg5s;
+            death.dmg10s = cause.dmg10s;
+            death.heal5s = cause.heal5s;
+            death.heal10s = cause.heal10s;
+            death.topSrc = cause.topSrc;
+            death.topSpell = cause.topSpell;
+            death.topAmount = cause.topAmount;
+            for (DcDeathLog::LastHit const& h : cause.lastHits)
+            {
+                DcTestRunRecord::DeathEntry::LastHit lh;
+                lh.ageMs = h.ageMs;
+                lh.src = h.src;
+                lh.spell = h.spell;
+                lh.amount = h.amount;
+                death.lastHits.push_back(std::move(lh));
+            }
+        }
+        LOG_INFO("playerbots.dungeonclear",
+                 "TESTRUN {} DCBOSS1A death {} ({}) t={}s killer={} spell={} amount={} overkill={} killerHp={}% "
+                 "last5s damage={} healing={} top={}/{} ({}) at ({}, {}, {}) while fighting {}",
+                 _record.runId, death.name, death.role, death.t, cause.any ? cause.killer : std::string("?"),
+                 cause.any ? cause.killerSpell : std::string("?"), cause.killerAmount, cause.killerOverkill,
+                 cause.killerHpPct, cause.dmg5s, cause.heal5s, cause.topSrc, cause.topSpell, cause.topAmount,
+                 death.x, death.y, death.z, death.opponent.empty() ? std::string("nothing") : death.opponent);
         _record.deaths.push_back(death);
         // Deliberately overwritten even when the latch is empty: this means
         // "what the LAST death was to", not "the last death that had a killer".
@@ -2616,6 +2664,32 @@ void DcTestRunJob::Teardown()
     // rely on it.
     UnbindFromMap();
 
+    // RebornWOW DCBOSS1A: the run's damage / healing totals, then stop logging it
+    {
+        std::vector<DcDeathLog::SourceTotal> sources;
+        std::vector<DcDeathLog::HealerTotal> healers;
+        std::uint64_t taken = 0;
+        DcDeathLog::Totals(_record.runId, 12, 6, &sources, &healers, &taken);
+        _record.damageTakenTotal = taken;
+        for (DcDeathLog::SourceTotal const& t : sources)
+        {
+            DcTestRunRecord::DamageSource d;
+            d.src = t.src;
+            d.spell = t.spell;
+            d.spellId = t.spellId;
+            d.total = t.total;
+            d.hits = t.hits;
+            _record.damageTaken.push_back(std::move(d));
+        }
+        for (DcDeathLog::HealerTotal const& t : healers)
+        {
+            DcTestRunRecord::HealSource h;
+            h.name = t.name;
+            h.total = t.total;
+            _record.healDone.push_back(std::move(h));
+        }
+        DcDeathLog::Untrack(_record.runId);
+    }
     _record.endedAtMs = NowUnixMs();
     _record.durationS = static_cast<uint32>((_record.endedAtMs - _record.startedAtMs) / 1000);
     // A Lab party's runs are recorded by the Lab (dc_labruns.jsonl); the host

@@ -80,6 +80,43 @@ namespace DcTestRunRecord
         std::string opponent;      // what was on the party; "" if out of combat
         std::uint32_t opponentEntry = 0;
         bool onBoss = false;       // opponent is a roster/flagged boss
+        // RebornWOW DCBOSS1A: what actually killed them (all "" / 0 when nothing was logged)
+        std::string killer;        // source of the last hit
+        std::string killerSpell;   // "" = unknown hit
+        std::uint32_t killerSpellId = 0;
+        std::uint32_t killerAmount = 0;
+        std::uint32_t killerOverkill = 0;
+        int killerHpPct = -1;      // the killer's own health %, -1 = not a creature
+        bool killerBoss = false;
+        std::uint32_t dmg5s = 0, dmg10s = 0, heal5s = 0, heal10s = 0;  // before the last hit
+        std::string topSrc, topSpell;   // the biggest damage dealer of the last 5 s
+        std::uint32_t topAmount = 0;
+        std::string role;          // tank | heal | dps | player
+        int x = 0, y = 0, z = 0;   // where they died
+        struct LastHit
+        {
+            std::uint32_t ageMs = 0;
+            std::string src;
+            std::string spell;
+            std::uint32_t amount = 0;
+        };
+        std::vector<LastHit> lastHits;  // newest first
+    };
+
+    // RebornWOW DCBOSS1A: damage the party took, by source and spell, and healing by healer.
+    struct DamageSource
+    {
+        std::string src;
+        std::string spell;
+        std::uint32_t spellId = 0;
+        std::uint64_t total = 0;
+        std::uint32_t hits = 0;
+    };
+
+    struct HealSource
+    {
+        std::string name;
+        std::uint64_t total = 0;
     };
 
     // One pull the Dynamic governor took a verdict on, with what the classifier
@@ -160,7 +197,9 @@ namespace DcTestRunRecord
         //     two fields to group and filter runs by.
         // 18: RebornWOW DCTEST10A -- gm: the name of the GM who started the run, so each
         //     GM's panel can list only their own runs.
-        std::uint32_t schema = 18;
+        // 19: RebornWOW DCBOSS1A -- death entries say what killed the member (killer, spell,
+        //     amount, boss health, damage/healing around it); damageTaken / healDone.
+        std::uint32_t schema = 19;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -225,6 +264,9 @@ namespace DcTestRunRecord
         std::vector<CheatEntry> cheats;
         std::string cheatTier;  // RebornWOW DCGM1B (schema 16)
         std::string gmName;     // RebornWOW DCTEST10A (schema 18): who started the run
+        std::vector<DamageSource> damageTaken;   // RebornWOW DCBOSS1A (schema 19)
+        std::vector<HealSource> healDone;
+        std::uint64_t damageTakenTotal = 0;
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

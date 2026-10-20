@@ -31,6 +31,7 @@
 #include "Ai/Dungeon/DungeonClear/Util/DcTargeting.h"
 #include "InstanceScript.h"
 
+#include "TestRun/DcDeathLog.h"  // RebornWOW DCBOSS1A
 #include "TestRun/DcTestComp.h"
 #include "TestRun/DcTestDungeonRegistry.h"
 #include "TestRun/DcTestPlanManager.h"
@@ -689,7 +690,9 @@ namespace
 bool DcTestRunManager::AddonRunDetail(std::string const& runId,
                                       std::vector<DcTestRunRecord::BossKill>* kills,
                                       std::vector<DcTestRunRecord::DeathEntry>* deaths,
-                                      std::vector<ChecklistRow>* checklist) const
+                                      std::vector<ChecklistRow>* checklist,
+                                      std::vector<DcTestRunRecord::DamageSource>* damage,
+                                      std::vector<DcTestRunRecord::HealSource>* healing) const
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
     for (auto const& job : _runs)
@@ -702,6 +705,31 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *deaths = job->RecordData().deaths;
         if (checklist)
             BuildChecklist(job->TankGuid(), *checklist);
+        if (damage || healing)  // RebornWOW DCBOSS1A: the live totals
+        {
+            std::vector<DcDeathLog::SourceTotal> sources;
+            std::vector<DcDeathLog::HealerTotal> healers;
+            DcDeathLog::Totals(runId, 10, 6, &sources, &healers, nullptr);
+            if (damage)
+                for (DcDeathLog::SourceTotal const& t : sources)
+                {
+                    DcTestRunRecord::DamageSource d;
+                    d.src = t.src;
+                    d.spell = t.spell;
+                    d.spellId = t.spellId;
+                    d.total = t.total;
+                    d.hits = t.hits;
+                    damage->push_back(std::move(d));
+                }
+            if (healing)
+                for (DcDeathLog::HealerTotal const& t : healers)
+                {
+                    DcTestRunRecord::HealSource h;
+                    h.name = t.name;
+                    h.total = t.total;
+                    healing->push_back(std::move(h));
+                }
+        }
         return true;
     }
     // RebornWOW DCTEST6A: a finished run's stats stay readable.
@@ -713,6 +741,10 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *kills = rec.bossTimeline;
         if (deaths)
             *deaths = rec.deaths;
+        if (damage)  // RebornWOW DCBOSS1A
+            *damage = rec.damageTaken;
+        if (healing)
+            *healing = rec.healDone;
         // DCTEST7A: the tank is gone; the record's boss roster against its kills.
         if (checklist)
             for (std::string const& name : rec.bossRoster)

@@ -195,7 +195,9 @@ public:
     bool AddonRunDetail(std::string const& runId,
                         std::vector<DcTestRunRecord::BossKill>* kills,
                         std::vector<DcTestRunRecord::DeathEntry>* deaths,
-                        std::vector<ChecklistRow>* checklist = nullptr) const;
+                        std::vector<ChecklistRow>* checklist = nullptr,
+                        std::vector<DcTestRunRecord::DamageSource>* damage = nullptr,   // RebornWOW DCBOSS1A
+                        std::vector<DcTestRunRecord::HealSource>* healing = nullptr) const;
     bool IsActive() const { return !_runs.empty(); }
 
     // Remaining global-cap headroom for the plan scheduler's launch decision

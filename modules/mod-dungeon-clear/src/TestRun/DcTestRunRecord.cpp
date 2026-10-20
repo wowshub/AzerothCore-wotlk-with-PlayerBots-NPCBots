@@ -20,6 +20,35 @@ namespace DcTestRunRecord
             s << '"' << EscapeJson(v) << '"';
         }
 
+        // RebornWOW DCBOSS1A: ,"damageTakenTotal":N,"damageTaken":[...],"healDone":[...]
+        std::string DamageJson(Record const& rec)
+        {
+            std::ostringstream s;
+            s << ",\"damageTakenTotal\":" << rec.damageTakenTotal << ",\"damageTaken\":[";
+            for (std::size_t i = 0; i < rec.damageTaken.size(); ++i)
+            {
+                DamageSource const& d = rec.damageTaken[i];
+                if (i)
+                    s << ',';
+                s << "{\"src\":";
+                AppendEscaped(s, d.src);
+                s << ",\"spell\":";
+                AppendEscaped(s, d.spell);
+                s << ",\"spellId\":" << d.spellId << ",\"total\":" << d.total << ",\"hits\":" << d.hits << '}';
+            }
+            s << "],\"healDone\":[";
+            for (std::size_t i = 0; i < rec.healDone.size(); ++i)
+            {
+                if (i)
+                    s << ',';
+                s << "{\"name\":";
+                AppendEscaped(s, rec.healDone[i].name);
+                s << ",\"total\":" << rec.healDone[i].total << '}';
+            }
+            s << ']';
+            return s.str();
+        }
+
         void AppendStatus(std::ostringstream& s, StatusEntry const& e)
         {
             s << "{\"t\":" << e.t << ",\"state\":";
@@ -190,7 +219,34 @@ namespace DcTestRunRecord
             s << ",\"opponent\":";
             AppendEscaped(s, d.opponent);
             s << ",\"opponentEntry\":" << d.opponentEntry
-              << ",\"onBoss\":" << (d.onBoss ? "true" : "false") << '}';
+              << ",\"onBoss\":" << (d.onBoss ? "true" : "false");
+            // RebornWOW DCBOSS1A
+            s << ",\"killer\":";
+            AppendEscaped(s, d.killer);
+            s << ",\"killerSpell\":";
+            AppendEscaped(s, d.killerSpell);
+            s << ",\"killerSpellId\":" << d.killerSpellId << ",\"killerAmount\":" << d.killerAmount
+              << ",\"killerOverkill\":" << d.killerOverkill << ",\"killerHpPct\":" << d.killerHpPct
+              << ",\"killerBoss\":" << (d.killerBoss ? "true" : "false")
+              << ",\"dmg5s\":" << d.dmg5s << ",\"dmg10s\":" << d.dmg10s
+              << ",\"heal5s\":" << d.heal5s << ",\"heal10s\":" << d.heal10s << ",\"topSrc\":";
+            AppendEscaped(s, d.topSrc);
+            s << ",\"topSpell\":";
+            AppendEscaped(s, d.topSpell);
+            s << ",\"topAmount\":" << d.topAmount << ",\"role\":";
+            AppendEscaped(s, d.role);
+            s << ",\"pos\":[" << d.x << ',' << d.y << ',' << d.z << "],\"lastHits\":[";
+            for (std::size_t k = 0; k < d.lastHits.size(); ++k)
+            {
+                if (k)
+                    s << ',';
+                s << "{\"ageMs\":" << d.lastHits[k].ageMs << ",\"src\":";
+                AppendEscaped(s, d.lastHits[k].src);
+                s << ",\"spell\":";
+                AppendEscaped(s, d.lastHits[k].spell);
+                s << ",\"amount\":" << d.lastHits[k].amount << '}';
+            }
+            s << "]}";
         }
         s << "],\"pulls\":[";
         for (std::size_t i = 0; i < rec.pulls.size(); ++i)
@@ -217,6 +273,7 @@ namespace DcTestRunRecord
         s << "],\"cheatTier\":\"" << rec.cheatTier << '"'
           << ",\"tierClass\":\"" << TierClass(rec) << '"'  // RebornWOW DCGM1B3
           << ",\"gm\":\"" << EscapeJson(rec.gmName) << '"'  // RebornWOW DCTEST10A
+          << DamageJson(rec)  // RebornWOW DCBOSS1A
           << ",\"clean\":" << (rec.cheatTier.empty() && rec.cheats.empty() ? "true" : "false")
           << ",\"cheats\":[";
         for (std::size_t i = 0; i < rec.cheats.size(); ++i)
