@@ -136,15 +136,25 @@ namespace
                 uint32 const spec = bot ? uint32(AiFactory::GetPlayerSpecTab(bot)) : 0;
                 // RebornWOW DCGM1A: trailing field = active GM cheats (g = god, p = power).
                 std::string cheats;
+                // RebornWOW DCTEST9A: trailing power type and power % so the panel draws the
+                // class's own bar (rage / energy / runic power, not only mana)
+                int32 powerType = -1, powerPct = -1;
+                if (bot)
+                {
+                    Powers const pt = bot->getPowerType();
+                    uint32 const maxP = bot->GetMaxPower(pt);
+                    powerType = int32(pt);
+                    powerPct = maxP ? int32(uint64(bot->GetPower(pt)) * 100 / maxP) : 0;
+                }
                 if (bot && bot->GetCommandStatus(CHEAT_GOD))
                     cheats += 'g';
                 if (bot && bot->GetCommandStatus(CHEAT_POWER))
                     cheats += 'p';
                 SendAddonPayload(player, Acore::StringFormat(
-                    "DC\tTRM\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    "DC\tTRM\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                     AddonField(s.runId), AddonField(b.name), uint32(b.classId), AddonField(b.role),
                     level, ilvl, uint32(b.hp), int32(b.mp), b.alive ? 1 : 0, b.inCombat ? 1 : 0, spec,
-                    cheats.empty() ? std::string("-") : cheats));
+                    cheats.empty() ? std::string("-") : cheats, powerType, powerPct));  // DCTEST9A
             }
         }
         // RebornWOW DCTEST6A: finished runs, newest first. TRF = outcome and
