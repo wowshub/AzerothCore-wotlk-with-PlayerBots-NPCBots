@@ -1009,7 +1009,9 @@ bool DcEngageGeometry::IsAtBossEngage(Player* bot, AiObjectContext* ctx,
     // engage action then runs the tag-and-drag that brings the boss to the party.
     // Deliberately skips the live-boss floor probe too — the boss is on the water
     // sheet, a different level by construction.
-    if (BossPullbackRegistry::Find(bot->GetMapId(), boss.entry))
+    // DCHOL2C: not once the pull has failed and the row opted in -- he is then an ordinary boss.
+    if (BossPullbackRegistry::Find(bot->GetMapId(), boss.entry) &&
+        !DcTargeting::IsPullbackFallback(bot, ctx, boss.entry))
     {
         float const engageRange = BossEngageRange(bot, ctx, boss, staticRange);
         return bot->GetDistance(boss.x, boss.y, boss.z) < engageRange;

@@ -279,6 +279,10 @@ public:
     // at-boss probe — and the Find misses outright while the table is empty, which
     // it has been since S1593.
     static bool IsPullbackBossDue(Player* bot, AiObjectContext* ctx);
+    // RebornWOW DCHOL2C: the boss' pull-back row opted in (engageAfterFailedPull) AND the pull
+    // latch (DcPullContext::abortTarget) holds him, i.e. the tag-and-drag was given up on. While
+    // true he is treated as an ordinary boss by the route, the at-boss test and the engage rung.
+    static bool IsPullbackFallback(Player* bot, AiObjectContext* ctx, uint32 bossEntry);
 
     // --- Room-wide-aggro pre-clear (RoomAggroRegistry) --------------------
 

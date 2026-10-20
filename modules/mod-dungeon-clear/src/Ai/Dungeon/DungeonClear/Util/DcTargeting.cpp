@@ -1348,6 +1348,19 @@ bool DcTargeting::IsPullbackBossDue(Player* bot, AiObjectContext* ctx)
     Creature* const boss = GetLiveBoss(bot, ctx, next->entry);
     return boss && boss->IsAlive();
 }
+// RebornWOW DCHOL2C: see the declaration. Compared by creature ENTRY: the latch holds the boss'
+// guid, and the boss may be too far away to be loaded as a live creature right now.
+bool DcTargeting::IsPullbackFallback(Player* bot, AiObjectContext* ctx, uint32 bossEntry)
+{
+    if (!bot || !ctx)
+        return false;
+    BossPullback const* row = BossPullbackRegistry::Find(bot->GetMapId(), bossEntry);
+    if (!row || !row->engageAfterFailedPull)
+        return false;
+    ObjectGuid const abort = ctx->GetValue<DcPullContext&>(DcKey::PullContext)->Get().abortTarget;
+    return !abort.IsEmpty() && abort.IsCreatureOrVehicle() && abort.GetEntry() == bossEntry;
+}
+
 bool DcTargeting::RoomClearForcesAdvanced(Player* bot, AiObjectContext* ctx)
 {
     if (!bot || !ctx)

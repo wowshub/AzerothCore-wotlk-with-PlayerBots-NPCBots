@@ -66,7 +66,9 @@ namespace
             // in game by the user standing there (.gps 1445.72 40.80 58.77, map 602):
             // walls both sides, off his lap, and a knock-back from the south only
             // pushes the tank further into the corridor. Normal tag (no force-aggro).
-            { 602, 28586, 1445.72f, 40.80f, 58.77f, 0.0f, false },
+            // DCHOL2C: the pull can fail for a reason outside the row (trash packs on the 170+ yd walk-in
+            // take the tag); then fight him as an ordinary boss rather than stall the run.
+            { 602, 28586, 1445.72f, 40.80f, 58.77f, 0.0f, false, true },
         };
         return rows;
     }

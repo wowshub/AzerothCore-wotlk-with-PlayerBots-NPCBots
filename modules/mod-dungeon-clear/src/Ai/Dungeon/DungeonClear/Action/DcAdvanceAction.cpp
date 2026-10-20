@@ -2197,8 +2197,11 @@ bool DungeonClearAdvanceAction::Execute(Event /*event*/)
     // and suppress the live-boss handle entirely so direct pursuit (FillPursuitObs
     // / DoPursue, which bee-lines at the creature's current position) can never
     // arm. Fetching the boss is the engage action's job, not the route's.
+    // DCHOL2C: an opted-in row stops being a pull-back boss once the pull has failed (the engage
+    // rung, the at-boss test and this route must agree, or the tank is called back to the anchor).
     bool const pullback =
-        BossPullbackRegistry::Find(bot->GetMapId(), next->entry) != nullptr;
+        BossPullbackRegistry::Find(bot->GetMapId(), next->entry) != nullptr &&
+        !DcTargeting::IsPullbackFallback(bot, context, next->entry);
     Creature* const liveBoss =
         pullback ? nullptr : DcTargeting::GetLiveBoss(bot, context, next->entry);
     float const bossX = liveBoss ? liveBoss->GetPositionX() : next->x;

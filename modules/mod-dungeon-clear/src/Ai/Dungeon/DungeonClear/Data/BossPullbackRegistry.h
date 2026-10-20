@@ -90,6 +90,17 @@ struct BossPullback
     // Kept because "the boss physically cannot reach the party" is a real class
     // of failure, but a boss that is merely SLOW to arrive is not it.
     bool   summonWhenStuckBelow{false};
+
+    // RebornWOW DCHOL2C: ENGAGE-AFTER-FAILED-PULL opt-in, default OFF.
+    //
+    // When the tag-and-drag has been given up on (DcPullContext::abortTarget holds this boss --
+    // two fizzles, or an abort), the default is to HOLD at the anchor and stall the run after 120 s
+    // ("the drag kept failing"). That is right where the boss's own ground kills the party and a
+    // walk-in is the wipe (Ghaz'an, retired). It is wrong where the danger is only awkward: a
+    // stalled run is worse than a hard fight. A row that sets this makes the boss an ordinary boss
+    // once the pull has failed -- route to his live position, "at the boss" near him, direct engage.
+    // Bjarngrim (Halls of Lightning): the risk is Knock Away into a wall, not lethal ground.
+    bool   engageAfterFailedPull{false};
 };
 
 class BossPullbackRegistry

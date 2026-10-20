@@ -1050,7 +1050,16 @@ bool DungeonClearEngageBossAction::Execute(Event event)
     // anchor and say why, rather than substituting the one behaviour that kills the
     // party. The pull re-arms on its own the next tick it can (the boss wanders
     // back, the abort latch clears at the Engage cleanup).
-    if (BossPullbackRegistry::Find(bot->GetMapId(), next->entry))
+    // RebornWOW DCHOL2C: the row opted in and the pull has been given up on -> fall through to the
+    // ordinary engage below instead of holding on the anchor until the run stalls.
+    if (BossPullbackRegistry::Find(bot->GetMapId(), next->entry) &&
+        DcTargeting::IsPullbackFallback(bot, context, next->entry))
+    {
+        LOG_DEBUG("playerbots.dungeonclear",
+                  "[DC:{}] the pull-back of {} failed -> engaging him directly like any other boss",
+                  bot->GetName(), next->name);
+    }
+    else if (BossPullbackRegistry::Find(bot->GetMapId(), next->entry))
     {
         DcMovement::StopBot(bot, DcMovement::Stop::Hold);
 
