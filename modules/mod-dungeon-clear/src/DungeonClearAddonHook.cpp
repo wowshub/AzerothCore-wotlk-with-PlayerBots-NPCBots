@@ -277,7 +277,7 @@ namespace
         }
         // RebornWOW DCBOSS1A: damage taken by source and spell, healing by healer
         for (DcTestRunRecord::DamageSource const& t : damage)
-            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIS\t{}\t{}\t{}\t{}\t{}",
+            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIQ\t{}\t{}\t{}\t{}\t{}",  // DCBOSS1B2: TIS is the inspect window's
                 AddonField(t.src), t.spellId, t.spell.empty() ? std::string("-") : AddonField(t.spell), t.total, t.hits)));
         for (DcTestRunRecord::HealSource const& t : healing)
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIH\t{}\t{}", AddonField(t.name), t.total)));
