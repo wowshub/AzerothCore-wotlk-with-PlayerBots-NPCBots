@@ -290,7 +290,11 @@ namespace
                 checks += (checks.empty() ? "" : " | ") + kv.first + " x" + std::to_string(kv.second) + "s";
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIX\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 AddonField(h.name), h.combatS, h.movingS, h.castingS, h.lowAllyS, h.lowAllyMovingS, h.lowAllyIdleS, h.minManaPct,
-                checks.empty() ? std::string("-") : AddonField(checks))));
+                std::string("-"))));
+            // RebornWOW DCBOSS1D: one short line per answer (a joined field was clipped at 250 bytes)
+            for (auto const& kv : h.castChecks)
+                SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIY\t{}\t{}\t{}",
+                    AddonField(h.name), kv.second, AddonField(kv.first))));
         }
         // RebornWOW DCTEST7A: the boss/objective checklist, in clear order.
         for (DcTestRunManager::ChecklistRow const& row : checklist)

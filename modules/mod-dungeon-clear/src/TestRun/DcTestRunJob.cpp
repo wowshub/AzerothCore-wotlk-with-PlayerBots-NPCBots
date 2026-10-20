@@ -1806,6 +1806,57 @@ namespace
         }
     }
 
+    // RebornWOW DCBOSS1D: what is keeping the healer from casting -- a control state, and the
+    // harmful auras on it (at most three, sorted) so the enemy spell shows by name.
+    std::string ControlFlags(Player* p)
+    {
+        std::string out;
+        auto add = [&out](char const* n)
+        {
+            if (!out.empty())
+                out += ",";
+            out += n;
+        };
+        if (p->HasUnitFlag(UNIT_FLAG_SILENCED))
+            add("silenced");
+        if (p->HasUnitFlag(UNIT_FLAG_STUNNED))
+            add("stunned");
+        if (p->HasUnitFlag(UNIT_FLAG_CONFUSED))
+            add("confused");
+        if (p->HasUnitFlag(UNIT_FLAG_FLEEING))
+            add("fleeing");
+        if (p->HasUnitFlag(UNIT_FLAG_PACIFIED))
+            add("pacified");
+        if (p->HasUnitState(UNIT_STATE_ROOT))
+            add("rooted");
+        if (p->HasUnitState(UNIT_STATE_LOST_CONTROL))
+            add("lost-control");
+        return out.empty() ? std::string("none") : out;
+    }
+
+    std::string HarmfulAuras(Player* p)
+    {
+        std::set<std::string> names;
+        for (auto const& entry : p->GetAppliedAuras())
+        {
+            AuraApplication const* app = entry.second;
+            if (!app || app->IsPositive() || !app->GetBase())
+                continue;
+            SpellInfo const* si = app->GetBase()->GetSpellInfo();
+            if (si && si->SpellName[0] && *si->SpellName[0])
+                names.insert(si->SpellName[0]);
+        }
+        std::string out;
+        uint32 n = 0;
+        for (std::string const& name : names)
+        {
+            if (++n > 3)
+                break;
+            out += (out.empty() ? "" : ";") + name;
+        }
+        return out.empty() ? std::string("-") : out;
+    }
+
     std::string HealCastCheck(Player* healer, std::vector<Player*> const& members)
     {
         Player* ally = nullptr;
@@ -1843,10 +1894,11 @@ namespace
             result[i] = spell->CheckCast(i == 0);  // 0: strict, as the bot AI asks
             delete spell;
         }
-        return Acore::StringFormat("{}: strict={} loose={} gcd={} spellcd={}", heal->SpellName[0] ? heal->SpellName[0] : "?",
+        return Acore::StringFormat("{}: strict={} loose={} gcd={} spellcd={} cc={} debuffs={}", heal->SpellName[0] ? heal->SpellName[0] : "?",
                                    CastResultName(result[0]), CastResultName(result[1]),
                                    healer->GetGlobalCooldownMgr().HasGlobalCooldown(heal) ? "on" : "off",
-                                   healer->HasSpellCooldown(heal->Id) ? "on" : "off");
+                                   healer->HasSpellCooldown(heal->Id) ? "on" : "off",
+                                   ControlFlags(healer), HarmfulAuras(healer));
     }
 }
 
@@ -1901,6 +1953,16 @@ void DcTestRunJob::SampleHealers(Player* tank, uint32 dt)
         if (casting)
             st->castingS += secs;
         st->minManaPct = std::min(st->minManaPct, st->manaPct);
+        {
+            // RebornWOW DCBOSS1D: every combat second with a control state on the healer
+            std::string const cc = ControlFlags(m);
+            if (cc != "none")
+            {
+                std::string const key = "in combat: cc=" + cc;
+                if (st->castChecks.size() < 12 || st->castChecks.count(key))
+                    st->castChecks[key] += secs;
+            }
+        }
         if (lowAlly)
         {
             st->lowAllyS += secs;
@@ -1911,7 +1973,7 @@ void DcTestRunJob::SampleHealers(Player* tank, uint32 dt)
                 st->lowAllyIdleS += secs;
                 // RebornWOW DCBOSS1C: idle with an ally low -- what does the engine say?
                 std::string const why = HealCastCheck(m, members);
-                if (!why.empty() && (st->castChecks.size() < 8 || st->castChecks.count(why)))
+                if (!why.empty() && (st->castChecks.size() < 12 || st->castChecks.count(why)))
                     st->castChecks[why] += secs;
             }
         }
