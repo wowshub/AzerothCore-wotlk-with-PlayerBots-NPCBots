@@ -1815,12 +1815,17 @@ void DcTestRunJob::CaptureBuilds(Player* tank)
             TalentTabEntry const* tab = sTalentTabStore.LookupEntry(talent->TalentTab);
             if (!tab || !(tab->ClassMask & p->getClassMask()) || tab->tabpage > 2)
                 continue;
+            // RebornWOW DCP1C2: HasTalent() is true only for the rank the character has, so the
+            // learned rank is the highest r+1 that matches -- points are ranks, not talents
+            uint32 learned = 0;
             for (uint32 r = 0; r < MAX_TALENT_RANK; ++r)
                 if (talent->RankID[r] && p->HasTalent(talent->RankID[r], spec))
-                {
-                    points[tab->tabpage] = points[tab->tabpage] + 1;
-                    ranks.push_back(talent->RankID[r]);
-                }
+                    learned = r + 1;
+            if (learned)
+            {
+                points[tab->tabpage] += learned;
+                ranks.push_back(talent->RankID[learned - 1]);
+            }
         }
         std::sort(ranks.begin(), ranks.end());
         uint32 hash = 2166136261u;  // FNV-1a 32
