@@ -47,7 +47,7 @@ reopener:Hide()
 reopener:SetScript("OnUpdate", function(self)
     self:Hide()
     -- Protected windows may not be shown from addon code in combat: skip them then.
-    for f in pairs(reopen) do if not f:IsShown() and not (InCombatLockdown() and f:IsProtected()) then f:Show() end end
+    for f in pairs(reopen) do if not f:IsShown() and not f.dcHosted and not (InCombatLockdown() and f:IsProtected()) then f:Show() end end  -- WSC1G
     wipe(reopen)
 end)
 
@@ -122,9 +122,13 @@ end
 -- Keep the top-left corner on the same screen spot while the scale changes.
 local pendingApply = {}               -- windows to re-apply after combat
 local function Locked(f) return InCombatLockdown() and f:IsProtected() end
+-- WSC1G: a window hosted inside another addon's panel (DungeonClear's Test mode sets
+-- `dcHosted` on its docked windows) is left alone: no saved place / scale, no scaling,
+-- no re-parent, no re-open; its grip stays hidden.
+local function Hosted(f) return f and f.dcHosted end
 
 local function SetScaleKeepCorner(f, s)
-    if Locked(f) then return end
+    if Locked(f) or Hosted(f) then return end  -- WSC1G
     if s < MIN_SCALE then s = MIN_SCALE elseif s > MAX_SCALE then s = MAX_SCALE end
     local l, t = f:GetLeft(), f:GetTop()
     local eff = f:GetEffectiveScale()
@@ -146,6 +150,7 @@ local function SavePlace(name, f)
 end
 
 local function ApplySaved(name, f)
+    if Hosted(f) then return end  -- WSC1G
     local e = DB.frames[name]
     if not e then return end
     if Locked(f) then pendingApply[name] = f; return end
@@ -188,7 +193,8 @@ local function Decorate(name, f)
             if math.abs(s - f:GetScale()) > 0.005 then SetScaleKeepCorner(f, s) end
         end)
     end)
-    grip:SetScript("OnMouseUp", function(self) self:SetScript("OnUpdate", nil); self.drag = nil; SavePlace(name, f) end)
+    grip:SetScript("OnMouseUp", function(self) self:SetScript("OnUpdate", nil); self.drag = nil; if not Hosted(f) then SavePlace(name, f) end end)
+    if Hosted(f) then grip:Hide() end  -- WSC1G
     grip:SetScript("OnDoubleClick", function()
         SetScaleKeepCorner(f, d.native or 1)
         local e = Entry(name); e.scale = nil
@@ -215,7 +221,7 @@ local function Decorate(name, f)
     -- WSC1B: a sub-window hanging off another frame would vanish with it; move
     -- it to UIParent, keeping its place on screen.
     local parent = f:GetParent()
-    if parent and parent ~= UIParent and KeepsOpen(name) and f:GetObjectType() == "Frame" and not f:IsProtected() then
+    if parent and parent ~= UIParent and not Hosted(f) and KeepsOpen(name) and f:GetObjectType() == "Frame" and not f:IsProtected() then  -- WSC1G
         local l, t = f:GetLeft(), f:GetTop()
         local eff = f:GetEffectiveScale()
         f:SetParent(UIParent)
@@ -232,7 +238,7 @@ local function Decorate(name, f)
         cascade = cascade - 1
     end)
     f:HookScript("OnHide", function(self)
-        if cascade > 0 and KeepsOpen(name) then reopen[self] = true; reopener:Show() end
+        if cascade > 0 and KeepsOpen(name) and not Hosted(self) then reopen[self] = true; reopener:Show() end  -- WSC1G
     end)
 
     -- Re-apply after the addon shows (some reset their own scale each time they open).
