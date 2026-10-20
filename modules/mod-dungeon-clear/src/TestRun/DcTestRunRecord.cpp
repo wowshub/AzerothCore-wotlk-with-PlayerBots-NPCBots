@@ -55,7 +55,17 @@ namespace DcTestRunRecord
                 AppendEscaped(s, h.name);
                 s << ",\"combatS\":" << h.combatS << ",\"movingS\":" << h.movingS << ",\"castingS\":" << h.castingS
                   << ",\"lowAllyS\":" << h.lowAllyS << ",\"lowAllyMovingS\":" << h.lowAllyMovingS
-                  << ",\"lowAllyIdleS\":" << h.lowAllyIdleS << ",\"minManaPct\":" << h.minManaPct << '}';
+                  << ",\"lowAllyIdleS\":" << h.lowAllyIdleS << ",\"minManaPct\":" << h.minManaPct
+                  << ",\"castChecks\":{";
+                bool firstKey = true;  // RebornWOW DCBOSS1C
+                for (auto const& kv : h.castChecks)
+                {
+                    if (!firstKey)
+                        s << ',';
+                    firstKey = false;
+                    s << '"' << EscapeJson(kv.first) << "\":" << kv.second;
+                }
+                s << "}}";
             }
             s << ']';
             return s.str();

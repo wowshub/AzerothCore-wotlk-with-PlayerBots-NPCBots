@@ -7,6 +7,7 @@
 #define _PLAYERBOT_DCTESTRUNRECORD_H
 
 #include <cstdint>
+#include <map>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -132,6 +133,9 @@ namespace DcTestRunRecord
         std::uint32_t lowAllyIdleS = 0;     // ...of which neither moving nor casting
         int minManaPct = 100;               // lowest mana % seen in combat
         int manaPct = 100;                  // latest
+        // RebornWOW DCBOSS1C: while idle with an ally below half health, what Spell::CheckCast
+        // said about one of the healer's heal spells -> seconds. Few distinct keys.
+        std::map<std::string, std::uint32_t> castChecks;
     };
 
     // One pull the Dynamic governor took a verdict on, with what the classifier
@@ -216,7 +220,9 @@ namespace DcTestRunRecord
         //     amount, boss health, damage/healing around it); damageTaken / healDone.
         // 20: RebornWOW DCBOSS1B -- healerStats (per healer: time in combat / moving / casting,
         //     time an ally was below half health, lowest mana) and a healers note on each death.
-        std::uint32_t schema = 20;
+        // 21: RebornWOW DCBOSS1C -- healerStats[].castChecks (the engine's answer to "can this
+        //     healer cast a heal on the lowest ally" while it stood idle).
+        std::uint32_t schema = 21;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token

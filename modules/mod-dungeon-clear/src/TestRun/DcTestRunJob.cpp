@@ -30,6 +30,9 @@
 #include "Util/DcPlayerbotsConfig.h"
 #include "World.h"
 #include "TestRun/DcDeathLog.h"  // RebornWOW DCBOSS1A
+#include "Spell.h"                // RebornWOW DCBOSS1C
+#include "SpellInfo.h"
+#include "SpellMgr.h"
 
 #include "AiFactory.h"
 #include "Playerbots.h"
@@ -1777,6 +1780,72 @@ void DcTestRunJob::TrackDeaths(Player* tank)
                 observe(member);
 }
 
+// RebornWOW DCBOSS1C: ask the engine why an idle healer does not heal. Picks the healer's
+// highest-level direct heal and runs the engine's own CheckCast on the lowest-health ally,
+// strict (global cooldown checked, as the bots do) and loose, plus the two cooldown flags.
+// The answer is a short text, the same for the same situation, so it can be counted.
+namespace
+{
+    std::string CastResultName(uint32 r)
+    {
+        switch (r)
+        {
+            case SPELL_CAST_OK: return "OK";
+            case SPELL_FAILED_NOT_READY: return "NOT_READY";
+            case SPELL_FAILED_SPELL_IN_PROGRESS: return "IN_PROGRESS";
+            case SPELL_FAILED_OUT_OF_RANGE: return "OUT_OF_RANGE";
+            case SPELL_FAILED_LINE_OF_SIGHT: return "NO_LINE_OF_SIGHT";
+            case SPELL_FAILED_NO_POWER: return "NO_POWER";
+            case SPELL_FAILED_MOVING: return "MOVING";
+            case SPELL_FAILED_SILENCED: return "SILENCED";
+            case SPELL_FAILED_BAD_TARGETS: return "BAD_TARGETS";
+            case SPELL_FAILED_BAD_IMPLICIT_TARGETS: return "BAD_IMPLICIT_TARGETS";
+            case SPELL_FAILED_CASTER_AURASTATE: return "CASTER_AURASTATE";
+            case SPELL_FAILED_NOT_STANDING: return "NOT_STANDING";
+            default: return "code " + std::to_string(r);
+        }
+    }
+
+    std::string HealCastCheck(Player* healer, std::vector<Player*> const& members)
+    {
+        Player* ally = nullptr;
+        float lowest = 101.f;
+        for (Player* m : members)
+            if (m->IsAlive() && m->GetHealthPct() < lowest)
+            {
+                lowest = m->GetHealthPct();
+                ally = m;
+            }
+        if (!ally)
+            return std::string();
+        SpellInfo const* heal = nullptr;
+        for (auto const& entry : healer->GetSpellMap())
+        {
+            if (!healer->HasSpell(entry.first))
+                continue;
+            SpellInfo const* si = sSpellMgr->GetSpellInfo(entry.first);
+            if (!si || si->IsPassive() || !si->HasEffect(SPELL_EFFECT_HEAL) || si->PowerType != POWER_MANA)
+                continue;
+            if (!heal || si->SpellLevel > heal->SpellLevel)
+                heal = si;
+        }
+        if (!heal)
+            return "no heal spell known";
+        uint32 result[2] = { 0, 0 };
+        for (int i = 0; i < 2; ++i)
+        {
+            Spell* spell = new Spell(healer, heal, TRIGGERED_NONE);
+            spell->m_targets.SetUnitTarget(ally);
+            result[i] = spell->CheckCast(i == 0);  // 0: strict, as the bot AI asks
+            delete spell;
+        }
+        return Acore::StringFormat("{}: strict={} loose={} gcd={} spellcd={}", heal->SpellName[0] ? heal->SpellName[0] : "?",
+                                   CastResultName(result[0]), CastResultName(result[1]),
+                                   healer->GetGlobalCooldownMgr().HasGlobalCooldown(heal) ? "on" : "off",
+                                   healer->HasSpellCooldown(heal->Id) ? "on" : "off");
+    }
+}
+
 // RebornWOW DCBOSS1B: once a second, what each healer is doing. The first DCBOSS1A run
 // showed four deaths with no healing at all in the last 5 s and a healer whose heals were
 // almost all rejected; "moving" is a prime suspect (the bots refuse casting-time spells
@@ -1834,7 +1903,13 @@ void DcTestRunJob::SampleHealers(Player* tank, uint32 dt)
             if (moving)
                 st->lowAllyMovingS += secs;
             else if (!casting)
+            {
                 st->lowAllyIdleS += secs;
+                // RebornWOW DCBOSS1C: idle with an ally low -- what does the engine say?
+                std::string const why = HealCastCheck(m, members);
+                if (!why.empty() && (st->castChecks.size() < 8 || st->castChecks.count(why)))
+                    st->castChecks[why] += secs;
+            }
         }
     }
 }
