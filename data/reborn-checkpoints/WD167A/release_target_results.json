@@ -1,0 +1,12 @@
+{
+  "gate_matrix_cases": 32771,
+  "enemy_cases": 13,
+  "fire_cases": 21,
+  "old_idle_selected_bug_reproduced": true,
+  "old_fire_idle_splash_bug_reproduced": true,
+  "new_safety_cases_passed": true,
+  "original_chance_and_three_target_cap_preserved": true,
+  "method": "Actual original/candidate production functions, Player/Unit/visitors/cast API stubs; not real engine",
+  "worldserver_build": "not performed",
+  "game": "pending"
+}

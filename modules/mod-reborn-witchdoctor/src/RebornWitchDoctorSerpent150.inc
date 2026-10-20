@@ -44,12 +44,13 @@ void Shot(Creature* ward,ObjectGuid centerGuid)
     uint32 chance=Owns(p,FireTwo)?40:20;if(Owns(p,Striker))chance+=10;
     auto* state=p->CustomData.GetDefault<State>(Key);++state->attacks;
     if(!roll_chance_i(chance))return;
+    // WD167A: the primary hit may have killed center; gate the recipients, not its corpse.
     Unit* center=ObjectAccessor::GetUnit(*ward,centerGuid);if(!center||!p->IsInMap(center)||!p->InSamePhase(center))return;
     std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(center,10.0f);Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(center,units,check);Cell::VisitObjects(center,search,10.0f);
     units.sort([center](Unit* a,Unit* b){return center->GetDistance(a)<center->GetDistance(b);});std::vector<ObjectGuid> targets;
-    for(Unit* u:units)if(u->IsAlive()&&p->IsValidAttackTarget(u)&&p->InSamePhase(u)&&center->IsWithinDistInMap(u,10.0f)&&ward->IsWithinLOSInMap(u)) { targets.push_back(u->GetGUID());if(targets.size()==3)break; }
+    for(Unit* u:units)if(WD21A::AutomaticTarget(p,ward,u)&&center->IsWithinDistInMap(u,10.0f)) { targets.push_back(u->GetGUID());if(targets.size()==3)break; }
     if(targets.empty())return;++state->procs;
-    for(auto guid:targets)if(Unit* u=ObjectAccessor::GetUnit(*ward,guid))if(u->IsAlive()&&p->IsValidAttackTarget(u))ward->CastSpell(u,FireHit,true,nullptr,nullptr,p->GetGUID());
+    for(auto guid:targets)if(Unit* u=ObjectAccessor::GetUnit(*ward,guid))if(WD21A::AutomaticTarget(p,ward,u))ward->CastSpell(u,FireHit,true,nullptr,nullptr,p->GetGUID());
 }
 class fire : public SpellScript
 {

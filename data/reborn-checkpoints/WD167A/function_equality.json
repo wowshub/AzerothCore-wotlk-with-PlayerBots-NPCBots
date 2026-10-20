@@ -1,0 +1,9 @@
+{
+  "tested_functions_equal": [
+    "bool AutomaticTarget(",
+    "bool Valid(Player* player,Unit* unit) const",
+    "void Shot("
+  ],
+  "excluded": "WD166A reconcile optimization; old TG13A client; other cumulative changes",
+  "formal_parent": "9e9b79668caa2072d3a3272efae1cce4323f6a86"
+}

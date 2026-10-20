@@ -1051,6 +1051,19 @@ constexpr uint32 Entry = 900190;
 constexpr uint32 HealingWard = 9003170;
 constexpr uint32 Heal = 9003171;
 constexpr uint32 HealingEntry = 900191;
+
+// WD167A: only autonomous damage uses this gate; manual spells keep native targeting.
+// A selected idle creature is not evidence of combat, even when its owner fights elsewhere.
+bool AutomaticTarget(Player* player, Creature* source, Unit* target)
+{
+    return player && source && target && player->IsAlive() && player->IsInWorld() &&
+        source->IsAlive() && source->IsInWorld() && target->IsAlive() && target->IsInWorld() &&
+        source->GetOwnerGUID()==player->GetGUID() && player->IsInMap(source) &&
+        player->InSamePhase(source) && source->IsInMap(target) && source->InSamePhase(target) &&
+        player->IsValidAttackTarget(target) && player->IsInCombatWith(target) &&
+        source->IsWithinLOSInMap(target) && !target->HasBreakableByDamageCrowdControlAura();
+}
+
 bool IsWardEntry(uint32 entry) { return entry==Entry || entry==HealingEntry || entry==900196 || entry==900204; }
 constexpr char Key[] = "RebornWD21A.Ward";
 struct State : DataMap::Base { ObjectGuid guid; };
@@ -1135,9 +1148,7 @@ public:
         void JustDied(Unit*) override { me->DespawnOrUnsummon(); }
         bool Valid(Player* player,Unit* unit) const
         {
-            return unit && unit->IsAlive() && player->IsValidAttackTarget(unit) &&
-                me->InSamePhase(unit) && me->IsWithinDistInMap(unit,30.0f) &&
-                me->IsWithinLOSInMap(unit) && !unit->HasBreakableByDamageCrowdControlAura();
+            return WD21A::AutomaticTarget(player,me,unit) && me->IsWithinDistInMap(unit,30.0f);
         }
         Unit* Enemy(Player* player)
         {
