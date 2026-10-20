@@ -540,6 +540,7 @@ private:
     uint32 _joinIssuedAtMs = 0;
     bool _joinPosSaved = false;
     uint32 _joinFarMs = 0;  // RebornWOW DCGM1C3: how long the joined player has been far behind
+    uint32 _joinDeadMs = 0; // RebornWOW DCGM1C6: how long the joined player has been dead
     uint32 _joinMap = 0;
     float _joinX = 0.f, _joinY = 0.f, _joinZ = 0.f, _joinO = 0.f;
     bool _cheatApplied = false;

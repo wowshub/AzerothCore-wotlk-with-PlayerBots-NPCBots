@@ -3187,6 +3187,30 @@ void DcTestRunJob::CatchUpJoinPlayer(uint32 dt)
         return;
     Player* p = ObjectAccessor::FindConnectedPlayer(_joinGuid);
     Player* tank = FindTank();
+    // RebornWOW DCGM1C6: the joined player died while the bots live. The clear's post-combat rez
+    // "carries on without them" when it cannot raise him, and the test regroup (DCRZ2A) only runs
+    // when the WHOLE party is dead -- he was left dead for the rest of the run. After 20 s dead, with
+    // the tank out of combat on the same map, he is revived at full health next to the tank.
+    if (p && tank && p->IsInWorld() && tank->IsInWorld() && !p->IsBeingTeleported() && !p->IsAlive() &&
+        p->GetGroup() == tank->GetGroup() && p->GetMapId() == tank->GetMapId())
+    {
+        _joinDeadMs += dt;
+        if (_joinDeadMs >= 20000 && !tank->IsInCombat())
+        {
+            _joinDeadMs = 0;
+            _joinFarMs = 0;
+            p->ResurrectPlayer(1.0f);
+            p->SpawnCorpseBones();
+            p->NearTeleportTo(tank->GetPositionX(), tank->GetPositionY(), tank->GetPositionZ(), tank->GetOrientation());
+            NoteCheat(p->GetName(), "revived next to the tank (died)");
+            ChatHandler(p->GetSession()).SendSysMessage(
+                "|cff33ccff[DC test]|r You died; you were revived next to the tank.");
+            LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1C6 {} was dead for 20 s: revived next to the tank",
+                     _record.runId, p->GetName());
+        }
+        return;
+    }
+    _joinDeadMs = 0;
     if (!p || !tank || !p->IsInWorld() || !tank->IsInWorld() || p->IsBeingTeleported() ||
         !p->IsAlive() || p->IsInCombat() || tank->IsInCombat() ||  // DCGM1C4: never into a pull
         p->GetMap() != tank->GetMap() || p->GetGroup() != tank->GetGroup())
