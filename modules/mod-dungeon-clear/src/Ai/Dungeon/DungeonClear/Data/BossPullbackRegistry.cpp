@@ -68,7 +68,10 @@ namespace
             // pushes the tank further into the corridor. Normal tag (no force-aggro).
             // DCHOL2C: the pull can fail for a reason outside the row (trash packs on the 170+ yd walk-in
             // take the tag); then fight him as an ordinary boss rather than stall the run.
-            { 602, 28586, 1445.72f, 40.80f, 58.77f, 0.0f, false, true },
+            // RebornWOW DCHOL2D: Bjarngrim's row is REMOVED (live 2026-10-20: the long walk-in takes trash
+            // as the tag, a pack stands on the camp, the pull maneuver keeps the party passive and
+            // nobody fights). He is fought like any other boss; the risk is Knock Away into a wall.
+            // { 602, 28586, 1445.72f, 40.80f, 58.77f, 0.0f, false, true },
         };
         return rows;
     }
