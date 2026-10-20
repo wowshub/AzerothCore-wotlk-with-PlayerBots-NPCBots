@@ -712,7 +712,11 @@ public:
                 tier = DcPartyTier::TierFor(player);
                 source = "party";
             }
-            SendAddonPayload(player, "DC\tTIER\t" + tier + "\t" + source);
+            // RebornWOW DCTEST10B: 4th field = the test run whose party the player is in
+            std::string testRun;
+            if (!DcTestRunManager::Instance().TestPartyOf(player, &testRun))
+                testRun = "-";
+            SendAddonPayload(player, "DC\tTIER\t" + tier + "\t" + source + "\t" + testRun);
             return;
         }
 

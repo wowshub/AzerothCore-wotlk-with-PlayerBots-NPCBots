@@ -2742,10 +2742,21 @@ void DcTestRunJob::ReleaseJoinPlayer()
 {
     if (_joinGuid.IsEmpty())
         return;
+    ObjectGuid const joined = _joinGuid;
     Player* p = ObjectAccessor::FindConnectedPlayer(_joinGuid);
     _joinGuid.Clear();
     if (!p)
+    {
+        // RebornWOW DCTEST10B: logged out mid-run -- still leave the bot party, or the
+        // saved group keeps the character in it for the next run with these bots
+        if (Player* tank = FindTank())
+            if (Group* g = tank->GetGroup())
+                if (g->IsMember(joined))
+                    g->RemoveMember(joined);
+        LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCTEST10B joined player offline at the end: removed from the bot party",
+                 _record.runId);
         return;
+    }
     if (_joinGod)
         p->SetCommandStatusOff(CHEAT_GOD);
     Player* tank = FindTank();

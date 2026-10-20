@@ -994,6 +994,25 @@ bool DcTestRunManager::ViewerRunTier(Player* viewer, std::string* tier) const
     return false;
 }
 
+// RebornWOW DCTEST10B: by group, not by map -- a GM who joined a test (or was left in
+// its party) is in it wherever he stands; a GM who only watches is not.
+bool DcTestRunManager::TestPartyOf(Player* player, std::string* runId) const
+{
+    if (!player || !player->GetGroup())
+        return false;
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    for (auto const& job : _runs)
+    {
+        Player* tank = ObjectAccessor::FindConnectedPlayer(job->TankGuid());
+        if (tank && tank != player && tank->GetGroup() == player->GetGroup())
+        {
+            *runId = job->RecordData().runId;
+            return true;
+        }
+    }
+    return false;
+}
+
 bool DcTestRunManager::IsTestTank(ObjectGuid tank) const
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
