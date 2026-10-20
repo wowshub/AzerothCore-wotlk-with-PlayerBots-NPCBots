@@ -325,6 +325,8 @@ private:
     void CaptureExtras(Player* tank);
     void TrackDeaths(Player* tank);
     void SampleHealers(Player* tank, uint32 dt);        // RebornWOW DCBOSS1B
+    void CaptureBuilds(Player* tank);                   // RebornWOW DCP1C
+    bool _buildsDone = false;                           // RebornWOW DCP1C: every comp member read
     std::string HealerSnapshot(Player* dead) const;     // RebornWOW DCBOSS1B
     void TrackEngagement(Player* tank);
     void TrackPulls(Player* tank);

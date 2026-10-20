@@ -39,6 +39,21 @@ namespace DcTestRunRecord
         std::string detectedRole;    // what the talents say: "tank"|"heal"|"dps"
         bool roleMismatch = false;   // detectedRole != role
 
+        // RebornWOW DCP1C (schema 22): the build this member went in with, read once on the
+        // first monitor tick. Empty when it could not be read.
+        std::string talents;         // points in the three tabs, "5/31/35"
+        std::string fingerprint;     // 8 hex: FNV-1a 32 over the learned talent ranks
+        std::string glyphs;          // glyph spell ids, comma separated
+        std::uint32_t avgIlvl = 0;
+        struct GearPiece
+        {
+            std::uint32_t slot = 0;
+            std::uint32_t entry = 0;
+            std::uint32_t ilvl = 0;
+            std::uint32_t enchant = 0;  // permanent enchantment id, 0 = none
+        };
+        std::vector<GearPiece> gear;
+
         // Where the character was standing when the run claimed it. Teardown
         // sends the party to its BIND point rather than back here (see
         // DcTestRunJob::ReviveAndSendHome — an entry position can be another
@@ -222,7 +237,9 @@ namespace DcTestRunRecord
         //     time an ally was below half health, lowest mana) and a healers note on each death.
         // 21: RebornWOW DCBOSS1C -- healerStats[].castChecks (the engine's answer to "can this
         //     healer cast a heal on the lowest ally" while it stood idle).
-        std::uint32_t schema = 21;
+        // 22: RebornWOW DCP1C -- comp[] carries each member's build: talents, fingerprint,
+        //     glyphs, gear.
+        std::uint32_t schema = 22;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token

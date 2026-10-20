@@ -196,6 +196,17 @@ namespace DcTestRunRecord
               << ",\"detectedRole\":";
             AppendEscaped(s, c.detectedRole);
             s << ",\"roleMismatch\":" << (c.roleMismatch ? "true" : "false")
+              << ",\"talents\":";
+            AppendEscaped(s, c.talents);  // RebornWOW DCP1C
+            s << ",\"fp\":";
+            AppendEscaped(s, c.fingerprint);
+            s << ",\"glyphs\":";
+            AppendEscaped(s, c.glyphs);
+            s << ",\"avgIlvl\":" << c.avgIlvl << ",\"gear\":[";
+            for (std::size_t k = 0; k < c.gear.size(); ++k)
+                s << (k ? "," : "") << '[' << c.gear[k].slot << ',' << c.gear[k].entry << ',' << c.gear[k].ilvl << ','
+                  << c.gear[k].enchant << ']';
+            s << ']'
               << ",\"from\":{\"map\":" << c.fromMap
               << ",\"x\":" << c.fromX << ",\"y\":" << c.fromY << ",\"z\":" << c.fromZ
               << ",\"o\":" << c.fromO << "}}";

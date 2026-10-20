@@ -1780,6 +1780,83 @@ void DcTestRunJob::TrackDeaths(Player* tank)
                 observe(member);
 }
 
+// RebornWOW DCP1C: read each comp member's build once (talents, glyphs, gear) and put it in
+// the run record and the log. Members that are not in the world yet are tried again next tick;
+// _buildsDone ends the work once everyone in the comp has been read.
+void DcTestRunJob::CaptureBuilds(Player* tank)
+{
+    if (_buildsDone || !tank)
+        return;
+    Group* group = tank->GetGroup();
+    if (!group)
+        return;
+    bool allDone = true;
+    for (DcTestRunRecord::CompEntry& entry : _record.comp)
+    {
+        if (!entry.fingerprint.empty())
+            continue;
+        Player* p = nullptr;
+        for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+            if (Player* m = ref->GetSource(); m && m->GetName() == entry.name && m->IsInWorld())
+                p = m;
+        if (!p)
+        {
+            allDone = false;
+            continue;
+        }
+        uint8 const spec = p->GetActiveSpec();
+        uint32 points[3] = { 0, 0, 0 };
+        std::vector<uint32> ranks;
+        for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
+        {
+            TalentEntry const* talent = sTalentStore.LookupEntry(i);
+            if (!talent)
+                continue;
+            TalentTabEntry const* tab = sTalentTabStore.LookupEntry(talent->TalentTab);
+            if (!tab || !(tab->ClassMask & p->getClassMask()) || tab->tabpage > 2)
+                continue;
+            for (uint32 r = 0; r < MAX_TALENT_RANK; ++r)
+                if (talent->RankID[r] && p->HasTalent(talent->RankID[r], spec))
+                {
+                    points[tab->tabpage] = points[tab->tabpage] + 1;
+                    ranks.push_back(talent->RankID[r]);
+                }
+        }
+        std::sort(ranks.begin(), ranks.end());
+        uint32 hash = 2166136261u;  // FNV-1a 32
+        for (uint32 id : ranks)
+            for (int shift = 0; shift < 32; shift += 8)
+            {
+                hash ^= (id >> shift) & 0xFFu;
+                hash *= 16777619u;
+            }
+        entry.talents = Acore::StringFormat("{}/{}/{}", points[0], points[1], points[2]);
+        entry.fingerprint = Acore::StringFormat("{:08x}", hash);
+        for (uint8 slot = 0; slot < MAX_GLYPH_SLOT_INDEX; ++slot)
+            if (uint32 glyph = p->GetGlyph(slot))
+                if (GlyphPropertiesEntry const* gp = sGlyphPropertiesStore.LookupEntry(glyph))
+                    entry.glyphs += (entry.glyphs.empty() ? "" : ",") + std::to_string(gp->SpellId);
+        entry.avgIlvl = static_cast<uint32>(p->GetAverageItemLevel() + 0.5f);
+        for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
+        {
+            Item* item = p->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+            ItemTemplate const* proto = item ? item->GetTemplate() : nullptr;
+            if (!proto)
+                continue;
+            DcTestRunRecord::CompEntry::GearPiece g;
+            g.slot = slot;
+            g.entry = item->GetEntry();
+            g.ilvl = proto->ItemLevel;
+            g.enchant = item->GetEnchantmentId(PERM_ENCHANTMENT_SLOT);
+            entry.gear.push_back(g);
+        }
+        LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCP1C {} {} {} talents={} fp={} ilvl={} glyphs={} gear={}", _record.runId,
+                 entry.name, entry.className, entry.spec, entry.talents, entry.fingerprint, entry.avgIlvl,
+                 entry.glyphs.empty() ? std::string("-") : entry.glyphs, entry.gear.size());
+    }
+    _buildsDone = allDone;
+}
+
 // RebornWOW DCBOSS1C: ask the engine why an idle healer does not heal. Picks the healer's
 // highest-level direct heal and runs the engine's own CheckCast on the lowest-health ally,
 // strict (global cooldown checked, as the bots do) and loose, plus the two cooldown flags.
@@ -2422,6 +2499,7 @@ void DcTestRunJob::TickMonitoring(uint32 dt)
         TrackEngagement(tank);
         TrackPulls(tank);
         SampleHealers(tank, dt);  // RebornWOW DCBOSS1B
+        CaptureBuilds(tank);      // RebornWOW DCP1C
 
         if (next.has_value() && next->mapId == tank->GetMapId())
         {
