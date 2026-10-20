@@ -621,6 +621,7 @@ std::vector<DcTestRunManager::AddonRunView> DcTestRunManager::AddonRunViews() co
         for (DcTestRunRecord::CompEntry const& c : rec.comp)
             v.comp.emplace_back(c.name, c.role);
         v.cheatTier = job->CheatTier();  // RebornWOW DCGM1B2
+        v.gmName = rec.gmName;           // RebornWOW DCTEST10A
         out.push_back(std::move(v));
     }
     return out;

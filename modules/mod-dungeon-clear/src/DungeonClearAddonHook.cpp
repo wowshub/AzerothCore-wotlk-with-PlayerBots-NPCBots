@@ -111,10 +111,11 @@ namespace
             bool const watching = tank && tank->IsInWorld() && player->IsInWorld() &&
                                   tank->GetMap() == player->GetMap();
             SendAddonPayload(player, Acore::StringFormat(
-                "DC\tTR\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                "DC\tTR\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 AddonField(s.runId), AddonField(s.dungeon), s.heroic ? 1 : 0, AddonField(s.stage),
                 s.elapsedS, s.bossesKilled, s.bossesTotal, watching ? 1 : 0, s.wiped ? 1 : 0,
-                s.inCombat ? 1 : 0, s.level));
+                s.inCombat ? 1 : 0, s.level,
+                r.gmName.empty() ? std::string("-") : AddonField(r.gmName)));  // DCTEST10A: who started it
             // Free text on its own line: the run's state, its current target, and why it stalls.
             SendAddonPayload(player, ClipPayload("DC\tTRS\t" + AddonField(s.runId) + "\t" +
                                                  AddonField(s.state) + "\t" + AddonField(s.bossName) +
@@ -163,12 +164,13 @@ namespace
         for (DcTestRunRecord::Record const& f : DcTestRunManager::Instance().FinishedRuns())
         {
             SendAddonPayload(player, ClipPayload(Acore::StringFormat(
-                "DC\tTRF\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                "DC\tTRF\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 AddonField(f.runId), AddonField(f.dungeon), f.heroic ? 1 : 0, AddonField(f.result),
                 f.durationS, f.bossesKilled, f.bossesTotal, uint32(f.deaths.size()), f.testRegroups,
                 uint32(f.cheats.size()), f.level, f.compSeed, f.gearIlvl, f.gearQuality,
                 f.roster ? 1 : 0,
-                f.cheatTier.empty() ? std::string("-") : AddonField(f.cheatTier))));  // DCGM1B2
+                f.cheatTier.empty() ? std::string("-") : AddonField(f.cheatTier),  // DCGM1B2
+                f.gmName.empty() ? std::string("-") : AddonField(f.gmName))));     // DCTEST10A
             std::string comp;
             for (auto const& c : f.comp)
                 comp += (comp.empty() ? "" : ",") + AddonField(c.name) + ":" + AddonField(c.role) +

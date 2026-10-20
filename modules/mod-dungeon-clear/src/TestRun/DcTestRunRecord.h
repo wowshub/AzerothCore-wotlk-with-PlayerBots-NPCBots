@@ -158,7 +158,9 @@ namespace DcTestRunRecord
         // 17: RebornWOW DCGM1B3 -- tierClass ("normal" | story | casual | speed |
         //     "mixed" = switched mid-run) and clean (no tier, no GM action): the
         //     two fields to group and filter runs by.
-        std::uint32_t schema = 17;
+        // 18: RebornWOW DCTEST10A -- gm: the name of the GM who started the run, so each
+        //     GM's panel can list only their own runs.
+        std::uint32_t schema = 18;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -222,6 +224,7 @@ namespace DcTestRunRecord
         };
         std::vector<CheatEntry> cheats;
         std::string cheatTier;  // RebornWOW DCGM1B (schema 16)
+        std::string gmName;     // RebornWOW DCTEST10A (schema 18): who started the run
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

@@ -216,6 +216,7 @@ namespace DcTestRunRecord
               << ",\"why\":\"" << rec.testRegroupLog[i].why << "\"}";
         s << "],\"cheatTier\":\"" << rec.cheatTier << '"'
           << ",\"tierClass\":\"" << TierClass(rec) << '"'  // RebornWOW DCGM1B3
+          << ",\"gm\":\"" << EscapeJson(rec.gmName) << '"'  // RebornWOW DCTEST10A
           << ",\"clean\":" << (rec.cheatTier.empty() && rec.cheats.empty() ? "true" : "false")
           << ",\"cheats\":[";
         for (std::size_t i = 0; i < rec.cheats.size(); ++i)

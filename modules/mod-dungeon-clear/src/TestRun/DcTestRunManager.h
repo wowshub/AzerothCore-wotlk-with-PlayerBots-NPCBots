@@ -171,6 +171,7 @@ public:
         uint32 pulls = 0;
         std::vector<std::pair<std::string, std::string>> comp;  // name, role
         std::string cheatTier;  // RebornWOW DCGM1B2: tier in force, "" = normal
+        std::string gmName;     // RebornWOW DCTEST10A: the GM who started it
     };
     std::vector<AddonRunView> AddonRunViews() const;
 

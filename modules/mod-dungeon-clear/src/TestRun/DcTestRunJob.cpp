@@ -287,6 +287,7 @@ void DcTestRunJob::InitIdentity(Player* gm, DcTestDungeonRegistry::Row const& ro
     _record.level = _level;
     _record.heroic = heroic;
     _record.compSeed = seed;
+    _record.gmName = gm ? gm->GetName() : std::string();  // RebornWOW DCTEST10A
     _record.startedAtMs = NowUnixMs();
     _record.pauseGraceS = _limits.pauseGraceMs / 1000;
     _record.stallGraceS = _limits.stallGraceMs / 1000;
