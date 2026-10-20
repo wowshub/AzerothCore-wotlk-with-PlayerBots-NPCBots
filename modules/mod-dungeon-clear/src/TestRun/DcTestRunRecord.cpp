@@ -45,6 +45,18 @@ namespace DcTestRunRecord
                 AppendEscaped(s, rec.healDone[i].name);
                 s << ",\"total\":" << rec.healDone[i].total << '}';
             }
+            s << "],\"healerStats\":[";  // RebornWOW DCBOSS1B
+            for (std::size_t i = 0; i < rec.healerStats.size(); ++i)
+            {
+                HealerStat const& h = rec.healerStats[i];
+                if (i)
+                    s << ',';
+                s << "{\"name\":";
+                AppendEscaped(s, h.name);
+                s << ",\"combatS\":" << h.combatS << ",\"movingS\":" << h.movingS << ",\"castingS\":" << h.castingS
+                  << ",\"lowAllyS\":" << h.lowAllyS << ",\"lowAllyMovingS\":" << h.lowAllyMovingS
+                  << ",\"lowAllyIdleS\":" << h.lowAllyIdleS << ",\"minManaPct\":" << h.minManaPct << '}';
+            }
             s << ']';
             return s.str();
         }
@@ -246,7 +258,9 @@ namespace DcTestRunRecord
                 AppendEscaped(s, d.lastHits[k].spell);
                 s << ",\"amount\":" << d.lastHits[k].amount << '}';
             }
-            s << "]}";
+            s << "],\"healers\":";
+            AppendEscaped(s, d.healers);  // RebornWOW DCBOSS1B
+            s << '}';
         }
         s << "],\"pulls\":[";
         for (std::size_t i = 0; i < rec.pulls.size(); ++i)

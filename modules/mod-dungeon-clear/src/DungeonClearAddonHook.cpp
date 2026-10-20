@@ -251,7 +251,8 @@ namespace
         std::vector<DcTestRunManager::ChecklistRow> checklist;  // DCTEST7A
         std::vector<DcTestRunRecord::DamageSource> damage;      // RebornWOW DCBOSS1A
         std::vector<DcTestRunRecord::HealSource> healing;
-        if (!DcTestRunManager::Instance().AddonRunDetail(runId, &kills, &deaths, &checklist, &damage, &healing))
+        std::vector<DcTestRunRecord::HealerStat> healerStats;  // RebornWOW DCBOSS1B
+        if (!DcTestRunManager::Instance().AddonRunDetail(runId, &kills, &deaths, &checklist, &damage, &healing, &healerStats))
         {
             SendAddonPayload(player, "DC\tTI_ERR\t" + AddonField(runId));
             return;
@@ -268,11 +269,11 @@ namespace
             // RebornWOW DCBOSS1A: fields 6..17 say what killed them ("-" = none)
             DcTestRunRecord::DeathEntry const& d = deaths[i];
             auto const dash = [](std::string const& v) { return v.empty() ? std::string("-") : AddonField(v); };
-            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTID\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTID\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 d.t, AddonField(d.name), d.onBoss ? 1 : 0, AddonField(d.opponent),
                 dash(d.killer), d.killerSpellId, dash(d.killerSpell), d.killerAmount, d.killerOverkill,
                 d.killerHpPct, d.dmg5s, d.heal5s, dash(d.role), dash(d.topSrc),
-                dash(d.topSpell) + "\t" + std::to_string(d.topAmount))));
+                dash(d.topSpell) + "\t" + std::to_string(d.topAmount), dash(d.healers))));  // DCBOSS1B: field 18
         }
         // RebornWOW DCBOSS1A: damage taken by source and spell, healing by healer
         for (DcTestRunRecord::DamageSource const& t : damage)
@@ -280,6 +281,10 @@ namespace
                 AddonField(t.src), t.spellId, t.spell.empty() ? std::string("-") : AddonField(t.spell), t.total, t.hits)));
         for (DcTestRunRecord::HealSource const& t : healing)
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIH\t{}\t{}", AddonField(t.name), t.total)));
+        // RebornWOW DCBOSS1B: what each healer did with the fight
+        for (DcTestRunRecord::HealerStat const& h : healerStats)
+            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIX\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                AddonField(h.name), h.combatS, h.movingS, h.castingS, h.lowAllyS, h.lowAllyMovingS, h.lowAllyIdleS, h.minManaPct)));
         // RebornWOW DCTEST7A: the boss/objective checklist, in clear order.
         for (DcTestRunManager::ChecklistRow const& row : checklist)
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIL\t{}\t{}\t{}",

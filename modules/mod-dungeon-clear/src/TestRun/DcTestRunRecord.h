@@ -101,6 +101,7 @@ namespace DcTestRunRecord
             std::uint32_t amount = 0;
         };
         std::vector<LastHit> lastHits;  // newest first
+        std::string healers;            // RebornWOW DCBOSS1B: the healers' state when this death was seen
     };
 
     // RebornWOW DCBOSS1A: damage the party took, by source and spell, and healing by healer.
@@ -117,6 +118,20 @@ namespace DcTestRunRecord
     {
         std::string name;
         std::uint64_t total = 0;
+    };
+
+    // RebornWOW DCBOSS1B: what a healer did with its fight time (sampled once a second).
+    struct HealerStat
+    {
+        std::string name;
+        std::uint32_t combatS = 0;          // seconds in combat
+        std::uint32_t movingS = 0;          // ...of which moving (casting-time heals are refused while moving)
+        std::uint32_t castingS = 0;         // ...of which casting
+        std::uint32_t lowAllyS = 0;         // seconds in combat while a party member was below half health
+        std::uint32_t lowAllyMovingS = 0;   // ...of which the healer was moving
+        std::uint32_t lowAllyIdleS = 0;     // ...of which neither moving nor casting
+        int minManaPct = 100;               // lowest mana % seen in combat
+        int manaPct = 100;                  // latest
     };
 
     // One pull the Dynamic governor took a verdict on, with what the classifier
@@ -199,7 +214,9 @@ namespace DcTestRunRecord
         //     GM's panel can list only their own runs.
         // 19: RebornWOW DCBOSS1A -- death entries say what killed the member (killer, spell,
         //     amount, boss health, damage/healing around it); damageTaken / healDone.
-        std::uint32_t schema = 19;
+        // 20: RebornWOW DCBOSS1B -- healerStats (per healer: time in combat / moving / casting,
+        //     time an ally was below half health, lowest mana) and a healers note on each death.
+        std::uint32_t schema = 20;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -267,6 +284,7 @@ namespace DcTestRunRecord
         std::vector<DamageSource> damageTaken;   // RebornWOW DCBOSS1A (schema 19)
         std::vector<HealSource> healDone;
         std::uint64_t damageTakenTotal = 0;
+        std::vector<HealerStat> healerStats;   // RebornWOW DCBOSS1B (schema 20)
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

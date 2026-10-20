@@ -197,7 +197,8 @@ public:
                         std::vector<DcTestRunRecord::DeathEntry>* deaths,
                         std::vector<ChecklistRow>* checklist = nullptr,
                         std::vector<DcTestRunRecord::DamageSource>* damage = nullptr,   // RebornWOW DCBOSS1A
-                        std::vector<DcTestRunRecord::HealSource>* healing = nullptr) const;
+                        std::vector<DcTestRunRecord::HealSource>* healing = nullptr,
+                        std::vector<DcTestRunRecord::HealerStat>* healerStats = nullptr) const;  // RebornWOW DCBOSS1B
     bool IsActive() const { return !_runs.empty(); }
 
     // Remaining global-cap headroom for the plan scheduler's launch decision

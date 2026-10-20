@@ -324,6 +324,8 @@ private:
     // leader that vanishes at the end still leaves the last values it wrote.
     void CaptureExtras(Player* tank);
     void TrackDeaths(Player* tank);
+    void SampleHealers(Player* tank, uint32 dt);        // RebornWOW DCBOSS1B
+    std::string HealerSnapshot(Player* dead) const;     // RebornWOW DCBOSS1B
     void TrackEngagement(Player* tank);
     void TrackPulls(Player* tank);
     void ClosePull(bool wipedHere = false);

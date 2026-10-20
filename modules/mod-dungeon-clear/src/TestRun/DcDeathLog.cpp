@@ -129,6 +129,10 @@ namespace DcDeathLog
             {
                 if (!damage || !victim || !g_count.load(std::memory_order_relaxed) || !victim->IsPlayer() || !victim->IsAlive())
                     return;
+                // RebornWOW DCBOSS1B: this hook runs BEFORE the core's god-mode check, so an
+                // invincible player's hits were counted (the damage totals were inflated)
+                if (victim->ToPlayer()->GetCommandStatus(CHEAT_GOD))
+                    return;
                 // health is still the value before this hit
                 std::uint32_t const hpBefore = victim->GetHealth();
                 HitRec rec;

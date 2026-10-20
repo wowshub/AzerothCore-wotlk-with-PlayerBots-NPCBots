@@ -692,7 +692,8 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
                                       std::vector<DcTestRunRecord::DeathEntry>* deaths,
                                       std::vector<ChecklistRow>* checklist,
                                       std::vector<DcTestRunRecord::DamageSource>* damage,
-                                      std::vector<DcTestRunRecord::HealSource>* healing) const
+                                      std::vector<DcTestRunRecord::HealSource>* healing,
+                                      std::vector<DcTestRunRecord::HealerStat>* healerStats) const
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
     for (auto const& job : _runs)
@@ -703,6 +704,8 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *kills = job->RecordData().bossTimeline;
         if (deaths)
             *deaths = job->RecordData().deaths;
+        if (healerStats)  // RebornWOW DCBOSS1B
+            *healerStats = job->RecordData().healerStats;
         if (checklist)
             BuildChecklist(job->TankGuid(), *checklist);
         if (damage || healing)  // RebornWOW DCBOSS1A: the live totals
@@ -745,6 +748,8 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
             *damage = rec.damageTaken;
         if (healing)
             *healing = rec.healDone;
+        if (healerStats)  // RebornWOW DCBOSS1B
+            *healerStats = rec.healerStats;
         // DCTEST7A: the tank is gone; the record's boss roster against its kills.
         if (checklist)
             for (std::string const& name : rec.bossRoster)

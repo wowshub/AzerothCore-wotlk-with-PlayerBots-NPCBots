@@ -1753,6 +1753,11 @@ void DcTestRunJob::TrackDeaths(Player* tank)
                  cause.any ? cause.killerSpell : std::string("?"), cause.killerAmount, cause.killerOverkill,
                  cause.killerHpPct, cause.dmg5s, cause.heal5s, cause.topSrc, cause.topSpell, cause.topAmount,
                  death.x, death.y, death.z, death.opponent.empty() ? std::string("nothing") : death.opponent);
+        // RebornWOW DCBOSS1B: where the healers were, as this death was seen
+        death.healers = HealerSnapshot(member);
+        if (!death.healers.empty())
+            LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCBOSS1B healers at {}'s death: {}", _record.runId,
+                     death.name, death.healers);
         _record.deaths.push_back(death);
         // Deliberately overwritten even when the latch is empty: this means
         // "what the LAST death was to", not "the last death that had a killer".
@@ -1770,6 +1775,105 @@ void DcTestRunJob::TrackDeaths(Player* tank)
         for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
             if (Player* member = ref->GetSource(); member != tank && onTankMap(member))
                 observe(member);
+}
+
+// RebornWOW DCBOSS1B: once a second, what each healer is doing. The first DCBOSS1A run
+// showed four deaths with no healing at all in the last 5 s and a healer whose heals were
+// almost all rejected; "moving" is a prime suspect (the bots refuse casting-time spells
+// while moving), so it is counted separately from "standing but not casting".
+void DcTestRunJob::SampleHealers(Player* tank, uint32 dt)
+{
+    Group* group = tank ? tank->GetGroup() : nullptr;
+    if (!group)
+        return;
+    uint32 const secs = std::max<uint32>(1, (dt + 500) / 1000);
+    std::vector<Player*> members;
+    bool lowAlly = false;
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* m = ref->GetSource();
+        if (!m || !m->IsInWorld() || m->GetMapId() != tank->GetMapId())
+            continue;
+        members.push_back(m);
+        if (m->IsAlive() && m->GetHealthPct() < 50.f)
+            lowAlly = true;
+    }
+    for (Player* m : members)
+    {
+        bool healer = false;
+        for (auto const& c : _record.comp)
+            if (c.name == m->GetName() && c.role == "heal")
+                healer = true;
+        if (!healer || !m->IsAlive())
+            continue;
+        DcTestRunRecord::HealerStat* st = nullptr;
+        for (DcTestRunRecord::HealerStat& h : _record.healerStats)
+            if (h.name == m->GetName())
+                st = &h;
+        if (!st)
+        {
+            _record.healerStats.emplace_back();
+            st = &_record.healerStats.back();
+            st->name = m->GetName();
+        }
+        uint32 const maxMana = m->GetMaxPower(POWER_MANA);
+        st->manaPct = maxMana ? static_cast<int>(100ull * m->GetPower(POWER_MANA) / maxMana) : 0;
+        if (!m->IsInCombat())
+            continue;
+        bool const moving = m->isMoving();
+        bool const casting = m->HasUnitState(UNIT_STATE_CASTING);
+        st->combatS += secs;
+        if (moving)
+            st->movingS += secs;
+        if (casting)
+            st->castingS += secs;
+        st->minManaPct = std::min(st->minManaPct, st->manaPct);
+        if (lowAlly)
+        {
+            st->lowAllyS += secs;
+            if (moving)
+                st->lowAllyMovingS += secs;
+            else if (!casting)
+                st->lowAllyIdleS += secs;
+        }
+    }
+}
+
+// RebornWOW DCBOSS1B: the healers' state when a death is seen, as one line:
+// "Aledraan 62% mana, moving, not casting, 18 yd away". "" when the run has no healer role.
+std::string DcTestRunJob::HealerSnapshot(Player* dead) const
+{
+    Player* tank = FindTank();
+    Group* group = tank ? tank->GetGroup() : nullptr;
+    if (!group || !dead)
+        return std::string();
+    std::string out;
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* m = ref->GetSource();
+        if (!m || m == dead)
+            continue;
+        bool healer = false;
+        for (auto const& c : _record.comp)
+            if (c.name == m->GetName() && c.role == "heal")
+                healer = true;
+        if (!healer)
+            continue;
+        if (!out.empty())
+            out += "; ";
+        if (!m->IsInWorld() || !m->IsAlive())
+        {
+            out += m->GetName() + " dead";
+            continue;
+        }
+        uint32 const maxMana = m->GetMaxPower(POWER_MANA);
+        int const mana = maxMana ? static_cast<int>(100ull * m->GetPower(POWER_MANA) / maxMana) : 0;
+        out += Acore::StringFormat("{} {}% mana, {}, {}, {} yd away", m->GetName(), mana,
+                                   m->isMoving() ? "moving" : "standing",
+                                   m->HasUnitState(UNIT_STATE_CASTING) ? "casting" : "not casting",
+                                   m->GetMapId() == dead->GetMapId() ? static_cast<int>(m->GetExactDist(dead)) : -1);
+    }
+    return out;
 }
 
 // Who to blame for a run people died in. DcTestRun::BlameFor owns the rule.
@@ -2176,6 +2280,7 @@ void DcTestRunJob::TickMonitoring(uint32 dt)
         TrackDeaths(tank);
         TrackEngagement(tank);
         TrackPulls(tank);
+        SampleHealers(tank, dt);  // RebornWOW DCBOSS1B
 
         if (next.has_value() && next->mapId == tank->GetMapId())
         {
