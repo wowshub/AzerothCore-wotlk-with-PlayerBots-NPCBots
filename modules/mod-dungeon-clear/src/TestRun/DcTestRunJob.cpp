@@ -55,6 +55,7 @@
 #include "Ai/Dungeon/DungeonClear/DcPullContext.h"
 #include "Ai/Dungeon/DungeonClear/DcValueKeys.h"
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcPartyState.h"  // RebornWOW DCGM1C5
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
 #include "TestRun/DcTestRunManager.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
@@ -3193,8 +3194,23 @@ void DcTestRunJob::CatchUpJoinPlayer(uint32 dt)
         _joinFarMs = 0;
         return;
     }
-    // DCGM1C4: 30 yd -- the trail keeps ~15; stuck spots seen at 44.9 and 51.3 yd
-    if (p->GetExactDist(tank) <= 30.0f)
+    // RebornWOW DCGM1C5: the distance the TANK waits at, not a fixed number. DCGM1C4 used 30 yd
+    // while the tank holds the advance at PartyMaxSpread (25 yd): a player 25-30 yd back was out
+    // of range for the tank and close enough for this, and the run stood still.
+    float limit = 30.0f;
+    if (PlayerbotAI* tankAI = GET_PLAYERBOT_AI(tank))
+    {
+        DcPartyState::SpreadGate const gate = DcPartyState::GetSpreadGate(tank, tankAI->GetAiObjectContext());
+        // a pull maneuver holds the party at its camp on purpose (the gate is waived), and a
+        // camp-anchored gate measures against the camp, not the tank
+        if (gate.maxSpread >= 50000.0f || gate.anchor)
+        {
+            _joinFarMs = 0;
+            return;
+        }
+        limit = std::clamp(gate.maxSpread + 1.0f, 15.0f, 60.0f);
+    }
+    if (p->GetExactDist(tank) <= limit)
     {
         _joinFarMs = 0;
         return;
@@ -3203,8 +3219,8 @@ void DcTestRunJob::CatchUpJoinPlayer(uint32 dt)
     if (_joinFarMs < 8000)
         return;
     _joinFarMs = 0;
-    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1C4 {} stuck at ({:.1f}, {:.1f}, {:.1f}) {:.1f} yd behind the tank",
-             _record.runId, p->GetName(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetExactDist(tank));
+    LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCGM1C5 {} stuck at ({:.1f}, {:.1f}, {:.1f}) {:.1f} yd behind the tank (the tank waits beyond {:.0f} yd)",
+             _record.runId, p->GetName(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetExactDist(tank), limit);
     p->NearTeleportTo(tank->GetPositionX(), tank->GetPositionY(), tank->GetPositionZ(), tank->GetOrientation());
     ChatHandler(p->GetSession()).SendSysMessage(
         "|cff33ccff[DC test]|r You fell behind the party; you were moved to the tank.");
