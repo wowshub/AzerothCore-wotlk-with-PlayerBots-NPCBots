@@ -10,6 +10,12 @@
 #include "ScriptMgr.h"
 #include "RebornWitchDoctorRanks.h"
 #include "RebornWitchDoctorBotState168.h"
+#include "RebornWitchDoctorBotBuild173.h"
+#include "RebornWitchDoctorBotProfiles173.h"
+#include "Playerbots.h"
+#include "Trainer.h"
+#include "Creature.h"
+#include "ObjectMgr.h"
 #include "RebornWitchDoctorTalentNodes.h"
 #include "RebornWitchDoctorBudget.h"
 #include "WitchDoctorTalentPolicy.h"
@@ -29,6 +35,7 @@
 #include <chrono>
 #include <mutex>
 #include <unordered_map>
+#include <unordered_set>
 using namespace Acore::ChatCommands;
 namespace WD161Bridge { void Apply(Player*,bool,bool); }
 namespace WD160Bridge { void Apply(Player*,bool,bool); }
@@ -882,6 +889,8 @@ bool Check168(ChatHandler* h)
  return true;
 }
 
+#include "RebornWitchDoctorBotBuild173.inc"
+
 class Commands : public CommandScript
 {
 public:
@@ -889,6 +898,11 @@ public:
     ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable cmds={
+            {"wd173preview",BotPreview173,SEC_GAMEMASTER,Console::No},
+            {"wd173join",BotEnroll173,SEC_GAMEMASTER,Console::No},
+            {"wd173bind",BotBind173,SEC_GAMEMASTER,Console::No},
+            {"wd173apply",BotApply173,SEC_GAMEMASTER,Console::No},
+            {"wd173train",BotTrain173,SEC_GAMEMASTER,Console::No},
             {"wd141quote",PanelUnlockQuote,SEC_PLAYER,Console::No},
             {"wd141buy",PanelUnlockBuy,SEC_PLAYER,Console::No},
             {"wd114numbers",SpellNumbers,SEC_PLAYER,Console::No},
