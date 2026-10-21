@@ -36,7 +36,15 @@ class generator:public SpellScript
 };
 class volley:public SpellScript
 {
-    PrepareSpellScript(volley);bool accepted=false;uint64 generation=0;uint32 spirits=0;
+    PrepareSpellScript(volley);bool automatic=false;
+    bool Load()override{automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true;}
+    void Filter(std::list<WorldObject*>& targets)
+    {
+        if(!automatic)return;
+        Player* p=WD68A::Caster(GetCaster());
+        targets.remove_if([p](WorldObject* o){return !o||!WD168::SafeAutomaticTarget(p,o->ToUnit());});
+    }
+    bool accepted=false;uint64 generation=0;uint32 spirits=0;
     SpellCastResult Check()
     {
         Player* p=WD68A::Caster(GetCaster());if(!IsDoctor(p)||!p->IsAlive()||!p->HasSpell(Volley))return SPELL_FAILED_CASTER_AURASTATE;
@@ -45,9 +53,11 @@ class volley:public SpellScript
         return SPELL_CAST_OK; // accepted casts complete even if readiness expires while casting
     }
     void Snapshot(){Player* p=WD68A::Caster(GetCaster());spirits=WD87A::Count(p);}
-    void Damage(SpellEffIndex)
+    void Damage(SpellEffIndex index)
     {
         Player* p=WD68A::Caster(GetCaster());if(!IsDoctor(p)){SetEffectValue(0);return;}
+        // Explicit target A and destination-area target B are both checked at launch.
+        if(automatic&&!WD168::SafeAutomaticTarget(p,GetHitUnit())){PreventHitDefaultEffect(index);SetEffectValue(0);return;}
         int32 value=GetEffectValue()+int32(.285f*std::max(0.f,p->GetTotalAttackPowerValue(RANGED_ATTACK)));
         SetEffectValue(value);
     }
@@ -58,10 +68,15 @@ class volley:public SpellScript
         State* state=Data(p);++state->volleyCompleted;state->lastVolleyAt=getMSTime();state->lastBefore=GlaiveRemaining(p);
         p->CastSpell(p,9003574,true);Reduce(p,3000);state->lastAfter=GlaiveRemaining(p);
         if(Data(p)->volleyGeneration==generation)p->RemoveAurasDueToSpell(Ready,p->GetGUID());
-        if(Unit* target=GetExplTargetUnit())WD68A::Mirror(p,target,Volley);
+        if(Unit* target=GetExplTargetUnit())
+        {
+            // Copies retain automatic targeting even after the original prepare scope ended.
+            WD168::AutomaticCastScope mirrorScope(p,automatic?Volley:0);
+            WD68A::Mirror(p,target,Volley);
+        }
         Sync(p); // copies neither grant Spirits nor reduce cooldowns nor generate new readiness
     }
-    void Register()override{OnCheckCast+=SpellCheckCastFn(volley::Check);BeforeCast+=SpellCastFn(volley::Snapshot);OnEffectLaunchTarget+=SpellEffectFn(volley::Damage,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);OnHit+=SpellHitFn(volley::Hit);AfterCast+=SpellCastFn(volley::Done);}
+    void Register()override{OnObjectAreaTargetSelect+=SpellObjectAreaTargetSelectFn(volley::Filter,EFFECT_0,TARGET_UNIT_DEST_AREA_ENEMY);OnCheckCast+=SpellCheckCastFn(volley::Check);BeforeCast+=SpellCastFn(volley::Snapshot);OnEffectLaunchTarget+=SpellEffectFn(volley::Damage,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);OnHit+=SpellHitFn(volley::Hit);AfterCast+=SpellCastFn(volley::Done);}
 };
 class eclipse:public SpellScript
 {

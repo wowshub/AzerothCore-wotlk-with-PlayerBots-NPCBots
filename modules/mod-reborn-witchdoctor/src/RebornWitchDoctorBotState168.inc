@@ -6,7 +6,9 @@ LearnedSpell ReadSpell(Player* p,uint32 base)
 {
  LearnedSpell out;out.base=base;
  // Highest actually learned rank, not a hypothetical level-unlocked rank.
- if(auto* family=WD19A::FindFamily(base))
+ if(base==9004000 || base==9004030)
+ {for(uint32 i=0;i<7;++i)if(p->HasSpell(base+i))out.learned=base+i;}
+ else if(auto* family=WD19A::FindFamily(base))
  {
   for(std::size_t i=family->count;i>0;--i)
    if(p->HasSpell(family->ranks[i-1].spell)){out.learned=family->ranks[i-1].spell;break;}
@@ -26,11 +28,23 @@ Snapshot Capture(Player* p)
  out.plan=ReadPlan(p);out.level=p->GetLevel();out.alive=p->IsAlive();
  out.inWorld=p->IsInWorld();out.combat=p->IsInCombat();
  out.mana=p->GetPower(POWER_MANA);out.maxMana=p->GetMaxPower(POWER_MANA);
- if(auto* wardState=p->CustomData.Get<WD21A::State>(WD21A::Key))
-  if(auto* ward=ObjectAccessor::GetCreature(*p,wardState->guid))
-   out.serpentPresent=ward->IsAlive()&&ward->IsInWorld()&&ward->GetEntry()==900190&&ward->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(ward)&&p->InSamePhase(ward);
+ // Observe all three existing owner slots without creating state or changing selections.
+ ObjectGuid ids[3]={};
+ if(auto* st=p->CustomData.Get<WD21A::State>(WD21A::Key))ids[0]=st->guid;
+ if(auto* st=p->CustomData.Get<WD36A::State>(WD36A::Key))ids[1]=st->guid;
+ if(auto* st=p->CustomData.Get<WD41A::State>(WD41A::Key))ids[2]=st->guid;
+ auto* selection=p->CustomData.Get<WD53A::State>(WD53A::Key);
+ for(uint32 i=0;i<3;++i)
+ {
+  if(selection && WD53A::Slot(selection->selected[i])==int(i) && p->HasSpell(selection->selected[i]))
+   out.summons[i].selected=selection->selected[i];
+  if(auto* u=ObjectAccessor::GetCreature(*p,ids[i]))
+   if(u->IsAlive()&&u->IsInWorld()&&WD53A::Entry(i,u->GetEntry())&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))
+   {out.summons[i].present=true;out.summons[i].entry=u->GetEntry();}
+ }
+ out.serpentPresent=out.summons[0].present; // Includes healing/mimic wards; never overwrite an occupied slot.
  out.souls=WD87A::Count(p); // Only aura 9003574 from this player's own GUID, capped at five.
- uint32 bases[]={9003100,9003101,9003104,9003160,9003260,9003970,9003980};
+ uint32 bases[]={9003100,9003101,9003104,9003160,9003260,9003970,9003980,9004000,9004030,9003541,9003270};
  for(std::size_t i=0;i<out.spells.size();++i)out.spells[i]=ReadSpell(p,bases[i]);
  return out;
 }

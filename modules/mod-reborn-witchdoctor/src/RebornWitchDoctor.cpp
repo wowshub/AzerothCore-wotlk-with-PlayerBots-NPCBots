@@ -3542,3 +3542,5 @@ void WD67ClearSummons(Player* player,bool healing,bool cleansing)
 }
 
 namespace WD142Bridge { void Clear(Player* p) { WD142::Clear(p); } }
+
+#include "RebornWitchDoctorBotCombat170.inc"

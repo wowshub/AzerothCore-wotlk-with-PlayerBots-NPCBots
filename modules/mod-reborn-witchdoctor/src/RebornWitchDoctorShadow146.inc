@@ -48,6 +48,14 @@ class spirit_sync : public AuraScript
 class glaive : public SpellScript
 {
     PrepareSpellScript(glaive);
+    bool automatic=false;
+    bool Load() override { automatic=!GetSpell()->IsTriggered()&&WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true; }
+    void Filter(std::list<WorldObject*>& targets)
+    {
+        if(!automatic)return; // Preserve manual cone targeting, including its normal native rules.
+        Player* p=GetCaster()->ToPlayer();
+        targets.remove_if([p](WorldObject* o){return !o||!WD168::SafeAutomaticTarget(p,o->ToUnit());});
+    }
     uint32 readyPct=0;
     void Snapshot() { readyPct=WD149::ReadyPct(GetCaster()->ToPlayer()); }
     void Consume() { if(readyPct)WD149::Consume(GetCaster()->ToPlayer()); }
@@ -63,6 +71,8 @@ class glaive : public SpellScript
     }
     void Register() override
     {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(glaive::Filter,EFFECT_0,TARGET_UNIT_CONE_ENEMY_24);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(glaive::Filter,EFFECT_2,TARGET_UNIT_CONE_ENEMY_24);
         OnCast += SpellCastFn(glaive::Snapshot);
         AfterCast += SpellCastFn(glaive::Consume);
         OnCheckCast += SpellCheckCastFn(glaive::Check);

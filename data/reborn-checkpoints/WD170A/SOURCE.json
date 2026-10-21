@@ -1,0 +1,32 @@
+{
+  "stage": "WD170A",
+  "source": {
+    "stage": "WD170A",
+    "status": "candidate; 4 actual CPP syntax / 393 fixture cases passed; final link/game pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_093359_阶段WD170A_暗影狩猎装备轮转走位与召唤回收累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_093359_阶段WD170A_暗影狩猎装备轮转走位与召唤回收累计包.zip",
+    "sha256": "96b374600ad9cd74f93812f9fb4075bed6f7392139dab4e3f4f93cf6f1738da8",
+    "source_files": 12,
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A"
+    ],
+    "deployment": "none",
+    "tested_spec": "Shadowhunting saved spec2"
+  },
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorEquipment170.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotCombat170.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow146.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow159.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp"
+  ],
+  "playerbots_commit": "09f142e7af5147bbbc340965c496de7e97468a05",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": "Final review archived under WD176A"
+}
