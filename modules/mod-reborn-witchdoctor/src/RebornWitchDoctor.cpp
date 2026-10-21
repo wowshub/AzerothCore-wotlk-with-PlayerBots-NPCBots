@@ -270,12 +270,18 @@ void Clear(Player* p)
 void Mirror(Player* p,Unit* target,uint32 spell)
 {
     if (!IsDoctor(p) || !target || !p->IsAlive() || !p->HasSpell(Mimic)) return;
+    bool automatic=WD168::IsAutomaticCast(p,spell);
+    if(automatic&&!WD168::SafeAutomaticTarget(p,target))return;
     State* state=p->CustomData.GetDefault<State>(Key);
+    ObjectGuid targetGuid=target->GetGUID();
     for(ObjectGuid guid : {state->mimic,state->extra,state->mojo})
     {
+        target=ObjectAccessor::GetUnit(*p,targetGuid);if(!target||!p->IsAlive())break;
         Creature* c=ObjectAccessor::GetCreature(*p,guid);
         if (!c || Caster(c)!=p || !c->IsInMap(target) || !c->InSamePhase(target) ||
             !c->IsWithinDistInMap(target,40.0f) || !c->IsWithinLOSInMap(target)) continue;
+        if(automatic&&!WD168::SafeAutomaticTarget(p,target))continue;
+        WD168::AutomaticCastScope copyScope(p,automatic?spell:0);
         if(spell==9003822 || spell==9004164 || spell==9004174) c->CastSpell(target,spell,true,nullptr,nullptr,p->GetGUID());
         else c->CastSpell(target,spell,true);
     }
@@ -624,6 +630,8 @@ public:
 class spell_reborn_wd9a_bad_juju : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd9a_bad_juju);
+    bool automatic=false;
+    bool Load() override { automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true; }
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003103, Hex, Mark}); }
     SpellCastResult CheckTalent()
     {
@@ -631,10 +639,11 @@ class spell_reborn_wd9a_bad_juju : public SpellScript
         if (!GetCaster()->IsPlayer() && (!p || !p->HasAura(WD84A::Unleashed) || !GetSpell()->IsTriggered())) return SPELL_FAILED_CASTER_AURASTATE;
         return WD5A::CanCastBadJuju(p) && p->HasSpell(9003103) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
-    void AddCoefficient(SpellEffIndex)
+    void AddCoefficient(SpellEffIndex index)
     {
         Player* p=WD68A::Caster(GetCaster());
         if (!IsDoctor(p)) return;
+        if(automatic&&!WD168::SafeAutomaticTarget(p,GetHitUnit())){PreventHitDefaultEffect(index);SetEffectValue(0);return;}
         int32 power=std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW));
         SetEffectValue(int32(float(GetEffectValue())+power*WD84A::PowerScale(p)+std::max(0.0f,p->GetStat(STAT_SPIRIT))*0.30f));
     }
@@ -666,6 +675,8 @@ class spell_reborn_wd9a_bad_juju : public SpellScript
     void UnleashMirror()
     {
         Player* p=GetCaster()->ToPlayer();Unit* target=GetHitUnit();
+        if(automatic&&!WD168::SafeAutomaticTarget(p,target))return;
+        WD168::AutomaticCastScope mirrorScope(p,automatic?GetSpellInfo()->Id:0);
         if (IsDoctor(p) && p->HasAura(WD84A::Unleashed) && !GetSpell()->IsTriggered() && target && target->IsAlive() && p->IsValidAttackTarget(target))
             WD68A::Mirror(p,target,GetSpellInfo()->Id);
     }
@@ -678,8 +689,14 @@ class spell_reborn_wd9a_bad_juju : public SpellScript
         int32 perTick=int32(std::min<uint64>(2147483647u,uint64(GetHitDamage())*30/100));
         if (perTick>0) p->CastCustomSpell(WD85A::StringsTick,SPELLVALUE_BASE_POINT0,perTick,target,true);
     }
+    void ProtectHit(SpellEffIndex index)
+    {
+        if(automatic&&!WD168::SafeAutomaticTarget(WD68A::Caster(GetCaster()),GetHitUnit()))
+        {PreventHitDefaultEffect(index);SetEffectValue(0);}
+    }
     void Register() override
     {
+        OnEffectHitTarget += SpellEffectFn(spell_reborn_wd9a_bad_juju::ProtectHit,EFFECT_ALL,SPELL_EFFECT_ANY);
         AfterHit += SpellHitFn(spell_reborn_wd9a_bad_juju::ApplyMark);
         AfterHit += SpellHitFn(spell_reborn_wd9a_bad_juju::ApplyStrings);
         AfterHit += SpellHitFn(spell_reborn_wd9a_bad_juju::UnleashMirror);
@@ -2380,6 +2397,8 @@ namespace WD48A
 class spell_reborn_wd48a_attack : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd48a_attack);
+    bool automatic=false;
+    bool Load() override { automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true; }
     bool marked=false;
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003499}); }
     SpellCastResult CheckDoctor()
@@ -2390,9 +2409,10 @@ class spell_reborn_wd48a_attack : public SpellScript
             player->GetLevel()>=GetSpellInfo()->SpellLevel ?
             SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
-    void Scale(SpellEffIndex)
+    void Scale(SpellEffIndex index)
     {
         Player* player=GetCaster()->ToPlayer();if(!IsDoctor(player))return;
+        if(automatic&&!WD168::SafeAutomaticTarget(player,GetHitUnit())){PreventHitDefaultEffect(index);SetEffectValue(0);return;}
         float extra=0.0f;
         if(WD48A::Juju(GetSpellInfo()->Id))
             extra=float(std::max(0,player->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW)))+
@@ -2417,8 +2437,14 @@ class spell_reborn_wd48a_attack : public SpellScript
         // The source contract accepts Hex of Malice from any caster, not other curses.
         player->CastSpell(target,9003499,true);
     }
+    void ProtectHit(SpellEffIndex index)
+    {
+        if(automatic&&!WD168::SafeAutomaticTarget(WD68A::Caster(GetCaster()),GetHitUnit()))
+        {PreventHitDefaultEffect(index);SetEffectValue(0);}
+    }
     void Register() override
     {
+        OnEffectHitTarget += SpellEffectFn(spell_reborn_wd48a_attack::ProtectHit,EFFECT_ALL,SPELL_EFFECT_ANY);
         OnCheckCast += SpellCheckCastFn(spell_reborn_wd48a_attack::CheckDoctor);
         OnEffectLaunchTarget += SpellEffectFn(spell_reborn_wd48a_attack::Scale,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
         AfterHit += SpellHitFn(spell_reborn_wd48a_attack::Mark);
@@ -2477,36 +2503,42 @@ namespace WD50A
             if (Aura* aura=target->GetAura(rank.spell,player->GetGUID())) return aura;
         return nullptr;
     }
-    bool Enemy(Player* player, Unit* center, Unit* unit)
+    bool Enemy(Player* player, Unit* center, Unit* unit,bool automatic=false)
     {
         return unit && unit!=center && unit->IsAlive() && unit->IsInWorld() &&
             player->IsInMap(unit) && player->InSamePhase(unit) &&
             center->IsInMap(unit) && center->InSamePhase(unit) &&
             player->IsValidAttackTarget(unit) && center->IsWithinDistInMap(unit,8.0f) &&
-            center->IsWithinLOSInMap(unit) && !OwnedHex(player,unit);
+            center->IsWithinLOSInMap(unit) && !OwnedHex(player,unit) &&
+            (!automatic||WD168::SafeAutomaticTarget(player,unit));
     }
-    void Spread(Player* player, Unit* primary)
+    void Spread(Player* player, Unit* primary,bool automatic=false)
     {
+        if(automatic&&!WD168::SafeAutomaticTarget(player,primary))return;
         Aura* source=OwnedHex(player,primary);
         AuraEffect* original=source ? source->GetEffect(EFFECT_0) : nullptr;
         if (!original || source->GetDuration()<=0) return;
         // Snapshot scalar values before AddAura: application hooks may change auras.
+        ObjectGuid primaryGuid=primary->GetGUID();
         uint32 spell=source->GetId();int32 duration=source->GetDuration();
         int32 amount=original->GetAmount(),timer=original->GetPeriodicTimer();
         float crit=original->GetCritChance();
         std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(primary,8.0f);
         Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(primary,units,check);
         Cell::VisitObjects(primary,search,8.0f);
-        units.remove_if([player,primary](Unit* unit){return !Enemy(player,primary,unit);});
+        units.remove_if([player,primary,automatic](Unit* unit){return !Enemy(player,primary,unit,automatic);});
         units.sort([primary](Unit* a,Unit* b)
         {
             float da=primary->GetDistance(a),db=primary->GetDistance(b);
             return da==db ? a->GetGUID()<b->GetGUID() : da<db;
         });
-        for (Unit* unit:units)
+        std::vector<ObjectGuid> targets;for(Unit* unit:units)targets.push_back(unit->GetGUID());
+        for (ObjectGuid guid:targets)
         {
-            if (!player->IsAlive() || !primary->IsAlive()) return;
-            if (!Enemy(player,primary,unit)) continue;
+            Unit* unit=ObjectAccessor::GetUnit(*player,guid);
+            primary=ObjectAccessor::GetUnit(*player,primaryGuid);
+            if (!player->IsAlive() || !primary || !primary->IsAlive() || (automatic&&!WD168::SafeAutomaticTarget(player,primary))) return;
+            if (!Enemy(player,primary,unit,automatic)) continue;
             // AddAura, not CastSpell: no initial direct damage or further spreading.
             if (Aura* copy=player->AddAura(spell,unit))
             {
@@ -2526,6 +2558,8 @@ namespace WD50A
 class spell_reborn_wd50a_spread : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd50a_spread);
+    bool automatic=false;
+    bool Load() override { automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true; }
     bool handled=false;
     bool Validate(SpellInfo const*) override {return ValidateSpellInfo({9003520});}
     void AfterDamage()
@@ -2539,7 +2573,7 @@ class spell_reborn_wd50a_spread : public SpellScript
             !player->IsInMap(primary) || !player->InSamePhase(primary) ||
             !player->IsValidAttackTarget(primary) ||
             (!WD48A::Juju(GetSpellInfo()->Id) && !WD48A::Fire(GetSpellInfo()->Id))) return;
-        WD50A::Spread(player,primary);
+        WD50A::Spread(player,primary,automatic);
     }
     void Register() override {AfterHit += SpellHitFn(spell_reborn_wd50a_spread::AfterDamage);}
 };

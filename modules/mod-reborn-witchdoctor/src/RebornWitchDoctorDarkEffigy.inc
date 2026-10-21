@@ -9,6 +9,8 @@ bool Owns(Player* player)
 class spell_wd91_cleave : public SpellScript
 {
     PrepareSpellScript(spell_wd91_cleave);
+    bool automatic=false;
+    bool Load() override {automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true;}
     bool expanded=false;
     void After()
     {
@@ -16,6 +18,7 @@ class spell_wd91_cleave : public SpellScript
         Unit* primary=GetExplTargetUnit();
         if (expanded || GetSpell()->IsTriggered() || !Owns(player) || !primary ||
             (!WD48A::Juju(GetSpellInfo()->Id) && !WD48A::Fire(GetSpellInfo()->Id))) return;
+        if(automatic&&!WD168::SafeAutomaticTarget(player,primary))return;
         expanded=true; // Recursive triggered copies can never fan out again.
         AuraEffect* amount=player->GetAuraEffect(DarkEffigy,EFFECT_0,player->GetGUID());
         uint32 cap=amount?uint32(std::max(0,std::min(2,amount->GetAmount()))):0;
@@ -25,7 +28,7 @@ class spell_wd91_cleave : public SpellScript
         Cell::VisitObjects(primary,search,10.0f);
         units.remove_if([&](Unit* unit)
         {
-            return unit==primary || !unit->IsAlive() || !unit->IsInWorld() ||
+            return (automatic&&!WD168::SafeAutomaticTarget(player,unit)) || unit==primary || !unit->IsAlive() || !unit->IsInWorld() ||
                 !player->IsInMap(unit) || !player->InSamePhase(unit) ||
                 !primary->IsWithinDistInMap(unit,10.0f) || !player->IsValidAttackTarget(unit) ||
                 !player->IsWithinLOSInMap(unit);
@@ -42,13 +45,16 @@ class spell_wd91_cleave : public SpellScript
             if(targets.size()>=cap) break;
             targets.push_back(unit->GetGUID());
         }
+        ObjectGuid primaryGuid=primary->GetGUID();
         for (ObjectGuid guid:targets)
         {
             if (!Owns(player)) break;
             Unit* target=ObjectAccessor::GetUnit(*player,guid);
-            if (target && target->IsAlive() && player->IsInMap(target) && player->InSamePhase(target) &&
+            Unit* center=ObjectAccessor::GetUnit(*player,primaryGuid);
+            if(!center)break;
+            if (target && (!automatic||(WD168::SafeAutomaticTarget(player,center)&&WD168::SafeAutomaticTarget(player,target)&&center->IsWithinDistInMap(target,10.0f))) && target->IsAlive() && player->IsInMap(target) && player->InSamePhase(target) &&
                 player->IsValidAttackTarget(target) && player->IsWithinLOSInMap(target))
-                player->CastSpell(target,GetSpellInfo()->Id,true);
+                {WD168::AutomaticCastScope copyScope(player,automatic?GetSpellInfo()->Id:0);player->CastSpell(target,GetSpellInfo()->Id,true);}
         }
     }
     void Register() override { AfterCast += SpellCastFn(spell_wd91_cleave::After); }

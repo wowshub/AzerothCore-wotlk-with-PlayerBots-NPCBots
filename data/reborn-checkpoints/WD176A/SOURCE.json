@@ -1,0 +1,137 @@
+{
+  "stage": "WD176A",
+  "source": {
+    "stage": "WD176A",
+    "status": "candidate;3011 rerun checks;4CPP syntax;game/full link pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_134633_阶段WD176A_巫医机器人累计晨测总包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_134633_阶段WD176A_巫医机器人累计晨测总包.zip",
+    "sha256": "43d6db520e3d86e37ac5d951f19894bb2e8d968244d9bc451a769e5807f9f6e1",
+    "source_files": 23,
+    "changes_since175": 5,
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A"
+    ],
+    "deployment": "none"
+  },
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo175.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorDarkEffigy.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorHexfire.inc"
+  ],
+  "playerbots_commit": "9ea0cd0ef677d6fd5cf0b7136240f402d0cb23ce",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": {
+    "files": [
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+        "method": "Reapplying only the original unrelated backup/formal difference restores exact candidate176; actual release excludes WD165/166"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-playerbots/src/Bot/Factory/AiFactory.cpp",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-playerbots/src/Bot/PlayerbotAI.cpp",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorEquipment170.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotCombat170.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow146.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow159.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotBuild173.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotBuild173.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotProfiles173.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotJob174.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotJob174.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotJobPolicy174.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo175.h",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorDarkEffigy.inc",
+        "method": "Exact tested candidate after newline normalization"
+      },
+      {
+        "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorHexfire.inc",
+        "method": "Exact tested candidate after newline normalization"
+      }
+    ],
+    "syntax": {
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": 0,
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp": 0,
+      "modules/mod-playerbots/src/Bot/Factory/AiFactory.cpp": 0,
+      "modules/mod-playerbots/src/Bot/PlayerbotAI.cpp": 0
+    },
+    "user_scope": "WD176A cumulative basic gameplay and DPS/multi-snake improvement;177–184 excluded",
+    "author": "Codex self-review",
+    "regression": "Archived3011 candidate checks; release replays checked for semantic equivalence,4 full CPP syntax rerun",
+    "lifecycle165_unaccepted": "excluded",
+    "query166_unaccepted": "excluded",
+    "game_targeted": "User basic acceptance, not all transaction/PvP/latency matrices"
+  }
+}

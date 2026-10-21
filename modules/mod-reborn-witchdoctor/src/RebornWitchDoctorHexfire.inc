@@ -1,7 +1,7 @@
 // WD99A: Hexfire Adept; included after WD98, with native transient replacement packets.
 namespace WD99A
 {
-constexpr uint32 Adept=9003820, Ready=9003821, Wrath=9003822, WardNpc=9003823;
+constexpr uint32 Adept=9003820, Ready=9003821, Wrath=9003822, WardNpc=9003823,AutomaticMode=176;
 struct State : DataMap::Base { uint32 original=0; uint64 generation=0; };
 State* Data(Player* p) { return p->CustomData.GetDefault<State>("RebornWD99.Hexfire"); }
 bool Owned(Player* p) { return IsDoctor(p) && p->IsAlive() && p->GetLevel()>=50 && p->HasSpell(Adept) && p->HasAura(Adept,p->GetGUID()); }
@@ -51,6 +51,8 @@ class npc_wd99_serpent : public ScriptedAI
 public:
     explicit npc_wd99_serpent(Creature* c):ScriptedAI(c) { }
     ObjectGuid target;
+    bool automatic=false;
+    void SetData(uint32 id,uint32 value) override {if(id==AutomaticMode)automatic=value!=0;}
     uint32 timer=2000;
     void SetGUID(ObjectGuid const& id,int32) override { target=id; }
     void IsSummonedBy(WorldObject* object) override
@@ -70,7 +72,7 @@ public:
         if(!Owned(p) || !p->IsInMap(me) || !p->InSamePhase(me)) { me->DespawnOrUnsummon();return; }
         if(timer>diff) { timer-=diff;return; } timer=2000;
         Unit* victim=ObjectAccessor::GetUnit(*me,target);
-        if(!victim || !victim->IsAlive() || !p->IsValidAttackTarget(victim) || !me->InSamePhase(victim) ||
+        if((automatic&&!WD168::SafeAutomaticTarget(p,victim)) || !victim || !victim->IsAlive() || !p->IsValidAttackTarget(victim) || !me->InSamePhase(victim) ||
             !me->IsWithinDistInMap(victim,30.0f) || !me->IsWithinLOSInMap(victim) || victim->HasBreakableByDamageCrowdControlAura()) return;
         me->SetFacingToObject(victim);me->CastSpell(victim,WD21A::Attack,true,nullptr,nullptr,p->GetGUID());
     }
@@ -78,6 +80,8 @@ public:
 class spell_wd99_wrath : public SpellScript
 {
     PrepareSpellScript(spell_wd99_wrath);
+    bool automatic=false;
+    bool Load() override { automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true; }
     bool accepted=false,done=false;
     uint64 generation=0;
     SpellCastResult Check()
@@ -92,9 +96,10 @@ class spell_wd99_wrath : public SpellScript
         }
         return SPELL_CAST_OK;
     }
-    void Scale(SpellEffIndex)
+    void Scale(SpellEffIndex index)
     {
         Player* p=WD68A::Caster(GetCaster());if(!Owned(p)) return;
+        if(automatic&&!WD168::SafeAutomaticTarget(p,GetHitUnit())){PreventHitDefaultEffect(index);SetEffectValue(0);return;}
         SetEffectValue(GetEffectValue()+int32(.75f*Power(p)*WD84A::PowerScale(p)));
     }
     void Done()
@@ -102,27 +107,44 @@ class spell_wd99_wrath : public SpellScript
         Player* p=GetCaster()->ToPlayer();Unit* primary=GetExplTargetUnit();
         if(done || GetSpell()->IsTriggered() || !Owned(p) || !primary) return;
         done=true;
+        bool safePrimary=!automatic||WD168::SafeAutomaticTarget(p,primary);
+        if(safePrimary)
+        {
         // Choose and freeze GUIDs before any triggered effects can change the world.
         std::list<Unit*> units;
         Acore::AnyUnitInObjectRangeCheck check(primary,10.0f);
         Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(primary,units,check);
         Cell::VisitObjects(primary,search,10.0f);
-        units.remove_if([&](Unit* u) { return u==primary || !u->IsAlive() || !u->IsInWorld() || !p->IsInMap(u) || !p->InSamePhase(u) || !primary->IsWithinDistInMap(u,10.0f) || !p->IsValidAttackTarget(u) || !p->IsWithinLOSInMap(u); });
+        units.remove_if([&](Unit* u) { return (automatic&&!WD168::SafeAutomaticTarget(p,u)) || u==primary || !u->IsAlive() || !u->IsInWorld() || !p->IsInMap(u) || !p->InSamePhase(u) || !primary->IsWithinDistInMap(u,10.0f) || !p->IsValidAttackTarget(u) || !p->IsWithinLOSInMap(u); });
         units.sort([primary](Unit* a,Unit* b) { float da=primary->GetExactDistSq(a),db=primary->GetExactDistSq(b);return da==db?a->GetGUID()<b->GetGUID():da<db; });
         std::vector<ObjectGuid> targets;
         for(Unit* u:units) { if(targets.size()==2) break;targets.push_back(u->GetGUID()); }
         Position pos=primary->GetPosition();ObjectGuid main=primary->GetGUID();
         for(ObjectGuid id:targets)
+        {
+            Unit* center=ObjectAccessor::GetUnit(*p,main);
+            if(!center)break;
             if(Unit* u=ObjectAccessor::GetUnit(*p,id))
-                if(Owned(p) && u->IsAlive() && p->IsInMap(u) && p->InSamePhase(u) && p->IsValidAttackTarget(u) && p->IsWithinLOSInMap(u)) p->CastSpell(u,Wrath,true);
-        if(Owned(p))
-            if(TempSummon* ward=p->SummonCreature(WardNpc,pos,TEMPSUMMON_TIMED_DESPAWN,10000)) ward->AI()->SetGUID(main,0);
-        if(Unit* u=ObjectAccessor::GetUnit(*p,main)) WD68A::Mirror(p,u,Wrath);
+                if(Owned(p) && (!automatic||(WD168::SafeAutomaticTarget(p,center)&&WD168::SafeAutomaticTarget(p,u)&&center->IsWithinDistInMap(u,10.0f))) && u->IsAlive() && p->IsInMap(u) && p->InSamePhase(u) && p->IsValidAttackTarget(u) && p->IsWithinLOSInMap(u))
+                {WD168::AutomaticCastScope copyScope(p,automatic?Wrath:0);p->CastSpell(u,Wrath,true);}
+        }
+        if(Owned(p)&&(!automatic||WD168::SafeAutomaticTarget(p,ObjectAccessor::GetUnit(*p,main))))
+            if(TempSummon* ward=p->SummonCreature(WardNpc,pos,TEMPSUMMON_TIMED_DESPAWN,10000)) {ward->AI()->SetData(AutomaticMode,automatic?1:0);ward->AI()->SetGUID(main,0);}
+        if(Unit* u=ObjectAccessor::GetUnit(*p,main))
+            if(!automatic||WD168::SafeAutomaticTarget(p,u))
+            {WD168::AutomaticCastScope mirrorScope(p,automatic?Wrath:0);WD68A::Mirror(p,u,Wrath);}
+        }
         // A newer Hexfire during this cast must not lose its new readiness.
         if(Data(p)->generation==generation) p->RemoveAurasDueToSpell(Ready,p->GetGUID());
     }
+    void ProtectHit(SpellEffIndex index)
+    {
+        if(automatic&&!WD168::SafeAutomaticTarget(WD68A::Caster(GetCaster()),GetHitUnit()))
+        {PreventHitDefaultEffect(index);SetEffectValue(0);}
+    }
     void Register() override
     {
+        OnEffectHitTarget += SpellEffectFn(spell_wd99_wrath::ProtectHit,EFFECT_ALL,SPELL_EFFECT_ANY);
         OnCheckCast += SpellCheckCastFn(spell_wd99_wrath::Check);
         OnEffectLaunchTarget += SpellEffectFn(spell_wd99_wrath::Scale,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
         AfterCast += SpellCastFn(spell_wd99_wrath::Done);
