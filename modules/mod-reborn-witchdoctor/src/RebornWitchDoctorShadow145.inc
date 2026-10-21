@@ -27,29 +27,17 @@ class spirit_gain : public SpellScript
     }
     void Register() override { AfterHit += SpellHitFn(spirit_gain::HitSpirit); }
 };
-class eclipse_cast : public SpellScript
-{
-    PrepareSpellScript(eclipse_cast);
-    SpellCastResult Check()
-    {
-        Player* p=GetCaster()->ToPlayer();
-        if(!Owns(p,GetSpellInfo()->Id)) return SPELL_FAILED_CASTER_AURASTATE;
-        if(Count(p)==0)
-        {
-            if(p->GetSession()) ChatHandler(p->GetSession()).SendNotification(
-                "灵魂蚀需要至少1层灵魂。请先用灵魂回收（Reclamation）等方式获取灵魂。");
-            return SPELL_FAILED_DONT_REPORT;
-        }
-        return SPELL_CAST_OK;
-    }
-    void Register() override { OnCheckCast += SpellCheckCastFn(eclipse_cast::Check); }
-};
 class eclipse_aura : public AuraScript
 {
     PrepareAuraScript(eclipse_aura);
+    public:
+    // Per-aura provenance: a manual reapplication clears any previous automatic flag.
+    bool automatic=false;
+private:
     uint32 remaining=0,damage=0,splash=0;
     void Apply(AuraEffect const* effect,AuraEffectHandleModes)
     {
+        automatic=false;
         Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;
         remaining=Owns(p,GetId())?Count(p):0;
         if(!remaining) { GetAura()->Remove();return; }
@@ -67,6 +55,7 @@ class eclipse_aura : public AuraScript
     {
         Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;Unit* target=GetTarget();
         if(!Owns(p,GetId()) || !target->IsAlive() || !remaining || !p->IsValidAttackTarget(target) ||
+           (automatic&&!WD168::SafeAutomaticTarget(p,target)) ||
            !p->IsWithinDistInMap(target,30.0f) || !p->IsWithinLOSInMap(target)) { GetAura()->Remove();return; }
         --remaining;
         std::list<Unit*> enemies;
@@ -76,7 +65,7 @@ class eclipse_aura : public AuraScript
         enemies.sort([target](Unit* a,Unit* b) { return target->GetDistance(a)<target->GetDistance(b); });
         std::vector<ObjectGuid> selected;
         for(Unit* other:enemies)
-            if(other!=target && other->IsAlive() && p->InSamePhase(other) && target->IsWithinDistInMap(other,10.0f) && p->IsValidAttackTarget(other) && target->IsWithinLOSInMap(other) && p->IsWithinLOSInMap(other))
+            if(other!=target && (!automatic||WD168::SafeAutomaticTarget(p,other)) && other->IsAlive() && p->InSamePhase(other) && target->IsWithinDistInMap(other,10.0f) && p->IsValidAttackTarget(other) && target->IsWithinLOSInMap(other) && p->IsWithinLOSInMap(other))
             {
                 selected.push_back(other->GetGUID());
                 if(selected.size()==5) break;
@@ -85,7 +74,7 @@ class eclipse_aura : public AuraScript
         // Resolve each GUID again after triggered casts; never retain other-unit pointers across callbacks.
         for(ObjectGuid guid:selected)
             if(Unit* other=ObjectAccessor::GetUnit(*p,guid))
-                if(Owns(p,GetId()) && other->IsAlive() && p->InSamePhase(other) && p->IsValidAttackTarget(other) && p->IsWithinLOSInMap(other))
+                if(Owns(p,GetId()) && (!automatic||(WD168::SafeAutomaticTarget(p,other) && target->IsWithinDistInMap(other,10.0f) && target->IsWithinLOSInMap(other))) && other->IsAlive() && p->InSamePhase(other) && p->IsValidAttackTarget(other) && p->IsWithinLOSInMap(other))
                     p->CastCustomSpell(Splash,SPELLVALUE_BASE_POINT0,splash,other,true);
         // Spirits are snapshotted and never consumed or created by Eclipse.
     }
@@ -94,6 +83,32 @@ class eclipse_aura : public AuraScript
         AfterEffectApply += AuraEffectApplyFn(eclipse_aura::Apply,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY,AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
         OnEffectPeriodic += AuraEffectPeriodicFn(eclipse_aura::Tick,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY);
     }
+};
+class eclipse_cast : public SpellScript
+{
+    PrepareSpellScript(eclipse_cast);
+    bool automatic=false;
+    bool Load() override
+    { automatic=!GetSpell()->IsTriggered()&&WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true; }
+    void MarkAura()
+    {
+        if(Aura* aura=GetHitAura())
+            if(auto* script=aura->GetScript<eclipse_aura>("WD145::eclipse_aura"))
+                script->automatic=automatic;
+    }
+    SpellCastResult Check()
+    {
+        Player* p=GetCaster()->ToPlayer();
+        if(!Owns(p,GetSpellInfo()->Id)) return SPELL_FAILED_CASTER_AURASTATE;
+        if(Count(p)==0)
+        {
+            if(p->GetSession()) ChatHandler(p->GetSession()).SendNotification(
+                "灵魂蚀需要至少1层灵魂。请先用灵魂回收（Reclamation）等方式获取灵魂。");
+            return SPELL_FAILED_DONT_REPORT;
+        }
+        return SPELL_CAST_OK;
+    }
+    void Register() override { OnCheckCast += SpellCheckCastFn(eclipse_cast::Check); AfterHit += SpellHitFn(eclipse_cast::MarkAura); }
 };
 void Register()
 {

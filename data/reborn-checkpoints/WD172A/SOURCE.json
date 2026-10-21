@@ -1,0 +1,26 @@
+{
+  "stage": "WD172A",
+  "source": {
+    "stage": "WD172A",
+    "status": "candidate; 644 fixtures, 4 CPP syntax passed; full link/game pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_114119_阶段WD172A_满魂灵魂蚀与代价战刃累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_114119_阶段WD172A_满魂灵魂蚀与代价战刃累计包.zip",
+    "sha256": "5a33f2e83f1542799c71231aeeef158572cdf43303089dce1e518aa6fa2b8552",
+    "source_files": 14,
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A"
+    ],
+    "deployment": "none"
+  },
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc"
+  ],
+  "playerbots_commit": "a40f4f8943e392223e1dfb6c7a691a2df9cce181",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": "Final review archived under WD176A"
+}
