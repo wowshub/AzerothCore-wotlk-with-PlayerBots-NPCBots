@@ -15,4 +15,5 @@ Receipt Enroll(Player*,unsigned expectedRevision);
 Receipt Bind(Player*,std::string_view profile,unsigned expectedRevision);
 Receipt Apply(Player*,std::string_view profile,unsigned expectedRevision,unsigned expectedLevel,std::string_view expectedHex);
 Receipt TrainOne(Player*,Creature*,unsigned maximumCopper);
+Receipt ConfirmTraining(Player*,unsigned spell);
 }

@@ -11,6 +11,8 @@
 #include "RebornWitchDoctorRanks.h"
 #include "RebornWitchDoctorBotState168.h"
 #include "RebornWitchDoctorBotBuild173.h"
+#include "RebornWitchDoctorBotJob174.h"
+#include "../../mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h"
 #include "RebornWitchDoctorBotProfiles173.h"
 #include "Playerbots.h"
 #include "Trainer.h"
@@ -890,6 +892,7 @@ bool Check168(ChatHandler* h)
 }
 
 #include "RebornWitchDoctorBotBuild173.inc"
+#include "RebornWitchDoctorBotJob174.inc"
 
 class Commands : public CommandScript
 {
@@ -898,6 +901,9 @@ public:
     ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable cmds={
+            {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
+            {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
+            {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},
             {"wd173preview",BotPreview173,SEC_GAMEMASTER,Console::No},
             {"wd173join",BotEnroll173,SEC_GAMEMASTER,Console::No},
             {"wd173bind",BotBind173,SEC_GAMEMASTER,Console::No},
@@ -958,8 +964,11 @@ public:
     }
     void OnPlayerLevelChanged(Player* p,uint8) override
     { if (Doctor(p)) Apply(p,p->CustomData.GetDefault<State>(Key)); }
+    void OnPlayerUpdate(Player* p,uint32 diff) override { WD174::Tick(p,diff); }
+    void OnPlayerMapChanged(Player* p) override { WD174::Cancel(p,"map_changed"); }
     void OnPlayerLogout(Player* p) override
     {
+        WD174::Forget(p);
         State* s=p->CustomData.GetDefault<State>(Key);Remove(p,s);p->CustomData.Erase(Key);
     }
 };

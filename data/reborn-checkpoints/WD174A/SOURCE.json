@@ -1,0 +1,32 @@
+{
+  "stage": "WD174A",
+  "source": {
+    "stage": "WD174A",
+    "status": "candidate;2026 checks incl128 real isolated MySQL;4CPP syntax;final link/game pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_124431_阶段WD174A_受控准备队列与升级学习监听累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_124431_阶段WD174A_受控准备队列与升级学习监听累计包.zip",
+    "sha256": "b6c99cc6902f2390fbfeed2ea6fa2fd8999ad3e94473066cc2a93b16fe0952c2",
+    "source_files": 20,
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A"
+    ],
+    "deployment": "none"
+  },
+  "paths": [
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotBuild173.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotBuild173.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotJob174.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotJob174.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotJobPolicy174.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp"
+  ],
+  "playerbots_commit": "a40f4f8943e392223e1dfb6c7a691a2df9cce181",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": "Final review archived under WD176A"
+}

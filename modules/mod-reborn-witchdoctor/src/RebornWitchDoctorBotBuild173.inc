@@ -116,6 +116,14 @@ Receipt TrainOne(Player* p,Creature* npc,unsigned cap) {
  r.ready=p->HasSpell(choice->SpellId);r.status=r.ready?"learned_ledger_queued":"not_learned";
  return r;
 }
+Receipt ConfirmTraining(Player* p,unsigned spell) {
+ Receipt r;if(!Bot(p)){r.status="not_bot";return r;}Observe(p,r);r.spell=spell;
+ if(!spell){r.status="invalid_spell";return r;}
+ QueryResult q=CharacterDatabase.Query("SELECT COUNT(*) FROM reborn_wd12_training WHERE guid={} AND spell={}",p->GetGUID().GetCounter(),spell);
+ if(!q){r.status="ledger_unavailable";return r;}
+ r.ready=q->Fetch()[0].Get<unsigned>()>0&&p->HasSpell(spell);
+ r.status=r.ready?"training_confirmed":"training_pending";return r;
+}
 } // WD173
 namespace WD5A {
 inline Player* BotTarget173(ChatHandler* h){return h->getSelectedPlayer();}
