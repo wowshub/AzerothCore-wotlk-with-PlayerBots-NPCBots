@@ -1,0 +1,28 @@
+{
+  "stage": "WD171A",
+  "source": {
+    "stage": "WD171A",
+    "status": "candidate, 4 real CPP syntax and 472 fixture cases passed; final link/game pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_111338_阶段WD171A_队伍互补召唤与单人团队巫祝累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_111338_阶段WD171A_队伍互补召唤与单人团队巫祝累计包.zip",
+    "sha256": "c18a1c9d18b6d5e1d8a5935646686c6261b4011f166cf297adba91d805034580",
+    "source_files": 13,
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A"
+    ],
+    "deployment": "none"
+  },
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp"
+  ],
+  "playerbots_commit": "58c36ce24b93121cba070d3b6b95ac06f589af9c",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": "Final review archived under WD176A"
+}

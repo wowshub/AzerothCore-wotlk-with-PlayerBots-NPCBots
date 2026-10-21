@@ -876,6 +876,7 @@ bool Check168(ChatHandler* h)
  if(s.plan.available)h->PSendSysMessage("WD168 plan={} revision={} slot={} spec={} level={} AE={}/{} TE={}/{}",s.plan.reason,s.plan.revision,s.plan.slot+1,s.plan.spec,s.level,s.plan.ae,s.plan.aeBudget,s.plan.te,s.plan.teBudget);
  else h->PSendSysMessage("WD168 plan={} (当前方案数据不可用，不输出虚构点数)",s.plan.reason);
  h->PSendSysMessage("WD168 souls={}/5 mana={}/{} alive={} world={} combat={} serpent={} (只读；不是可施法判定)",s.souls,s.mana,s.maxMana,s.alive,s.inWorld,s.combat,s.serpentPresent);
+ h->PSendSysMessage("WD171 mass_wards={} (实际存活且属于本人)",s.massWards);
  for(uint32 i=0;i<3;++i)h->PSendSysMessage("WD170 slot={} selected={} present={} entry={}",i+1,s.summons[i].selected,s.summons[i].present,s.summons[i].entry);
  for(auto const& a:s.spells)h->PSendSysMessage("WD168 base={} learned={} replacement={} info={} cooldown_ms={} gcd_ms={}",a.base,a.learned,a.replacement,a.infoKnown,a.cooldownMs,a.gcdMs);
  return true;
@@ -902,6 +903,7 @@ public:
             {"wd139state",ProfileState139,SEC_PLAYER,Console::No},
             {"wd168state",Check168,SEC_PLAYER,Console::No},
             {"wd170state",Check168,SEC_PLAYER,Console::No},
+            {"wd171state",Check168,SEC_PLAYER,Console::No},
             {"wd67save2",AESave139,SEC_PLAYER,Console::No},
             {"wd67save",AESave,SEC_PLAYER,Console::No},
             {"wd64check",AuditNode,SEC_PLAYER,Console::No},

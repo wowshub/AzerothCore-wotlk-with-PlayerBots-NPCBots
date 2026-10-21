@@ -39,10 +39,13 @@ Snapshot Capture(Player* p)
   if(selection && WD53A::Slot(selection->selected[i])==int(i) && p->HasSpell(selection->selected[i]))
    out.summons[i].selected=selection->selected[i];
   if(auto* u=ObjectAccessor::GetCreature(*p,ids[i]))
-   if(u->IsAlive()&&u->IsInWorld()&&WD53A::Entry(i,u->GetEntry())&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))
+   if(u->IsAlive()&&u->IsInWorld()&&(WD53A::Entry(i,u->GetEntry())||(i==1&&u->GetEntry()==900232))&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))
    {out.summons[i].present=true;out.summons[i].entry=u->GetEntry();}
  }
  out.serpentPresent=out.summons[0].present; // Includes healing/mimic wards; never overwrite an occupied slot.
+ if(auto* mass=p->CustomData.Get<WD150::State>(WD150::Key))
+  for(auto guid:mass->wards)if(auto* u=ObjectAccessor::GetCreature(*p,guid))
+   if(u->IsAlive()&&u->IsInWorld()&&u->GetEntry()==900190&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))++out.massWards;
  out.souls=WD87A::Count(p); // Only aura 9003574 from this player's own GUID, capped at five.
  uint32 bases[]={9003100,9003101,9003104,9003160,9003260,9003970,9003980,9004000,9004030,9003541,9003270};
  for(std::size_t i=0;i<out.spells.size();++i)out.spells[i]=ReadSpell(p,bases[i]);
