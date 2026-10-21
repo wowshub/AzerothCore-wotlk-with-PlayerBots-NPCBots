@@ -1,0 +1,23 @@
+{
+  "stage": "WD168A",
+  "source": {
+    "stage": "WD168A",
+    "status": "candidate; syntax and 27 isolated cases passed; game pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_060626_阶段WD168A_巫医方案魂资源与技能冷却只读快照",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_060626_阶段WD168A_巫医方案魂资源与技能冷却只读快照.zip",
+    "sha256": "43eb14b22078b596c32e85f705a024df4bcd2fdd4c290f1e0b9dc561601553cd",
+    "source_files": 4,
+    "client_files": 0,
+    "deployment": "none",
+    "worldserver_build": "not performed"
+  },
+  "paths": [
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp"
+  ],
+  "playerbots_commit": "f327c8b4389e2d6f2651dd9017d60c06b2df30c0",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": "Final review archived under WD176A"
+}

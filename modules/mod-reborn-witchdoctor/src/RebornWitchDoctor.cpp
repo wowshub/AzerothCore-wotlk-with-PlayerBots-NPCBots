@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "ScriptDefines/GlobalScript.h"
 #include "RebornWitchDoctorRanks.h"
+#include "RebornWitchDoctorBotState168.h"
 #include "WitchDoctorTalentPolicy.h"
 #include <unordered_set>
 #include <vector>
@@ -3369,6 +3370,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorFinal161.inc"
 #include "RebornWitchDoctorShadow143.inc"
 #include "RebornWitchDoctorSupport144.inc"
+#include "RebornWitchDoctorBotState168.inc"
 
 // WD126: the donor spell's Dodge and Scale auras remain native 3.3.5a effects.
 class spell_reborn_wd126_shrink_ally : public SpellScript

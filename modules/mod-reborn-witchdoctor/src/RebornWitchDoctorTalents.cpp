@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "RebornWitchDoctorRanks.h"
+#include "RebornWitchDoctorBotState168.h"
 #include "RebornWitchDoctorTalentNodes.h"
 #include "RebornWitchDoctorBudget.h"
 #include "WitchDoctorTalentPolicy.h"
@@ -868,6 +869,17 @@ bool Check148(ChatHandler* h)
     return true;
 }
 
+bool Check168(ChatHandler* h)
+{
+ Player* p=h->GetSession()->GetPlayer();if(!Doctor(p)){h->SendSysMessage("WD168: 仅可查看自己的巫医状态。");return true;}
+ auto s=WD168::Capture(p);
+ if(s.plan.available)h->PSendSysMessage("WD168 plan={} revision={} slot={} spec={} level={} AE={}/{} TE={}/{}",s.plan.reason,s.plan.revision,s.plan.slot+1,s.plan.spec,s.level,s.plan.ae,s.plan.aeBudget,s.plan.te,s.plan.teBudget);
+ else h->PSendSysMessage("WD168 plan={} (当前方案数据不可用，不输出虚构点数)",s.plan.reason);
+ h->PSendSysMessage("WD168 souls={}/5 mana={}/{} alive={} world={} combat={} (只读；不是可施法判定)",s.souls,s.mana,s.maxMana,s.alive,s.inWorld,s.combat);
+ for(auto const& a:s.spells)h->PSendSysMessage("WD168 base={} learned={} replacement={} info={} cooldown_ms={} gcd_ms={}",a.base,a.learned,a.replacement,a.infoKnown,a.cooldownMs,a.gcdMs);
+ return true;
+}
+
 class Commands : public CommandScript
 {
 public:
@@ -887,6 +899,7 @@ public:
             {"wdtestpoints",AETestPoints,SEC_GAMEMASTER,Console::No},
             {"wd67join",AEJoin,SEC_PLAYER,Console::No},
             {"wd139state",ProfileState139,SEC_PLAYER,Console::No},
+            {"wd168state",Check168,SEC_PLAYER,Console::No},
             {"wd67save2",AESave139,SEC_PLAYER,Console::No},
             {"wd67save",AESave,SEC_PLAYER,Console::No},
             {"wd64check",AuditNode,SEC_PLAYER,Console::No},
@@ -936,4 +949,26 @@ public:
 void AddRebornWitchDoctorTalentScripts()
 {
     new WD5A::Commands();new WD5A::ExactModifier();new WD5A::Players();
+}
+
+// WD168A: observe the already loaded committed build; never call Load/Ready/GetDefault here.
+namespace WD168
+{
+Plan ReadPlan(Player* p)
+{
+ Plan out;
+ if(!WD5A::Doctor(p)){out.reason="not_witchdoctor";return out;}
+ if(!WD5A::Enabled()||!WD5A::ProfilesEnabled()){out.reason="disabled";return out;}
+ auto* s=p->CustomData.Get<WD5A::State>(WD5A::Key);
+ if(!s||!s->loaded){out.reason="not_loaded";return out;}
+ if(!s->modern){out.reason="legacy";return out;}
+ if(s->layoutMismatch){out.reason="layout_mismatch";return out;}
+ if(s->active>=3||s->active>=s->unlocked){out.reason="invalid_slot";return out;}
+ if(s->specs[s->active]>=3){out.reason="unbound";return out;}
+ if(!WD5A::AEValid(s->aeMasks[s->active],p->GetLevel(),s->testAE,s->testTE)){out.reason="invalid_build";return out;}
+ out.available=true;out.reason="ready";out.revision=s->revision;out.slot=s->active;out.spec=s->specs[s->active];
+ out.ae=WD5A::AESpent(s->aeMasks[s->active]);out.te=WD5A::TESpent(s->aeMasks[s->active]);
+ out.aeBudget=WD67Budget::AE(p->GetLevel())+s->testAE;out.teBudget=WD67Budget::TE(p->GetLevel())+s->testTE;
+ return out;
+}
 }
