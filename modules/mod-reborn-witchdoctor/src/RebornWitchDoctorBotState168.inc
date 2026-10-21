@@ -26,6 +26,9 @@ Snapshot Capture(Player* p)
  out.plan=ReadPlan(p);out.level=p->GetLevel();out.alive=p->IsAlive();
  out.inWorld=p->IsInWorld();out.combat=p->IsInCombat();
  out.mana=p->GetPower(POWER_MANA);out.maxMana=p->GetMaxPower(POWER_MANA);
+ if(auto* wardState=p->CustomData.Get<WD21A::State>(WD21A::Key))
+  if(auto* ward=ObjectAccessor::GetCreature(*p,wardState->guid))
+   out.serpentPresent=ward->IsAlive()&&ward->IsInWorld()&&ward->GetEntry()==900190&&ward->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(ward)&&p->InSamePhase(ward);
  out.souls=WD87A::Count(p); // Only aura 9003574 from this player's own GUID, capped at five.
  uint32 bases[]={9003100,9003101,9003104,9003160,9003260,9003970,9003980};
  for(std::size_t i=0;i<out.spells.size();++i)out.spells[i]=ReadSpell(p,bases[i]);

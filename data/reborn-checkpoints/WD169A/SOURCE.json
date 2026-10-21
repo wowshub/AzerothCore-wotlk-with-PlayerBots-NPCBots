@@ -1,0 +1,29 @@
+{
+  "stage": "WD169A",
+  "source": {
+    "stage": "WD169A",
+    "status": "candidate; 4 CPP syntax, 165 AI and 32 state fixture cases passed; game/link pending",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_075602_阶段WD169A_巫医首轮打怪治疗与召唤AI累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_075602_阶段WD169A_巫医首轮打怪治疗与召唤AI累计包.zip",
+    "sha256": "ec3f70fd24bab9e85d391a94090a22ad0cdf447adec53ad627dcb401e08eb038",
+    "source_files": 8,
+    "client_files": 0,
+    "includes": [
+      "WD167A",
+      "WD168A"
+    ],
+    "deployment": "none",
+    "worldserver_build": "not performed"
+  },
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Bot/Factory/AiFactory.cpp",
+    "modules/mod-playerbots/src/Bot/PlayerbotAI.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp"
+  ],
+  "playerbots_commit": "32ad057990fb7c90438b486ff7fb48a3b6658f5a",
+  "scope": "cumulative WD176A basic acceptance only",
+  "review": "Final review archived under WD176A"
+}

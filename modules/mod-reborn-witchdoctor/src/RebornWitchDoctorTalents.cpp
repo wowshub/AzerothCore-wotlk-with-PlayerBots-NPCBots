@@ -875,7 +875,7 @@ bool Check168(ChatHandler* h)
  auto s=WD168::Capture(p);
  if(s.plan.available)h->PSendSysMessage("WD168 plan={} revision={} slot={} spec={} level={} AE={}/{} TE={}/{}",s.plan.reason,s.plan.revision,s.plan.slot+1,s.plan.spec,s.level,s.plan.ae,s.plan.aeBudget,s.plan.te,s.plan.teBudget);
  else h->PSendSysMessage("WD168 plan={} (当前方案数据不可用，不输出虚构点数)",s.plan.reason);
- h->PSendSysMessage("WD168 souls={}/5 mana={}/{} alive={} world={} combat={} (只读；不是可施法判定)",s.souls,s.mana,s.maxMana,s.alive,s.inWorld,s.combat);
+ h->PSendSysMessage("WD168 souls={}/5 mana={}/{} alive={} world={} combat={} serpent={} (只读；不是可施法判定)",s.souls,s.mana,s.maxMana,s.alive,s.inWorld,s.combat,s.serpentPresent);
  for(auto const& a:s.spells)h->PSendSysMessage("WD168 base={} learned={} replacement={} info={} cooldown_ms={} gcd_ms={}",a.base,a.learned,a.replacement,a.infoKnown,a.cooldownMs,a.gcdMs);
  return true;
 }
