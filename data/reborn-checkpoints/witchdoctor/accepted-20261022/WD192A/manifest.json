@@ -1,0 +1,58 @@
+{
+  "stage": "WD192A",
+  "metadata": {
+    "stage": "WD192A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_213034_阶段WD192A_黑暗帷幕主动轮转与周期安全累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_213034_阶段WD192A_黑暗帷幕主动轮转与周期安全累计包.zip",
+    "sha256": "36b93ffb4fa6e88388576b0531894c9a2930eca7d6ecb7745ca97966420f187d",
+    "status": "candidate; offline only; game pending",
+    "changed": [
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVeil192.h",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorCommon142.inc"
+    ],
+    "source_files": 37,
+    "client_new_changes": 0,
+    "tests": {
+      "decisions": 333,
+      "lifecycle": 22,
+      "cpp_syntax": 4
+    },
+    "base": "f53db00286bd36dcc6f5837127ac92706b4265033b995997af0dc18685adc509"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_213034_阶段WD192A_黑暗帷幕主动轮转与周期安全累计包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVeil192.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorCommon142.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "4ddddf34c3304187b0b0a6947988c08f4ca447d868583c493d5a456f4de91eb7",
+      "candidate_output": "77dcea5fbc5f3d9dac20a9b8e1d206a3abad58607a836bda9f3aeb758ebb8536",
+      "formal_input": "4ddddf34c3304187b0b0a6947988c08f4ca447d868583c493d5a456f4de91eb7",
+      "release_output": "77dcea5fbc5f3d9dac20a9b8e1d206a3abad58607a836bda9f3aeb758ebb8536"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVeil192.h": {
+      "candidate_input": null,
+      "candidate_output": "634c7fda7c8f82291952e99eff4bc97dbb7d7c85b53899c1126fe087da9df047",
+      "formal_input": null,
+      "release_output": "634c7fda7c8f82291952e99eff4bc97dbb7d7c85b53899c1126fe087da9df047"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+      "candidate_input": "db012baf84df7bbf24541fd98923596bc9066a92c81ce1202272314a3a123c6b",
+      "candidate_output": "afe6a69737102b371a40a08a876a425416ff2f875a7d9aa3ae257c71a28cb5cd",
+      "formal_input": "e9d0c8b5b31a1200f438c7b07ac4c14c82921d17a4ef9e0076e6a70da40695e6",
+      "release_output": "cbb1a9f14fb8fac38193656b0e7ee0d85cfbb8108784610025832905c2948836"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorCommon142.inc": {
+      "candidate_input": "e77ea3d09f8f04926c0b7edc3f6da980283ceff231efaf3e53a09a682f1b12cd",
+      "candidate_output": "48e6eb067a8d7a1dce11e247cea45f25ff5c9fe122e739d09a1e6d88c99603f3",
+      "formal_input": "e77ea3d09f8f04926c0b7edc3f6da980283ceff231efaf3e53a09a682f1b12cd",
+      "release_output": "48e6eb067a8d7a1dce11e247cea45f25ff5c9fe122e739d09a1e6d88c99603f3"
+    }
+  },
+  "title": "dark veil automation and periodic safety"
+}

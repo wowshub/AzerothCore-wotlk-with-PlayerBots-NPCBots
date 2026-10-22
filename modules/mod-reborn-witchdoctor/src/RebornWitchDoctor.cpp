@@ -3487,7 +3487,7 @@ void AddRebornWitchDoctorScripts()
     RegisterSpellScript(WD143::auto_shot);
     RegisterSpellScript(WD143::arrow);
     RegisterSpellScript(WD143::reclamation);
-    RegisterSpellScript(WD142::aura_veil);
+    RegisterSpellAndAuraScriptPairWithArgs(WD142::spell_veil, WD142::aura_veil, "WD142::aura_veil");
     RegisterSpellScript(WD142::spell_pulse);
     RegisterSpellScript(WD142::aura_devotion);
     new WD142::melee();

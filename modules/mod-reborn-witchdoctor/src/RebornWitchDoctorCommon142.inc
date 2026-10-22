@@ -14,6 +14,10 @@ void Clear(Player* p)
 class aura_veil : public AuraScript
 {
     PrepareAuraScript(aura_veil);
+public:
+    void SetAutomatic(bool value) {automatic=value;}
+private:
+    bool automatic=false;
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({Veil,Pulse,Communion}); }
     void Applied(AuraEffect const*,AuraEffectHandleModes)
     {
@@ -34,6 +38,8 @@ class aura_veil : public AuraScript
         Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;
         Unit* target=GetTarget();
         if(!IsDoctor(p) || !p->IsAlive() || !p->HasSpell(Veil) || !p->IsInMap(target)) { Remove();return; }
+        if(automatic&&!WD168::SafeAutomaticTarget(p,target)) {Remove();return;}
+        WD168::AutomaticCastScope scope(p,automatic?Pulse:0);
         if(target->IsAlive() && p->IsValidAttackTarget(target) && p->IsWithinDistInMap(target,40.0f) && p->IsWithinLOSInMap(target))
             p->CastSpell(target,Pulse,true);
     }
@@ -44,19 +50,52 @@ class aura_veil : public AuraScript
         OnEffectPeriodic += AuraEffectPeriodicFn(aura_veil::Tick,EFFECT_1,SPELL_AURA_PERIODIC_DUMMY);
     }
 };
+// Preserve the existing SQL loader name with a paired Spell/Aura loader.
+// Capture during prepare, relay after actual application/reapplication.
+class spell_veil : public SpellScript
+{
+    PrepareSpellScript(spell_veil);
+    bool automatic=false;
+    bool Load() override {automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),Veil);return true;}
+    void Guard(SpellEffIndex)
+    {
+        if(automatic&&!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetHitUnit()))
+        {PreventHitAura();PreventHitDefaultEffect(EFFECT_0);PreventHitDefaultEffect(EFFECT_1);}
+    }
+    void Mark()
+    {
+        if(Aura* a=GetHitAura())if(auto* script=a->GetScript<aura_veil>("WD142::aura_veil"))script->SetAutomatic(automatic);
+    }
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_veil::Guard,EFFECT_0,SPELL_EFFECT_APPLY_AURA);
+        OnEffectHitTarget += SpellEffectFn(spell_veil::Guard,EFFECT_1,SPELL_EFFECT_APPLY_AURA);
+        AfterHit += SpellHitFn(spell_veil::Mark);
+    }
+};
 class spell_pulse : public SpellScript
 {
     PrepareSpellScript(spell_pulse);
-    void Damage(SpellEffIndex)
+    bool automatic=false;
+    bool Load() override {automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),Pulse);return true;}
+    void Recheck()
+    {if(automatic&&!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetHitUnit()))SetHitDamage(0);}
+    void Damage(SpellEffIndex index)
     {
         Player* p=GetCaster()->ToPlayer();
+        if(automatic&&!WD168::SafeAutomaticTarget(p,GetHitUnit()))
+        {PreventHitDefaultEffect(index);SetEffectValue(0);SetHitDamage(0);return;}
         if(!IsDoctor(p) || !p->HasSpell(Veil) || !GetHitUnit() || !GetHitUnit()->HasAura(Veil,p->GetGUID())) { SetEffectValue(0);return; }
         float amount=GetEffectValue()+0.10f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW))+
                      0.045f*std::max(0.0f,p->GetTotalAttackPowerValue(BASE_ATTACK));
         if(p->HasSpell(Communion) && p->HasAura(Communion,p->GetGUID())) amount*=2.0f;
         SetEffectValue(int32(std::max(0.0f,amount)));
     }
-    void Register() override { OnEffectHitTarget += SpellEffectFn(spell_pulse::Damage,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE); }
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_pulse::Damage,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnHit += SpellHitFn(spell_pulse::Recheck);
+    }
 };
 class aura_devotion : public AuraScript
 {
