@@ -36,6 +36,12 @@ local function box(parent,x,y,width,height)
  return f
 end
 local function val(n)return n==nil and'—'or tostring(n)end
+local function points(current)
+ return '|cff40dcffAE 已加点 '..val(current.ae)..'/'..val(current.aeBudget)..'　未加点数 '..val(current.aeLeft)..'|r\n|cffffd15cTE 已加点 '..val(current.te)..'/'..val(current.teBudget)..'　未加点数 '..val(current.teLeft)..'|r'
+end
+local function totals(current)
+ return '总额度 AE '..val(current.aeBudget)..' · TE '..val(current.teBudget)
+end
 local function left(current)
  if current.aeLeft==nil then return '|cffffbb66未同步前不显示旧额度|r'end
  local color=current.aeLeft<0 or current.teLeft<0
@@ -48,17 +54,17 @@ end
 function P.UpdateGuide()
  if not G.frame then return end
  if not P.guide then
-  local b=box(G.frame,428,-5,426,52);P.guide=b
-  b.caption=text(b,6,-1,414,11);b.values=text(b,6,-15,414,18);b.plan=text(b,6,-37,414,11)
+  local b=box(G.frame,428,-5,426,68);P.guide=b
+  b.caption=text(b,6,-1,414,11);b.values=text(b,6,-15,414,16);b.values:SetHeight(36);b.plan=text(b,6,-53,414,10)
  end
  local b=P.guide
  if G.catalogClass~='巫医'then b:Hide();if G.titleText then G.titleText:SetWidth(700)end;G.context:SetWidth(900);return end
  b:Show();if G.titleText then G.titleText:SetWidth(390)end;G.context:SetWidth(390)
  local current=P.Current(G.fromBot);local result=G.WD.Build(G.WD.selected or 1,G.WD.previewLevel or UnitLevel('player'))
  local plan=result and{level=result.level,ae=result.ae,te=result.te,label='推荐'}or nil
- b.caption:SetText(current.reason..' · 已用 / 总额')
- b.values:SetText('|cff40dcffAE '..val(current.ae)..'/'..val(current.aeBudget)..(current.aeLeft~=nil and(' 余'..current.aeLeft)or'')..'|r    |cffffd15cTE '..val(current.te)..'/'..val(current.teBudget)..(current.teLeft~=nil and(' 余'..current.teLeft)or'')..'|r')
- b.plan:SetText(planText(plan)..'  |cffb7c3cf（大字＝角色已用/总额）|r')
+ b.caption:SetText(current.reason..' · 已加点 / 总额度')
+ b.values:SetText(points(current))
+ b.plan:SetText(planText(plan)..'  |cffb7c3cf（角色点数仅计已保存）|r')
  b.current=current;b.planData=plan
 end
 function P.UpdateCollection()
@@ -90,9 +96,9 @@ function T.RefreshWD(...)
  local result=refreshTree(...)
  if T.frame then
   local current=P.Current(G.fromBot);local plan=G.WD.Build(G.WD.selected or 1,G.WD.previewLevel or UnitLevel('player'))
-  T.frame.title:SetText('巫医推荐 · 天赋树预览 · TG17A')
-  T.summary:SetFont(STANDARD_TEXT_FONT or'Fonts\\FRIZQT__.TTF',17,'OUTLINE');T.summary:SetHeight(44)
-  T.summary:SetText(current.reason..'\n|cff40dcffAE '..val(current.ae)..'/'..val(current.aeBudget)..'|r  |cffffd15cTE '..val(current.te)..'/'..val(current.teBudget)..'|r  '..left(current)..(plan and('  ｜推荐'..plan.level..'级：AE '..plan.ae..' · TE '..plan.te)or''))
+  T.frame.title:SetText('巫医推荐 · 天赋树预览 · TG18A')
+  T.summary:SetFont(STANDARD_TEXT_FONT or'Fonts\\FRIZQT__.TTF',17,'OUTLINE');T.summary:SetHeight(60)
+  T.summary:SetText(current.reason..(plan and(' ｜推荐 '..plan.level..'级：AE '..plan.ae..' · TE '..plan.te..'（预览）')or'')..'\n'..points(current))
  end
  return result
 end

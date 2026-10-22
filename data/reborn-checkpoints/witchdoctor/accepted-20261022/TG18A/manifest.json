@@ -1,0 +1,22 @@
+{
+  "stage": "TG18A",
+  "metadata": {
+    "stage": "TG18A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_214759_阶段TG18A_AE_TE已加与未加点数显示",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_214759_阶段TG18A_AE_TE已加与未加点数显示.zip",
+    "sha256": "a1e4e3243bbe51ebf0d3569fe5b5419804a3e3617b3cfa908fe36dab09a6c2ba",
+    "status": "candidate; visual game pending",
+    "files": 1
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_214759_阶段TG18A_AE_TE已加与未加点数显示",
+  "paths": [
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/PointSummary.lua"
+  ],
+  "files": {
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/PointSummary.lua": {
+      "formal_input": "79e633dd73bfccccb7a81fb3d6cb603425ff578baa901d941b8dcc427df258cd",
+      "release_output": "81c93421299a0fabf4dd0d316ab8bb1fd4dbba0de6e22b26ebf427c79a5e2413"
+    }
+  },
+  "title": "clarify allocated and unallocated points"
+}
