@@ -45,9 +45,17 @@ namespace Trainer
         trainerList.TrainerGUID = npc->GetGUID();
         trainerList.TrainerType = AsUnderlyingType(_type);
         trainerList.Greeting = GetGreeting(locale);
+        // WD195A: talent-owned entries belong in the saved talent tree, not the
+        // mentor purchase list. Evaluate enrollment once for this response;
+        // -1 (database failure) remains fail-closed, as in GetSpellState.
+        bool const hideTalentSpells = _trainerId == 900189 && WD67::Enrollment(player) != 0;
+        if (hideTalentSpells)
+            trainerList.Greeting += "\n天赋技能请在天赋面板加点并保存。 / Learn talent skills by saving your talent build.";
         trainerList.Spells.reserve(_spells.size());
         for (Spell const& trainerSpell : _spells)
         {
+            if (hideTalentSpells && WD67::Managed(trainerSpell.SpellId))
+                continue;
             if (!player->IsSpellFitByClassAndRace(trainerSpell.SpellId))
                 continue;
 

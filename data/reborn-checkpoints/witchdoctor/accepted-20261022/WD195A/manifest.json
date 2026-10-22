@@ -1,0 +1,24 @@
+{
+  "stage": "WD195A",
+  "metadata": {
+    "stage": "WD195A",
+    "status": "candidate",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_231127_阶段WD195A_巫医导师天赋技能列表清理.zip",
+    "sha256": "9b4f44754283e0c71414b7dea3301e945bc77ca582992df2c830597de33b9d1f",
+    "source_files": 1,
+    "game": "pending"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_231127_阶段WD195A_巫医导师天赋技能列表清理",
+  "paths": [
+    "src/server/game/Entities/Creature/Trainer.cpp"
+  ],
+  "files": {
+    "src/server/game/Entities/Creature/Trainer.cpp": {
+      "candidate_input": "1f4711ee4587a545c9a374ecd8d2f9dc4ed2fe44aa6159592e8acaeffda3abac",
+      "candidate_output": "a97548835090a894d85fdb3bbe64a6ae6f4502d72686a808f9dd0a742eef80e6",
+      "formal_input": "1f4711ee4587a545c9a374ecd8d2f9dc4ed2fe44aa6159592e8acaeffda3abac",
+      "release_output": "a97548835090a894d85fdb3bbe64a6ae6f4502d72686a808f9dd0a742eef80e6"
+    }
+  },
+  "title": "filter unavailable mentor skills"
+}
