@@ -53,6 +53,8 @@ Snapshot Capture(Player* p)
   for(auto guid:{mimic->mimic,mimic->extra,mimic->mojo})
    if(auto* u=ObjectAccessor::GetCreature(*p,guid))
     if(u->IsAlive()&&u->IsInWorld()&&u->GetEntry()==WD68A::MimicEntry&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))out.mimicPresent=true;
+ // WD201: existing independent Viper accessor is read-only; no lazy state creation.
+ out.viperPresent=WD160::Viper(p)!=nullptr;
  out.souls=WD87A::Count(p); // Only aura 9003574 from this player's own GUID, capped at five.
  uint32 bases[]={9003100,9003101,9003104,9003160,9003260,9003970,9003980,9004000,9004030,9003541,9003270};
  for(std::size_t i=0;i<out.spells.size();++i)out.spells[i]=ReadSpell(p,bases[i]);

@@ -116,7 +116,7 @@ local function create()
  T.empty=text(480,-300,720,'','GameFontNormalLarge');T.empty:SetHeight(180)
  T.actual=button(416,-740,185,'实际天赋面板',function()N.Actual(names[T.class])end)
  T.collect=button(616,-740,180,'收藏此天赋',T.SaveRecommended,'gold')
- T.apply=button(812,-740,270,'保留已学并加点',T.ApplyRecommendation,'red')
+ T.apply=button(812,-740,270,'按推荐天赋加点',T.ApplyRecommendation,'red')
  T.rename=button(616,-740,105,'重命名',T.Rename);T.delete=button(730,-740,105,'删除',T.Delete)
  T.applySaved=button(850,-740,230,'比较并应用此天赋',function()S.RequestApply()end,'red')
  T.detailsButton=button(1092,-740,205,'查看方案说明',function()
@@ -215,7 +215,7 @@ function T.Refresh()
  local summary=G.PointSummary.Current(false)
  if S.Class()==T.class and summary.ae then T.summary:SetText(summary.reason..'\n|cff65d5efAE 已加点 '..summary.ae..'/'..summary.aeBudget..'  未加点数 '..summary.aeLeft..'|r\n|cffffd060TE 已加点 '..summary.te..'/'..summary.teBudget..'  未加点数 '..summary.teLeft..'|r')
  else T.summary:SetText(S.Class()==T.class and('角色 '..UnitLevel('player')..'级 · 当前天赋以已保存数据为准')or'浏览其他职业 · 不显示为本人已加点')end
- enable(T.actual,S.Class()==T.class and not InCombatLockdown());T.status:SetText(T.message or why or(favorite and'保存收藏不会改变角色；应用需比较并确认。'or'推荐只载入草稿；请在实际天赋面板核对保存。'));T.painting=false
+ enable(T.actual,S.Class()==T.class and not InCombatLockdown());T.status:SetText(why or T.message or(favorite and'保存收藏不会改变角色；应用需比较并确认。'or'按推荐天赋加点：保留已学，只载入草稿；请在实际天赋面板核对保存。'));T.painting=false
 end
 local oldGOpen=G.Open;local oldSOpen=S.Open
 function T.Open(tab,class,index)

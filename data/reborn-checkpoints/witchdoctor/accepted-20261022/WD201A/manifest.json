@@ -1,0 +1,62 @@
+{
+  "stage": "WD201A",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_051003_阶段WD201A_TG22A_毒蛇替换与推荐加点入口累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_051003_阶段WD201A_TG22A_毒蛇替换与推荐加点入口累计测试包.zip",
+    "sha256": "fbeabdd652d1ff0e4e50dd1d94fdfd7db945321adab973a279a875c11da2744b",
+    "status": "candidate_not_game_tested",
+    "changed_source": [
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc"
+    ],
+    "changed_client": [
+      "Interface/AddOns/RebornTalentGuide/TalentCenter.lua"
+    ],
+    "ai_cases": 491,
+    "presence_cases": 14,
+    "syntax_units": 4,
+    "lua_templates": 284,
+    "zip_crc_and_sha256": true
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_051003_阶段WD201A_TG22A_毒蛇替换与推荐加点入口累计测试包",
+  "paths": [
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "cb3c7c7ee652f9c8f7cb2647e1b1c8a4b9eba436ab567c63e1dfb5d2cf05476b",
+      "candidate_output": "4966632f4fe678634f6f34f55d624ce3687c59a544761eaf525b5bcfc3987ca0",
+      "formal_input": "cb3c7c7ee652f9c8f7cb2647e1b1c8a4b9eba436ab567c63e1dfb5d2cf05476b",
+      "release_output": "4966632f4fe678634f6f34f55d624ce3687c59a544761eaf525b5bcfc3987ca0"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h": {
+      "candidate_input": "fb7a7b372ad0965dcfe5ab60e28589bdfd9044d7905b67abca9dcb1e185a9180",
+      "candidate_output": "ddbeea46e2e71f09ed3c02821378673e3ed6fc5690641381696a22f41a9ce3cb",
+      "formal_input": "fb7a7b372ad0965dcfe5ab60e28589bdfd9044d7905b67abca9dcb1e185a9180",
+      "release_output": "ddbeea46e2e71f09ed3c02821378673e3ed6fc5690641381696a22f41a9ce3cb"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h": {
+      "candidate_input": "8303feaa37f9d1c9181b9602ddf090c2e059f328eccb9b46e50ade707b772b5c",
+      "candidate_output": "1121d93c109a9e03a2bc3342f9476f87afb84af2eb9cf1e33d28ef4c1e8d7364",
+      "formal_input": "8303feaa37f9d1c9181b9602ddf090c2e059f328eccb9b46e50ade707b772b5c",
+      "release_output": "1121d93c109a9e03a2bc3342f9476f87afb84af2eb9cf1e33d28ef4c1e8d7364"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc": {
+      "candidate_input": "1376cc8e7ef7cf80830ce15d37add5734b4bff98af0e1901b938e4564a98f717",
+      "candidate_output": "d0bd92e6445fa006548488b055b10d1b5a7c643e487f266ac553a473030ebe60",
+      "formal_input": "1376cc8e7ef7cf80830ce15d37add5734b4bff98af0e1901b938e4564a98f717",
+      "release_output": "d0bd92e6445fa006548488b055b10d1b5a7c643e487f266ac553a473030ebe60"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua": {
+      "formal_input": "4b20bdeae7ca659b39b86d0a42fa96e40bc2c947ec982160bf53d2d415c63705",
+      "release_output": "4cf54d7cf154693d5c7970c34761271780eb26560793e77dd18e98d75a2a3171"
+    }
+  },
+  "title": "native viper replacement and clear apply action"
+}
