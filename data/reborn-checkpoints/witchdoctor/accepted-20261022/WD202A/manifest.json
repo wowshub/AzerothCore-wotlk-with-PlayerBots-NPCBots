@@ -1,0 +1,30 @@
+{
+  "stage": "WD202A",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_053701_阶段WD202A_蛙变免疫筛选与巫医近期累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_053701_阶段WD202A_蛙变免疫筛选与巫医近期累计测试包.zip",
+    "sha256": "e427ddd5bb3c4825bb903dcbee1c8d3ba58b8e828565f84629b9294254bd487f",
+    "status": "candidate_not_game_tested",
+    "changed_source": [
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h"
+    ],
+    "client_base": "WD201A/TG22A byte-identical",
+    "ai_cases": 500,
+    "script_cases": 35,
+    "syntax_units": 4,
+    "zip_crc_and_sha256": true
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_053701_阶段WD202A_蛙变免疫筛选与巫医近期累计测试包",
+  "paths": [
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h"
+  ],
+  "files": {
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h": {
+      "candidate_input": "cf2b52a400b99fdfdc9724794afc7374308d64d49c1549744e93cc445e491508",
+      "candidate_output": "803ed18e343663c59d0e3c0765b1b29221305226faed4f8fc38535d01d27e07e",
+      "formal_input": "cf2b52a400b99fdfdc9724794afc7374308d64d49c1549744e93cc445e491508",
+      "release_output": "803ed18e343663c59d0e3c0765b1b29221305226faed4f8fc38535d01d27e07e"
+    }
+  },
+  "title": "frog transformation immunity checks"
+}
