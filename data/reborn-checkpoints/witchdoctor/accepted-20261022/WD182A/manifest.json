@@ -1,0 +1,66 @@
+{
+  "stage": "WD182A",
+  "metadata": {
+    "stage": "WD182A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_021143_阶段WD182A_魔精光束持续治疗与节蓝累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_021143_阶段WD182A_魔精光束持续治疗与节蓝累计测试包.zip",
+    "sha256": "3798b81b2da7671240027c3caa12f873c0bfde3f19bd1a026569abe7a55c23a0",
+    "source_files": 30,
+    "changed_since181": 4,
+    "checks": 5431,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A",
+      "WD179A",
+      "WD180A",
+      "WD181A"
+    ]
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_021143_阶段WD182A_魔精光束持续治疗与节蓝累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorBeam182.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBeamPolicy182.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "1f812a6043913c048e3cc0e42d5678d990d4e2639524483b2d767f948e29d7aa",
+      "candidate_output": "725110b88674de16527217daeb8a8cdda3a42e555b8c9252ad976740b111a82f",
+      "formal_input": "1f812a6043913c048e3cc0e42d5678d990d4e2639524483b2d767f948e29d7aa",
+      "release_output": "725110b88674de16527217daeb8a8cdda3a42e555b8c9252ad976740b111a82f"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorBeam182.h": {
+      "candidate_input": null,
+      "candidate_output": "26065f7026eb2b52a011b5839a425a24346a5b814fcc7f6ab1f8474ad30bf349",
+      "formal_input": null,
+      "release_output": "26065f7026eb2b52a011b5839a425a24346a5b814fcc7f6ab1f8474ad30bf349"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBeamPolicy182.h": {
+      "candidate_input": null,
+      "candidate_output": "9977a8b6b3524123e8b7485f4e4c0067207452c9928de14ee303c50d72d56b97",
+      "formal_input": null,
+      "release_output": "9977a8b6b3524123e8b7485f4e4c0067207452c9928de14ee303c50d72d56b97"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc": {
+      "candidate_input": "8a6a2fb02040d59cfd33dbb17d0d889aa68678e58f644efbcef4b9fcd2e8cdb2",
+      "candidate_output": "c704c3d57e7bdfbc741c4e1151c619dc8d7afb234f948c0fa46dfa6db6f2358d",
+      "formal_input": "8a6a2fb02040d59cfd33dbb17d0d889aa68678e58f644efbcef4b9fcd2e8cdb2",
+      "release_output": "c704c3d57e7bdfbc741c4e1151c619dc8d7afb234f948c0fa46dfa6db6f2358d"
+    }
+  },
+  "title": "beam healing policy and mana reserve"
+}
