@@ -1,0 +1,22 @@
+{
+  "stage": "WD199A",
+  "metadata": {
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_011916_阶段WD199A_巫医近期优化统一汇总测试包.zip",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_011916_阶段WD199A_巫医近期优化统一汇总测试包",
+    "sha256": "fe819fea8d9beccc79c7ea340c49753a7a6525db0f81dcbc5ef9048b759ff5ac",
+    "status": "candidate_not_game_tested"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_011916_阶段WD199A_巫医近期优化统一汇总测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "1a8818bcc9e2d138bf3a82df8ac9bfe7f3f6301ab4c20a59a554936b865a9bd6",
+      "candidate_output": "7f76bc0a6d3869d503374559db18bbdbd3d9673b532c959dc71792d5a2513828",
+      "formal_input": "1a8818bcc9e2d138bf3a82df8ac9bfe7f3f6301ab4c20a59a554936b865a9bd6",
+      "release_output": "7f76bc0a6d3869d503374559db18bbdbd3d9673b532c959dc71792d5a2513828"
+    }
+  },
+  "title": "require available plan for maintenance"
+}
