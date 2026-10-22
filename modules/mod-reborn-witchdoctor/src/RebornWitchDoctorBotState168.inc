@@ -15,7 +15,9 @@ LearnedSpell ReadSpell(Player* p,uint32 base)
  }
  else if(p->HasSpell(base))out.learned=base;
  if(!out.learned)return out;
- out.replacement=p->GetTemporarySpellReplacement(out.learned);
+ // Core returns the original learned ID when no temporary override exists.
+ uint32 resolved=p->GetTemporarySpellReplacement(out.learned);
+ out.replacement=resolved!=out.learned?resolved:0;
  out.cooldownMs=p->GetSpellCooldownDelay(out.learned);
  if(auto* info=sSpellMgr->GetSpellInfo(out.learned))
  {out.infoKnown=true;out.gcdMs=p->GetGlobalCooldownMgr().GetGlobalCooldown(info);}
@@ -46,6 +48,11 @@ Snapshot Capture(Player* p)
  if(auto* mass=p->CustomData.Get<WD150::State>(WD150::Key))
   for(auto guid:mass->wards)if(auto* u=ObjectAccessor::GetCreature(*p,guid))
    if(u->IsAlive()&&u->IsInWorld()&&u->GetEntry()==900190&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))++out.massWards;
+ // Independent Mimics do not occupy the ordinary Ward slot. Observe, never create state.
+ if(auto* mimic=p->CustomData.Get<WD68A::State>(WD68A::Key))
+  for(auto guid:{mimic->mimic,mimic->extra,mimic->mojo})
+   if(auto* u=ObjectAccessor::GetCreature(*p,guid))
+    if(u->IsAlive()&&u->IsInWorld()&&u->GetEntry()==WD68A::MimicEntry&&u->GetOwnerGUID()==p->GetGUID()&&p->IsInMap(u)&&p->InSamePhase(u))out.mimicPresent=true;
  out.souls=WD87A::Count(p); // Only aura 9003574 from this player's own GUID, capped at five.
  uint32 bases[]={9003100,9003101,9003104,9003160,9003260,9003970,9003980,9004000,9004030,9003541,9003270};
  for(std::size_t i=0;i<out.spells.size();++i)out.spells[i]=ReadSpell(p,bases[i]);

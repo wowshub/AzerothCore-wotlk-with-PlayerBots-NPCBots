@@ -1,0 +1,76 @@
+{
+  "stage": "WD189A",
+  "metadata": {
+    "stage": "WD189A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_205326_阶段WD189A_巫毒轮转与独立召唤累计优化",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_205326_阶段WD189A_巫毒轮转与独立召唤累计优化.zip",
+    "sha256": "4137146760742cc3786af280fc87fbd341a66610894f00eaa0f0e9a83b20313f",
+    "status": "candidate; offline passed; final link and game pending",
+    "changed": [
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo189.h",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc"
+    ],
+    "source_files": 33,
+    "client_files": 6,
+    "client_new_changes": 0,
+    "tests": {
+      "rotation": 249,
+      "bridge": 19,
+      "safety": 6,
+      "cpp_syntax": 4
+    },
+    "inherits": "WD187/TG17/WD188; WD177-184 remain unaccepted"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_205326_阶段WD189A_巫毒轮转与独立召唤累计优化",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo189.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "616cbe08d0f8c4f0c726f43d873983a51a2ab02dbb07a67b073314a7509f75da",
+      "candidate_output": "5a91ddb7ebb15bd56b7764f347d640f0842f462fc9c8c8a32bedaef6485e73d3",
+      "formal_input": "616cbe08d0f8c4f0c726f43d873983a51a2ab02dbb07a67b073314a7509f75da",
+      "release_output": "5a91ddb7ebb15bd56b7764f347d640f0842f462fc9c8c8a32bedaef6485e73d3"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h": {
+      "candidate_input": "7dfb6a5d9d924304d6adc769a08210c13d3cf1d0f3916eac3c0181081c8a1e89",
+      "candidate_output": "8516c1b6c52d79d18b998683f9795239caeebf5a73eebf869dd20ac382e09054",
+      "formal_input": "7dfb6a5d9d924304d6adc769a08210c13d3cf1d0f3916eac3c0181081c8a1e89",
+      "release_output": "8516c1b6c52d79d18b998683f9795239caeebf5a73eebf869dd20ac382e09054"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo189.h": {
+      "candidate_input": null,
+      "candidate_output": "8df611aeb3e72b8eeaa85b209b0c0d253ded842522b017615708892dbd3a05e2",
+      "formal_input": null,
+      "release_output": "8df611aeb3e72b8eeaa85b209b0c0d253ded842522b017615708892dbd3a05e2"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+      "candidate_input": "71f539543075621f0cc6e00c0bd5eac734de8bef789cb4cdf11a8992176c1014",
+      "candidate_output": "db012baf84df7bbf24541fd98923596bc9066a92c81ce1202272314a3a123c6b",
+      "formal_input": "aedd2b50cd423e648392a229732d89be080dc3c64a79d37d339a60a57d1f2ae4",
+      "release_output": "e9d0c8b5b31a1200f438c7b07ac4c14c82921d17a4ef9e0076e6a70da40695e6"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h": {
+      "candidate_input": "19587a0f5f07ede304e001b9551f9d85d6c8cdc4349b1024f8864c806575a66e",
+      "candidate_output": "0897c6307e730283d784f09231ea85f57237c461bd4c3f41188dd334420cbef0",
+      "formal_input": "19587a0f5f07ede304e001b9551f9d85d6c8cdc4349b1024f8864c806575a66e",
+      "release_output": "0897c6307e730283d784f09231ea85f57237c461bd4c3f41188dd334420cbef0"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.inc": {
+      "candidate_input": "9800f72b82f57ba9a637f1405eccf5cce378bb85cd5043e40d377f2534d4aef4",
+      "candidate_output": "1376cc8e7ef7cf80830ce15d37add5734b4bff98af0e1901b938e4564a98f717",
+      "formal_input": "9800f72b82f57ba9a637f1405eccf5cce378bb85cd5043e40d377f2534d4aef4",
+      "release_output": "1376cc8e7ef7cf80830ce15d37add5734b4bff98af0e1901b938e4564a98f717"
+    }
+  },
+  "title": "voodoo rotation and independent summons"
+}

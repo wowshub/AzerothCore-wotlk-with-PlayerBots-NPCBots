@@ -27,7 +27,7 @@ struct Snapshot
 {
  Plan plan;
  uint32 level=0,souls=0,mana=0,maxMana=0,massWards=0;
- bool alive=false,inWorld=false,combat=false,serpentPresent=false;
+ bool alive=false,inWorld=false,combat=false,serpentPresent=false,mimicPresent=false;
  std::array<LearnedSpell,11> spells{};
  std::array<SummonSlot,3> summons{};
 };

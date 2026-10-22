@@ -2871,6 +2871,16 @@ namespace WD152 { uint32 TakeReady(Player*); }
 class spell_reborn_wd55a_shadowflare : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd55a_shadowflare);
+    bool automatic=false;
+    bool Load() override {automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true;}
+    void Filter(std::list<WorldObject*>& targets)
+    {
+        if(!automatic)return;
+        Player* p=GetCaster()->ToPlayer();
+        targets.remove_if([p](WorldObject* o){return !o||!WD168::SafeAutomaticTarget(p,o->ToUnit());});
+    }
+    void Recheck()
+    {if(automatic&&!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetHitUnit()))SetHitDamage(0);}
     uint32 readyPercent=0;
     void SnapshotReady() {if(!GetSpell()->IsTriggered())readyPercent=WD152::TakeReady(GetCaster()->ToPlayer());}
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003574}); }
@@ -2903,6 +2913,8 @@ class spell_reborn_wd55a_shadowflare : public SpellScript
     }
     void Register() override
     {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_reborn_wd55a_shadowflare::Filter,EFFECT_0,TARGET_UNIT_DEST_AREA_ENEMY);
+        OnHit += SpellHitFn(spell_reborn_wd55a_shadowflare::Recheck);
         OnCast += SpellCastFn(spell_reborn_wd55a_shadowflare::SnapshotReady);
         OnCheckCast += SpellCheckCastFn(spell_reborn_wd55a_shadowflare::CheckDoctor);
         OnEffectLaunchTarget += SpellEffectFn(spell_reborn_wd55a_shadowflare::Scale,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
