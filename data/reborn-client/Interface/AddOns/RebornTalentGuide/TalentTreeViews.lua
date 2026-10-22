@@ -82,10 +82,10 @@ local function createWD()
  T.returnButton=C.Button(f,1060,-41,100,'返回推荐',function()G.Navigation.Return('巫医',W.selected)end)
  T.library=C.Button(f,1030,-3,230,'我的天赋收藏',function()RebornTalentCollections.Open('WITCHDOCTOR')end);T.library:SetHeight(20)
  T.actual=C.Button(f,1170,-41,105,'实际天赋面板',function()G.Navigation.Actual('巫医')end)
- T.summary=C.Text(f,20,-79,1240,'','GameFontNormal')
+ T.summary=C.Text(f,20,-76,1240,'','GameFontNormal')
  T.artBackground=f:CreateTexture(nil,'BORDER');T.artBackground:SetPoint('TOPLEFT',4,-30);T.artBackground:SetSize(1286,628);T.artBackground:SetAlpha(.22)
- T.classBoard=C.Board(f,12,-108,630,510,'巫医 · 通用 AE')
- T.specBoard=C.Board(f,652,-108,630,510,'专精 TE')
+ T.classBoard=C.Board(f,12,-144,630,474,'巫医 · 通用 AE')
+ T.specBoard=C.Board(f,652,-144,630,474,'专精 TE')
  T.classBoard:SetBackdropColor(.025,.04,.055,.57);T.specBoard:SetBackdropColor(.025,.04,.055,.57)
  C.Button(f,340,-631,92,'当前等级',function()W.previewCurrent=true;W.previewLevel=UnitLevel('player');T.choices={};T.RefreshWD()end)
  for i,level in ipairs({20,40,60,80})do local value=level;C.Button(f,442+(i-1)*90,-631,80,value..'级',function()W.previewCurrent=false;W.previewLevel=value;T.choices={};T.RefreshWD()end)end
@@ -100,7 +100,7 @@ function T.RefreshWD()
  T.summary:SetText(string.format('%s · %d级 · 推荐 AE %d/%d，TE %d/%d；图标只读；当前已保存点数见悬停',D.plans[W.selected].title,result.level,result.ae,result.aeBudget,result.te,result.teBudget))
  T.specBoard.title:SetText('巫医 · '..names[tabs[result.plan.spec]]..' TE')
  C.Atlas(T.artBackground,'talents-background-witchdoctor-'..tabs[result.plan.spec]:lower())
- T.classBoard.title:SetText('巫医 · 通用 AE');C.Legend(T.frame,'recommendation')
+ T.classBoard.title:SetText('巫医 · 通用 AE');C.Legend(T.frame,'recommendation',126)
  if G.Navigation then G.Navigation.Select('巫医',W.selected)end
  for i,board in ipairs({T.classBoard,T.specBoard})do paintWD(board,i==1 and'Class'or tabs[result.plan.spec],result,nil,nil,true);C.ScrollTree(board,board.items,true);C.Paint(board,board.items,board.edges,{captionBelow=true})end
  for i,b in ipairs(T.planButtons)do b:SetText((i==W.selected and'● 'or'')..D.plans[i].title)end

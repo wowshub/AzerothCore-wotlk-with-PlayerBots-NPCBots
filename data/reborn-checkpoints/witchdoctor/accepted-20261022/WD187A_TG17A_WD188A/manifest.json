@@ -1,0 +1,80 @@
+{
+  "stage": "WD187A_TG17A_WD188A",
+  "metadata": {
+    "stages": [
+      "WD187A",
+      "TG17A",
+      "WD188A"
+    ],
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_203702_阶段WD187A_TG17A_WD188A_守卫四角推荐与蛇卫射程站位",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_203702_阶段WD187A_TG17A_WD188A_守卫四角推荐与蛇卫射程站位.zip",
+    "sha256": "1597f783ae8dcfe05ba959e8056754fe8f78ae3ae11b7527832e1268dcc3a0fc",
+    "status": "candidate; offline checks passed; game and final link pending",
+    "source_files": 32,
+    "client_files": 6,
+    "source_changed_existing": 3,
+    "source_new": 1,
+    "client_changed": 5,
+    "unchanged_panel": "WD186A",
+    "includes_unaccepted": "WD177-WD184 from WD185 cumulative; no acceptance promotion"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_203702_阶段WD187A_TG17A_WD188A_守卫四角推荐与蛇卫射程站位",
+  "paths": [
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/PointSummary.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentPanelWindows.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentTreeViews.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorUI.lua",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorPlacement187.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSpiritLink135.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "8ee357a0bdf946737b974a5e3ee0fbde6e8478fdfb22eb1de97bfe63f9100a2e",
+      "candidate_output": "616cbe08d0f8c4f0c726f43d873983a51a2ab02dbb07a67b073314a7509f75da",
+      "formal_input": "8ee357a0bdf946737b974a5e3ee0fbde6e8478fdfb22eb1de97bfe63f9100a2e",
+      "release_output": "616cbe08d0f8c4f0c726f43d873983a51a2ab02dbb07a67b073314a7509f75da"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+      "candidate_input": "6136dba328e2a0767c58d3b11edc69032838327fee9090ee5d26bcc56fd694e6",
+      "candidate_output": "71f539543075621f0cc6e00c0bd5eac734de8bef789cb4cdf11a8992176c1014",
+      "formal_input": "ebf9834128cd737d5535e3494f10a48e49d5d1fd48f017afff224ea34c390f50",
+      "release_output": "aedd2b50cd423e648392a229732d89be080dc3c64a79d37d339a60a57d1f2ae4"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorPlacement187.h": {
+      "candidate_input": null,
+      "candidate_output": "9c324485942348f07a3cb3b71b8d5ff4562efd17143e11490c610bdf4fa11267",
+      "formal_input": null,
+      "release_output": "9c324485942348f07a3cb3b71b8d5ff4562efd17143e11490c610bdf4fa11267"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSpiritLink135.inc": {
+      "candidate_input": "a4e8973903de34a31d6d81715781feafac2acb310bd787aeb9bc9f17bf6ced14",
+      "candidate_output": "07a675179484fc186c0538cfdbc524e50af986e31ef393000e3d83de44639fbb",
+      "formal_input": "3a8e05c9228c3bd4608ce99336f87d91a1dc0311a969118ad57b805887effe78",
+      "release_output": "07a675179484fc186c0538cfdbc524e50af986e31ef393000e3d83de44639fbb"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/PointSummary.lua": {
+      "formal_input": "7854d3a104807d0578e69e0e0f89709b1c9b0aafe361a905171dca3c05ef8707",
+      "release_output": "79e633dd73bfccccb7a81fb3d6cb603425ff578baa901d941b8dcc427df258cd"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentPanelWindows.lua": {
+      "formal_input": "fd4e61044bc2169a08fed8c3689a5ccb180f08d8fb5a7bfc330230b272ecc870",
+      "release_output": "99733a6c4f10bea87b3cb4abb97f140829eb4aad5304edf6dc34bbc9e9ee14b0"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentTreeViews.lua": {
+      "formal_input": "fcce42760cfccc02cd8eae11bd0773813d310066a7ac1d8cf7d3d64ca1cc716d",
+      "release_output": "457bf10811dbfbb9b7d01a9c3b50703a2389847bdcf739156f29bf160f8db03e"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua": {
+      "formal_input": "a0deeb9cd03b25479c951637e6edbc110352dcf990c82b7e70f31f32be473345",
+      "release_output": "bcef542fcd288c1623774fe1207fe804efcdf972f08d8956e0ccf906ab795078"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorUI.lua": {
+      "formal_input": "37abeed7c7096110d887f8a83f08446f66da7c0f6488ab67c7a64f77ed97d9b2",
+      "release_output": "c84ff9e8dd1b684b10063746142ec700f27cda87e149ccde8cc5e3957a0b6c4d"
+    }
+  },
+  "title": "fixed summon slots and ward coverage"
+}

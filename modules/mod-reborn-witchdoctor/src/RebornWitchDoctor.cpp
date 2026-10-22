@@ -24,6 +24,7 @@
 #include <limits>
 #include "SpellAuraEffects.h"
 #include "Player.h"
+#include "RebornWitchDoctorPlacement187.h"
 #include "ObjectAccessor.h"
 #include "DataMap.h"
 #include "RebornWitchDoctorSpiritVisualState.h"
@@ -309,7 +310,7 @@ class spell_reborn_wd68a_summon : public SpellScript
         uint32 count=WD153::MimicCount(chosen,mojo);
         for(uint32 i=0;i<count;++i)
         {
-            Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,count==3?0.8f+float(i)*2.094395f:(i?5.48f:0.8f));
+            Position pos=WD187::MimicPosition(p,i);
             fresh[i]=p->SummonCreature(WD68A::MimicEntry,pos,TEMPSUMMON_TIMED_DESPAWN,uint32(std::max(1,duration)));
             if(!fresh[i])
             {
@@ -1032,8 +1033,7 @@ namespace WD53A
 constexpr uint32 Rite=9003540, Recall=9003541;
 constexpr char Key[]="RebornWD53A.Summons";
 struct Paid { ObjectGuid guid; uint32 mana=0; };
-struct State : DataMap::Base { uint32 selected[3]={}; Paid paid[3]; float placementAngle=0.0f; };
-float Angle(Player* player) { return player->CustomData.GetDefault<State>(Key)->placementAngle; }
+struct State : DataMap::Base { uint32 selected[3]={}; Paid paid[3]; };
 int Slot(uint32 id)
 {
     switch(id)
@@ -1120,7 +1120,7 @@ class spell_reborn_wd21a_serpent : public SpellScript
         Player* player=GetCaster()->ToPlayer();
         if (!IsDoctor(player)) return;
         Position pos=player->GetPosition();
-        player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         // Only replace the old ward after the new summon succeeds.
         uint32 entry=GetSpellInfo()->Id==WD21A::HealingWard ? WD21A::HealingEntry : WD21A::Entry;
         TempSummon* ward=player->SummonCreature(entry,pos,TEMPSUMMON_TIMED_DESPAWN,60000);
@@ -1470,7 +1470,7 @@ class spell_reborn_wd36a_idol : public SpellScript
         Player* player=GetCaster()->ToPlayer();
         if (!IsDoctor(player)) return;
         Position pos=player->GetPosition();
-        player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         // AI owns the precise 15s deadline, including its final pulse; 16s is a safety expiry.
         TempSummon* idol=player->SummonCreature(WD36A::Entry,pos,TEMPSUMMON_TIMED_DESPAWN,16000);
         if (!idol)
@@ -1586,7 +1586,7 @@ class spell_reborn_wd38a_idol : public SpellScript
         PreventHitDefaultEffect(index);if (handled)return;handled=true;
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD38A::BySpell(GetSpellInfo()->Id);
         if (!cfg || !IsDoctor(player))return;
-        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         TempSummon* idol=player->SummonCreature(cfg->entry,pos,TEMPSUMMON_TIMED_DESPAWN,cfg->entry==900202 ? WD117::Duration(player)+1000 : 61000);
         if (!idol) { ChatHandler(player->GetSession()).SendSysMessage("神像召唤失败，原神像已保留。");return; }
         WD36A::Clear(player);
@@ -1686,7 +1686,7 @@ class spell_reborn_wd40a_sentry : public SpellScript
     {
         PreventHitDefaultEffect(index);if(handled)return;handled=true;
         Player* player=GetCaster()->ToPlayer();if(!IsDoctor(player))return;
-        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         TempSummon* ward=player->SummonCreature(WD40A::Entry,pos,TEMPSUMMON_TIMED_DESPAWN,61000);
         if(!ward) { ChatHandler(player->GetSession()).SendSysMessage("哨戒守卫召唤失败，原守卫已保留。");return; }
         WD21A::Clear(player);
@@ -1801,7 +1801,7 @@ class spell_reborn_wd41a_effigy : public SpellScript
     {
         PreventHitDefaultEffect(index);if(handled)return;handled=true;
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD41A::BySpell(GetSpellInfo()->Id);if(!cfg || !IsDoctor(player))return;
-        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         TempSummon* ward=player->SummonCreature(cfg->entry,pos,TEMPSUMMON_TIMED_DESPAWN,cfg->entry==900201 ? 16000 : 61000);
         if(!ward) { ChatHandler(player->GetSession()).SendSysMessage("雕像召唤失败，原雕像已保留。");return; }
         WD41A::Clear(player);
@@ -1997,7 +1997,7 @@ class spell_reborn_wd44a_cleanse : public SpellScript
         Player* player=GetCaster()->ToPlayer();
         if (!IsDoctor(player)) return;
         Position pos=player->GetPosition();
-        player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         // WD44A: first dispel after 3s; 60s deadline includes final pulse, 61s safety expiry.
         TempSummon* idol=player->SummonCreature(900203,pos,TEMPSUMMON_TIMED_DESPAWN,61000);
         if (!idol)
@@ -2135,7 +2135,7 @@ class spell_reborn_wd45a_stasis : public SpellScript
     {
         PreventHitDefaultEffect(index);if(handled)return;handled=true;
         Player* player=GetCaster()->ToPlayer();if(!IsDoctor(player))return;
-        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(player));
+        Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         TempSummon* ward=player->SummonCreature(900204,pos,TEMPSUMMON_TIMED_DESPAWN,5000);
         if(!ward) { ChatHandler(player->GetSession()).SendSysMessage("静滞守卫召唤失败，原守卫已保留。");return; }
         WD21A::Clear(player);
@@ -2818,13 +2818,10 @@ class spell_reborn_wd53a_rite : public SpellScript
         // Same three flags as native EffectCastButtons: retain mana, individual cooldowns,
         // school/silence checks and existing per-family CheckDoctor scripts.
         TriggerCastFlags flags=TriggerCastFlags(TRIGGERED_IGNORE_GCD|TRIGGERED_IGNORE_CAST_IN_PROGRESS|TRIGGERED_CAST_DIRECTLY);
-        auto* state=player->CustomData.GetDefault<WD53A::State>(WD53A::Key);
         for (uint32 slot=0;slot<3;++slot)
         {
-            state->placementAngle=float(slot)*2.0943951f;
             if (selected[slot] && player->HasSpell(selected[slot])) player->CastSpell(player,selected[slot],flags);
         }
-        state->placementAngle=0.0f;
     }
     void Register() override
     {

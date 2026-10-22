@@ -17,7 +17,8 @@ local function describe(result)
  lines[#lines+1]='';lines[#lines+1]='前置与互斥';lines[#lines+1]=p.conflicts
  lines[#lines+1]='';lines[#lines+1]='属性方向';lines[#lines+1]=p.stats
  lines[#lines+1]='';lines[#lines+1]='点数预算';lines[#lines+1]=string.format('AE %d/%d，保留%d；TE %d/%d，保留%d。',result.ae,result.aeBudget,result.aeBudget-result.ae,result.te,result.teBudget,result.teBudget-result.te)
- lines[#lines+1]='保留点可按队伍需要选择通用工具，不为花满点数强塞技能。各等级重新计算前置，低等级不会直接载入80级模板。'
+ lines[#lines+1]=p.reserveNote or '保留点可按队伍需要选择通用工具。'
+ lines[#lines+1]='各等级重新计算前置；已学方案保留原点数，因此实际补点结果可能与标准推荐不同。'
  if #result.blocked>0 then
   lines[#lines+1]='';lines[#lines+1]='后续目标及当前未满足条件'
   for _,x in ipairs(result.blocked)do lines[#lines+1]=D.nodes[x.id].name..'：'..x.reason end

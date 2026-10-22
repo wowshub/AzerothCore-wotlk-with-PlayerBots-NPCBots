@@ -90,9 +90,9 @@ function T.RefreshWD(...)
  local result=refreshTree(...)
  if T.frame then
   local current=P.Current(G.fromBot);local plan=G.WD.Build(G.WD.selected or 1,G.WD.previewLevel or UnitLevel('player'))
-  T.frame.title:SetText('巫医推荐 · 天赋树预览 · TG16A')
-  T.summary:SetFont(STANDARD_TEXT_FONT or'Fonts\\FRIZQT__.TTF',17,'OUTLINE');T.summary:SetHeight(24)
-  T.summary:SetText(current.reason..'  |cff40dcffAE '..val(current.ae)..'/'..val(current.aeBudget)..'|r  |cffffd15cTE '..val(current.te)..'/'..val(current.teBudget)..'|r  '..left(current)..(plan and('  ｜推荐'..plan.level..'级：AE '..plan.ae..' · TE '..plan.te)or''))
+  T.frame.title:SetText('巫医推荐 · 天赋树预览 · TG17A')
+  T.summary:SetFont(STANDARD_TEXT_FONT or'Fonts\\FRIZQT__.TTF',17,'OUTLINE');T.summary:SetHeight(44)
+  T.summary:SetText(current.reason..'\n|cff40dcffAE '..val(current.ae)..'/'..val(current.aeBudget)..'|r  |cffffd15cTE '..val(current.te)..'/'..val(current.teBudget)..'|r  '..left(current)..(plan and('  ｜推荐'..plan.level..'级：AE '..plan.ae..' · TE '..plan.te)or''))
  end
  return result
 end

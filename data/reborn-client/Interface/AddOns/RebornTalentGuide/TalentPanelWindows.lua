@@ -46,6 +46,21 @@ end
 function W.ReturnToCollection()
  if RebornTalentCollections then RebornTalentCollections.Open('WITCHDOCTOR')else W.ReturnToRecommendation()end
 end
+-- TG17A: enter recommendations from the viewed tree without touching its draft.
+function W.RecommendFromDoctor(frame)
+ local G,M=RebornTalentGuide,RebornWD8
+ if not G or not G.WD or not G.Navigation or not M then return end
+ local plans=RebornTalentGuideWDData.plans;local index=G.WD.selected
+ if not index or not plans[index]or plans[index].spec~=M.draftSpec then
+  index=nil;for i,plan in ipairs(plans)do if plan.spec==M.draftSpec then index=i;break end end
+ end
+ if not index then G.Message('当前浏览专精尚无推荐');return end
+ G.fromBot=false;G.WD.previewCurrent=true;G.WD.previewLevel=UnitLevel('player')
+ if G.Navigation.Return('巫医',index)then
+  if frame then frame:Hide()end
+  if RebornWDSpecHome then RebornWDSpecHome:Hide()end
+ end
+end
 function W.AddReturn(frame)
  if not frame or frame.rebornReturnCollection then return end
  local b=CreateFrame('Button',nil,frame,'UIPanelButtonTemplate');b:SetSize(190,20);b:SetPoint('TOPRIGHT',frame,'TOPRIGHT',-116,-3);b:SetFrameLevel(frame:GetFrameLevel()+4)
@@ -53,6 +68,12 @@ function W.AddReturn(frame)
  b:SetScript('OnEnter',function(self)GameTooltip:SetOwner(self,'ANCHOR_BOTTOM');GameTooltip:SetText('返回天赋收藏面板');GameTooltip:AddLine('保留所选推荐与预览等级；两面板均可继续拖动缩放。',1,1,1,true);GameTooltip:Show()end)
  b:SetScript('OnLeave',function()GameTooltip:Hide()end)
  frame.rebornReturnCollection=b
+ local recommend=CreateFrame('Button',nil,frame,'UIPanelButtonTemplate')
+ recommend:SetSize(130,20);recommend:SetPoint('RIGHT',b,'LEFT',-8,0);recommend:SetFrameLevel(frame:GetFrameLevel()+4)
+ recommend:SetText('天赋推荐');recommend:SetScript('OnClick',function()W.RecommendFromDoctor(frame)end)
+ recommend:SetScript('OnEnter',function(self)GameTooltip:SetOwner(self,'ANCHOR_BOTTOM');GameTooltip:SetText('查看当前专精推荐');GameTooltip:AddLine('保留未保存草稿，按角色当前等级浏览；不会自动保存、绑定或洗点。',1,1,1,true);GameTooltip:Show()end)
+ recommend:SetScript('OnLeave',function()GameTooltip:Hide()end)
+ frame.rebornRecommendation= recommend
 end
 function W.Register(key,frame)
  if not frame then return end

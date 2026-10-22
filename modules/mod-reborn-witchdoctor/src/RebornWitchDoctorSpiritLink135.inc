@@ -22,7 +22,7 @@ class spell_reborn_wd135_link : public SpellScript
     {
         PreventHitDefaultEffect(index);
         Player* p=GetCaster()->ToPlayer();if(!IsDoctor(p)) return;
-        Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,WD53A::Angle(p));
+        Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(1));
         if(TempSummon* idol=p->SummonCreature(WD135::Entry,pos,TEMPSUMMON_MANUAL_DESPAWN,0))
         {
             WD36A::Clear(p);
