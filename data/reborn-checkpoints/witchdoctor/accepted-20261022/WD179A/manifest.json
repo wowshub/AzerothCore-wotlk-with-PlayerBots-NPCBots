@@ -1,0 +1,49 @@
+{
+  "stage": "WD179A",
+  "metadata": {
+    "stage": "WD179A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_231439_阶段WD179A_巫医战后原生复活累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_231439_阶段WD179A_巫医战后原生复活累计测试包.zip",
+    "sha256": "4a4a9c4892a5d433053947e7e053a24ad4e0ebb19551155d284eb12ae9361cae",
+    "source_files": 26,
+    "changed_since178": 2,
+    "checks": 4402,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A"
+    ]
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_231439_阶段WD179A_巫医战后原生复活累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorResurrect179.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "1cc1c8f35dce5d6e81513a1665b6ac374b8b7059a43a464eeac553231392244b",
+      "candidate_output": "ab31d6991096c454674c6e4e5b04175a965fd38af48977332b3f2ec7ae56ffac",
+      "formal_input": "1cc1c8f35dce5d6e81513a1665b6ac374b8b7059a43a464eeac553231392244b",
+      "release_output": "ab31d6991096c454674c6e4e5b04175a965fd38af48977332b3f2ec7ae56ffac"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorResurrect179.h": {
+      "candidate_input": null,
+      "candidate_output": "fc3d8be79a2e9d825513c37f344ac2f8719e7bcfe02a52b5d78962675d5c8349",
+      "formal_input": null,
+      "release_output": "fc3d8be79a2e9d825513c37f344ac2f8719e7bcfe02a52b5d78962675d5c8349"
+    }
+  },
+  "title": "native postcombat resurrection"
+}
