@@ -118,6 +118,12 @@ class aura_wd98_malicious : public AuraScript
 class aura_wd98_marionette : public AuraScript
 {
     PrepareAuraScript(aura_wd98_marionette);
+    bool automatic=false;
+    void Source(AuraEffect const*,AuraEffectHandleModes)
+    {
+        Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;
+        automatic=WD168::IsAutomaticCast(p,Marionette);
+    }
     std::vector<ObjectGuid> clones;
     bool completed=false;
     void Apply(AuraEffect const*,AuraEffectHandleModes)
@@ -141,6 +147,8 @@ class aura_wd98_marionette : public AuraScript
             if(Creature* c=ObjectAccessor::GetCreature(*p,guid);c && c->IsAlive() && c->GetOwnerGUID()==p->GetGUID())
             {
                 // Owner is the damage caster; each destination is the corresponding clone.
+                if(automatic&&!Owned(p,Marionette))break;
+                WD168::AutomaticCastScope scope(p,automatic?Explosion:0);
                 p->CastSpell(c->GetPositionX(),c->GetPositionY(),c->GetPositionZ(),Explosion,true);
                 c->DespawnOrUnsummon();
             }
@@ -153,6 +161,8 @@ class aura_wd98_marionette : public AuraScript
     }
     void Register() override
     {
+        // Reapplication must replace the origin flag, including automatic -> manual.
+        AfterEffectApply += AuraEffectApplyFn(aura_wd98_marionette::Source,EFFECT_0,SPELL_AURA_MOD_ROOT,AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
         AfterEffectApply += AuraEffectApplyFn(aura_wd98_marionette::Apply,EFFECT_0,SPELL_AURA_MOD_ROOT,AURA_EFFECT_HANDLE_REAL);
         OnEffectPeriodic += AuraEffectPeriodicFn(aura_wd98_marionette::Tick,EFFECT_1,SPELL_AURA_PERIODIC_DUMMY);
         AfterEffectRemove += AuraEffectRemoveFn(aura_wd98_marionette::Remove,EFFECT_0,SPELL_AURA_MOD_ROOT,AURA_EFFECT_HANDLE_REAL);
@@ -161,12 +171,35 @@ class aura_wd98_marionette : public AuraScript
 class spell_wd98_explosion : public SpellScript
 {
     PrepareSpellScript(spell_wd98_explosion);
+    bool automatic=false;
+    bool Load() override {automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true;}
+    void Filter(std::list<WorldObject*>& targets)
+    {
+        if(!automatic)return;
+        Player* p=GetCaster()->ToPlayer();
+        targets.remove_if([p](WorldObject* o){return !o||!WD168::SafeAutomaticTarget(p,o->ToUnit());});
+    }
+    void Guard(SpellEffIndex index)
+    {
+        if(automatic&&!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetHitUnit()))
+        {PreventHitDefaultEffect(index);SetHitDamage(0);PreventHitAura();}
+    }
+    void Recheck()
+    {if(automatic&&!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetHitUnit())){SetHitDamage(0);PreventHitAura();}}
     void Scale(SpellEffIndex)
     {
         Player* p=GetCaster()->ToPlayer();
         SetEffectValue(IsDoctor(p) ? GetEffectValue()+int32(.5f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW))) : 0);
     }
-    void Register() override { OnEffectLaunchTarget += SpellEffectFn(spell_wd98_explosion::Scale,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE); }
+    void Register() override
+    {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_wd98_explosion::Filter,EFFECT_0,TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_wd98_explosion::Filter,EFFECT_1,TARGET_UNIT_DEST_AREA_ENEMY);
+        OnEffectLaunchTarget += SpellEffectFn(spell_wd98_explosion::Scale,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget += SpellEffectFn(spell_wd98_explosion::Guard,EFFECT_0,SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget += SpellEffectFn(spell_wd98_explosion::Guard,EFFECT_1,SPELL_EFFECT_APPLY_AURA);
+        OnHit += SpellHitFn(spell_wd98_explosion::Recheck);
+    }
 };
 class ExactMods : public GlobalScript
 {

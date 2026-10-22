@@ -1,0 +1,50 @@
+{
+  "stage": "WD190A",
+  "metadata": {
+    "stage": "WD190A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_210631_阶段WD190A_沃金自保与灵魂提线安全爆发累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_210631_阶段WD190A_沃金自保与灵魂提线安全爆发累计包.zip",
+    "sha256": "980ec6c4a7a071584af5fc4dbd4da4f635d78c7b8bc6c272921eb346816ad97c",
+    "status": "candidate; offline only; game pending",
+    "changed": [
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorCooldown190.h",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorEndVoodoo.inc"
+    ],
+    "source_files": 35,
+    "client_new_changes": 0,
+    "tests": {
+      "decisions": 281,
+      "delayed": 14,
+      "cpp_syntax": 4
+    },
+    "base": "4137146760742cc3786af280fc87fbd341a66610894f00eaa0f0e9a83b20313f"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_210631_阶段WD190A_沃金自保与灵魂提线安全爆发累计包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorCooldown190.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorEndVoodoo.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "5a91ddb7ebb15bd56b7764f347d640f0842f462fc9c8c8a32bedaef6485e73d3",
+      "candidate_output": "b0fbda74f902e5b21780dd3eca9985deb6222f49eb07ce6bf108dcbc8e9c0282",
+      "formal_input": "5a91ddb7ebb15bd56b7764f347d640f0842f462fc9c8c8a32bedaef6485e73d3",
+      "release_output": "b0fbda74f902e5b21780dd3eca9985deb6222f49eb07ce6bf108dcbc8e9c0282"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorCooldown190.h": {
+      "candidate_input": null,
+      "candidate_output": "d393a150349d8c0b0d548f894cd3935f2a5f8d24a169271547b047b5e62a5e76",
+      "formal_input": null,
+      "release_output": "d393a150349d8c0b0d548f894cd3935f2a5f8d24a169271547b047b5e62a5e76"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorEndVoodoo.inc": {
+      "candidate_input": "cbf9c7dffb4567cf4811d34878af8b16381680f04349f5e87e988bae66a886e0",
+      "candidate_output": "37df674829ed628ee2df674a4a0da7eeac7048976dc00c9ed5b78493c774c5ef",
+      "formal_input": "2e51410611df34b9670a16e810cf3aff0d411f3be1282d35e985194b32b3dc55",
+      "release_output": "37df674829ed628ee2df674a4a0da7eeac7048976dc00c9ed5b78493c774c5ef"
+    }
+  },
+  "title": "Voljin defense and puppet burst safety"
+}
