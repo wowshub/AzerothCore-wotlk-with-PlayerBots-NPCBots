@@ -70,7 +70,7 @@ private:
     }
     bool AutoRecipient(Player* p,Unit* u)
     {
-        if(!WD130A::Friendly(p,u)||!p->InSamePhase(u))return false;
+        if(!WD130A::Friendly(p,u)||!p->InSamePhase(u)||!p->IsValidAssistTarget(u))return false;
         if(u==p)return true;
         if(u->GetTypeId()==TYPEID_PLAYER)return p->GetGroup()&&p->IsInRaidWith(u);
 #ifdef MOD_NPCERBOTS
@@ -83,6 +83,24 @@ private:
         if(p->GetHealthPct()<30.f)return true;
         if(auto* g=p->GetGroup())for(auto* r=g->GetFirstMember();r;r=r->next())
             if(auto* u=r->GetSource())if(AutoRecipient(p,u)&&u->GetHealthPct()<30.f)return true;
+#ifdef MOD_NPCERBOTS
+        // WD183: GroupReference contains Players, not the NPCBot roster. Scan the
+        // same bounded combat neighborhood as the AI; do not limit triage to the
+        // current beam branches or the 15-yard propagation neighborhood.
+        if(p->GetGroup())
+        {
+            std::list<Unit*> nearby;
+            Acore::AnyUnitInObjectRangeCheck check(p,40.f);
+            Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(p,nearby,check);
+            Cell::VisitObjects(p,search,40.f);
+            for(Unit* u:nearby)
+                if(u&&u->IsNPCBot()&&AutoRecipient(p,u)&&u->GetHealthPct()<30.f)
+                {
+                    LOG_DEBUG("playerbots","WD183 {} critical_npc={} hp={}",p->GetName(),u->GetGUID().GetCounter(),u->GetHealthPct());
+                    return true;
+                }
+        }
+#endif
         return false;
     }
     bool OwnsChannel(Player* p)

@@ -1,0 +1,46 @@
+{
+  "stage": "WD183A",
+  "metadata": {
+    "stage": "WD183A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_024856_阶段WD183A_混编队伍危急治疗衔接累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_024856_阶段WD183A_混编队伍危急治疗衔接累计测试包.zip",
+    "sha256": "9b43bebe4d408875ef01f1b737c619d6a661a47c105dba06f1d9939547b6eeee",
+    "source_files": 30,
+    "changed_since182": 1,
+    "checks": 5995,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A",
+      "WD179A",
+      "WD180A",
+      "WD181A",
+      "WD182A"
+    ]
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_024856_阶段WD183A_混编队伍危急治疗衔接累计测试包",
+  "paths": [
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc"
+  ],
+  "files": {
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc": {
+      "candidate_input": "c704c3d57e7bdfbc741c4e1151c619dc8d7afb234f948c0fa46dfa6db6f2358d",
+      "candidate_output": "055262c3bea113d16e6617017cab11698be38c7a15d6b02fbac748783dd23887",
+      "formal_input": "c704c3d57e7bdfbc741c4e1151c619dc8d7afb234f948c0fa46dfa6db6f2358d",
+      "release_output": "055262c3bea113d16e6617017cab11698be38c7a15d6b02fbac748783dd23887"
+    }
+  },
+  "title": "mixed group emergency triage"
+}
