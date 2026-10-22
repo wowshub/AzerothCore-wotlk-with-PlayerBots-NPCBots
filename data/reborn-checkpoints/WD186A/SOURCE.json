@@ -1,0 +1,13 @@
+{
+  "package": {
+    "stage": "WD186A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_071023_阶段WD186A_新角色CoA首次启用引导",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_071023_阶段WD186A_新角色CoA首次启用引导.zip",
+    "sha256": "479ebc526b82c69e73f4378b784d3277aee47cb5c5dc6ed23071d1c08c6bcd64",
+    "client_files": 1,
+    "status": "candidate; Lua5.1 simulated scenario groups14 passed; game pending"
+  },
+  "panel_sha256": "16ffcd77923e8a0a7961765dc9a4d133b2fb6b5ba7b4f5895c21cfe2b3c98832",
+  "input_sha256": "ed573c65a792889e61327a7fe7b2d27e2da7184a78b6095a63b5874c408136b1",
+  "scope": "first enrollment UX only"
+}
