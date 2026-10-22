@@ -1,0 +1,58 @@
+{
+  "stage": "WD191A",
+  "metadata": {
+    "stage": "WD191A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_212158_阶段WD191A_光束引导内合法治疗穿插累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_212158_阶段WD191A_光束引导内合法治疗穿插累计包.zip",
+    "sha256": "f53db00286bd36dcc6f5837127ac92706b4265033b995997af0dc18685adc509",
+    "status": "candidate; offline only; game pending",
+    "changed": [
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Bot/PlayerbotAI.cpp",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+      "01_覆盖到源代码根目录/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc"
+    ],
+    "source_files": 35,
+    "client_new_changes": 0,
+    "tests": {
+      "decisions": 307,
+      "actual_methods": 2435,
+      "cpp_syntax": 4
+    },
+    "base": "980ec6c4a7a071584af5fc4dbd4da4f635d78c7b8bc6c272921eb346816ad97c"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_212158_阶段WD191A_光束引导内合法治疗穿插累计包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Bot/PlayerbotAI.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "b0fbda74f902e5b21780dd3eca9985deb6222f49eb07ce6bf108dcbc8e9c0282",
+      "candidate_output": "4ddddf34c3304187b0b0a6947988c08f4ca447d868583c493d5a456f4de91eb7",
+      "formal_input": "b0fbda74f902e5b21780dd3eca9985deb6222f49eb07ce6bf108dcbc8e9c0282",
+      "release_output": "4ddddf34c3304187b0b0a6947988c08f4ca447d868583c493d5a456f4de91eb7"
+    },
+    "modules/mod-playerbots/src/Bot/PlayerbotAI.cpp": {
+      "candidate_input": "45b788684671b447ccf3f887630d1a678661316f2168547fbdf7dc804dec74b2",
+      "candidate_output": "7b796059c0b825b57b083a69c005dc180c5451326834962e388c9b7a5285d63e",
+      "formal_input": "45b788684671b447ccf3f887630d1a678661316f2168547fbdf7dc804dec74b2",
+      "release_output": "7b796059c0b825b57b083a69c005dc180c5451326834962e388c9b7a5285d63e"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotState168.h": {
+      "candidate_input": "0897c6307e730283d784f09231ea85f57237c461bd4c3f41188dd334420cbef0",
+      "candidate_output": "8303feaa37f9d1c9181b9602ddf090c2e059f328eccb9b46e50ade707b772b5c",
+      "formal_input": "0897c6307e730283d784f09231ea85f57237c461bd4c3f41188dd334420cbef0",
+      "release_output": "8303feaa37f9d1c9181b9602ddf090c2e059f328eccb9b46e50ade707b772b5c"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc": {
+      "candidate_input": "055262c3bea113d16e6617017cab11698be38c7a15d6b02fbac748783dd23887",
+      "candidate_output": "e7760ded35364abb82e050a853bd9bd41cf1a795b59c96d07a436b67ca336cdf",
+      "formal_input": "055262c3bea113d16e6617017cab11698be38c7a15d6b02fbac748783dd23887",
+      "release_output": "e7760ded35364abb82e050a853bd9bd41cf1a795b59c96d07a436b67ca336cdf"
+    }
+  },
+  "title": "native healing casts during beam channel"
+}

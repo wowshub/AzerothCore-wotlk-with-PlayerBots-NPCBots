@@ -44,6 +44,22 @@ class aura_reborn_wd130_beam : public AuraScript
     PrepareAuraScript(aura_reborn_wd130_beam);
 public:
     void SetAutomatic(bool value) {automatic=value;}
+    uint32 NextCost() const
+    {
+        static uint32 const mana[7]={101,139,186,231,316,429,470};
+        return uint32(uint64(mana[GetId()-9003922])*branches.size()*(100+10*ticks)/200);
+    }
+    bool SideReady(Player* p,uint32 id)
+    {
+        if(!automatic||!OwnsChannel(p)||branches.empty())return false;
+        if(!id)return true;
+        auto* info=sSpellMgr->GetSpellInfo(id);
+        if(!info||!WD130A::SideCast(p,info)||info->PowerType!=POWER_MANA||!p->HasSpell(id))return false;
+        uint32 cost=uint32(std::max(0,info->CalcPowerCost(p,info->GetSchoolMask())));
+        uint32 mana=p->GetPower(POWER_MANA);
+        // Pay the real modified side cost, then reserve the next growing beam tick.
+        return mana>=cost&&WD182::ContinueReserve(mana-cost,p->GetMaxPower(POWER_MANA),NextCost());
+    }
 private:
     bool automatic=false;
     std::vector<ObjectGuid> branches;
@@ -136,9 +152,8 @@ private:
             if(automatic)Stop(p,"no_injured_branch");else p->InterruptSpell(CURRENT_CHANNELED_SPELL);
             return;
         }
-        static uint32 const mana[7]={101,139,186,231,316,429,470};
+        uint32 cost=NextCost();
         ++ticks;
-        uint32 cost=uint32(uint64(mana[GetId()-9003922])*branches.size()*(100+10*(ticks-1))/200);
         if(automatic&&!WD182::ContinueReserve(p->GetPower(POWER_MANA),p->GetMaxPower(POWER_MANA),cost))
         {Stop(p,"mana_reserve");return;}
         if(p->GetPower(POWER_MANA)<int32(cost)) { p->InterruptSpell(CURRENT_CHANNELED_SPELL);return; }
@@ -172,6 +187,21 @@ private:
         AfterEffectRemove += AuraEffectRemoveFn(aura_reborn_wd130_beam::Removed,EFFECT_0,SPELL_AURA_PERIODIC_DUMMY,AURA_EFFECT_HANDLE_REAL);
     }
 };
+bool WD168::BeamSideReady(Player* p,uint32 id)
+{
+    if(!WD130A::Channel(p)||!p->IsInWorld()||p->isMoving()||p->IsBeingTeleported()||
+       p->HasUnitState(UNIT_STATE_LOST_CONTROL)||!p->GetCharmerGUID().IsEmpty()||
+       p->GetCurrentSpell(CURRENT_GENERIC_SPELL))return false;
+    auto plan=ReadPlan(p);if(!plan.available||plan.spec!=1)return false;
+    Spell* channel=p->GetCurrentSpell(CURRENT_CHANNELED_SPELL);
+    if(!channel->GetSpellInfo()->IsActionAllowedChannel())return false;
+    Unit* target=ObjectAccessor::GetUnit(*p,channel->m_targets.GetUnitTargetGUID());
+    if(!target)return false;
+    Aura* aura=target->GetAura(channel->GetSpellInfo()->Id,p->GetGUID());
+    if(!aura)return false;
+    auto* script=aura->GetScript<aura_reborn_wd130_beam>("aura_reborn_wd130_beam");
+    return script&&script->SideReady(p,id);
+}
 // Channeled casts are deferred beyond the AI's prepare scope. Relay the Spell's
 // snapshot to the actual applied Aura; querying the scope in Aura::Load is too late.
 void spell_reborn_wd130_beam::MarkAutomation()

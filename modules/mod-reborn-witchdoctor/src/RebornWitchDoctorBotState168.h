@@ -47,6 +47,9 @@ public:
 };
 bool IsAutomaticCast(Player*,uint32);
 bool SafeAutomaticTarget(Player*,Unit*);
+// WD191: read the current beam's actual AuraScript, never a persistent bot flag.
+// spell=0 queries an idle automatic beam; a real ID additionally checks side cost.
+bool BeamSideReady(Player*,uint32 spell=0);
 // No pointers to mutable state escape; not a CanCast predicate or AI action.
 }
 #endif
