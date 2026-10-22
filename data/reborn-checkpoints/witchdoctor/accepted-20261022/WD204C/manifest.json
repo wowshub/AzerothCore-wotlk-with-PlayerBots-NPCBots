@@ -1,0 +1,42 @@
+{
+  "stage": "WD204C",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_071331_阶段WD204C_TG22A_战刃锥形与巫医近期统一汇总测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_071331_阶段WD204C_TG22A_战刃锥形与巫医近期统一汇总测试包.zip",
+    "sha256": "57cf0c7829f3138e6e8b833ef5d2ece3fb3712be62ecc67ae0a584e5192f5a51",
+    "status": "candidate_not_game_tested",
+    "supersedes_review": [
+      "WD204A",
+      "WD204B"
+    ],
+    "changed_source": [
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorGlaive204.h"
+    ],
+    "client_base": "TG22A byte-identical",
+    "ai_cases": 538,
+    "syntax_units": 4,
+    "zip_crc_and_sha256": true,
+    "mirage_automatic_included": false
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_071331_阶段WD204C_TG22A_战刃锥形与巫医近期统一汇总测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorGlaive204.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "ae59293a3430c5079ca0795580a8d33d3303e79c4de297883c18833072173851",
+      "candidate_output": "82669d02382ab6bbba5945f62fb1dfd0aa324379bad254e55057d908205c46d1",
+      "formal_input": "ae59293a3430c5079ca0795580a8d33d3303e79c4de297883c18833072173851",
+      "release_output": "82669d02382ab6bbba5945f62fb1dfd0aa324379bad254e55057d908205c46d1"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorGlaive204.h": {
+      "candidate_input": null,
+      "candidate_output": "a9b3de74ceee16f5bc5d930d38e2f2e0b322254d1448888d7fef975730ac36de",
+      "formal_input": null,
+      "release_output": "a9b3de74ceee16f5bc5d930d38e2f2e0b322254d1448888d7fef975730ac36de"
+    }
+  },
+  "title": "native self-centered spirit glaive cone"
+}
