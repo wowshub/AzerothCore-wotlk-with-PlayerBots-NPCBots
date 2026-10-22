@@ -16,3 +16,10 @@ for i,ids in ipairs(additions)do
  plan.reserveNote=i==4 and '酿造标准80级推荐保留1 AE：通用强效混合与本系已推荐同族取高，重复投入不叠加；不为填满点数改选互斥节点。'
   or '80级补充伤害、续航与队伍净化工具；低等级仍按原优先级和真实前置逐点生成。'
 end
+
+-- TG19A: retain the original Shadow priorities; fill a remaining legal TE with True Spirit.
+for i=1,2 do
+ local p=RebornTalentGuideWDData.plans[i]
+ p.order[#p.order+1]=6853
+ p.reserveNote=p.reserveNote..' 暗影TE末位补充真灵魂；巨蛇诡计仍须满足此前23点门槛，不绕校验。'
+end

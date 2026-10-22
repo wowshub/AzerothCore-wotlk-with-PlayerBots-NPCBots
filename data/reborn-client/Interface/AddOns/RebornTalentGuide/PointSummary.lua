@@ -97,7 +97,7 @@ function T.RefreshWD(...)
  if T.frame then
   local current=P.Current(G.fromBot);local plan=G.WD.Build(G.WD.selected or 1,G.WD.previewLevel or UnitLevel('player'))
   T.frame.title:SetText('巫医推荐 · 天赋树预览 · TG18A')
-  T.summary:SetFont(STANDARD_TEXT_FONT or'Fonts\\FRIZQT__.TTF',17,'OUTLINE');T.summary:SetHeight(60)
+  T.summary:SetFont(STANDARD_TEXT_FONT or'Fonts\\FRIZQT__.TTF',16,'OUTLINE');T.summary:SetHeight(48)
   T.summary:SetText(current.reason..(plan and(' ｜推荐 '..plan.level..'级：AE '..plan.ae..' · TE '..plan.te..'（预览）')or'')..'\n'..points(current))
  end
  return result

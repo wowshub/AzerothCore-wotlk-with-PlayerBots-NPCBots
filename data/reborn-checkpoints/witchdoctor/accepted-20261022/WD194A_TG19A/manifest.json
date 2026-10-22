@@ -1,0 +1,43 @@
+{
+  "stage": "WD194A_TG19A",
+  "metadata": {
+    "stage": "WD194A_TG19A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_215535_阶段WD194A_TG19A_巫医AI与推荐系统汇总测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_215535_阶段WD194A_TG19A_巫医AI与推荐系统汇总测试包.zip",
+    "sha256": "23c35f06071959fa9d2bf9576d7f7b70be0981afee1e7e4384e0b4a69d83a0cd",
+    "source_files": 38,
+    "client_files": 7,
+    "source_changes_from_WD193": 0,
+    "status": "combined candidate; game pending",
+    "sources": {
+      "WD187A_TG17A_WD188A": "1597f783ae8dcfe05ba959e8056754fe8f78ae3ae11b7527832e1268dcc3a0fc",
+      "WD189A": "4137146760742cc3786af280fc87fbd341a66610894f00eaa0f0e9a83b20313f",
+      "WD190A": "980ec6c4a7a071584af5fc4dbd4da4f635d78c7b8bc6c272921eb346816ad97c",
+      "WD191A": "f53db00286bd36dcc6f5837127ac92706b4265033b995997af0dc18685adc509",
+      "WD192A": "36b93ffb4fa6e88388576b0531894c9a2930eca7d6ecb7745ca97966420f187d",
+      "WD193A": "2f0535476f4278a7d1a91d540986259d025124c507bc5ec12d89b07ec080228c",
+      "TG18A": "a1e4e3243bbe51ebf0d3569fe5b5419804a3e3617b3cfa908fe36dab09a6c2ba"
+    }
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_215535_阶段WD194A_TG19A_巫医AI与推荐系统汇总测试包",
+  "paths": [
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/PointSummary.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctor.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua"
+  ],
+  "files": {
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/PointSummary.lua": {
+      "formal_input": "81c93421299a0fabf4dd0d316ab8bb1fd4dbba0de6e22b26ebf427c79a5e2413",
+      "release_output": "a816e949e79c0f087be6ecba169b831ea424d47e51b0d24a7bd8034c409e5888"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctor.lua": {
+      "formal_input": "8bd8bad1624b3cb6ffcc6d2f5a90a087a07cdc70b733e38cfa3bad3ae1d9d37d",
+      "release_output": "b746279cea125bb5bfd9b8570a94e75563cff643c32a853b1d9b94f31b4849be"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua": {
+      "formal_input": "bcef542fcd288c1623774fe1207fe804efcdf972f08d8956e0ccf906ab795078",
+      "release_output": "5a7f41ca47baaaafdcbe8485d7a0044d2670b51aa3691db3df0f79d84b1f040b"
+    }
+  },
+  "title": "complete legal talent recommendations"
+}

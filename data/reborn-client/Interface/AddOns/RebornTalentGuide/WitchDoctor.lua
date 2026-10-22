@@ -12,9 +12,11 @@ function W.Ready()
  return M,L
 end
 function W.Budget(level)
- level=math.max(1,math.min(80,math.floor(tonumber(level)or 80)))
+ level=math.max(1,math.min(255,math.floor(tonumber(level)or 80)))
  local M=RebornWD8
  if W.IsDoctor()and M and M.loaded and M.level==level and type(M.aeBudget)=='number'and type(M.teBudget)=='number'then return M.aeBudget,M.teBudget end
+ -- Beyond 80 only authoritative snapshots may supply extra budget.
+ level=math.min(level,80)
  return math.max(0,math.floor((level-8)/2)),math.max(0,math.floor((level-9)/2))
 end
 -- The production validator has no yielding calls. Restore every borrowed context field,
@@ -36,7 +38,7 @@ end
 local function build(index,level,seed)
  local M,L=W.Ready();if not M then return nil,L end
  local p=D.plans[index];if not p then return nil,'推荐方案不存在'end
- level=math.max(1,math.min(seed and 255 or 80,math.floor(tonumber(level)or 80)))
+ level=math.max(1,math.min(255,math.floor(tonumber(level)or 80)))
  local ae,te=W.Budget(level);if seed then ae,te=M.aeBudget,M.teBudget end
  local mask=seed or M.MaskParse(0);local candidates=priorities(p);local order={}
  if seed then local valid,why=W.Validate(mask,p.spec,level,ae,te);if not valid then return nil,'当前已保存方案不符合规则：'..tostring(why)end end
@@ -78,7 +80,7 @@ end
 function W.Build(index,level,seed)
  local M,L=W.Ready();if not M then return nil,L end
  local plan=D.plans[index];if not plan then return nil,'推荐方案不存在'end
- level=math.max(1,math.min(seed and 255 or 80,math.floor(tonumber(level)or 80)))
+ level=math.max(1,math.min(255,math.floor(tonumber(level)or 80)))
  local ae,te=W.Budget(level);if seed then ae,te=M.aeBudget,M.teBudget end
  local key=table.concat({tostring(index),level,ae,te,tostring(seed or''),tostring(plan),tostring(D.nodes),tostring(L),L.hash,tostring(M.AEValid),tostring(W.Validate),tostring(M.MaskParse),tostring(M.MaskRank),tostring(M.MaskSet),tostring(M.AERank),tostring(M.LayoutValid),tostring(M.AESpent),tostring(M.TESpent)},':')
  if builds[key]then return copyBuild(builds[key])end
