@@ -2212,17 +2212,20 @@ class spell_reborn_wd45a_burst : public SpellScript
 namespace WD46A
 {
     constexpr uint32 Damage = 9003468, Touch = 9003470, Debuff = 9003471;
-    bool Enemy(Player* player, Unit* center, Unit* unit)
+    bool Enemy(Player* player, Unit* center, Unit* unit, bool automatic=false)
     {
         return IsDoctor(player) && center && unit && unit->IsAlive() &&
             player->IsInMap(unit) && player->InSamePhase(unit) && center->IsInMap(unit) &&
             center->InSamePhase(unit) && center->IsWithinDistInMap(unit,5.0f) &&
-            center->IsWithinLOSInMap(unit) && player->IsValidAttackTarget(unit);
+            center->IsWithinLOSInMap(unit) && player->IsValidAttackTarget(unit) &&
+            (!automatic || (center->IsAlive() && center->IsInWorld() && WD168::SafeAutomaticTarget(player,unit)));
     }
 }
 class spell_reborn_wd46a_bottle : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd46a_bottle);
+    bool automatic=false;
+    bool Load() override {automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true;}
     bool handled=false;
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({WD46A::Damage,WD46A::Touch,WD46A::Debuff}); }
     SpellCastResult CheckDoctor()
@@ -2259,7 +2262,7 @@ class spell_reborn_wd46a_bottle : public SpellScript
         std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(center,5.0f);
         Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(center,units,check);
         Cell::VisitObjects(center,search,5.0f);
-        units.remove_if([player,center](Unit* unit) { return !WD46A::Enemy(player,center,unit); });
+        units.remove_if([player,center,this](Unit* unit) { return !WD46A::Enemy(player,center,unit,automatic); });
         units.sort([center](Unit* a,Unit* b)
         {
             float da=center->GetDistance(a),db=center->GetDistance(b);
@@ -2272,7 +2275,9 @@ class spell_reborn_wd46a_bottle : public SpellScript
         {
             Unit* liveCenter=ObjectAccessor::GetUnit(*player,centerGuid);
             Unit* enemy=ObjectAccessor::GetUnit(*player,guid);
-            if(!player->IsAlive() || !WD46A::Enemy(player,liveCenter,enemy))continue;
+            if(!player->IsAlive() || !WD46A::Enemy(player,liveCenter,enemy,automatic))continue;
+            // The child Load snapshots this source, even when the parent missile lands later.
+            WD168::AutomaticCastScope damageScope(player,automatic?WD46A::Damage:0);
             player->CastCustomSpell(enemy,WD46A::Damage,&amount,nullptr,nullptr,true);
         }
     }
@@ -2286,6 +2291,25 @@ class spell_reborn_wd46a_bottle : public SpellScript
 class spell_reborn_wd46a_damage : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd46a_damage);
+    bool automatic=false;
+    bool legalAtLoad=true;
+    bool Load() override
+    {
+        Player* p=GetCaster()->ToPlayer();
+        automatic=WD168::IsAutomaticCast(p,GetSpellInfo()->Id);
+        legalAtLoad=!automatic||WD168::SafeAutomaticTarget(p,GetExplTargetUnit());
+        return true;
+    }
+    SpellCastResult CheckAutomatic()
+    {
+        return !automatic||(legalAtLoad&&WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetExplTargetUnit()))
+            ?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
+    }
+    void ProtectDamage()
+    {
+        // OnHit runs before the native damage resolution, after launch calculations.
+        if(automatic&&(!legalAtLoad||!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetHitUnit())))SetHitDamage(0);
+    }
     bool handled=false;
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({WD46A::Touch,WD46A::Debuff}); }
     void ApplyTouch()
@@ -2295,10 +2319,16 @@ class spell_reborn_wd46a_damage : public SpellScript
         Player* player=GetCaster()->ToPlayer();Unit* target=GetHitUnit();
         // AfterHit damage is post immunity/resist/absorb. No debuff on a fully absorbed hit.
         if(GetHitDamage()<=0 || !IsDoctor(player) || !player->IsAlive() || !target || !target->IsAlive() ||
-            !player->HasSpell(WD46A::Touch) || !player->HasAura(WD46A::Touch) || !player->IsValidAttackTarget(target))return;
+            !player->HasSpell(WD46A::Touch) || !player->HasAura(WD46A::Touch) || !player->IsValidAttackTarget(target) ||
+            (automatic&&(!legalAtLoad||!WD168::SafeAutomaticTarget(player,target))))return;
         player->CastSpell(target,WD46A::Debuff,true);
     }
-    void Register() override { AfterHit += SpellHitFn(spell_reborn_wd46a_damage::ApplyTouch); }
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_reborn_wd46a_damage::CheckAutomatic);
+        OnHit += SpellHitFn(spell_reborn_wd46a_damage::ProtectDamage);
+        AfterHit += SpellHitFn(spell_reborn_wd46a_damage::ApplyTouch);
+    }
 };
 
 // WD47A: direct Loa's Brew healing only; echoes and copied heals never re-enter.

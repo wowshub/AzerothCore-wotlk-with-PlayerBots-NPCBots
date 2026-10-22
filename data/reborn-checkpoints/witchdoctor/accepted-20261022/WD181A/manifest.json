@@ -1,0 +1,58 @@
+{
+  "stage": "WD181A",
+  "metadata": {
+    "stage": "WD181A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_011229_阶段WD181A_瓶中之灵治疗与自动溅射安全累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_011229_阶段WD181A_瓶中之灵治疗与自动溅射安全累计测试包.zip",
+    "sha256": "fdb78917272b6a6eba6554b9a05687447afb7d97cb79fb6a3cb06d78a6d2dae3",
+    "source_files": 27,
+    "changed_since180": 3,
+    "checks": 5144,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A",
+      "WD179A",
+      "WD180A"
+    ]
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_011229_阶段WD181A_瓶中之灵治疗与自动溅射安全累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorHeal180.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "f0026d3c2344388b974a3dd64aa81075c02b4742df65168b6681e375b6ac5ffc",
+      "candidate_output": "1f812a6043913c048e3cc0e42d5678d990d4e2639524483b2d767f948e29d7aa",
+      "formal_input": "f0026d3c2344388b974a3dd64aa81075c02b4742df65168b6681e375b6ac5ffc",
+      "release_output": "1f812a6043913c048e3cc0e42d5678d990d4e2639524483b2d767f948e29d7aa"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorHeal180.h": {
+      "candidate_input": "d37a67af96e0087e7515feb4cc8a1fd9267534bd000da8e4077714a33309e19a",
+      "candidate_output": "c17a57c16abc3dbd88d293b4dc9da2d3ed5fe8a6a81daa384a0d99d92fb666fa",
+      "formal_input": "d37a67af96e0087e7515feb4cc8a1fd9267534bd000da8e4077714a33309e19a",
+      "release_output": "c17a57c16abc3dbd88d293b4dc9da2d3ed5fe8a6a81daa384a0d99d92fb666fa"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+      "candidate_input": "f526199f82af683c1f4da92ed9a6b7b38195c4f291076857d48d60ef42c6bab3",
+      "candidate_output": "6136dba328e2a0767c58d3b11edc69032838327fee9090ee5d26bcc56fd694e6",
+      "formal_input": "dcc92098d9f9d50642b24160c2cf3617e2948cb51ca230b48ede102bce4b1b8d",
+      "release_output": "ebf9834128cd737d5535e3494f10a48e49d5d1fd48f017afff224ea34c390f50"
+    }
+  },
+  "title": "bottle healing and derived damage safety"
+}
