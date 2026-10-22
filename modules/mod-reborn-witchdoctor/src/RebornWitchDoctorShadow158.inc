@@ -42,7 +42,13 @@ class ready:public AuraScript
 class umbral:public SpellScript
 {
     PrepareSpellScript(umbral);
-    bool accepted=false,done=false;uint64 generation=0;
+    bool accepted=false,done=false,automatic=false;uint64 generation=0;
+    bool Load()override{automatic=WD168::IsAutomaticCast(WD68A::Caster(GetCaster()),GetSpellInfo()->Id);return true;}
+    void ProtectHit(SpellEffIndex)
+    {
+        if(automatic&&!WD168::SafeAutomaticTarget(WD68A::Caster(GetCaster()),GetHitUnit()))
+        {for(uint32 i=0;i<MAX_SPELL_EFFECTS;++i){PreventHitDefaultEffect(SpellEffIndex(i));PreventHitEffect(SpellEffIndex(i));}}
+    }
     SpellCastResult Check()
     {
         Player* p=WD68A::Caster(GetCaster());if(!Owns(p,Talent)||!p->HasSpell(Umbral))return SPELL_FAILED_CASTER_AURASTATE;
@@ -52,23 +58,35 @@ class umbral:public SpellScript
     }
     void Hit()
     {
-        Player* p=WD68A::Caster(GetCaster());Unit* u=GetHitUnit();if(!Owns(p,Talent)||!u||!GetHitAura())return;
+        Player* p=WD68A::Caster(GetCaster());Unit* u=GetHitUnit();if(!Owns(p,Talent)||!u||!GetHitAura()||(automatic&&!WD168::SafeAutomaticTarget(p,u)))return;
         for(auto const& r:WD19A::HexRanks)if(Aura* a=u->GetAura(r.spell,p->GetGUID())){a->RefreshDuration();break;}
         auto* s=Data(p);s->targets.erase(std::remove_if(s->targets.begin(),s->targets.end(),[p](ObjectGuid id){Unit* t=ObjectAccessor::GetUnit(*p,id);return !t||!t->HasAura(Umbral,p->GetGUID());}),s->targets.end());
         if(std::find(s->targets.begin(),s->targets.end(),u->GetGUID())==s->targets.end())s->targets.push_back(u->GetGUID());
     }
     void Done()
     {
-        Player* p=GetCaster()->ToPlayer();Unit* primary=GetExplTargetUnit();if(done||GetSpell()->IsTriggered()||!Owns(p,Talent)||!primary)return;done=true;
+        Player* p=GetCaster()->ToPlayer();Unit* primary=GetExplTargetUnit();if(done||GetSpell()->IsTriggered()||!Owns(p,Talent)||!primary)return;
+        if(automatic&&!WD168::SafeAutomaticTarget(p,primary))return;done=true;
+        ObjectGuid primaryGuid=primary->GetGUID();
         std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(primary,10.f);Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(primary,units,check);Cell::VisitObjects(primary,search,10.f);
-        units.remove_if([&](Unit* u){return u==primary||!u->IsAlive()||!p->IsInMap(u)||!p->InSamePhase(u)||!primary->IsWithinDistInMap(u,10.f)||!p->IsValidAttackTarget(u)||!p->IsWithinLOSInMap(u);});
+        units.remove_if([&](Unit* u){return u==primary||!u->IsAlive()||!p->IsInMap(u)||!p->InSamePhase(u)||!primary->IsWithinDistInMap(u,10.f)||!p->IsValidAttackTarget(u)||!p->IsWithinLOSInMap(u)||(automatic&&!WD168::SafeAutomaticTarget(p,u));});
         units.sort([primary](Unit* a,Unit* b){float da=primary->GetExactDistSq(a),db=primary->GetExactDistSq(b);return da==db?a->GetGUID()<b->GetGUID():da<db;});
         std::vector<ObjectGuid> ids;for(Unit* u:units){if(ids.size()==2)break;ids.push_back(u->GetGUID());}
-        for(auto id:ids)if(Unit* u=ObjectAccessor::GetUnit(*p,id))if(u->IsAlive()&&p->IsInMap(u)&&p->InSamePhase(u)&&p->IsValidAttackTarget(u)&&p->IsWithinLOSInMap(u))p->CastSpell(u,Umbral,true);
-        WD68A::Mirror(p,primary,Umbral);
+        for(auto id:ids)
+        {
+            primary=ObjectAccessor::GetUnit(*p,primaryGuid);
+            if(!p->IsAlive()||!primary||(automatic&&!WD168::SafeAutomaticTarget(p,primary)))break;
+            Unit* u=ObjectAccessor::GetUnit(*p,id);
+            if(u&&u->IsAlive()&&p->IsInMap(u)&&p->InSamePhase(u)&&p->IsValidAttackTarget(u)&&p->IsWithinLOSInMap(u)&&primary->IsWithinDistInMap(u,10.f)&&
+               (!automatic||WD168::SafeAutomaticTarget(p,u)))
+            {WD168::AutomaticCastScope scope(p,automatic?Umbral:0);p->CastSpell(u,Umbral,true);}
+        }
+        primary=ObjectAccessor::GetUnit(*p,primaryGuid);
+        if(primary&&(!automatic||WD168::SafeAutomaticTarget(p,primary)))
+        {WD168::AutomaticCastScope scope(p,automatic?Umbral:0);WD68A::Mirror(p,primary,Umbral);}
         if(Data(p)->generation==generation)p->RemoveAurasDueToSpell(Ready,p->GetGUID());
     }
-    void Register()override{OnCheckCast+=SpellCheckCastFn(umbral::Check);AfterHit+=SpellHitFn(umbral::Hit);AfterCast+=SpellCastFn(umbral::Done);}
+    void Register()override{OnEffectHitTarget+=SpellEffectFn(umbral::ProtectHit,EFFECT_ALL,SPELL_EFFECT_ANY);OnCheckCast+=SpellCheckCastFn(umbral::Check);AfterHit+=SpellHitFn(umbral::Hit);AfterCast+=SpellCastFn(umbral::Done);}
 };
 class leech:public AuraScript
 {

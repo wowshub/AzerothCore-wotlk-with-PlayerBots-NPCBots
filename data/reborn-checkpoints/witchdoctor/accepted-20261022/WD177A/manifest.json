@@ -1,0 +1,54 @@
+{
+  "stage": "WD177A",
+  "metadata": {
+    "stage": "WD177A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_205831_阶段WD177A_巫医通用妖术与幽影替换累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_205831_阶段WD177A_巫医通用妖术与幽影替换累计测试包.zip",
+    "sha256": "bef700de346640b0a89f8b77034045a4e663c52d38c936faa19efb4bd1f40f86",
+    "source_files": 24,
+    "changed_since176": 3,
+    "checks": 3780,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A"
+    ]
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261020\\codexfix_20261020_205831_阶段WD177A_巫医通用妖术与幽影替换累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo175.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow158.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "14ed0c85408272ed7f7f253ebc9d432bca76bcf8ed6901919e4d57ce83bbad4a",
+      "candidate_output": "effc50c2c6b539759d39747d05c734435f7c33ba4ad109c6549918efc08c56a1",
+      "formal_input": "14ed0c85408272ed7f7f253ebc9d432bca76bcf8ed6901919e4d57ce83bbad4a",
+      "release_output": "effc50c2c6b539759d39747d05c734435f7c33ba4ad109c6549918efc08c56a1"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorVoodoo175.h": {
+      "candidate_input": "00404561d597e5fd9a8673cc59add7e805118940485c3b43503b1e8ff9a12792",
+      "candidate_output": "661d5e7e4f93c29f4f7343b3b71d08464d3101b99b66422cda70380080218262",
+      "formal_input": "00404561d597e5fd9a8673cc59add7e805118940485c3b43503b1e8ff9a12792",
+      "release_output": "661d5e7e4f93c29f4f7343b3b71d08464d3101b99b66422cda70380080218262"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow158.inc": {
+      "candidate_input": "520d95c1dd4ee09fe784bf7e1a710396521b3d4949add2dcba9368a383ca6162",
+      "candidate_output": "72b00cdfe19749947699b62f0829b0ddcca5c7ab6112f849ee1e722e0d0c2bd5",
+      "formal_input": "520d95c1dd4ee09fe784bf7e1a710396521b3d4949add2dcba9368a383ca6162",
+      "release_output": "72b00cdfe19749947699b62f0829b0ddcca5c7ab6112f849ee1e722e0d0c2bd5"
+    }
+  },
+  "title": "common hex and replacement"
+}
