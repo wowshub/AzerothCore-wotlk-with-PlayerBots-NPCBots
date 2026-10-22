@@ -1,0 +1,55 @@
+{
+  "stage": "WD184A",
+  "metadata": {
+    "stage": "WD184A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_032537_阶段WD184A_提基治疗与傍晚联测累计总包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_032537_阶段WD184A_提基治疗与傍晚联测累计总包.zip",
+    "sha256": "7bbf1125a5ae68aaa35f85a7265db37cd07a8da658ed247644f71114c241661e",
+    "source_files": 30,
+    "changed_since183": 2,
+    "checks": 6235,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A",
+      "WD179A",
+      "WD180A",
+      "WD181A",
+      "WD182A",
+      "WD183A"
+    ],
+    "cumulative_source_union": "16 frozen predecessor ZIPs checked,30 paths,no missing"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_032537_阶段WD184A_提基治疗与傍晚联测累计总包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorHeal180.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "725110b88674de16527217daeb8a8cdda3a42e555b8c9252ad976740b111a82f",
+      "candidate_output": "4fc9c502ec0844a64e1354e5a58c897e02b422feb2cc7ff3b9bd89a193f9510f",
+      "formal_input": "725110b88674de16527217daeb8a8cdda3a42e555b8c9252ad976740b111a82f",
+      "release_output": "4fc9c502ec0844a64e1354e5a58c897e02b422feb2cc7ff3b9bd89a193f9510f"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorHeal180.h": {
+      "candidate_input": "c17a57c16abc3dbd88d293b4dc9da2d3ed5fe8a6a81daa384a0d99d92fb666fa",
+      "candidate_output": "92ff4ea3e0342d5e399304ed5f27c4c6567025eec470ba08bef3401bf0f67af7",
+      "formal_input": "c17a57c16abc3dbd88d293b4dc9da2d3ed5fe8a6a81daa384a0d99d92fb666fa",
+      "release_output": "92ff4ea3e0342d5e399304ed5f27c4c6567025eec470ba08bef3401bf0f67af7"
+    }
+  },
+  "title": "tiki healing selection"
+}
