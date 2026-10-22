@@ -1,0 +1,21 @@
+{
+  "stage": "TG20A",
+  "metadata": {
+    "stage": "TG20A",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_232235_阶段TG20A_天赋推荐入口保留原树与草稿.zip",
+    "sha256": "147425d771031f1cadf0b42058ecc73e3e7c2331b952d5fa8908c5dd3b0d6fc4",
+    "status": "candidate",
+    "client_files": 1
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_232235_阶段TG20A_天赋推荐入口保留原树与草稿",
+  "paths": [
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentPanelWindows.lua"
+  ],
+  "files": {
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentPanelWindows.lua": {
+      "formal_input": "99733a6c4f10bea87b3cb4abb97f140829eb4aad5304edf6dc34bbc9e9ee14b0",
+      "release_output": "79f8d2a0b6a8aa0ed8da5f1b91e809039faba3993899d99d019fe4203a1afddc"
+    }
+  },
+  "title": "open guide while preserving talent draft"
+}

@@ -56,10 +56,9 @@ function W.RecommendFromDoctor(frame)
  end
  if not index then G.Message('当前浏览专精尚无推荐');return end
  G.fromBot=false;G.WD.previewCurrent=true;G.WD.previewLevel=UnitLevel('player')
- if G.Navigation.Return('巫医',index)then
-  if frame then frame:Hide()end
-  if RebornWDSpecHome then RebornWDSpecHome:Hide()end
- end
+ -- TG20A: the original tree remains open for comparison, including its draft.
+ -- Navigation.Return already brings the recommendation window to the front.
+ G.Navigation.Return('巫医',index)
 end
 function W.AddReturn(frame)
  if not frame or frame.rebornReturnCollection then return end
@@ -71,7 +70,7 @@ function W.AddReturn(frame)
  local recommend=CreateFrame('Button',nil,frame,'UIPanelButtonTemplate')
  recommend:SetSize(130,20);recommend:SetPoint('RIGHT',b,'LEFT',-8,0);recommend:SetFrameLevel(frame:GetFrameLevel()+4)
  recommend:SetText('天赋推荐');recommend:SetScript('OnClick',function()W.RecommendFromDoctor(frame)end)
- recommend:SetScript('OnEnter',function(self)GameTooltip:SetOwner(self,'ANCHOR_BOTTOM');GameTooltip:SetText('查看当前专精推荐');GameTooltip:AddLine('保留未保存草稿，按角色当前等级浏览；不会自动保存、绑定或洗点。',1,1,1,true);GameTooltip:Show()end)
+ recommend:SetScript('OnEnter',function(self)GameTooltip:SetOwner(self,'ANCHOR_BOTTOM');GameTooltip:SetText('查看当前专精推荐');GameTooltip:AddLine('保留原天赋窗口和未保存草稿，按当前专精与等级打开推荐；不会自动保存、绑定或洗点。',1,1,1,true);GameTooltip:Show()end)
  recommend:SetScript('OnLeave',function()GameTooltip:Hide()end)
  frame.rebornRecommendation= recommend
 end
