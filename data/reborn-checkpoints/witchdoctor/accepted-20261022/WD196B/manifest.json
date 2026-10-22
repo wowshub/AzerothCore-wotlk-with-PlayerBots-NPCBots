@@ -1,0 +1,67 @@
+{
+  "stage": "WD196B",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_000846_阶段WD196B_瞬发蛙变与近期修复汇总测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_000846_阶段WD196B_瞬发蛙变与近期修复汇总测试包.zip",
+    "sha256": "45c695b7b78f452362df45c77240c730a45c7246f791cb6b8436931ec536af48",
+    "changed_vs_wd194": [
+      "data/customfixsql/world/witchdoctor/WD196B/01_control_binding.sql",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorControl196.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.inc"
+    ],
+    "source_files": 42,
+    "client_files": 7,
+    "status": "candidate_not_game_tested"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_000846_阶段WD196B_瞬发蛙变与近期修复汇总测试包",
+  "paths": [
+    "data/customfixsql/world/witchdoctor/WD196B/01_control_binding.sql",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorControl196.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.inc"
+  ],
+  "files": {
+    "data/customfixsql/world/witchdoctor/WD196B/01_control_binding.sql": {
+      "candidate_input": null,
+      "candidate_output": "f3f2d0c11c044594e6b5ad148bbc038beab744ccb6aa703eda853bb6557db152",
+      "formal_input": null,
+      "release_output": "f3f2d0c11c044594e6b5ad148bbc038beab744ccb6aa703eda853bb6557db152"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "11b7f5fd81d69e48076b0c2044c60fde5c1290e61b743b51dbe5c50d12044c13",
+      "candidate_output": "5b352c448697e027e4cde22e754d8c3084042183586938282e6db2e18e62f9d7",
+      "formal_input": "11b7f5fd81d69e48076b0c2044c60fde5c1290e61b743b51dbe5c50d12044c13",
+      "release_output": "5b352c448697e027e4cde22e754d8c3084042183586938282e6db2e18e62f9d7"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorControl196.h": {
+      "candidate_input": null,
+      "candidate_output": "baad61f0eea35ceb223d263d8734f26c4aab04586dd1ada79e031374d020e200",
+      "formal_input": null,
+      "release_output": "baad61f0eea35ceb223d263d8734f26c4aab04586dd1ada79e031374d020e200"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+      "candidate_input": "afe6a69737102b371a40a08a876a425416ff2f875a7d9aa3ae257c71a28cb5cd",
+      "candidate_output": "d57760b42e5994a01267b6c72af897342c756b6628a85aa10cb7e406a35ab47d",
+      "formal_input": "cbb1a9f14fb8fac38193656b0e7ee0d85cfbb8108784610025832905c2948836",
+      "release_output": "c5136de7cd74fe401781f1c7a026ba14d12ff859f9c2f2d9f2ad5c7acebb231c"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h": {
+      "candidate_input": null,
+      "candidate_output": "cf2b52a400b99fdfdc9724794afc7374308d64d49c1549744e93cc445e491508",
+      "formal_input": null,
+      "release_output": "cf2b52a400b99fdfdc9724794afc7374308d64d49c1549744e93cc445e491508"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.inc": {
+      "candidate_input": null,
+      "candidate_output": "5d6de54351f6a1683e6b0d5857de1258ce037dbd2b443a7753cf6401c7e7775f",
+      "formal_input": null,
+      "release_output": "5d6de54351f6a1683e6b0d5857de1258ce037dbd2b443a7753cf6401c7e7775f"
+    }
+  },
+  "title": "safe native instant frog crowd control"
+}

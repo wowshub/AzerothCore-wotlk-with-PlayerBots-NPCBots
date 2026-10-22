@@ -3444,6 +3444,7 @@ void WD117ClearSwift(Player* p)
 #include "RebornWitchDoctorShadow143.inc"
 #include "RebornWitchDoctorSupport144.inc"
 #include "RebornWitchDoctorBotState168.inc"
+#include "RebornWitchDoctorControl196.inc"
 
 // WD126: the donor spell's Dodge and Scale auras remain native 3.3.5a effects.
 class spell_reborn_wd126_shrink_ally : public SpellScript
@@ -3481,6 +3482,7 @@ void AddRebornWitchDoctorScripts()
     WD147::Register();
     WD145::Register();
     new WD144::exact_mods();
+    RegisterSpellScript(spell_reborn_wd196_control);
     RegisterSpellScript(WD144::jinx);
     RegisterSpellScript(WD144::marker);
     RegisterSpellScript(WD144::talent);
