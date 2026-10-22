@@ -1,0 +1,165 @@
+{
+  "stage": "TG21A",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_033609_阶段TG21A_WD199A_天赋中心与巫医完整近期汇总测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_033609_阶段TG21A_WD199A_天赋中心与巫医完整近期汇总测试包.zip",
+    "sha256": "b0290bfcc38f0774c28a9ffc56bfe928726343e27f29b1dbe197ba74d812001a",
+    "changed_client": [
+      "Interface/AddOns/RebornTalentGuide/CollectionApply.lua",
+      "Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+      "Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+      "Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+      "Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+      "Interface/AddOns/RebornTalentGuide/WitchDoctor.lua",
+      "Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua"
+    ],
+    "status": "candidate_not_game_tested",
+    "preview": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_033609_阶段TG21A_WD199A_天赋中心与巫医完整近期汇总测试包\\checks\\TG21A_recommend_layout.png"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_033609_阶段TG21A_WD199A_天赋中心与巫医完整近期汇总测试包",
+  "paths": [
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/Backdrop.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG4B.tga",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG4B.tga",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionApply.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctor.lua",
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua"
+  ],
+  "files": {
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionApply.lua": {
+      "formal_input": "99bb40e20e8f83f23e47e59084a221a54eee4547a4b41cb2c564f178888f238e",
+      "release_output": "d49f01ea5a9639bcffea7669641dd0924705b4f55bfe2251916c513cd12a06e8"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionStore.lua": {
+      "formal_input": "00231950259440ab8018497bdc80038764f69f56908cf83f9e9e8d26c93c7831",
+      "release_output": "7a40f86c441b738cad59cdbbdc2700cb32938f7faf67407feb135436b9859a70"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Lifecycle.lua": {
+      "formal_input": "f7467bdb543bed2de995d14b084e81360a822dd9f9c249ff14e8d0b2a505773e",
+      "release_output": "e1b2e77b222fdb8adfe1d52102a93b700835a19f926977c21cc41fafb2f58b4c"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc": {
+      "formal_input": "77bb29e87be018e83ef3743fa0ac105c7bd69298339af8856d8f8222de080ab9",
+      "release_output": "4d5167dd2e3845f6f0e724c27eaf8d9971e46e6da86f3b9172bb1052c270075d"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua": {
+      "formal_input": null,
+      "release_output": "4b20bdeae7ca659b39b86d0a42fa96e40bc2c947ec982160bf53d2d415c63705"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctor.lua": {
+      "formal_input": "b746279cea125bb5bfd9b8570a94e75563cff643c32a853b1d9b94f31b4849be",
+      "release_output": "274862776910282ecde7f8054996d392cf0ae867a8d2862c159322c1dcd8d86a"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua": {
+      "formal_input": "5a7f41ca47baaaafdcbe8485d7a0044d2670b51aa3691db3df0f79d84b1f040b",
+      "release_output": "1d7ffefe0873bc22345de89a074b3ec060a8eb3d95bca45442c46f9f8faa1187"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/Backdrop.blp": {
+      "formal_input": null,
+      "release_output": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG4B.tga": {
+      "formal_input": null,
+      "release_output": "2909575133e271bcb966121e9bf204ccab6831b79844f10d5ea271b04559ed7a"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp": {
+      "formal_input": null,
+      "release_output": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG4B.tga": {
+      "formal_input": null,
+      "release_output": "594c171a9fcb340ccf552843a03dfbf0c926e3094664b948967d3d2e36d30182"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp": {
+      "formal_input": null,
+      "release_output": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp": {
+      "formal_input": null,
+      "release_output": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp": {
+      "formal_input": null,
+      "release_output": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp": {
+      "formal_input": null,
+      "release_output": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp": {
+      "formal_input": null,
+      "release_output": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp": {
+      "formal_input": null,
+      "release_output": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d"
+    },
+    "data/reborn-client/Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp": {
+      "formal_input": null,
+      "release_output": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257"
+    }
+  },
+  "title": "unified talent center and full AE recommendation"
+}

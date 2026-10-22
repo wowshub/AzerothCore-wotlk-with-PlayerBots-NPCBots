@@ -18,7 +18,7 @@ function L.Flush()
  -- never interrupt a save/bind/reset already in flight or replace local drafts.
  local M=RebornWD8;local level=UnitLevel('player')
  if L.needsSnapshot and type(level)=='number'and level>0 and W and W.IsDoctor()and M and type(M.Query)=='function'and
-  (shown(G.frame)or(S and shown(S.frame))or(G.TreeViews and shown(G.TreeViews.frame)))and not M.pending and not M.dirty and not M.aeDirty and
+  (shown(G.frame)or(S and shown(S.frame))or(G.TreeViews and shown(G.TreeViews.frame))or(G.TalentCenter and shown(G.TalentCenter.frame)))and not M.pending and not M.dirty and not M.aeDirty and
   not(S and S.waiting)and M.level~=level then
   local key=tostring(UnitGUID('player'))..':'..tostring(level)
   if not L.queryAttempt or L.queryAttempt.key~=key then L.queryAttempt={key=key,count=0,next=0}end
@@ -36,6 +36,7 @@ function L.Flush()
  if refreshPanels and N and shown(N.large)then N.RefreshLarge()end
  local T=G.TreeViews
  if T and shown(T.frame)then T.RefreshWD()end
+ if G.TalentCenter and shown(G.TalentCenter.frame)then G.TalentCenter.Refresh()end
  L.refreshes=L.refreshes+1
 end
 function L.Schedule(guide)
@@ -80,7 +81,7 @@ L.watchFrame=CreateFrame('Frame');L.observedLevel=L.level
 local watchElapsed=0
 local function visible()
  local S=RebornTalentCollections;local T=G.TreeViews
- return shown(G.frame)or(S and shown(S.frame))or(T and shown(T.frame))
+ return shown(G.frame)or(S and shown(S.frame))or(T and shown(T.frame))or(G.TalentCenter and shown(G.TalentCenter.frame))
 end
 local function snapshotKey()
  local M=RebornWD8;if not M then return ''end
@@ -114,7 +115,7 @@ function G.Create(...)local result=createGuide(...);L.Watch(G.frame);return resu
 local C=RebornTalentTreeCanvas;local createWindow=C.Window
 function C.Window(name,...)
  local f=createWindow(name,...)
- if name=='RebornTalentCollectionFrame'or name=='RebornTGWDRecommendationTree'then L.Watch(f)end
+ if name=='RebornTalentCollectionFrame'or name=='RebornTGWDRecommendationTree'or name=='RebornTalentCenterFrame'then L.Watch(f)end
  return f
 end
 L.Watch(G.frame)

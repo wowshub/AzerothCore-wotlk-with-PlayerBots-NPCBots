@@ -1,5 +1,10 @@
 -- TG5A. A confirmation is permission to submit, not proof the server accepted it.
 local S=RebornTalentCollections;local G=RebornTalentGuide;local P=RebornTalentGuidePaladin
+local function visibleOwner(owner)
+ local T=G.TalentCenter
+ if owner==S.frame and T and T.tab=='favorites'and T.frame and T.frame:IsShown()then return T.frame end
+ return owner
+end
 function S.Compare(b)
  local shape,invalid=S.Shape(b);if not shape then return {},invalid end
  local current,why=S.Capture(b.class);if not current then return {},why end
@@ -8,6 +13,7 @@ function S.Compare(b)
  table.sort(rows,function(a,b)return a.id<b.id end);return rows,nil,current
 end
 function S.CanApply(b,owner)
+ owner=visibleOwner(owner)
  local valid,why=S.Validate(b);if not valid then return nil,why end
  if S.Class()~=b.class or G.fromBot then return nil,'仅能应用到自己同职业的当前专精'end
  if InCombatLockdown()or UnitIsDeadOrGhost('player')then return nil,'请脱战并复活后应用'end
@@ -59,6 +65,7 @@ function S.Verify(r)
  return M.MaskEqual(M.aeMasks[r.slot+1],mask)and M.revision>r.revision,'服务器已保存点数尚不一致'
 end
 function S.Submit(id,version,b,ctx,owner)
+ owner=visibleOwner(owner)
  local now,why=S.CanApply(b,owner);if not now then return false,why end
  if now.signature~=ctx.signature then return false,'当前方案已改变，请重新比较并确认'end
  local r=S.Record(id,version,b,now)

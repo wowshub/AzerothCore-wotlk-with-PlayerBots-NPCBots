@@ -23,3 +23,9 @@ for i=1,2 do
  p.order[#p.order+1]=6853
  p.reserveNote=p.reserveNote..' 暗影TE末位补充真灵魂；巨蛇诡计仍须满足此前23点门槛，不绕校验。'
 end
+
+-- TG21A: complete the legal AE budget. Shared Potent Mixes does not stack.
+local support=RebornTalentGuideWDData.plans[4]
+support.ae[#support.ae+1]=12264
+support.reserveNote='80级推荐36 AE/35 TE。通用强效混合与酿造同族取高，不重复叠加；末位用于完成合法AE配点。'
+support.stats='精神、治疗强度与法力续航优先；两树强效混合同族取高，末位通用AE不额外叠加治疗或减威胁。'

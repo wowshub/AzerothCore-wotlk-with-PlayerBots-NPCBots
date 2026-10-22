@@ -1,5 +1,5 @@
 -- TG5A. Account-local library of intentions, never a character's confirmed talent state.
-RebornTalentCollections={schema=1,limit=100,historyLimit=40}
+RebornTalentCollections={schema=1,limit=1,historyLimit=40}
 local S=RebornTalentCollections
 local G=RebornTalentGuide;local PD=RebornTalentGuidePaladinData;local WD=RebornTalentGuideWDData
 function S.Copy(t)if type(t)~='table'then return t end;local n={};for k,v in pairs(t)do n[k]=S.Copy(v)end;return n end
@@ -22,7 +22,8 @@ function S.ActiveNativeJob()
  if R.job then return R.job,R elseif P.job then return P.job,P end
 end
 function S.StopOwned(reason)
- local job,engine=S.ActiveNativeJob();if job and job.owner==S.frame then engine.Stop(reason)end
+ local job,engine=S.ActiveNativeJob();local T=G.TalentCenter
+ if job and(job.owner==S.frame or(T and job.owner==T.frame))then engine.Stop(reason)end
 end
 function S.Class()local _,c,id=UnitClass('player');return id==13 and'WITCHDOCTOR'or c end
 function S.Nodes(class)
@@ -39,7 +40,7 @@ function S.Layout(class)
  return table.concat(rows,',')
 end
 function S.Shape(b)
- if type(b)~='table'or b.schema~=1 or(not S.NativeData(b.class)and b.class~='WITCHDOCTOR')or type(b.level)~='number'or b.level<10 or b.level>80 or b.level%1~=0 or type(b.ranks)~='table'then return nil,'方案职业、等级或结构无效'end
+ if type(b)~='table'or b.schema~=1 or(not S.NativeData(b.class)and b.class~='WITCHDOCTOR')or type(b.level)~='number'or b.level<10 or b.level>(b.class=='WITCHDOCTOR'and 255 or 80)or b.level%1~=0 or type(b.ranks)~='table'then return nil,'方案职业、等级或结构无效'end
  if b.layout~=S.Layout(b.class)then return nil,'节点版本已改变：请重新核对后另存，不能直接应用'end
  if b.mode~=(b.class~='WITCHDOCTOR'and'NATIVE'or'WD_AETE')then return nil,'职业配点模式不匹配'end
  if b.class=='WITCHDOCTOR'and(b.spec~=0 and b.spec~=1 and b.spec~=2)then return nil,'巫医专精无效'end
@@ -121,7 +122,7 @@ function S.Commit(name,b,id,expectedHead,basedOn,profile)
  local meta,metaError=S.Profile(inputProfile);if not meta then return nil,metaError end
  if not item then
   local n=0;for _,v in pairs(d.builds)do if type(v)=='table'and v.class==b.class then n=n+1 end end
-  if n>=S.limit then return nil,'本职业收藏已达100套，请整理后再保存'end
+  if n>=S.limit then return nil,'本职业免费收藏位已用完（1个）；已有收藏保留，可重命名或删除，扩展入口尚未开放'end
   repeat id='local-'..d.nextId;d.nextId=d.nextId+1 until d.builds[id]==nil
   item={id=id,class=b.class,versions={}};d.builds[id]=item
  end

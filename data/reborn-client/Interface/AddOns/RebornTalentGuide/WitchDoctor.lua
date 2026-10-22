@@ -118,7 +118,11 @@ function W.CheckDraft(index,previewLevel)
  table.sort(result.retained,function(a,b)return a.id<b.id end);table.sort(result.deferred,function(a,b)return a.id<b.id end)
  result.addedAE=result.ae-M.AESpent(saved);result.addedTE=result.te-M.TESpent(saved)
  if M.MaskEqual(saved,result.mask)then
-  if #result.deferred==0 then return nil,'当前方案已包含本级推荐，本次无需补点'end
+  if #result.deferred==0 then
+   local aeLeft,teLeft=result.aeBudget-result.ae,result.teBudget-result.te
+   if aeLeft>0 or teLeft>0 then return nil,'本方案推荐节点已全部加入；仍有 AE '..aeLeft..' / TE '..teLeft..' 未加点，可在实际天赋面板选择其他合法节点'end
+   return nil,'本级推荐已全部加入，当前 AE/TE 点数已用完'
+  end
   if result.ae>=result.aeBudget and result.te>=result.teBudget then return nil,'当前AE和TE额度已用完，没有可补点数；已存点数保留'end
   local first=result.deferred[1];return nil,'当前没有可补的推荐点数；'..first.name..'：'..first.reason..'。已存点数保留'
  end
