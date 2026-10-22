@@ -1,0 +1,50 @@
+{
+  "stage": "WD193A",
+  "metadata": {
+    "stage": "WD193A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_214310_阶段WD193A_迅捷神像战斗移动支援累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_214310_阶段WD193A_迅捷神像战斗移动支援累计包.zip",
+    "sha256": "2f0535476f4278a7d1a91d540986259d025124c507bc5ec12d89b07ec080228c",
+    "status": "candidate; offline only; game pending",
+    "changed": [
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorIdol193.h",
+      "01_覆盖到源代码根目录/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h"
+    ],
+    "source_files": 38,
+    "client_new_changes": 0,
+    "tests": {
+      "decisions": 358,
+      "observation": 20,
+      "cpp_syntax": 4
+    },
+    "base": "36b93ffb4fa6e88388576b0531894c9a2930eca7d6ecb7745ca97966420f187d"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_214310_阶段WD193A_迅捷神像战斗移动支援累计包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorIdol193.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "77dcea5fbc5f3d9dac20a9b8e1d206a3abad58607a836bda9f3aeb758ebb8536",
+      "candidate_output": "11b7f5fd81d69e48076b0c2044c60fde5c1290e61b743b51dbe5c50d12044c13",
+      "formal_input": "77dcea5fbc5f3d9dac20a9b8e1d206a3abad58607a836bda9f3aeb758ebb8536",
+      "release_output": "11b7f5fd81d69e48076b0c2044c60fde5c1290e61b743b51dbe5c50d12044c13"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorIdol193.h": {
+      "candidate_input": null,
+      "candidate_output": "386d364a53272bfde6979f4e9d2fbf2e9d515f4cb432a752757374ae4c15f954",
+      "formal_input": null,
+      "release_output": "386d364a53272bfde6979f4e9d2fbf2e9d515f4cb432a752757374ae4c15f954"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h": {
+      "candidate_input": "8516c1b6c52d79d18b998683f9795239caeebf5a73eebf869dd20ac382e09054",
+      "candidate_output": "fb7a7b372ad0965dcfe5ab60e28589bdfd9044d7905b67abca9dcb1e185a9180",
+      "formal_input": "8516c1b6c52d79d18b998683f9795239caeebf5a73eebf869dd20ac382e09054",
+      "release_output": "fb7a7b372ad0965dcfe5ab60e28589bdfd9044d7905b67abca9dcb1e185a9180"
+    }
+  },
+  "title": "situational swift idol support"
+}
