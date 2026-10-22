@@ -1,0 +1,52 @@
+{
+  "stage": "WD180A",
+  "metadata": {
+    "stage": "WD180A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_001759_阶段WD180A_巫医药水急救与聚集群疗累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_001759_阶段WD180A_巫医药水急救与聚集群疗累计测试包.zip",
+    "sha256": "d8b4fb73a0d05ae668fa7d6a201f1ef40596f8186541a0632af5fab747ccc14d",
+    "source_files": 27,
+    "changed_since179": 2,
+    "checks": 4763,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A",
+      "WD179A"
+    ],
+    "work_started": "2026-10-20",
+    "delivered": "2026-10-21"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_001759_阶段WD180A_巫医药水急救与聚集群疗累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorHeal180.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "ab31d6991096c454674c6e4e5b04175a965fd38af48977332b3f2ec7ae56ffac",
+      "candidate_output": "f0026d3c2344388b974a3dd64aa81075c02b4742df65168b6681e375b6ac5ffc",
+      "formal_input": "ab31d6991096c454674c6e4e5b04175a965fd38af48977332b3f2ec7ae56ffac",
+      "release_output": "f0026d3c2344388b974a3dd64aa81075c02b4742df65168b6681e375b6ac5ffc"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorHeal180.h": {
+      "candidate_input": null,
+      "candidate_output": "d37a67af96e0087e7515feb4cc8a1fd9267534bd000da8e4077714a33309e19a",
+      "formal_input": null,
+      "release_output": "d37a67af96e0087e7515feb4cc8a1fd9267534bd000da8e4077714a33309e19a"
+    }
+  },
+  "title": "potion triage and group healing"
+}
