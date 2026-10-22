@@ -1,0 +1,49 @@
+{
+  "stage": "WD185A",
+  "metadata": {
+    "stage": "WD185A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_051920_阶段WD185A_无弹药枪械与弓箭配对修复累计包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_051920_阶段WD185A_无弹药枪械与弓箭配对修复累计包.zip",
+    "sha256": "db89d811504afe2be52fe1d75b2837a5c4bca3523adf6495fe079e5ae88efbb6",
+    "source_files": 30,
+    "minimal_files": 1,
+    "changed_since184": 2,
+    "checks": 6364,
+    "syntax_CPP": 4,
+    "status": "candidate;game/final link pending",
+    "deployment": "none",
+    "includes": [
+      "WD167A",
+      "WD168A",
+      "WD169A",
+      "WD170A",
+      "WD171A",
+      "WD172A",
+      "WD173A",
+      "WD174A",
+      "WD175A",
+      "WD176A",
+      "WD177A",
+      "WD178A",
+      "WD179A",
+      "WD180A",
+      "WD181A",
+      "WD182A",
+      "WD183A",
+      "WD184A"
+    ]
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261021\\codexfix_20261021_051920_阶段WD185A_无弹药枪械与弓箭配对修复累计包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "4fc9c502ec0844a64e1354e5a58c897e02b422feb2cc7ff3b9bd89a193f9510f",
+      "candidate_output": "8ee357a0bdf946737b974a5e3ee0fbde6e8478fdfb22eb1de97bfe63f9100a2e",
+      "formal_input": "4fc9c502ec0844a64e1354e5a58c897e02b422feb2cc7ff3b9bd89a193f9510f",
+      "release_output": "8ee357a0bdf946737b974a5e3ee0fbde6e8478fdfb22eb1de97bfe63f9100a2e"
+    }
+  },
+  "title": "retain original cumulative diagnostic marker"
+}
