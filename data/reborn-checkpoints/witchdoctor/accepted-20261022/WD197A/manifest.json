@@ -1,0 +1,41 @@
+{
+  "stage": "WD197A",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_004902_阶段WD197A_灵魂震击打断与近期累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_004902_阶段WD197A_灵魂震击打断与近期累计测试包.zip",
+    "sha256": "7360546cd3faca24ef7c2a2cb07a094eaee8d5a25d1f21b690d0483cad57c04a",
+    "changed": [
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorInterrupt197.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow158.inc"
+    ],
+    "status": "candidate_not_game_tested"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_004902_阶段WD197A_灵魂震击打断与近期累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorInterrupt197.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow158.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "5b352c448697e027e4cde22e754d8c3084042183586938282e6db2e18e62f9d7",
+      "candidate_output": "b48546460a9ffd4b802261e8ef25f822a1627a3f0081da3e6893fefa2a6b89f9",
+      "formal_input": "5b352c448697e027e4cde22e754d8c3084042183586938282e6db2e18e62f9d7",
+      "release_output": "b48546460a9ffd4b802261e8ef25f822a1627a3f0081da3e6893fefa2a6b89f9"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorInterrupt197.h": {
+      "candidate_input": null,
+      "candidate_output": "885ced5cd35fa0812d87a788a2e34c13275ff67b7649da83c14037f4e58e176a",
+      "formal_input": null,
+      "release_output": "885ced5cd35fa0812d87a788a2e34c13275ff67b7649da83c14037f4e58e176a"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow158.inc": {
+      "candidate_input": "72b00cdfe19749947699b62f0829b0ddcca5c7ab6112f849ee1e722e0d0c2bd5",
+      "candidate_output": "852c14de6266dfebf248e387efedce620c6caff79deab720635591b1ee80fcd1",
+      "formal_input": "72b00cdfe19749947699b62f0829b0ddcca5c7ab6112f849ee1e722e0d0c2bd5",
+      "release_output": "852c14de6266dfebf248e387efedce620c6caff79deab720635591b1ee80fcd1"
+    }
+  },
+  "title": "native spirit shock interrupt"
+}

@@ -97,9 +97,17 @@ class leech:public AuraScript
 class shock:public SpellScript
 {
     PrepareSpellScript(shock);
-    SpellCastResult Check(){return Owns(GetCaster()->ToPlayer(),Shock)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;}
-    void Interrupt(SpellEffIndex i){Unit* u=GetHitUnit();if(!u||u->IsPlayer())PreventHitDefaultEffect(i);}
-    void Register()override{OnCheckCast+=SpellCheckCastFn(shock::Check);OnEffectLaunchTarget+=SpellEffectFn(shock::Interrupt,EFFECT_1,SPELL_EFFECT_INTERRUPT_CAST);}
+    bool automatic=false,blocked=false;
+    bool Load()override{automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),Shock);return true;}
+    bool Safe(){Unit* u=GetHitUnit();return u&&!u->IsPlayer()&&WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),u);}
+    SpellCastResult Check(){if(!Owns(GetCaster()->ToPlayer(),Shock))return SPELL_FAILED_CASTER_AURASTATE;
+        if(automatic&&(!GetExplTargetUnit()||GetExplTargetUnit()->IsPlayer()||!WD168::SafeAutomaticTarget(GetCaster()->ToPlayer(),GetExplTargetUnit())))return SPELL_FAILED_BAD_TARGETS;
+        return SPELL_CAST_OK;}
+    void Interrupt(SpellEffIndex i){Unit* u=GetHitUnit();if(!u||u->IsPlayer()||(automatic&&!Safe()))PreventHitDefaultEffect(i);}
+    void Before(SpellMissInfo){blocked=automatic&&!Safe();}
+    void Silence(SpellEffIndex i){if(blocked){PreventHitAura();PreventHitDefaultEffect(i);}}
+    void Register()override{OnCheckCast+=SpellCheckCastFn(shock::Check);OnEffectLaunchTarget+=SpellEffectFn(shock::Interrupt,EFFECT_1,SPELL_EFFECT_INTERRUPT_CAST);
+        BeforeHit+=BeforeSpellHitFn(shock::Before);OnEffectHitTarget+=SpellEffectFn(shock::Silence,EFFECT_0,SPELL_EFFECT_APPLY_AURA);}
 };
 class lifecycle:public PlayerScript
 {
