@@ -1,0 +1,22 @@
+{
+  "stage": "WD198A",
+  "metadata": {
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_011247_阶段WD198A_战后恢复优先与近期累计测试包.zip",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_011247_阶段WD198A_战后恢复优先与近期累计测试包",
+    "sha256": "b6a8a02422ec5290e94d5aabd3f2d945916690a1aab97a001cd54334bdb2515f",
+    "status": "candidate_not_game_tested"
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_011247_阶段WD198A_战后恢复优先与近期累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "b48546460a9ffd4b802261e8ef25f822a1627a3f0081da3e6893fefa2a6b89f9",
+      "candidate_output": "1a8818bcc9e2d138bf3a82df8ac9bfe7f3f6301ab4c20a59a554936b865a9bd6",
+      "formal_input": "b48546460a9ffd4b802261e8ef25f822a1627a3f0081da3e6893fefa2a6b89f9",
+      "release_output": "1a8818bcc9e2d138bf3a82df8ac9bfe7f3f6301ab4c20a59a554936b865a9bd6"
+    }
+  },
+  "title": "recover before postcombat maintenance"
+}
