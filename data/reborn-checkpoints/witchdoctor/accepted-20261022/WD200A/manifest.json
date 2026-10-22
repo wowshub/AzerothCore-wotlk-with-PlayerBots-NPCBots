@@ -1,0 +1,56 @@
+{
+  "stage": "WD200A",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_040822_阶段WD200A_愚者把戏情境召唤与巫医累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_040822_阶段WD200A_愚者把戏情境召唤与巫医累计测试包.zip",
+    "sha256": "6502bf803c9a06bcd1d910f107ce6b6fcad4b1920bd9014c95608bcab6d787fe",
+    "status": "candidate_not_game_tested",
+    "changed_source": [
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorFool200.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorFool200.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow160.inc"
+    ],
+    "client_base": "TG21A byte-identical",
+    "checks": {
+      "ai": 466,
+      "summon": 32,
+      "syntax": 4,
+      "zip_crc_sha256": true
+    }
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_040822_阶段WD200A_愚者把戏情境召唤与巫医累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorFool200.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorFool200.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow160.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "7f76bc0a6d3869d503374559db18bbdbd3d9673b532c959dc71792d5a2513828",
+      "candidate_output": "cb3c7c7ee652f9c8f7cb2647e1b1c8a4b9eba436ab567c63e1dfb5d2cf05476b",
+      "formal_input": "7f76bc0a6d3869d503374559db18bbdbd3d9673b532c959dc71792d5a2513828",
+      "release_output": "cb3c7c7ee652f9c8f7cb2647e1b1c8a4b9eba436ab567c63e1dfb5d2cf05476b"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorFool200.h": {
+      "candidate_input": null,
+      "candidate_output": "fcb08adaa8cac707312d6f36925d1c93dc0ade2a5cb4820e730a955f64d5cf58",
+      "formal_input": null,
+      "release_output": "fcb08adaa8cac707312d6f36925d1c93dc0ade2a5cb4820e730a955f64d5cf58"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorFool200.h": {
+      "candidate_input": null,
+      "candidate_output": "890dadaa38beb31950070ad90bf74ad224c7edea7e2eb9d87d6ed67232e28820",
+      "formal_input": null,
+      "release_output": "890dadaa38beb31950070ad90bf74ad224c7edea7e2eb9d87d6ed67232e28820"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow160.inc": {
+      "candidate_input": "f1314a90fc5c52a8c4b7ff10b5610c30aad0614b4eaa537fa97c63d4e93603db",
+      "candidate_output": "c8d3ffe7024cf4a902d511d076672f96d8685aa7900e2e4868112b422a83c63d",
+      "formal_input": "f1314a90fc5c52a8c4b7ff10b5610c30aad0614b4eaa537fa97c63d4e93603db",
+      "release_output": "c8d3ffe7024cf4a902d511d076672f96d8685aa7900e2e4868112b422a83c63d"
+    }
+  },
+  "title": "situational fools trick and safe echoes"
+}

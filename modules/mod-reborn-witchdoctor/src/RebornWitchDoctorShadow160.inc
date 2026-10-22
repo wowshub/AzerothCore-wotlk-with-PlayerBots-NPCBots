@@ -1,3 +1,4 @@
+#include "RebornWitchDoctorFool200.h"
 // WD160: Viper Ward + Fool's Play. Independent summon groups; latest-source deviations recorded.
 namespace WD160
 {
@@ -54,7 +55,8 @@ bool CanMirrorSpell(SpellInfo const* info)
 }
 class summon:public SpellScript
 {
-    PrepareSpellScript(summon);bool made=false;
+    PrepareSpellScript(summon);bool made=false,automatic=false;
+    bool Load()override{automatic=WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true;}
     SpellCastResult Check()
     {
         Player* p=GetCaster()->ToPlayer();bool viper=GetSpellInfo()->Id==Ward;
@@ -62,17 +64,19 @@ class summon:public SpellScript
         if(!sObjectMgr->GetCreatureTemplate(viper?ViperEntry:FoolEntry))return SPELL_FAILED_ERROR;
         if(viper){if(!p->HasSpell(WD150::Call))return SPELL_FAILED_CASTER_AURASTATE;uint32 remaining=p->GetSpellCooldownDelay(WD150::Call);if(remaining)return SPELL_FAILED_NOT_READY;}
         else{Unit* u=GetExplTargetUnit();if(!u||!u->IsAlive()||!p->IsInMap(u)||!p->InSamePhase(u)||!p->IsValidAttackTarget(u)||!p->IsWithinLOSInMap(u))return SPELL_FAILED_BAD_TARGETS;}
+        if(automatic&&!viper){Unit* u=GetExplTargetUnit();if(!u||u->IsPlayer()||!WD168::SafeAutomaticTarget(p,u))return SPELL_FAILED_BAD_TARGETS;if(FoolCopy(p))return SPELL_FAILED_NOT_READY;}
         return SPELL_CAST_OK;
     }
     void Hit(SpellEffIndex)
     {
         if(made)return;made=true;Player* p=GetCaster()->ToPlayer();bool viper=GetSpellInfo()->Id==Ward;Unit* target=GetExplTargetUnit();if(!Owns(p,viper?Talent:Fool))return;
+        if(automatic&&!viper&&(!target||target->IsPlayer()||!WD168::SafeAutomaticTarget(p,target)))return;
         Position pos=p->GetPosition();if(viper){if(WorldLocation const* dest=GetExplTargetDest())pos=*dest;}else if(target)pos=target->GetNearPosition(1.f,0.f);else return;
         int32 duration=20000;if(viper)p->ApplySpellMod(9003160,SPELLMOD_DURATION,duration);
         TempSummon* c=p->SummonCreature(viper?ViperEntry:FoolEntry,pos,TEMPSUMMON_TIMED_DESPAWN,std::max(1,duration));
         if(!c){ChatHandler(p->GetSession()).SendNotification("召唤失败，原有召唤物已保留。");return;}
         Clear(p,viper);if(viper){Data(p)->viper=c->GetGUID();WD150::Clear(p);WD149::Gain(p);SyncPresence(p);}
-        else{Data(p)->fool=c->GetGUID();c->AI()->SetGUID(target->GetGUID(),1);SyncFoolPresence(p);}
+        else{Data(p)->fool=c->GetGUID();c->AI()->SetData(WD200::AutomaticKey,automatic?1u:0u);c->AI()->SetGUID(target->GetGUID(),1);SyncFoolPresence(p);}
     }
     void SharedCooldown(){Player* p=GetCaster()->ToPlayer();if(GetSpellInfo()->Id==Ward&&!GetSpell()->IsTriggered()&&Owns(p,Talent)){uint32 remaining=p->GetSpellCooldownDelay(Ward),old=p->GetSpellCooldownDelay(WD150::Call);if(remaining>old)p->AddSpellCooldown(WD150::Call,0,GameTime::GetGameTime().count()+(remaining+999)/1000,true);}}
     void Register()override{OnCheckCast+=SpellCheckCastFn(summon::Check);OnEffectHit+=SpellEffectFn(summon::Hit,EFFECT_0,SPELL_EFFECT_DUMMY);AfterCast+=SpellCastFn(summon::SharedCooldown);}
@@ -112,11 +116,14 @@ class fool:public CreatureScript
 public:fool():CreatureScript("npc_reborn_wd160_fool"){}
     struct AI:ScriptedAI
     {
-        ObjectGuid owner,target;explicit AI(Creature* c):ScriptedAI(c){}
+        ObjectGuid owner,target;bool automatic=false;explicit AI(Creature* c):ScriptedAI(c){}
         void IsSummonedBy(WorldObject* source)override{Player* p=source?source->ToPlayer():nullptr;if(!Owns(p,Fool)){me->DespawnOrUnsummon();return;}owner=p->GetGUID();me->SetOwnerGUID(owner);me->SetCreatorGUID(owner);me->SetFaction(p->GetFaction());me->m_ControlledByPlayer=true;me->SetUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED);me->SetByteValue(UNIT_FIELD_BYTES_2,1,p->GetByteValue(UNIT_FIELD_BYTES_2,1));me->SetReactState(REACT_PASSIVE);}
+        void SetData(uint32 key,uint32 value)override{if(key==WD200::AutomaticKey)automatic=value!=0;}
+        uint32 GetData(uint32 key)const override{return key==WD200::AutomaticKey&&automatic?1u:0u;}
         void SetGUID(ObjectGuid const& id,int32 key)override
         {
             if(key!=1)return;target=id;Unit* u=ObjectAccessor::GetUnit(*me,target);if(!u||!u->IsAlive()){me->DespawnOrUnsummon();return;}
+            if(automatic&&!WD168::SafeAutomaticTarget(ObjectAccessor::GetPlayer(*me,owner),u)){me->DespawnOrUnsummon();return;}
             me->SetDisplayId(u->GetDisplayId());me->SetObjectScale(u->GetObjectScale());me->SetLevel(u->GetLevel());
             me->SetMaxHealth(std::max<uint32>(1,u->GetMaxHealth()));me->SetHealth(std::max<uint32>(1,std::min<uint32>(u->GetHealth(),me->GetMaxHealth())));
             float lo=u->GetFloatValue(UNIT_FIELD_MINDAMAGE),hi=u->GetFloatValue(UNIT_FIELD_MAXDAMAGE);
@@ -131,6 +138,7 @@ public:fool():CreatureScript("npc_reborn_wd160_fool"){}
         {
             Player* p=ObjectAccessor::GetPlayer(*me,owner);Unit* u=ObjectAccessor::GetUnit(*me,target);
             if(!Owns(p,Fool)||!p->IsInWorld()||Data(p)->fool!=me->GetGUID()||me->GetOwnerGUID()!=owner||!p->IsInMap(me)||!p->InSamePhase(me)||!u||!u->IsAlive()||!p->IsValidAttackTarget(u)||!me->InSamePhase(u)){me->DespawnOrUnsummon();return;}
+            if(automatic&&!WD168::SafeAutomaticTarget(p,u)){me->AttackStop();me->DespawnOrUnsummon();return;}
             me->SetByteValue(UNIT_FIELD_BYTES_2,1,p->GetByteValue(UNIT_FIELD_BYTES_2,1));if(me->GetVictim()!=u)AttackStart(u);if(UpdateVictim())DoMeleeAttackIfReady();
         }
     };
@@ -147,6 +155,9 @@ public:echoes():AllSpellScript("reborn_wd160_enemy_echoes",{ALLSPELLHOOK_ON_CAST
         for(ObjectGuid id:copies)if(Creature* c=ObjectAccessor::GetCreature(*caster,id))
         {
             Player* p=ObjectAccessor::GetPlayer(*c,c->GetOwnerGUID());if(!Owns(p,Fool)||Data(p)->fool!=id||!p->IsValidAttackTarget(caster)||!c->InSamePhase(caster)||!c->IsWithinDistInMap(caster,40.f)||!c->IsWithinLOSInMap(caster))continue;
+            bool automatic=c->AI()->GetData(WD200::AutomaticKey)!=0;
+            if(automatic&&(!WD168::SafeAutomaticTarget(p,caster)||!WD200::AutomaticEcho(info)))continue;
+            WD168::AutomaticCastScope scope(p,automatic?info->Id:0u);
             ++Data(p)->copies;c->CastSpell(caster,info->Id,true); // clone is the caster, never the enemy/player; triggered copies cannot recurse
         }
     }
