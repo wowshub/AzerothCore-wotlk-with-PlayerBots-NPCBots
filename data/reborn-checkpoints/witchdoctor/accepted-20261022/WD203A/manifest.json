@@ -1,0 +1,54 @@
+{
+  "stage": "WD203A",
+  "metadata": {
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_060557_阶段WD203A_短读条蛙变安全取消与巫医累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_060557_阶段WD203A_短读条蛙变安全取消与巫医累计测试包.zip",
+    "sha256": "c146068109132cc46583426ecd6825425e92112d70fd0f47047ca19c3a26c5ff",
+    "status": "candidate_not_game_tested",
+    "changed_source": [
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorControl196.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.inc"
+    ],
+    "client_base": "WD202A/TG22A byte-identical",
+    "ai_cases": 519,
+    "script_cases": 69,
+    "syntax_units": 4,
+    "zip_crc_and_sha256": true
+  },
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261022\\codexfix_20261022_060557_阶段WD203A_短读条蛙变安全取消与巫医累计测试包",
+  "paths": [
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorControl196.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h",
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.inc"
+  ],
+  "files": {
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h": {
+      "candidate_input": "4966632f4fe678634f6f34f55d624ce3687c59a544761eaf525b5bcfc3987ca0",
+      "candidate_output": "ae59293a3430c5079ca0795580a8d33d3303e79c4de297883c18833072173851",
+      "formal_input": "4966632f4fe678634f6f34f55d624ce3687c59a544761eaf525b5bcfc3987ca0",
+      "release_output": "ae59293a3430c5079ca0795580a8d33d3303e79c4de297883c18833072173851"
+    },
+    "modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorControl196.h": {
+      "candidate_input": "baad61f0eea35ceb223d263d8734f26c4aab04586dd1ada79e031374d020e200",
+      "candidate_output": "e6dcec1db971667686869d3ffc6b068d27cfff1e836802fa78abb69766b5ee73",
+      "formal_input": "baad61f0eea35ceb223d263d8734f26c4aab04586dd1ada79e031374d020e200",
+      "release_output": "e6dcec1db971667686869d3ffc6b068d27cfff1e836802fa78abb69766b5ee73"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.h": {
+      "candidate_input": "803ed18e343663c59d0e3c0765b1b29221305226faed4f8fc38535d01d27e07e",
+      "candidate_output": "b75f607cc4a3726b7d4e0dc84e717574730098bb05fe6ce26044a127a6a32aca",
+      "formal_input": "803ed18e343663c59d0e3c0765b1b29221305226faed4f8fc38535d01d27e07e",
+      "release_output": "b75f607cc4a3726b7d4e0dc84e717574730098bb05fe6ce26044a127a6a32aca"
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorControl196.inc": {
+      "candidate_input": "5d6de54351f6a1683e6b0d5857de1258ce037dbd2b443a7753cf6401c7e7775f",
+      "candidate_output": "74283672f28b7187912fe9e2d529334d69556cfec2b2c60ce8c5137cd6854c64",
+      "formal_input": "5d6de54351f6a1683e6b0d5857de1258ce037dbd2b443a7753cf6401c7e7775f",
+      "release_output": "74283672f28b7187912fe9e2d529334d69556cfec2b2c60ce8c5137cd6854c64"
+    }
+  },
+  "title": "short frog cast completion validation"
+}
