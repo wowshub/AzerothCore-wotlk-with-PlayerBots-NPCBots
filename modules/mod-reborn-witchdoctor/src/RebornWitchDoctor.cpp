@@ -2925,7 +2925,7 @@ class spell_reborn_wd55a_shadowflare : public SpellScript
 // WD56A: separate cooldown summon; never occupies Ward/Idol/Effigy slots.
 namespace WD56A
 {
-constexpr uint32 Spell=9003580, Immunity=9003581, Protection=9003582, Lock=9003583, Entry=900211;
+constexpr uint32 Spell=9003580, Immunity=9003581, Protection=9003582, Lock=9003583, Visual=9003584, Entry=900211;
 constexpr char Key[]="RebornWD56A.Bwonsamdi";
 struct State : DataMap::Base { ObjectGuid guid; };
 void Clear(Player* player)
@@ -2955,7 +2955,7 @@ class spell_reborn_wd56a_voodoo : public SpellScript
 {
     PrepareSpellScript(spell_reborn_wd56a_voodoo);
     bool handled=false;
-    bool Validate(SpellInfo const*) override { return ValidateSpellInfo({WD56A::Immunity,WD56A::Protection,WD56A::Lock}); }
+    bool Validate(SpellInfo const*) override { return ValidateSpellInfo({WD56A::Immunity,WD56A::Protection,WD56A::Lock,WD56A::Visual}); }
     SpellCastResult Check()
     {
         Player* player=GetCaster()->ToPlayer();
@@ -2997,7 +2997,7 @@ public:
             if (Unit* unit=ObjectAccessor::GetUnit(*me,guid))
             { unit->RemoveAurasDueToSpell(WD56A::Immunity,owner); unit->RemoveAurasDueToSpell(WD56A::Protection,owner); }
         }
-        void Cleanup() { for (auto const& guid:affected) Remove(guid); affected.clear(); }
+        void Cleanup() { me->RemoveAurasDueToSpell(WD56A::Visual,me->GetGUID()); for (auto const& guid:affected) Remove(guid); affected.clear(); }
         void DoAction(int32 action) override { if (action==56) Cleanup(); }
         void IsSummonedBy(WorldObject* summoner) override
         {
@@ -3007,6 +3007,10 @@ public:
             me->SetFaction(player->GetFaction()); me->SetLevel(player->GetLevel());
             me->SetMaxHealth(std::max(5u,uint32(player->GetLevel())*10)); me->SetHealth(me->GetMaxHealth());
             me->SetReactState(REACT_PASSIVE); me->SetCombatMovement(false);
+            // WD206V1: official801665 domain visual only; never trigger its immunity/root/stat effects.
+            if (Aura* visual=me->AddAura(WD56A::Visual,me))
+            { visual->SetMaxDuration(8000); visual->SetDuration(8000); }
+
         }
         void AttackStart(Unit*) override { }
         void MoveInLineOfSight(Unit*) override { }
