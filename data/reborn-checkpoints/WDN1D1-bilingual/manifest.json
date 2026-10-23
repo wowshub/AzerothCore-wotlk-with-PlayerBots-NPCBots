@@ -1,0 +1,7 @@
+{
+  "stage": "WDN1D1-bilingual",
+  "scope": "user basic fixed native NPCBot main/role menu bilingual; no battle AI acceptance",
+  "sql_sha256": "7dd76176d6f2bf1db0633c989eede6e93bb1fb89d9a97306030cf529fd4819a5",
+  "artifact_sha256": "279c3b6e3296faf43b990daf393237b4782dd784f3bf4153ebdfc78e6d1ca8f5",
+  "parent": "082ea87f7cde585050911e82a1091fe1c57ac6e2"
+}
