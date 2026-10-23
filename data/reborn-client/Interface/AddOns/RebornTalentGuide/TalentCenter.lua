@@ -1,22 +1,25 @@
 -- TG21A: one talent center; reuse native draft, collection and validation engines.
 local G=RebornTalentGuide;local S=RebornTalentCollections;local W=G.WD
 local C=RebornTalentTreeCanvas;local N=G.Navigation;local Windows=RebornTalentPanelWindows
+local L=G.CenterLocale
+local function put(widget,value)widget:SetText(L.Text(value))end
+local function popup(key)L.Popup(key);StaticPopup_Show(key)end
 local T={tab='recommend',scene='全部',selected={},choices={}};G.TalentCenter=T
 local classes={{'WARRIOR','战士'},{'PALADIN','圣骑士'},{'HUNTER','猎人'},{'ROGUE','潜行者'},{'PRIEST','牧师'},{'DEATHKNIGHT','死亡骑士'},{'SHAMAN','萨满'},{'MAGE','法师'},{'WARLOCK','术士'},{'DRUID','德鲁伊'},{'DEMONHUNTER','恶魔猎手'},{'MONK','武僧'},{'WITCHDOCTOR','巫医'}}
 local names={};for _,row in ipairs(classes)do names[row[1]]=row[2]end
 local specNames={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
 local function enable(b,on)if on then b:Enable()else b:Disable()end end
 local function move(f,x,y,w,h)f:ClearAllPoints();f:SetPoint('TOPLEFT',T.frame,'TOPLEFT',x,y);if w then f:SetWidth(w)end;if h then f:SetHeight(h)end end
-local function text(x,y,w,s,font)return C.Text(T.frame,x,y,w,s,font)end
+local function text(x,y,w,s,font)return L.Bind(C.Text(T.frame,x,y,w,s,font),s)end
 local function button(x,y,w,s,fn,style)
- local b=C.Button(T.frame,x,y,w,s,fn)
+ local b=L.Bind(C.Button(T.frame,x,y,w,s,fn),s)
  if style then
   local paint=function(self)local on=self:IsEnabled();on=on and on~=0;self:SetBackdropColor(on and(style=='red'and .38 or .30)or .06,on and(style=='red'and .065 or .24)or .07,on and .045 or .08,1);self:SetBackdropBorderColor(on and .75 or .22,on and .49 or .24,on and .22 or .26,1)end
   b:SetScript('OnEnter',function(self)paint(self)end);b:SetScript('OnLeave',paint);b:SetScript('OnEnable',paint);b:SetScript('OnDisable',paint);b:SetScript('OnMouseDown',paint);b:SetScript('OnMouseUp',paint);b:SetScript('OnHide',paint);paint(b)
  end
  return b
 end
-function T.Message(msg)T.message=msg or'';if T.status then T.status:SetText(T.message)end end
+function T.Message(msg)T.message=msg or'';if T.status then put(T.status,T.message)end end
 local function stop()
  N.Stop();S.StopOwned('切换天赋中心页面，停止后续加点；已加点保留')
  if StaticPopup_Hide then for _,key in ipairs({'REBORN_TG_CENTER_DRAFT','REBORN_TG_CENTER_NAME','REBORN_TG_CENTER_RENAME','REBORN_TG_CENTER_DELETE','REBORN_TG_CENTER_NATIVE'})do StaticPopup_Hide(key)end end
@@ -41,7 +44,7 @@ function T.ApplyRecommendation()
   StaticPopupDialogs.REBORN_TG_CENTER_DRAFT={text='保留全部已学点数，增加 AE '..result.addedAE..' / TE '..result.addedTE..'？\n只载入草稿，请到实际天赋面板核对保存。',button1='载入草稿',button2=CANCEL,timeout=0,whileDead=false,hideOnEscape=true,OnAccept=function()
    if T.class~='WITCHDOCTOR'or selected()~=index then T.Message('当前推荐已改变，请重新确认');return end
    local ok,msg=W.LoadDraft(index,level,result);T.Message(msg or(ok and'已载入草稿，请到实际天赋面板核对保存'or'载入失败'));T.Refresh()
-  end};StaticPopup_Show('REBORN_TG_CENTER_DRAFT')
+  end};popup('REBORN_TG_CENTER_DRAFT')
  else
   local build,title=S.Recommendation(T.class);if not build then T.Message(title);return end
   local token=T.class;local index=selected();local ctx,why=S.CanApply(build,T.frame);if not ctx then T.Message(why);return end
@@ -49,7 +52,7 @@ function T.ApplyRecommendation()
    if T.class~=token or selected()~=index then T.Message('推荐已改变，请重新确认');return end
    local now,why=S.CanApply(build,T.frame);if not now or now.signature~=ctx.signature then T.Message(why or'当前方案已改变，请重新确认');return end
    local ok,msg=S.NativeEngine(token).StartPlan(now.plan,T.frame,function(_,why)T.Message(why);T.Refresh()end);T.Message(msg or(ok and'正在按原生接口逐点加点'or'无法开始加点'));T.Refresh()
-  end};StaticPopup_Show('REBORN_TG_CENTER_NATIVE')
+  end};popup('REBORN_TG_CENTER_NATIVE')
  end
 end
 local function namedSave(build,default,profile)
@@ -64,7 +67,7 @@ local function namedSave(build,default,profile)
    local id,version=S.Commit(self.editBox:GetText(),snapshot,nil,nil,nil,profile)
    if not id then T.Message(version);return end
    T.tab='favorites';T.favorite=id;S.Load(id,version);T.Message('已保存收藏；角色天赋未改变');T.Refresh()
-  end};StaticPopup_Show('REBORN_TG_CENTER_NAME')
+  end};popup('REBORN_TG_CENTER_NAME')
 end
 function T.SaveCurrent()
  local b,why=current();if not b then T.Message(why);return end
@@ -80,19 +83,20 @@ function T.Rename()
  StaticPopupDialogs.REBORN_TG_CENTER_RENAME={text='重命名收藏',button1='保存名称',button2=CANCEL,hasEditBox=true,maxLetters=96,timeout=0,whileDead=true,hideOnEscape=true,OnShow=function(self)self.editBox:SetText(e.name);self.editBox:HighlightText()end,OnAccept=function(self)
   if T.favorite~=id then T.Message('收藏选择已改变，请重新确认');return end
   local saved,rev=S.Commit(self.editBox:GetText(),build,id,head,version,profile);if saved then S.Load(saved,rev);T.Refresh()else T.Message(rev)end
- end};StaticPopup_Show('REBORN_TG_CENTER_RENAME')
+ end};popup('REBORN_TG_CENTER_RENAME')
 end
 function T.Delete()
  local e=S.editor;if not e or T.favorite~=e.id then return end;local id,head,name=e.id,e.head,e.name
- StaticPopupDialogs.REBORN_TG_CENTER_DELETE={text='删除收藏「'..name..'」？\n角色天赋不会改变。',button1='删除收藏',button2=CANCEL,timeout=0,whileDead=true,hideOnEscape=true,OnAccept=function()
+ StaticPopupDialogs.REBORN_TG_CENTER_DELETE={text=L.English()and('Delete favorite "'..name..'"?\nCharacter talents will not change.')or('删除收藏「'..name..'」？\n角色天赋不会改变。'),button1='删除收藏',button2=CANCEL,timeout=0,whileDead=true,hideOnEscape=true,OnAccept=function()
   if T.favorite~=id then T.Message('收藏选择已改变，请重新确认');return end
   local ok,why=S.Delete(id,head);if ok then T.favorite=nil;S.editor=nil;T.Message('收藏已删除，角色天赋未改变');T.Refresh()else T.Message(why)end
- end};StaticPopup_Show('REBORN_TG_CENTER_DELETE')
+ end};popup('REBORN_TG_CENTER_DELETE')
 end
 local function create()
  if T.frame then return end
  local f=C.Window('RebornTalentCenterFrame','天赋中心');T.frame=f;f:SetSize(1320,830);Windows.Register('talentCenter',f)
- if f.title then f.title:SetText('天赋中心')end
+ if f.title then L.Bind(f.title,'天赋中心')end
+ T.language=button(670,-12,65,'EN',L.Toggle);T.language:SetText(L.English()and'中文'or'EN')
  if f.note then f.note:Hide()end;if f.legend then f.legend:Hide()end
  if f.tgBackgroundChoice then f.tgBackgroundChoice:Hide()end
  T.tabs={button(190,-12,150,'推荐天赋',function()stop();T.tab='recommend';T.message=nil;T.Refresh()end),button(350,-12,150,'我的收藏',function()stop();T.tab='favorites';T.favorite=nil;T.message=nil;T.Refresh()end)}
@@ -121,9 +125,9 @@ local function create()
  T.applySaved=button(850,-740,230,'比较并应用此天赋',function()S.RequestApply()end,'red')
  T.detailsButton=button(1092,-740,205,'查看方案说明',function()
   if T.details:IsShown()then T.details:Hide()else
-   local p=plans()[selected()];local lines={p and p.title or'天赋说明',p and(p.purpose or p.body)or'',p and p.stats or'',p and p.conflicts or''}
-   for _,line in ipairs(p and p.rotation or{})do lines[#lines+1]=line end
-   T.detailsText:SetText(table.concat(lines,'\n\n'));T.details:Show()
+   local p=plans()[selected()];local lines={p and L.Plan(p,'title')or L.Text('天赋说明'),p and L.Plan(p,p.purpose and'purpose'or'body')or'',p and L.Plan(p,'stats')or'',p and L.Plan(p,'conflicts')or''}
+   for _,line in ipairs(p and L.Plan(p,'rotation')or{})do lines[#lines+1]=line end
+   put(T.detailsText,table.concat(lines,'\n\n'));T.details:Show()
   end
  end)
  T.details=CreateFrame('Frame',nil,f);T.details:SetPoint('TOPLEFT',414,-142);T.details:SetSize(884,510);T.details:SetFrameLevel(f:GetFrameLevel()+4)
@@ -137,12 +141,12 @@ function T.RefreshList()
  if not T.frame then return end
  local list={};local all=plans();local query=T.search and T.search:GetText()or''
  if T.tab=='recommend'then
-  for i,p in ipairs(all)do local scene=p.category or(i==1 and T.class=='WITCHDOCTOR'and'练级'or'PVE');if T.scene=='全部'or T.scene==scene then list[#list+1]={index=i,name=p.title}end end
+  for i,p in ipairs(all)do local scene=p.category or(i==1 and T.class=='WITCHDOCTOR'and'练级'or'PVE');if T.scene=='全部'or T.scene==scene then list[#list+1]={index=i,name=L.Plan(p,'title')}end end
   local found=false;for _,row in ipairs(list)do if row.index==selected()then found=true end end;if not found and list[1]then choose(list[1].index)end
  else
   local saved=S.List(T.class);local q=string.lower(query or'')
   for _,item in ipairs(saved)do if q==''or string.find(string.lower(item.name),q,1,true)then list[#list+1]={id=item.id,name=item.name}end end
-  T.slotText:SetText('我的收藏 '..#saved..' / 免费1个');enable(T.saveCurrent,#saved<S.limit and S.Class()==T.class)
+  put(T.slotText,'我的收藏 '..#saved..' / 免费1个');enable(T.saveCurrent,#saved<S.limit and S.Class()==T.class)
  end
  for i,row in ipairs(list)do
   local b=T.planButtons[i]
@@ -160,11 +164,21 @@ local function paintWD(build,result)
  if not mask then return false end
  local spec=result and result.plan.spec or build.spec
  for i,tab in ipairs({'Class',({[0]='Voodoo',[1]='Brewing',[2]='Shadowhunting'})[spec]})do
-  local board=T.boards[i];move(board,416+(i-1)*440,-144,432,498);board.width=412;board.height=450;board.canvas:SetSize(412,450);board:Show();board.title:SetText(i==1 and'巫医 · 通用 AE'or(specNames[spec]..' · 专精 TE'))
+  local board=T.boards[i];move(board,416+(i-1)*440,-144,432,498);board.width=412;board.height=450;board.canvas:SetSize(412,450);board:Show();put(board.title,i==1 and'巫医 · 通用 AE'or(specNames[spec]..' · 专精 TE'))
   G.TreeViews.PaintWD(board,tab,{mask=mask},T.choices,T.Refresh,true)
   if build then for _,item in ipairs(board.items)do item.onClick=nil;item.tooltip=function(t,n)local d=RebornTalentGuideWDData.nodes[n.id];t:SetText(d.name);t:AddLine((T.favorite and'收藏配点 'or'当前已保存 ')..n.target..'/'..n.maximum,1,.85,.3,true);t:AddLine(d.effects[math.max(1,n.target)]or'',1,1,1,true);t:AddLine(d.limit,1,.7,.4,true)end end end
+  if L.English()then for _,item in ipairs(board.items)do
+   item.tooltip=function(t,n)
+    local d=RebornTalentGuideWDData.nodes[n.id];t:SetText(d.en or d.name)
+    t:AddLine((build and(T.favorite and'Favorite rank 'or'Saved rank ')or'Recommended rank ')..n.target..'/'..n.maximum,1,.85,.3,true)
+    t:AddLine('Spell descriptions use your game client language.',.7,.7,.7,true)
+    t:AddLine(d.effects[math.max(1,n.target)]or'',1,1,1,true)
+    t:AddLine(d.limit or'',1,.7,.4,true)
+   end
+  end end
   C.ScrollTree(board,board.items,true)
   C.Paint(board,board.items,board.edges,{captionBelow=true})
+  put(board.title,board.title:GetText())
  end
  return true
 end
@@ -173,19 +187,20 @@ local function paintNative(build)
  local plan=build and S.NativePlan(build)or data.plans[selected()];if not plan then return false end
  local own=S.Capture(T.class);local treeNames=T.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'}
  for t,tree in ipairs(data.trees)do
-  local board=T.boards[t];move(board,416+(t-1)*293,-144,285,498);board.width=265;board.height=450;board.canvas:SetSize(265,450);board.title:SetText(treeNames[t]);board:Show();local items,edges,ids={},{},{}
+  local board=T.boards[t];move(board,416+(t-1)*293,-144,285,498);board.width=265;board.height=450;board.canvas:SetSize(265,450);put(board.title,treeNames[t]);board:Show();local items,edges,ids={},{},{}
   for _,n in ipairs(tree)do ids[n.id]=true end
-  for i,n in ipairs(tree)do local rank=plan.ranks[t][i]or 0;local _,_,icon=GetSpellInfo(n.spells[math.max(1,rank)]);items[#items+1]={id=n.id,x=34+(n.col-1)*60,y=24+(n.row-1)*40,size=31,spell=n.spells[math.max(1,rank)],icon=icon or n.icon,name=n.name,target=rank,actual=own and(own.ranks[n.id]or 0)or nil,maximum=n.max,shape=n.max>1 and'circle'or'square'};if n.dep and n.dep~=0 and ids[n.dep]then edges[#edges+1]={n.dep,n.id}end end
+  for i,n in ipairs(tree)do local rank=plan.ranks[t][i]or 0;local _,_,icon=GetSpellInfo(n.spells[math.max(1,rank)]);items[#items+1]={id=n.id,x=34+(n.col-1)*60,y=24+(n.row-1)*40,size=31,spell=n.spells[math.max(1,rank)],icon=icon or n.icon,name=L.English()and(GetSpellInfo(n.spells[math.max(1,rank)])or n.name)or n.name,target=rank,actual=own and(own.ranks[n.id]or 0)or nil,maximum=n.max,shape=n.max>1 and'circle'or'square'};if n.dep and n.dep~=0 and ids[n.dep]then edges[#edges+1]={n.dep,n.id}end end
   C.Paint(board,items,edges,{captionBelow=true,current=build~=nil})
  end;return true
 end
 function T.Refresh()
  if not T.frame or T.painting then return end;T.painting=true
+ L.Refresh();T.language:SetText(L.English()and'中文'or'EN')
  G.catalogClass=names[T.class]or T.class;G.fromBot=false
  T.details:Hide()
  local favorite=T.tab=='favorites';T.tabs[1]:Select(not favorite);T.tabs[2]:Select(favorite)
  for token,b in pairs(T.classButtons)do b:Select(token==T.class)end
- T.choiceTitle:SetText(favorite and'我的天赋'or'天赋加点')
+ put(T.choiceTitle,favorite and'我的天赋'or'天赋加点')
  for i,b in ipairs(T.sceneButtons)do if favorite then b:Hide()else b:Show();b:Select(({'全部','PVE','PVP','练级'})[i]==T.scene)end end
  for _,f in ipairs({T.currentButton,T.saveCurrent,T.slotText,T.search,T.searchHint,T.expand})do if favorite then f:Show()else f:Hide()end end
  T.planScroll:ClearAllPoints();T.planScroll:SetPoint('TOPLEFT',T.frame,'TOPLEFT',184,favorite and-266 or-188);T.planScroll:SetHeight(favorite and 364 or 430)
@@ -197,25 +212,25 @@ function T.Refresh()
  if favorite then
   if T.favorite then local e=S.editor;if e and e.id==T.favorite and e.build.class==T.class then b=e.build end
   else b,why=current()end
-  T.heading:SetText(T.favorite and S.editor and S.editor.name or'当前天赋加点');T.subtitle:SetText(T.favorite and'个人收藏 · 只读预览'or'与实际天赋面板已保存配点一致 · 不包含未保存草稿')
+  T.heading:SetText(T.favorite and S.editor and S.editor.name or L.Text('当前天赋加点'));put(T.subtitle,T.favorite and'个人收藏 · 只读预览'or'与实际天赋面板已保存配点一致 · 不包含未保存草稿')
   if b then if b.class=='WITCHDOCTOR'then paintWD(b)else paintNative(b)end end
   if T.favorite and b then T.rename:Show();T.delete:Show();T.applySaved:Show();local can,reason=S.CanApply(b,S.frame);enable(T.applySaved,can~=nil);why=reason end
  else
-  T.heading:SetText(p and p.title or((names[T.class]or'')..' · 暂无推荐天赋'));T.subtitle:SetText('推荐天赋 · '..T.scene..' · 只载入草稿或通过原生加点确认')
+  put(T.heading,p and L.Plan(p,'title') or((names[T.class]or'')..' · 暂无推荐天赋'));put(T.subtitle,'推荐天赋 · '..T.scene..' · 只载入草稿或通过原生加点确认')
   if p then
-   if T.class=='WITCHDOCTOR'then local lev=W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player');result,why=W.Build(selected(),lev);if result then paintWD(nil,result);T.subtitle:SetText('推荐'..result.level..'级：AE '..result.ae..'/'..result.aeBudget..' · TE '..result.te..'/'..result.teBudget..'；保留已学，只载入草稿。')end
+   if T.class=='WITCHDOCTOR'then local lev=W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player');result,why=W.Build(selected(),lev);if result then paintWD(nil,result);put(T.subtitle,'推荐'..result.level..'级：AE '..result.ae..'/'..result.aeBudget..' · TE '..result.te..'/'..result.teBudget..'；保留已学，只载入草稿。')end
    else paintNative()end
    T.collect:Show();enable(T.collect,#S.List(T.class)<S.limit);T.apply:Show()
    if T.class=='WITCHDOCTOR'then local draft,reason=W.CheckDraft(selected(),W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player'));enable(T.apply,draft~=nil);why=reason
    else local b=S.Recommendation(T.class);local ctx,reason;if b then ctx,reason=S.CanApply(b,T.frame)end;enable(T.apply,ctx~=nil);why=reason end
   end
  end
- local has=T.boards[1]:IsShown();if has then T.empty:Hide()else T.empty:Show();T.empty:SetText(why or'此职业尚无可用的推荐或收藏数据。\n不会用其他职业天赋代替。')end
- T.description:SetText(favorite and'当前天赋与收藏都只读预览；保存收藏不会改变角色，应用仍需原校验与确认。'or p and((p.purpose or p.body or'')..(T.class=='WITCHDOCTOR'and('\n'..(p.reserveNote or''))or''))or'')
+ local has=T.boards[1]:IsShown();if has then T.empty:Hide()else T.empty:Show();put(T.empty,why or'此职业尚无可用的推荐或收藏数据。\n不会用其他职业天赋代替。')end
+ put(T.description,favorite and'当前天赋与收藏都只读预览；保存收藏不会改变角色，应用仍需原校验与确认。'or p and(L.Plan(p,p.purpose and'purpose'or'body')..(T.class=='WITCHDOCTOR'and('\n'..L.Plan(p,'reserveNote'))or''))or'')
  local summary=G.PointSummary.Current(false)
- if S.Class()==T.class and summary.ae then T.summary:SetText(summary.reason..'\n|cff65d5efAE 已加点 '..summary.ae..'/'..summary.aeBudget..'  未加点数 '..summary.aeLeft..'|r\n|cffffd060TE 已加点 '..summary.te..'/'..summary.teBudget..'  未加点数 '..summary.teLeft..'|r')
- else T.summary:SetText(S.Class()==T.class and('角色 '..UnitLevel('player')..'级 · 当前天赋以已保存数据为准')or'浏览其他职业 · 不显示为本人已加点')end
- enable(T.actual,S.Class()==T.class and not InCombatLockdown());T.status:SetText(why or T.message or(favorite and'保存收藏不会改变角色；应用需比较并确认。'or'按推荐天赋加点：保留已学，只载入草稿；请在实际天赋面板核对保存。'));T.painting=false
+ if S.Class()==T.class and summary.ae then put(T.summary,summary.reason..'\n|cff65d5efAE 已加点 '..summary.ae..'/'..summary.aeBudget..'  未加点数 '..summary.aeLeft..'|r\n|cffffd060TE 已加点 '..summary.te..'/'..summary.teBudget..'  未加点数 '..summary.teLeft..'|r')
+ else put(T.summary,S.Class()==T.class and('角色 '..UnitLevel('player')..'级 · 当前天赋以已保存数据为准')or'浏览其他职业 · 不显示为本人已加点')end
+ enable(T.actual,S.Class()==T.class and not InCombatLockdown());put(T.status,why or T.message or(favorite and'保存收藏不会改变角色；应用需比较并确认。'or'按推荐天赋加点：保留已学，只载入草稿；请在实际天赋面板核对保存。'));T.painting=false
 end
 local oldGOpen=G.Open;local oldSOpen=S.Open
 function T.Open(tab,class,index)

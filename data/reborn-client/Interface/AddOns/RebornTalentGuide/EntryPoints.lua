@@ -90,7 +90,11 @@ b:SetScript('OnClick',function(_,key)
   Settings().showLargeRacial=not Settings().showLargeRacial;FindRacial();ApplyRacial()
   print('[天赋推荐] Custom Racial 大图标：'..(Settings().showLargeRacial and'显示'or'隐藏')..'；小入口保留。')
  else
-  if G.frame and G.frame:IsShown()then G.frame:Hide()else G.Open(false)end
+  -- TG23B: G.Open now opens TalentCenter; the legacy guide stays hidden.
+  local center=G.TalentCenter and G.TalentCenter.frame
+  if center and center:IsShown()then center:Hide()
+  elseif G.frame and G.frame:IsShown()then G.frame:Hide()
+  else G.Open(false)end
  end
 end)
 b:SetScript('OnEnter',function(self)

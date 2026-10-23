@@ -97,7 +97,14 @@ function S.RequestApply()
   local current=S.editor;local db=S.DB();local entry=db and db.builds[id];local target=entry and entry.versions[version]
   if not current or not target or current.id~=id or current.version~=version or current.dirty or S.Fingerprint(current.build)~=S.Fingerprint(b)then S.status='收藏选择已改变，请重新确认';S.Refresh();return end
   local ok,result=S.Submit(id,version,b,ctx,S.frame);if not ok then S.status=result end;S.Refresh()
- end};StaticPopup_Show('REBORN_COLLECTION_APPLY')
+ end};
+ local center=G.TalentCenter;local locale=G.CenterLocale
+ if center and center.frame and center.frame:IsShown()and locale and locale.English()then
+  local dialog=StaticPopupDialogs.REBORN_COLLECTION_APPLY
+  dialog.text='Apply "'..title..'" version '..version..' to your current build?\n'..#ctx.diff..' differing nodes. '..(b.class=='WITCHDOCTOR'and'Uses the original Witch Doctor save interface; completion requires server confirmation.'or'Adds points through the native interface. Stopping does not undo spent points.')..'\nNo automatic reset, charge, spec switch or glyph installation.'
+  dialog.button1='Confirm Apply';dialog.button2='Cancel'
+ end
+ StaticPopup_Show('REBORN_COLLECTION_APPLY')
 end
 function S.CheckReceipts()
  local d=S.DB();if not d then return end

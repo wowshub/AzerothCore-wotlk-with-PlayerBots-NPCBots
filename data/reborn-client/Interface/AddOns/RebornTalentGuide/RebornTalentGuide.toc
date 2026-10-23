@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: Reborn Talent Guide | 天赋中心
 ## Notes: TG16A 战士、圣骑士与巫医多方案收藏、版本编辑、差异校验及确认应用
-## Version: TG21A
+## Version: TG23A
 ## OptionalDeps: MultiBot, DragonUI, RebornEquipmentVault, RebornSpectatorAutoWatch, RebornWitchDoctorTalents
 ## SavedVariables: RebornTGEntrySettings, RebornTGScaleDB, RebornTGViewSettings, RebornTalentCollectionsDB
 Data.lua
@@ -49,4 +49,5 @@ Lifecycle.lua
 
 ApplyFeedback.lua
 
+TalentCenterLocale.lua
 TalentCenter.lua

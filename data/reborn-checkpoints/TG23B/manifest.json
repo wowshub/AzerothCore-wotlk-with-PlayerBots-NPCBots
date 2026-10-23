@@ -1,0 +1,16 @@
+{
+  "stage": "TG23B",
+  "acceptance": "user_basic_passed",
+  "scope": "天赋中心中英切换与推荐图标再次点击关闭，用户基本测试通过；不外推所有布局/翻译矩阵。无Playerbot WD205与NPCBot代码，无SQL/DBC。已装TG23A+B通过无需重装。",
+  "source_zip_sha256": "e689e84fc1c6d1d507b7889e12a2621cad487ef2e791cdb153184f79c25bcfb0",
+  "resources": {
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/CollectionApply.lua": "b5a3130e4e584d2b2ac4aaa0763e92473b1b9af8d8d7b5e0dbe41367089fbccd",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/EntryPoints.lua": "d79c3cc9da9c1f10444d4e80d013cf08b32149ff0a9b2be6365106aa733f91ff",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc": "e5943f88682f2a6012f49d410ecbba4e419e546975ea9fdb2af5d3bb8b94e8e1",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/TalentCenter.lua": "f1449d3252902266caa599c55753c3ec9c5d257982f542e469d1194399096ca2",
+    "02_覆盖到客户端根目录/Interface/AddOns/RebornTalentGuide/TalentCenterLocale.lua": "11cdaaae804c27f2cdc6a42709d71dad6abbf909388dd4b427003d33bb20f868"
+  },
+  "artifact_sha256": "8337a24ce3a13ebc7bafbb7677ac99686c01b501735ed45994f7c77de9e6063a",
+  "artifact_name": "reborn-tg23b-20261023-resources.zip",
+  "publication": "normal push/tag/Release; production deployment by user"
+}
