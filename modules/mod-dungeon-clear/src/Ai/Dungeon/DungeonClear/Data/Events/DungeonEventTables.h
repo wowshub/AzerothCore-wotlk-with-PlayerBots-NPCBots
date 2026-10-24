@@ -704,7 +704,12 @@ namespace DcHallsOfLightning
     // pit box and NOT yet here, so arriving simply stops it being due. There is
     // no completion latch to reset — a party shoved back into the pit re-arms it,
     // which is the correct answer, and a wipe leaves no stale flag behind.
-    constexpr float TRANSIT_END_RADIUS = 10.0f;
+    //
+    // RebornWOW DCHOL3A: 10 -> 14. The driver asked for the anchor's own (small) arrive radius, and
+    // a tank that hovers 9-11 yd short of the ledge (measured 2026-10-20, run tr-20261020-092244-1:
+    // "cursor 13/13 (10.8yd) ... advancing" for 330 s, then FROZEN) never got there: the event stayed
+    // "running" while the predicate, at 10 yd, had already stopped being due.
+    constexpr float TRANSIT_END_RADIUS = 14.0f;
 
     // --- THE CORRIDOR, and why it is TWO boxes ------------------------------
     //

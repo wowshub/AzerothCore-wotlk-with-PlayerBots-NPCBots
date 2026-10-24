@@ -307,7 +307,11 @@ ObjectiveArriveResult DriveSlagFurnaceTransit(Player* bot, AiObjectContext* cont
     in.cursorIndex = cursor;
     in.anchorCount = anchorCount;
     in.distToCursor = bot->GetExactDist(target.x, target.y, target.z);
-    in.arriveRadius = target.arriveRadius;
+    // RebornWOW DCHOL3A: at the LAST anchor the crossing is over inside TRANSIT_END_RADIUS (the
+    // number the event's own predicate stops at), not inside the anchor's small arrive radius -- a
+    // tank that hovered 9-11 yd short of the ledge kept the step "running" until it timed out.
+    in.arriveRadius = (cursor == lastAnchor) ? std::max(target.arriveRadius, TRANSIT_END_RADIUS)
+                                             : target.arriveRadius;
     in.gathered = st.transitGathered;
     in.quorumMet = pack.living <= 1 ||
                    static_cast<float>(pack.nearCursor) >=
