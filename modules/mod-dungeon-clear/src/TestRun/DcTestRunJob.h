@@ -325,6 +325,7 @@ private:
     void CaptureExtras(Player* tank);
     void TrackDeaths(Player* tank);
     void SampleHealers(Player* tank, uint32 dt);        // RebornWOW DCBOSS1B
+    void WatchPets(Player* tank, uint32 dt);            // RebornWOW DCPET1A
     void CaptureBuilds(Player* tank);                   // RebornWOW DCP1C
     bool _buildsDone = false;                           // RebornWOW DCP1C: every comp member read
     std::string HealerSnapshot(Player* dead) const;     // RebornWOW DCBOSS1B
@@ -541,6 +542,7 @@ private:
     bool _joinPosSaved = false;
     uint32 _joinFarMs = 0;  // RebornWOW DCGM1C3: how long the joined player has been far behind
     uint32 _joinDeadMs = 0; // RebornWOW DCGM1C6: how long the joined player has been dead
+    std::map<ObjectGuid, uint32> _petIdleMs;  // RebornWOW DCPET1A: owner -> how long its pet has stood idle in a fight
     uint32 _joinMap = 0;
     float _joinX = 0.f, _joinY = 0.f, _joinZ = 0.f, _joinO = 0.f;
     bool _cheatApplied = false;

@@ -153,7 +153,23 @@ static void ReapPetReleases()
             continue;
         if (Pet* pet = player->GetPet())
             pet->SetReactState(REACT_DEFENSIVE);
+        else
+        {
+            // RebornWOW DCPET1A: no pet right now (dead, dismissed, being re-summoned). Its
+            // react state is saved with it, so a pet that comes back would come back PASSIVE
+            // and never fight again: keep the release armed until the pet is here, unless the
+            // owner has been held passive again meanwhile.
+            std::lock_guard<std::mutex> lock(g_dcPassiveMutex);
+            if (!g_dcPassivePlayers.count(guid))
+                g_dcPetReleaseAt[guid] = getMSTime() + 2000;
+        }
     }
+}
+
+bool DcFollowerLifecycle::IsHeldPassive(ObjectGuid player)  // RebornWOW DCPET1A
+{
+    std::lock_guard<std::mutex> lock(g_dcPassiveMutex);
+    return g_dcPassivePlayers.count(player) != 0;
 }
 
 void DcFollowerLifecycle::MarkFollowing(ObjectGuid player)
@@ -395,11 +411,13 @@ void DcFollowerLifecycle::RemoveFollowerPassive(Player* follower)
         // (ticked from ReapStrandedPassives) applies it once the delay elapses.
         // A non-positive delay reverts to the old immediate release.
         float const delaySec = DcSettings::GetFloat(follower, "PullPetReleaseDelay");
-        if (delaySec > 0.0f && follower->GetPet())
+        // RebornWOW DCPET1A: scheduled even with no pet at this moment -- ReapPetReleases keeps
+        // it armed until the pet is back (it was set PASSIVE and keeps that across a re-summon)
+        if (delaySec > 0.0f || !follower->GetPet())
         {
             std::lock_guard<std::mutex> lock(g_dcPassiveMutex);
             g_dcPetReleaseAt[follower->GetGUID()] =
-                getMSTime() + uint32(delaySec * 1000.0f);
+                getMSTime() + uint32(std::max(0.0f, delaySec) * 1000.0f);
         }
         else if (Pet* pet = follower->GetPet())
             pet->SetReactState(REACT_DEFENSIVE);

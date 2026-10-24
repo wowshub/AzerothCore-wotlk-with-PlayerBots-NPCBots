@@ -58,6 +58,8 @@
 #include "Ai/Dungeon/DungeonClear/Settings/DcSettings.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcPartyState.h"  // RebornWOW DCGM1C5
 #include "Ai/Dungeon/DungeonClear/Util/DcRezRecovery.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcFollowerLifecycle.h"  // RebornWOW DCPET1A
+#include "Pet.h"
 #include "TestRun/DcTestRunManager.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRunWing.h"
@@ -1782,6 +1784,68 @@ void DcTestRunJob::TrackDeaths(Player* tank)
                 observe(member);
 }
 
+// RebornWOW DCPET1A: a member's pet that stands still while its owner fights. Owner alive and in
+// combat, attacking (or targeting) something that is ALREADY in combat -- so this never pulls --,
+// pet alive with no victim, for 6 s: a passive pet DC is not holding at a camp goes back to
+// defensive, and the pet is sent at that target the way playerbots' "pet attack" does. One log
+// line per idle episode, naming what was wrong.
+void DcTestRunJob::WatchPets(Player* tank, uint32 dt)
+{
+    Group* group = tank ? tank->GetGroup() : nullptr;
+    if (!group)
+        return;
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* owner = ref->GetSource();
+        if (!owner || !owner->IsInWorld() || owner->GetMapId() != tank->GetMapId())
+            continue;
+        Pet* pet = owner->GetPet();
+        Unit* target = owner->GetVictim();
+        if (!target)
+            target = ObjectAccessor::GetUnit(*owner, owner->GetTarget());
+        bool const idle = pet && pet->IsAlive() && pet->IsInWorld() && owner->IsAlive() && owner->IsInCombat() &&
+                          target && target->IsAlive() && target->IsInCombat() && owner->IsValidAttackTarget(target) &&
+                          !pet->GetVictim();
+        uint32& ms = _petIdleMs[owner->GetGUID()];
+        if (!idle)
+        {
+            ms = 0;
+            continue;
+        }
+        ms += dt;
+        if (ms < 6000)
+            continue;
+        ms = 0;  // acted: the next episode needs another 6 s
+        bool const held = DcFollowerLifecycle::IsHeldPassive(owner->GetGUID());
+        ReactStates const react = pet->GetReactState();
+        std::string what;
+        if (react == REACT_PASSIVE)
+        {
+            if (held)
+                continue;  // held at a pull camp on purpose
+            pet->SetReactState(REACT_DEFENSIVE);
+            what = "passive -> defensive, ";
+        }
+        pet->ClearUnitState(UNIT_STATE_FOLLOW);
+        pet->AttackStop();
+        pet->SetTarget(target->GetGUID());
+        if (CharmInfo* ci = pet->GetCharmInfo())
+        {
+            ci->SetIsCommandAttack(true);
+            ci->SetIsAtStay(false);
+            ci->SetIsFollowing(false);
+            ci->SetIsCommandFollow(false);
+            ci->SetIsReturning(false);
+        }
+        if (pet->AI())
+            pet->AI()->AttackStart(target);
+        LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCPET1A {}'s pet {} stood idle 6 s in a fight (react={}) -> {}sent at {}",
+                 _record.runId, owner->GetName(), pet->GetName(),
+                 react == REACT_PASSIVE ? "passive" : (react == REACT_DEFENSIVE ? "defensive" : "aggressive"),
+                 what, target->GetName());
+    }
+}
+
 // RebornWOW DCP1C: read each comp member's build once (talents, glyphs, gear) and put it in
 // the run record and the log. Members that are not in the world yet are tried again next tick;
 // _buildsDone ends the work once everyone in the comp has been read.
@@ -2518,6 +2582,7 @@ void DcTestRunJob::TickMonitoring(uint32 dt)
         TrackEngagement(tank);
         TrackPulls(tank);
         SampleHealers(tank, dt);  // RebornWOW DCBOSS1B
+        WatchPets(tank, dt);      // RebornWOW DCPET1A
         CaptureBuilds(tank);      // RebornWOW DCP1C
 
         if (next.has_value() && next->mapId == tank->GetMapId())

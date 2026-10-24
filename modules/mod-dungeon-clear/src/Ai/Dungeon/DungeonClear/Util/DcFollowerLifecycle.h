@@ -63,6 +63,9 @@ public:
 
     static void ReapStrandedPassives();
 
+    // RebornWOW DCPET1A: is this player held passive at a pull camp by DC right now?
+    static bool IsHeldPassive(ObjectGuid player);
+
 };
 
 #endif  // _DC_FOLLOWER_LIFECYCLE_H
