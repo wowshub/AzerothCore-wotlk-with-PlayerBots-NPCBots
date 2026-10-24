@@ -35,6 +35,8 @@
 #include "DcInstanceReset.h"
 #include "DcDungeonQueue.h"
 #include "TestRun/DcTestRunManager.h"
+#include "TestRun/DcPrepSnapshot.h"  // RebornWOW DCPREP1A
+#include "Group.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "DcPanelData.h"   // RebornWOW DCUI3B
 #include "DcPlayerRuns.h"  // RebornWOW DCRUN1A
@@ -301,6 +303,76 @@ namespace
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tTIL\t{}\t{}\t{}",
                 AddonField(row.name), row.objective ? 1 : 0, AddonField(row.status))));
         SendAddonPayload(player, "DC\tTI_END\t" + AddonField(runId));
+    }
+
+    // RebornWOW DCPREP1A: "prep [runId]" -- how ready the party is. Without a run id: the sender's
+    // own group right now (the panel's pre-run view; anyone may ask). With one: the snapshots the
+    // test harness stored when that run started (GM only, like every test-run view).
+    //   PRP_START <runId|-> <refIlvl> <members>
+    //   PRP_M <name> <class> <level> <role> <ilvl> <weakest> <empty slots> <durability %> <needs pet> <has pet> <talents>
+    //   PRP_S <name> hp power powerType armor ap rap sp healSp crit rcrit scrit hit rhit shit haste expertise defense dodge parry block resilience
+    //   PRP_B <name> <F|E|W> <aura spell id> <seconds left>      (worn flask / elixir / food)
+    //   PRP_K <name> <H|M|F|E|W> <item id> <count>               (carried: health / mana potion, flask, elixir, food)
+    //   PRP_END
+    std::string F1(float v)
+    {
+        return Acore::StringFormat("{:.1f}", v);
+    }
+
+    void SendPrep(Player* player, std::string const& runId)
+    {
+        std::vector<std::pair<std::string, DcPrep::Snapshot>> rows;
+        std::uint32_t ref = 0;
+        std::string tag = "-";
+        if (!runId.empty() && runId != "-")
+        {
+            if (!player->GetSession() || player->GetSession()->GetSecurity() < SEC_GAMEMASTER)
+            {
+                SendAddonPayload(player, "DC\tPRP_ERR\tgm");
+                return;
+            }
+            if (!DcTestRunManager::Instance().AddonRunPrep(runId, &rows, &ref))
+            {
+                SendAddonPayload(player, "DC\tPRP_ERR\trun");
+                return;
+            }
+            tag = AddonField(runId);
+        }
+        else if (Group* group = player->GetGroup())
+        {
+            for (GroupReference* r = group->GetFirstMember(); r; r = r->next())
+                if (Player* m = r->GetSource(); m && m->IsInWorld())
+                    rows.emplace_back(m->GetName(), DcPrep::Capture(m, ""));
+        }
+        else
+            rows.emplace_back(player->GetName(), DcPrep::Capture(player, ""));
+        if (rows.size() > 10)
+            rows.resize(10);
+
+        SendAddonPayload(player, Acore::StringFormat("DC\tPRP_START\t{}\t{}\t{}", tag, ref, rows.size()));
+        for (auto const& row : rows)
+        {
+            DcPrep::Snapshot const& s = row.second;
+            std::string const n = AddonField(row.first);
+            SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tPRP_M\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                n, s.classId, s.level, s.role, s.avgIlvl, s.minIlvl, s.emptySlots, s.durabilityPct,
+                s.needsPet ? 1 : 0, s.hasPet ? 1 : 0, AddonField(s.talents))));
+            DcPrep::Stats const& t = s.stats;
+            std::string line = Acore::StringFormat("DC\tPRP_S\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", n, t.hp, t.mana, t.powerType,
+                                                   t.armor, t.ap, t.rap, t.sp, t.healSp);
+            for (float v : { t.crit, t.rcrit, t.scrit, t.hit, t.rhit, t.shit, t.haste })
+                line += "\t" + F1(v);
+            line += Acore::StringFormat("\t{}\t{}", t.expertise, t.defense);
+            for (float v : { t.dodge, t.parry, t.block })
+                line += "\t" + F1(v);
+            line += "\t" + std::to_string(t.resilience);
+            SendAddonPayload(player, ClipPayload(line));
+            for (DcPrep::Buff const& b : s.buffs)
+                SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tPRP_B\t{}\t{}\t{}\t{}", n, b.kind, b.spellId, b.secs)));
+            for (DcPrep::Stock const& k : s.stock)
+                SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tPRP_K\t{}\t{}\t{}\t{}", n, k.kind, k.itemId, k.count)));
+        }
+        SendAddonPayload(player, "DC\tPRP_END\t" + tag);
     }
 
     // RebornWOW DCGM3A: "gmcmd <text>" -- a GM command typed from the panel by a player who cannot
@@ -822,6 +894,13 @@ public:
         if (subCmd == "rezchoice")
         {
             DcRezRecovery::HandleCorpseRunChoice(player, param);
+            return;
+        }
+
+        // RebornWOW DCPREP1A: the readiness panel
+        if (subCmd == "prep")
+        {
+            SendPrep(player, param);
             return;
         }
 

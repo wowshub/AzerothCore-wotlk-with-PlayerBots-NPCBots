@@ -199,6 +199,10 @@ public:
                         std::vector<DcTestRunRecord::DamageSource>* damage = nullptr,   // RebornWOW DCBOSS1A
                         std::vector<DcTestRunRecord::HealSource>* healing = nullptr,
                         std::vector<DcTestRunRecord::HealerStat>* healerStats = nullptr) const;  // RebornWOW DCBOSS1B
+    // RebornWOW DCPREP1A: the readiness snapshots of one run's party (the comp, then the human who
+    // joined), and the item level the bots were rolled to (0 = uncapped / roster run).
+    bool AddonRunPrep(std::string const& runId, std::vector<std::pair<std::string, DcPrep::Snapshot>>* rows,
+                      std::uint32_t* refIlvl) const;
     bool IsActive() const { return !_runs.empty(); }
 
     // Remaining global-cap headroom for the plan scheduler's launch decision

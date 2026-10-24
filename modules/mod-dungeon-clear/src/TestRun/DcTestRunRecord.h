@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "TestRun/DcDiagSnapshot.h"
+#include "TestRun/DcPrepSnapshot.h"  // RebornWOW DCPREP1A
 
 // One JSON line per completed test run, appended to dc_testruns.jsonl in the
 // worldserver working directory (env override DC_TESTRUNS_FILE) — same
@@ -53,6 +54,7 @@ namespace DcTestRunRecord
             std::uint32_t enchant = 0;  // permanent enchantment id, 0 = none
         };
         std::vector<GearPiece> gear;
+        DcPrep::Snapshot prep;       // RebornWOW DCPREP1A (schema 23): readiness at the start of the run
 
         // Where the character was standing when the run claimed it. Teardown
         // sends the party to its BIND point rather than back here (see
@@ -239,7 +241,9 @@ namespace DcTestRunRecord
         //     healer cast a heal on the lowest ally" while it stood idle).
         // 22: RebornWOW DCP1C -- comp[] carries each member's build: talents, fingerprint,
         //     glyphs, gear.
-        std::uint32_t schema = 22;
+        // 23: RebornWOW DCPREP1A -- comp[].prep (item level, key stats, flask/elixir/food worn,
+        //     potions and food carried) and `joined` (the same for the human who joined the party).
+        std::uint32_t schema = 23;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -265,6 +269,8 @@ namespace DcTestRunRecord
         // roster IS the comp, so there is nothing to replay from a seed.
         bool roster = false;
         std::vector<CompEntry> comp;
+        std::string joinedName;      // RebornWOW DCPREP1A: the human who joined the party, if any
+        DcPrep::Snapshot joinedPrep;
         std::uint64_t startedAtMs = 0;  // unix ms
         std::uint64_t endedAtMs = 0;
         std::uint32_t durationS = 0;

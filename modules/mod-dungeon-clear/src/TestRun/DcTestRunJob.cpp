@@ -30,6 +30,7 @@
 #include "Util/DcPlayerbotsConfig.h"
 #include "World.h"
 #include "TestRun/DcDeathLog.h"  // RebornWOW DCBOSS1A
+#include "TestRun/DcPrepSnapshot.h"  // RebornWOW DCPREP1A
 #include "Spell.h"                // RebornWOW DCBOSS1C
 #include "SpellInfo.h"
 #include "SpellMgr.h"
@@ -1791,6 +1792,17 @@ void DcTestRunJob::CaptureBuilds(Player* tank)
     Group* group = tank->GetGroup();
     if (!group)
         return;
+    // RebornWOW DCPREP1A: the human who joined the party goes in the record too (the readiness
+    // of the one character that is not rolled by the harness is what the comparison is about)
+    if (!_joinGuid.IsEmpty() && !_record.joinedPrep.valid)
+        if (Player* human = ObjectAccessor::FindConnectedPlayer(_joinGuid); human && human->IsInWorld())
+        {
+            _record.joinedName = human->GetName();
+            _record.joinedPrep = DcPrep::Capture(human, "");
+            LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCPREP1A {} (joined) ilvl={} min={} empty={} dur={}%", _record.runId,
+                     human->GetName(), _record.joinedPrep.avgIlvl, _record.joinedPrep.minIlvl,
+                     _record.joinedPrep.emptySlots, _record.joinedPrep.durabilityPct);
+        }
     bool allDone = true;
     for (DcTestRunRecord::CompEntry& entry : _record.comp)
     {
@@ -1843,6 +1855,7 @@ void DcTestRunJob::CaptureBuilds(Player* tank)
                 if (GlyphPropertiesEntry const* gp = sGlyphPropertiesStore.LookupEntry(glyph))
                     entry.glyphs += (entry.glyphs.empty() ? "" : ",") + std::to_string(gp->SpellId);
         entry.avgIlvl = static_cast<uint32>(p->GetAverageItemLevel() + 0.5f);
+        entry.prep = DcPrep::Capture(p, entry.role);  // RebornWOW DCPREP1A
         for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
         {
             Item* item = p->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);

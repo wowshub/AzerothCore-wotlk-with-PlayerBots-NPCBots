@@ -207,11 +207,15 @@ namespace DcTestRunRecord
                 s << (k ? "," : "") << '[' << c.gear[k].slot << ',' << c.gear[k].entry << ',' << c.gear[k].ilvl << ','
                   << c.gear[k].enchant << ']';
             s << ']'
+              << ",\"prep\":" << DcPrep::ToJson(c.prep)  // RebornWOW DCPREP1A
               << ",\"from\":{\"map\":" << c.fromMap
               << ",\"x\":" << c.fromX << ",\"y\":" << c.fromY << ",\"z\":" << c.fromZ
               << ",\"o\":" << c.fromO << "}}";
         }
-        s << "],\"startedAtMs\":" << rec.startedAtMs
+        s << "],\"joined\":{\"name\":";
+        AppendEscaped(s, rec.joinedName);  // RebornWOW DCPREP1A
+        s << ",\"prep\":" << DcPrep::ToJson(rec.joinedPrep) << "}";
+        s << ",\"startedAtMs\":" << rec.startedAtMs
           << ",\"endedAtMs\":" << rec.endedAtMs
           << ",\"durationS\":" << rec.durationS
           << ",\"result\":";

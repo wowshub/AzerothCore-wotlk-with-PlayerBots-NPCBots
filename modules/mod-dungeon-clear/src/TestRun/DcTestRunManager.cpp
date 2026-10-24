@@ -767,6 +767,39 @@ bool DcTestRunManager::AddonRunDetail(std::string const& runId,
     return false;
 }
 
+// RebornWOW DCPREP1A
+bool DcTestRunManager::AddonRunPrep(std::string const& runId, std::vector<std::pair<std::string, DcPrep::Snapshot>>* rows,
+                                    std::uint32_t* refIlvl) const
+{
+    auto fill = [&](DcTestRunRecord::Record const& rec)
+    {
+        if (rows)
+        {
+            for (DcTestRunRecord::CompEntry const& c : rec.comp)
+                if (c.prep.valid)
+                    rows->emplace_back(c.name, c.prep);
+            if (rec.joinedPrep.valid)
+                rows->emplace_back(rec.joinedName, rec.joinedPrep);
+        }
+        if (refIlvl)
+            *refIlvl = rec.gearIlvl;
+    };
+    std::lock_guard<std::mutex> lock(_runsMutex);
+    for (auto const& job : _runs)
+        if (job->RunId() == runId)
+        {
+            fill(job->RecordData());
+            return true;
+        }
+    for (DcTestRunRecord::Record const& rec : _finished)
+        if (rec.runId == runId)
+        {
+            fill(rec);
+            return true;
+        }
+    return false;
+}
+
 std::vector<DcTestRunRecord::Record> DcTestRunManager::FinishedRuns() const
 {
     std::lock_guard<std::mutex> lock(_runsMutex);
