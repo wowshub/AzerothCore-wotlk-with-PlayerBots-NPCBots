@@ -1,4 +1,4 @@
-﻿#include "botdatamgr.h"
+#include "botdatamgr.h"
 #include "BattlegroundMgr.h"
 #include "BattlegroundQueue.h"
 #include "bot_ai.h"
@@ -3191,6 +3191,8 @@ uint8 BotDataMgr::GetMinLevelForBotClass(uint8 m_class)
 {
     switch (m_class)
     {
+        case BOT_CLASS_WITCH_DOCTOR:
+            return 10;
         case BOT_CLASS_DEATH_KNIGHT:
             return 55;
         case BOT_CLASS_ARCHMAGE:

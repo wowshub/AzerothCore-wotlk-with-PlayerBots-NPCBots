@@ -52,6 +52,11 @@ class glaive : public SpellScript
     bool Load() override { automatic=!GetSpell()->IsTriggered()&&WD168::IsAutomaticCast(GetCaster()->ToPlayer(),GetSpellInfo()->Id);return true; }
     void Filter(std::list<WorldObject*>& targets)
     {
+        if(WDN1::Actor(GetCaster()))
+        {
+            Unit* caster=GetCaster();uint32 spell=GetSpellInfo()->Id;
+            targets.remove_if([caster,spell](WorldObject* o){return !WDN1::Known(caster,spell)||!o||!WDN1::Safe(caster,o->ToUnit());});return;
+        }
         if(!automatic)return; // Preserve manual cone targeting, including its normal native rules.
         Player* p=GetCaster()->ToPlayer();
         targets.remove_if([p](WorldObject* o){return !o||!WD168::SafeAutomaticTarget(p,o->ToUnit());});
@@ -61,10 +66,18 @@ class glaive : public SpellScript
     void Consume() { if(readyPct)WD149::Consume(GetCaster()->ToPlayer()); }
     SpellCastResult Check()
     {
+        if(auto* c=WDN1::Actor(GetCaster()))
+            return WDN1::Known(c,GetSpellInfo()->Id)&&WDN1::Safe(c,c->GetVictim())?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
         Player* p=GetCaster()->ToPlayer();return Owns(p,GetSpellInfo()->Id)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
     }
     void Damage(SpellEffIndex)
     {
+        if(WDN1::Actor(GetCaster()))
+        {
+            Unit* c=GetCaster();
+            if(!WDN1::Known(c,GetSpellInfo()->Id)||!WDN1::Safe(c,GetHitUnit())){SetEffectValue(0);return;}
+            SetEffectValue(GetEffectValue()+int32(.5f*std::max(0.f,c->GetTotalAttackPowerValue(RANGED_ATTACK))+.5f*std::max(0,c->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW))));return;
+        }
         Player* p=GetCaster()->ToPlayer();if(!Owns(p,GetSpellInfo()->Id)) { SetEffectValue(0);return; }
         int32 base=GetEffectValue()+int32(.5f*std::max(0.0f,p->GetTotalAttackPowerValue(RANGED_ATTACK))+.5f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW)));
         SetEffectValue(int32(int64(base)*(100+readyPct)/100));
@@ -84,6 +97,7 @@ class resistance : public AuraScript
     PrepareAuraScript(resistance);
     void Calculate(AuraEffect const*,int32& amount,bool& recalc)
     {
+        if(auto* c=WDN1::Actor(GetCaster())){amount=WDN1::Known(c,GetId())?-int32(c->GetLevel()+1):0;recalc=false;return;}
         Player* p=GetCaster()?GetCaster()->ToPlayer():nullptr;amount=Owns(p,GetId())?-int32(p->GetLevel()+1):0;recalc=false;
     }
     void Register() override { DoEffectCalcAmount += AuraEffectCalcAmountFn(resistance::Calculate,EFFECT_2,SPELL_AURA_MOD_RESISTANCE); }

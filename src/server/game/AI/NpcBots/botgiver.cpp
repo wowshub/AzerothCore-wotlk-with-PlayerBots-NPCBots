@@ -165,6 +165,7 @@ public:
                             case BOT_CLASS_NECROMANCER: textId = BOT_TEXT_CLASS_NECROMANCER_PLU;    break;
                             case BOT_CLASS_SEA_WITCH:   textId = BOT_TEXT_CLASS_SEAWITCH_PLU;       break;
                             case BOT_CLASS_CRYPT_LORD:  textId = BOT_TEXT_CLASS_CRYPT_LORD_PLU;     break;
+                            case BOT_CLASS_WITCH_DOCTOR: textId = BOT_TEXT_CLASS_HUNTER_PLU; break;
                             default:                    textId = 0;                                 break;
                         }
 
@@ -172,7 +173,7 @@ public:
                             continue;
 
                         std::ostringstream bclass;
-                        bclass << npcbot_count_per_class[botclass] << " " << bot_ai::LocalizedNpcText(player, textId) << " (" << BotMgr::GetNpcBotCostStr(player->GetLevel(), botclass) << ")";
+                        bclass << npcbot_count_per_class[botclass] << " " << (botclass == BOT_CLASS_WITCH_DOCTOR ? std::string("巫医 / Witch Doctor") : bot_ai::LocalizedNpcText(player, textId)) << " (" << BotMgr::GetNpcBotCostStr(player->GetLevel(), botclass) << ")";
 
                         AddGossipItemFor(player, GOSSIP_ICON_TALK, bclass.str(), HIRE_CLASS, GOSSIP_ACTION_INFO_DEF + botclass);
 

@@ -4465,20 +4465,25 @@ void Unit::_UpdateAutoRepeatSpell()
         return;
     }
 
-    static uint32 const HUNTER_AUTOSHOOT = 75;
+    bool isHunterAutoShot=spellProto->Id==75;
+#ifdef MOD_NPCERBOTS
+    if(spellProto->Id==9003989)
+        if(Creature const* npc=ToCreature();npc&&npc->IsNPCBot()&&npc->GetEntry()==900260&&npc->GetBotClass()==BOT_CLASS_WITCH_DOCTOR)
+            isHunterAutoShot=true; // WDN1D3: pause this NPC's auto shot during skills; do not treat it as a wand.
+#endif
 
     // Check "realtime" interrupts
-    if ((IsPlayer() && ToPlayer()->isMoving() && spellProto->Id != HUNTER_AUTOSHOOT) || IsNonMeleeSpellCast(false, false, true, spellProto->Id == HUNTER_AUTOSHOOT))
+    if ((IsPlayer() && ToPlayer()->isMoving() && !isHunterAutoShot) || IsNonMeleeSpellCast(false, false, true, isHunterAutoShot))
     {
         // cancel wand shoot
-        if (spellProto->Id != HUNTER_AUTOSHOOT)
+        if (!isHunterAutoShot)
             InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
         m_AutoRepeatFirstCast = true;
         return;
     }
 
     // Apply delay (Hunter's autoshoot not affected)
-    if (m_AutoRepeatFirstCast && getAttackTimer(RANGED_ATTACK) < 500 && spellProto->Id != HUNTER_AUTOSHOOT)
+    if (m_AutoRepeatFirstCast && getAttackTimer(RANGED_ATTACK) < 500 && !isHunterAutoShot)
     {
         setAttackTimer(RANGED_ATTACK, 500);
     }
@@ -4491,7 +4496,7 @@ void Unit::_UpdateAutoRepeatSpell()
         SpellCastResult result = m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->CheckCast(true);
         if (result != SPELL_CAST_OK)
         {
-            if (spellProto->Id != HUNTER_AUTOSHOOT)
+            if (!isHunterAutoShot)
             {
                 InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
             }

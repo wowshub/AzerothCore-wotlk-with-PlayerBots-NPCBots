@@ -209,6 +209,7 @@ bool __firstload = true;
 void AddSC_death_knight_bot();
 void AddSC_druid_bot();
 void AddSC_hunter_bot();
+void AddSC_witch_doctor_bot();
 void AddSC_mage_bot();
 void AddSC_paladin_bot();
 void AddSC_priest_bot();
@@ -247,6 +248,7 @@ void AddNpcBotScripts()
     AddSC_death_knight_bot();
     AddSC_druid_bot();
     AddSC_hunter_bot();
+    AddSC_witch_doctor_bot();
     AddSC_mage_bot();
     AddSC_paladin_bot();
     AddSC_priest_bot();
@@ -906,6 +908,7 @@ bool BotMgr::IsClassEnabled(uint8 m_class)
 
 bool BotMgr::IsWanderingClassEnabled(uint8 m_class)
 {
+    if (m_class == BOT_CLASS_WITCH_DOCTOR) return false; // WDN1A controlled prototype only
     switch (m_class)
     {
         case BOT_CLASS_WARRIOR:
@@ -2207,6 +2210,8 @@ std::string BotMgr::GetNpcBotCostStr(uint8 level, uint8 botclass)
 uint8 BotMgr::BotClassByClassName(std::string const& className)
 {
     static const std::map<std::string, uint8> BotClassNamesMap = {
+        { "witchdoctor", BOT_CLASS_WITCH_DOCTOR },
+        { "witch_doctor", BOT_CLASS_WITCH_DOCTOR },
         { "warrior", BOT_CLASS_WARRIOR },
         { "paladin", BOT_CLASS_PALADIN },
         { "hunter", BOT_CLASS_HUNTER },
@@ -2252,6 +2257,8 @@ uint8 BotMgr::GetBotPlayerClass(uint8 bot_class)
     {
         switch (bot_class)
         {
+            case BOT_CLASS_WITCH_DOCTOR:
+                return CLASS_WITCH_DOCTOR;
             case BOT_CLASS_BM:
                 return BOT_CLASS_WARRIOR;
             case BOT_CLASS_SPHYNX:
@@ -2285,6 +2292,8 @@ uint8 BotMgr::GetBotPlayerRace(uint8 bot_class, uint8 bot_race)
     {
         switch (bot_class)
         {
+            case BOT_CLASS_WITCH_DOCTOR:
+                return RACE_HUMAN;
             case BOT_CLASS_BM:
                 return RACE_ORC;
             case BOT_CLASS_SPHYNX:
@@ -2328,6 +2337,8 @@ uint8 BotMgr::GetBotEquipmentClass(uint8 bot_class)
     {
         switch (bot_class)
         {
+            case BOT_CLASS_WITCH_DOCTOR:
+                return BOT_CLASS_HUNTER;
             case BOT_CLASS_BM:
                 return BOT_CLASS_WARRIOR;
             case BOT_CLASS_SPHYNX:

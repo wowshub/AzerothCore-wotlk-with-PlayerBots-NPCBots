@@ -803,6 +803,7 @@ SpellCastResult bot_ai::CheckBotCast(Unit const* victim, uint32 spellId) const
         case BOT_CLASS_NECROMANCER:
         case BOT_CLASS_SEA_WITCH:
         case BOT_CLASS_CRYPT_LORD:
+        case BOT_CLASS_WITCH_DOCTOR:
             break;
         default:
             BOT_LOG_ERROR("entities.player", "CheckBotCast(): Unknown bot class {}", _botclass);
@@ -959,7 +960,17 @@ bool bot_ai::doCast(Unit* victim, uint32 spellId, TriggerCastFlags flags)
     SpellCastTargets targets;
     targets.SetUnitTarget(victim);
     Spell* spell = new Spell(me, m_botSpellInfo, flags);
-    spell->prepare(&targets); //sets current spell if succeed
+    SpellCastResult prepareResult=spell->prepare(&targets); //sets current spell if succeed
+    if (_botclass==BOT_CLASS_WITCH_DOCTOR && prepareResult!=SPELL_CAST_OK)
+    {
+        static BotTimePoint nextDiagnostic;
+        auto now=BotClock::now();
+        if(now>=nextDiagnostic)
+        {
+            nextDiagnostic=now+10s;
+            BOT_LOG_ERROR("npcbots", "[WDN1D3] prepare-rejected spell={} result={} mana={}/{}",spellId,uint32(prepareResult),me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA));
+        }
+    }
 /*
     SpellCastResult result = spell->CheckCast(true);
     if (result != SPELL_CAST_OK)
@@ -2589,7 +2600,7 @@ void bot_ai::SetStats(bool force)
     me->UpdateAttackPowerAndDamage();
     if (_botclass == BOT_CLASS_WARRIOR || _botclass == BOT_CLASS_HUNTER || _botclass == BOT_CLASS_ROGUE ||
         _botclass == BOT_CLASS_MAGE || _botclass == BOT_CLASS_PRIEST || _botclass == BOT_CLASS_WARLOCK ||
-        _botclass == BOT_CLASS_DARK_RANGER || _botclass == BOT_CLASS_SEA_WITCH)
+        _botclass == BOT_CLASS_DARK_RANGER || _botclass == BOT_CLASS_SEA_WITCH || _botclass == BOT_CLASS_WITCH_DOCTOR)
     {
         atpower += _getTotalBotStat(BOT_STAT_MOD_RANGED_ATTACK_POWER) * ap_mod;
         me->SetStatFlatModifier(UNIT_MOD_ATTACK_POWER_RANGED, BASE_VALUE, atpower);
@@ -2881,7 +2892,7 @@ void bot_ai::SetStats(bool force)
         if (mylevel >= 55 && GetSpec() == BOT_SPEC_MAGE_ARCANE)
             value += 6.f;
     }
-    if (_botclass >= BOT_CLASS_EX_START)
+    if (_botclass >= BOT_CLASS_EX_START && _botclass != BOT_CLASS_WITCH_DOCTOR)
     {
         float haste_per_lvl;
         switch (_botclass)
@@ -4779,6 +4790,7 @@ bool bot_ai::CheckAttackTarget()
         case BOT_CLASS_MAGE:
         case BOT_CLASS_WARLOCK:
         case BOT_CLASS_SHAMAN:
+        case BOT_CLASS_WITCH_DOCTOR: // WDN1D2: native ranged spell target selection
             byspell = ranged && HasRole(NPC_BOT_ROLE_DPS);
             break;
         case BOT_CLASS_SPHYNX:
@@ -7317,7 +7329,7 @@ void bot_ai::_OnManaUpdate() const
     intValue -= std::min<float>(me->GetCreateStat(STAT_INTELLECT), 20.f); //not a mistake
     intValue = std::max<float>(intValue, 0.f);
 
-    float intMult = _botclass < BOT_CLASS_EX_START ? 15.f : IsHeroExClass(_botclass) ? 5.f : 1.5f;
+    float intMult = (_botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_WITCH_DOCTOR) ? 15.f : IsHeroExClass(_botclass) ? 5.f : 1.5f;
 
     m_basemana = intValue * intMult + 20.f; //20.f is not a mistake
     //m_basemana += IAmFree() ? mylevel * 50.f : 0; //+4000/+0 mana at 80
@@ -7348,11 +7360,11 @@ void bot_ai::_OnManaRegenUpdate() const
 
     float power_regen_mp5;
     int32 modManaRegenInterrupt;
-    if (_botclass < BOT_CLASS_EX_START)
+    if (_botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_WITCH_DOCTOR)
     {
         // Mana regen from spirit and intellect
         float spiregen = 0.001f;
-        if (GtRegenMPPerSptEntry const* moreRatio = sGtRegenMPPerSptStore.LookupEntry((_botclass-1)*GT_MAX_LEVEL + mylevel-1))
+        if (GtRegenMPPerSptEntry const* moreRatio = sGtRegenMPPerSptStore.LookupEntry((GetPlayerClass()-1)*GT_MAX_LEVEL + mylevel-1))
             spiregen = moreRatio->ratio * _getTotalBotStat(BOT_STAT_MOD_SPIRIT);
 
         // PCT bonus from SPELL_AURA_MOD_POWER_REGEN_PERCENT aura on spirit base regen
@@ -7546,7 +7558,7 @@ void bot_ai::OnSpellHit(Unit* caster, SpellInfo const* spell)
     //uint32 const spellId = spell->Id;
 
     if (!spell->IsPositive() && spell->GetMaxDuration() > 1000 && caster->IsControlledByPlayer() &&
-        _botclass >= BOT_CLASS_EX_START)
+        _botclass >= BOT_CLASS_EX_START && _botclass != BOT_CLASS_WITCH_DOCTOR)
     {
         //bots of W3 classes will not be easily CCed
         if (spell->HasAura(SPELL_AURA_MOD_STUN) || spell->HasAura(SPELL_AURA_MOD_CONFUSE) ||
@@ -12471,7 +12483,7 @@ bool bot_ai::_canUseRanged() const
     return (_botclass == BOT_CLASS_HUNTER || _botclass == BOT_CLASS_ROGUE ||
         _botclass == BOT_CLASS_WARRIOR || _botclass == BOT_CLASS_PRIEST ||
         _botclass == BOT_CLASS_MAGE || _botclass == BOT_CLASS_WARLOCK ||
-        _botclass == BOT_CLASS_DARK_RANGER || _botclass == BOT_CLASS_SEA_WITCH);
+        _botclass == BOT_CLASS_DARK_RANGER || _botclass == BOT_CLASS_SEA_WITCH || _botclass == BOT_CLASS_WITCH_DOCTOR);
 }
 
 bool bot_ai::_canUseRelic() const
@@ -12511,7 +12523,8 @@ bool bot_ai::_canEquip(ItemTemplate const* newProto, uint8 slot, bool ignoreItem
         return false;
 
     //class requirements
-    if (_botclass < BOT_CLASS_EX_START && !(newProto->AllowableClass & (1<<(_botclass-1))))
+    if ((_botclass < BOT_CLASS_EX_START && !(newProto->AllowableClass & (1<<(_botclass-1)))) ||
+        (_botclass == BOT_CLASS_WITCH_DOCTOR && !(newProto->AllowableClass & (1<<(CLASS_WITCH_DOCTOR-1)))))
         return false;
 
     //skip race requirements
@@ -12676,6 +12689,7 @@ bool bot_ai::_canEquip(ItemTemplate const* newProto, uint8 slot, bool ignoreItem
                 }
                 break;
             case BOT_CLASS_HUNTER:
+            case BOT_CLASS_WITCH_DOCTOR: // WDN1A equipment archetype, no Hunter talents
                 switch (newProto->SubClass)
                 {
                     case ITEM_SUBCLASS_WEAPON_AXE:
@@ -13039,6 +13053,7 @@ bool bot_ai::_canEquip(ItemTemplate const* newProto, uint8 slot, bool ignoreItem
                     case BOT_CLASS_HUNTER:
                     case BOT_CLASS_ROGUE:
                     case BOT_CLASS_DRUID:
+                    case BOT_CLASS_WITCH_DOCTOR:
                         break;
                     default:
                         return false;
@@ -15129,7 +15144,7 @@ void bot_ai::InitRace()
 {
     // Sync Race, Class, Gender to ensure client knows this is a player-like entity
     me->SetByteValue(UNIT_FIELD_BYTES_0, 0, _botExtras->race);
-    me->SetByteValue(UNIT_FIELD_BYTES_0, 1, _botclass);
+    me->SetByteValue(UNIT_FIELD_BYTES_0, 1, _botclass == BOT_CLASS_WITCH_DOCTOR ? CLASS_WITCH_DOCTOR : _botclass);
     me->SetByteValue(UNIT_FIELD_BYTES_0, 2, me->getGender());
 }
 
@@ -18996,7 +19011,7 @@ bool bot_ai::GlobalUpdate(uint32 diff)
     {
         if ((me->IsInCombat() && !me->IsSitState() && CanBotAttackOnVehicle()) || !CanSheath())
         {
-            if (_botclass == BOT_CLASS_HUNTER || _botclass == BOT_CLASS_DARK_RANGER || _botclass == BOT_CLASS_SEA_WITCH)
+            if (_botclass == BOT_CLASS_HUNTER || _botclass == BOT_CLASS_DARK_RANGER || _botclass == BOT_CLASS_SEA_WITCH || _botclass == BOT_CLASS_WITCH_DOCTOR)
             {
                 if (me->GetSheath() != SHEATH_STATE_RANGED)
                     me->SetSheath(SHEATH_STATE_RANGED);
@@ -21612,7 +21627,7 @@ bool bot_ai::IsCastingClass(uint8 m_class)
         m_class == CLASS_MAGE || m_class == CLASS_WARLOCK || m_class == CLASS_DRUID ||
         m_class == BOT_CLASS_SPHYNX || m_class == BOT_CLASS_ARCHMAGE || m_class == BOT_CLASS_DREADLORD ||
         m_class == BOT_CLASS_SPELLBREAKER || m_class == BOT_CLASS_DARK_RANGER || m_class == BOT_CLASS_NECROMANCER ||
-        m_class == BOT_CLASS_SEA_WITCH);
+        m_class == BOT_CLASS_SEA_WITCH || m_class == BOT_CLASS_WITCH_DOCTOR);
 }
 bool bot_ai::IsHealingClass(uint8 m_class)
 {
@@ -21692,11 +21707,11 @@ bool bot_ai::CanCrit() const
 }
 bool bot_ai::CanMiss() const
 {
-    return _botclass < BOT_CLASS_EX_START;
+    return _botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_WITCH_DOCTOR;
 }
 bool bot_ai::CanSheath() const
 {
-    return _botclass < BOT_CLASS_EX_START;
+    return _botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_WITCH_DOCTOR;
 }
 bool bot_ai::CanSit() const
 {
@@ -21708,7 +21723,7 @@ bool bot_ai::CanEat() const
 }
 bool bot_ai::CanDrink() const
 {
-    return _botclass < BOT_CLASS_EX_START;
+    return _botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_WITCH_DOCTOR;
 }
 bool bot_ai::CanRegenInCombat() const
 {
@@ -21731,7 +21746,7 @@ bool bot_ai::CanUseAmmo() const
 {
     if ((_botclass == BOT_CLASS_HUNTER || _botclass == BOT_CLASS_ROGUE ||
         _botclass == BOT_CLASS_WARRIOR || _botclass == BOT_CLASS_DARK_RANGER ||
-        _botclass == BOT_CLASS_SEA_WITCH) &&
+        _botclass == BOT_CLASS_SEA_WITCH || _botclass == BOT_CLASS_WITCH_DOCTOR) &&
         _equips[BOT_SLOT_RANGED])
     {
         ItemTemplate const* ranged = _equips[BOT_SLOT_RANGED]->GetTemplate();

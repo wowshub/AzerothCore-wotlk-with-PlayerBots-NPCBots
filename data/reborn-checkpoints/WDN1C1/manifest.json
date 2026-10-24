@@ -1,0 +1,105 @@
+{
+  "source_package": {
+    "folder": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261023\\codexfix_20261023_091407_阶段WDN1C1_NPC巫医蛇之守卫与持续射击累计测试包",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261023\\codexfix_20261023_091407_阶段WDN1C1_NPC巫医蛇之守卫与持续射击累计测试包.zip",
+    "sha256": "fc32cf4c18fcebda113de71af9365e17c05d12c986832615c9928aa6c04e4c7b",
+    "status": "candidate",
+    "changes": [
+      "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWard1.h"
+    ],
+    "new_sql": false,
+    "new_client_data": false,
+    "inherited_files_verified": 140
+  },
+  "files": {
+    "data/customfixsql/world/reborn_witchdoctor/WDN1A/01_controlled_npcbot_prototype.sql": {
+      "published_sha256": "269ab1b156665660259f217738c9416d7dbdf3ddcebde5bf285d966b93761319",
+      "tested_sha256": "269ab1b156665660259f217738c9416d7dbdf3ddcebde5bf285d966b93761319",
+      "daily_matches_tested": true
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp": {
+      "published_sha256": "7ef3af7cdf518f71da479d21ca8ca80eb706ae6dacf32272fe16cbc410f52bbe",
+      "tested_sha256": "7ef3af7cdf518f71da479d21ca8ca80eb706ae6dacf32272fe16cbc410f52bbe",
+      "daily_matches_tested": true
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h": {
+      "published_sha256": "56ebb0181c22cc5a5d621886a3095e09570b2d7882e84e239f2e2f50e4cda867",
+      "tested_sha256": "56ebb0181c22cc5a5d621886a3095e09570b2d7882e84e239f2e2f50e4cda867",
+      "daily_matches_tested": true
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWard1.h": {
+      "published_sha256": "54a290ec56b7871fd8c86eb8bf95ab442d4ffef3010f235684e9cafca125736f",
+      "tested_sha256": "54a290ec56b7871fd8c86eb8bf95ab442d4ffef3010f235684e9cafca125736f",
+      "daily_matches_tested": true
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc": {
+      "published_sha256": "0260e3837d64ecaeff4fc7c8615ace92e9780af4f86eb9f5285533b46b599f46",
+      "tested_sha256": "0260e3837d64ecaeff4fc7c8615ace92e9780af4f86eb9f5285533b46b599f46",
+      "daily_matches_tested": true
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc": {
+      "published_sha256": "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e",
+      "tested_sha256": "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e",
+      "daily_matches_tested": true
+    },
+    "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow146.inc": {
+      "published_sha256": "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614",
+      "tested_sha256": "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614",
+      "daily_matches_tested": true
+    },
+    "src/server/game/AI/NpcBots/botcommon.h": {
+      "published_sha256": "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37",
+      "tested_sha256": "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37",
+      "daily_matches_tested": true
+    },
+    "src/server/game/AI/NpcBots/botdatamgr.cpp": {
+      "published_sha256": "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee",
+      "tested_sha256": "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee",
+      "daily_matches_tested": true
+    },
+    "src/server/game/AI/NpcBots/botgiver.cpp": {
+      "published_sha256": "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66",
+      "tested_sha256": "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66",
+      "daily_matches_tested": true
+    },
+    "src/server/game/AI/NpcBots/botmgr.cpp": {
+      "published_sha256": "9163f989ec1dc4f831f02855c8b5bd9fd5184f324271af0bd7be4779127b8c04",
+      "tested_sha256": "9163f989ec1dc4f831f02855c8b5bd9fd5184f324271af0bd7be4779127b8c04",
+      "daily_matches_tested": true
+    },
+    "src/server/game/AI/NpcBots/bot_ai.cpp": {
+      "published_sha256": "481309cbe8ef4616b1daafc48e51bbad01c2f6c3510cefc1bf3ad38976c08048",
+      "tested_sha256": "481309cbe8ef4616b1daafc48e51bbad01c2f6c3510cefc1bf3ad38976c08048",
+      "daily_matches_tested": true
+    },
+    "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp": {
+      "published_sha256": "e4dc7afc45c5354ebf9cda6d86a42fbe10ac8e76bfb511ba6b0eaa5731f6ed97",
+      "tested_sha256": "e4dc7afc45c5354ebf9cda6d86a42fbe10ac8e76bfb511ba6b0eaa5731f6ed97",
+      "daily_matches_tested": true
+    },
+    "src/server/game/Entities/Unit/Unit.cpp": {
+      "published_sha256": "77d597d9fa2686bf4a79ced19077fd01735561ca8c4a2662c615b84c5948b16e",
+      "tested_sha256": "77d597d9fa2686bf4a79ced19077fd01735561ca8c4a2662c615b84c5948b16e",
+      "daily_matches_tested": true
+    }
+  },
+  "artifacts": [
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261023\\release_WDN1C1\\reborn-wdn1c1-20261023-source-overlay.zip",
+      "sha256": "e59bba94f58606e2f369e63044353cbc3ffd24bdc89841e80d62157c488b6720",
+      "bytes": 441674
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261023\\release_WDN1C1\\reborn-wdn1c1-20261023-world-sql.zip",
+      "sha256": "c206075600482a26952508c5ac2f288792450709ca2a5af3a5592fc2baac85cb",
+      "bytes": 3558
+    }
+  ],
+  "excluded": [
+    "Playerbot WD205",
+    "RebornWitchDoctorMirage154.inc candidate"
+  ],
+  "parent": "7d0c4901b4e738f9127fcefae9307ed76ff228a5"
+}

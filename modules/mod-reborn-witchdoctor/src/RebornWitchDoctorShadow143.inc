@@ -9,7 +9,7 @@ class auto_shot : public SpellScript
     SpellCastResult Check()
     {
         Player* p=GetCaster()->ToPlayer();
-        return Owns(p) && p->HasSpell(AutoShot) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+        return ((Owns(p) && p->HasSpell(AutoShot)) || (WDN1::Known(GetCaster(),AutoShot)&&WDN1::Safe(GetCaster(),GetExplTargetUnit()))) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
     void Register() override { OnCheckCast += SpellCheckCastFn(auto_shot::Check); }
 };
@@ -17,17 +17,20 @@ class arrow : public SpellScript
 {
     PrepareSpellScript(arrow);
     uint32 hungerBefore=0,spiritsBefore=0;
+    bool npcDamageAuthorized=false;
     void Snapshot(){Player* p=GetCaster()->ToPlayer();if(!GetSpell()->IsTriggered()){hungerBefore=WD157::HungerCount(p);spiritsBefore=WD87A::Count(p);}}
     void Done(){if(!GetSpell()->IsTriggered())WD157::ArrowCast(GetCaster()->ToPlayer(),hungerBefore,spiritsBefore);}
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({Identity,ArrowTalent,Heal}); }
     SpellCastResult Check()
     {
         Player* p=GetCaster()->ToPlayer();
-        return Owns(p) && p->HasSpell(ArrowTalent) && p->HasSpell(GetSpellInfo()->Id) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+        return ((Owns(p) && p->HasSpell(ArrowTalent) && p->HasSpell(GetSpellInfo()->Id)) || (WDN1::Known(GetCaster(),GetSpellInfo()->Id)&&WDN1::Safe(GetCaster(),GetExplTargetUnit()))) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
     void Damage(SpellEffIndex)
     {
         Player* p=GetCaster()->ToPlayer();
+        if(!p&&WDN1::Known(GetCaster(),GetSpellInfo()->Id)&&WDN1::Safe(GetCaster(),GetHitUnit()))
+        {Unit* u=GetCaster();npcDamageAuthorized=true;SetEffectValue(GetEffectValue()+int32(.20f*std::max(0.f,u->GetTotalAttackPowerValue(RANGED_ATTACK))+.25f*std::max(0,u->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE))));return;}
         if(!Owns(p)) { SetEffectValue(0);return; }
         float extra=0.20f*std::max(0.0f,p->GetTotalAttackPowerValue(RANGED_ATTACK))+
             0.25f*std::max(0,p->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE));
@@ -36,6 +39,14 @@ class arrow : public SpellScript
     void Hit()
     {
         Player* p=GetCaster()->ToPlayer();
+        if(!p&&npcDamageAuthorized&&WDN1::Known(GetCaster(),GetSpellInfo()->Id)&&GetHitUnit()&&
+           GetCaster()->IsInMap(GetHitUnit())&&GetCaster()->InSamePhase(GetHitUnit())&&GetHitDamage()>0)
+        {
+            Unit* u=GetCaster();auto* info=sSpellMgr->GetSpellInfo(Heal);if(!info)return;
+            uint32 amount=u->SpellHealingBonusTaken(u,info,uint64(GetHitDamage())*40/100,HEAL);
+            HealInfo heal(u,u,amount,info,info->GetSchoolMask());Unit::CalcHealAbsorb(heal);u->HealBySpell(heal,false);
+            u->GetThreatMgr().ForwardThreatForAssistingMe(u,float(heal.GetEffectiveHeal())*.5f,info);return;
+        }
         if(!Owns(p) || GetHitDamage()<=0) return;
         WD157::ArrowHit(p,GetHitUnit());
         SpellInfo const* info=sSpellMgr->GetSpellInfo(Heal);
@@ -62,11 +73,13 @@ class reclamation : public SpellScript
     SpellCastResult Check()
     {
         Player* p=GetCaster()->ToPlayer();
-        return Owns(p) && p->HasSpell(GetSpellInfo()->Id) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+        return ((Owns(p) && p->HasSpell(GetSpellInfo()->Id)) || (WDN1::Known(GetCaster(),GetSpellInfo()->Id)&&WDN1::Safe(GetCaster(),GetExplTargetUnit()))) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
     void Cast()
     {
         Player* p=GetCaster()->ToPlayer();
+        if(!p&&WDN1::Known(GetCaster(),GetSpellInfo()->Id)&&!GetSpell()->IsTriggered())
+        {GetCaster()->CastSpell(GetCaster(),WDN1::Spirit,true);return;}
         if(!Owns(p) || GetSpell()->IsTriggered()) return;
         p->CastSpell(p,9003574,true);
         Unit* target=GetExplTargetUnit();
