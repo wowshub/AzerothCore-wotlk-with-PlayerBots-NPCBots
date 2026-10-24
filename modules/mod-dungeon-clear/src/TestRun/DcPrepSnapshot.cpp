@@ -13,9 +13,12 @@
 #include "DBCStores.h"
 #include "Item.h"
 #include "ObjectMgr.h"
+#include "Creature.h"
 #include "Player.h"
 #include "Playerbots.h"
 #include "PlayerbotAI.h"
+#include "bot_ai.h"
+#include "botcommon.h"
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "StringFormat.h"
@@ -133,6 +136,35 @@ namespace DcPrep
                 AddStock(out, proto, item->GetCount(), kind);
         }
 
+        // the flask / elixir / food a unit is wearing right now (a player or an NPCBot)
+        void ReadBuffs(Unit* u, std::vector<Buff>& out)
+        {
+            auto const& kinds = BuffKinds();
+            for (auto const& entry : u->GetAppliedAuras())
+            {
+                AuraApplication const* app = entry.second;
+                Aura const* aura = app ? app->GetBase() : nullptr;
+                if (!aura)
+                    continue;
+                auto it = kinds.find(aura->GetId());
+                if (it == kinds.end())
+                    continue;
+                SpellInfo const* si = aura->GetSpellInfo();
+                if (!si || IsEatingAura(si))
+                    continue;
+                bool known = false;
+                for (Buff const& b : out)
+                    known = known || b.spellId == aura->GetId();
+                if (known)
+                    continue;
+                Buff b;
+                b.kind = it->second;
+                b.spellId = aura->GetId();
+                b.secs = aura->GetDuration() > 0 ? static_cast<std::uint32_t>(aura->GetDuration() / 1000) : 0;
+                out.push_back(b);
+            }
+        }
+
         std::string Talents(Player* p)
         {
             std::uint8_t const spec = p->GetActiveSpec();
@@ -229,30 +261,7 @@ namespace DcPrep
         st.block = p->GetFloatValue(PLAYER_BLOCK_PERCENTAGE);
 
         // the flask / elixir / food the character is wearing right now
-        auto const& kinds = BuffKinds();
-        for (auto const& entry : p->GetAppliedAuras())
-        {
-            AuraApplication const* app = entry.second;
-            Aura const* aura = app ? app->GetBase() : nullptr;
-            if (!aura)
-                continue;
-            auto it = kinds.find(aura->GetId());
-            if (it == kinds.end())
-                continue;
-            SpellInfo const* si = aura->GetSpellInfo();
-            if (!si || IsEatingAura(si))
-                continue;
-            bool known = false;
-            for (Buff const& b : s.buffs)
-                known = known || b.spellId == aura->GetId();
-            if (known)
-                continue;
-            Buff b;
-            b.kind = it->second;
-            b.spellId = aura->GetId();
-            b.secs = aura->GetDuration() > 0 ? static_cast<std::uint32_t>(aura->GetDuration() / 1000) : 0;
-            s.buffs.push_back(b);
-        }
+        ReadBuffs(p, s.buffs);
 
         // the potions, flasks, elixirs and food in the bags
         for (std::uint8_t slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
@@ -261,6 +270,78 @@ namespace DcPrep
             if (Bag* bag = p->GetBagByPos(bagSlot))
                 for (std::uint32_t i = 0; i < bag->GetBagSize(); ++i)
                     ScanItem(bag->GetItemByPos(static_cast<std::uint8_t>(i)), s.stock);
+        return s;
+    }
+
+    Snapshot CaptureBot(Creature* bot)
+    {
+        Snapshot s;
+        bot_ai const* ai = bot ? bot->GetBotAI() : nullptr;
+        if (!ai)
+            return s;
+        s.valid = true;
+        s.npcBot = true;
+        s.classId = ai->GetBotClass();
+        s.level = bot->GetLevel();
+        s.role = ai->HasRole(NPC_BOT_ROLE_TANK) ? "tank" : (ai->HasRole(NPC_BOT_ROLE_HEAL) ? "heal" : "dps");
+        s.avgIlvl = static_cast<std::uint32_t>(ai->GetAverageItemLevel() + 0.5f);
+
+        // same slot list as the player read, in the NPCBot's own slot names
+        static constexpr std::uint8_t kRequired[] = {
+            BOT_SLOT_HEAD, BOT_SLOT_NECK, BOT_SLOT_SHOULDERS, BOT_SLOT_CHEST, BOT_SLOT_WAIST, BOT_SLOT_LEGS,
+            BOT_SLOT_FEET, BOT_SLOT_WRIST, BOT_SLOT_HANDS, BOT_SLOT_FINGER1, BOT_SLOT_FINGER2, BOT_SLOT_TRINKET1,
+            BOT_SLOT_TRINKET2, BOT_SLOT_BACK, BOT_SLOT_MAINHAND };
+        std::uint32_t minIlvl = 0;
+        for (std::uint8_t slot : kRequired)
+        {
+            Item* item = ai->GetEquips(slot);
+            ItemTemplate const* proto = item ? item->GetTemplate() : nullptr;
+            if (!proto)
+            {
+                ++s.emptySlots;
+                continue;
+            }
+            if (!minIlvl || proto->ItemLevel < minIlvl)
+                minIlvl = proto->ItemLevel;
+        }
+        s.minIlvl = minIlvl;
+
+        std::uint32_t lowest = 100;
+        for (std::uint8_t slot = 0; slot < BOT_INVENTORY_SIZE; ++slot)
+        {
+            Item* item = ai->GetEquips(slot);
+            if (!item)
+                continue;
+            std::uint32_t const maxDur = item->GetUInt32Value(ITEM_FIELD_MAXDURABILITY);
+            if (maxDur)
+                lowest = std::min(lowest, item->GetUInt32Value(ITEM_FIELD_DURABILITY) * 100 / maxDur);
+        }
+        s.durabilityPct = lowest;
+
+        // The stat formulas are the ones the NPCBot itself saves for its own stat page
+        // (bot_ai::_saveStats), so the panel agrees with what the bot shows.
+        Stats& st = s.stats;
+        st.hp = bot->GetMaxHealth();
+        st.powerType = bot->getPowerType();
+        st.mana = bot->GetMaxPower(s.classId == BOT_CLASS_DRUID ? POWER_MANA : bot->getPowerType());
+        st.armor = bot->GetArmor();
+        st.ap = static_cast<std::uint32_t>(std::max(0.f, bot->GetTotalAttackPowerValue(BASE_ATTACK)));
+        st.rap = static_cast<std::uint32_t>(std::max(0.f, bot->GetTotalAttackPowerValue(RANGED_ATTACK)));
+        st.sp = static_cast<std::uint32_t>(std::max(0, bot->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_MAGIC)));
+        st.healSp = static_cast<std::uint32_t>(std::max(0, bot->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_MAGIC)));
+        st.expertise = ai->GetBotExpertise();
+        st.defense = bot->GetDefenseSkillValue();
+        st.resilience = static_cast<std::uint32_t>(std::max(0.f, ai->GetBotResilience()));
+        float const crit = ai->GetBotCritChance() + bot->GetTotalAuraModifier(SPELL_AURA_MOD_WEAPON_CRIT_PERCENT) +
+                           bot->GetTotalAuraModifier(SPELL_AURA_MOD_CRIT_PCT);
+        st.crit = st.rcrit = st.scrit = std::max(0.f, crit);
+        st.hit = st.rhit = st.shit = std::max(0.f, -ai->GetBotMissChance());  // 100 = the bot needs no hit rating
+        st.haste = static_cast<float>(std::max(0, ai->GetHaste()));
+        st.dodge = bot->GetUnitDodgeChance();
+        st.parry = bot->GetUnitParryChance();
+        st.block = bot->GetUnitBlockChance();
+
+        ReadBuffs(bot, s.buffs);
         return s;
     }
 

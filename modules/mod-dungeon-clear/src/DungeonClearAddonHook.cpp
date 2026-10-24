@@ -36,6 +36,8 @@
 #include "DcDungeonQueue.h"
 #include "TestRun/DcTestRunManager.h"
 #include "TestRun/DcPrepSnapshot.h"  // RebornWOW DCPREP1A
+#include "bot_ai.h"    // RebornWOW DCPREP2A
+#include "botmgr.h"
 #include "Group.h"
 #include "DcPartyTier.h"   // RebornWOW DCGM1F
 #include "DcPanelData.h"   // RebornWOW DCUI3B
@@ -346,6 +348,41 @@ namespace
         }
         else
             rows.emplace_back(player->GetName(), DcPrep::Capture(player, ""));
+        // DCPREP2A: NPCBots are creatures, not group members, so the loop above never sees them.
+        // Add the hired NPCBots of every real person in the party.
+        if (runId.empty() || runId == "-")
+        {
+            std::vector<Player*> owners;
+            if (Group* group = player->GetGroup())
+            {
+                for (GroupReference* r = group->GetFirstMember(); r; r = r->next())
+                {
+                    // a real person can carry a PlayerbotAI too (IsRealPlayer); only a true bot is skipped
+                    PlayerbotAI* ownerAi = r->GetSource() ? GET_PLAYERBOT_AI(r->GetSource()) : nullptr;
+                    if (Player* m = r->GetSource(); m && m->IsInWorld() && !(ownerAi && !ownerAi->IsRealPlayer()))
+                        owners.push_back(m);
+                }
+            }
+            else
+                owners.push_back(player);
+            for (Player* owner : owners)
+            {
+                BotMgr* mgr = owner->GetBotMgr();
+                if (!mgr)
+                    continue;
+                for (auto const& kv : *mgr->GetBotMap())
+                {
+                    Creature* bot = kv.second;
+                    if (!bot || !bot->IsInWorld())
+                        continue;
+                    bool dup = false;
+                    for (auto const& have : rows)
+                        dup = dup || have.first == bot->GetName();
+                    if (!dup)
+                        rows.emplace_back(bot->GetName(), DcPrep::CaptureBot(bot));
+                }
+            }
+        }
         if (rows.size() > 10)
             rows.resize(10);
 
@@ -356,7 +393,8 @@ namespace
             std::string const n = AddonField(row.first);
             SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tPRP_M\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 n, s.classId, s.level, s.role, s.avgIlvl, s.minIlvl, s.emptySlots, s.durabilityPct,
-                s.needsPet ? 1 : 0, s.hasPet ? 1 : 0, AddonField(s.talents))));
+                s.needsPet ? 1 : 0, s.hasPet ? 1 : 0, AddonField(s.talents))
+                + (s.npcBot ? "\tn" : "")));
             DcPrep::Stats const& t = s.stats;
             std::string line = Acore::StringFormat("DC\tPRP_S\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", n, t.hp, t.mana, t.powerType,
                                                    t.armor, t.ap, t.rap, t.sp, t.healSp);

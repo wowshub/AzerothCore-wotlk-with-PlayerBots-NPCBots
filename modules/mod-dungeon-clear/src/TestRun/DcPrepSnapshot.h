@@ -11,6 +11,7 @@
 #include <vector>
 
 class Player;
+class Creature;
 
 // RebornWOW DCPREP1A: how ready a character is to go in -- gear level, the stats that matter, the
 // flask / elixir / food it is wearing, and the potions and food it carries. Read once for the run
@@ -53,6 +54,7 @@ namespace DcPrep
     struct Snapshot
     {
         bool valid = false;
+        bool npcBot = false;              // DCPREP2A: an NPCBot (a creature), not a player
         std::uint32_t classId = 0;
         std::uint32_t level = 0;
         std::string role;                 // tank | heal | dps
@@ -70,6 +72,10 @@ namespace DcPrep
 
     // `role` may be empty: it is then read from the character's spec.
     Snapshot Capture(Player* p, std::string const& role);
+
+    // DCPREP2A: the same readiness read for an NPCBot. It has no talents, no bags and no pet to
+    // check, so those parts stay empty; gear, stats and worn flask / food are real.
+    Snapshot CaptureBot(Creature* bot);
 
     // One JSON object, no trailing newline.
     std::string ToJson(Snapshot const& s);

@@ -16,6 +16,8 @@
 #include "StringFormat.h"
 #include "WorldSession.h"
 #include "DcPartyTier.h"
+#include "TestRun/DcDeathLog.h"
+#include "TestRun/DcPrepSnapshot.h"
 #include "TestRun/DcTestDungeonRegistry.h"
 #include "TestRun/DcTestRunManager.h"
 #include "bot_ai.h"
@@ -36,6 +38,9 @@ namespace
     {
         uint32 t = 0;          // seconds since the run started
         std::string name;
+        // DCSTAT2A: a member's death, from DcDeathLog (empty for a boss kill or an NPCBot)
+        std::string killer, spell;
+        uint32 amount = 0, overkill = 0, dmg5 = 0, heal5 = 0;
     };
 
     struct Member
@@ -43,6 +48,8 @@ namespace
         std::string name;
         uint32 cls = 0, level = 0;
         char kind = 'p';       // a = your account, b = playerbot, n = NPCBot, p = real player
+        uint32 ilvl = 0;       // DCSTAT2A: average equipped item level at the start (0 = unknown)
+        std::string role;      // DCSTAT2A: tank | heal | dps ("" = unknown)
     };
 
     struct Run
@@ -57,6 +64,9 @@ namespace
         std::vector<Member> members;
         std::string tier, result = "running", reason;
         std::vector<uint32> viewers;  // DCRUN1B: real players who get the record (owner first)
+        // DCSTAT2A: damage the party took by source+spell and healing done by healer (merged over restarts)
+        std::vector<DcDeathLog::SourceTotal> taken;
+        std::vector<DcDeathLog::HealerTotal> healers;
     };
 
     constexpr std::size_t kKeep = 20;          // finished runs kept per owner
@@ -73,6 +83,53 @@ namespace
             if (c == '\t' || c == '\n' || c == '\r')
                 c = ' ';
         return s;
+    }
+
+    // DCSTAT2A: fold a finished stretch's totals into the run's (a restarted run keeps its earlier ones)
+    void MergeTotals(Run& r, std::vector<DcDeathLog::SourceTotal> const& src,
+                     std::vector<DcDeathLog::HealerTotal> const& heal)
+    {
+        for (DcDeathLog::SourceTotal const& t : src)
+        {
+            auto it = std::find_if(r.taken.begin(), r.taken.end(), [&](DcDeathLog::SourceTotal const& x)
+                                   { return x.src == t.src && x.spell == t.spell; });
+            if (it == r.taken.end())
+                r.taken.push_back(t);
+            else
+            {
+                it->total += t.total;
+                it->hits += t.hits;
+            }
+        }
+        for (DcDeathLog::HealerTotal const& t : heal)
+        {
+            auto it = std::find_if(r.healers.begin(), r.healers.end(),
+                                   [&](DcDeathLog::HealerTotal const& x) { return x.name == t.name; });
+            if (it == r.healers.end())
+                r.healers.push_back(t);
+            else
+                it->total += t.total;
+        }
+        auto bySize = [](auto const& a, auto const& b) { return a.total > b.total; };
+        std::sort(r.taken.begin(), r.taken.end(), bySize);
+        std::sort(r.healers.begin(), r.healers.end(), bySize);
+        if (r.taken.size() > 12)
+            r.taken.resize(12);
+        if (r.healers.size() > 8)
+            r.healers.resize(8);
+    }
+
+    // DCSTAT2A: log every Player in the tank's group (playerbots and real players; NPCBots are creatures)
+    void TrackMembers(Player* tank, std::string const& runId)
+    {
+        if (Group* g = tank->GetGroup())
+        {
+            for (GroupReference* r = g->GetFirstMember(); r; r = r->next())
+                if (Player* p = r->GetSource())
+                    DcDeathLog::Track(p->GetGUID(), runId);
+        }
+        else
+            DcDeathLog::Track(tank->GetGUID(), runId);
     }
 
     bool IsReal(Player* p)
@@ -176,6 +233,15 @@ namespace
                 s << ',';
             s << "{\"t\":" << v[i].t << ",\"name\":";
             Esc(s, v[i].name);
+            if (!v[i].killer.empty() || !v[i].spell.empty())  // DCSTAT2A
+            {
+                s << ",\"killer\":";
+                Esc(s, v[i].killer);
+                s << ",\"spell\":";
+                Esc(s, v[i].spell);
+                s << ",\"amount\":" << v[i].amount << ",\"overkill\":" << v[i].overkill << ",\"dmg5\":" << v[i].dmg5
+                  << ",\"heal5\":" << v[i].heal5;
+            }
             s << '}';
         }
         s << ']';
@@ -211,6 +277,23 @@ namespace
         EscEvents(s, r.bosses);
         s << ",\"deaths\":";
         EscEvents(s, r.deaths);
+        s << ",\"taken\":[";
+        for (std::size_t i = 0; i < r.taken.size(); ++i)
+        {
+            s << (i ? "," : "") << "{\"src\":";
+            Esc(s, r.taken[i].src);
+            s << ",\"spell\":";
+            Esc(s, r.taken[i].spell);
+            s << ",\"total\":" << r.taken[i].total << ",\"hits\":" << r.taken[i].hits << '}';
+        }
+        s << "],\"healers\":[";
+        for (std::size_t i = 0; i < r.healers.size(); ++i)
+        {
+            s << (i ? "," : "") << "{\"name\":";
+            Esc(s, r.healers[i].name);
+            s << ",\"total\":" << r.healers[i].total << '}';
+        }
+        s << ']';
         s << ",\"members\":[";
         for (std::size_t i = 0; i < r.members.size(); ++i)
         {
@@ -219,7 +302,9 @@ namespace
             s << "{\"name\":";
             Esc(s, r.members[i].name);
             s << ",\"class\":" << r.members[i].cls << ",\"level\":" << r.members[i].level << ",\"kind\":\""
-              << r.members[i].kind << "\"}";
+              << r.members[i].kind << "\",\"ilvl\":" << r.members[i].ilvl << ",\"role\":";
+            Esc(s, r.members[i].role);
+            s << '}';
         }
         s << "]}";
         file << s.str() << '\n';
@@ -231,6 +316,14 @@ namespace
     {
         Run r = std::move(it->second);
         gActive.erase(it);
+        {   // DCSTAT2A: what this stretch of the run took and healed, then stop logging
+            std::vector<DcDeathLog::SourceTotal> src;
+            std::vector<DcDeathLog::HealerTotal> heal;
+            std::uint64_t taken = 0;
+            DcDeathLog::Totals(r.id, 12, 8, &src, &heal, &taken);
+            MergeTotals(r, src, heal);
+            DcDeathLog::Untrack(r.id);
+        }
         r.end = time(nullptr);
         r.reason = reason;
         r.result = Classify(reason);
@@ -261,6 +354,12 @@ namespace
             m.level = p->GetLevel();
             bool const mine = p->GetSession() && p->GetSession()->GetAccountId() == account;
             m.kind = mine ? 'a' : (IsReal(p) ? 'p' : 'b');
+            DcPrep::Snapshot const prep = DcPrep::Capture(p, "");  // DCSTAT2A
+            if (prep.valid)
+            {
+                m.ilvl = prep.avgIlvl;
+                m.role = prep.role;
+            }
             out.push_back(m);
         };
         if (Group* g = tank->GetGroup())
@@ -283,6 +382,12 @@ namespace
                         m.cls = ai ? ai->GetBotClass() : 0;
                         m.level = bot->GetLevel();
                         m.kind = 'n';
+                        DcPrep::Snapshot const prep = DcPrep::CaptureBot(bot);  // DCSTAT2B (DCPREP2A)
+                        if (prep.valid)
+                        {
+                            m.ilvl = prep.avgIlvl;
+                            m.role = prep.role;
+                        }
                         out.push_back(m);
                     }
         return out;
@@ -324,6 +429,10 @@ namespace
             if (!boss && !member)
                 return;
             uint32 const inst = unit->GetInstanceId(), map = unit->GetMapId();
+            // DCSTAT2A: what killed a player (DcDeathLog keeps its own lock; taken before ours)
+            DcDeathLog::Detail cause;
+            if (!boss && unit->IsPlayer())
+                cause = DcDeathLog::TakeDeath(unit->GetGUID());
             std::lock_guard<std::mutex> lock(gMtx);
             for (auto& kv : gActive)
             {
@@ -332,7 +441,21 @@ namespace
                     continue;
                 std::vector<RunEvent>& list = boss ? r.bosses : r.deaths;
                 if (list.size() < kMaxEvents)
-                    list.push_back({ static_cast<uint32>(time(nullptr) - r.start), unit->GetName() });
+                {
+                    RunEvent e;
+                    e.t = static_cast<uint32>(time(nullptr) - r.start);
+                    e.name = unit->GetName();
+                    if (cause.any)
+                    {
+                        e.killer = cause.killer;
+                        e.spell = cause.killerSpell;
+                        e.amount = cause.killerAmount;
+                        e.overkill = cause.killerOverkill;
+                        e.dmg5 = cause.dmg5s;
+                        e.heal5 = cause.heal5s;
+                    }
+                    list.push_back(std::move(e));
+                }
                 break;
             }
         }
@@ -364,6 +487,7 @@ namespace DcPlayerRuns
             {
                 ++it->second.restarts;           // `dc on` again mid-run
                 AddViewers(it->second, viewers);  // DCRUN1B: whoever joined since
+                TrackMembers(tank, it->second.id);  // DCSTAT2A: idempotent; picks up whoever joined
                 return;
             }
             FinishLocked(it, "Left the dungeon (a new run started).");
@@ -383,6 +507,7 @@ namespace DcPlayerRuns
                 r.reason.clear();
                 r.end = 0;
                 ++r.restarts;
+                TrackMembers(tank, r.id);        // DCSTAT2A: logging stopped when it ended
                 gActive[tank->GetGUID()] = std::move(r);
                 return;
             }
@@ -398,6 +523,7 @@ namespace DcPlayerRuns
         r.tier = tier.empty() ? "normal" : tier;
         r.members = std::move(members);
         r.viewers = viewers;                     // DCRUN1B
+        TrackMembers(tank, r.id);                // DCSTAT2A
         gActive[tank->GetGUID()] = std::move(r);
     }
 
@@ -462,16 +588,37 @@ namespace DcPlayerRuns
             }
             copy = *r;
         }
+        if (copy.result == "running")  // DCSTAT2A: a live run shows what the log holds so far
+        {
+            std::vector<DcDeathLog::SourceTotal> src;
+            std::vector<DcDeathLog::HealerTotal> heal;
+            std::uint64_t taken = 0;
+            DcDeathLog::Totals(copy.id, 12, 8, &src, &heal, &taken);
+            MergeTotals(copy, src, heal);
+        }
         std::string const cid = Clean(id);
         send(Acore::StringFormat("DC\tMRX\t{}\tR\t{}", cid, Clean(copy.reason)));
         send(Acore::StringFormat("DC\tMRX\t{}\tS\t{}", cid, copy.restarts));
         for (Member const& m : copy.members)
             send(Acore::StringFormat("DC\tMRX\t{}\tM\t{}\t{}\t{}\t{}", cid, Clean(m.name), m.cls, m.level,
                                      std::string(1, m.kind)));
+        for (Member const& m : copy.members)  // DCSTAT2A: item level and role per member
+            if (m.ilvl > 0 || !m.role.empty())
+                send(Acore::StringFormat("DC\tMRX\t{}\tI\t{}\t{}\t{}", cid, Clean(m.name), m.ilvl, Clean(m.role)));
         for (RunEvent const& e : copy.bosses)
             send(Acore::StringFormat("DC\tMRX\t{}\tB\t{}\t{}", cid, e.t, Clean(e.name)));
         for (RunEvent const& e : copy.deaths)
+        {
             send(Acore::StringFormat("DC\tMRX\t{}\tD\t{}\t{}", cid, e.t, Clean(e.name)));
+            if (!e.killer.empty() || !e.spell.empty())  // DCSTAT2A: follows its D line
+                send(Acore::StringFormat("DC\tMRX\t{}\tK\t{}\t{}\t{}\t{}\t{}\t{}\t{}", cid, Clean(e.killer),
+                                         Clean(e.spell), e.amount, e.overkill, e.dmg5, e.heal5, e.t));
+        }
+        for (DcDeathLog::SourceTotal const& t : copy.taken)  // DCSTAT2A
+            send(Acore::StringFormat("DC\tMRX\t{}\tT\t{}\t{}\t{}\t{}", cid, Clean(t.src), Clean(t.spell),
+                                     static_cast<uint64>(t.total), t.hits));
+        for (DcDeathLog::HealerTotal const& t : copy.healers)
+            send(Acore::StringFormat("DC\tMRX\t{}\tH\t{}\t{}", cid, Clean(t.name), static_cast<uint64>(t.total)));
         send("DC\tMRX_END\t" + cid);
     }
 
