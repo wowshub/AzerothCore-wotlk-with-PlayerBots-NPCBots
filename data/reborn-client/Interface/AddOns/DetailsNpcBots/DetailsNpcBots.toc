@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: Details! NPCBots (RebornWOW)
+## Title-zhCN: [战斗] Details! 统计 NPCBot
+## Notes: Makes Details! list NPCBots (hired companions) in the group damage/healing meters.
+## Version: 1.0.0
+## Author: RebornWOW (Claude, DETNPC1A)
+## OptionalDeps: Details
+## SavedVariables: DetailsNpcBotsDB
+
+DetailsNpcBots.lua
