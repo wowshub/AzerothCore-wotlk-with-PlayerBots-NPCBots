@@ -6,7 +6,7 @@
 -- =========================================================================
 
 local ADDON_PREFIX = "TR"
-local PANEL_VERSION = "1.3.7"   -- shown in the title bar, so a stale copy of this file is easy to spot
+local PANEL_VERSION = "1.4.4"   -- shown in the title bar, so a stale copy of this file is easy to spot
 -- the panel speaks Chinese unless the GM switched to English (the 中文/EN button in the title bar);
 -- with no choice saved it follows the DungeonClear panel's language, else Chinese
 local function IsZh()
@@ -59,6 +59,13 @@ local state = {
     spawnSel = nil,
     spawnOffset = 0,
     loot = { entry = 0, items = {}, offset = 0, ready = false },
+    lootByType = {},   -- entry -> { { item, chance, min, max, group, q, icon, name, zh }, ... } (TREAS2D)
+    lootAsked = {},    -- entry -> true once `loot <entry>` was sent
+    lootNew = {},
+    lootWork = {},     -- entry -> the working copy of the loot table (a draft until Save)
+    lootRow = 0,
+    pool = { cat = "all", page = 0, text = "", items = {}, more = false },
+    poolOffset = 0,
     iconsByCat = {},   -- category -> { { name = "INV_Box_01" }, ... } from the server
     iconCat = "chest",
     iconRow = 0,
@@ -283,7 +290,7 @@ local function RefreshList()
             local dr = state.drafts[entry]
             row.icon:SetTexture(IconPath((dr and dr.icon) or t.icon, t.rarity))
             row.rim:SetTexture(rar.r, rar.g, rar.b, 1)
-            row.name:SetText("|cff" .. rar.hex .. t.name .. "|r" .. (state.drafts[entry] and ("  |cffff9933*" .. T("未保存", "unsaved") .. "|r") or ""))
+            row.name:SetText("|cff" .. rar.hex .. t.name .. "|r" .. ((ui.EntryDirty and ui.EntryDirty(entry)) and ("  |cffff9933*" .. T("未保存", "unsaved") .. "|r") or ""))
             local gold = (t.goldMax > 0) and (GoldShort(t.goldMin) .. "-" .. GoldShort(t.goldMax) .. T("金", "g")) or T("无金币", "no gold")
             local nSpawn = state.spawnCount[entry] or 0
             row.info:SetText(entry .. "  ·  " .. gold .. (nSpawn > 0 and ("  ·  |cff88ccff" .. nSpawn .. T("处", " spots") .. "|r") or ""))
@@ -304,6 +311,9 @@ local function SelectType(entry)
     RefreshList()
     if ui.RefreshCard then ui.RefreshCard() end
     if ui.RefreshSpawnList then ui.RefreshSpawnList() end
+    state.lootRow = 0
+    if ui.RequestLootIfNeeded then ui.RequestLootIfNeeded() end
+    if ui.RefreshLoot then ui.RefreshLoot() end
 end
 
 -- right-click menu of a chest type
@@ -565,6 +575,10 @@ function ui.UpdateDirty()
     local t = Selected()
     local d = t and state.drafts[t.entry]
     local n = 0
+    if t and ui.LootDiff then
+        local _, lootN = ui.LootDiff(t.entry)
+        n = n + lootN
+    end
     for _, key in ipairs(DRAFT_KEYS) do
         if d and d[key] then n = n + 1 end
         local eb = ui.boxes and ui.boxes[key]
@@ -587,7 +601,9 @@ end
 function ui.SaveDraft()
     local t = Selected()
     local d = t and state.drafts[t.entry]
-    if not d or not AnyDraft(d) then return end
+    local lootCmds = t and ui.LootDiff and ui.LootDiff(t.entry) or {}
+    if not t or ((not d or not AnyDraft(d)) and #lootCmds == 0) then return end
+    d = d or {}
     local function val(key) return d[key] or ServerText(t, key) end
     local cmds = {}
     if d.name then
@@ -633,6 +649,8 @@ function ui.SaveDraft()
         t.icon = d.icon
         cmds[#cmds + 1] = "typeset " .. t.entry .. " icon " .. d.icon
     end
+    for _, c in ipairs(lootCmds) do cmds[#cmds + 1] = c end   -- the loot table's changes go last
+    state.lootWork[t.entry] = nil
     -- one command at a time, a little apart: the server answers each one, and a burst of chat lines is throttled
     for i, c in ipairs(cmds) do
         if i == 1 then Cmd(c) else ui.After(0.3 * (i - 1), function() Cmd(c) end) end
@@ -644,7 +662,12 @@ end
 function ui.UndoDraft(key)
     local t = Selected()
     local d = t and state.drafts[t.entry]
-    if not d then return end
+    if t and not key and state.lootWork[t.entry] then
+        state.lootWork[t.entry] = nil   -- the loot table goes back to the server's
+        ui.RefreshLoot()
+        ui.RefreshPool()
+    end
+    if not d then ui.UpdateDirty() return end
     if key then
         d[key] = nil
         if key == "display" then d.displayModel = nil end
@@ -682,6 +705,644 @@ local function BindDraft(eb, key)
             end
         end
     end)
+end
+
+-- =========================================================================
+-- loot table grid (middle, bottom), loot editor, item pool (right) -- TREAS2D
+-- =========================================================================
+local LOOT_CELL, LOOT_GAP = 46, 6
+
+local function ItemLabel(it)
+    if IsZh() and it.zh and it.zh ~= "" then return it.zh end
+    return it.name or tostring(it.item or it.id or "?")
+end
+
+local function ChanceText(c)
+    c = tonumber(c) or 0
+    if c == math.floor(c) then return string.format("%d%%", c) end
+    return string.format("%.1f%%", c)
+end
+
+local function CountText(it)
+    if (it.max or 1) > 1 then
+        return "x" .. (it.min or 1) .. ((it.max or 1) > (it.min or 1) and ("-" .. it.max) or "")
+    end
+    if (it.min or 1) > 1 then return "x" .. it.min end
+    return ""
+end
+
+-- A full item tooltip only for an item the client already has. Asking for an unknown item through a tooltip makes the
+-- client fetch it, and the equipment-compare addon zzzMoPItemTooltips then crashes the client (0x00620727 in
+-- ShoppingTooltip1; seen again on 2026-10-25 while hovering the item pool). Without the data a plain tooltip is shown.
+function ui.ItemTip(owner, anchor, id, label, quality, lines)
+    GameTooltip:SetOwner(owner, anchor)
+    local cached = GetItemInfo(id)
+    local shown = false
+    if cached then shown = pcall(GameTooltip.SetHyperlink, GameTooltip, "item:" .. id) end
+    if not shown then
+        local q = RARITY_Q[quality or 1] or RARITY_Q[1]
+        GameTooltip:AddLine("|cff" .. q[4] .. label .. "|r")
+        GameTooltip:AddLine("ItemID: " .. id, 0.7, 0.7, 0.7)
+        if not cached then
+            GameTooltip:AddLine(T("客户端还没有这件物品的数据，所以不显示完整提示。", "The client has no data for this item yet, so the full tooltip is skipped."), 1, 0.5, 0.2, true)
+        end
+    end
+    for _, l in ipairs(lines or {}) do GameTooltip:AddLine(l[1], l[2] or 1, l[3] or 0.82, l[4] or 0, true) end
+    GameTooltip:Show()
+end
+
+function ui.RequestLoot(entry)
+    entry = tonumber(entry)
+    if not entry then return end
+    state.lootAsked[entry] = true
+    Cmd("loot " .. entry)
+end
+
+function ui.RequestLootIfNeeded()
+    local t = Selected()
+    if t and not state.lootByType[t.entry] and not state.lootAsked[t.entry] then ui.RequestLoot(t.entry) end
+end
+
+-- The loot table is edited as a draft, like the rest of the card: state.lootWork[entry] is a working copy of the
+-- server's list; the grid shows it, the Save button sends the difference, Undo drops it.
+local function LootList(entry)
+    return state.lootWork[entry] or state.lootByType[entry]
+end
+
+local function WorkList(entry)
+    local w = state.lootWork[entry]
+    if not w then
+        w = {}
+        for _, it in ipairs(state.lootByType[entry] or {}) do
+            w[#w + 1] = { item = it.item, chance = it.chance, min = it.min, max = it.max, group = it.group,
+                          q = it.q, icon = it.icon, name = it.name, zh = it.zh }
+        end
+        state.lootWork[entry] = w
+    end
+    return w
+end
+
+-- the commands that turn the server's table into the working copy
+function ui.LootDiff(entry)
+    local work = state.lootWork[entry]
+    local cmds = {}
+    if not work then return cmds, 0 end
+    local sm, wm = {}, {}
+    for _, it in ipairs(state.lootByType[entry] or {}) do sm[it.item] = it end
+    for _, it in ipairs(work) do
+        wm[it.item] = true
+        local s = sm[it.item]
+        if not s or s.chance ~= it.chance or s.min ~= it.min or s.max ~= it.max or s.group ~= it.group then
+            cmds[#cmds + 1] = string.format("lootset %d %d %g %d %d %d", entry, it.item, it.chance, it.min, it.max, it.group)
+        end
+    end
+    for _, it in ipairs(state.lootByType[entry] or {}) do
+        if not wm[it.item] then cmds[#cmds + 1] = string.format("lootdel %d %d", entry, it.item) end
+    end
+    return cmds, #cmds
+end
+
+function ui.EntryDirty(entry)
+    if state.drafts[entry] then return true end
+    local _, n = ui.LootDiff(entry)
+    return n > 0
+end
+
+-- a change was made to the working copy: drop it again when it equals the server's, and repaint
+function ui.TouchLoot(entry)
+    local _, n = ui.LootDiff(entry)
+    if n == 0 then state.lootWork[entry] = nil end
+    ui.UpdateDirty()
+    ui.RefreshLoot()
+    ui.RefreshPool()
+end
+
+local function LootReady(entry)
+    if state.lootByType[entry] then return true end
+    Status(T("掉落表还在读取，稍等一下再改", "The loot table is still loading, try again in a moment"), true)
+    return false
+end
+
+local function MetaFor(id, meta)
+    if meta then return { q = meta.q or 1, icon = meta.icon or "", name = meta.name or "", zh = meta.zh or "" } end
+    local name, _, q, _, _, _, _, _, _, tex = GetItemInfo(id)
+    return { q = q or 1, icon = tex or "Interface\\Icons\\INV_Misc_QuestionMark", name = name or ("item " .. id), zh = "" }
+end
+
+-- put an item into the working copy of the selected chest type's loot table (100%, one piece, no group)
+function ui.AddLoot(id, meta)
+    local t = Selected()
+    id = tonumber(id)
+    if not t then Status(T("先选一种宝箱", "Pick a chest type first"), true) return end
+    if not id or not LootReady(t.entry) then return end
+    for _, it in ipairs(LootList(t.entry) or {}) do
+        if it.item == id then
+            Status(T("这件已经在掉落表里了，点它可以改概率和数量", "Already in the loot table: click it to change chance and count"), true)
+            return
+        end
+    end
+    local m = MetaFor(id, meta)
+    local w = WorkList(t.entry)
+    w[#w + 1] = { item = id, chance = 100, min = 1, max = 1, group = 0, q = m.q, icon = m.icon, name = m.name, zh = m.zh }
+    state.lootRow = 1000   -- scroll to the new one
+    ui.TouchLoot(t.entry)
+    Status(T("已加入掉落表（还没保存，点“保存”才生效）", "Added to the loot table (not saved yet: click Save)"))
+end
+
+function ui.DeleteLoot(entry, item)
+    if not LootReady(entry) then return end
+    local w = WorkList(entry)
+    for i, it in ipairs(w) do
+        if it.item == item then table.remove(w, i) break end
+    end
+    ui.TouchLoot(entry)
+end
+
+local function SetLootLine(entry, item, chance, mn, mx, group)
+    if not LootReady(entry) then return end
+    for _, it in ipairs(WorkList(entry)) do
+        if it.item == item then
+            if chance then it.chance = chance end
+            if mn then it.min = mn end
+            if mx then it.max = mx end
+            if group then it.group = group end
+        end
+    end
+    ui.TouchLoot(entry)
+end
+
+local function LootInList(id)
+    local t = Selected()
+    for _, it in ipairs((t and LootList(t.entry)) or {}) do
+        if it.item == id then return true end
+    end
+    return false
+end
+
+-- cursor items: a click or a drag released over the grid (a cell is a child of the area, so it takes the drop too)
+local function DropOnLoot()
+    local kind, id = GetCursorInfo()
+    if kind == "item" and id then
+        ClearCursor()
+        ui.AddLoot(id)
+    end
+end
+
+-- ---------------------------------------------------------------- the grid
+function ui.RefreshLoot()
+    if not ui.lootCells then return end
+    local t = Selected()
+    local list = t and LootList(t.entry)
+    local serverList = t and state.lootByType[t.entry] or {}
+    local cols, vis = ui.lootCols or 1, ui.lootRowsVis or 1
+    local n = list and #list or 0
+    local maxRow = math.max(0, math.ceil(n / cols) - vis)
+    state.lootRow = math.max(0, math.min(state.lootRow or 0, maxRow))
+    for i, cell in ipairs(ui.lootCells) do
+        local it = (i <= cols * vis) and list and list[state.lootRow * cols + i]
+        if it then
+            local q = RARITY_Q[it.q] or RARITY_Q[1]
+            cell.it = it
+            if it.q >= 8 then cell.rim:SetTexture(1, 0.12, 0.12, 1) else cell.rim:SetTexture(q[1], q[2], q[3], 1) end    -- a quality the client has no colour for: see the tooltip
+            cell.tex:SetTexture(IconPath(it.icon, 1))
+            cell.chance:SetText(ChanceText(it.chance))
+            if it.chance >= 100 then cell.chance:SetTextColor(1, 1, 1) else cell.chance:SetTextColor(1, 0.82, 0.2) end
+            cell.count:SetText(CountText(it))
+            cell.group:SetText(it.group > 0 and ("G" .. it.group) or "")
+            local was
+            for _, s in ipairs(serverList) do if s.item == it.item then was = s end end
+            if not was or was.chance ~= it.chance or was.min ~= it.min or was.max ~= it.max or was.group ~= it.group then
+                cell.mod:Show()
+            else
+                cell.mod:Hide()
+            end
+            cell:Show()
+        else
+            cell.it = nil
+            cell:Hide()
+        end
+    end
+    if ui.lootCount then
+        local dirty = t and state.lootWork[t.entry]
+        ui.lootCount:SetText(list and (string.format(T("%d 件", "%d items"), n) .. (dirty and ("  |cffff9933*" .. T("未保存", "unsaved") .. "|r") or "")) or "")
+    end
+    if ui.lootEmpty then
+        if not t then ui.lootEmpty:SetText("")
+        elseif not list then ui.lootEmpty:SetText(T("读取中…", "Loading…"))
+        elseif n == 0 then
+            ui.lootEmpty:SetText(T("这种宝箱现在只给金币。\n把右边“物品库”里的物品拖到这里，或点一下物品加入；也可以把背包里的物品拖进来。",
+                "This chest gives gold only.\nDrag an item from the Item pool here, or click one; items from your bags work too."))
+        else ui.lootEmpty:SetText("") end
+    end
+end
+
+function ui.LayoutLoot()
+    local area = ui.lootArea
+    if not (area and ui.lootCells) then return end
+    local w, h = area:GetWidth() or 0, area:GetHeight() or 0
+    if w < 60 or h < 60 then return end
+    local cols = math.max(1, math.floor((w - 16) / (LOOT_CELL + LOOT_GAP)))
+    local vis = math.max(1, math.floor((h - 38) / (LOOT_CELL + LOOT_GAP)))
+    ui.lootCols, ui.lootRowsVis = cols, vis
+    for i = #ui.lootCells + 1, cols * vis do
+        local cell = CreateFrame("Button", nil, area)
+        cell:SetSize(LOOT_CELL, LOOT_CELL)
+        cell:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        cell.rim = cell:CreateTexture(nil, "BACKGROUND")
+        cell.rim:SetAllPoints()
+        cell.tex = cell:CreateTexture(nil, "ARTWORK")
+        cell.tex:SetPoint("TOPLEFT", 2, -2)
+        cell.tex:SetPoint("BOTTOMRIGHT", -2, 2)
+        cell.tex:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        local hl = cell:CreateTexture(nil, "HIGHLIGHT")
+        hl:SetAllPoints()
+        hl:SetTexture(0.45, 0.70, 1.0, 0.35)
+        local function Small(point, x, y)
+            local fs = cell:CreateFontString(nil, "OVERLAY")
+            fs:SetFont(STANDARD_TEXT_FONT or "Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+            fs:SetPoint(point, x, y)
+            return fs
+        end
+        cell.chance = Small("BOTTOMLEFT", 3, 3)
+        cell.count = Small("TOPRIGHT", -3, -3)
+        cell.group = Small("TOPLEFT", 3, -3)
+        cell.group:SetTextColor(0.5, 0.8, 1)
+        cell.mod = cell:CreateTexture(nil, "OVERLAY")   -- an orange dot: new or changed, not saved yet
+        cell.mod:SetSize(9, 9)
+        cell.mod:SetPoint("TOPRIGHT", -2, -2)
+        cell.mod:SetTexture(1, 0.6, 0.15, 1)
+        cell.mod:Hide()
+        cell:SetScript("OnEnter", function(self)
+            local it = self.it
+            if not it then return end
+            ui.ItemTip(self, "ANCHOR_RIGHT", it.item, ItemLabel(it), it.q, {
+                { " ", 1, 1, 1 },
+                { string.format(T("概率 %s   数量 %d-%d   组 %d", "Chance %s   Count %d-%d   Group %d"), ChanceText(it.chance), it.min, it.max, it.group), 1, 0.82, 0 },
+                { T("点击：改概率、数量、组    右键：更多", "Click: edit chance, count, group    Right-click: more"), 0.7, 0.7, 0.7 },
+                (it.q >= 8) and { T("品质 " .. it.q .. "：客户端没有这个品质的颜色，开箱时拾取窗口会报 Lua 错误，不要放进宝箱。", "Quality " .. it.q .. ": the client has no colour for it, the loot window gives a Lua error; keep it out of chests."), 1, 0.3, 0.3 } or nil,
+            })
+        end)
+        cell:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        cell:SetScript("OnReceiveDrag", DropOnLoot)
+        cell:SetScript("OnClick", function(self, button)
+            if GetCursorInfo and GetCursorInfo() then DropOnLoot() return end   -- an item on the cursor: put it in, do not edit the cell
+            local it = self.it
+            if not it then return end
+            if button == "RightButton" then ui.LootMenu(it) else ui.EditLoot(it) end
+        end)
+        ui.lootCells[i] = cell
+    end
+    for i, cell in ipairs(ui.lootCells) do
+        cell:ClearAllPoints()
+        cell:SetPoint("TOPLEFT", area, "TOPLEFT", 8 + ((i - 1) % cols) * (LOOT_CELL + LOOT_GAP), -30 - math.floor((i - 1) / cols) * (LOOT_CELL + LOOT_GAP))
+    end
+    ui.RefreshLoot()
+end
+
+function ui.LootMenu(it)
+    local t = Selected()
+    if not t then return end
+    ui.lootMenuFrame = ui.lootMenuFrame or CreateFrame("Frame", "RebornTreasureGMLootMenu", UIParent, "UIDropDownMenuTemplate")
+    local entry, id = t.entry, it.item
+    local function Set(chance) SetLootLine(entry, id, chance) end
+    local menu = {
+        { text = ItemLabel(it), isTitle = true, notCheckable = true },
+        { text = T("编辑…", "Edit…"), notCheckable = true, func = function() ui.EditLoot(it) end },
+        { text = T("概率 100%（必掉）", "Chance 100% (always)"), notCheckable = true, func = function() Set(100) end },
+        { text = T("概率 50%", "Chance 50%"), notCheckable = true, func = function() Set(50) end },
+        { text = T("概率 10%", "Chance 10%"), notCheckable = true, func = function() Set(10) end },
+        { text = T("概率 1%", "Chance 1%"), notCheckable = true, func = function() Set(1) end },
+        { text = "|cffff4040" .. T("从掉落表删除", "Remove from the loot table") .. "|r", notCheckable = true, func = function() ui.DeleteLoot(entry, id) end },
+        { text = T("取消", "Cancel"), notCheckable = true },
+    }
+    ui.OpenMenu(menu, ui.lootMenuFrame)
+end
+
+local function BuildLootGrid(area)
+    area:EnableMouse(true)
+    area:SetScript("OnReceiveDrag", DropOnLoot)
+    area:SetScript("OnMouseUp", function() if GetCursorInfo and GetCursorInfo() then DropOnLoot() end end)
+    area:EnableMouseWheel(true)
+    area:SetScript("OnMouseWheel", function(_, d) state.lootRow = (state.lootRow or 0) - d; ui.RefreshLoot() end)
+    ui.lootCells = {}
+    ui.lootCount = area:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    ui.lootCount:SetPoint("TOPRIGHT", -10, -10)
+    ui.lootEmpty = area:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    ui.lootEmpty:SetPoint("TOPLEFT", 16, -40)
+    ui.lootEmpty:SetPoint("BOTTOMRIGHT", -16, 10)
+    ui.lootEmpty:SetJustifyH("CENTER")
+    area:SetScript("OnSizeChanged", function() ui.LayoutLoot() end)
+end
+
+-- ---------------------------------------------------------------- the editor of one loot line
+local function BuildLootEditor(main)
+    local f = CreateFrame("Frame", "RebornTreasureLootEditor", main)
+    f:SetSize(330, 250)
+    f:SetPoint("CENTER", UIParent, "CENTER", -80, 40)
+    f:SetFrameStrata("FULLSCREEN_DIALOG")
+    f:SetToplevel(true)
+    f:SetClampedToScreen(true)
+    f:SetMovable(true)
+    f:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 24,
+        insets = { left = 6, right = 6, top = 6, bottom = 6 },
+    })
+    f:EnableMouse(true)
+    f:Hide()
+    local solid = f:CreateTexture(nil, "BACKGROUND")
+    solid:SetPoint("TOPLEFT", 7, -7)
+    solid:SetPoint("BOTTOMRIGHT", -7, 7)
+    solid:SetTexture(0.02, 0.02, 0.03, 0.97)
+    local drag = CreateFrame("Frame", nil, f)
+    drag:SetPoint("TOPLEFT", 6, -4)
+    drag:SetPoint("TOPRIGHT", -30, -4)
+    drag:SetHeight(28)
+    drag:EnableMouse(true)
+    drag:RegisterForDrag("LeftButton")
+    drag:SetScript("OnDragStart", function() f:StartMoving() end)
+    drag:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+    Header(f, "Interface\\Icons\\INV_Misc_Bag_08", "掉落物品", "Loot line")
+    local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+    close:SetPoint("TOPRIGHT", -4, -4)
+
+    f.icon = f:CreateTexture(nil, "ARTWORK")
+    f.icon:SetSize(40, 40)
+    f.icon:SetPoint("TOPLEFT", 18, -42)
+    f.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    f.name = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    f.name:SetPoint("LEFT", f.icon, "RIGHT", 10, 6)
+    f.name:SetPoint("RIGHT", f, "RIGHT", -16, 0)
+    f.name:SetJustifyH("LEFT")
+    f.sub = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    f.sub:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 0, -4)
+
+    local function Field(labelZh, labelEn, y, tipZh, tipEn)
+        local fs = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        fs:SetPoint("TOPLEFT", 20, y)
+        Bind(fs, labelZh, labelEn)
+        local eb = EditField(f, 70, true)
+        eb:SetPoint("TOPLEFT", 150, y + 4)
+        eb:SetScript("OnEnterPressed", function(self) self:ClearFocus(); ui.ApplyLootEdit() end)
+        local hold = CreateFrame("Frame", nil, f)
+        hold:SetPoint("TOPLEFT", fs, "TOPLEFT", -2, 2)
+        hold:SetPoint("BOTTOMRIGHT", eb, "BOTTOMRIGHT", 0, 0)
+        Tip(hold, tipZh, tipEn)
+        return eb
+    end
+    f.eChance = Field("概率 %（0–100）", "Chance % (0-100)", -100, "这一件掉落的概率。组为 0 时每件独立计算；100 = 必掉。", "Chance for this line. With group 0 every line rolls on its own; 100 = always.")
+    f.eMin = Field("最少数量", "Min count", -128, "掉落时最少几个。", "Fewest pieces when it drops.")
+    f.eMax = Field("最多数量", "Max count", -156, "掉落时最多几个（1–255）。", "Most pieces when it drops (1-255).")
+    f.eGroup = Field("组（0 = 无）", "Group (0 = none)", -184, "同一组（编号相同、大于 0）里的物品一次只掉其中一件，概率是组内的相对权重。", "Lines sharing a group number above 0 drop only one of them; the chances are weights inside the group.")
+
+    local apply = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+    apply:SetSize(90, 24)
+    apply:SetPoint("BOTTOMLEFT", 20, 16)
+    Bind(apply, "应用", "Apply")
+    apply:SetScript("OnClick", function() ui.ApplyLootEdit() end)
+    local del = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+    del:SetSize(90, 24)
+    del:SetPoint("LEFT", apply, "RIGHT", 8, 0)
+    Bind(del, "删除", "Remove")
+    del:SetScript("OnClick", function()
+        local e = f.editing
+        if e then ui.DeleteLoot(e.entry, e.item.item) end
+        f:Hide()
+    end)
+    ui.lootEditor = f
+end
+
+function ui.EditLoot(it)
+    local t = Selected()
+    local f = ui.lootEditor
+    if not (t and f and it) then return end
+    f.editing = { entry = t.entry, item = it }
+    f.icon:SetTexture(IconPath(it.icon, 1))
+    local q = RARITY_Q[it.q] or RARITY_Q[1]
+    f.name:SetText("|cff" .. q[4] .. ItemLabel(it) .. "|r")
+    f.sub:SetText(string.format("%s %d   %s", T("物品", "Item"), it.item, t.name))
+    f.eChance:SetText(string.format("%g", it.chance))
+    f.eMin:SetText(tostring(it.min))
+    f.eMax:SetText(tostring(it.max))
+    f.eGroup:SetText(tostring(it.group))
+    f:Show()
+    f:Raise()
+end
+
+function ui.ApplyLootEdit()
+    local f = ui.lootEditor
+    local e = f and f.editing
+    if not e then return end
+    local chance = math.max(0, math.min(100, tonumber(f.eChance:GetText()) or 100))
+    local mn = math.max(1, math.min(255, math.floor(tonumber(f.eMin:GetText()) or 1)))
+    local mx = math.max(mn, math.min(255, math.floor(tonumber(f.eMax:GetText()) or mn)))
+    local grp = math.max(0, math.min(255, math.floor(tonumber(f.eGroup:GetText()) or 0)))
+    SetLootLine(e.entry, e.item.item, chance, mn, mx, grp)
+    f:Hide()
+end
+
+-- ---------------------------------------------------------------- the item pool
+local POOL_CATS = {
+    { "all", "全部", "All" }, { "use", "消耗", "Use" }, { "gear", "装备", "Gear" }, { "cloth", "服饰", "Cloth" },
+    { "weapon", "武器", "Weapon" }, { "mount", "坐骑", "Mount" }, { "pet", "宠物", "Pet" }, { "recipe", "配方", "Recipe" },
+    { "trade", "材料", "Trade" }, { "quest", "任务", "Quest" }, { "gem", "宝石", "Gem" }, { "misc", "杂项", "Misc" },
+}
+local POOL_ROW_H = 36
+
+function ui.PoolRequest(page)
+    local p = state.pool
+    if page then p.page = math.max(0, page) end
+    p.loading = true
+    Cmd("items " .. p.cat .. " " .. p.page .. (p.text ~= "" and (" " .. CleanText(p.text)) or ""))
+    ui.RefreshPool()
+end
+
+function ui.RefreshPool()
+    if not ui.poolRows then return end
+    local p = state.pool
+    for key, b in pairs(ui.poolCatBtns or {}) do
+        if key == p.cat then b:LockHighlight() else b:UnlockHighlight() end
+    end
+    local visible = ui.poolVisible or 0
+    state.poolOffset = math.max(0, math.min(state.poolOffset or 0, #p.items - visible))
+    for i, row in ipairs(ui.poolRows) do
+        local it = (i <= visible) and p.items[i + state.poolOffset]
+        if it then
+            local q = RARITY_Q[it.q] or RARITY_Q[1]
+            row.it = it
+            row.rim:SetTexture(q[1], q[2], q[3], 1)
+            row.tex:SetTexture(IconPath(it.icon, 1))
+            row.name:SetText("|cff" .. q[4] .. ItemLabel(it) .. "|r")
+            row.info:SetText("|cff888888" .. it.id .. "|r" .. (it.q >= 8 and ("  |cffff6060" .. T("品质", "quality") .. " " .. it.q .. "|r") or ""))
+            if LootInList(it.id) then row.have:Show() else row.have:Hide() end
+            row:Show()
+        else
+            row.it = nil
+            row:Hide()
+        end
+    end
+    if ui.poolPage then
+        ui.poolPage:SetText(string.format(T("第 %d 页", "Page %d"), p.page + 1) .. (p.loading and ("  " .. T("读取中…", "Loading…")) or ""))
+    end
+    if ui.poolPrev then
+        if p.page > 0 then ui.poolPrev:Enable() else ui.poolPrev:Disable() end
+        if p.more then ui.poolNext:Enable() else ui.poolNext:Disable() end
+    end
+    if ui.poolEmpty then
+        ui.poolEmpty:SetText((#p.items == 0 and not p.loading) and T("没有找到。可以输入物品编号，或中文/英文名字的一部分。", "Nothing found. Type an item id, or part of a Chinese / English name.") or "")
+    end
+end
+
+local function PoolGhost()
+    if ui.ghost then return ui.ghost end
+    local g = CreateFrame("Frame", nil, UIParent)
+    g:SetSize(40, 40)
+    g:SetFrameStrata("TOOLTIP")
+    g.tex = g:CreateTexture(nil, "ARTWORK")
+    g.tex:SetAllPoints()
+    g.tex:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    g:SetScript("OnUpdate", function(self)
+        local x, y = GetCursorPosition()
+        local s = UIParent:GetEffectiveScale()
+        self:ClearAllPoints()
+        self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x / s + 18, y / s - 18)
+    end)
+    g:Hide()
+    ui.ghost = g
+    return g
+end
+
+function ui.LayoutPool()
+    local list = ui.poolList
+    if not (list and ui.poolRows) then return end
+    local n = math.max(1, math.floor((list:GetHeight() or 0) / POOL_ROW_H))
+    for i = #ui.poolRows + 1, n do
+        local row = CreateFrame("Button", nil, list)
+        row:SetHeight(POOL_ROW_H - 2)
+        row:SetPoint("TOPLEFT", 0, -(i - 1) * POOL_ROW_H)
+        row:SetPoint("RIGHT", list, "RIGHT", 0, 0)
+        row:RegisterForClicks("LeftButtonUp")
+        row:RegisterForDrag("LeftButton")
+        local bg = row:CreateTexture(nil, "BACKGROUND")
+        bg:SetAllPoints()
+        bg:SetTexture(0.10, 0.10, 0.12, 0.9)
+        local hl = row:CreateTexture(nil, "HIGHLIGHT")
+        hl:SetAllPoints()
+        hl:SetTexture(0.45, 0.70, 1.0, 0.30)
+        row.rim = row:CreateTexture(nil, "ARTWORK")
+        row.rim:SetSize(30, 30)
+        row.rim:SetPoint("LEFT", 4, 0)
+        row.tex = row:CreateTexture(nil, "OVERLAY")
+        row.tex:SetSize(26, 26)
+        row.tex:SetPoint("CENTER", row.rim, "CENTER")
+        row.tex:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        row.name = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        row.name:SetPoint("TOPLEFT", row.rim, "TOPRIGHT", 6, -1)
+        row.name:SetPoint("RIGHT", row, "RIGHT", -22, 0)
+        row.name:SetJustifyH("LEFT")
+        row.info = row:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+        row.info:SetPoint("BOTTOMLEFT", row.rim, "BOTTOMRIGHT", 6, 1)
+        row.have = row:CreateTexture(nil, "OVERLAY")
+        row.have:SetSize(16, 16)
+        row.have:SetPoint("RIGHT", -4, 0)
+        row.have:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+        row:SetScript("OnEnter", function(self)
+            if not self.it then return end
+            ui.ItemTip(self, "ANCHOR_LEFT", self.it.id, ItemLabel(self.it), self.it.q, {
+                { " ", 1, 1, 1 },
+                { T("点击：加入这种宝箱的掉落表（100%，1 个，点“保存”才生效）", "Click: add to this chest's loot table (100%, 1 piece; then Save)"), 0.7, 0.7, 0.7 },
+                { T("也可以拖到中间的掉落表里", "or drag it onto the loot table in the middle"), 0.7, 0.7, 0.7 },
+            })
+        end)
+        row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        row:SetScript("OnClick", function(self)
+            if not self.it then return end
+            if state.dragStamp and GetTime() - state.dragStamp < 0.3 then return end   -- the mouse-up of a drag
+            ui.AddLoot(self.it.id, self.it)
+        end)
+        row:SetScript("OnDragStart", function(self)
+            if not self.it then return end
+            GameTooltip:Hide()
+            state.dragItem = self.it
+            local g = PoolGhost()
+            g.tex:SetTexture(IconPath(self.it.icon, 1))
+            g:Show()
+        end)
+        row:SetScript("OnDragStop", function()
+            local it = state.dragItem
+            state.dragItem = nil
+            state.dragStamp = GetTime()
+            if ui.ghost then ui.ghost:Hide() end
+            if it and ui.lootArea and MouseIsOver(ui.lootArea) then ui.AddLoot(it.id, it) end
+        end)
+        ui.poolRows[i] = row
+    end
+    ui.poolVisible = n
+    ui.RefreshPool()
+end
+
+local function BuildPool(pool)
+    state.pool = state.pool or { cat = "all", page = 0, text = "", items = {}, more = false }
+    ui.poolCatBtns = {}
+    local W = 52
+    for k, c in ipairs(POOL_CATS) do
+        local b = CreateFrame("Button", nil, pool, "UIPanelButtonTemplate")
+        b:SetSize(W, 20)
+        b:SetPoint("TOPLEFT", 2 + ((k - 1) % 4) * (W + 2), -2 - math.floor((k - 1) / 4) * 22)
+        Bind(b, c[2], c[3])
+        b:SetScript("OnClick", function()
+            state.pool.cat = c[1]
+            state.poolOffset = 0
+            ui.PoolRequest(0)
+        end)
+        ui.poolCatBtns[c[1]] = b
+    end
+    local box = EditField(pool, 100, false)
+    box:SetPoint("TOPLEFT", 8, -74)
+    box:SetPoint("RIGHT", pool, "RIGHT", -62, 0)
+    box:SetMaxLetters(40)
+    box:SetScript("OnEnterPressed", function(self)
+        self:ClearFocus()
+        state.pool.text = self:GetText() or ""
+        if state.pool.text:match("^%s*%d+%s*$") then state.pool.cat = "all" end   -- an item id: look everywhere
+        state.poolOffset = 0
+        ui.PoolRequest(0)
+    end)
+    Tip(box, "搜索物品", "Search items", T("写物品编号（会在所有分类里找），或中文/英文名字的一部分，按 Enter。", "An item id (searched in every category), or part of a Chinese / English name, then Enter."))
+    ui.poolBox = box
+    local go = CreateFrame("Button", nil, pool, "UIPanelButtonTemplate")
+    go:SetSize(54, 22)
+    go:SetPoint("TOPRIGHT", -2, -73)
+    Bind(go, "搜索", "Search")
+    go:SetScript("OnClick", function() box:GetScript("OnEnterPressed")(box) end)
+
+    local prev = CreateFrame("Button", nil, pool, "UIPanelButtonTemplate")
+    prev:SetSize(30, 20)
+    prev:SetPoint("TOPLEFT", 2, -100)
+    prev:SetText("<")
+    prev:SetScript("OnClick", function() state.poolOffset = 0; ui.PoolRequest(state.pool.page - 1) end)
+    local nxt = CreateFrame("Button", nil, pool, "UIPanelButtonTemplate")
+    nxt:SetSize(30, 20)
+    nxt:SetPoint("LEFT", prev, "RIGHT", 2, 0)
+    nxt:SetText(">")
+    nxt:SetScript("OnClick", function() state.poolOffset = 0; ui.PoolRequest(state.pool.page + 1) end)
+    ui.poolPrev, ui.poolNext = prev, nxt
+    ui.poolPage = pool:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    ui.poolPage:SetPoint("LEFT", nxt, "RIGHT", 8, 0)
+
+    local list = CreateFrame("Frame", nil, pool)
+    list:SetPoint("TOPLEFT", 2, -124)
+    list:SetPoint("BOTTOMRIGHT", -2, 2)
+    list:EnableMouseWheel(true)
+    list:SetScript("OnMouseWheel", function(_, d) state.poolOffset = (state.poolOffset or 0) - d * 3; ui.RefreshPool() end)
+    list:SetScript("OnSizeChanged", function() ui.LayoutPool() end)
+    ui.poolList = list
+    ui.poolRows = {}
+    ui.poolEmpty = list:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    ui.poolEmpty:SetPoint("TOPLEFT", 10, -20)
+    ui.poolEmpty:SetPoint("RIGHT", -10, 0)
+    ui.poolEmpty:SetJustifyH("CENTER")
 end
 
 local function BuildMiddle(main)
@@ -875,10 +1536,8 @@ local function BuildMiddle(main)
     lootArea:SetPoint("BOTTOMRIGHT", col, "BOTTOMRIGHT", -8, 8)
     lootArea:SetBackdropColor(0, 0, 0, 0.4)
     Header(lootArea, "Interface\\Icons\\INV_Misc_Bag_08", "掉落表", "Loot table")
-    local soon = lootArea:CreateFontString(nil, "OVERLAY", "GameFontDisable")
-    soon:SetPoint("CENTER")
-    Bind(soon, "下一期：物品图标、爆率、数量", "Next: item icons, chance, count")
     ui.lootArea = lootArea
+    BuildLootGrid(lootArea)
 
     local empty = col:CreateFontString(nil, "OVERLAY", "GameFontDisableLarge")
     empty:SetPoint("CENTER")
@@ -1178,6 +1837,9 @@ local function SetRightTab(which)
     if which == "spawns" then
         ui.RefreshSpawnList()
         if ui.main and ui.main:IsShown() then ui.RequestSpawns() end
+    elseif which == "pool" and not state.pool.loaded and ui.main and ui.main:IsShown() then
+        state.pool.loaded = true
+        ui.PoolRequest(0)
     end
 end
 
@@ -1202,10 +1864,7 @@ local function BuildRight(main)
     local pool = CreateFrame("Frame", nil, col)
     pool:SetPoint("TOPLEFT", 4, -36)
     pool:SetPoint("BOTTOMRIGHT", -4, 4)
-    local soon = pool:CreateFontString(nil, "OVERLAY", "GameFontDisable")
-    soon:SetPoint("CENTER")
-    soon:SetWidth(200)
-    Bind(soon, "下一期：分类、搜索、拖进掉落表", "Next: categories, search, drag into the loot table")
+    BuildPool(pool)
     ui.poolPane = pool
 
     -- ---------------- tab: spawns
@@ -1566,9 +2225,7 @@ local function BuildContents(main)
         row:SetScript("OnEnter", function(self)
             if not self.item then return end
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            local ok = pcall(GameTooltip.SetHyperlink, GameTooltip, "item:" .. self.item)
-            if not ok then GameTooltip:AddLine(self.name:GetText() or "") end
-            GameTooltip:Show()
+            ui.ItemTip(self, "ANCHOR_RIGHT", self.item, self.name:GetText() or "", self.q)
         end)
         row:SetScript("OnLeave", function() GameTooltip:Hide() end)
         ui.contentsRows[i] = row
@@ -1583,6 +2240,7 @@ local function BuildContents(main)
             if it then
                 local rar = RARITY_Q[it.q] or RARITY_Q[1]
                 row.item = it.item
+                row.q = it.q
                 row.icon:SetTexture(IconPath(it.icon, 1))
                 row.rim:SetTexture(rar[1], rar[2], rar[3], 1)
                 local nm = (IsZh() and it.zh ~= "" and it.zh) or it.name
@@ -1843,6 +2501,8 @@ local function Layout()
     ui.middle:SetPoint("BOTTOMRIGHT", ui.right, "BOTTOMLEFT", -6, 0)
     if ui.LayoutRows then ui.LayoutRows() end
     if ui.LayoutSpawnRows then ui.LayoutSpawnRows() end
+    if ui.LayoutLoot then ui.LayoutLoot() end
+    if ui.LayoutPool then ui.LayoutPool() end
 end
 
 local function SaveGeometry()
@@ -1968,6 +2628,8 @@ local function BuildMain()
         if ui.looksFrame then ui.looksFrame:Hide() end
         if ui.contentsFrame then ui.contentsFrame:Hide() end
         if ui.iconsFrame then ui.iconsFrame:Hide() end
+        if ui.lootEditor then ui.lootEditor:Hide() end
+        if ui.ghost then ui.ghost:Hide() end
     end)
 end
 
@@ -2021,6 +2683,8 @@ local function OnServer(msg)
         RefreshList()
         ui.RefreshCard()
         ui.RefreshSpawnList()
+        ui.RequestLootIfNeeded()
+        ui.RefreshLoot()
     elseif kind == "SP_START" then
         state.spawnsNew = {}
         state.cluesNew = {}
@@ -2049,19 +2713,48 @@ local function OnServer(msg)
             ui.RefreshSpawnList()
         end
     elseif kind == "LT_START" then
-        if tonumber(f[2]) == state.loot.entry then state.loot.items = {}; state.loot.ready = false end
+        local entry = tonumber(f[2])
+        state.lootNew[entry or 0] = {}
+        if entry == state.loot.entry then state.loot.items = {}; state.loot.ready = false end
     elseif kind == "LT" then
-        if tonumber(f[2]) == state.loot.entry then
-            state.loot.items[#state.loot.items + 1] = {
-                item = tonumber(f[3]) or 0, chance = tonumber(f[4]) or 0, min = tonumber(f[5]) or 1, max = tonumber(f[6]) or 1,
-                group = tonumber(f[7]) or 0, q = tonumber(f[8]) or 1, icon = f[9] or "", name = f[10] or "", zh = f[11] or "",
-            }
-        end
+        local entry = tonumber(f[2])
+        local line = {
+            item = tonumber(f[3]) or 0, chance = tonumber(f[4]) or 0, min = tonumber(f[5]) or 1, max = tonumber(f[6]) or 1,
+            group = tonumber(f[7]) or 0, q = tonumber(f[8]) or 1, icon = f[9] or "", name = f[10] or "", zh = f[11] or "",
+        }
+        local list = state.lootNew[entry or 0]
+        if list then list[#list + 1] = line end
+        if entry == state.loot.entry then state.loot.items[#state.loot.items + 1] = line end
     elseif kind == "LT_END" then
-        if tonumber(f[2]) == state.loot.entry then
+        local entry = tonumber(f[2])
+        if entry and state.lootNew[entry] then
+            state.lootByType[entry] = state.lootNew[entry]
+            state.lootNew[entry] = nil
+        end
+        if entry == state.loot.entry then
             state.loot.ready = true
             if ui.RefreshContents then ui.RefreshContents() end
         end
+        ui.RefreshLoot()
+        ui.RefreshPool()
+    elseif kind == "IT_START" then
+        state.poolNew = { cat = f[2], page = tonumber(f[3]) or 0, items = {} }
+    elseif kind == "IT" then
+        if state.poolNew then
+            state.poolNew.items[#state.poolNew.items + 1] = {
+                id = tonumber(f[2]) or 0, q = tonumber(f[3]) or 1, icon = f[7] or "", name = f[8] or "", zh = f[9] or "",
+            }
+        end
+    elseif kind == "IT_END" then
+        local n = state.poolNew
+        state.poolNew = nil
+        if n and n.cat == state.pool.cat and n.page == state.pool.page then
+            state.pool.items = n.items
+            state.pool.more = f[3] == "1"
+            state.pool.loading = false
+            state.poolOffset = 0
+        end
+        ui.RefreshPool()
     elseif kind == "IC_START" then
         state.iconNew, state.iconNewCat = {}, f[2] or "chest"
     elseif kind == "IC" then
@@ -2086,13 +2779,25 @@ local function OnServer(msg)
         local names = { typenew = T("已新建", "Created"), typecopy = T("已复制", "Copied"), typedel = T("已删除", "Deleted"), typeset = T("已保存", "Saved"),
             spawngo = T("已传送", "Teleported"), spawnshow = T("宝箱已显示", "Chest shown"), spawndel = T("点位已删除", "Spawn deleted"),
             spawnhere = T("点位已移到脚下", "Spawn moved here"), spawnrespawn = T("刷新时间已保存", "Respawn saved"),
-            spawncomment = T("备注已保存", "Note saved"), spawnclue = T("线索已保存", "Clue saved"), spawntype = T("种类已改", "Type changed") }
+            spawncomment = T("备注已保存", "Note saved"), spawnclue = T("线索已保存", "Clue saved"), spawntype = T("种类已改", "Type changed"),
+            lootset = T("掉落已保存", "Loot saved"), lootdel = T("已从掉落表删除", "Removed from the loot table") }
         Status((names[what] or what) .. (f[3] and ("  " .. f[3]) or ""))
         if what == "spawnsnap" then
             Status(string.format(T("贴地：移动 %s 个，在水下 %s 个，没处理 %s 个（地图没加载）", "Snapped: %s moved, %s under water, %s skipped (map not loaded)"),
                 f[4] or "0", f[5] or "0", f[6] or "0"))
         end
         if what == "typeset" then RefreshLooks() end
+        if what == "lootset" or what == "lootdel" then
+            Status(T("掉落表已保存", "Loot table saved") .. "  " .. (f[4] or ""))
+            local entry = tonumber(f[3])
+            if entry and not state.lootReread then
+                state.lootReread = true   -- one read after the whole burst of answers
+                ui.After(0.8, function()
+                    state.lootReread = nil
+                    ui.RequestLoot(entry)
+                end)
+            end
+        end
         if what:sub(1, 5) == "spawn" then
             -- teleport and show: wait for the new map to load, then ask for the chest
             if what == "spawngo" and state.pendingShow == tonumber(f[3]) then
@@ -2125,6 +2830,7 @@ local function Build()
         { "looks", function() BuildLooks(ui.main) end },
         { "contents", function() BuildContents(ui.main) end },
         { "icons", function() BuildIcons(ui.main) end },
+        { "lootedit", function() BuildLootEditor(ui.main) end },
         { "layout", function() RestoreGeometry(); Layout(); ui.RefreshCard() end },
     }
     for _, s in ipairs(stages) do

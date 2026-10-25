@@ -165,7 +165,9 @@ namespace
         text.erase(std::remove_if(text.begin(), text.end(), [](char ch) { return ch == '%' || ch == '_' || ch == '\\' || ch == '\''; }), text.end());
         WorldDatabase.EscapeString(text);
 
-        std::string where = std::string("(") + CategoryCond(cat) + ")";
+        // the client's loot window colours a line by item quality and only knows 0-7; an item above that gives a Lua error
+        // in Blizzard's LootFrame.lua (line 111) when the chest is opened, so such items are not offered
+        std::string where = std::string("(") + CategoryCond(cat) + ") AND i.Quality <= 7";
         if (!text.empty())
         {
             if (IsNumber(text))
@@ -672,9 +674,15 @@ public:
                 Fail(handler, gm, "没有这种宝箱");
                 return true;
             }
-            if (!sObjectMgr->GetItemTemplate(item))
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(item);
+            if (!proto)
             {
                 Fail(handler, gm, "没有这个物品: " + w[2]);
+                return true;
+            }
+            if (proto->Quality > 7)   // see SendItems
+            {
+                Fail(handler, gm, Acore::StringFormat("物品 {} 的品质值是 {}（超过 7），客户端的拾取窗口显示不了会报 Lua 错误，不能加进宝箱", item, uint32(proto->Quality)));
                 return true;
             }
             chance = std::max(0.0f, std::min(chance, 100.0f));
