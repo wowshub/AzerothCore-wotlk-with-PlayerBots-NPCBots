@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "ObjectGuid.h"
@@ -80,6 +81,36 @@ namespace DcDeathLog
     // run's members, biggest first.
     void Totals(std::string const& runId, std::size_t maxSources, std::size_t maxHealers,
                 std::vector<SourceTotal>* sources, std::vector<HealerTotal>* healers, std::uint64_t* taken);
+    // RebornWOW DCSTAT3A: what the party DID, not only what it took.
+    // Damage a tracked member (or its pet, or an NPCBot it owns) dealt to creatures, summed per
+    // member, per target name and per boss fight, plus the damage each member took.
+    struct MemberOut
+    {
+        std::string name;
+        std::uint64_t dealt = 0;
+        std::uint64_t taken = 0;     // only players are tracked as victims, so an NPCBot reads 0
+    };
+    struct TargetOut
+    {
+        std::string name;
+        bool boss = false;
+        std::uint64_t total = 0;
+    };
+    struct BossFight
+    {
+        std::string boss;
+        std::uint32_t durMs = 0;     // first party hit -> last party hit on this boss
+        std::uint64_t total = 0;
+        std::vector<std::pair<std::string, std::uint64_t>> members;  // biggest first
+    };
+    struct Output
+    {
+        std::vector<MemberOut> members;
+        std::vector<TargetOut> targets;
+        std::vector<BossFight> bosses;
+    };
+    // The run's output so far (biggest first). Does not clear anything.
+    void OutputOf(std::string const& runId, Output& out);
     // Registers the engine hooks (call once from AddSC).
     void Register();
 }

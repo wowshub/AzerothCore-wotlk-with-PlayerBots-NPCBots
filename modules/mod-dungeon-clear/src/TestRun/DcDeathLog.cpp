@@ -54,9 +54,26 @@ namespace DcDeathLog
             std::string spell;
         };
 
+        // DCSTAT3A: damage one member dealt (keyed by the member's own guid: a player, or an NPCBot)
+        struct BossAcc
+        {
+            std::uint64_t total = 0;
+            std::uint32_t firstMs = 0, lastMs = 0;
+        };
+        struct OutRec
+        {
+            std::string runId;
+            std::string name;
+            std::uint64_t total = 0;
+            std::unordered_map<std::string, std::uint64_t> byTarget;
+            std::unordered_map<std::string, bool> targetBoss;
+            std::unordered_map<std::string, BossAcc> byBoss;
+        };
+
         struct Victim
         {
             std::string runId;
+            std::string name;                 // DCSTAT3A
             std::deque<HitRec> hits;
             std::deque<HealRec> heals;
             std::unordered_map<std::string, SourceTotal> dmg;
@@ -67,6 +84,8 @@ namespace DcDeathLog
 
         std::mutex g_mu;
         std::unordered_map<ObjectGuid, Victim> g_victims;
+        std::unordered_map<ObjectGuid, OutRec> g_out;   // DCSTAT3A
+        constexpr std::size_t kTargetCap = 120;
         std::atomic<std::uint32_t> g_count{0};
 
         std::uint32_t NowMs()
@@ -125,8 +144,72 @@ namespace DcDeathLog
                 Remember(target, attacker, spellInfo);
             }
 
+            // DCSTAT3A: a hit on a creature, credited to the tracked member behind the attacker
+            void DealtByParty(Unit* attacker, Unit* victim, std::uint32_t damage)
+            {
+                if (!attacker || attacker == victim)
+                    return;
+                Creature* target = victim->ToCreature();
+                if (!target || target->IsControlledByPlayer() || target->IsNPCBot() || target->IsNPCBotPet())
+                    return;
+                Unit* who = attacker->GetCharmerOrOwnerOrSelf();
+                if (!who || who == victim)
+                    return;
+                ObjectGuid ownerGuid;
+                if (who->IsPlayer())
+                    ownerGuid = who->GetGUID();
+                else if (Creature* bot = who->ToCreature(); bot && bot->IsNPCBot())
+                {
+                    Player* owner = bot->GetBotOwner();
+                    if (!owner)
+                        return;
+                    ownerGuid = owner->GetGUID();
+                }
+                else
+                    return;
+
+                std::uint32_t const dealt = std::min<std::uint32_t>(damage, target->GetHealth());  // no overkill
+                if (!dealt)
+                    return;
+                bool const boss = target->IsDungeonBoss();
+                std::string const targetName = target->GetName();
+
+                std::lock_guard<std::mutex> lock(g_mu);
+                auto vit = g_victims.find(ownerGuid);
+                if (vit == g_victims.end())
+                    return;
+                OutRec& o = g_out[who->GetGUID()];
+                if (o.runId != vit->second.runId)
+                {
+                    o = OutRec();
+                    o.runId = vit->second.runId;
+                    o.name = who->GetName();
+                }
+                o.total += dealt;
+                if (o.byTarget.size() < kTargetCap || o.byTarget.count(targetName))
+                {
+                    o.byTarget[targetName] += dealt;
+                    if (boss)
+                        o.targetBoss[targetName] = true;
+                }
+                if (boss)
+                {
+                    BossAcc& b = o.byBoss[targetName];
+                    std::uint32_t const now = NowMs();
+                    if (!b.total)
+                        b.firstMs = now;
+                    b.lastMs = now;
+                    b.total += dealt;
+                }
+            }
+
             void OnDamage(Unit* attacker, Unit* victim, uint32& damage) override
             {
+                if (damage && victim && g_count.load(std::memory_order_relaxed) && !victim->IsPlayer())
+                {
+                    DealtByParty(attacker, victim, damage);
+                    return;
+                }
                 if (!damage || !victim || !g_count.load(std::memory_order_relaxed) || !victim->IsPlayer() || !victim->IsAlive())
                     return;
                 // RebornWOW DCBOSS1B: this hook runs BEFORE the core's god-mode check, so an
@@ -151,6 +234,7 @@ namespace DcDeathLog
                 if (it == g_victims.end())
                     return;
                 Victim& v = it->second;
+                v.name = victim->GetName();
                 rec.ms = NowMs();
                 if (v.pending.set && v.pending.attacker == from && rec.ms - v.pending.ms <= kPendingMs)
                 {
@@ -227,6 +311,8 @@ namespace DcDeathLog
     void Untrack(std::string const& runId)
     {
         std::lock_guard<std::mutex> lock(g_mu);
+        for (auto it = g_out.begin(); it != g_out.end();)
+            it = it->second.runId == runId ? g_out.erase(it) : std::next(it);
         for (auto it = g_victims.begin(); it != g_victims.end();)
         {
             if (it->second.runId == runId)
@@ -357,6 +443,73 @@ namespace DcDeathLog
                       [](HealerTotal const& a, HealerTotal const& b) { return a.total > b.total; });
             if (healers->size() > maxHealers)
                 healers->resize(maxHealers);
+        }
+    }
+
+    void OutputOf(std::string const& runId, Output& out)
+    {
+        std::map<std::string, MemberOut> members;
+        std::map<std::string, TargetOut> targets;
+        struct Fight
+        {
+            std::uint64_t total = 0;
+            std::uint32_t first = 0, last = 0;
+            std::map<std::string, std::uint64_t> by;
+        };
+        std::map<std::string, Fight> fights;
+        {
+            std::lock_guard<std::mutex> lock(g_mu);
+            for (auto const& e : g_out)
+            {
+                OutRec const& o = e.second;
+                if (o.runId != runId)
+                    continue;
+                members[o.name].name = o.name;
+                members[o.name].dealt += o.total;
+                for (auto const& t : o.byTarget)
+                {
+                    TargetOut& to = targets[t.first];
+                    to.name = t.first;
+                    auto bit = o.targetBoss.find(t.first);
+                    to.boss = to.boss || (bit != o.targetBoss.end() && bit->second);
+                    to.total += t.second;
+                }
+                for (auto const& b : o.byBoss)
+                {
+                    Fight& f = fights[b.first];
+                    if (!f.total || b.second.firstMs < f.first)
+                        f.first = b.second.firstMs;
+                    f.last = std::max(f.last, b.second.lastMs);
+                    f.total += b.second.total;
+                    f.by[o.name] += b.second.total;
+                }
+            }
+            for (auto const& e : g_victims)
+                if (e.second.runId == runId && !e.second.name.empty())
+                {
+                    members[e.second.name].name = e.second.name;
+                    members[e.second.name].taken += e.second.taken;
+                }
+        }
+        for (auto& m : members)
+            out.members.push_back(std::move(m.second));
+        std::sort(out.members.begin(), out.members.end(),
+                  [](MemberOut const& a, MemberOut const& b) { return a.dealt > b.dealt; });
+        for (auto& t : targets)
+            out.targets.push_back(std::move(t.second));
+        std::sort(out.targets.begin(), out.targets.end(),
+                  [](TargetOut const& a, TargetOut const& b) { return a.total > b.total; });
+        for (auto& f : fights)
+        {
+            BossFight bf;
+            bf.boss = f.first;
+            bf.total = f.second.total;
+            bf.durMs = f.second.last >= f.second.first ? f.second.last - f.second.first : 0;
+            for (auto const& m : f.second.by)
+                bf.members.emplace_back(m.first, m.second);
+            std::sort(bf.members.begin(), bf.members.end(),
+                      [](auto const& a, auto const& b) { return a.second > b.second; });
+            out.bosses.push_back(std::move(bf));
         }
     }
 

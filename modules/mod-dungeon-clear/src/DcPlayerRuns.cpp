@@ -67,6 +67,7 @@ namespace
         // DCSTAT2A: damage the party took by source+spell and healing done by healer (merged over restarts)
         std::vector<DcDeathLog::SourceTotal> taken;
         std::vector<DcDeathLog::HealerTotal> healers;
+        DcDeathLog::Output out;   // DCSTAT3A: damage done / taken per member, per target, per boss fight
     };
 
     constexpr std::size_t kKeep = 20;          // finished runs kept per owner
@@ -117,6 +118,63 @@ namespace
             r.taken.resize(12);
         if (r.healers.size() > 8)
             r.healers.resize(8);
+    }
+
+    // DCSTAT3A: fold a finished stretch's output into the run's (a restarted run keeps its earlier ones)
+    void MergeOutput(Run& r, DcDeathLog::Output const& add)
+    {
+        DcDeathLog::Output& o = r.out;
+        for (auto const& m : add.members)
+        {
+            auto it = std::find_if(o.members.begin(), o.members.end(), [&](auto const& x) { return x.name == m.name; });
+            if (it == o.members.end())
+                o.members.push_back(m);
+            else
+            {
+                it->dealt += m.dealt;
+                it->taken += m.taken;
+            }
+        }
+        for (auto const& t : add.targets)
+        {
+            auto it = std::find_if(o.targets.begin(), o.targets.end(), [&](auto const& x) { return x.name == t.name; });
+            if (it == o.targets.end())
+                o.targets.push_back(t);
+            else
+            {
+                it->total += t.total;
+                it->boss = it->boss || t.boss;
+            }
+        }
+        for (auto const& b : add.bosses)
+        {
+            auto it = std::find_if(o.bosses.begin(), o.bosses.end(), [&](auto const& x) { return x.boss == b.boss; });
+            if (it == o.bosses.end())
+            {
+                o.bosses.push_back(b);
+                continue;
+            }
+            it->total += b.total;
+            it->durMs += b.durMs;
+            for (auto const& m : b.members)
+            {
+                auto mit = std::find_if(it->members.begin(), it->members.end(), [&](auto const& x) { return x.first == m.first; });
+                if (mit == it->members.end())
+                    it->members.push_back(m);
+                else
+                    mit->second += m.second;
+            }
+            std::sort(it->members.begin(), it->members.end(), [](auto const& a, auto const& b2) { return a.second > b2.second; });
+        }
+        auto byDealt = [](auto const& a, auto const& b) { return a.dealt > b.dealt; };
+        std::sort(o.members.begin(), o.members.end(), byDealt);
+        std::sort(o.targets.begin(), o.targets.end(), [](auto const& a, auto const& b) { return a.total > b.total; });
+        if (o.members.size() > 12)
+            o.members.resize(12);
+        if (o.targets.size() > 14)
+            o.targets.resize(14);
+        if (o.bosses.size() > 10)
+            o.bosses.resize(10);
     }
 
     // DCSTAT2A: log every Player in the tank's group (playerbots and real players; NPCBots are creatures)
@@ -322,6 +380,9 @@ namespace
             std::uint64_t taken = 0;
             DcDeathLog::Totals(r.id, 12, 8, &src, &heal, &taken);
             MergeTotals(r, src, heal);
+            DcDeathLog::Output out;   // DCSTAT3A
+            DcDeathLog::OutputOf(r.id, out);
+            MergeOutput(r, out);
             DcDeathLog::Untrack(r.id);
         }
         r.end = time(nullptr);
@@ -595,6 +656,9 @@ namespace DcPlayerRuns
             std::uint64_t taken = 0;
             DcDeathLog::Totals(copy.id, 12, 8, &src, &heal, &taken);
             MergeTotals(copy, src, heal);
+            DcDeathLog::Output out;   // DCSTAT3A
+            DcDeathLog::OutputOf(copy.id, out);
+            MergeOutput(copy, out);
         }
         std::string const cid = Clean(id);
         send(Acore::StringFormat("DC\tMRX\t{}\tR\t{}", cid, Clean(copy.reason)));
@@ -619,6 +683,26 @@ namespace DcPlayerRuns
                                      static_cast<uint64>(t.total), t.hits));
         for (DcDeathLog::HealerTotal const& t : copy.healers)
             send(Acore::StringFormat("DC\tMRX\t{}\tH\t{}\t{}", cid, Clean(t.name), static_cast<uint64>(t.total)));
+        // DCSTAT3A: damage done / taken per member, damage by target, one line per member per boss fight
+        for (DcDeathLog::MemberOut const& m : copy.out.members)
+            send(Acore::StringFormat("DC\tMRX\t{}\tO\t{}\t{}\t{}", cid, Clean(m.name), static_cast<uint64>(m.dealt),
+                                     static_cast<uint64>(m.taken)));
+        for (DcDeathLog::TargetOut const& t : copy.out.targets)
+            send(Acore::StringFormat("DC\tMRX\t{}\tOT\t{}\t{}\t{}", cid, Clean(t.name), t.boss ? 1 : 0,
+                                     static_cast<uint64>(t.total)));
+        for (DcDeathLog::BossFight const& b : copy.out.bosses)
+        {
+            send(Acore::StringFormat("DC\tMRX\t{}\tOB\t{}\t{}\t{}", cid, Clean(b.boss), b.durMs / 1000,
+                                     static_cast<uint64>(b.total)));
+            std::size_t n = 0;
+            for (auto const& m : b.members)
+            {
+                if (++n > 8)
+                    break;
+                send(Acore::StringFormat("DC\tMRX\t{}\tOM\t{}\t{}\t{}", cid, Clean(b.boss), Clean(m.first),
+                                         static_cast<uint64>(m.second)));
+            }
+        }
         send("DC\tMRX_END\t" + cid);
     }
 
