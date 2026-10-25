@@ -2,6 +2,9 @@
 namespace WD154
 {
 constexpr uint32 Mirage=9004110,Swift=9004111,Wisdom=9004112,Clone=9004113,Speed=9004114,Entry=900254;
+// Only the synchronous automatic summon inherits this provenance. Manual casts keep their movement.
+thread_local Player* automaticCloneOwner=nullptr;
+struct CloneScope {Player* previous;CloneScope(Player* p):previous(automaticCloneOwner){automaticCloneOwner=p;}~CloneScope(){automaticCloneOwner=previous;}};
 constexpr char Key[]="RebornWD154.Mirage";
 struct State:DataMap::Base {ObjectGuid clone;};
 constexpr uint32 Cooldown(bool swift){return swift?120000u:180000u;}
@@ -24,9 +27,12 @@ void Register()override{OnCheckCast+=SpellCheckCastFn(cast::Check);AfterCast+=Sp
 class aura:public AuraScript
 {
 PrepareAuraScript(aura);
+ bool automatic=false;
+ bool Load()override{Unit* owner=GetUnitOwner();automatic=WD168::IsAutomaticCast(owner?owner->ToPlayer():nullptr,Mirage);return true;}
 void Apply(AuraEffect const*,AuraEffectHandleModes){Player* p=GetTarget()->ToPlayer();if(!Owns(p,Mirage)||GetCasterGUID()!=p->GetGUID())return;
  if(!p->IsInWorld())return;
  p->CastSpell(p,Speed,true);if(Aura* speed=p->GetAura(Speed,p->GetGUID())){speed->SetMaxDuration(GetMaxDuration());speed->SetDuration(GetDuration());}
+ CloneScope origin(automatic?p:nullptr);
  if(TempSummon* c=p->SummonCreature(Entry,p->GetPosition(),TEMPSUMMON_TIMED_DESPAWN,std::max(1,GetDuration()))){Clear(p);p->CustomData.GetDefault<State>(Key)->clone=c->GetGUID();}
 }
 void Remove(AuraEffect const*,AuraEffectHandleModes){if(Unit* u=GetTarget())u->RemoveAurasDueToSpell(Speed,GetCasterGUID());}
@@ -53,7 +59,7 @@ void IsSummonedBy(WorldObject* summoner)override{Player* p=summoner?summoner->To
  me->SetUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED);me->m_ControlledByPlayer=true;
  for(uint32 i=0;i<3;++i)me->SetVirtualItem(i,p->GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID+(EQUIPMENT_SLOT_MAINHAND+i)*2));
  me->SetByteValue(UNIT_FIELD_BYTES_2,0,p->GetByteValue(UNIT_FIELD_BYTES_2,0));me->SetByteValue(UNIT_FIELD_BYTES_2,1,p->GetByteValue(UNIT_FIELD_BYTES_2,1));
- me->SetDisplayId(p->GetDisplayId());p->CastSpell(me,Clone,true);me->SetWalk(false);Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,25.0f,0.f);me->GetMotionMaster()->MovePoint(1,pos);
+ me->SetDisplayId(p->GetDisplayId());p->CastSpell(me,Clone,true);me->SetWalk(false);if(automaticCloneOwner==p)return;Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,25.0f,0.f);me->GetMotionMaster()->MovePoint(1,pos);
 }
 void UpdateAI(uint32)override{Player* p=ObjectAccessor::GetPlayer(*me,owner);if(!Owns(p,Mirage)||!p->IsInMap(me)||!p->InSamePhase(me)||p->CustomData.GetDefault<State>(Key)->clone!=me->GetGUID())me->DespawnOrUnsummon();}
 };

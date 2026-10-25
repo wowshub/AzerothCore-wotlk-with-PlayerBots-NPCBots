@@ -21,7 +21,13 @@ class call : public AuraScript
     PrepareAuraScript(call);bool made=false;
     void Tick(AuraEffect const*)
     {
-        if(made)return;made=true;Player* p=GetTarget()->ToPlayer();if(!Owns(p,Call)||GetCasterGUID()!=p->GetGUID())return;
+        if(made)return;made=true;
+        if(Creature* c=WDN1::Actor(GetTarget()))
+        {
+            if(GetCasterGUID()==c->GetGUID())WDN2B::Summon(c);
+            return;
+        }
+        Player* p=GetTarget()->ToPlayer();if(!Owns(p,Call)||GetCasterGUID()!=p->GetGUID())return;
         int32 duration=15000;p->ApplySpellMod(9003160,SPELLMOD_DURATION,duration);
         std::vector<ObjectGuid> fresh;
 uint32 count=p->HasSpell(9004131)&&p->HasAura(9004131,p->GetGUID())?6:4;

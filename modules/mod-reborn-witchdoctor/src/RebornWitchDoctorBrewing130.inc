@@ -122,7 +122,8 @@ private:
     bool OwnsChannel(Player* p)
     {
         Spell* spell=p?p->GetCurrentSpell(CURRENT_CHANNELED_SPELL):nullptr;
-        return spell&&spell->GetSpellInfo()->Id==GetId()&&spell->m_targets.GetUnitTargetGUID()==GetTarget()->GetGUID();
+        Unit* owner=GetUnitOwner();
+        return spell&&owner&&spell->GetSpellInfo()->Id==GetId()&&spell->m_targets.GetUnitTargetGUID()==owner->GetGUID();
     }
     void Stop(Player* p,char const* reason)
     {
@@ -194,7 +195,7 @@ bool WD168::BeamSideReady(Player* p,uint32 id)
        p->GetCurrentSpell(CURRENT_GENERIC_SPELL))return false;
     auto plan=ReadPlan(p);if(!plan.available||plan.spec!=1)return false;
     Spell* channel=p->GetCurrentSpell(CURRENT_CHANNELED_SPELL);
-    if(!channel->GetSpellInfo()->IsActionAllowedChannel())return false;
+    if(!channel||!channel->GetSpellInfo()->IsActionAllowedChannel())return false;
     Unit* target=ObjectAccessor::GetUnit(*p,channel->m_targets.GetUnitTargetGUID());
     if(!target)return false;
     Aura* aura=target->GetAura(channel->GetSpellInfo()->Id,p->GetGUID());

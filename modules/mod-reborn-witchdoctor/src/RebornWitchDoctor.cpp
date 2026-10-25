@@ -10,7 +10,13 @@
 #include "ScriptDefines/GlobalScript.h"
 #include "RebornWitchDoctorRanks.h"
 #include "RebornWitchDoctorNpcActor1.h"
+#include "RebornWitchDoctorNpcVoodoo2.h"
 #include "RebornWitchDoctorNpcWard1.h"
+#include "RebornWitchDoctorNpcDebuff2.h"
+#include "RebornWitchDoctorNpcMassWard2.h"
+#include "RebornWitchDoctorNpcMimic2.h"
+#include "RebornWitchDoctorNpcIdol2.h"
+#include "RebornWitchDoctorNpcEffigy2.h"
 #include "RebornWitchDoctorBotState168.h"
 #include "WitchDoctorTalentPolicy.h"
 #include <unordered_set>
@@ -296,6 +302,7 @@ class spell_reborn_wd68a_summon : public SpellScript
     PrepareSpellScript(spell_reborn_wd68a_summon);
     SpellCastResult Check()
     {
+        if(Creature*c=WDN1::Actor(GetCaster()))return WDN2C::Known(c)&&c->GetBotAI()->HasRole(NPC_BOT_ROLE_DPS)&&!WDN2C::Current(c)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
         Player* p=GetCaster()->ToPlayer();
         return IsDoctor(p) && p->HasSpell(GetSpellInfo()->Id) && p->GetLevel()>=GetSpellInfo()->SpellLevel
             ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
@@ -303,6 +310,7 @@ class spell_reborn_wd68a_summon : public SpellScript
     void Summon(SpellEffIndex index)
     {
         PreventHitDefaultEffect(index);
+        if(Creature*c=WDN1::Actor(GetCaster())){WDN2C::Summon(c);return;}
         Player* p=GetCaster()->ToPlayer();if (!IsDoctor(p)) return;
         int32 duration=GetSpellInfo()->GetDuration();p->ApplySpellMod(GetSpellInfo()->Id,SPELLMOD_DURATION,duration);
         // Allocate the new group first; a partial failure preserves the previous group.
@@ -345,9 +353,13 @@ public:
     struct AI : ScriptedAI
     {
         explicit AI(Creature* c):ScriptedAI(c) {me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);}
+        bool npcOwner=false;
+        void IsSummonedBy(WorldObject* summoner)override
+        {npcOwner=WDN1::Actor(summoner?summoner->ToUnit():nullptr)!=nullptr;}
         void AttackStart(Unit*) override {}
         void UpdateAI(uint32) override
         {
+            if(npcOwner){if(!WDN2C::Alive(me))me->DespawnOrUnsummon();return;}
             if (!WD68A::Caster(me)) me->DespawnOrUnsummon();
         }
     };
@@ -536,6 +548,13 @@ class spell_reborn_wd3_birth : public SpellScript
     {
         Player* player=WD68A::Caster(GetCaster());
         uint32 id=GetSpellInfo()->Id;
+        if(Creature* npc=WDN1::Actor(GetCaster()))
+        {
+            bool known=WDN1::Known(npc,id)&&!npc->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION);
+            if(WD19A::IsBrew(id))return known&&GetExplTargetUnit()==npc?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
+            return known&&WDN2C::Source(npc,GetExplTargetUnit(),id)?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
+        }
+        if(!player&&WDN2C::Source(GetCaster(),GetExplTargetUnit(),id))return SPELL_CAST_OK;
         return IsDoctor(player) && (WD19A::IsWrath(id) || WD19A::IsBrew(id)) &&
             player->GetLevel()>=GetSpellInfo()->SpellLevel && player->HasSpell(id)
             ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
@@ -544,7 +563,16 @@ class spell_reborn_wd3_birth : public SpellScript
     {
         Player* player = WD68A::Caster(GetCaster());
         if (!IsDoctor(player))
-            return;
+        {
+            Creature* npc=WDN1::Actor(GetCaster());
+            bool heal=WD19A::IsBrew(GetSpellInfo()->Id);
+            if(!heal)npc=WDN2C::Source(GetCaster(),GetHitUnit(),GetSpellInfo()->Id);
+            if(!npc||!WDN1::Known(npc,GetSpellInfo()->Id))return;
+            float power=float(std::max(0,heal?npc->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE):npc->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE)));
+            float bonus=power*(heal?0.84f:0.625f);
+            if(!heal&&GetSpellInfo()->Id!=Wrath)bonus+=std::max(0.f,npc->GetTotalAttackPowerValue(RANGED_ATTACK))*0.11f;
+            SetEffectValue(int32(float(GetEffectValue())+bonus));return;
+        }
         bool healing = WD19A::IsBrew(GetSpellInfo()->Id);
         int32 power = healing ? player->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE)
                               : player->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE);
@@ -580,6 +608,7 @@ class spell_reborn_wd3_birth : public SpellScript
     }
     void MirrorCast()
     {
+        if(!GetSpell()->IsTriggered()&&GetHitDamage()>0)WDN2C::Mirror(GetCaster(),GetHitUnit(),GetSpellInfo()->Id);
         Player* p=GetCaster()->ToPlayer();
         if (p && !GetSpell()->IsTriggered() && GetHitUnit()) WD68A::Mirror(p,GetHitUnit(),GetSpellInfo()->Id);
     }
@@ -717,14 +746,16 @@ class spell_reborn_wd10a_hex : public SpellScript
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({Hex, Mark}); }
     SpellCastResult CheckDoctor()
     {
+        if (WDN1::Actor(GetCaster()))
+            return WDN2::Allowed(GetCaster(),GetExplTargetUnit(),GetSpellInfo()->Id) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player = GetCaster()->ToPlayer();
         return IsDoctor(player) && player->GetLevel() >= GetSpellInfo()->SpellLevel && player->HasSpell(GetSpellInfo()->Id)
             ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
     void DirectCoefficient(SpellEffIndex)
     {
-        Player* player = GetCaster()->ToPlayer();
-        if (!IsDoctor(player)) return;
+        Unit* player = GetCaster();
+        if (!IsDoctor(player->ToPlayer()) && !WDN2::Known(player,GetSpellInfo()->Id)) return;
         float power = float(std::max(0, player->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW)));
         float rangedPower = std::max(0.0f, player->GetTotalAttackPowerValue(RANGED_ATTACK));
         SetEffectValue(int32(float(GetEffectValue()) + power * 0.08f + rangedPower * 0.10f));
@@ -740,22 +771,22 @@ class aura_reborn_wd10a_hex : public AuraScript
     PrepareAuraScript(aura_reborn_wd10a_hex);
     void PeriodicCoefficient(AuraEffect const* effect, int32& amount, bool& canRecalculate)
     {
-        Player* player = GetCaster() ? GetCaster()->ToPlayer() : nullptr;
-        if (!IsDoctor(player)) return;
+        Unit* player = GetCaster();
+        if (!player || (!IsDoctor(player->ToPlayer()) && !WDN2::Known(player,GetSpellInfo()->Id))) return;
         // Core calls this after native damage scaling. Rebuild from the unscaled
         // stored amount so percentage modifiers are applied exactly once.
         int32 base = effect->GetOldAmount(); // Hex has one stack only.
         int32 power = std::max(0, player->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW));
         uint32 scaled = uint32(std::max(0, int32(float(base) + power * 0.05f)));
-        amount = int32(player->SpellDamageBonusDone(GetTarget(), GetSpellInfo(), scaled, DOT, EFFECT_0, effect->GetPctMods(), 1));
+        amount = int32(player->SpellDamageBonusDone(GetUnitOwner(), GetSpellInfo(), scaled, DOT, EFFECT_0, effect->GetPctMods(), 1));
         canRecalculate = false;
     }
     // WD37A: snapshot periodic crit on application AND recast/refresh.
     // The core still rolls each tick and calculates its normal critical damage.
     void SnapshotPeriodicCrit(AuraEffect const* effect, AuraEffectHandleModes /*mode*/)
     {
-        Player* player=GetCaster() ? GetCaster()->ToPlayer() : nullptr;
-        if (!IsDoctor(player) || !GetTarget()) return;
+        Unit* player=GetCaster();
+        if (!player || (!IsDoctor(player->ToPlayer()) && !WDN2::Known(player,GetSpellInfo()->Id)) || !GetTarget()) return;
         bool isHex=false;
         for (WD19A::Rank const& rank : WD19A::HexRanks)
             if (rank.spell==GetSpellInfo()->Id) { isHex=true;break; }
@@ -914,6 +945,10 @@ class spell_reborn_wd20a_support : public SpellScript
     PrepareSpellScript(spell_reborn_wd20a_support);
     SpellCastResult CheckDoctor()
     {
+        if (WDN1::Actor(GetCaster()))
+            return WDN2::Base(GetSpellInfo()->Id)!=WDN2::Hex &&
+                WDN2::Allowed(GetCaster(),GetExplTargetUnit(),GetSpellInfo()->Id)
+                ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player=GetCaster()->ToPlayer();
         return IsDoctor(player) && WD20AuraGroup(GetSpellInfo()->Id) &&
             player->HasSpell(GetSpellInfo()->Id) && player->GetLevel()>=GetSpellInfo()->SpellLevel
@@ -1108,8 +1143,10 @@ class spell_reborn_wd21a_serpent : public SpellScript
     SpellCastResult CheckDoctor()
     {
         if (Creature* c=WDN1::Actor(GetCaster()))
-            return GetSpellInfo()->Id==WDN1C::SpellId&&WDN1C::Known(c)&&
-                c->GetBotAI()->HasRole(NPC_BOT_ROLE_DPS)&&sObjectMgr->GetCreatureTemplate(WDN1C::Entry)
+            return WDN1C::Known(c,GetSpellInfo()->Id)&&
+                !c->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION)&&
+                (GetSpellInfo()->Id==WDN1C::Healing||c->GetBotAI()->HasRole(NPC_BOT_ROLE_DPS))&&
+                sObjectMgr->GetCreatureTemplate(WDN1C::EntryFor(GetSpellInfo()->Id))
                 ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player=GetCaster()->ToPlayer();
         if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
@@ -1125,7 +1162,7 @@ class spell_reborn_wd21a_serpent : public SpellScript
         _handled=true;
         if (Creature* c=WDN1::Actor(GetCaster()))
         {
-            if(GetSpellInfo()->Id==WDN1C::SpellId)WDN1C::Summon(c);
+            WDN1C::Summon(c,GetSpellInfo()->Id);
             return;
         }
         Player* player=GetCaster()->ToPlayer();
@@ -1159,20 +1196,21 @@ public:
     {
         explicit AI(Creature* creature) : ScriptedAI(creature) { }
         ObjectGuid owner;
-        bool npcOwner=false;
+        bool npcOwner=false,npcMass=false;
         float timer=2000.0f; // WD51A: preserve fractional attack progress under haste.
         void IsSummonedBy(WorldObject* summoner) override
         {
             if(Creature* c=WDN1::Actor(summoner?summoner->ToUnit():nullptr))
             {
-                if(me->GetEntry()!=WDN1C::Entry||!WDN1C::Known(c)){me->DespawnOrUnsummon();return;}
-                npcOwner=true;owner=c->GetGUID();
+                if((me->GetEntry()!=WDN1C::Entry&&me->GetEntry()!=WDN1C::HealingEntry)||
+                   (me->GetEntry()==WDN1C::HealingEntry?!WDN1C::Known(c,WDN1C::Healing):(!WDN1C::Known(c)&&!WDN2B::Creating(c)))){me->DespawnOrUnsummon();return;}
+                npcOwner=true;npcMass=me->GetEntry()==WDN1C::Entry&&WDN2B::Creating(c);owner=c->GetGUID();
                 me->SetOwnerGUID(owner);me->SetCreatorGUID(owner);
                 me->SetControlledByPlayer(true);me->SetUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED);
                 me->SetByteValue(UNIT_FIELD_BYTES_2,1,c->GetByteValue(UNIT_FIELD_BYTES_2,1));
                 me->SetFaction(c->GetFaction());me->SetLevel(c->GetLevel());
                 me->SetMaxHealth(std::max(5u,uint32(c->GetLevel())*10));me->SetHealth(me->GetMaxHealth());
-                me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);timer=2000;
+                me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);timer=me->GetEntry()==WDN1C::HealingEntry?2500:2000;
                 return;
             }
             Player* player=summoner ? summoner->ToPlayer() : nullptr;
@@ -1250,7 +1288,7 @@ public:
         }
         void UpdateAI(uint32 diff) override
         {
-            if(npcOwner){WDN1C::Update(me,owner,timer,diff);return;}
+            if(npcOwner){if(npcMass)WDN2B::Update(me,owner,timer,diff);else WDN1C::Update(me,owner,timer,diff);return;}
             Player* player=ObjectAccessor::GetPlayer(*me,owner);
             if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
                 !player->IsInMap(me) || !player->InSamePhase(me) ||
@@ -1313,6 +1351,15 @@ class spell_reborn_wd22a_heal : public SpellScript
         Unit* original=GetOriginalCaster();
         Player* player=original ? original->ToPlayer() : nullptr;
         Creature* ward=GetCaster()->ToCreature();
+        if(Creature*c=WDN1::Actor(original))
+        {
+            if(!ward||ward->GetEntry()!=WDN1C::HealingEntry||WDN1C::Current(c)!=ward||
+               !WDN2D::Eligible(c,ward,GetExplTargetUnit(),false))
+            {PreventHitDefaultEffect(effIndex);return;}
+            float power=float(std::max(0,c->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE)));
+            float rap=std::max(0.f,c->GetTotalAttackPowerValue(RANGED_ATTACK));
+            SetEffectValue(int32(float(GetEffectValue())+power*0.185f+rap*0.08f));return;
+        }
         if (!IsDoctor(player) || !ward || ward->GetEntry()!=WD21A::HealingEntry ||
             ward->GetOwnerGUID()!=player->GetGUID())
         {
@@ -1481,6 +1528,7 @@ class spell_reborn_wd36a_idol : public SpellScript
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({WD36A::Summon,WD36A::Mana}); }
     SpellCastResult CheckDoctor()
     {
+        if(auto*c=WDN1::Actor(GetCaster()))return WDN2D::Known(c)&&!WDN2D::Current(c)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
         Player* player=GetCaster()->ToPlayer();
         if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
             !player->HasSpell(WD36A::Summon) || player->GetLevel()<14)
@@ -1492,6 +1540,7 @@ class spell_reborn_wd36a_idol : public SpellScript
         PreventHitDefaultEffect(index);
         if (handled) return;
         handled=true;
+        if(auto*c=WDN1::Actor(GetCaster())){WDN2D::Summon(c);return;}
         Player* player=GetCaster()->ToPlayer();
         if (!IsDoctor(player)) return;
         Position pos=player->GetPosition();
@@ -1520,10 +1569,12 @@ public:
     struct AI : ScriptedAI
     {
         explicit AI(Creature* creature) : ScriptedAI(creature) { }
+        bool npcOwner=false;
         ObjectGuid owner;
         uint32 timer=3000, remaining=15000;
         void IsSummonedBy(WorldObject* summoner) override
         {
+            if(auto*c=WDN1::Actor(summoner?summoner->ToUnit():nullptr)){npcOwner=true;owner=c->GetGUID();me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);return;}
             Player* player=summoner ? summoner->ToPlayer() : nullptr;
             if (!IsDoctor(player)) { me->DespawnOrUnsummon();return; }
             owner=player->GetGUID();me->SetOwnerGUID(owner);me->SetCreatorGUID(owner);
@@ -1537,6 +1588,7 @@ public:
         void JustDied(Unit*) override { me->DespawnOrUnsummon(); }
         void UpdateAI(uint32 diff) override
         {
+            if(npcOwner){WDN2D::Update(me,owner,timer,remaining,diff);return;}
             Player* player=ObjectAccessor::GetPlayer(*me,owner);
             if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
                 !player->IsInMap(me) || !player->InSamePhase(me) ||
@@ -1601,6 +1653,7 @@ class spell_reborn_wd38a_idol : public SpellScript
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003380,9003381,9003382,9003383,9003390,9003391,9003432,9003433}); }
     SpellCastResult CheckDoctor()
     {
+        if(auto*c=WDN1::Actor(GetCaster()))return (GetSpellInfo()->Id==WDN2D::Swift||GetSpellInfo()->Id==WDN2D::Serene)&&WDN2D::Known(c,GetSpellInfo()->Id)&&!WDN2D::Current(c)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD38A::BySpell(GetSpellInfo()->Id);
         if (!cfg || !IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
             !player->HasSpell(cfg->spell) || player->GetLevel()<cfg->level) return SPELL_FAILED_CASTER_AURASTATE;
@@ -1609,6 +1662,7 @@ class spell_reborn_wd38a_idol : public SpellScript
     void Place(SpellEffIndex index)
     {
         PreventHitDefaultEffect(index);if (handled)return;handled=true;
+        if(auto*c=WDN1::Actor(GetCaster())){if(GetSpellInfo()->Id==WDN2D::Swift||GetSpellInfo()->Id==WDN2D::Serene)WDN2D::Summon(c,GetSpellInfo()->Id);return;}
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD38A::BySpell(GetSpellInfo()->Id);
         if (!cfg || !IsDoctor(player))return;
         Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
@@ -1631,6 +1685,7 @@ public:
     struct AI : ScriptedAI
     {
         explicit AI(Creature* creature):ScriptedAI(creature) { }
+        bool npcOwner=false;
         ObjectGuid owner; WD38A::Config const* cfg=nullptr;
         int32 swiftAmount=25;
         uint32 timer=1,remaining=60000;
@@ -1643,6 +1698,7 @@ public:
         void DoAction(int32 action) override { if(action==38) ClearFields(); }
         void IsSummonedBy(WorldObject* summoner) override
         {
+            if(auto*c=WDN1::Actor(summoner?summoner->ToUnit():nullptr)){if(me->GetEntry()!=WDN2D::SwiftEntry&&me->GetEntry()!=WDN2D::SereneEntry){me->DespawnOrUnsummon();return;}npcOwner=true;owner=c->GetGUID();remaining=me->GetEntry()==WDN2D::SwiftEntry?10000:60000;timer=1;me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);return;}
             Player* player=summoner ? summoner->ToPlayer():nullptr;cfg=WD38A::ByEntry(me->GetEntry());
             if(!cfg || !IsDoctor(player)) { me->DespawnOrUnsummon();return; }
             if(cfg->entry==900202) { remaining=WD117::Duration(player);swiftAmount=WD117::SwiftAmount(player); }
@@ -1656,6 +1712,7 @@ public:
         void JustDied(Unit*) override { ClearFields();me->DespawnOrUnsummon(); }
         void UpdateAI(uint32 diff) override
         {
+            if(npcOwner){WDN2D::Update(me,owner,timer,remaining,diff);return;}
             Player* player=ObjectAccessor::GetPlayer(*me,owner);
             if(!cfg || !IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
                 !player->IsInMap(me) || !player->InSamePhase(me) || !player->HasSpell(cfg->spell) ||
@@ -1817,6 +1874,7 @@ class spell_reborn_wd41a_effigy : public SpellScript
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({9003410,9003411,9003420,9003421,9003422,9003423,9003430,9003431}); }
     SpellCastResult CheckDoctor()
     {
+        if(auto*c=WDN1::Actor(GetCaster()))return WDN2E::CanPlace(c,GetSpellInfo()->Id)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD41A::BySpell(GetSpellInfo()->Id);
         if (!cfg || !IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
             !player->HasSpell(cfg->spell) || player->GetLevel()<cfg->level) return SPELL_FAILED_CASTER_AURASTATE;
@@ -1825,6 +1883,7 @@ class spell_reborn_wd41a_effigy : public SpellScript
     void Place(SpellEffIndex index)
     {
         PreventHitDefaultEffect(index);if(handled)return;handled=true;
+        if(auto*c=WDN1::Actor(GetCaster())){WDN2E::Summon(c,GetSpellInfo()->Id);return;}
         Player* player=GetCaster()->ToPlayer();auto const* cfg=WD41A::BySpell(GetSpellInfo()->Id);if(!cfg || !IsDoctor(player))return;
         Position pos=player->GetPosition();player->MovePositionToFirstCollision(pos,1.5f,WD187::Angle(WD53A::Slot(GetSpellInfo()->Id)));
         TempSummon* ward=player->SummonCreature(cfg->entry,pos,TEMPSUMMON_TIMED_DESPAWN,cfg->entry==900201 ? 16000 : 61000);
@@ -1846,6 +1905,7 @@ public:
     struct AI : ScriptedAI
     {
         explicit AI(Creature* creature):ScriptedAI(creature) { }
+        bool npcOwner=false;
         ObjectGuid owner, pendingCaster;
         WD41A::Config const* cfg=nullptr;
         uint32 timer=1,remaining=60000;
@@ -1862,6 +1922,7 @@ public:
         }
         void IsSummonedBy(WorldObject* summoner) override
         {
+            if(auto*c=WDN1::Actor(summoner?summoner->ToUnit():nullptr)){npcOwner=true;owner=c->GetGUID();remaining=me->GetEntry()==WDN2E::CursedEntry?15000:60000;me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);return;}
             Player* player=summoner ? summoner->ToPlayer():nullptr;cfg=WD41A::ByEntry(me->GetEntry());
             if(!cfg || !IsDoctor(player)) { me->DespawnOrUnsummon();return; }
             if(cfg->entry==900201)remaining=15000;
@@ -1872,9 +1933,10 @@ public:
         }
         void AttackStart(Unit*) override { }
         void MoveInLineOfSight(Unit*) override { }
-        void JustDied(Unit*) override { ClearFields();me->DespawnOrUnsummon(); }
+        void JustDied(Unit*) override { if(npcOwner)if(auto*c=ObjectAccessor::GetCreature(*me,owner))WDN2E::Clear(c);ClearFields();me->DespawnOrUnsummon(); }
         void UpdateAI(uint32 diff) override
         {
+            if(npcOwner){WDN2E::Update(me,owner,timer,remaining,diff);return;}
             Player* player=ObjectAccessor::GetPlayer(*me,owner);
             if(!cfg || !IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
                 !player->IsInMap(me) || !player->InSamePhase(me) || !player->HasSpell(cfg->spell) ||
@@ -1931,6 +1993,7 @@ public:
     {
         if(!spell || !caster || !info || spell->IsTriggered() || info->IsPositive())return;
         Unit* target=spell->m_targets.GetUnitTarget();
+        if(auto*c=WDN1::Actor(target)){WDN2E::Queue(c,caster);return;}
         Player* player=target ? target->ToPlayer():nullptr;
         if(!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
             !caster->IsAlive() || !player->IsInMap(caster) || !player->InSamePhase(caster) ||
@@ -1982,6 +2045,18 @@ public:
             return; // Keep the authored Hexed PvP ceiling; native diminishing follows.
         }
         if(info->IsPositive() || info->HasAttribute(SPELL_ATTR7_NO_TARGET_DURATION_MOD))return;
+        // WDN2G: any valid NPC-owned field can qualify; never stack several +25% fields.
+        for(auto const& application:target->GetAppliedAuras())
+        {
+            Aura* marker=application.second->GetBase();
+            if(marker->GetId()!=WDN2E::GravenField)continue;
+            if(auto*c=WDN1::Actor(marker->GetCaster()))
+                if(WDN2E::GravenAffects(c,target,info->GetAllEffectsMechanicMask()))
+                {
+                    duration=int32(std::min<int64>(int64(duration)*125/100,INT32_MAX));
+                    return;
+                }
+        }
         Aura* field=target->GetAura(9003423);
         if(!field)return;
         Player* player=ObjectAccessor::GetPlayer(*target,field->GetCasterGUID());
@@ -2963,15 +3038,24 @@ void Clear(Player* player)
         { if (summon->AI()) summon->AI()->DoAction(56); summon->DespawnOrUnsummon(); }
     player->RemoveAurasDueToSpell(Immunity,player->GetGUID());
 }
-bool Eligible(Player* owner,Creature* source,Unit* unit)
+bool Qualified(Unit*u)
+{
+    if(WDN2O::Known(u))return true;
+    Player*p=u?u->ToPlayer():nullptr;
+    return IsDoctor(p)&&p->IsAlive()&&p->IsInWorld()&&p->GetLevel()>=40&&p->HasSpell(Spell);
+}
+bool Eligible(Unit* owner,Creature* source,Unit* unit)
 {
     if (!unit || !unit->IsAlive() || !unit->IsInWorld() || !source->IsInMap(unit) ||
         !source->InSamePhase(unit) || !owner->IsFriendlyTo(unit) ||
         !source->IsWithinDistInMap(unit,15.0f) || !source->IsWithinLOSInMap(unit)) return false;
     if (unit==owner) return true;
-    if (unit->IsPlayer()) return owner->IsInRaidWith(unit);
+    if(Creature*c=WDN1::Actor(owner))
+        return (unit->IsPlayer()||unit->IsNPCBot())&&c->GetBotAI()->IsInBotParty(unit);
+    Player*p=owner->ToPlayer();if(!p)return false;
+    if (unit->IsPlayer()) return p->IsInRaidWith(unit);
 #ifdef MOD_NPCERBOTS
-    if (unit->IsNPCBot()) return owner->GetGroup() && unit->ToCreature()->GetBotGroup()==owner->GetGroup();
+    if (unit->IsNPCBot()) return p->GetGroup() && unit->ToCreature()->GetBotGroup()==p->GetGroup();
 #endif
     return false;
 }
@@ -2983,19 +3067,22 @@ class spell_reborn_wd56a_voodoo : public SpellScript
     bool Validate(SpellInfo const*) override { return ValidateSpellInfo({WD56A::Immunity,WD56A::Protection,WD56A::Lock,WD56A::Visual}); }
     SpellCastResult Check()
     {
-        Player* player=GetCaster()->ToPlayer();
-        return IsDoctor(player) && player->IsAlive() && player->IsInWorld() &&
-            player->GetLevel()>=40 && player->HasSpell(WD56A::Spell) && !player->HasAura(WD56A::Lock) ?
+        Unit* player=GetCaster();
+        if(Creature*c=WDN1::Actor(player))
+            if(c->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION)||WDN2O::Current(c))return SPELL_FAILED_CASTER_AURASTATE;
+        return WD56A::Qualified(player) && !player->HasAura(WD56A::Lock) && sObjectMgr->GetCreatureTemplate(WD56A::Entry) ?
             SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
     void Place(SpellEffIndex index)
     {
         PreventHitDefaultEffect(index); if (handled) return; handled=true;
-        Player* player=GetCaster()->ToPlayer(); if (!IsDoctor(player)) return;
+        Unit* player=GetCaster(); if (!WD56A::Qualified(player)) return;
         Position pos=player->GetPosition(); player->MovePositionToFirstCollision(pos,1.5f,0.0f);
         TempSummon* summon=player->SummonCreature(WD56A::Entry,pos,TEMPSUMMON_TIMED_DESPAWN,8100);
-        if (!summon) { ChatHandler(player->GetSession()).SendSysMessage("大巫毒召唤失败，原召唤物已保留。"); return; }
-        WD56A::Clear(player);
+        if (!summon) { if(Player*p=player->ToPlayer())ChatHandler(p->GetSession()).SendSysMessage("大巫毒召唤失败，原召唤物已保留。"); return; }
+        if(Creature*c=WDN1::Actor(player))
+        {WDN2O::Clear(c);auto*state=c->CustomData.GetDefault<WDN2O::State>(WDN2O::Key);state->guid=summon->GetGUID();state->recruiter=c->GetBotAI()->GetBotOwnerGuid();return;}
+        WD56A::Clear(player->ToPlayer());
         player->CustomData.GetDefault<WD56A::State>(WD56A::Key)->guid=summon->GetGUID();
     }
     void Register() override
@@ -3026,9 +3113,10 @@ public:
         void DoAction(int32 action) override { if (action==56) Cleanup(); }
         void IsSummonedBy(WorldObject* summoner) override
         {
-            Player* player=summoner ? summoner->ToPlayer() : nullptr;
-            if (!IsDoctor(player)) { me->DespawnOrUnsummon(); return; }
+            Unit* player=summoner ? summoner->ToUnit() : nullptr;
+            if (!WD56A::Qualified(player)) { me->DespawnOrUnsummon(); return; }
             owner=player->GetGUID(); me->SetOwnerGUID(owner); me->SetCreatorGUID(owner);
+            if(WDN1::Actor(player)){me->SetControlledByPlayer(true);me->SetUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED);me->SetByteValue(UNIT_FIELD_BYTES_2,1,player->GetByteValue(UNIT_FIELD_BYTES_2,1));}
             me->SetFaction(player->GetFaction()); me->SetLevel(player->GetLevel());
             me->SetMaxHealth(std::max(5u,uint32(player->GetLevel())*10)); me->SetHealth(me->GetMaxHealth());
             me->SetReactState(REACT_PASSIVE); me->SetCombatMovement(false);
@@ -3042,11 +3130,16 @@ public:
         void JustDied(Unit*) override { Cleanup(); me->DespawnOrUnsummon(); }
         void UpdateAI(uint32 diff) override
         {
-            Player* player=ObjectAccessor::GetPlayer(*me,owner);
-            if (!IsDoctor(player) || !player->IsAlive() || !player->IsInWorld() ||
-                !player->IsInMap(me) || !player->InSamePhase(me) || !player->HasSpell(WD56A::Spell) ||
-                player->CustomData.GetDefault<WD56A::State>(WD56A::Key)->guid!=me->GetGUID() || diff>=remaining)
+            Unit* player=ObjectAccessor::GetUnit(*me,owner);
+            bool tracked=false;
+            if(WD56A::Qualified(player))
+            {
+                if(Creature*c=WDN1::Actor(player))tracked=WDN2O::Current(c)==me;
+                else tracked=player->CustomData.GetDefault<WD56A::State>(WD56A::Key)->guid==me->GetGUID();
+            }
+            if (!tracked || !player->IsInMap(me) || !player->InSamePhase(me) || diff>=remaining)
             { Cleanup(); me->DespawnOrUnsummon(); return; }
+            if(WDN1::Actor(player)){me->SetFaction(player->GetFaction());me->SetByteValue(UNIT_FIELD_BYTES_2,1,player->GetByteValue(UNIT_FIELD_BYTES_2,1));}
             remaining-=diff;
             if (timer>diff) { timer-=diff; return; } timer=250;
             std::list<Unit*> units;

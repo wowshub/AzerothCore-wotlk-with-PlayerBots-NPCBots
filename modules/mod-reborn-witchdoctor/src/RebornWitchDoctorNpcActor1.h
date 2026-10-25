@@ -2,6 +2,7 @@
 #ifndef REBORN_WD_NPC_ACTOR_1_H
 #define REBORN_WD_NPC_ACTOR_1_H
 #include "Creature.h"
+#include "SpellMgr.h"
 #include "Player.h"
 #include "bot_ai.h"
 #include "botcommon.h"
@@ -20,6 +21,8 @@ inline Creature* Actor(Unit* u)
 }
 inline uint32 Base(uint32 id)
 {
+ for(auto r:WD19A::WrathRanks)if(r.spell==id)return 9003100;
+ for(auto r:WD19A::BrewRanks)if(r.spell==id)return 9003101;
  if(id==AutoShot)return AutoShot;
  if(id>=9004000&&id<=9004006)return 9004000;
  if(id>=9004030&&id<=9004036)return 9004030;
@@ -29,7 +32,9 @@ inline uint32 Base(uint32 id)
 }
 inline bool Known(Unit* u,uint32 id)
 {
- auto* c=Actor(u);uint32 base=Base(id);if(!c||!base||c->GetLevel()<10)return false;
+ auto* c=Actor(u);uint32 base=Base(id);if(!c||!base)return false;
+ if(base==9003100||base==9003101){auto* info=sSpellMgr->GetSpellInfo(id);if(!info||c->GetLevel()<info->SpellLevel)return false;}
+ else if(c->GetLevel()<10)return false;
  auto const& spells=c->GetBotAI()->GetSpellMap();auto it=spells.find(base);
  return it!=spells.end()&&it->second&&it->second->enabled&&it->second->spellId==id;
 }

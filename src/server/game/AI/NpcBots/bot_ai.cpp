@@ -21634,7 +21634,7 @@ bool bot_ai::IsHealingClass(uint8 m_class)
     return
         (m_class == BOT_CLASS_PRIEST || m_class == BOT_CLASS_DRUID ||
         m_class == BOT_CLASS_SHAMAN || m_class == BOT_CLASS_PALADIN ||
-        m_class == BOT_CLASS_SPHYNX);
+        m_class == BOT_CLASS_SPHYNX || m_class == BOT_CLASS_WITCH_DOCTOR); // WDN2R: native healer role eligibility
 }
 bool bot_ai::IsHumanoidClass(uint8 m_class)
 {
@@ -21773,7 +21773,9 @@ bool bot_ai::CanChangeEquip(uint8 slot) const
 }
 bool bot_ai::CanDisplayNonWeaponEquipmentChanges() const
 {
-    return (_botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_ARCHMAGE);
+    // WDN2L: the humanoid Witch Doctor uses native NPCBot armor display.
+    return (_botclass < BOT_CLASS_EX_START || _botclass == BOT_CLASS_ARCHMAGE ||
+        _botclass == BOT_CLASS_WITCH_DOCTOR);
 }
 bool bot_ai::IsValidTransmog(uint8 slot, ItemTemplate const* source) const
 {
