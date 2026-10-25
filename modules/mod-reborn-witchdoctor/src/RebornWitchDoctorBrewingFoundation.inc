@@ -17,9 +17,9 @@ class spell_reborn_wd120_brewing : public SpellScript
         if(Creature*c=GetCaster()->ToCreature())
         {
             uint32 id=GetSpellInfo()->Id;
-            if(id==WDN2P::Pulse)return WDN2P::Prepared(c)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
+            if(id==WDN2P::Pulse)return WDN2P::Ingredient(c,WDN2P::Prep)?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
             if(!WDN2P::Active(c)||!WDN2P::Known(c,id))return SPELL_FAILED_CASTER_AURASTATE;
-            if(id==WDN2P::Prep)return SPELL_CAST_OK;
+            if(id==WDN2P::Prep||id==WDN2P::Bones||id==WDN2P::Fish||id==WDN2P::Thistle)return WDN2P::Selected(c)==id?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;
             if(WD120A::IsSplash(id))return WDN2P::Prepared(c)&&WDN2P::Destination(c,GetExplTargetDest())?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
             return WDN2P::Prepared(c)&&WDN2P::Eligible(c,GetExplTargetUnit())?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
         }
@@ -34,7 +34,7 @@ class spell_reborn_wd120_brewing : public SpellScript
         if(Creature*c=GetCaster()->ToCreature())
         {
             targets.clear();
-            if(WDN2P::Prepared(c))for(Unit*t:WDN2P::Targets(c))
+            if(WDN2P::Ingredient(c,WDN2P::Prep))for(Unit*t:WDN2P::Targets(c))
             {targets.push_back(t);if(targets.size()==8)break;}
             return;
         }
@@ -53,7 +53,7 @@ class spell_reborn_wd120_brewing : public SpellScript
     {
         // Never pass a Creature through the player-only ingredient FIFO.
         if(Creature*c=GetCaster()->ToCreature())
-        {_shrooms=WDN2P::Prepared(c);return;}
+        {_shrooms=WDN2P::Ingredient(c,WDN2P::Prep);_bones=WDN2P::Ingredient(c,WDN2P::Bones);_fish=WDN2P::Ingredient(c,WDN2P::Fish);_thistle=WDN2P::Ingredient(c,WDN2P::Thistle);return;}
         // Per-cast state: a different preparation while the missile travels cannot change it.
         _shrooms=GetCaster()->HasAura(WD120A::Shrooms);
         _concoctions=GetCaster()->HasAura(9003954);
@@ -83,7 +83,7 @@ class spell_reborn_wd120_brewing : public SpellScript
             Unit*t=GetExplTargetUnit();
             // Launch-target hooks have no hit target yet for area heals. Eligibility
             // is checked in target selection and again at hit below.
-            if(!WDN2P::Prepared(c)||(!pulse&&(!WDN2P::Known(c,GetSpellInfo()->Id)||!(splash?WDN2P::Destination(c,GetExplTargetDest()):WDN2P::Eligible(c,t)))))
+            if(!(pulse?WDN2P::Ingredient(c,WDN2P::Prep):WDN2P::Prepared(c))||(!pulse&&(!WDN2P::Known(c,GetSpellInfo()->Id)||!(splash?WDN2P::Destination(c,GetExplTargetDest()):WDN2P::Eligible(c,t)))))
             {SetEffectValue(0);return;}
             SetEffectValue(WDN2P::Amount(c,GetEffectValue(),pulse,splash));return;
         }
@@ -99,8 +99,14 @@ class spell_reborn_wd120_brewing : public SpellScript
     {
         if(Creature*c=GetCaster()->ToCreature())
         {
-            if(_npcHit&&_shrooms&&(WD120A::IsToss(GetSpellInfo()->Id)||WD120A::IsSplash(GetSpellInfo()->Id))&&WDN2P::Known(c,GetSpellInfo()->Id)&&WDN2P::Eligible(c,GetHitUnit()))
-                c->CastSpell(GetHitUnit(),WD120A::IsSplash(GetSpellInfo()->Id)?WDN2P::SplashHot:WDN2P::Hot,true);
+            if(_npcHit&&(WD120A::IsToss(GetSpellInfo()->Id)||WD120A::IsSplash(GetSpellInfo()->Id))&&WDN2P::Known(c,GetSpellInfo()->Id)&&WDN2P::Eligible(c,GetHitUnit()))
+            {
+                bool splash=WD120A::IsSplash(GetSpellInfo()->Id);
+                if(_shrooms)c->CastSpell(GetHitUnit(),splash?WDN2P::SplashHot:WDN2P::Hot,true);
+                if(_thistle)c->CastSpell(GetHitUnit(),splash?WDN2P::ThistleSplash:WDN2P::ThistlePotion,true);
+                if(_fish)c->CastSpell(GetHitUnit(),splash?WDN2P::FishSplash:WDN2P::FishPotion,true);
+                if(_bones){int32 amount=WDN2P::Shield(c,splash);c->CastCustomSpell(GetHitUnit(),splash?WDN2P::BonesSplash:WDN2P::BonesPotion,&amount,nullptr,nullptr,true);}
+            }
             return;
         }
         Player* p=GetCaster()->ToPlayer();Unit* target=GetHitUnit();
@@ -132,7 +138,7 @@ class spell_reborn_wd120_brewing : public SpellScript
         if(Creature*c=GetCaster()->ToCreature())
         {
             bool pulse=GetSpellInfo()->Id==WDN2P::Pulse;
-            _npcHit=WDN2P::Eligible(c,GetHitUnit())&&(pulse?WDN2P::Prepared(c):(_shrooms&&WDN2P::Known(c,GetSpellInfo()->Id)));
+            _npcHit=WDN2P::Eligible(c,GetHitUnit())&&(pulse?WDN2P::Ingredient(c,WDN2P::Prep):((_shrooms||_bones||_fish||_thistle)&&WDN2P::Known(c,GetSpellInfo()->Id)));
             if(WD120A::IsSplash(GetSpellInfo()->Id))_npcHit=_npcHit&&WDN2P::SplashEligible(c,GetHitUnit(),GetExplTargetDest());
             if(!_npcHit)SetHitHeal(0); // Heal is calculated at launch; clear it before native hit settlement.
         }

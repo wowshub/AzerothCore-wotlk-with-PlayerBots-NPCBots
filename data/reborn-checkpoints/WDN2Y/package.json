@@ -1,0 +1,11 @@
+{
+  "folder": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_042546_阶段WDN2Y_NPC巫医回响与前批整合总测试包",
+  "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_042546_阶段WDN2Y_NPC巫医回响与前批整合总测试包.zip",
+  "sha256": "58e6a75ce1bd8cfc41b295000bd442c8183a4dc468a4e86390d4e5f6d936bf4c",
+  "source_count": 26,
+  "changed_source": 3,
+  "new_sql": false,
+  "new_data": false,
+  "includes_V_data": true,
+  "status": "candidate; game pending"
+}

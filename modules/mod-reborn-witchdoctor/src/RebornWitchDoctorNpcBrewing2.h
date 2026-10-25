@@ -4,11 +4,14 @@
 #include "RebornWitchDoctorBrewingNumbers.h"
 namespace WDN2P
 {
+constexpr uint32 Thistle=9003915,ThistleField=9003916,ThistlePotion=9003917,ThistleSplash=9003918;
+constexpr uint32 Fish=9003901,FishField=9003902,FishPotion=9003903,FishSplash=9003904;
+constexpr uint32 Bones=9003905,BonesField=9003906,BonesPotion=9003907,BonesSplash=9003908;
 constexpr uint32 Splash=9003890,SplashHot=9003889;
 constexpr WD19A::Rank SplashRanks[]={{9003890,17},{9003891,22},{9003892,28},{9003893,36},{9003894,44},{9003895,50},{9003896,58}};
 constexpr uint32 Prep=9003865,Pulse=9003866,Hot=9003867,Toss=9003870;
 constexpr WD19A::Rank TossRanks[]={{9003870,14},{9003871,22},{9003872,30},{9003873,38},{9003874,46},{9003875,54},{9003876,60}};
-inline uint32 Base(uint32 id){return id==Prep?Prep:WD120A::IsToss(id)?Toss:WD120A::IsSplash(id)?Splash:0;}
+inline uint32 Base(uint32 id){return id==Thistle?Thistle:id==Fish?Fish:id==Bones?Bones:id==Prep?Prep:WD120A::IsToss(id)?Toss:WD120A::IsSplash(id)?Splash:0;}
 inline bool Known(Creature*c,uint32 id)
 {
  if(!WDN1::Actor(c)||!Base(id))return false;
@@ -17,8 +20,11 @@ inline bool Known(Creature*c,uint32 id)
 }
 inline bool Active(Creature*c)
 {return WDN1::Actor(c)&&!c->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION);}
-inline bool Prepared(Creature*c)
-{return Active(c)&&Known(c,Prep)&&c->HasAura(Prep,c->GetGUID());}
+inline uint32 Selected(Creature*c){return Known(c,Prep)?Prep:Known(c,Bones)?Bones:Known(c,Fish)?Fish:Known(c,Thistle)?Thistle:0;}
+inline bool Ingredient(Creature*c,uint32 id){return Active(c)&&Selected(c)==id&&c->HasAura(id,c->GetGUID());}
+inline bool Prepared(Creature*c){return Ingredient(c,Prep)||Ingredient(c,Bones)||Ingredient(c,Fish)||Ingredient(c,Thistle);}
+inline void Clear(Creature*c){if(c)for(uint32 id:{Prep,Bones,BonesField,Fish,FishField,Thistle,ThistleField})c->RemoveAurasDueToSpell(id,c->GetGUID());}
+inline int32 Shield(Creature*c,bool splash){return std::max(1,int32((splash?25.f:100.f)+std::max(0.f,c->GetStat(STAT_SPIRIT))*.35f+float(std::max(0,c->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE)))*.80f));}
 inline bool Eligible(Creature*c,Unit*t)
 {return Active(c)&&WDN2D::Eligible(c,c,t,false);}
 inline std::vector<Unit*> Targets(Creature*c)
@@ -54,7 +60,15 @@ inline Unit* SplashAnchor(Creature*c)
  return best;
 }
 inline void Maintain(Creature*c)
-{if(c&&(!Active(c)||!Known(c,Prep)))c->RemoveAurasDueToSpell(Prep,c->GetGUID());}
+{
+ if(!c)return;
+ if(!Active(c)){Clear(c);return;}
+ uint32 selected=Selected(c);
+ if(selected!=Prep)c->RemoveAurasDueToSpell(Prep,c->GetGUID());
+ if(selected!=Thistle){c->RemoveAurasDueToSpell(Thistle,c->GetGUID());c->RemoveAurasDueToSpell(ThistleField,c->GetGUID());}
+ if(selected!=Fish){c->RemoveAurasDueToSpell(Fish,c->GetGUID());c->RemoveAurasDueToSpell(FishField,c->GetGUID());}
+ if(selected!=Bones){c->RemoveAurasDueToSpell(Bones,c->GetGUID());c->RemoveAurasDueToSpell(BonesField,c->GetGUID());}
+}
 inline int32 Amount(Creature*c,int32 base,bool pulse,bool splash=false)
 {
  if(pulse)base=int32(double(base)*WD120A::Scaling(c->GetLevel()));

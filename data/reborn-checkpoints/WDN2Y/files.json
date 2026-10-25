@@ -1,0 +1,106 @@
+[
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "sha256": "236a2cdcde6d94a78b43df08da726b3b42ca4ba436fecae6b2aff0234d635bce"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc",
+    "sha256": "b90e83784c87d9c8e772e8a3760f8b6db20d2771879cbc22b9d270837eb873e0"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingFoundation.inc",
+    "sha256": "94202c8b1cf11675436f9d863c83a50f961338c04049f9356c2f83a2c424c9e7"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingNumbers.h",
+    "sha256": "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorMirage154.inc",
+    "sha256": "340ebc6f1ccb1f4de9745855babd5d1190dcb74c9ccd779dae73141b6ce78fe0"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h",
+    "sha256": "c73f7e911a53a4f9fabc2defce29d98be67ef38e4b60cc55770bacd5040a19f1"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewEcho2.h",
+    "sha256": "855516211d0dc8902e4bff77a425684ff0de4d34544fec0577d9cdad6f274644"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h",
+    "sha256": "228b1a65f8744b33602f58e216bacd9393032f17b32cccf06b8f5f7a7e80b73b"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcDebuff2.h",
+    "sha256": "fc922230bea4d4827c255823a5adf12ea908df1fd05243f598dd7c3edc343604"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcEffigy2.h",
+    "sha256": "5961d1a53cc0d2a547441defc73ae920458e6b52da497c1f4a47046216589d75"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcIdol2.h",
+    "sha256": "5e7b2f72269f8cbc5ab28b077f68a932f2790d7b7e1d511e4713877e79e53e61"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcMassWard2.h",
+    "sha256": "e421a32d6ffa47b5c3a497d63e93197a5818c5d548182d9a0f8d863168b10a31"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcMimic2.h",
+    "sha256": "0a15896679c53c5db44eb5751330bf3dff2d819aacb9d5f9b6ee000baed45311"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcVoodoo2.h",
+    "sha256": "7b1cea57b1b4aa568dc5e1e8ef054ecc174b1d60411139f3fb9b7e48e44e30a5"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWard1.h",
+    "sha256": "6e0f91bde670ea2c5ea0c3ef13a2adada88aabfaeb1be18a739555dbc488dfd6"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSerpent150.inc",
+    "sha256": "fc9b63dda531fa3e6a5400cbad2d0011faf4161414da4723fd8b90b22180cc1c"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+    "sha256": "8f3d9297938e494503a28dc320bfb9cb2517068322225625cf120642e69d2454"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc",
+    "sha256": "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e"
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow146.inc",
+    "sha256": "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614"
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botcommon.h",
+    "sha256": "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37"
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "sha256": "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee"
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botgiver.cpp",
+    "sha256": "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66"
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botmgr.cpp",
+    "sha256": "9163f989ec1dc4f831f02855c8b5bd9fd5184f324271af0bd7be4779127b8c04"
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/bot_ai.cpp",
+    "sha256": "ae842f6282b28b9e05f37de934e440174c36c55c20d19c7537b0ab81cb9f823e"
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+    "sha256": "38cb7abc479652ca89774035d0c8be5c687db819d6dc9599662423805f30493e"
+  },
+  {
+    "path": "src/server/game/Entities/Unit/Unit.cpp",
+    "sha256": "77d597d9fa2686bf4a79ced19077fd01735561ca8c4a2662c615b84c5948b16e"
+  }
+]

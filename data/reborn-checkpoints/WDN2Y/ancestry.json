@@ -1,0 +1,50 @@
+[
+  {
+    "stage": "WDN2S",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261024\\codexfix_20261024_215531_阶段WDN2S_NPC巫医治疗后备修复与前批累计总测试包.zip",
+    "sha256": "3560fda16db04c4ac5290e9c219a1018dc8c6b829eaf2950145b9b7015801d43",
+    "files": 25,
+    "changed_from_previous": null,
+    "status": "user basic passed and released"
+  },
+  {
+    "stage": "WDN2T",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_022341_阶段WDN2T_NPC巫医治疗续航累计测试包.zip",
+    "sha256": "07f8fd654cb51641bb7eae5c931876106211e2cf02da9877960cdb6c0588b5eb",
+    "files": 25,
+    "changed_from_previous": 1,
+    "status": "candidate"
+  },
+  {
+    "stage": "WDN2U",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_030012_阶段WDN2U_NPC巫医蛙骨配料与药水护盾累计测试包.zip",
+    "sha256": "feafce6181235a6951704fb46713a4564144b9b93d52c66ea3e231f8ec55bd3b",
+    "files": 25,
+    "changed_from_previous": 3,
+    "status": "candidate"
+  },
+  {
+    "stage": "WDN2V",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_031200_阶段WDN2V_NPC巫医鱼油配料与药水加速累计测试包.zip",
+    "sha256": "ffad39ff51cc5118991bca5c8347d7b1d235a80248549e5179fadf9f82a0ddf0",
+    "files": 25,
+    "changed_from_previous": 3,
+    "status": "candidate"
+  },
+  {
+    "stage": "WDN2W",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_033510_阶段WDN2W_NPC巫医血蓟吸血与配料累计测试包.zip",
+    "sha256": "c9acc8cd0b7968e361e1850082baadbefdea0e1e3abaf7baecdbd700e39de9d5",
+    "files": 25,
+    "changed_from_previous": 3,
+    "status": "candidate"
+  },
+  {
+    "stage": "WDN2X",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_035808_阶段WDN2X_NPC巫医洛阿药剂队友治疗累计测试包.zip",
+    "sha256": "474339dc4f47cce718e4b95e7242dfd663cc0c71a9c138dc2378ff5a721c0e16",
+    "files": 25,
+    "changed_from_previous": 2,
+    "status": "candidate"
+  }
+]

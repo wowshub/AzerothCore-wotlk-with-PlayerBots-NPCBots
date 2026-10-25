@@ -1,0 +1,8 @@
+# WDN2Y cumulative acceptance, 2026-10-25
+User: “这个应该都测试通过 推送并release 吧”. Applies to the delivered WDN2Y cumulative package, basic acceptance; not every numerical/PvP/lifecycle matrix or unfinished class work.
+26 installed source files match the frozen package byte-for-byte. Base 7dd11b73d353c4d43d12d5cd2007434b48d0a593; preserves Claude TREASFIX2/DCBAR1A ancestry. No production deployment, SQL execution, or game executable built.
+Scope: T healing mana reserve; U bone ingredient/shields; V fish ingredient and single fish cast-haste effect fix; W thistle ingredient; X ally Loa Brew; Y effective-heal target-switch echo and lifecycle cleanup. S and earlier functionality preserved, no unrelated UI changes.
+Original ZIP SHA256 58e6a75ce1bd8cfc41b295000bd442c8183a4dc468a4e86390d4e5f6d936bf4c. Historical candidate labels in original files are unchanged; this record supersedes their acceptance status only.
+Source and client/server Data are in the original cumulative ZIP. V modifies only Spell 9003903 effect2 type 3 to 6 in each independent baseline; includes both server dbc/Spell.dbc and client DBFilesClient/Spell.dbc for existing PATCH-XA. No new SQL. Existing WD bindings and NPC templates required. Already installed/tested: no reinstall. New install: hash-check, source overlay then rebuild, stop server/exit client before matching Data import; never exchange server/client DBC or replace whole MPQ.
+Inherited offline evidence: 1309 AI,33 ally,27 echo,57 brewing,19 thistle API-substitute cases and two CPP syntax checks. No claim of new full build or exact runtime sampling in this publication.
+Remaining: other healing/advanced synergies, survival/escape/recovery, three-spec strategies, full dungeon and stability regression. UI independent.

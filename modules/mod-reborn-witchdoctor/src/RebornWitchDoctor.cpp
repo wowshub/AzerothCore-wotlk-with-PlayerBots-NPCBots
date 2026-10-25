@@ -16,6 +16,8 @@
 #include "RebornWitchDoctorNpcMassWard2.h"
 #include "RebornWitchDoctorNpcMimic2.h"
 #include "RebornWitchDoctorNpcIdol2.h"
+#include "RebornWitchDoctorNpcBrewing2.h"
+#include "RebornWitchDoctorNpcBrewEcho2.h"
 #include "RebornWitchDoctorNpcEffigy2.h"
 #include "RebornWitchDoctorBotState168.h"
 #include "WitchDoctorTalentPolicy.h"
@@ -544,6 +546,17 @@ class spell_reborn_wd3_birth : public SpellScript
     {
         return ValidateSpellInfo({Wrath, Brew, Echo});
     }
+    bool NpcBrewTarget(Unit* target)
+    {
+        Creature* npc=WDN1::Actor(GetCaster());
+        return npc&&WDN1::Known(npc,GetSpellInfo()->Id)&&WDN2P::Eligible(npc,target)&&
+            (target==npc||npc->GetBotAI()->HasRole(NPC_BOT_ROLE_HEAL));
+    }
+    void GuardNpcBrewHit()
+    {
+        if(GetCaster()->ToCreature()&&WD19A::IsBrew(GetSpellInfo()->Id)&&!NpcBrewTarget(GetHitUnit()))
+            SetHitHeal(0);
+    }
     SpellCastResult CheckDoctor()
     {
         Player* player=WD68A::Caster(GetCaster());
@@ -551,7 +564,7 @@ class spell_reborn_wd3_birth : public SpellScript
         if(Creature* npc=WDN1::Actor(GetCaster()))
         {
             bool known=WDN1::Known(npc,id)&&!npc->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION);
-            if(WD19A::IsBrew(id))return known&&GetExplTargetUnit()==npc?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
+            if(WD19A::IsBrew(id))return known&&NpcBrewTarget(GetExplTargetUnit())?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
             return known&&WDN2C::Source(npc,GetExplTargetUnit(),id)?SPELL_CAST_OK:SPELL_FAILED_BAD_TARGETS;
         }
         if(!player&&WDN2C::Source(GetCaster(),GetExplTargetUnit(),id))return SPELL_CAST_OK;
@@ -567,6 +580,7 @@ class spell_reborn_wd3_birth : public SpellScript
             Creature* npc=WDN1::Actor(GetCaster());
             bool heal=WD19A::IsBrew(GetSpellInfo()->Id);
             if(!heal)npc=WDN2C::Source(GetCaster(),GetHitUnit(),GetSpellInfo()->Id);
+            if(heal&&!NpcBrewTarget(GetExplTargetUnit())){SetEffectValue(0);return;}
             if(!npc||!WDN1::Known(npc,GetSpellInfo()->Id))return;
             float power=float(std::max(0,heal?npc->SpellBaseHealingBonusDone(SPELL_SCHOOL_MASK_NATURE):npc->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_NATURE)));
             float bonus=power*(heal?0.84f:0.625f);
@@ -587,6 +601,12 @@ class spell_reborn_wd3_birth : public SpellScript
     }
     void AfterBrew()
     {
+        if(Creature* npc=GetCaster()->ToCreature())
+        {
+            if(WD19A::IsBrew(GetSpellInfo()->Id)&&!GetSpell()->IsTriggered()&&NpcBrewTarget(GetHitUnit()))
+                WDN2Y::AfterHeal(npc,GetHitUnit(),GetHitHeal());
+            return;
+        }
         Player* player = GetCaster()->ToPlayer();
         Unit* target = GetHitUnit();
         if (!IsDoctor(player) || !WD19A::IsBrew(GetSpellInfo()->Id) || GetSpell()->IsTriggered() || !target)
@@ -615,6 +635,7 @@ class spell_reborn_wd3_birth : public SpellScript
     void Register() override
     {
         OnCheckCast += SpellCheckCastFn(spell_reborn_wd3_birth::CheckDoctor);
+        OnHit += SpellHitFn(spell_reborn_wd3_birth::GuardNpcBrewHit);
         OnEffectLaunchTarget += SpellEffectFn(spell_reborn_wd3_birth::AddCoACoefficient, EFFECT_0, SPELL_EFFECT_ANY);
         AfterHit += SpellHitFn(spell_reborn_wd3_birth::AfterBrew);
         AfterHit += SpellHitFn(spell_reborn_wd3_birth::MirrorCast);

@@ -5,6 +5,7 @@
 #include "SpellMgr.h"
 #include "Log.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h"
+#include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewEcho2.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcVoodoo2.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWard1.h"
@@ -18,7 +19,7 @@ namespace
 {
 constexpr uint32 Wrath=9003100,Brew=9003101,Vigil=9003855;
 constexpr uint32 Arrow=9003970, Reclamation=9003980, Eclipse=9004000, Glaive=9004030;
-std::vector<uint32> const supportSpells={WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
+std::vector<uint32> const supportSpells={WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
 std::vector<uint32> const healingSpells={WDN2P::Splash,WDN2P::Toss,WDN2P::Prep,Brew,WDN1C::Healing};
 std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN2B::SpellId,WDN2C::SpellId};
 }
@@ -36,7 +37,7 @@ public:
     struct witch_doctor_botAI : public bot_ai
     {
         bool preferWrath=false;
-        uint32 spiritOwner=0,spiritMap=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0;
+        uint32 spiritOwner=0,spiritMap=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
         void Trace(char const* reason,uint32 spell=0,int32 result=0)
         {
             if(diagnosticTimer||IAmFree())return;
@@ -51,9 +52,9 @@ public:
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
         { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("npcbots", "[WDN1D3] initialized entry={}",me->GetEntry()); }
 
-        void Reset() override { preferWrath=false; hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0; me->RemoveAurasDueToSpell(WDN2P::Prep,me->GetGUID());WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
+        void Reset() override { allyBrewRetry=brewingRetry=0; healingReserve=false;preferWrath=false; hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0; WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
         void JustDied(Unit* killer) override
-        { me->RemoveAurasDueToSpell(WDN2P::Prep,me->GetGUID());WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());bot_ai::JustDied(killer); }
+        { WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());bot_ai::JustDied(killer); }
         void InitPowers() override { me->SetPowerType(POWER_MANA);bot_ai::InitPowers(); }
         void ApplyClassPassives() const override { } // No Hunter or Player talent inheritance.
 
@@ -67,6 +68,15 @@ public:
         }
         void InitSpells() override
         {
+            InitSpellMap(WDN2P::Thistle,true,false);
+            auto*thistleInfo=sSpellMgr->GetSpellInfo(WDN2P::Thistle);auto const&thistleMap=GetSpellMap();auto thistle=thistleMap.find(WDN2P::Thistle);
+            if(thistle!=thistleMap.end()&&thistle->second)thistle->second->spellId=thistleInfo&&me->GetLevel()>=thistleInfo->SpellLevel?WDN2P::Thistle:0;
+            InitSpellMap(WDN2P::Fish,true,false);
+            auto*fishInfo=sSpellMgr->GetSpellInfo(WDN2P::Fish);auto const&fishMap=GetSpellMap();auto fish=fishMap.find(WDN2P::Fish);
+            if(fish!=fishMap.end()&&fish->second)fish->second->spellId=fishInfo&&me->GetLevel()>=fishInfo->SpellLevel?WDN2P::Fish:0;
+            InitSpellMap(WDN2P::Bones,true,false);
+            auto*bonesInfo=sSpellMgr->GetSpellInfo(WDN2P::Bones);auto const&bonesMap=GetSpellMap();auto bones=bonesMap.find(WDN2P::Bones);
+            if(bones!=bonesMap.end()&&bones->second)bones->second->spellId=bonesInfo&&me->GetLevel()>=bonesInfo->SpellLevel?WDN2P::Bones:0;
             InitFamily(WDN2P::Splash,WDN2P::SplashRanks);
             InitFamily(WDN2P::Toss,WDN2P::TossRanks);
             InitSpellMap(WDN2P::Prep,true,false);
@@ -238,13 +248,24 @@ public:
             // doCast preserves normal 20% base-mana cost, prepare checks, GCD and cooldown.
             return CheckBotCast(anchor,spell)==SPELL_CAST_OK&&bot_ai::doCast(anchor,spell);
         }
+        bool healingReserve=false;
+        bool ReserveHealingMana()
+        {
+            // WDN2T: role policy only; never change native spell costs or cooldowns.
+            uint32 maximum=me->GetMaxPower(POWER_MANA);
+            if(!HasRole(NPC_BOT_ROLE_HEAL)||!maximum){healingReserve=false;return false;}
+            uint64 current=uint64(me->GetPower(POWER_MANA))*100;
+            if(current<=uint64(maximum)*40)healingReserve=true;
+            else if(current>=uint64(maximum)*60)healingReserve=false;
+            return healingReserve;
+        }
         bool TryBrewing(uint32 diff)
         {
-            if(brewingRetry||IsCasting()||!WDN2P::Active(me)||!WDN2P::Known(me,WDN2P::Prep))return false;
+            if(brewingRetry||IsCasting()||!WDN2P::Active(me)||!WDN2P::Selected(me))return false;
             brewingRetry=1000; // Bound grid scans and rejected-cast retries.
             auto targets=WDN2P::Targets(me);if(targets.empty())return false;
             if(!WDN2P::Prepared(me))
-                return IsSpellReady(WDN2P::Prep,diff)&&CheckBotCast(me,WDN2P::Prep)==SPELL_CAST_OK&&bot_ai::doCast(me,WDN2P::Prep);
+                {uint32 prep=WDN2P::Selected(me);return IsSpellReady(prep,diff)&&CheckBotCast(me,prep)==SPELL_CAST_OK&&bot_ai::doCast(me,prep);}
             Unit*t=targets.front();uint32 spell=GetSpell(WDN2P::Toss);
             // A single critically injured ally gets the stronger single-target potion first.
             bool const groupFirst=t->GetHealthPct()>=35.f||!IsSpellReady(WDN2P::Toss,diff);
@@ -270,6 +291,19 @@ public:
                GetSpell(Vigil)!=Vigil||me->HasAura(Vigil)||me->HasAura(9003581)||
                me->HasAura(9003800)||!IsSpellReady(Vigil,diff))return false;
             return CheckBotCast(me,Vigil)==SPELL_CAST_OK&&bot_ai::doCast(me,Vigil);
+        }
+        bool TryAllyBrew(uint32 diff)
+        {
+            if(allyBrewRetry||!HasRole(NPC_BOT_ROLE_HEAL)||IsCasting()||!WDN2P::Active(me))return false;
+            uint32 spell=GetSpell(Brew);
+            if(!spell||!WDN1::Known(me,spell)||!IsSpellReady(Brew,diff))return false;
+            allyBrewRetry=500; // Bound scans and rejected casts; native cooldown/mana stay authoritative.
+            for(Unit* target:WDN2P::Targets(me))
+            {
+                if(target==me||target->GetHealthPct()>=70.f)continue;
+                if(CheckBotCast(target,spell)==SPELL_CAST_OK&&bot_ai::doCast(target,spell))return true;
+            }
+            return false;
         }
         bool TrySelfHeal(uint32 diff)
         {
@@ -354,11 +388,13 @@ public:
             if(spiritOwner!=GetBotOwnerGuid()||spiritMap!=me->GetMapId())
             {
                 me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());
-                me->RemoveAurasDueToSpell(WDN2P::Prep,me->GetGUID());WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);
+                WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);
                 spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();
             }
             hexEffigyRetry=hexEffigyRetry>diff?hexEffigyRetry-diff:0;gravenRetry=gravenRetry>diff?gravenRetry-diff:0;cursedRetry=cursedRetry>diff?cursedRetry-diff:0;swiftRetry=swiftRetry>diff?swiftRetry-diff:0;sereneRetry=sereneRetry>diff?sereneRetry-diff:0;
+            allyBrewRetry=allyBrewRetry>diff?allyBrewRetry-diff:0;
             brewingRetry=brewingRetry>diff?brewingRetry-diff:0;
+            WDN2Y::Maintain(me);
             WDN2P::Maintain(me);
             WDN2O::Current(me);
             WDN2E::Current(me);
@@ -387,10 +423,13 @@ public:
             { me->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());return; }
             DoVehicleActions(diff);
             if(!CanBotAttackOnVehicle()||ProcessImmediateNonAttackTarget()){Trace("vehicle-or-immediate");return;}
+            bool const reserveHealingMana=ReserveHealingMana();
             if(TryVoodoo(diff))return;
             if(TryVigil(diff))return;
             if(TrySelfHeal(diff))return;
             if(TryBrewing(diff))return;
+            if(TryAllyBrew(diff))return;
+            if(reserveHealingMana&&TryManaIdol(diff))return;
             if(TryHealingWard(diff))return;
             if(TryManaIdol(diff))return;
             if(TrySereneIdol(diff))return;
@@ -418,6 +457,7 @@ public:
             if(!WDN1::Safe(me,target)){Trace("unsafe-target");return;}
             // Native doCast handles movement/real cast time; do not suppress instant spells.
             KeepAutoShot(target);
+            if(reserveHealingMana){Trace("healing-mana-reserve");return;}
             if(!pulling&&TryCursedEffigy(target,diff))return;
             if(!pulling&&TryHexingEffigy(target,diff))return;
             if(!pulling&&TryGravenEffigy(target,diff))return;

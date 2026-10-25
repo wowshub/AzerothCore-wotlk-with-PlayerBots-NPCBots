@@ -1,0 +1,30 @@
+[
+  {
+    "side": "client",
+    "spell": 9003903,
+    "field_zero_based": 73,
+    "before": 3,
+    "after": 6,
+    "aura": 216,
+    "base_points": 9,
+    "duration_index": 31,
+    "input_sha256": "cf6c221da106e12e9fd62130dc5112dc365e9393f092edcfee129bb86ea2c49f",
+    "output_sha256": "48a6dc0b616e01492e1d7a2b5f6cc03d8634cb0978b2192b7586aa6442ef0186",
+    "records": 62062,
+    "only_one_uint32_changed": true
+  },
+  {
+    "side": "server",
+    "spell": 9003903,
+    "field_zero_based": 73,
+    "before": 3,
+    "after": 6,
+    "aura": 216,
+    "base_points": 9,
+    "duration_index": 31,
+    "input_sha256": "d230f3f0a2d2c03aaf66e04b04bafb781024f836cd37e0eafd2a780986601099",
+    "output_sha256": "358ce5feac67ca3d73f1d8d71de8ac36e0415a652e21f2eec7b7d9b743f7b75d",
+    "records": 62062,
+    "only_one_uint32_changed": true
+  }
+]
