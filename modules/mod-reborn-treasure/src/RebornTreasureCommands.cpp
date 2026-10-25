@@ -10,6 +10,10 @@
 #include "WorldPacket.h"
 #include <algorithm>
 #include <cstdlib>
+#include <map>
+#include <cctype>
+#include <set>
+#include <ctime>
 #include <string>
 #include <vector>
 
@@ -102,8 +106,9 @@ namespace
 
     void SendType(Player* p, TreasureType const& t)
     {
-        Send(p, Acore::StringFormat("TY\t{}\t{}\t{}\t{}\t{:.2f}\t{}\t{}\t{}\t{}\t{}\t{}", t.entry, Fld(t.name), Fld(t.icon), t.displayId,
-                                    t.size, t.goldMin, t.goldMax, uint32(t.rarity), t.respawnMin, t.respawnMax, t.active ? 1 : 0));
+        Send(p, Acore::StringFormat("TY\t{}\t{}\t{}\t{}\t{:.2f}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", t.entry, Fld(t.name), Fld(t.icon), t.displayId,
+                                    t.size, t.goldMin, t.goldMax, uint32(t.rarity), t.respawnMin, t.respawnMax, t.active ? 1 : 0,
+                                    t.dungeonGoldScale ? 1 : 0));
         if (GameObjectDisplayInfoEntry const* d = sGameObjectDisplayInfoStore.LookupEntry(t.displayId))
             Send(p, Acore::StringFormat("TYM\t{}\t{}", t.entry, Fld(d->filename ? d->filename : "")));
     }
@@ -196,6 +201,59 @@ namespace
         Send(p, Acore::StringFormat("IT_END\t{}\t{}\t{}", page, more ? 1 : 0, count));
     }
 
+    // TREASFIX2: icons for the chest-type list, by category. The names come from the item display table (so the
+    // game knows them); the categories are picked by the icon file's own name, not by the name of an item (an item
+    // called "...Chest" is armor).
+    void SendIcons(Player* p, std::string cat)
+    {
+        std::transform(cat.begin(), cat.end(), cat.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+        Send(p, "IC_START\t" + cat);
+
+        std::map<std::string, std::string> all;   // lower case -> the table's spelling, sorted by name
+        for (uint32 i = 0; i < sItemDisplayInfoStore.GetNumRows(); ++i)
+            if (ItemDisplayInfoEntry const* e = sItemDisplayInfoStore.LookupEntry(i))
+                if (e->inventoryIcon && *e->inventoryIcon)
+                {
+                    std::string name = e->inventoryIcon;
+                    std::string lo = name;
+                    std::transform(lo.begin(), lo.end(), lo.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+                    if (lo.find('.') == std::string::npos && lo.find('\\') == std::string::npos)
+                        all.emplace(lo, name);
+                }
+
+        auto starts = [](std::string const& s, char const* pre) { return s.rfind(pre, 0) == 0; };
+        uint32 sent = 0;
+        for (auto const& kv : all)
+        {
+            std::string const& lo = kv.first;
+            bool ok = false;
+            if (cat == "chest")
+                ok = (starts(lo, "inv_box_") && lo.find("birdcage") == std::string::npos && lo.find("petcarrier") == std::string::npos) ||
+                     starts(lo, "inv_crate_") || lo == "inv_misc_ornatebox" || starts(lo, "inv_misc_urn_") ||
+                     starts(lo, "inv_misc_gift_") || starts(lo, "inv_misc_giftwrap_") || starts(lo, "inv_chest_christmas") ||
+                     starts(lo, "inv_holiday_christmas_present") || starts(lo, "inv_misc_basket_") || lo == "inv_misc_easterbasket" ||
+                     starts(lo, "inv_valentinesbox");
+            else if (cat == "key")
+                ok = starts(lo, "inv_misc_key_");
+            else if (cat == "coin")
+                ok = starts(lo, "inv_misc_coin_");
+            else if (cat == "gem")
+                ok = starts(lo, "inv_misc_gem_");
+            else if (cat == "bag")
+                ok = starts(lo, "inv_misc_bag_");
+            else if (cat == "scroll")
+                ok = starts(lo, "inv_scroll_") || starts(lo, "inv_misc_book_") || starts(lo, "inv_misc_note_") ||
+                     starts(lo, "inv_misc_stonetablet_") || starts(lo, "inv_misc_map") || starts(lo, "inv_misc_rune_");
+            if (!ok)
+                continue;
+            if (sent >= 120)
+                break;
+            Send(p, Acore::StringFormat("IC\t{}", kv.second));
+            ++sent;
+        }
+        Send(p, Acore::StringFormat("IC_END\t{}\t{}", cat, sent));
+    }
+
     // the appearances a chest can have: every model the stock chests use, most common first
     void SendLooks(Player* p)
     {
@@ -214,6 +272,49 @@ namespace
             } while (r->NextRow());
         }
         Send(p, "LK_END");
+    }
+
+    std::string MapNameOf(uint32 id, LocaleConstant loc)
+    {
+        if (MapEntry const* e = sMapStore.LookupEntry(id))
+            return (e->name[loc] && *e->name[loc]) ? e->name[loc] : (e->name[0] ? e->name[0] : "?");
+        return "?";
+    }
+
+    std::string AreaNameOf(uint32 id, LocaleConstant loc)
+    {
+        if (AreaTableEntry const* e = sAreaTableStore.LookupEntry(id))
+            return (e->area_name[loc] && *e->area_name[loc]) ? e->area_name[loc] : (e->area_name[0] ? e->area_name[0] : "?");
+        return "?";
+    }
+
+    // TREAS2C: the spawns of one chest type (entry 0 = every spawn in the world)
+    void SendSpawns(Player* p, uint32 entry)
+    {
+        LocaleConstant const loc = p->GetSession()->GetSessionDbcLocale();
+        uint64 const now = static_cast<uint64>(time(nullptr));
+        std::vector<TreasureSpawn> all = sRebornTreasure->Snapshot();
+        Send(p, Acore::StringFormat("SP_START\t{}", entry));
+        uint32 sent = 0, total = 0;
+        for (TreasureSpawn const& s : all)
+        {
+            if (entry && s.entry != entry)
+                continue;
+            ++total;
+            if (sent >= 300)
+                continue;
+            ++sent;
+            uint32 left = (s.chests.empty() && s.nextRespawnTime > now) ? static_cast<uint32>(s.nextRespawnTime - now) : 0;
+            int dist = p->GetMapId() == s.mapId ? static_cast<int>(p->GetDistance(s.x, s.y, s.z)) : -1;
+            std::string clue = sRebornTreasure->GetSpawnClue(s.spawnId);
+            Send(p, Acore::StringFormat("SP\t{}\t{}\t{}\t{}\t{}\t{}\t{:.1f}\t{:.1f}\t{:.1f}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                                        s.spawnId, s.entry, s.mapId, Fld(MapNameOf(s.mapId, loc)), s.zoneId, Fld(AreaNameOf(s.zoneId, loc)),
+                                        s.x, s.y, s.z, s.chests.empty() ? 0 : 1, left, s.respawnMinSecs, s.respawnMaxSecs, dist,
+                                        clue.empty() ? 0 : 1, s.wet ? 1 : 0, Fld(Clip(s.comment, 80))));
+            if (!clue.empty())
+                Send(p, Acore::StringFormat("SPC\t{}\t{}", s.spawnId, Fld(Clip(clue, 200))));
+        }
+        Send(p, Acore::StringFormat("SP_END\t{}\t{}\t{}", entry, sent, total));
     }
 
     void Fail(ChatHandler* handler, Player* p, std::string const& what)
@@ -278,8 +379,13 @@ public:
             player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation(), respawn, commentStr, player->GetMap());
 
         if (newSpawnId > 0)
+        {
             handler->PSendSysMessage("|cff00ff00[野外寻宝]|r 成功创建宝箱点位！SpawnID: {}, 品质: {}, 刷新间隔: {} 秒, 描述: {}",
                 newSpawnId, uint32(quality), respawn, commentStr);
+            TreasureSpawn made;
+            if (sRebornTreasure->GetSpawn(newSpawnId, made) && made.wet)
+                handler->SendSysMessage("|cffff9933[野外寻宝]|r 提示：这里是水下，宝箱已放在水底。想放在岸上：站到岸上用面板右键“把点位移到我脚下”。");
+        }
         else
             handler->SendSysMessage("|cffff0000[野外寻宝]|r 创建宝箱点位失败，请检查数据库配置或日志。");
         return true;
@@ -339,7 +445,7 @@ public:
         std::vector<std::string> w = Split(line);
         if (w.empty())
         {
-            handler->SendSysMessage("用法: .treasure ui types|loot|items|looks|typeset|typenew|typedel|lootset|lootdel ...");
+            handler->SendSysMessage("用法: .treasure ui types|loot|items|looks|typeset|typenew|typecopy|typedel|lootset|lootdel|spawns|spawngo|spawnshow|spawndel|spawnhere|spawnrespawn|spawncomment|spawnclue|spawntype ...");
             return true;
         }
         std::string const& what = w[0];
@@ -363,6 +469,11 @@ public:
         if (what == "looks")
         {
             SendLooks(gm);
+            return true;
+        }
+        if (what == "icons")   // TREASFIX2: icons [category]
+        {
+            SendIcons(gm, w.size() >= 2 ? w[1] : std::string("chest"));
             return true;
         }
         if (what == "loot" && w.size() >= 2)
@@ -400,6 +511,18 @@ public:
             }
             return true;
         }
+        if (what == "typecopy" && w.size() >= 2)       // typecopy <entry>  (TREAS2B)
+        {
+            uint32 entry = sRebornTreasure->CopyType(Num(w[1]), err);
+            if (!entry)
+                Fail(handler, gm, err);
+            else
+            {
+                Send(gm, Acore::StringFormat("OK\ttypecopy\t{}", entry));
+                SendTypes(gm);
+            }
+            return true;
+        }
         if (what == "typeset" && w.size() >= 4)        // typeset <entry> <field> <value...>
         {
             uint32 entry = Num(w[1]);
@@ -419,6 +542,7 @@ public:
             else if (field == "rarity")     t.rarity = static_cast<uint8>(Num(value));
             else if (field == "respawn" && w.size() >= 5) { t.respawnMin = Num(w[3]); t.respawnMax = Num(w[4]); }
             else if (field == "active")     t.active = Num(value) != 0;
+            else if (field == "dscale")     t.dungeonGoldScale = Num(value) != 0;   // TREAS2B
             else
             {
                 Fail(handler, gm, "不认识的设置项: " + field);
@@ -432,6 +556,106 @@ public:
                 if (sRebornTreasure->GetType(entry, t))
                     SendType(gm, t);
             }
+            return true;
+        }
+        // ---- TREAS2C: spawns (point = a place where a chest of a type stands)
+        if (what == "spawns")                          // spawns [entry]
+        {
+            SendSpawns(gm, w.size() >= 2 ? Num(w[1]) : 0);
+            return true;
+        }
+        if (what == "spawngo" && w.size() >= 2)        // spawngo <id>: teleport the GM there
+        {
+            TreasureSpawn s;
+            if (!sRebornTreasure->GetSpawn(Num(w[1]), s))
+            {
+                Fail(handler, gm, "没有这个点位");
+                return true;
+            }
+            if (gm->IsInCombat() || gm->IsBeingTeleported())
+            {
+                Fail(handler, gm, "战斗中或正在传送，稍后再试");
+                return true;
+            }
+            if (!gm->TeleportTo(s.mapId, s.x, s.y, s.z + 1.0f, s.o))
+                Fail(handler, gm, "传送失败（副本里的点位要先进入那个副本）");
+            else
+                Send(gm, Acore::StringFormat("OK\tspawngo\t{}", s.spawnId));
+            return true;
+        }
+        if (what == "spawnshow" && w.size() >= 2)      // spawnshow <id>: put the chest there now (it may have been taken)
+        {
+            if (!sRebornTreasure->ForceRespawn(Num(w[1]), gm->GetMap()))
+                Fail(handler, gm, "刷出失败：没有这个点位，或那张地图现在没有加载（先传送过去）");
+            else
+                Send(gm, Acore::StringFormat("OK\tspawnshow\t{}", Num(w[1])));
+            return true;
+        }
+        if (what == "spawndel" && w.size() >= 2)       // spawndel <id>
+        {
+            if (!sRebornTreasure->RemoveSpawn(Num(w[1])))
+                Fail(handler, gm, "没有这个点位");
+            else
+                Send(gm, Acore::StringFormat("OK\tspawndel\t{}", Num(w[1])));
+            return true;
+        }
+        if (what == "spawnhere" && w.size() >= 2)      // spawnhere <id>: move the point to where the GM stands
+        {
+            if (!sRebornTreasure->MoveSpawn(Num(w[1]), static_cast<uint16>(gm->GetMapId()), gm->GetZoneId(), gm->GetPositionX(),
+                                            gm->GetPositionY(), gm->GetPositionZ(), gm->GetOrientation(), gm->GetMap()))
+                Fail(handler, gm, "没有这个点位");
+            else
+            {
+                Send(gm, Acore::StringFormat("OK\tspawnhere\t{}", Num(w[1])));
+                TreasureSpawn moved;
+                if (sRebornTreasure->GetSpawn(Num(w[1]), moved) && moved.wet)
+                    handler->SendSysMessage("|cffff9933[野外寻宝]|r 提示：这里是水下，宝箱会沉在水底。");
+            }
+            return true;
+        }
+        if (what == "spawnsnap" && w.size() >= 2)      // spawnsnap <id|0>: put the point(s) on the ground
+        {
+            uint32 const id = Num(w[1]);
+            TreasureSpawn probe;
+            if (id && !sRebornTreasure->GetSpawn(id, probe))
+            {
+                Fail(handler, gm, "没有这个点位");
+                return true;
+            }
+            RebornTreasureMgr::SnapResult const r = sRebornTreasure->SnapSpawns(id, gm->GetMap());
+            Send(gm, Acore::StringFormat("OK\tspawnsnap\t{}\t{}\t{}\t{}", id, r.moved, r.wet, r.skipped));
+            return true;
+        }
+        if (what == "spawnrespawn" && w.size() >= 4)   // spawnrespawn <id> <min> <max>
+        {
+            if (!sRebornTreasure->SetSpawnRespawn(Num(w[1]), Num(w[2]), Num(w[3])))
+                Fail(handler, gm, "没有这个点位");
+            else
+                Send(gm, Acore::StringFormat("OK\tspawnrespawn\t{}", Num(w[1])));
+            return true;
+        }
+        if (what == "spawncomment" && w.size() >= 2)   // spawncomment <id> [text...]
+        {
+            if (!sRebornTreasure->SetSpawnComment(Num(w[1]), Rest(line, 2)))
+                Fail(handler, gm, "没有这个点位");
+            else
+                Send(gm, Acore::StringFormat("OK\tspawncomment\t{}", Num(w[1])));
+            return true;
+        }
+        if (what == "spawnclue" && w.size() >= 2)      // spawnclue <id> [text...]  (no text = remove the clue)
+        {
+            if (!sRebornTreasure->SetSpawnClue(Num(w[1]), Rest(line, 2)))
+                Fail(handler, gm, "没有这个点位");
+            else
+                Send(gm, Acore::StringFormat("OK\tspawnclue\t{}", Num(w[1])));
+            return true;
+        }
+        if (what == "spawntype" && w.size() >= 3)      // spawntype <id> <entry>
+        {
+            if (!sRebornTreasure->SetSpawnType(Num(w[1]), Num(w[2]), err))
+                Fail(handler, gm, err);
+            else
+                Send(gm, Acore::StringFormat("OK\tspawntype\t{}", Num(w[1])));
             return true;
         }
         if (what == "lootset" && w.size() >= 7)        // lootset <entry> <item> <chance> <min> <max> <group>

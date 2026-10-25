@@ -10,11 +10,13 @@
 #include "Mail.h"
 #include "Map.h"
 #include "MapMgr.h"
+#include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "WorldSession.h"
 #include <algorithm>
+#include <cmath>
 #include <ctime>
 
 namespace
@@ -41,6 +43,31 @@ namespace
     uint32 RandomBetween(uint32 a, uint32 b)
     {
         return urand(std::min(a, b), std::max(a, b));
+    }
+
+    // TREASFIX2: where the ground is under a point. A GM who stood in water or on a flying mount put the point
+    // at the water surface / in the air, and the chest hung there. The search starts a little above the point
+    // and goes down (and finds floors of buildings too, not only the terrain).
+    struct Ground
+    {
+        bool found = false;
+        float z = 0.0f;
+        bool wet = false;   // the ground is below a water surface
+    };
+
+    Ground FindGround(Map* map, float x, float y, float z)
+    {
+        Ground g;
+        if (!map)
+            return g;
+        float ground = INVALID_HEIGHT;
+        float const level = map->GetWaterOrGroundLevel(PHASEMASK_NORMAL, x, y, z + 1.0f, &ground);
+        if (ground <= INVALID_HEIGHT + 1.0f)
+            return g;
+        g.found = true;
+        g.z = ground + 0.05f;
+        g.wet = level > ground + 0.3f;
+        return g;
     }
 }
 
@@ -174,12 +201,33 @@ void RebornTreasureMgr::Update(uint32 diff)
     if (!m_enabled || !m_dbReady)
         return;
 
+    // TREASFIX1: close the loot window of whoever emptied a chest. Done every tick and without our lock held: the
+    // release fires OnLootStateChanged -> OnChestEmptied, which takes it.
+    std::vector<std::pair<ObjectGuid, ObjectGuid>> release;
+    bool emptiedWaiting = false;
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        release.swap(m_pendingRelease);
+    }
+    for (auto const& pr : release)
+        if (Player* p = ObjectAccessor::FindConnectedPlayer(pr.first))
+            if (p->GetSession() && p->IsInWorld() && p->GetLootGUID() == pr.second)
+                p->GetSession()->DoLootRelease(pr.second);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        emptiedWaiting = !m_emptied.empty();
+    }
+
+    bool scan = true;
     if (m_updateTimer > diff)
     {
         m_updateTimer -= diff;
-        return;
+        scan = false;
     }
-    m_updateTimer = 2000;
+    else
+        m_updateTimer = 2000;
+    if (!scan && !emptiedWaiting)
+        return;
 
     uint64 now = static_cast<uint64>(time(nullptr));
     std::lock_guard<std::mutex> lock(m_mutex);
@@ -209,6 +257,8 @@ void RebornTreasureMgr::Update(uint32 diff)
             }
     }
     m_emptied.clear();
+    if (!scan)
+        return;
 
     for (auto& pair : m_spawns)
     {
@@ -278,7 +328,14 @@ bool RebornTreasureMgr::SpawnChestLocked(TreasureSpawn& spawn, Map* map)
     if (spawn.chests.count(instanceId))
         return false;
 
-    GameObject* go = map->SummonGameObject(spawn.entry, spawn.x, spawn.y, spawn.z, spawn.o, 0.0f, 0.0f, 0.0f, 0.0f, 0);
+    // TREASFIX2: on the ground, whatever height the GM was standing at when the point was made
+    float z = spawn.z;
+    Ground const ground = FindGround(map, spawn.x, spawn.y, spawn.z);
+    spawn.wet = ground.found && ground.wet;
+    if (ground.found && std::fabs(ground.z - spawn.z) > 0.5f)
+        z = ground.z;
+
+    GameObject* go = map->SummonGameObject(spawn.entry, spawn.x, spawn.y, z, spawn.o, 0.0f, 0.0f, 0.0f, 0.0f, 0);
     if (!go)
     {
         LOG_ERROR("module", "mod-reborn-treasure: could not summon chest: spawnId={}, entry={}", spawn.spawnId, spawn.entry);
@@ -306,6 +363,7 @@ void RebornTreasureMgr::DespawnChestLocked(TreasureSpawn& spawn, uint32 instance
 
     m_guidToSpawnId.erase(it->second);
     m_opened.erase(it->second);
+    m_chestGold.erase(it->second);
     spawn.chests.erase(it);
 }
 
@@ -397,13 +455,85 @@ bool RebornTreasureMgr::OnChestUsed(Player* player, GameObject* go)
     // the chest is consumable, so the core removes it once everything was taken
     player->SendLoot(go->GetGUID(), LOOT_CORPSE);
 
-    // TREAS2A2 diagnostic: tells a GM what the core made of it when no loot window opens
-    if (WorldSession* diag = player->GetSession())
-        if (m_debugLog || diag->GetSecurity() >= SEC_GAMEMASTER)
-            ChatHandler(diag).PSendSysMessage("|cff888888[寻宝调试]|r 宝箱{} 掉落编号{} 物品{}件 金币{} 状态{} 窗口{}",
-                go->GetEntry(), go->GetGOInfo()->GetLootId(), go->loot.items.size(), go->loot.gold,
-                uint32(go->getLootState()), player->GetLootGUID() == go->GetGUID() ? 1 : 0);
+    // TREAS2B: the gold as rolled; mod-dungeon-scale only scales it when it is taken
+    if (go->loot.gold > 0)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_chestGold[go->GetGUID()] = go->loot.gold;
+    }
+
+    // TREASFIX1: a chest that has nothing left (a second click after it was emptied, or a chest with an empty table
+    // and no gold): the client opens no window for it and never sends a release, so the character would stay kneeling
+    if (go->loot.isLooted() && player->GetLootGUID() == go->GetGUID())
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_pendingRelease.emplace_back(player->GetGUID(), go->GetGUID());
+    }
     return true;
+}
+
+void RebornTreasureMgr::OnLootTaken(Player* player, bool goldAboutToGo)
+{
+    if (!m_enabled || !player)
+        return;
+    ObjectGuid const guid = player->GetLootGUID();
+    if (!guid.IsGameObject() || !IsTreasureEntry(guid.GetEntry()))
+        return;
+    Map* map = player->GetMap();
+    GameObject* go = map ? map->GetGameObject(guid) : nullptr;
+    if (!go)
+        return;
+    if (go->loot.unlootedCount > 0 || (go->loot.gold > 0 && !goldAboutToGo))
+        return;   // something is still in it
+
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if (m_guidToSpawnId.count(guid))
+        m_pendingRelease.emplace_back(player->GetGUID(), guid);
+}
+
+void RebornTreasureMgr::OnBeforeLootMoney(Player* player, Loot* loot)
+{
+    if (!m_enabled || !player || !loot)
+        return;
+    ObjectGuid guid = player->GetLootGUID();
+    if (!guid.IsGameObject() || !IsTreasureEntry(guid.GetEntry()))
+        return;
+
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto goldIt = m_chestGold.find(guid);
+    auto typeIt = m_types.find(guid.GetEntry());
+    if (goldIt == m_chestGold.end() || typeIt == m_types.end() || typeIt->second.dungeonGoldScale)
+        return;
+    loot->gold = goldIt->second;   // undo a scaling that ran before us
+}
+
+void RebornTreasureMgr::OnLootMoney(Player* player, uint32 gold)
+{
+    if (!m_enabled || !player)
+        return;
+    ObjectGuid guid = player->GetLootGUID();
+    if (!guid.IsGameObject() || !IsTreasureEntry(guid.GetEntry()))
+        return;
+    OnLootTaken(player, true);   // TREASFIX1: the core zeroes loot->gold right after this hook
+
+    uint32 full = 0;
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto goldIt = m_chestGold.find(guid);
+        if (goldIt == m_chestGold.end())
+            return;
+        auto typeIt = m_types.find(guid.GetEntry());
+        if (typeIt != m_types.end() && !typeIt->second.dungeonGoldScale)
+            full = goldIt->second;
+        m_chestGold.erase(goldIt);   // the gold is taken once
+    }
+
+    // a scaling that ran after us: pay the difference
+    if (full > gold)
+    {
+        player->ModifyMoney(full - gold);
+        ChatHandler(player->GetSession()).PSendSysMessage("|cffffd700[野外寻宝]|r 宝箱金币不随副本人数缩放，已补足 {} 铜。", full - gold);
+    }
 }
 
 void RebornTreasureMgr::CollectNearby(uint16 mapId, uint32 instanceId, float px, float py, float pz, std::vector<TreasureNearby>& out)
@@ -461,6 +591,13 @@ uint32 RebornTreasureMgr::AddSpawn(uint32 kind, uint16 mapId, uint32 zoneId, flo
         return 0;
     auto typeIt = m_types.find(entry);
     uint8 const quality = typeIt != m_types.end() ? typeIt->second.rarity : static_cast<uint8>(kind);
+
+    if (where && where->GetId() == mapId)   // TREASFIX2: the saved point is on the ground, not where the GM floated
+    {
+        Ground const g = FindGround(where, x, y, z);
+        if (g.found)
+            z = g.z;
+    }
 
     TreasureSpawn spawn;
     spawn.spawnId = m_nextSpawnId++;
@@ -529,6 +666,166 @@ bool RebornTreasureMgr::ForceRespawn(uint32 spawnId, Map* where)
     return SpawnChestLocked(spawn, sMapMgr->FindMap(spawn.mapId, 0));
 }
 
+// ------------------------------------------------------------------ TREAS2C: spawn management
+
+bool RebornTreasureMgr::GetSpawn(uint32 spawnId, TreasureSpawn& out)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_spawns.find(spawnId);
+    if (it == m_spawns.end())
+        return false;
+    out = it->second;
+    return true;
+}
+
+bool RebornTreasureMgr::MoveSpawn(uint32 spawnId, uint16 mapId, uint32 zoneId, float x, float y, float z, float o, Map* where)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_spawns.find(spawnId);
+    if (it == m_spawns.end())
+        return false;
+
+    if (where && where->GetId() == mapId)   // TREASFIX2
+    {
+        Ground const g = FindGround(where, x, y, z);
+        if (g.found)
+            z = g.z;
+    }
+
+    TreasureSpawn& spawn = it->second;
+    DespawnAllLocked(spawn);   // the old chests go; the new ones come with the next tick (or now, where the GM stands)
+    spawn.mapId = mapId;
+    spawn.zoneId = zoneId;
+    spawn.x = x;
+    spawn.y = y;
+    spawn.z = z;
+    spawn.o = o;
+    spawn.nextRespawnTime = static_cast<uint64>(time(nullptr));
+    WorldDatabase.Execute(
+        "UPDATE reborn_treasure_spawns SET map = {}, zone_id = {}, position_x = {}, position_y = {}, position_z = {}, "
+        "orientation = {}, next_respawn_time = {} WHERE spawn_id = {}",
+        mapId, zoneId, x, y, z, o, spawn.nextRespawnTime, spawnId);
+    if (where && where->GetId() == mapId)
+        SpawnChestLocked(spawn, where);
+    return true;
+}
+
+bool RebornTreasureMgr::SetSpawnRespawn(uint32 spawnId, uint32 minSecs, uint32 maxSecs)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_spawns.find(spawnId);
+    if (it == m_spawns.end())
+        return false;
+    minSecs = std::max<uint32>(10, minSecs);
+    maxSecs = std::max(minSecs, maxSecs);
+    it->second.respawnMinSecs = minSecs;
+    it->second.respawnMaxSecs = maxSecs;
+    WorldDatabase.Execute("UPDATE reborn_treasure_spawns SET respawn_time_min = {}, respawn_time_max = {} WHERE spawn_id = {}",
+                          minSecs, maxSecs, spawnId);
+    return true;
+}
+
+bool RebornTreasureMgr::SetSpawnComment(uint32 spawnId, std::string comment)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_spawns.find(spawnId);
+    if (it == m_spawns.end())
+        return false;
+    if (comment.size() > 200)
+        comment.resize(200);
+    it->second.comment = comment;
+    WorldDatabase.EscapeString(comment);
+    WorldDatabase.Execute("UPDATE reborn_treasure_spawns SET comment = '{}' WHERE spawn_id = {}", comment, spawnId);
+    return true;
+}
+
+std::string RebornTreasureMgr::GetSpawnClue(uint32 spawnId)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_clueBySpawn.find(spawnId);
+    return it != m_clueBySpawn.end() ? it->second.clueText : std::string();
+}
+
+bool RebornTreasureMgr::SetSpawnClue(uint32 spawnId, std::string const& text)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if (!m_spawns.count(spawnId))
+        return false;
+    WorldDatabase.Execute("DELETE FROM reborn_treasure_clues WHERE spawn_id = {}", spawnId);
+    if (text.empty())
+    {
+        m_clueBySpawn.erase(spawnId);
+        return true;
+    }
+    std::string safe = text.size() > 400 ? text.substr(0, 400) : text;
+    WorldDatabase.EscapeString(safe);
+    WorldDatabase.Execute(
+        "INSERT INTO reborn_treasure_clues (spawn_id, clue_text, min_distance, max_distance, comment) VALUES ({}, '{}', 5, 45, 'TREAS2C panel')",
+        spawnId, safe);
+    TreasureClue clue;
+    clue.spawnId = spawnId;
+    clue.clueText = text;
+    clue.minDistance = 5.0f;
+    clue.maxDistance = 45.0f;
+    m_clueBySpawn[spawnId] = std::move(clue);
+    return true;
+}
+
+bool RebornTreasureMgr::SetSpawnType(uint32 spawnId, uint32 entry, std::string& err)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_spawns.find(spawnId);
+    if (it == m_spawns.end())
+    {
+        err = "没有这个点位";
+        return false;
+    }
+    auto typeIt = m_types.find(entry);
+    if (typeIt == m_types.end() || !typeIt->second.active)
+    {
+        err = "这种宝箱不存在或没有启用";
+        return false;
+    }
+    TreasureSpawn& spawn = it->second;
+    DespawnAllLocked(spawn);
+    spawn.entry = entry;
+    spawn.quality = typeIt->second.rarity;
+    spawn.nextRespawnTime = static_cast<uint64>(time(nullptr));
+    WorldDatabase.Execute("UPDATE reborn_treasure_spawns SET entry = {}, quality = {}, next_respawn_time = {} WHERE spawn_id = {}",
+                          entry, uint32(spawn.quality), spawn.nextRespawnTime, spawnId);
+    return true;
+}
+
+RebornTreasureMgr::SnapResult RebornTreasureMgr::SnapSpawns(uint32 spawnId, Map* where)
+{
+    SnapResult r;
+    std::lock_guard<std::mutex> lock(m_mutex);
+    for (auto& pair : m_spawns)
+    {
+        TreasureSpawn& s = pair.second;
+        if (spawnId && s.spawnId != spawnId)
+            continue;
+        Map* map = (where && where->GetId() == s.mapId) ? where : sMapMgr->FindMap(s.mapId, 0);
+        Ground const g = FindGround(map, s.x, s.y, s.z);
+        if (!g.found)
+        {
+            ++r.skipped;
+            continue;
+        }
+        s.wet = g.wet;
+        if (g.wet)
+            ++r.wet;
+        if (std::fabs(g.z - s.z) <= 0.25f)
+            continue;
+        s.z = g.z;
+        WorldDatabase.Execute("UPDATE reborn_treasure_spawns SET position_z = {} WHERE spawn_id = {}", s.z, s.spawnId);
+        DespawnAllLocked(s);   // the chest comes back at the new height at the next tick
+        s.nextRespawnTime = static_cast<uint64>(time(nullptr));
+        ++r.moved;
+    }
+    return r;
+}
+
 // ------------------------------------------------------------------ TREAS2A: chest types
 
 uint32 RebornTreasureMgr::EntryForKindLocked(uint32 kind) const
@@ -543,9 +840,16 @@ void RebornTreasureMgr::LoadTypesLocked()
 {
     m_types.clear();
 
+    // TREAS2B: dungeon_gold_scale comes with the TREAS2B SQL; without it every type pays full gold
+    m_hasScaleColumn = false;
+    if (QueryResult col = WorldDatabase.Query(
+            "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() "
+            "AND TABLE_NAME = 'reborn_treasure_types' AND COLUMN_NAME = 'dungeon_gold_scale'"))
+        m_hasScaleColumn = col->Fetch()[0].Get<uint64>() > 0;
+
     QueryResult result = WorldDatabase.Query(
-        "SELECT entry, name, icon, display_id, size, gold_min, gold_max, rarity, respawn_min, respawn_max, is_active "
-        "FROM reborn_treasure_types ORDER BY entry");
+        "SELECT entry, name, icon, display_id, size, gold_min, gold_max, rarity, respawn_min, respawn_max, is_active, {} "
+        "FROM reborn_treasure_types ORDER BY entry", m_hasScaleColumn ? "dungeon_gold_scale" : "0");
     if (result)
     {
         do
@@ -563,6 +867,7 @@ void RebornTreasureMgr::LoadTypesLocked()
             t.respawnMin = f[8].Get<uint32>();
             t.respawnMax = f[9].Get<uint32>();
             t.active     = f[10].Get<bool>();
+            t.dungeonGoldScale = f[11].Get<uint32>() != 0;
             if (!IsTreasureEntry(t.entry))
                 continue;
             m_types[t.entry] = t;
@@ -704,6 +1009,8 @@ bool RebornTreasureMgr::SaveType(TreasureType const& in, std::string& err)
         "REPLACE INTO reborn_treasure_types (entry, name, icon, display_id, size, gold_min, gold_max, rarity, respawn_min, respawn_max, is_active) "
         "VALUES ({}, '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {})",
         t.entry, name, icon, t.displayId, t.size, t.goldMin, t.goldMax, uint32(t.rarity), t.respawnMin, t.respawnMax, t.active ? 1 : 0);
+    if (m_hasScaleColumn)
+        WorldDatabase.Execute("UPDATE reborn_treasure_types SET dungeon_gold_scale = {} WHERE entry = {}", t.dungeonGoldScale ? 1 : 0, t.entry);
     // the template's gold lives in the addon table too, so a restart keeps it even without the types table
     WorldDatabase.Execute("REPLACE INTO gameobject_template_addon (entry, faction, flags, mingold, maxgold, artkit0, artkit1, artkit2, artkit3) "
                           "VALUES ({}, 0, 0, {}, {}, 0, 0, 0, 0)", t.entry, t.goldMin, t.goldMax);
@@ -739,6 +1046,31 @@ uint32 RebornTreasureMgr::NewType(std::string const& name, std::string& err)
     t.goldMin = 0;
     t.goldMax = 0;
     return SaveType(t, err) ? entry : 0;
+}
+
+uint32 RebornTreasureMgr::CopyType(uint32 from, std::string& err)
+{
+    TreasureType src;
+    if (!GetType(from, src))
+    {
+        err = "没有这种宝箱";
+        return 0;
+    }
+    std::string name = src.name + " 副本";
+    uint32 entry = NewType(name, err);
+    if (!entry)
+        return 0;
+    TreasureType t = src;
+    t.entry = entry;
+    t.name = name;
+    if (!SaveType(t, err))
+        return 0;
+    WorldDatabase.Execute(
+        "INSERT INTO gameobject_loot_template (Entry, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, Comment) "
+        "SELECT {}, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, 'TREAS2B copy' "
+        "FROM gameobject_loot_template WHERE Entry = {}", entry, from);
+    MarkLootDirty();
+    return entry;
 }
 
 bool RebornTreasureMgr::DeleteType(uint32 entry, std::string& err)
@@ -785,6 +1117,34 @@ public:
     }
 };
 
+class RebornTreasureMoneyPlayerScript : public PlayerScript
+{
+public:
+    RebornTreasureMoneyPlayerScript() : PlayerScript("RebornTreasureMoneyPlayerScript", { PLAYERHOOK_ON_BEFORE_LOOT_MONEY, PLAYERHOOK_ON_LOOT_ITEM }) { }
+
+    // TREASFIX1: the unlooted counter was already lowered when this runs
+    void OnPlayerLootItem(Player* player, Item* /*item*/, uint32 /*count*/, ObjectGuid /*lootguid*/) override
+    {
+        sRebornTreasure->OnLootTaken(player, false);
+    }
+
+    void OnPlayerBeforeLootMoney(Player* player, Loot* loot) override
+    {
+        sRebornTreasure->OnBeforeLootMoney(player, loot);
+    }
+};
+
+class RebornTreasureLootScript : public LootScript
+{
+public:
+    RebornTreasureLootScript() : LootScript("RebornTreasureLootScript", { LOOTHOOK_ON_LOOT_MONEY }) { }
+
+    void OnLootMoney(Player* player, uint32 gold) override
+    {
+        sRebornTreasure->OnLootMoney(player, gold);
+    }
+};
+
 class RebornTreasureWorldScript : public WorldScript
 {
 public:
@@ -812,5 +1172,7 @@ public:
 void AddSC_mod_reborn_treasure()
 {
     new RebornTreasureGameObjectScript();
+    new RebornTreasureMoneyPlayerScript();
+    new RebornTreasureLootScript();
     new RebornTreasureWorldScript();
 }

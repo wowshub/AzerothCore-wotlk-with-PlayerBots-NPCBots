@@ -8,11 +8,13 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 class Player;
 class GameObject;
 class Map;
+struct Loot;
 
 enum TreasureQuality : uint8
 {
@@ -46,6 +48,7 @@ struct TreasureType
     uint32 respawnMin = 300;
     uint32 respawnMax = 600;
     bool   active = true;
+    bool   dungeonGoldScale = false; // TREAS2B: true = in a dungeon the gold follows mod-dungeon-scale's player-count scaling
 };
 
 struct TreasureSpawn
@@ -65,6 +68,7 @@ struct TreasureSpawn
     uint64 nextRespawnTime = 0;
     bool   isActive = true;
     std::string comment;
+    bool   wet = false;             // runtime: the ground under the chest is below a water surface (TREASFIX2)
 
     // Runtime only, never stored. A dungeon exists once per group (an "instance"), so the chest is kept
     // per map copy: instanceId -> the chest standing in that copy. The open world is instanceId 0.
@@ -110,6 +114,14 @@ public:
     // true = the click was ours (loot window opened, or the chest swallowed); false = not ours
     bool OnChestUsed(Player* player, GameObject* go);
     void OnChestEmptied(ObjectGuid guid);  // TREAS2A4: everything was taken, remove the chest at the next tick
+    // TREAS2B: a chest type with dungeonGoldScale off pays its full gold in a dungeon too. Both hooks are
+    // needed because mod-dungeon-scale may run before or after us: the first puts the gold back, the second tops up.
+    void OnBeforeLootMoney(Player* player, Loot* loot);
+    void OnLootMoney(Player* player, uint32 gold);
+    // TREASFIX1: the player took an item or the gold out of a chest of ours; when nothing is left the server closes the
+    // loot window for him at the next tick (the core only does it when the client sends its release packet, and a client that
+    // does not leaves the character kneeling and the chest standing)
+    void OnLootTaken(Player* player, bool goldAboutToGo);
 
     void CollectNearby(uint16 mapId, uint32 instanceId, float px, float py, float pz, std::vector<TreasureNearby>& out);
     std::vector<TreasureSpawn> Snapshot();
@@ -122,12 +134,30 @@ public:
     bool ForceRespawn(uint32 spawnId, Map* where);
     bool IsDbReady() const { return m_dbReady; }
 
+    // TREAS2C: spawn management from the GM panel (all return false when the spawn does not exist)
+    bool MoveSpawn(uint32 spawnId, uint16 mapId, uint32 zoneId, float x, float y, float z, float o, Map* where);
+    bool SetSpawnRespawn(uint32 spawnId, uint32 minSecs, uint32 maxSecs);
+    bool SetSpawnComment(uint32 spawnId, std::string comment);
+    bool SetSpawnClue(uint32 spawnId, std::string const& text);   // empty text removes the clue
+    bool SetSpawnType(uint32 spawnId, uint32 entry, std::string& err);
+    std::string GetSpawnClue(uint32 spawnId);
+    // TREASFIX2: put the spawn(s) on the ground (spawnId 0 = every spawn). A spawn whose map is not loaded is skipped.
+    struct SnapResult
+    {
+        uint32 moved = 0;     // z was changed (and saved)
+        uint32 wet = 0;       // the ground there is under water
+        uint32 skipped = 0;   // no ground height known (map or grid not loaded)
+    };
+    SnapResult SnapSpawns(uint32 spawnId, Map* where);
+    bool GetSpawn(uint32 spawnId, TreasureSpawn& out);
+
     // TREAS2A: chest types (GM panel). Errors come back as a plain sentence in `err`.
     std::vector<TreasureType> Types();
     bool GetType(uint32 entry, TreasureType& out);
     bool SaveType(TreasureType const& type, std::string& err);   // create or change; applies at once
     uint32 NewType(std::string const& name, std::string& err);   // the next free entry, 0 on failure
     bool DeleteType(uint32 entry, std::string& err);
+    uint32 CopyType(uint32 from, std::string& err);              // a new type with the same looks, gold and loot
     void MarkLootDirty() { m_lootDirty = true; }                  // reloads gameobject_loot_template shortly
 
 private:
@@ -163,6 +193,9 @@ private:
     std::map<uint32, TreasureType> m_types;
     std::unordered_set<ObjectGuid> m_opened;   // chests whose first open was already counted
     std::unordered_set<ObjectGuid> m_emptied;  // chests that were looted empty, waiting to be removed
+    std::vector<std::pair<ObjectGuid, ObjectGuid>> m_pendingRelease;  // TREASFIX1: (player, chest) whose loot window is to be closed
+    std::unordered_map<ObjectGuid, uint32> m_chestGold;  // TREAS2B: the gold a chest rolled, before any scaling
+    bool m_hasScaleColumn = false;             // reborn_treasure_types.dungeon_gold_scale exists (TREAS2B SQL)
     bool m_lootDirty = false;
     std::unordered_map<uint32, TreasureClue> m_clueBySpawn;
 };

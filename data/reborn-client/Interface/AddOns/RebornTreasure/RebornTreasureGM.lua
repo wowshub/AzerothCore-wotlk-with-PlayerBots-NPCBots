@@ -1,0 +1,2220 @@
+-- =========================================================================
+-- RebornTreasure GM 面板 (TREAS2B)
+-- 三栏: 左 = 宝箱种类, 中 = 选中的宝箱 (外观/设置; 掉落表在 TREAS2C), 右 = 物品库 (TREAS2C)
+-- 和服务端的对话: 发 ".treasure ui ..." (只有 GM 能执行), 收前缀 "TR" 的插件消息
+-- 打开: /rtgm, 或寻宝指南面板标题旁的 GM 按钮
+-- =========================================================================
+
+local ADDON_PREFIX = "TR"
+local PANEL_VERSION = "1.3.7"   -- shown in the title bar, so a stale copy of this file is easy to spot
+-- the panel speaks Chinese unless the GM switched to English (the 中文/EN button in the title bar);
+-- with no choice saved it follows the DungeonClear panel's language, else Chinese
+local function IsZh()
+    local db = RebornTreasureDB
+    if db and db.lang then return db.lang == "zh" end
+    if DungeonClearDB and DungeonClearDB.lang then return DungeonClearDB.lang == "zh" end
+    return true
+end
+
+-- short labels; tooltips always show both languages
+local function T(zh, en) return IsZh() and zh or en end
+
+-- text that is set once and must follow the language switch
+local binds = {}
+local function Bind(obj, zh, en)
+    binds[#binds + 1] = { obj = obj, zh = zh, en = en }
+    obj:SetText(T(zh, en))
+end
+local function BindFn(obj, fn)
+    binds[#binds + 1] = { obj = obj, fn = fn }
+    obj:SetText(fn())
+end
+
+local RARITY = {
+    [1] = { r = 0.12, g = 1.00, b = 0.00, hex = "1eff00", zh = "普通", en = "Common" },
+    [2] = { r = 0.00, g = 0.44, b = 0.87, hex = "0070dd", zh = "稀有", en = "Rare" },
+    [3] = { r = 0.64, g = 0.21, b = 0.93, hex = "a335ee", zh = "史诗", en = "Epic" },
+}
+local DEFAULT_ICON = {
+    [1] = "Interface\\Icons\\INV_Box_01",
+    [2] = "Interface\\Icons\\INV_Box_02",
+    [3] = "Interface\\Icons\\INV_Box_04",
+}
+
+local state = {
+    types = {},        -- entry -> type
+    order = {},        -- entries, sorted
+    models = {},       -- entry -> model path
+    looks = {},        -- { {id, model, name}, ... }
+    selected = nil,
+    pendingSelect = nil,
+    listOffset = 0,
+    lookOffset = 0,
+    online = false,
+    drafts = {},       -- entry -> { field = text } typed but not saved yet
+    spawns = {},       -- TREAS2C: every chest spawn of the world, as the server last listed them
+    spawnCount = {},   -- entry -> how many spawns the type has
+    clues = {},        -- spawn id -> clue text
+    spawnScope = "type",
+    spawnSel = nil,
+    spawnOffset = 0,
+    loot = { entry = 0, items = {}, offset = 0, ready = false },
+    iconsByCat = {},   -- category -> { { name = "INV_Box_01" }, ... } from the server
+    iconCat = "chest",
+    iconRow = 0,
+}
+
+local ui = {}
+
+-- item quality: r, g, b, hex
+local RARITY_Q = {
+    [0] = { 0.62, 0.62, 0.62, "9d9d9d" }, [1] = { 1, 1, 1, "ffffff" }, [2] = { 0.12, 1, 0, "1eff00" },
+    [3] = { 0, 0.44, 0.87, "0070dd" }, [4] = { 0.64, 0.21, 0.93, "a335ee" }, [5] = { 1, 0.5, 0, "ff8000" },
+    [6] = { 0.9, 0.8, 0.5, "e6cc80" },
+}
+
+-- =========================================================================
+-- helpers
+-- =========================================================================
+local function Cmd(text)
+    SendChatMessage(".treasure ui " .. text, "SAY")
+end
+
+local function Split(msg)
+    local out = {}
+    for field in string.gmatch(msg .. "\t", "([^\t]*)\t") do
+        out[#out + 1] = field
+    end
+    return out
+end
+
+local function CleanText(s)
+    s = tostring(s or "")
+    s = s:gsub("|", ""):gsub("[\r\n\t]", " ")
+    return s
+end
+
+local function Money(copper)
+    copper = tonumber(copper) or 0
+    if GetCoinTextureString then
+        local ok, text = pcall(GetCoinTextureString, copper, 12)
+        if ok and text then return text end
+    end
+    return string.format("%.2f%s", copper / 10000, T("金", "g"))
+end
+
+local function GoldShort(copper)
+    local g = (tonumber(copper) or 0) / 10000
+    if g >= 1 then return string.format("%d", math.floor(g + 0.5)) end
+    return string.format("%.2f", g)
+end
+
+-- icons saved by the TREAS2A SQL lost their backslashes ("InterfaceIconsINV_Box_01"); put them back
+local function IconPath(icon, rarity)
+    icon = icon or ""
+    if icon ~= "" and not icon:find("\\", 1, true) then
+        icon = "Interface\\Icons\\" .. (icon:match("^[Ii]nterface[Ii]cons(.+)$") or icon)
+    end
+    if icon == "" then icon = DEFAULT_ICON[rarity] or DEFAULT_ICON[1] end
+    return icon
+end
+
+-- a PlayerModel frame takes the DBC path as it is (like GObjectEditorUI); .m2 is the fallback
+function ui.ShowModel(model, path)
+    if not path or path == "" then return false end
+    local tries = { path, (path:gsub("%.[mM][dD][xXlL]$", ".m2")) }
+    for _, p in ipairs(tries) do
+        if pcall(model.SetModel, model, p) then
+            pcall(model.SetCamDistanceScale, model, 1.0)
+            pcall(model.SetPosition, model, 0, 0, 0)
+            pcall(model.SetModelScale, model, model.zoom or 1)
+            pcall(model.SetFacing, model, model.facing or 0.6)
+            return true
+        end
+    end
+    return false
+end
+
+local function Status(text, isError)
+    if not ui.status then return end
+    ui.status:SetText(text or "")
+    if isError then
+        ui.status:SetTextColor(1, 0.25, 0.25)
+    else
+        ui.status:SetTextColor(0.4, 1, 0.4)
+    end
+end
+
+local function Tip(owner, zh, en, extra)
+    owner:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine(zh, 1, 0.82, 0)
+        GameTooltip:AddLine(en, 0.7, 0.7, 0.7)
+        if extra then
+            GameTooltip:AddLine(" ")
+            GameTooltip:AddLine(extra, 0.9, 0.9, 0.9, true)
+        end
+        GameTooltip:Show()
+    end)
+    owner:SetScript("OnLeave", function() GameTooltip:Hide() end)
+end
+
+-- a square icon button with a coloured rim (the panel's "button with colour" style)
+local function IconButton(parent, size, icon, r, g, b)
+    local btn = CreateFrame("Button", nil, parent)
+    btn:SetSize(size, size)
+    local rim = btn:CreateTexture(nil, "BACKGROUND")
+    rim:SetPoint("TOPLEFT", -2, 2)
+    rim:SetPoint("BOTTOMRIGHT", 2, -2)
+    rim:SetTexture(r, g, b, 0.9)
+    btn.rim = rim
+    local tex = btn:CreateTexture(nil, "ARTWORK")
+    tex:SetAllPoints()
+    tex:SetTexture(icon)
+    tex:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    btn.icon = tex
+    local hl = btn:CreateTexture(nil, "HIGHLIGHT")
+    hl:SetAllPoints()
+    hl:SetTexture("Interface\\Buttons\\ButtonHilight-Square")
+    hl:SetBlendMode("ADD")
+    btn:SetScript("OnMouseDown", function(self) self.icon:SetPoint("TOPLEFT", 1, -1); self.icon:SetPoint("BOTTOMRIGHT", 1, -1) end)
+    btn:SetScript("OnMouseUp", function(self) self.icon:ClearAllPoints(); self.icon:SetAllPoints() end)
+    return btn
+end
+
+local function Panel(parent)
+    local f = CreateFrame("Frame", nil, parent)
+    f:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 14,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+    })
+    f:SetBackdropColor(0.08, 0.06, 0.03, 0.85)
+    f:SetBackdropBorderColor(0.8, 0.62, 0.25, 1)
+    return f
+end
+
+local function Header(parent, icon, zh, en)
+    local tex = parent:CreateTexture(nil, "OVERLAY")
+    tex:SetSize(20, 20)
+    tex:SetPoint("TOPLEFT", 8, -7)
+    tex:SetTexture(icon)
+    local fs = parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    fs:SetPoint("LEFT", tex, "RIGHT", 6, 0)
+    Bind(fs, zh, en)
+    return fs
+end
+
+local function EditField(parent, width, numeric)
+    local eb = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
+    eb:SetSize(width, 20)
+    eb:SetAutoFocus(false)
+    eb:SetFontObject("ChatFontNormal")
+    eb:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    if numeric then eb:SetMaxLetters(10) else eb:SetMaxLetters(60) end
+    return eb
+end
+
+-- the 3.3.5 client has no Show-by-flag method on regions
+local function ShowIf(obj, cond)
+    if cond then obj:Show() else obj:Hide() end
+end
+
+-- A drop-down menu over the panel. The panel swallows the mouse clicks, so the client never sees "a click elsewhere"
+-- and kept the menu until its own timer ran out (or until Cancel). An invisible full-screen button just under the menu
+-- closes it on any click outside; clicking an entry still works because the menu lists are above the button.
+function ui.OpenMenu(menu, frame)
+    EasyMenu(menu, frame, "cursor", 0, 0, "MENU")
+    if not ui.menuCatcher then
+        local c = CreateFrame("Button", nil, UIParent)
+        c:SetAllPoints(UIParent)
+        c:SetFrameStrata("TOOLTIP")
+        c:SetFrameLevel(0)
+        c:EnableMouse(true)
+        c:SetScript("OnMouseDown", function()
+            CloseDropDownMenus()
+            c:Hide()
+        end)
+        c:Hide()
+        if DropDownList1 and DropDownList1.HookScript then
+            DropDownList1:HookScript("OnHide", function() c:Hide() end)
+        end
+        ui.menuCatcher = c
+    end
+    for i = 1, 3 do   -- above the panel (which sits in FULLSCREEN_DIALOG), above the catcher
+        local l = _G["DropDownList" .. i]
+        if l then
+            l:SetFrameStrata("TOOLTIP")
+            l:Raise()
+        end
+    end
+    ui.menuCatcher:Show()
+end
+
+local function Selected()
+    return state.selected and state.types[state.selected]
+end
+
+-- =========================================================================
+-- left column: chest types
+-- =========================================================================
+local ROW_H = 38
+
+local function SortTypes()
+    wipe(state.order)
+    for entry in pairs(state.types) do state.order[#state.order + 1] = entry end
+    table.sort(state.order)
+end
+
+local function RefreshList()
+    if not ui.rows then return end
+    local total = #state.order
+    local visible = #ui.rows
+    local maxOff = math.max(0, total - ui.visibleRows)
+    if state.listOffset > maxOff then state.listOffset = maxOff end
+    for i = 1, visible do
+        local row = ui.rows[i]
+        local entry = state.order[i + state.listOffset]
+        local t = entry and state.types[entry]
+        if t and i <= ui.visibleRows then
+            local rar = RARITY[t.rarity] or RARITY[1]
+            row.entry = entry
+            local dr = state.drafts[entry]
+            row.icon:SetTexture(IconPath((dr and dr.icon) or t.icon, t.rarity))
+            row.rim:SetTexture(rar.r, rar.g, rar.b, 1)
+            row.name:SetText("|cff" .. rar.hex .. t.name .. "|r" .. (state.drafts[entry] and ("  |cffff9933*" .. T("未保存", "unsaved") .. "|r") or ""))
+            local gold = (t.goldMax > 0) and (GoldShort(t.goldMin) .. "-" .. GoldShort(t.goldMax) .. T("金", "g")) or T("无金币", "no gold")
+            local nSpawn = state.spawnCount[entry] or 0
+            row.info:SetText(entry .. "  ·  " .. gold .. (nSpawn > 0 and ("  ·  |cff88ccff" .. nSpawn .. T("处", " spots") .. "|r") or ""))
+            ShowIf(row.dscale, t.dscale)
+            ShowIf(row.off, not t.active)
+            if entry == state.selected then row.sel:Show() else row.sel:Hide() end
+            row:Show()
+        else
+            row.entry = nil
+            row:Hide()
+        end
+    end
+    ui.listCount:SetText(total .. " / 100")
+end
+
+local function SelectType(entry)
+    state.selected = entry
+    RefreshList()
+    if ui.RefreshCard then ui.RefreshCard() end
+    if ui.RefreshSpawnList then ui.RefreshSpawnList() end
+end
+
+-- right-click menu of a chest type
+function ui.TypeMenu(entry)
+    local t = state.types[entry]
+    if not t then return end
+    SelectType(entry)
+    ui.menuFrame = ui.menuFrame or CreateFrame("Frame", "RebornTreasureGMTypeMenu", UIParent, "UIDropDownMenuTemplate")
+    local respawn = t.respawnMin
+    local menu = {
+        { text = t.name .. "  |cff888888" .. entry .. "|r", isTitle = true, notCheckable = true },
+        { text = T("在我脚下刷一个", "Spawn one here"), notCheckable = true,
+          func = function() SendChatMessage(".treasure add " .. entry .. " " .. respawn, "SAY") end },
+        { text = T("刷一个并写线索…", "Spawn with a clue…"), notCheckable = true,
+          func = function() ChatFrame_OpenChat(".treasure add " .. entry .. " " .. respawn .. " ") end },
+        { text = T("列出所有点位", "List spawns"), notCheckable = true,
+          func = function() SendChatMessage(".treasure list", "SAY") end },
+        { text = T("启用", "Active"), checked = t.active,
+          func = function() Cmd("typeset " .. entry .. " active " .. (t.active and 0 or 1)) end },
+        { text = T("副本金币随人数缩放", "Dungeon gold scales"), checked = t.dscale,
+          func = function() Cmd("typeset " .. entry .. " dscale " .. (t.dscale and 0 or 1)) end },
+    }
+    for r = 1, 3 do
+        local info = RARITY[r]
+        menu[#menu + 1] = { text = "|cff" .. info.hex .. T(info.zh, info.en) .. "|r", checked = t.rarity == r,
+                            func = function() Cmd("typeset " .. entry .. " rarity " .. r) end }
+    end
+    menu[#menu + 1] = { text = T("改名", "Rename"), notCheckable = true,
+                        func = function() ui.eName:SetFocus(); ui.eName:HighlightText() end }
+    menu[#menu + 1] = { text = T("选择外观…", "Pick appearance…"), notCheckable = true,
+                        func = function() if not ui.looksFrame:IsShown() then ui.ToggleLooks() end end }
+    menu[#menu + 1] = { text = T("复制", "Copy"), notCheckable = true,
+                        func = function() state.pendingSelect = true; Cmd("typecopy " .. entry) end }
+    menu[#menu + 1] = { text = "|cffff4040" .. T("删除", "Delete") .. "|r", notCheckable = true,
+                        func = function() ui.Popup("REBORN_TREASURE_DELETE", t.name, nil, entry) end }
+    menu[#menu + 1] = { text = T("取消", "Cancel"), notCheckable = true }
+    ui.OpenMenu(menu, ui.menuFrame)
+end
+
+local function BuildLeft(main)
+    local col = Panel(main)
+    ui.left = col
+    Header(col, "Interface\\Icons\\INV_Box_02", "宝箱种类", "Chest types")
+
+    ui.listCount = col:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    ui.listCount:SetPoint("TOPRIGHT", -10, -12)
+
+    -- toolbar: new / copy / delete / refresh
+    local bar = CreateFrame("Frame", nil, col)
+    bar:SetPoint("TOPLEFT", 8, -34)
+    bar:SetPoint("TOPRIGHT", -8, -34)
+    bar:SetHeight(30)
+
+    local bNew = IconButton(bar, 26, "Interface\\Icons\\Spell_ChargePositive", 0.2, 0.75, 0.2)
+    bNew:SetPoint("LEFT", 2, 0)
+    bNew:SetScript("OnClick", function()
+        state.pendingSelect = true
+        Cmd("typenew " .. T("新宝箱", "New chest"))
+    end)
+    Tip(bNew, "新建宝箱", "New chest type", T("用下一个空闲编号（990200-990299）新建一种宝箱。", "Creates a chest type on the next free entry (990200-990299)."))
+
+    local bCopy = IconButton(bar, 26, "Interface\\Icons\\INV_Scroll_03", 0.25, 0.5, 0.95)
+    bCopy:SetPoint("LEFT", bNew, "RIGHT", 8, 0)
+    bCopy:SetScript("OnClick", function()
+        if not state.selected then Status(T("先选一种宝箱", "Pick a chest first"), true) return end
+        state.pendingSelect = true
+        Cmd("typecopy " .. state.selected)
+    end)
+    Tip(bCopy, "复制宝箱", "Copy chest type", T("外观、金币和掉落表都一起复制。", "Copies looks, gold and the loot table."))
+
+    local bDel = IconButton(bar, 26, "Interface\\Icons\\Spell_ChargeNegative", 0.85, 0.2, 0.15)
+    bDel:SetPoint("LEFT", bCopy, "RIGHT", 8, 0)
+    bDel:SetScript("OnClick", function()
+        local t = Selected()
+        if not t then Status(T("先选一种宝箱", "Pick a chest first"), true) return end
+        ui.Popup("REBORN_TREASURE_DELETE", t.name, nil, t.entry)
+    end)
+    Tip(bDel, "删除宝箱", "Delete chest type", T("三种基础宝箱不能删；还有点位在用的也不能删。", "The three base chests and types still used by a spawn cannot be deleted."))
+
+    local bRef = IconButton(bar, 26, "Interface\\Icons\\Spell_Holy_BorrowedTime", 0.85, 0.65, 0.15)
+    bRef:SetPoint("RIGHT", -2, 0)
+    bRef:SetScript("OnClick", function() Cmd("types") end)
+    Tip(bRef, "刷新", "Refresh")
+
+    -- rows
+    local list = CreateFrame("Frame", nil, col)
+    list:SetPoint("TOPLEFT", bar, "BOTTOMLEFT", 0, -4)
+    list:SetPoint("BOTTOMRIGHT", col, "BOTTOMRIGHT", -8, 8)
+    list:EnableMouseWheel(true)
+    list:SetScript("OnMouseWheel", function(_, delta)
+        state.listOffset = math.max(0, state.listOffset - delta)
+        RefreshList()
+    end)
+    ui.list = list
+    ui.rows = {}
+    ui.visibleRows = 0
+
+    function ui.LayoutRows()
+        local h = list:GetHeight() or 0
+        local n = math.max(1, math.floor(h / (ROW_H + 2)))
+        for i = #ui.rows + 1, n do
+            local row = CreateFrame("Button", nil, list)
+            row:SetHeight(ROW_H)
+            row:SetPoint("TOPLEFT", 0, -(i - 1) * (ROW_H + 2))
+            row:SetPoint("TOPRIGHT", 0, -(i - 1) * (ROW_H + 2))
+            local bg = row:CreateTexture(nil, "BACKGROUND")
+            bg:SetAllPoints()
+            bg:SetTexture(0, 0, 0, 0.35)
+            row.sel = row:CreateTexture(nil, "BORDER")
+            row.sel:SetAllPoints()
+            row.sel:SetTexture(1, 0.82, 0, 0.18)
+            row.sel:Hide()
+            local hl = row:CreateTexture(nil, "HIGHLIGHT")
+            hl:SetAllPoints()
+            hl:SetTexture(1, 1, 1, 0.08)
+            row.rim = row:CreateTexture(nil, "ARTWORK")
+            row.rim:SetSize(34, 34)
+            row.rim:SetPoint("LEFT", 2, 0)
+            row.icon = row:CreateTexture(nil, "OVERLAY")
+            row.icon:SetSize(30, 30)
+            row.icon:SetPoint("CENTER", row.rim, "CENTER")
+            row.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+            row.name = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            row.name:SetPoint("TOPLEFT", row.rim, "TOPRIGHT", 8, -2)
+            row.name:SetPoint("RIGHT", row, "RIGHT", -40, 0)
+            row.name:SetJustifyH("LEFT")
+            row.info = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+            row.info:SetPoint("BOTTOMLEFT", row.rim, "BOTTOMRIGHT", 8, 2)
+            row.dscale = row:CreateTexture(nil, "OVERLAY")
+            row.dscale:SetSize(16, 16)
+            row.dscale:SetPoint("RIGHT", -4, 0)
+            row.dscale:SetTexture("Interface\\Icons\\INV_Misc_GroupNeedMore")
+            row.off = row:CreateTexture(nil, "OVERLAY")
+            row.off:SetSize(16, 16)
+            row.off:SetPoint("RIGHT", row.dscale, "LEFT", -2, 0)
+            row.off:SetTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+            row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+            row:SetScript("OnClick", function(self, button)
+                if not self.entry then return end
+                if button == "RightButton" then ui.TypeMenu(self.entry) else SelectType(self.entry) end
+            end)
+            row:SetScript("OnEnter", function(self)
+                local t = self.entry and state.types[self.entry]
+                if not t then return end
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                GameTooltip:AddLine(t.name)
+                GameTooltip:AddLine(T("编号", "Entry") .. " " .. t.entry .. "   " .. T("外观", "Display") .. " " .. t.display, 0.8, 0.8, 0.8)
+                GameTooltip:AddLine(T("金币", "Gold") .. ": " .. Money(t.goldMin) .. " - " .. Money(t.goldMax), 1, 1, 1)
+                GameTooltip:AddLine(T("刷新", "Respawn") .. ": " .. t.respawnMin .. "-" .. t.respawnMax .. T(" 秒", " s"), 0.8, 0.8, 0.8)
+                if t.dscale then GameTooltip:AddLine("副本金币随人数缩放 / Dungeon gold scales with players", 1, 0.6, 0.2) end
+                if not t.active then GameTooltip:AddLine("已停用 / Inactive", 1, 0.3, 0.3) end
+                GameTooltip:AddLine("右键：刷出、启用、品质、复制、删除…", 0.5, 0.8, 1)
+                GameTooltip:AddLine("Right-click: spawn, toggle, quality, copy, delete…", 0.5, 0.6, 0.7)
+                GameTooltip:Show()
+            end)
+            row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+            ui.rows[i] = row
+        end
+        ui.visibleRows = n
+        RefreshList()
+    end
+end
+
+-- =========================================================================
+-- middle column: the selected chest (looks + settings); loot table comes in TREAS2C
+-- =========================================================================
+local function SaveField(field, value)
+    local t = Selected()
+    if not t then return end
+    Cmd("typeset " .. t.entry .. " " .. field .. " " .. value)
+end
+
+-- the text boxes hold a draft: what is typed stays (a click on the list, a rarity change or the
+-- server's reply no longer overwrites it) until Save / Enter sends it or Undo / Esc drops it
+local DRAFT_KEYS = { "name", "gmin", "gmax", "rmin", "rmax", "size", "display", "rarity", "active", "dscale", "icon" }
+local function ServerText(t, key)
+    if key == "name" then return t.name end
+    if key == "gmin" then return GoldShort(t.goldMin) end
+    if key == "gmax" then return GoldShort(t.goldMax) end
+    if key == "rmin" then return tostring(t.respawnMin) end
+    if key == "rmax" then return tostring(t.respawnMax) end
+    if key == "size" then return tostring(t.size) end
+    if key == "display" then return tostring(t.display) end
+    if key == "rarity" then return tostring(t.rarity) end
+    if key == "active" then return t.active and "1" or "0" end
+    if key == "dscale" then return t.dscale and "1" or "0" end
+    if key == "icon" then   -- the name only: the seed rows still carry a damaged path ("InterfaceIconsINV_Box_01")
+        local n = tostring(t.icon or "")
+        n = n:match("([^\\]+)$") or n
+        return (n:gsub("^[Ii]nterface[Ii]cons", ""))
+    end
+end
+
+local function AnyDraft(d)
+    if not d then return false end
+    for _, k in ipairs(DRAFT_KEYS) do if d[k] then return true end end
+    return false
+end
+
+-- the value shown for a field: the draft when there is one, else the server's
+function ui.Eff(t, key)
+    local d = state.drafts[t.entry]
+    local v = d and d[key]
+    if v == nil then v = ServerText(t, key) end
+    return v
+end
+
+-- a change that is not typed (appearance, quality, the ticks) goes into the draft too
+function ui.SetDraft(key, value, extra)   -- extra: the model path of a look; for an icon, true = picked by hand
+    local t = Selected()
+    if not t then return end
+    local d = state.drafts[t.entry] or {}
+    local v = tostring(value)
+    if v == ServerText(t, key) then
+        d[key] = nil
+        if key == "display" then d.displayModel = nil end
+    else
+        d[key] = v
+        if key == "display" then d.displayModel = extra end
+        if key == "icon" and extra then d.iconManual = true end   -- picked by hand: a later appearance no longer changes it
+    end
+    state.drafts[t.entry] = AnyDraft(d) and d or nil
+    ui.RefreshCard()
+    if ui.RefreshLooksNow then ui.RefreshLooksNow() end   -- the picker's "chosen" highlight follows the click / the undo
+    if ui.RefreshIconsNow then ui.RefreshIconsNow() end
+end
+
+-- appearance words -> a classic icon that fits (the names are all in the client)
+local ICON_KEYS = {
+    { "crate", "INV_Crate_01" }, { "barrel", "INV_Crate_03" }, { "tablet", "INV_Misc_StoneTablet_01" },
+    { "scroll", "INV_Scroll_03" }, { "map", "INV_Scroll_03" }, { "urn", "INV_Misc_Urn_01" }, { "vase", "INV_Misc_Urn_01" },
+    { "sack", "INV_Misc_Bag_09" }, { "bag", "INV_Misc_Bag_09" }, { "gift", "INV_Misc_Gift_01" }, { "present", "INV_Misc_Gift_01" },
+    { "coffer", "INV_Box_04" }, { "strongbox", "INV_Box_04" }, { "trunk", "INV_Box_02" }, { "cache", "INV_Box_02" },
+    { "box", "INV_Box_01" }, { "chest", "INV_Box_02" }, { "spoils", "INV_Box_02" }, { "booty", "INV_Box_02" },
+}
+function ui.AutoIcon(look)
+    local card = Selected()
+    if not (card and look) then return end
+    local d = state.drafts[card.entry]
+    if d and d.iconManual then return end
+    local hay = ((look.name or "") .. " " .. (look.model or "")):lower()
+    for _, k in ipairs(ICON_KEYS) do
+        if hay:find(k[1], 1, true) then
+            ui.SetDraft("icon", k[2], false)
+            return
+        end
+    end
+end
+
+-- a short form for the card: no "INV_" / "INV_Misc_" in front
+local function ShortIcon(name)
+    name = tostring(name or "")
+    name = name:gsub("^[Ii][Nn][Vv]_[Mm]isc_", ""):gsub("^[Ii][Nn][Vv]_", "")
+    if #name > 16 then name = name:sub(1, 15) .. ".." end
+    return name
+end
+
+function ui.UpdateDirty()
+    local t = Selected()
+    local d = t and state.drafts[t.entry]
+    local n = 0
+    for _, key in ipairs(DRAFT_KEYS) do
+        if d and d[key] then n = n + 1 end
+        local eb = ui.boxes and ui.boxes[key]
+        if eb then
+            if d and d[key] then eb:SetTextColor(1, 0.6, 0.2) else eb:SetTextColor(1, 1, 1) end
+        end
+    end
+    if ui.bSave then
+        if n > 0 then
+            ui.bSave:Enable(); ui.bUndo:Enable()
+            ui.dirtyText:SetText("|cffff9933" .. string.format(T("有 %d 项没保存", "%d unsaved"), n) .. "|r")
+        else
+            ui.bSave:Disable(); ui.bUndo:Disable()
+            ui.dirtyText:SetText(t and ("|cff55dd55" .. T("已全部保存", "All saved") .. "|r") or "")
+        end
+    end
+    RefreshList()
+end
+
+function ui.SaveDraft()
+    local t = Selected()
+    local d = t and state.drafts[t.entry]
+    if not d or not AnyDraft(d) then return end
+    local function val(key) return d[key] or ServerText(t, key) end
+    local cmds = {}
+    if d.name then
+        local name = CleanText(d.name)
+        if name == "" then Status(T("名字不能为空", "The name cannot be empty"), true); return end
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " name " .. name
+        t.name = name
+    end
+    if d.gmin or d.gmax then
+        local a = math.floor((tonumber(val("gmin")) or 0) * 10000 + 0.5)
+        local b = math.floor((tonumber(val("gmax")) or 0) * 10000 + 0.5)
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " gold " .. a .. " " .. b
+        t.goldMin, t.goldMax = a, b
+    end
+    if d.rmin or d.rmax then
+        local a, b = tonumber(val("rmin")) or 300, tonumber(val("rmax")) or 600
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " respawn " .. a .. " " .. b
+        t.respawnMin, t.respawnMax = a, b
+    end
+    if d.size then
+        local s = tonumber(d.size) or 1
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " size " .. s
+        t.size = s
+    end
+    if d.display then
+        t.display = tonumber(d.display) or t.display
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " display " .. t.display
+        if d.displayModel then state.models[t.entry] = d.displayModel end
+    end
+    if d.rarity then
+        t.rarity = tonumber(d.rarity) or t.rarity
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " rarity " .. t.rarity
+    end
+    if d.active then
+        t.active = d.active == "1"
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " active " .. d.active
+    end
+    if d.dscale then
+        t.dscale = d.dscale == "1"
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " dscale " .. d.dscale
+    end
+    if d.icon and d.icon ~= "" then
+        t.icon = d.icon
+        cmds[#cmds + 1] = "typeset " .. t.entry .. " icon " .. d.icon
+    end
+    -- one command at a time, a little apart: the server answers each one, and a burst of chat lines is throttled
+    for i, c in ipairs(cmds) do
+        if i == 1 then Cmd(c) else ui.After(0.3 * (i - 1), function() Cmd(c) end) end
+    end
+    state.drafts[t.entry] = nil   -- shown as saved now; the server's reply corrects it if it refused
+    ui.RefreshCard()
+end
+
+function ui.UndoDraft(key)
+    local t = Selected()
+    local d = t and state.drafts[t.entry]
+    if not d then return end
+    if key then
+        d[key] = nil
+        if key == "display" then d.displayModel = nil end
+        if key == "icon" then d.iconManual = nil end
+    else
+        d = nil
+    end
+    state.drafts[t.entry] = AnyDraft(d) and d or nil
+    ui.RefreshCard()
+    if ui.RefreshLooksNow then ui.RefreshLooksNow() end   -- the picker's "chosen" highlight follows the click / the undo
+    if ui.RefreshIconsNow then ui.RefreshIconsNow() end
+end
+
+local function BindDraft(eb, key)
+    ui.boxes = ui.boxes or {}
+    ui.boxes[key] = eb
+    eb:SetScript("OnTextChanged", function(self)
+        if ui.filling then return end
+        local t = Selected()
+        if not t then return end
+        local d = state.drafts[t.entry] or {}
+        local text = self:GetText() or ""
+        if text == ServerText(t, key) then d[key] = nil else d[key] = text end
+        state.drafts[t.entry] = AnyDraft(d) and d or nil
+        ui.UpdateDirty()
+    end)
+    eb:SetScript("OnEnterPressed", function(self) self:ClearFocus(); ui.SaveDraft() end)
+    eb:SetScript("OnEscapePressed", function(self) self:ClearFocus(); ui.UndoDraft(key) end)
+    eb:SetScript("OnTabPressed", function(self)
+        for i, k in ipairs(DRAFT_KEYS) do
+            if k == key then
+                local nxt = ui.boxes[DRAFT_KEYS[i % #DRAFT_KEYS + 1]]
+                if nxt then nxt:SetFocus(); nxt:HighlightText() end
+                return
+            end
+        end
+    end)
+end
+
+local function BuildMiddle(main)
+    local col = Panel(main)
+    ui.middle = col
+    ui.cardTitle = Header(col, "Interface\\Icons\\INV_Misc_Bag_10", "宝箱", "Chest")
+
+    -- model preview
+    local stage = CreateFrame("Frame", nil, col)
+    stage:SetPoint("TOPLEFT", 10, -34)
+    stage:SetSize(150, 150)
+    stage:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 16,
+        insets = { left = 4, right = 4, top = 4, bottom = 4 },
+    })
+    ui.stage = stage
+    local model = CreateFrame("PlayerModel", nil, stage)
+    model:SetPoint("TOPLEFT", 6, -6)
+    model:SetPoint("BOTTOMRIGHT", -6, 6)
+    model:SetFrameLevel(stage:GetFrameLevel() + 2)
+    model.facing = 0.6
+    model.zoom = 1
+    model:EnableMouse(true)
+    model:EnableMouseWheel(true)
+    model:SetScript("OnUpdate", function(self, elapsed)
+        if self.dragX then
+            local x = GetCursorPosition()
+            self.facing = self.facing + (x - self.dragX) * 0.02
+            self.dragX = x
+        elseif not self.paused then
+            self.facing = self.facing + elapsed * 0.4
+        end
+        pcall(self.SetFacing, self, self.facing)
+    end)
+    model:SetScript("OnMouseDown", function(self) self.dragX = GetCursorPosition() end)
+    model:SetScript("OnMouseUp", function(self) self.dragX = nil end)
+    model:SetScript("OnMouseWheel", function(self, delta)
+        self.zoom = math.max(0.3, math.min(3, self.zoom + delta * 0.1))
+        pcall(self.SetModelScale, self, self.zoom)
+    end)
+    ui.model = model
+    local noModel = stage:CreateTexture(nil, "ARTWORK")
+    noModel:SetSize(56, 56)
+    noModel:SetPoint("CENTER")
+    noModel:Hide()
+    ui.noModel = noModel
+    Tip(model, "外观预览：拖动旋转，滚轮缩放", "Preview: drag to turn, wheel to zoom")
+
+    -- appearance picker button under the preview
+    local bLook = IconButton(col, 24, "Interface\\Icons\\INV_Misc_Spyglass_02", 0.85, 0.65, 0.15)
+    bLook:SetPoint("TOPLEFT", stage, "BOTTOMLEFT", 2, -6)
+    bLook:SetScript("OnClick", function() if ui.ToggleLooks then ui.ToggleLooks() end end)
+    Tip(bLook, "选择外观", "Pick appearance", T("从库里所有宝箱用过的模型里选。客户端会缓存旧外观，换了看不到时清客户端 Cache 或新建一种。",
+        "Models used by stock chests. The client caches looks; clear the Cache folder or make a new type if it does not change."))
+    ui.lookText = col:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    ui.lookText:SetPoint("LEFT", bLook, "RIGHT", 6, 0)
+
+    -- the icon of this chest type (only the GM panel shows it): follows the appearance, can be picked by hand
+    local bIcon = IconButton(col, 24, "Interface\\Icons\\INV_Box_01", 0.55, 0.55, 0.65)
+    bIcon:SetPoint("TOPLEFT", bLook, "BOTTOMLEFT", 0, -8)
+    bIcon:SetScript("OnClick", function() if ui.ToggleIcons then ui.ToggleIcons() end end)
+    bIcon:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine(T("选择图标", "Pick the icon"), 1, 0.82, 0)
+        if ui.iconFull and ui.iconFull ~= "" then GameTooltip:AddLine(ui.iconFull, 1, 1, 1) end
+        GameTooltip:AddLine(T("这个图标只在 GM 面板里当标签用，游戏里看不到。选外观时会自动换成相配的图标；自己选过之后，换外观就不再改它。",
+            "Only the GM panel shows this icon. Picking an appearance changes it to a matching one; once you pick one by hand, a new appearance leaves it alone."), 0.8, 0.8, 0.8, true)
+        GameTooltip:Show()
+    end)
+    bIcon:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    ui.bIcon = bIcon
+    ui.iconText = col:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    ui.iconText:SetPoint("LEFT", bIcon, "RIGHT", 6, 0)
+
+    -- settings to the right of the preview
+    local x0, y = 176, -38
+    local function Label(icon, zh, en, yy)
+        local tex = col:CreateTexture(nil, "OVERLAY")
+        tex:SetSize(18, 18)
+        tex:SetPoint("TOPLEFT", x0, yy)
+        tex:SetTexture(icon)
+        local holder = CreateFrame("Frame", nil, col)
+        holder:SetAllPoints(tex)
+        holder:EnableMouse(true)
+        Tip(holder, zh, en)
+        return tex
+    end
+
+    Label("Interface\\Icons\\INV_Misc_Note_02", "名字", "Name", y)
+    local eName = EditField(col, 150, false)
+    eName:SetPoint("TOPLEFT", x0 + 28, y + 1)
+    BindDraft(eName, "name")
+    ui.eName = eName
+
+    y = y - 30
+    Label("Interface\\Icons\\INV_Misc_Coin_01", "金币（金）：最少 - 最多", "Gold (g): min - max", y)
+    local eGmin = EditField(col, 60, true)
+    eGmin:SetPoint("TOPLEFT", x0 + 28, y + 1)
+    local eGmax = EditField(col, 60, true)
+    eGmax:SetPoint("LEFT", eGmin, "RIGHT", 14, 0)
+    BindDraft(eGmin, "gmin")
+    BindDraft(eGmax, "gmax")
+    ui.eGmin, ui.eGmax = eGmin, eGmax
+    ui.goldText = col:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    ui.goldText:SetPoint("TOPLEFT", x0 + 28, y - 20)
+
+    y = y - 44
+    Label("Interface\\Icons\\Spell_Holy_BorrowedTime", "刷新（秒）：最少 - 最多", "Respawn (s): min - max", y)
+    local eRmin = EditField(col, 60, true)
+    eRmin:SetPoint("TOPLEFT", x0 + 28, y + 1)
+    local eRmax = EditField(col, 60, true)
+    eRmax:SetPoint("LEFT", eRmin, "RIGHT", 14, 0)
+    BindDraft(eRmin, "rmin")
+    BindDraft(eRmax, "rmax")
+    ui.eRmin, ui.eRmax = eRmin, eRmax
+
+    y = y - 30
+    Label("Interface\\Icons\\INV_Misc_EngGizmos_20", "大小（0.3-4）", "Size (0.3-4)", y)
+    local eSize = EditField(col, 60, true)
+    eSize:SetPoint("TOPLEFT", x0 + 28, y + 1)
+    BindDraft(eSize, "size")
+    ui.eSize = eSize
+
+    -- rarity: three coloured gems
+    y = y - 30
+    Label("Interface\\Icons\\INV_Misc_Gem_Variety_01", "品质", "Quality", y)
+    ui.rarityBtns = {}
+    for r = 1, 3 do
+        local info = RARITY[r]
+        local b = IconButton(col, 20, DEFAULT_ICON[r], info.r, info.g, info.b)
+        b:SetPoint("TOPLEFT", x0 + 28 + (r - 1) * 30, y + 1)
+        b:SetScript("OnClick", function() ui.SetDraft("rarity", r) end)
+        Tip(b, info.zh, info.en)
+        ui.rarityBtns[r] = b
+    end
+
+    -- toggles: active, dungeon gold scaling
+    y = y - 32
+    local cActive = CreateFrame("CheckButton", nil, col, "UICheckButtonTemplate")
+    cActive:SetSize(24, 24)
+    cActive:SetPoint("TOPLEFT", x0 - 3, y + 3)
+    cActive:SetScript("OnClick", function(self) ui.SetDraft("active", self:GetChecked() and 1 or 0) end)
+    local aText = col:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    aText:SetPoint("LEFT", cActive, "RIGHT", 2, 0)
+    Bind(aText, "启用", "Active")
+    Tip(cActive, "启用这种宝箱", "Chest type active", T("停用后不再刷出新的这种宝箱。", "An inactive type no longer spawns."))
+    ui.cActive = cActive
+
+    y = y - 26
+    local cScale = CreateFrame("CheckButton", nil, col, "UICheckButtonTemplate")
+    cScale:SetSize(24, 24)
+    cScale:SetPoint("TOPLEFT", x0 - 3, y + 3)
+    cScale:SetScript("OnClick", function(self) ui.SetDraft("dscale", self:GetChecked() and 1 or 0) end)
+    local sIcon = col:CreateTexture(nil, "OVERLAY")
+    sIcon:SetSize(18, 18)
+    sIcon:SetPoint("LEFT", cScale, "RIGHT", 2, 0)
+    sIcon:SetTexture("Interface\\Icons\\INV_Misc_GroupNeedMore")
+    local sText = col:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    sText:SetPoint("LEFT", sIcon, "RIGHT", 4, 0)
+    Bind(sText, "副本金币随人数缩放", "Dungeon gold scales")
+    Tip(cScale, "副本金币随人数缩放", "Dungeon gold scales with player count",
+        "关 / Off：副本里金币整份给开箱的人（默认）。Full gold in dungeons (default).\n" ..
+        "开 / On：跟副本缩放模块走，单人五人本只得 1/5。例：单人魔枢 6 金 → 1 金 20 银。\n" ..
+        "Follows mod-dungeon-scale: solo in a 5-man gets 1/5.")
+    ui.cScale = cScale
+
+    -- Save / Undo for the text boxes (the gems and ticks above save at once)
+    local bSave = CreateFrame("Button", nil, col, "UIPanelButtonTemplate")
+    bSave:SetSize(96, 24)
+    bSave:SetPoint("TOPLEFT", x0 - 3, y - 26)
+    Bind(bSave, "保存", "Save")
+    bSave:SetScript("OnClick", function() ui.SaveDraft() end)
+    Tip(bSave, "保存所有改动", "Save every change",
+        T("名字、金币、刷新、大小、外观、品质、两个勾选，改了都要点这里才生效。改过没保存的文字是橙色；格子里按 Enter 也保存；Tab 跳到下一格；Esc 撤销这一格。",
+          "Name, gold, respawn, size, appearance, quality and the two ticks all wait for this button. Unsaved text is orange; Enter in a box also saves; Tab goes to the next box; Esc undoes that box."))
+    local bUndo = CreateFrame("Button", nil, col, "UIPanelButtonTemplate")
+    bUndo:SetSize(64, 24)
+    bUndo:SetPoint("LEFT", bSave, "RIGHT", 4, 0)
+    Bind(bUndo, "撤销", "Undo")
+    bUndo:SetScript("OnClick", function() ui.UndoDraft(nil) end)
+    Tip(bUndo, "撤销没保存的修改", "Undo the unsaved changes")
+    local dirtyText = col:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    dirtyText:SetPoint("TOPLEFT", bSave, "BOTTOMLEFT", 2, -5)
+    ui.bSave, ui.bUndo, ui.dirtyText = bSave, bUndo, dirtyText
+
+    -- loot table area (TREAS2C)
+    local lootArea = Panel(col)
+    lootArea:SetPoint("TOPLEFT", col, "TOPLEFT", 8, -316)
+    lootArea:SetPoint("BOTTOMRIGHT", col, "BOTTOMRIGHT", -8, 8)
+    lootArea:SetBackdropColor(0, 0, 0, 0.4)
+    Header(lootArea, "Interface\\Icons\\INV_Misc_Bag_08", "掉落表", "Loot table")
+    local soon = lootArea:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    soon:SetPoint("CENTER")
+    Bind(soon, "下一期：物品图标、爆率、数量", "Next: item icons, chance, count")
+    ui.lootArea = lootArea
+
+    local empty = col:CreateFontString(nil, "OVERLAY", "GameFontDisableLarge")
+    empty:SetPoint("CENTER")
+    Bind(empty, "← 选一种宝箱", "← Pick a chest type")
+    ui.emptyCard = empty
+
+    ui.cardWidgets = { stage, bLook, ui.lookText, bIcon, ui.iconText, eName, eGmin, eGmax, eRmin, eRmax, eSize, cActive, cScale, lootArea, ui.goldText, bSave, bUndo, dirtyText }
+end
+
+function ui.RefreshCard()
+    local t = Selected()
+    local show = t ~= nil
+    if ui.cardWidgets then
+        for _, w in ipairs(ui.cardWidgets) do if show then w:Show() else w:Hide() end end
+    end
+    if ui.rarityBtns then
+        for _, b in ipairs(ui.rarityBtns) do if show then b:Show() else b:Hide() end end
+    end
+    ShowIf(ui.emptyCard, not show)
+    if not show then
+        Bind(ui.cardTitle, "宝箱", "Chest")
+        return
+    end
+    local rar = RARITY[t.rarity] or RARITY[1]
+    ui.cardTitle:SetText("|cff" .. rar.hex .. t.name .. "|r  |cff888888" .. t.entry .. "|r")
+    local d = state.drafts[t.entry] or {}
+    ui.filling = true
+    for _, key in ipairs(DRAFT_KEYS) do
+        local eb = ui.boxes[key]   -- appearance, quality and the ticks have no text box
+        if eb then
+            local want = d[key] or ServerText(t, key)
+            if not eb:HasFocus() and eb:GetText() ~= want then eb:SetText(want) end
+        end
+    end
+    ui.filling = false
+    ui.UpdateDirty()
+    ui.goldText:SetText(Money(t.goldMin) .. "  -  " .. Money(t.goldMax))
+    ui.cActive:SetChecked(ui.Eff(t, "active") == "1")
+    ui.cScale:SetChecked(ui.Eff(t, "dscale") == "1")
+    local effRarity = tonumber(ui.Eff(t, "rarity")) or t.rarity
+    for r, b in ipairs(ui.rarityBtns) do b:SetAlpha(r == effRarity and 1 or 0.35) end
+    ui.lookText:SetText(T("外观", "Display") .. " " .. ui.Eff(t, "display"))
+    local iconName = ui.Eff(t, "icon")
+    ui.bIcon.icon:SetTexture(IconPath(iconName, effRarity))
+    ui.iconText:SetText(T("图标", "Icon") .. " " .. (iconName ~= "" and ShortIcon(iconName) or T("默认", "default")))
+    ui.iconFull = iconName
+
+    local dd = state.drafts[t.entry]
+    local ok = ui.ShowModel(ui.model, (dd and dd.display and dd.displayModel) or state.models[t.entry])
+    if ok then
+        ui.model:Show()
+        ui.noModel:Hide()
+    else
+        ui.model:Hide()
+        ui.noModel:SetTexture(IconPath(t.icon, t.rarity))
+        ui.noModel:Show()
+    end
+end
+
+-- =========================================================================
+-- right column (TREAS2C): tab "Spawns" (where the chests of the chosen type / of the whole world stand)
+-- and tab "Item pool" (TREAS2D)
+-- =========================================================================
+local SP_ROW_H = 42
+
+-- cut a UTF-8 string to `max` characters
+local function Cut(s, max)
+    s = tostring(s or "")
+    local n, i, len = 0, 1, #s
+    while i <= len do
+        local b = s:byte(i)
+        local step = (b >= 240 and 4) or (b >= 224 and 3) or (b >= 192 and 2) or 1
+        n = n + 1
+        if n > max then return s:sub(1, i - 1) .. ".." end
+        i = i + step
+    end
+    return s
+end
+
+local function Clock(sec)
+    sec = math.max(0, math.floor(tonumber(sec) or 0))
+    return string.format("%d:%02d", math.floor(sec / 60), sec % 60)
+end
+
+-- a StaticPopup that opens over the panel (the panel sits in FULLSCREEN_DIALOG), and goes back after
+function ui.Popup(which, a1, a2, data)
+    local def = StaticPopupDialogs[which]
+    if def then
+        if which == "REBORN_TREASURE_INPUT" then
+            def.button1, def.button2 = T("确定", "OK"), T("取消", "Cancel")
+        else
+            def.button1, def.button2 = T("是", "Yes"), T("否", "No")
+        end
+    end
+    local dlg = StaticPopup_Show(which, a1, a2, data)
+    if dlg then
+        dlg:SetFrameStrata("TOOLTIP")
+        dlg:Raise()
+    end
+    return dlg
+end
+
+-- run something later (the panel's OnUpdate drives it)
+function ui.After(sec, fn)
+    state.timers = state.timers or {}
+    state.timers[#state.timers + 1] = { t = sec, fn = fn }
+end
+
+function ui.RunTimers(elapsed)
+    local list = state.timers
+    if list and #list > 0 then
+        for i = #list, 1, -1 do
+            local tm = list[i]
+            tm.t = tm.t - elapsed
+            if tm.t <= 0 then
+                table.remove(list, i)
+                local ok, err = pcall(tm.fn)
+                if not ok then DEFAULT_CHAT_FRAME:AddMessage("|cffff3333[RebornTreasure GM] " .. tostring(err) .. "|r") end
+            end
+        end
+    end
+    -- the spawn list: ask again every 15 s, redraw every second (the respawn countdown)
+    if ui.spawnPane and ui.spawnPane:IsShown() then
+        state.pollAcc = (state.pollAcc or 0) + elapsed
+        state.redrawAcc = (state.redrawAcc or 0) + elapsed
+        if state.pollAcc >= 15 then
+            state.pollAcc = 0
+            ui.RequestSpawns()
+        end
+        if state.redrawAcc >= 1 then
+            state.redrawAcc = 0
+            if ui.RefreshSpawnList then ui.RefreshSpawnList() end
+        end
+    end
+end
+
+function ui.RequestSpawns()
+    Cmd("spawns")
+    state.pollAcc = 0
+end
+
+local function SpawnById(id)
+    for _, s in ipairs(state.spawns) do
+        if s.id == id then return s end
+    end
+end
+
+local function SpawnLeft(s)
+    local passed = GetTime() - (state.spawnStamp or GetTime())
+    return math.max(0, s.left - passed)
+end
+
+-- the spawns shown in the list: this chest type's, or every one in the world
+local function ShownSpawns()
+    local out = {}
+    local sel = state.spawnScope == "type" and state.selected or nil
+    for _, s in ipairs(state.spawns) do
+        if not sel or s.entry == sel then out[#out + 1] = s end
+    end
+    return out
+end
+
+function ui.RefreshSpawnList()
+    if not ui.spawnRows then return end
+    local list = ShownSpawns()
+    local visible = ui.spawnVisible or 0
+    state.spawnOffset = math.max(0, math.min(state.spawnOffset or 0, #list - visible))
+    for i, row in ipairs(ui.spawnRows) do
+        local s = (i <= visible) and list[i + state.spawnOffset]
+        if s then
+            local t = state.types[s.entry]
+            local rar = RARITY[t and t.rarity or 1] or RARITY[1]
+            row.s = s
+            row.icon:SetTexture(IconPath(t and t.icon or "", t and t.rarity or 1))
+            row.rim:SetTexture(rar.r, rar.g, rar.b, 1)
+            if state.spawnScope == "all" then
+                row.name:SetText("|cff" .. rar.hex .. (t and t.name or tostring(s.entry)) .. "|r  |cffffd100" .. Cut(s.zoneName, 8) .. "|r")
+            else
+                row.name:SetText("|cffffd100" .. s.zoneName .. "|r" .. (s.comment ~= "" and ("  |cffaaaaaa" .. Cut(s.comment, 10) .. "|r") or ""))
+            end
+            row.info:SetText(string.format("#%d  %s  |cff888888%.0f, %.0f|r", s.id, Cut(s.mapName, 8), s.x, s.y) ..
+                (s.wet and ("  |cff55aaff" .. T("水下", "water") .. "|r") or ""))
+            if s.state == 1 then
+                row.status:SetText("|cff55dd55" .. T("已刷出", "standing") .. "|r")
+            else
+                local left = SpawnLeft(s)
+                if left > 0 then
+                    row.status:SetText("|cffff9933" .. T("等待 ", "wait ") .. Clock(left) .. "|r")
+                else
+                    row.status:SetText("|cffaaaaaa" .. T("待刷出", "pending") .. "|r")
+                end
+            end
+            row.dist:SetText(s.dist >= 0 and ("|cff888888" .. s.dist .. T("码", "yd") .. "|r") or "")
+            if s.hasClue then row.clue:Show() else row.clue:Hide() end
+            if s.id == state.spawnSel then row.sel:Show() else row.sel:Hide() end
+            row:Show()
+        else
+            row.s = nil
+            row:Hide()
+        end
+    end
+    if ui.spawnCount then
+        local scope = state.spawnScope == "type" and (Selected() and Selected().name or "") or T("全世界", "world")
+        ui.spawnCount:SetText(string.format("%s  |cff888888%d|r", Cut(scope, 8), #list))
+    end
+    ui.spawnEmpty:SetText(#list == 0 and (state.spawnsLoaded and T("这里还没有点位。点上面的 + 在你脚下刷一个。", "No spawns here. Click + above to put one at your feet.") or T("读取中…", "Loading…")) or "")
+    -- the selected spawn's details
+    local s = SpawnById(state.spawnSel)
+    if s then
+        local t = state.types[s.entry]
+        ui.spawnD1:SetText(string.format("|cffffd100#%d|r  %s", s.id, t and t.name or s.entry))
+        ui.spawnD2:SetText(string.format("%s · %s", s.mapName, s.zoneName))
+        ui.spawnD3:SetText(string.format(T("坐标 %.1f  %.1f  %.1f", "Pos %.1f  %.1f  %.1f"), s.x, s.y, s.z) ..
+            (s.dist >= 0 and ("   |cff888888" .. s.dist .. T("码", "yd") .. "|r") or "") ..
+            (s.wet and ("   |cff55aaff" .. T("在水下", "under water") .. "|r") or ""))
+        ui.spawnD4:SetText(string.format(T("刷新 %d–%d 秒", "Respawn %d–%d s"), s.rmin, s.rmax) ..
+            (s.comment ~= "" and ("   " .. Cut(s.comment, 14)) or ""))
+        ui.spawnD5:SetText(s.hasClue and ("|cff88ccff" .. T("线索：", "Clue: ") .. "|r" .. Cut(state.clues[s.id] or "", 22)) or "|cff666666" .. T("没有线索", "No clue") .. "|r")
+    else
+        for _, fs in ipairs({ ui.spawnD1, ui.spawnD2, ui.spawnD3, ui.spawnD4, ui.spawnD5 }) do fs:SetText("") end
+        ui.spawnD1:SetText("|cff666666" .. T("点一个点位看详情；右键有更多操作", "Click a spawn for details; right-click for more") .. "|r")
+    end
+    if ui.bSpAdd then
+        if Selected() then ui.bSpAdd:Enable() else ui.bSpAdd:Disable() end
+    end
+    for key, b in pairs({ type = ui.bScopeType, all = ui.bScopeAll }) do
+        if state.spawnScope == key then b:LockHighlight() else b:UnlockHighlight() end
+    end
+end
+
+-- right-click menu of a spawn
+function ui.SpawnMenu(s)
+    state.spawnSel = s.id
+    ui.RefreshSpawnList()
+    ui.spawnMenuFrame = ui.spawnMenuFrame or CreateFrame("Frame", "RebornTreasureGMSpawnMenu", UIParent, "UIDropDownMenuTemplate")
+    local t = state.types[s.entry]
+    local id = s.id
+    local typeList = {}
+    for _, entry in ipairs(state.order) do
+        local ty = state.types[entry]
+        if ty and ty.active then
+            local rar = RARITY[ty.rarity] or RARITY[1]
+            typeList[#typeList + 1] = { text = "|cff" .. rar.hex .. ty.name .. "|r", checked = (entry == s.entry), func = function()
+                Cmd("spawntype " .. id .. " " .. entry)
+            end }
+        end
+    end
+    local menu = {
+        { text = string.format("#%d  %s", id, t and t.name or s.entry), isTitle = true, notCheckable = true },
+        { text = T("传送到这里", "Teleport here"), notCheckable = true, func = function() Cmd("spawngo " .. id) end },
+        { text = T("传送并显示宝箱", "Teleport and show the chest"), notCheckable = true, func = function()
+            state.pendingShow = id
+            Cmd("spawngo " .. id)
+        end },
+        { text = T("显示宝箱（被捡走了就重新刷出）", "Show the chest (put it back if taken)"), notCheckable = true, func = function()
+            Cmd("spawnshow " .. id)
+        end },
+        { text = T("查看里面有什么", "See what is inside"), notCheckable = true, func = function() ui.ShowContents(s.entry) end },
+        { text = T("编辑线索…", "Edit the clue…"), notCheckable = true, func = function()
+            ui.Popup("REBORN_TREASURE_INPUT", T("写线索（玩家走近会看到；留空 = 删除线索）", "Clue text (players near it see it; empty = remove)"), nil,
+                { default = state.clues[id] or "", fn = function(text) Cmd("spawnclue " .. id .. " " .. CleanText(text)) end })
+        end },
+        { text = T("编辑备注…", "Edit the note…"), notCheckable = true, func = function()
+            ui.Popup("REBORN_TREASURE_INPUT", T("点位备注", "Spawn note"), nil,
+                { default = s.comment, fn = function(text) Cmd("spawncomment " .. id .. " " .. CleanText(text)) end })
+        end },
+        { text = T("设置刷新时间…", "Set respawn time…"), notCheckable = true, func = function()
+            ui.Popup("REBORN_TREASURE_INPUT", T("刷新秒数，写两个数：最少 最多（例：300 600）", "Respawn seconds: min max (e.g. 300 600)"), nil,
+                { default = s.rmin .. " " .. s.rmax, fn = function(text)
+                    local a, b = text:match("(%d+)%D+(%d+)")
+                    if not a then a = text:match("(%d+)"); b = a end
+                    if a then Cmd("spawnrespawn " .. id .. " " .. a .. " " .. (b or a)) else Status(T("要写数字", "Numbers please"), true) end
+                end })
+        end },
+        { text = T("把点位移到我脚下", "Move the spawn to my feet"), notCheckable = true, func = function() Cmd("spawnhere " .. id) end },
+        { text = T("贴地（修正这个点位的高度）", "Snap to the ground"), notCheckable = true, func = function() Cmd("spawnsnap " .. id) end },
+        { text = T("贴地：修正全部点位", "Snap every spawn to the ground"), notCheckable = true, func = function() Cmd("spawnsnap 0") end },
+        { text = T("改成别的宝箱种类", "Change the chest type"), notCheckable = true, hasArrow = true, menuList = typeList },
+        { text = T("复制坐标到聊天框", "Copy the position to chat"), notCheckable = true, func = function()
+            ChatFrame_OpenChat(string.format("%s %s (%.1f, %.1f, %.1f)", s.mapName, s.zoneName, s.x, s.y, s.z))
+        end },
+        { text = "|cffff4040" .. T("删除这个点位", "Delete this spawn") .. "|r", notCheckable = true, func = function()
+            ui.Popup("REBORN_TREASURE_SPAWN_DELETE", string.format("#%d  %s", id, s.zoneName), nil, id)
+        end },
+        { text = T("取消", "Cancel"), notCheckable = true },
+    }
+    ui.OpenMenu(menu, ui.spawnMenuFrame)
+end
+
+local function SetRightTab(which)
+    state.rightTab = which
+    ShowIf(ui.spawnPane, which == "spawns")
+    ShowIf(ui.poolPane, which == "pool")
+    if ui.tabSpawns then
+        if which == "spawns" then ui.tabSpawns:LockHighlight(); ui.tabPool:UnlockHighlight() else ui.tabPool:LockHighlight(); ui.tabSpawns:UnlockHighlight() end
+    end
+    if which == "spawns" then
+        ui.RefreshSpawnList()
+        if ui.main and ui.main:IsShown() then ui.RequestSpawns() end
+    end
+end
+
+local function BuildRight(main)
+    local col = Panel(main)
+    ui.right = col
+
+    local tabSpawns = CreateFrame("Button", nil, col, "UIPanelButtonTemplate")
+    tabSpawns:SetSize(92, 22)
+    tabSpawns:SetPoint("TOPLEFT", 8, -8)
+    Bind(tabSpawns, "点位", "Spawns")
+    tabSpawns:SetScript("OnClick", function() SetRightTab("spawns") end)
+    Tip(tabSpawns, "点位", "Spawns", T("世界里放了哪些宝箱：位置、状态、传送、显示、删除。", "Where the chests stand: position, state, teleport, show, delete."))
+    local tabPool = CreateFrame("Button", nil, col, "UIPanelButtonTemplate")
+    tabPool:SetSize(92, 22)
+    tabPool:SetPoint("LEFT", tabSpawns, "RIGHT", 4, 0)
+    Bind(tabPool, "物品库", "Item pool")
+    tabPool:SetScript("OnClick", function() SetRightTab("pool") end)
+    ui.tabSpawns, ui.tabPool = tabSpawns, tabPool
+
+    -- ---------------- tab: item pool (TREAS2D)
+    local pool = CreateFrame("Frame", nil, col)
+    pool:SetPoint("TOPLEFT", 4, -36)
+    pool:SetPoint("BOTTOMRIGHT", -4, 4)
+    local soon = pool:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    soon:SetPoint("CENTER")
+    soon:SetWidth(200)
+    Bind(soon, "下一期：分类、搜索、拖进掉落表", "Next: categories, search, drag into the loot table")
+    ui.poolPane = pool
+
+    -- ---------------- tab: spawns
+    local pane = CreateFrame("Frame", nil, col)
+    pane:SetPoint("TOPLEFT", 4, -36)
+    pane:SetPoint("BOTTOMRIGHT", -4, 4)
+    ui.spawnPane = pane
+
+    -- toolbar: scope, add, refresh
+    local bType = CreateFrame("Button", nil, pane, "UIPanelButtonTemplate")
+    bType:SetSize(78, 20)
+    bType:SetPoint("TOPLEFT", 4, -2)
+    Bind(bType, "本类型", "This type")
+    bType:SetScript("OnClick", function() state.spawnScope = "type"; state.spawnOffset = 0; ui.RefreshSpawnList() end)
+    Tip(bType, "只看选中的宝箱种类的点位", "Only the spawns of the selected chest type")
+    local bAll = CreateFrame("Button", nil, pane, "UIPanelButtonTemplate")
+    bAll:SetSize(78, 20)
+    bAll:SetPoint("LEFT", bType, "RIGHT", 2, 0)
+    Bind(bAll, "全世界", "World")
+    bAll:SetScript("OnClick", function() state.spawnScope = "all"; state.spawnOffset = 0; ui.RefreshSpawnList() end)
+    Tip(bAll, "世界里所有的宝箱点位", "Every chest spawn in the world")
+    ui.bScopeType, ui.bScopeAll = bType, bAll
+
+    local bRef = IconButton(pane, 20, "Interface\\Icons\\Spell_Holy_BorrowedTime", 0.85, 0.65, 0.15)
+    bRef:SetPoint("TOPRIGHT", -6, -3)
+    bRef:SetScript("OnClick", function() ui.RequestSpawns() end)
+    Tip(bRef, "刷新点位列表", "Refresh the list")
+    local bAdd = IconButton(pane, 20, "Interface\\Icons\\Spell_ChargePositive", 0.2, 0.7, 0.25)
+    bAdd:SetPoint("RIGHT", bRef, "LEFT", -8, 0)
+    bAdd:SetScript("OnClick", function()
+        local t = Selected()
+        if not t then return end
+        SendChatMessage(".treasure add " .. t.entry .. " " .. t.respawnMin, "SAY")
+        ui.After(1.5, ui.RequestSpawns)
+    end)
+    Tip(bAdd, "在我脚下刷一个选中的宝箱", "Put the selected chest at my feet",
+        T("用左边选中的种类，在你站的地方放一个新点位。要写线索：右键点位 → 编辑线索。", "Uses the type picked on the left. Add a clue afterwards: right-click the spawn."))
+    bAdd.icon:SetTexture("Interface\\Icons\\Spell_ChargePositive")
+    ui.bSpAdd = bAdd
+    -- the Enable/Disable calls of a plain button do not grey an icon: do it by hand
+    function bAdd:Enable() self:SetAlpha(1); self:EnableMouse(true) end
+    function bAdd:Disable() self:SetAlpha(0.35); self:EnableMouse(false) end
+
+    ui.spawnCount = pane:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    ui.spawnCount:SetPoint("TOPLEFT", bType, "BOTTOMLEFT", 2, -6)
+
+    -- details of the picked spawn, at the bottom
+    local detail = CreateFrame("Frame", nil, pane)
+    detail:SetPoint("BOTTOMLEFT", 2, 2)
+    detail:SetPoint("BOTTOMRIGHT", -2, 2)
+    detail:SetHeight(92)
+    detail:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 10,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+    })
+    detail:SetBackdropColor(0, 0, 0, 0.5)
+    detail:SetBackdropBorderColor(0.5, 0.4, 0.2, 1)
+    local last
+    for i = 1, 5 do
+        local fs = detail:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        fs:SetPoint("TOPLEFT", 8, -6 - (i - 1) * 16)
+        fs:SetPoint("RIGHT", -6, 0)
+        fs:SetJustifyH("LEFT")
+        ui["spawnD" .. i] = fs
+    end
+
+    -- the list
+    local list = CreateFrame("Frame", nil, pane)
+    list:SetPoint("TOPLEFT", ui.spawnCount, "BOTTOMLEFT", -2, -4)
+    list:SetPoint("BOTTOMRIGHT", detail, "TOPRIGHT", 0, 4)
+    list:EnableMouseWheel(true)
+    list:SetScript("OnMouseWheel", function(_, d) state.spawnOffset = (state.spawnOffset or 0) - d * 3; ui.RefreshSpawnList() end)
+    ui.spawnList = list
+    ui.spawnRows = {}
+    ui.spawnEmpty = list:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    ui.spawnEmpty:SetPoint("CENTER")
+    ui.spawnEmpty:SetWidth(200)
+
+    function ui.LayoutSpawnRows()
+        local n = math.max(1, math.floor((list:GetHeight() or 0) / SP_ROW_H))
+        for i = #ui.spawnRows + 1, n do
+            local row = CreateFrame("Button", nil, list)
+            row:SetHeight(SP_ROW_H - 3)
+            row:SetPoint("TOPLEFT", 0, -(i - 1) * SP_ROW_H)
+            row:SetPoint("RIGHT", list, "RIGHT", 0, 0)
+            row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+            local bg = row:CreateTexture(nil, "BACKGROUND")
+            bg:SetAllPoints()
+            bg:SetTexture(0, 0, 0, 0.35)
+            row.sel = row:CreateTexture(nil, "BORDER")
+            row.sel:SetAllPoints()
+            row.sel:SetTexture(1, 0.82, 0, 0.22)
+            local hl = row:CreateTexture(nil, "HIGHLIGHT")
+            hl:SetAllPoints()
+            hl:SetTexture(1, 1, 1, 0.1)
+            row.rim = row:CreateTexture(nil, "ARTWORK")
+            row.rim:SetSize(30, 30)
+            row.rim:SetPoint("LEFT", 5, 0)
+            row.icon = row:CreateTexture(nil, "OVERLAY")
+            row.icon:SetSize(26, 26)
+            row.icon:SetPoint("CENTER", row.rim, "CENTER")
+            row.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+            row.name = row:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+            row.name:SetPoint("TOPLEFT", row.rim, "TOPRIGHT", 6, -1)
+            row.name:SetPoint("RIGHT", row, "RIGHT", -64, 0)
+            row.name:SetJustifyH("LEFT")
+            row.info = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+            row.info:SetPoint("BOTTOMLEFT", row.rim, "BOTTOMRIGHT", 6, 1)
+            row.info:SetJustifyH("LEFT")
+            row.status = row:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+            row.status:SetPoint("TOPRIGHT", -6, -5)
+            row.dist = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+            row.dist:SetPoint("BOTTOMRIGHT", -6, 4)
+            row.clue = row:CreateTexture(nil, "OVERLAY")
+            row.clue:SetSize(12, 12)
+            row.clue:SetPoint("RIGHT", row.dist, "LEFT", -4, 0)
+            row.clue:SetTexture("Interface\\Icons\\INV_Misc_Note_01")
+            row:SetScript("OnClick", function(self, button)
+                if not self.s then return end
+                if button == "RightButton" then
+                    ui.SpawnMenu(self.s)
+                else
+                    state.spawnSel = self.s.id
+                    ui.RefreshSpawnList()
+                end
+            end)
+            row:SetScript("OnDoubleClick", function(self) if self.s then Cmd("spawngo " .. self.s.id) end end)
+            row:SetScript("OnEnter", function(self)
+                if not self.s then return end
+                GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+                GameTooltip:AddLine(string.format("#%d  %s", self.s.id, self.s.zoneName), 1, 0.82, 0)
+                GameTooltip:AddLine(string.format("%s  (%.1f, %.1f, %.1f)", self.s.mapName, self.s.x, self.s.y, self.s.z), 0.8, 0.8, 0.8)
+                GameTooltip:AddLine(T("右键：传送 / 显示宝箱 / 查看内容 / 线索 / 删除…", "Right-click: teleport / show / contents / clue / delete…"), 0.7, 0.7, 0.7)
+                GameTooltip:AddLine(T("双击：传送到这里", "Double-click: teleport here"), 0.7, 0.7, 0.7)
+                GameTooltip:Show()
+            end)
+            row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+            ui.spawnRows[i] = row
+        end
+        ui.spawnVisible = n
+        ui.RefreshSpawnList()
+    end
+    list:SetScript("OnSizeChanged", function() if ui.LayoutSpawnRows then ui.LayoutSpawnRows() end end)
+
+    state.spawnScope = state.spawnScope or "type"
+    SetRightTab("spawns")
+end
+
+-- =========================================================================
+-- icon picker (TREASFIX2): a grid of real icons the server lists
+-- =========================================================================
+local ICON_COLS, ICON_ROWS, ICON_CELL = 8, 8, 40
+
+local function RefreshIcons()
+    if not ui.iconCells then return end
+    local list = state.iconsByCat[state.iconCat] or {}
+    for key, b in pairs(ui.iconTabs or {}) do
+        if key == state.iconCat then b:LockHighlight() else b:UnlockHighlight() end
+    end
+    local maxRow = math.max(0, math.ceil(#list / ICON_COLS) - ICON_ROWS)
+    state.iconRow = math.max(0, math.min(state.iconRow or 0, maxRow))
+    local card = Selected()
+    local cur = card and ui.Eff(card, "icon") or ""
+    for i, cell in ipairs(ui.iconCells) do
+        local ic = list[state.iconRow * ICON_COLS + i]
+        if ic then
+            cell.ic = ic
+            cell.tex:SetTexture(IconPath(ic.name, 1))
+            if ic.name == cur then cell.sel:Show() else cell.sel:Hide() end
+            cell:Show()
+        else
+            cell.ic = nil
+            cell:Hide()
+        end
+    end
+    ui.iconsEmpty:SetText(#list == 0 and (state.iconsByCat[state.iconCat] and T("这一类没有图标", "No icons in this category") or T("读取中…", "Loading…")) or "")
+    if ui.iconsCount then
+        ui.iconsCount:SetText(#list > 0 and string.format("%d", #list) or "")
+    end
+end
+ui.RefreshIconsNow = RefreshIcons
+
+local function BuildIcons(main)
+    local f = CreateFrame("Frame", "RebornTreasureIconPicker", main)
+    f:SetSize(ICON_COLS * ICON_CELL + 28, ICON_ROWS * ICON_CELL + 112)
+    f:SetPoint("CENTER", UIParent, "CENTER", 120, 0)
+    f:SetFrameStrata("FULLSCREEN_DIALOG")
+    f:SetToplevel(true)
+    f:SetClampedToScreen(true)
+    f:SetMovable(true)
+    f:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 24,
+        insets = { left = 6, right = 6, top = 6, bottom = 6 },
+    })
+    f:EnableMouse(true)
+    f:Hide()
+    local solid = f:CreateTexture(nil, "BACKGROUND")
+    solid:SetPoint("TOPLEFT", 7, -7)
+    solid:SetPoint("BOTTOMRIGHT", -7, 7)
+    solid:SetTexture(0.02, 0.02, 0.03, 0.97)
+    local drag = CreateFrame("Frame", nil, f)
+    drag:SetPoint("TOPLEFT", 6, -4)
+    drag:SetPoint("TOPRIGHT", -30, -4)
+    drag:SetHeight(28)
+    drag:EnableMouse(true)
+    drag:RegisterForDrag("LeftButton")
+    drag:SetScript("OnDragStart", function() f:StartMoving() end)
+    drag:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+    Header(f, "Interface\\Icons\\INV_Box_01", "选择图标", "Pick the icon")
+    local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+    close:SetPoint("TOPRIGHT", -4, -4)
+    ui.iconsCount = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    ui.iconsCount:SetPoint("TOPRIGHT", -34, -13)
+
+    -- categories: chests first
+    local CATS = { { "chest", "箱子", "Chests" }, { "key", "钥匙", "Keys" }, { "coin", "金币", "Coins" },
+                   { "gem", "宝石", "Gems" }, { "bag", "袋子", "Bags" }, { "scroll", "卷轴书", "Scrolls" } }
+    ui.iconTabs = {}
+    local prev
+    for _, c in ipairs(CATS) do
+        local b = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+        b:SetSize(math.floor((ICON_COLS * ICON_CELL - 10) / #CATS), 22)
+        if prev then b:SetPoint("LEFT", prev, "RIGHT", 2, 0) else b:SetPoint("TOPLEFT", 14, -36) end
+        Bind(b, c[2], c[3])
+        b:SetScript("OnClick", function()
+            state.iconCat = c[1]
+            state.iconRow = 0
+            if not state.iconsByCat[c[1]] then Cmd("icons " .. c[1]) end
+            RefreshIcons()
+        end)
+        ui.iconTabs[c[1]] = b
+        prev = b
+    end
+
+    local grid = CreateFrame("Frame", nil, f)
+    grid:SetPoint("TOPLEFT", 14, -64)
+    grid:SetSize(ICON_COLS * ICON_CELL, ICON_ROWS * ICON_CELL)
+    grid:EnableMouseWheel(true)
+    grid:SetScript("OnMouseWheel", function(_, delta) state.iconRow = (state.iconRow or 0) - delta; RefreshIcons() end)
+    ui.iconCells = {}
+    for i = 1, ICON_COLS * ICON_ROWS do
+        local cell = CreateFrame("Button", nil, grid)
+        cell:SetSize(ICON_CELL - 2, ICON_CELL - 2)
+        cell:SetPoint("TOPLEFT", ((i - 1) % ICON_COLS) * ICON_CELL, -math.floor((i - 1) / ICON_COLS) * ICON_CELL)
+        cell:RegisterForClicks("LeftButtonUp")
+        cell.sel = cell:CreateTexture(nil, "BACKGROUND")      -- the chosen icon: a gold frame around it
+        cell.sel:SetPoint("TOPLEFT", -2, 2)
+        cell.sel:SetPoint("BOTTOMRIGHT", 2, -2)
+        cell.sel:SetTexture(1, 0.82, 0, 1)
+        cell.tex = cell:CreateTexture(nil, "ARTWORK")
+        cell.tex:SetAllPoints()
+        cell.tex:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        local hl = cell:CreateTexture(nil, "HIGHLIGHT")        -- under the mouse: bright
+        hl:SetAllPoints()
+        hl:SetTexture(0.45, 0.70, 1.0, 0.45)
+        cell:SetScript("OnEnter", function(self)
+            if not self.ic then return end
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:AddLine(self.ic.name, 1, 0.82, 0)
+            GameTooltip:Show()
+        end)
+        cell:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        cell:SetScript("OnClick", function(self)
+            if self.ic then ui.SetDraft("icon", self.ic.name, true) end
+        end)
+        ui.iconCells[i] = cell
+    end
+    ui.iconsEmpty = f:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    ui.iconsEmpty:SetPoint("CENTER", grid, "CENTER")
+    local hint = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    hint:SetPoint("BOTTOMLEFT", 14, 14)
+    hint:SetPoint("BOTTOMRIGHT", -14, 14)
+    hint:SetJustifyH("LEFT")
+    Bind(hint, "点一个图标选用（要点“保存”才生效）；滚轮翻页；拖标题移动。", "Click an icon to use it (then Save); wheel to scroll; drag the title to move.")
+    ui.iconsFrame = f
+    function ui.ToggleIcons()
+        if f:IsShown() then f:Hide() return end
+        if not Selected() then Status(T("先选一种宝箱", "Pick a chest first"), true) return end
+        f:Show()
+        f:Raise()
+        if not state.iconsByCat[state.iconCat] then Cmd("icons " .. state.iconCat) end
+        RefreshIcons()
+    end
+end
+
+-- =========================================================================
+-- what is inside a chest type (opened from the spawn menu)
+-- =========================================================================
+local function BuildContents(main)
+    local f = CreateFrame("Frame", "RebornTreasureContents", main)
+    f:SetSize(380, 420)
+    f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    f:SetFrameStrata("FULLSCREEN_DIALOG")
+    f:SetToplevel(true)
+    f:SetClampedToScreen(true)
+    f:SetMovable(true)
+    f:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 24,
+        insets = { left = 6, right = 6, top = 6, bottom = 6 },
+    })
+    f:EnableMouse(true)
+    f:Hide()
+    local drag = CreateFrame("Frame", nil, f)
+    drag:SetPoint("TOPLEFT", 6, -4)
+    drag:SetPoint("TOPRIGHT", -30, -4)
+    drag:SetHeight(28)
+    drag:EnableMouse(true)
+    drag:RegisterForDrag("LeftButton")
+    drag:SetScript("OnDragStart", function() f:StartMoving() end)
+    drag:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+    ui.contentsTitle = Header(f, "Interface\\Icons\\INV_Misc_Bag_08", "宝箱内容", "Chest contents")
+    local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+    close:SetPoint("TOPRIGHT", -4, -4)
+
+    ui.contentsGold = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    ui.contentsGold:SetPoint("TOPLEFT", 16, -38)
+    ui.contentsHint = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    ui.contentsHint:SetPoint("BOTTOMLEFT", 16, 12)
+    Bind(ui.contentsHint, "滚轮翻页。之后的版本在这里直接增删物品。", "Wheel to scroll. Adding and removing items comes next.")
+
+    local list = CreateFrame("Frame", nil, f)
+    list:SetPoint("TOPLEFT", 12, -60)
+    list:SetPoint("BOTTOMRIGHT", -12, 32)
+    list:EnableMouseWheel(true)
+    ui.contentsRows = {}
+    local ROW = 28
+    local visible = 11
+    for i = 1, visible do
+        local row = CreateFrame("Button", nil, list)
+        row:SetHeight(ROW - 2)
+        row:SetPoint("TOPLEFT", 0, -(i - 1) * ROW)
+        row:SetPoint("RIGHT", list, "RIGHT", 0, 0)
+        local bg = row:CreateTexture(nil, "BACKGROUND")
+        bg:SetAllPoints()
+        bg:SetTexture(0, 0, 0, 0.35)
+        local hl = row:CreateTexture(nil, "HIGHLIGHT")
+        hl:SetAllPoints()
+        hl:SetTexture(1, 1, 1, 0.1)
+        row.rim = row:CreateTexture(nil, "ARTWORK")
+        row.rim:SetSize(24, 24)
+        row.rim:SetPoint("LEFT", 3, 0)
+        row.icon = row:CreateTexture(nil, "OVERLAY")
+        row.icon:SetSize(20, 20)
+        row.icon:SetPoint("CENTER", row.rim, "CENTER")
+        row.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        row.name = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        row.name:SetPoint("LEFT", row.rim, "RIGHT", 6, 0)
+        row.name:SetPoint("RIGHT", row, "RIGHT", -92, 0)
+        row.name:SetJustifyH("LEFT")
+        row.chance = row:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        row.chance:SetPoint("RIGHT", -6, 0)
+        row:SetScript("OnEnter", function(self)
+            if not self.item then return end
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            local ok = pcall(GameTooltip.SetHyperlink, GameTooltip, "item:" .. self.item)
+            if not ok then GameTooltip:AddLine(self.name:GetText() or "") end
+            GameTooltip:Show()
+        end)
+        row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        ui.contentsRows[i] = row
+    end
+    ui.contentsEmpty = f:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    ui.contentsEmpty:SetPoint("CENTER", list, "CENTER")
+    function ui.RefreshContents()
+        local items = state.loot.items
+        state.loot.offset = math.max(0, math.min(state.loot.offset or 0, #items - visible))
+        for i, row in ipairs(ui.contentsRows) do
+            local it = items[i + state.loot.offset]
+            if it then
+                local rar = RARITY_Q[it.q] or RARITY_Q[1]
+                row.item = it.item
+                row.icon:SetTexture(IconPath(it.icon, 1))
+                row.rim:SetTexture(rar[1], rar[2], rar[3], 1)
+                local nm = (IsZh() and it.zh ~= "" and it.zh) or it.name
+                row.name:SetText("|cff" .. rar[4] .. nm .. "|r" .. ((it.max > 1) and ("  |cffaaaaaa x" .. it.min .. (it.max > it.min and ("-" .. it.max) or "") .. "|r") or ""))
+                row.chance:SetText(string.format("%s%%", (it.chance == math.floor(it.chance)) and tostring(math.floor(it.chance)) or string.format("%.1f", it.chance)))
+                row:Show()
+            else
+                row.item = nil
+                row:Hide()
+            end
+        end
+        ui.contentsEmpty:SetText(#items == 0 and (state.loot.ready and T("这种宝箱的掉落表是空的，只会给金币。", "The loot table is empty: gold only.") or T("读取中…", "Loading…")) or "")
+    end
+    list:SetScript("OnMouseWheel", function(_, d) state.loot.offset = (state.loot.offset or 0) - d * 3; ui.RefreshContents() end)
+    ui.contentsFrame = f
+end
+
+function ui.ShowContents(entry)
+    local t = state.types[entry]
+    if not ui.contentsFrame then return end
+    state.loot = { entry = entry, items = {}, offset = 0, ready = false }
+    ui.contentsTitle:SetText(T("宝箱内容", "Contents") .. "  |cffffd100" .. (t and t.name or entry) .. "|r")
+    ui.contentsGold:SetText(t and ((T("金币：", "Gold: ")) .. Money(t.goldMin) .. "  -  " .. Money(t.goldMax)) or "")
+    ui.contentsFrame:Show()
+    ui.contentsFrame:Raise()
+    ui.RefreshContents()
+    Cmd("loot " .. entry)
+end
+
+-- =========================================================================
+-- appearance picker (movable, resizable; rows follow its height)
+-- =========================================================================
+local LOOK_ROW_H = 32   -- bigger rows are easier to hit
+
+local function RefreshLooks()
+    if not ui.lookRows then return end
+    local total = #state.looks
+    local visible = ui.lookVisible or 0
+    state.lookOffset = math.max(0, math.min(state.lookOffset, total - visible))
+    local t = Selected()
+    for i, row in ipairs(ui.lookRows) do
+        local look = (i <= visible) and state.looks[i + state.lookOffset]
+        if look then
+            row.look = look
+            local file = (look.model:match("([^\\]+)$") or look.model):gsub("%.[^%.]+$", "")
+            row.text:SetText(string.format("|cffffd100%d|r  %s  |cff888888%s|r", look.id, look.name, file))
+            if t and tonumber(ui.Eff(t, "display")) == look.id then
+                row.sel:Show(); row.mark:Show()
+            else
+                row.sel:Hide(); row.mark:Hide()
+            end
+            row:Show()
+        else
+            row.look = nil
+            row:Hide()
+        end
+    end
+    if total == 0 then ui.lookEmpty:Show() else ui.lookEmpty:Hide() end
+    if ui.lookCount then
+        ui.lookCount:SetText(total > 0 and string.format("%d-%d / %d", state.lookOffset + 1, math.min(total, state.lookOffset + visible), total) or "")
+    end
+end
+
+ui.RefreshLooksNow = RefreshLooks
+
+local function BuildLooks(main)
+    local f = CreateFrame("Frame", "RebornTreasureLookPicker", main)
+    f:SetSize(520, 420)
+    f:SetPoint("TOPLEFT", main, "TOPRIGHT", -4, 0)
+    f:SetFrameStrata("FULLSCREEN_DIALOG")
+    f:SetToplevel(true)
+    f:SetClampedToScreen(true)
+    f:SetMovable(true)
+    f:SetResizable(true)
+    if f.SetMinResize then f:SetMinResize(420, 300) end
+    if f.SetMaxResize then f:SetMaxResize(1000, 900) end
+    f:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 24,
+        insets = { left = 6, right = 6, top = 6, bottom = 6 },
+    })
+    f:EnableMouse(true)
+    f:Hide()
+    local solid = f:CreateTexture(nil, "BACKGROUND")
+    solid:SetPoint("TOPLEFT", 7, -7)
+    solid:SetPoint("BOTTOMRIGHT", -7, 7)
+    solid:SetTexture(0.02, 0.02, 0.03, 0.97)
+
+    -- title strip: drag to move
+    local drag = CreateFrame("Frame", nil, f)
+    drag:SetPoint("TOPLEFT", 6, -4)
+    drag:SetPoint("TOPRIGHT", -30, -4)
+    drag:SetHeight(28)
+    drag:EnableMouse(true)
+    drag:RegisterForDrag("LeftButton")
+    drag:SetScript("OnDragStart", function() f:StartMoving() end)
+    drag:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+    Header(f, "Interface\\Icons\\INV_Misc_Spyglass_02", "选择外观", "Pick appearance")
+    local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+    close:SetPoint("TOPRIGHT", -4, -4)
+    ui.lookCount = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    ui.lookCount:SetPoint("TOPRIGHT", -34, -13)
+
+    -- preview on the right
+    local stage = CreateFrame("Frame", nil, f)
+    stage:SetPoint("TOPRIGHT", -12, -36)
+    stage:SetPoint("BOTTOMRIGHT", -12, 34)
+    stage:SetWidth(170)
+    stage:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+    })
+    stage:SetBackdropColor(0, 0, 0, 0.6)
+    stage:SetBackdropBorderColor(0.8, 0.62, 0.25, 1)
+    local preview = CreateFrame("PlayerModel", nil, stage)
+    preview:SetPoint("TOPLEFT", 4, -4)
+    preview:SetPoint("BOTTOMRIGHT", -4, 4)
+    preview:SetFrameLevel(stage:GetFrameLevel() + 2)
+    preview.facing = 0.6
+    preview.zoom = 1
+    preview:SetScript("OnUpdate", function(self, e) self.facing = self.facing + e * 0.6; pcall(self.SetFacing, self, self.facing) end)
+    preview:Hide()
+    ui.lookPreview = preview
+
+    -- list on the left
+    local list = CreateFrame("Frame", nil, f)
+    list:SetPoint("TOPLEFT", 12, -36)
+    list:SetPoint("BOTTOMRIGHT", stage, "BOTTOMLEFT", -8, 0)
+    list:EnableMouseWheel(true)
+    list:SetScript("OnMouseWheel", function(_, d) state.lookOffset = state.lookOffset - d * 3; RefreshLooks() end)
+    ui.lookRows = {}
+
+    local function LayoutLookRows()
+        local n = math.max(1, math.floor((list:GetHeight() or 0) / LOOK_ROW_H))
+        for i = #ui.lookRows + 1, n do
+            local row = CreateFrame("Button", nil, list)
+            row:SetHeight(LOOK_ROW_H - 2)
+            row:SetPoint("TOPLEFT", 0, -(i - 1) * LOOK_ROW_H)
+            row:SetPoint("RIGHT", list, "RIGHT", 0, 0)
+            row:RegisterForClicks("LeftButtonUp")
+            local bg = row:CreateTexture(nil, "BACKGROUND")
+            bg:SetAllPoints()
+            bg:SetTexture(0.10, 0.10, 0.12, 0.9)
+            -- the CHOSEN one (the card's appearance): a gold bar on the left and a gold tint
+            row.sel = row:CreateTexture(nil, "BORDER")
+            row.sel:SetAllPoints()
+            row.sel:SetTexture(1, 0.82, 0, 0.30)
+            row.mark = row:CreateTexture(nil, "ARTWORK")
+            row.mark:SetWidth(5)
+            row.mark:SetPoint("TOPLEFT", 0, 0)
+            row.mark:SetPoint("BOTTOMLEFT", 0, 0)
+            row.mark:SetTexture(1, 0.82, 0, 1)
+            -- the one UNDER THE MOUSE: bright blue-white, clearly another colour
+            local hl = row:CreateTexture(nil, "HIGHLIGHT")
+            hl:SetAllPoints()
+            hl:SetTexture(0.45, 0.70, 1.0, 0.38)
+            row.text = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+            row.text:SetPoint("LEFT", 10, 0)
+            row.text:SetPoint("RIGHT", -4, 0)
+            row.text:SetJustifyH("LEFT")
+            row:SetScript("OnEnter", function(self)
+                if self.look then
+                    if ui.ShowModel(preview, self.look.model) then preview:Show() else preview:Hide() end
+                end
+            end)
+            -- leaving a row: the preview goes back to the chosen appearance, like the highlight
+            row:SetScript("OnLeave", function()
+                local card = Selected()
+                local dd = card and state.drafts[card.entry]
+                local path = card and ((dd and dd.display and dd.displayModel) or state.models[card.entry])
+                if path and ui.ShowModel(preview, path) then preview:Show() else preview:Hide() end
+            end)
+            row:SetScript("OnClick", function(self)
+                if self.look then
+                    ui.SetDraft("display", self.look.id, self.look.model)
+                    ui.AutoIcon(self.look)
+                end
+            end)
+            ui.lookRows[i] = row
+        end
+        ui.lookVisible = n
+        RefreshLooks()
+    end
+
+    ui.lookEmpty = f:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    ui.lookEmpty:SetPoint("CENTER", list, "CENTER")
+    Bind(ui.lookEmpty, "读取中…", "Loading…")
+    local hint = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    hint:SetPoint("BOTTOMLEFT", 14, 13)
+    hint:SetPoint("BOTTOMRIGHT", -34, 13)
+    hint:SetJustifyH("LEFT")
+    Bind(hint, "停在一行上预览，点击使用；滚轮翻页；拖标题移动，拖右下角缩放。", "Hover to preview, click to use; wheel to scroll; drag the title to move, the corner to resize.")
+
+    local grip = CreateFrame("Button", nil, f)
+    grip:SetSize(16, 16)
+    grip:SetPoint("BOTTOMRIGHT", -8, 8)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetScript("OnMouseDown", function() f:StartSizing("BOTTOMRIGHT") end)
+    grip:SetScript("OnMouseUp", function() f:StopMovingOrSizing(); LayoutLookRows() end)
+    f:SetScript("OnSizeChanged", function() LayoutLookRows() end)
+
+    ui.looksFrame = f
+    function ui.ToggleLooks()
+        if f:IsShown() then f:Hide() return end
+        if not Selected() then Status(T("先选一种宝箱", "Pick a chest first"), true) return end
+        f:Show()
+        f:Raise()
+        LayoutLookRows()
+        if #state.looks == 0 then Cmd("looks") end
+        RefreshLooks()
+    end
+end
+
+-- the language switch: every bound text again, then every list and card that builds its own text
+function ui.ApplyLang()
+    for _, b in ipairs(binds) do
+        b.obj:SetText(b.fn and b.fn() or T(b.zh, b.en))
+    end
+    if ui.langLabel then ui.langLabel:SetText(IsZh() and "EN" or "中文") end
+    if ui.tabSpawns then
+        ui.tabSpawns:SetText(T("点位", "Spawns"))
+        ui.tabPool:SetText(T("物品库", "Item pool"))
+    end
+    RefreshList()
+    if ui.RefreshCard then ui.RefreshCard() end
+    if ui.UpdateDirty then ui.UpdateDirty() end
+    if ui.RefreshSpawnList then ui.RefreshSpawnList() end
+    if ui.RefreshContents then ui.RefreshContents() end
+    if ui.lookRows then RefreshLooks() end
+    Status(T("语言已切换", "Language switched"))
+end
+
+-- =========================================================================
+-- main frame
+-- =========================================================================
+local function Layout()
+    local main = ui.main
+    if not main or not ui.left then return end
+    local w = main:GetWidth()
+    local inner = w - 24
+    local lw = math.floor(inner * 0.27)
+    local rw = math.floor(inner * 0.26)
+    ui.left:ClearAllPoints()
+    ui.left:SetPoint("TOPLEFT", 12, -44)
+    ui.left:SetPoint("BOTTOMLEFT", 12, 30)
+    ui.left:SetWidth(lw)
+    ui.right:ClearAllPoints()
+    ui.right:SetPoint("TOPRIGHT", -12, -44)
+    ui.right:SetPoint("BOTTOMRIGHT", -12, 30)
+    ui.right:SetWidth(rw)
+    ui.middle:ClearAllPoints()
+    ui.middle:SetPoint("TOPLEFT", ui.left, "TOPRIGHT", 6, 0)
+    ui.middle:SetPoint("BOTTOMRIGHT", ui.right, "BOTTOMLEFT", -6, 0)
+    if ui.LayoutRows then ui.LayoutRows() end
+    if ui.LayoutSpawnRows then ui.LayoutSpawnRows() end
+end
+
+local function SaveGeometry()
+    local main = ui.main
+    RebornTreasureDB = RebornTreasureDB or {}
+    local point, _, relPoint, x, y = main:GetPoint(1)
+    RebornTreasureDB.gm = { point = point, relPoint = relPoint, x = x, y = y, w = main:GetWidth(), h = main:GetHeight() }
+end
+
+local function BuildMain()
+    local main = CreateFrame("Frame", "RebornTreasureGMFrame", UIParent)
+    ui.main = main
+    main:SetSize(980, 600)
+    main:SetPoint("CENTER")
+    main:SetFrameStrata("FULLSCREEN_DIALOG")
+    main:SetToplevel(true)
+    main:SetMovable(true)
+    main:SetResizable(true)
+    if main.SetMinResize then main:SetMinResize(900, 540) end
+    if main.SetMaxResize then main:SetMaxResize(1600, 1000) end
+    main:SetClampedToScreen(true)
+    main:EnableMouse(true)
+    main:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true, tileSize = 32, edgeSize = 28,
+        insets = { left = 8, right = 8, top = 8, bottom = 8 },
+    })
+    main:Hide()
+    tinsert(UISpecialFrames, "RebornTreasureGMFrame")
+
+    -- title bar (drag to move)
+    local bar = CreateFrame("Frame", nil, main)
+    bar:SetPoint("TOPLEFT", 10, -8)
+    bar:SetPoint("TOPRIGHT", -96, -8)
+    bar:SetHeight(32)
+    bar:EnableMouse(true)
+    bar:RegisterForDrag("LeftButton")
+    bar:SetScript("OnDragStart", function() main:StartMoving() end)
+    bar:SetScript("OnDragStop", function() main:StopMovingOrSizing(); SaveGeometry() end)
+    local crest = bar:CreateTexture(nil, "OVERLAY")
+    crest:SetSize(28, 28)
+    crest:SetPoint("LEFT", 2, 0)
+    crest:SetTexture("Interface\\Icons\\INV_Misc_Bag_11")
+    local title = bar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    title:SetPoint("LEFT", crest, "RIGHT", 8, 0)
+    local verText = bar:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    verText:SetPoint("LEFT", title, "RIGHT", 10, -2)
+    verText:SetText("v" .. PANEL_VERSION)
+    BindFn(title, function() return "|cffffd100" .. T("宝箱管理", "Treasure GM") .. "|r  |cff888888" .. T("Treasure GM", "宝箱管理") .. "|r" end)
+
+    local close = CreateFrame("Button", nil, main, "UIPanelCloseButton")
+    close:SetPoint("TOPRIGHT", -4, -4)
+
+    local langBtn = CreateFrame("Button", nil, main)
+    langBtn:SetSize(54, 22)
+    langBtn:SetPoint("TOPRIGHT", -44, -10)
+    langBtn:SetFrameLevel(main:GetFrameLevel() + 10)
+    langBtn:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+    })
+    langBtn:SetBackdropColor(0.25, 0.17, 0.04, 1)
+    langBtn:SetBackdropBorderColor(0.85, 0.65, 0.15, 1)
+    local langHl = langBtn:CreateTexture(nil, "HIGHLIGHT")
+    langHl:SetPoint("TOPLEFT", 3, -3)
+    langHl:SetPoint("BOTTOMRIGHT", -3, 3)
+    langHl:SetTexture(1, 1, 1, 0.18)
+    ui.langLabel = langBtn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    ui.langLabel:SetPoint("CENTER", 0, 0)
+    ui.langLabel:SetText(IsZh() and "EN" or "中文")
+    langBtn:SetScript("OnClick", function()
+        RebornTreasureDB = RebornTreasureDB or {}
+        RebornTreasureDB.lang = IsZh() and "en" or "zh"
+        local ok, err = pcall(ui.ApplyLang)
+        if not ok then DEFAULT_CHAT_FRAME:AddMessage("|cffff3333[RebornTreasure GM] language: " .. tostring(err) .. "|r") end
+    end)
+    Tip(langBtn, "切换语言", "Switch language", "中文 / English")
+    ui.langBtn = langBtn
+
+    -- status line + resize grip
+    ui.status = main:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    ui.status:SetPoint("BOTTOMLEFT", 16, 12)
+    ui.status:SetPoint("BOTTOMRIGHT", -40, 12)
+    ui.status:SetJustifyH("LEFT")
+
+    local grip = CreateFrame("Button", nil, main)
+    grip:SetSize(16, 16)
+    grip:SetPoint("BOTTOMRIGHT", -8, 8)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetScript("OnMouseDown", function() main:StartSizing("BOTTOMRIGHT") end)
+    grip:SetScript("OnMouseUp", function() main:StopMovingOrSizing(); SaveGeometry(); Layout() end)
+    Tip(grip, "拖动缩放", "Drag to resize")
+
+    main:SetScript("OnMouseDown", function() CloseDropDownMenus() end)
+    main:SetScript("OnSizeChanged", function() Layout() end)
+    main:SetScript("OnShow", function(self)
+        self:Raise()
+        Status(T("连接服务端…", "Contacting the server…"))
+        state.online = false
+        Cmd("ping")
+        Cmd("types")
+        ui.After(0.7, ui.RequestSpawns)
+        self.waitPong = 3
+    end)
+    main:SetScript("OnUpdate", function(self, elapsed)
+        if ui.RunTimers then ui.RunTimers(elapsed) end
+        if self.waitPong then
+            self.waitPong = self.waitPong - elapsed
+            if self.waitPong <= 0 then
+                self.waitPong = nil
+                if not state.online then
+                    Status(T("服务端没有回应：需要 GM 权限，且服务端装了 TREAS2B。", "No answer: needs a GM account and the TREAS2B server build."), true)
+                end
+            end
+        end
+    end)
+    main:SetScript("OnHide", function()
+        if ui.looksFrame then ui.looksFrame:Hide() end
+        if ui.contentsFrame then ui.contentsFrame:Hide() end
+        if ui.iconsFrame then ui.iconsFrame:Hide() end
+    end)
+end
+
+local function RestoreGeometry()
+    local g = RebornTreasureDB and RebornTreasureDB.gm
+    if not g then return end
+    ui.main:ClearAllPoints()
+    ui.main:SetPoint(g.point or "CENTER", UIParent, g.relPoint or "CENTER", g.x or 0, g.y or 0)
+    if g.w and g.h then ui.main:SetSize(math.max(900, g.w), math.max(540, g.h)) end
+end
+
+-- =========================================================================
+-- server messages
+-- =========================================================================
+local function OnServer(msg)
+    local f = Split(msg)
+    local kind = f[1]
+    if kind == "PONG" then
+        state.online = true
+        if f[2] == "1" then Status(T("已连接", "Connected")) else Status(T("服务端没导入宝箱的 SQL", "The treasure SQL is not imported"), true) end
+    elseif kind == "TY_START" then
+        wipe(state.types)
+        wipe(state.models)
+    elseif kind == "TY" then
+        local entry = tonumber(f[2])
+        if entry then
+            state.types[entry] = {
+                entry = entry, name = f[3] or "", icon = f[4] or "", display = tonumber(f[5]) or 0,
+                size = tonumber(f[6]) or 1, goldMin = tonumber(f[7]) or 0, goldMax = tonumber(f[8]) or 0,
+                rarity = tonumber(f[9]) or 1, respawnMin = tonumber(f[10]) or 300, respawnMax = tonumber(f[11]) or 600,
+                active = f[12] == "1", dscale = f[13] == "1",
+            }
+            SortTypes()
+            RefreshList()
+            if entry == state.selected then ui.RefreshCard() end
+        end
+    elseif kind == "TYM" then
+        local entry = tonumber(f[2])
+        if entry then
+            state.models[entry] = f[3]
+            if entry == state.selected then ui.RefreshCard() end
+        end
+    elseif kind == "TY_END" then
+        SortTypes()
+        if type(state.pendingSelect) == "number" and state.types[state.pendingSelect] then
+            state.selected = state.pendingSelect
+            state.pendingSelect = nil
+        elseif not (state.selected and state.types[state.selected]) then
+            state.selected = state.order[1]
+        end
+        RefreshList()
+        ui.RefreshCard()
+        ui.RefreshSpawnList()
+    elseif kind == "SP_START" then
+        state.spawnsNew = {}
+        state.cluesNew = {}
+    elseif kind == "SP" then
+        if state.spawnsNew then
+            local s = {
+                id = tonumber(f[2]) or 0, entry = tonumber(f[3]) or 0, mapId = tonumber(f[4]) or 0, mapName = f[5] or "?",
+                zoneId = tonumber(f[6]) or 0, zoneName = f[7] or "?", x = tonumber(f[8]) or 0, y = tonumber(f[9]) or 0, z = tonumber(f[10]) or 0,
+                state = tonumber(f[11]) or 0, left = tonumber(f[12]) or 0, rmin = tonumber(f[13]) or 0, rmax = tonumber(f[14]) or 0,
+                dist = tonumber(f[15]) or -1, hasClue = f[16] == "1", wet = f[17] == "1", comment = f[18] or "",
+            }
+            state.spawnsNew[#state.spawnsNew + 1] = s
+        end
+    elseif kind == "SPC" then
+        if state.cluesNew then state.cluesNew[tonumber(f[2]) or 0] = f[3] or "" end
+    elseif kind == "SP_END" then
+        if state.spawnsNew then
+            state.spawns, state.clues = state.spawnsNew, state.cluesNew or {}
+            state.spawnsNew, state.cluesNew = nil, nil
+            state.spawnStamp = GetTime()
+            state.spawnsLoaded = true
+            wipe(state.spawnCount)
+            for _, s in ipairs(state.spawns) do state.spawnCount[s.entry] = (state.spawnCount[s.entry] or 0) + 1 end
+            if state.spawnSel and not SpawnById(state.spawnSel) then state.spawnSel = nil end
+            RefreshList()
+            ui.RefreshSpawnList()
+        end
+    elseif kind == "LT_START" then
+        if tonumber(f[2]) == state.loot.entry then state.loot.items = {}; state.loot.ready = false end
+    elseif kind == "LT" then
+        if tonumber(f[2]) == state.loot.entry then
+            state.loot.items[#state.loot.items + 1] = {
+                item = tonumber(f[3]) or 0, chance = tonumber(f[4]) or 0, min = tonumber(f[5]) or 1, max = tonumber(f[6]) or 1,
+                group = tonumber(f[7]) or 0, q = tonumber(f[8]) or 1, icon = f[9] or "", name = f[10] or "", zh = f[11] or "",
+            }
+        end
+    elseif kind == "LT_END" then
+        if tonumber(f[2]) == state.loot.entry then
+            state.loot.ready = true
+            if ui.RefreshContents then ui.RefreshContents() end
+        end
+    elseif kind == "IC_START" then
+        state.iconNew, state.iconNewCat = {}, f[2] or "chest"
+    elseif kind == "IC" then
+        if state.iconNew then state.iconNew[#state.iconNew + 1] = { name = f[2] or "" } end
+    elseif kind == "IC_END" then
+        if state.iconNew then
+            state.iconsByCat[state.iconNewCat or "chest"] = state.iconNew
+            state.iconNew = nil
+        end
+        if ui.RefreshIconsNow then ui.RefreshIconsNow() end
+    elseif kind == "LK_START" then
+        wipe(state.looks)
+    elseif kind == "LK" then
+        state.looks[#state.looks + 1] = { id = tonumber(f[2]) or 0, model = f[3] or "", name = f[4] or "" }
+    elseif kind == "LK_END" then
+        RefreshLooks()
+    elseif kind == "OK" then
+        local what = f[2]
+        if (what == "typenew" or what == "typecopy") and tonumber(f[3]) then
+            state.pendingSelect = tonumber(f[3])
+        end
+        local names = { typenew = T("已新建", "Created"), typecopy = T("已复制", "Copied"), typedel = T("已删除", "Deleted"), typeset = T("已保存", "Saved"),
+            spawngo = T("已传送", "Teleported"), spawnshow = T("宝箱已显示", "Chest shown"), spawndel = T("点位已删除", "Spawn deleted"),
+            spawnhere = T("点位已移到脚下", "Spawn moved here"), spawnrespawn = T("刷新时间已保存", "Respawn saved"),
+            spawncomment = T("备注已保存", "Note saved"), spawnclue = T("线索已保存", "Clue saved"), spawntype = T("种类已改", "Type changed") }
+        Status((names[what] or what) .. (f[3] and ("  " .. f[3]) or ""))
+        if what == "spawnsnap" then
+            Status(string.format(T("贴地：移动 %s 个，在水下 %s 个，没处理 %s 个（地图没加载）", "Snapped: %s moved, %s under water, %s skipped (map not loaded)"),
+                f[4] or "0", f[5] or "0", f[6] or "0"))
+        end
+        if what == "typeset" then RefreshLooks() end
+        if what:sub(1, 5) == "spawn" then
+            -- teleport and show: wait for the new map to load, then ask for the chest
+            if what == "spawngo" and state.pendingShow == tonumber(f[3]) then
+                local id = state.pendingShow
+                state.pendingShow = nil
+                ui.After(3, function() Cmd("spawnshow " .. id) end)
+            end
+            ui.After(0.6, ui.RequestSpawns)
+        end
+    elseif kind == "ERR" then
+        Status(f[2] or "?", true)
+        UIErrorsFrame:AddMessage(f[2] or "?", 1, 0.2, 0.2)
+        state.pendingSelect = nil
+        state.pendingShow = nil
+        if ui.RefreshCard then ui.RefreshCard() end
+    end
+end
+
+-- =========================================================================
+-- build (each stage guarded, a failure is shown in red instead of a silent broken panel)
+-- =========================================================================
+local built = false
+local function Build()
+    if built then return true end
+    local stages = {
+        { "main", BuildMain },
+        { "left", function() BuildLeft(ui.main) end },
+        { "middle", function() BuildMiddle(ui.main) end },
+        { "right", function() BuildRight(ui.main) end },
+        { "looks", function() BuildLooks(ui.main) end },
+        { "contents", function() BuildContents(ui.main) end },
+        { "icons", function() BuildIcons(ui.main) end },
+        { "layout", function() RestoreGeometry(); Layout(); ui.RefreshCard() end },
+    }
+    for _, s in ipairs(stages) do
+        local ok, err = pcall(s[2])
+        if not ok then
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff3333[RebornTreasure GM] build failed at " .. s[1] .. ": " .. tostring(err) .. "|r")
+            return false
+        end
+    end
+    built = true
+    return true
+end
+
+local function Toggle()
+    if not Build() then return end
+    if ui.main:IsShown() then ui.main:Hide() else ui.main:Show() end
+end
+
+-- the popups are raised over the panel by ui.Popup; they go back to normal when they close
+local function PopupBack(self) self:SetFrameStrata("DIALOG") end
+
+StaticPopupDialogs["REBORN_TREASURE_DELETE"] = {
+    text = "删除宝箱种类“%s”？掉落表一起删除。\nDelete this chest type and its loot table?",
+    button1 = YES,
+    button2 = NO,
+    OnAccept = function(_, entry) if entry then Cmd("typedel " .. entry) end end,
+    OnHide = PopupBack,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+}
+
+StaticPopupDialogs["REBORN_TREASURE_SPAWN_DELETE"] = {
+    text = "删除这个宝箱点位 %s？世界里的宝箱一起消失。\nDelete this spawn? The chest in the world goes too.",
+    button1 = YES,
+    button2 = NO,
+    OnAccept = function(_, id) if id then Cmd("spawndel " .. id) end end,
+    OnHide = PopupBack,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+}
+
+StaticPopupDialogs["REBORN_TREASURE_INPUT"] = {
+    text = "%s",
+    button1 = ACCEPT,
+    button2 = CANCEL,
+    hasEditBox = 1,
+    maxLetters = 120,
+    OnShow = function(self)
+        local d = self.data
+        self.editBox:SetText(d and d.default or "")
+        self.editBox:HighlightText()
+        self.editBox:SetFocus()
+    end,
+    OnAccept = function(self, d)
+        if d and d.fn then d.fn(self.editBox:GetText() or "") end
+    end,
+    EditBoxOnEnterPressed = function(self)
+        local parent = self:GetParent()
+        local d = parent.data
+        parent:Hide()
+        if d and d.fn then d.fn(self:GetText() or "") end
+    end,
+    EditBoxOnEscapePressed = function(self) self:GetParent():Hide() end,
+    OnHide = PopupBack,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+}
+
+local events = CreateFrame("Frame")
+events:RegisterEvent("CHAT_MSG_ADDON")
+events:RegisterEvent("PLAYER_LOGIN")
+events:SetScript("OnEvent", function(_, event, prefix, msg)
+    if event == "CHAT_MSG_ADDON" then
+        if prefix ~= ADDON_PREFIX or type(msg) ~= "string" or not built then return end
+        local ok, err = pcall(OnServer, msg)
+        if not ok then DEFAULT_CHAT_FRAME:AddMessage("|cffff3333[RebornTreasure GM] " .. tostring(err) .. "|r") end
+    elseif event == "PLAYER_LOGIN" then
+        -- a GM button next to the guide panel's title
+        local guide = _G["RebornTreasureMainFrame"]
+        if guide then
+            local b = IconButton(guide, 22, "Interface\\Icons\\INV_Misc_Bag_11", 0.85, 0.65, 0.15)
+            b:SetPoint("TOPLEFT", 14, -12)
+            b:SetScript("OnClick", Toggle)
+            Tip(b, "宝箱管理（GM）", "Treasure GM panel", "/rtgm")
+        end
+    end
+end)
+
+SLASH_REBORNTREASUREGM1 = "/rtgm"
+SlashCmdList["REBORNTREASUREGM"] = Toggle
