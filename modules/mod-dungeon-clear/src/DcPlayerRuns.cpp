@@ -374,7 +374,7 @@ namespace
         if (owner->GetMap() == tank->GetMap())
             if (BotMgr* mgr = owner->GetBotMgr())
                 for (auto const& kv : *mgr->GetBotMap())
-                    if (Creature* bot = kv.second; bot && bot->GetMap() == tank->GetMap())
+                    if (Creature* bot = kv.second; bot && bot->IsInWorld() && bot->FindMap() == tank->GetMap())  // DCCRASH1A: GetMap() asserts for a bot that is not on a map
                     {
                         Member m;
                         m.name = bot->GetName();
