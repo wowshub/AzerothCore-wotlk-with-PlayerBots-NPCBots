@@ -1,0 +1,87 @@
+#
+# Reborn Treasure Module Configuration
+# 野外寻宝宝箱系统配置文件 (阶段 TREAS1B)
+#
+
+[worldserver]
+
+###################################################################################################
+# REBORN TREASURE MODULE SETTINGS
+#
+#    RebornTreasure.Enable
+#        Description: 是否启用野外寻宝模块。
+#        Default:     1 (启用)
+#                     0 (禁用)
+#
+
+RebornTreasure.Enable = 1
+
+#
+#    RebornTreasure.ClueCheckIntervalMs
+#        Description: 玩家寻宝线索与靠近感知的轮询心跳间隔(毫秒)。
+#                     适当的节流间隔可保证几乎零服务器 CPU 开销。
+#        Default:     2500 (2.5 秒)
+#
+
+RebornTreasure.ClueCheckIntervalMs = 2500
+
+#
+#    RebornTreasure.DefaultClueDistance
+#        Description: 玩家感知宝箱线索的默认触发距离(码)。
+#        Default:     40.0
+#
+
+RebornTreasure.DefaultClueDistance = 40.0
+
+#
+#    RebornTreasure.AnnounceOnClaim
+#        Description: 宝箱被领取时是否在当前区域/全图发送公告。
+#        Default:     1 (1=在宝箱所在区域广播, 0=不广播；没有全服广播)
+#
+
+RebornTreasure.AnnounceOnClaim = 1
+
+#
+#    RebornTreasure.MailRewardOnFullBag
+#        Description: 当玩家背包已满或部分物品放不下时，是否通过游戏内邮件系统可靠补发剩余奖励。
+#                     1 = 邮件安全补发(绝不销毁奖励)
+#                     0 = 阻止开启宝箱并提示玩家清理背包
+#        Default:     1
+#
+
+RebornTreasure.MailRewardOnFullBag = 1
+
+#
+#    RebornTreasure.DebugLog
+#        Description: 是否输出调试日志到服务端控制台。
+#        Default:     0 (关闭)
+#                     1 (开启)
+#
+
+RebornTreasure.DebugLog = 0
+
+#
+#    RebornTreasure.ClueSoundId
+#        Description: 线索出现时播放的提示音编号。0 = 不播放。
+#                     (原版 TREAS1A 的 11466 不属于 3.3.5 客户端，实际不会响，所以默认关闭；
+#                      要用请先在客户端确认某个音效编号。)
+#        Default:     0
+#
+
+RebornTreasure.ClueSoundId = 0
+
+#
+#    RebornTreasure.DefaultRespawnMinSecs
+#        Description: 宝箱被领取后的默认最小刷新时间(秒)。
+#        Default:     300 (5分钟)
+#
+
+RebornTreasure.DefaultRespawnMinSecs = 300
+
+#
+#    RebornTreasure.DefaultRespawnMaxSecs
+#        Description: 宝箱被领取后的默认最大刷新时间(秒)。
+#        Default:     600 (10分钟)
+#
+
+RebornTreasure.DefaultRespawnMaxSecs = 600

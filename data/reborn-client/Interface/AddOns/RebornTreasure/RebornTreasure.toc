@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: |cff00ff00Reborn|r Treasure (野外寻宝指南)
+## Notes: 野外寻宝线索记录与探险状态面板
+## Author: Gemini (阶段 TREAS1B)
+## Version: 1.1.0
+## SavedVariablesPerCharacter: RebornTreasureDB
+
+RebornTreasure.lua
+

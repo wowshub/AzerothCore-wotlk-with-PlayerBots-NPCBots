@@ -2907,7 +2907,8 @@ void GameObject::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* t
                         break;
                     case GAMEOBJECT_TYPE_CHEST:
                     case GAMEOBJECT_TYPE_GOOBER:
-                        if (ActivateToQuest(target))
+                        // TREAS1F: the wild-treasure chests (mod-reborn-treasure, entries 990200-990202) shimmer like a quest object
+                        if (ActivateToQuest(target) || (GetGoType() == GAMEOBJECT_TYPE_CHEST && GetEntry() >= 990200 && GetEntry() <= 990202))
                         {
                             dynFlags |= GO_DYNFLAG_LO_ACTIVATE;
                             if (sWorld->getBoolConfig(CONFIG_OBJECT_SPARKLES))
