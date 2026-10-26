@@ -40,7 +40,7 @@ public:
         WDN3A::State survival;
         uint32 utilityDelay=0,pullMoveDelay=0,survivalLogDelay=0,recentHostileDamage=0;
         bool preferWrath=false;
-        uint32 spiritOwner=0,spiritMap=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
+        uint32 spiritOwner=0,spiritMap=0,spiritPhase=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
         void Trace(char const* reason,uint32 spell=0,int32 result=0)
         {
             if(diagnosticTimer||IAmFree())return;
@@ -48,12 +48,12 @@ public:
             if(!me->IsInCombat()&&!(owner&&owner->IsInCombat())&&
                !IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL))return;
             diagnosticTimer=10000;
-            LOG_ERROR("server", "[WDN3E combat] entry={} owner={} gate={} spell={} result={} commands={} mana={}/{} arrow={} reclaim={} roles={} pull={} utilityMs={} wardKnown={} wardReady={} wardCheck={}",
+            LOG_ERROR("server", "[WDN4A combat] entry={} owner={} gate={} spell={} result={} commands={} mana={}/{} arrow={} reclaim={} roles={} pull={} utilityMs={} wardKnown={} wardReady={} wardCheck={}",
                 me->GetEntry(),GetBotOwnerGuid(),reason,spell,result,GetBotCommandState(),
                 me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation),GetBotRoles(),IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL),utilityDelay,WDN1C::Known(me),IsSpellReady(WDN1C::SpellId,0),WDN1C::Known(me)?int32(CheckBotCast(me,WDN1C::SpellId)):-1);
         }
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
-        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN3E] initialized entry={}",me->GetEntry()); }
+        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN4A] initialized entry={}",me->GetEntry()); }
 
         void Reset() override { pullMoveDelay=survivalLogDelay=recentHostileDamage=0;utilityDelay=0;survival.Clear(me); allyBrewRetry=brewingRetry=0; healingReserve=false;preferWrath=false; hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0; WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
         void JustDied(Unit* killer) override
@@ -431,7 +431,7 @@ public:
         {
             if(survivalLogDelay||!WDN1::Actor(me)||!me->IsInCombat()||me->GetHealthPct()>40.f)return;
             survivalLogDelay=3000;
-            LOG_ERROR("server", "[WDN3E] entry={} owner={} gate={} hp={} recentDamageMs={} roles={} commands={} casting={} attackers={} hold={} death={} slither={} mirage={} spell={} result={} defenseStatus(D/S/M)={}/{}/{} mana={}/{}",
+            LOG_ERROR("server", "[WDN4A] entry={} owner={} gate={} hp={} recentDamageMs={} roles={} commands={} casting={} attackers={} hold={} death={} slither={} mirage={} spell={} result={} defenseStatus(D/S/M)={}/{}/{} mana={}/{}",
                 me->GetEntry(),GetBotOwnerGuid(),gate,me->GetHealthPct(),recentHostileDamage,GetBotRoles(),GetBotCommandState(),IsCasting(),me->getAttackers().size(),survival.spell,
                 me->HasAura(WDN3A::Death,me->GetGUID()),me->HasAura(WDN3A::Slither,me->GetGUID()),me->HasAura(WDN3A::Mirage,me->GetGUID()),spell,result,DefenseStatus(WDN3A::Death,0),DefenseStatus(WDN3A::Slither,0),DefenseStatus(WDN3A::Mirage,0),me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA));
         }
@@ -457,22 +457,36 @@ public:
             }
             TraceSurvival("all-defense-casts-rejected");return false;
         }
+        void StopDisabledOffense()
+        {
+            if(HasRole(NPC_BOT_ROLE_DPS))return;
+            // Cancel only this class's known offensive casts; preserve healing and defense casts.
+            for(CurrentSpellTypes slot:{CURRENT_GENERIC_SPELL,CURRENT_CHANNELED_SPELL})
+                if(Spell const* current=me->GetCurrentSpell(slot))
+                    for(uint32 base:damageSpells)
+                        if(GetSpell(base)&&current->GetSpellInfo()->Id==GetSpell(base))
+                        {me->InterruptSpell(slot);break;}
+        }
         void UpdateAI(uint32 diff) override
         {
             recentHostileDamage=recentHostileDamage>diff?recentHostileDamage-diff:0;
             pullMoveDelay=pullMoveDelay>diff?pullMoveDelay-diff:0;
             survivalLogDelay=survivalLogDelay>diff?survivalLogDelay-diff:0;
             utilityDelay=utilityDelay>diff?utilityDelay-diff:0;
+            if(spiritOwner!=GetBotOwnerGuid()||spiritMap!=me->GetMapId()||spiritPhase!=me->GetPhaseMask())
+            {
+                // Do not carry a previous combat target or escape into another context.
+                if(spiritOwner){me->AttackStop();me->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);opponent=nullptr;disttarget=nullptr;}
+                survival.Clear(me);
+                me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());
+                WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);
+                recentHostileDamage=pullMoveDelay=0;utilityDelay=0;spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();spiritPhase=me->GetPhaseMask();
+            }
+            StopDisabledOffense();
             if(IsDuringTeleport())survival.Clear(me);
             // Before GlobalUpdate/CheckAttackTarget: both may move or acquire targets.
             // CommonTimers is driven by Creature::Update, so native cooldowns keep ticking during holds.
             if(survival.Hold(me,diff)){TraceSurvival("defensive-hold");opponent=nullptr;disttarget=nullptr;return;}
-            if(spiritOwner!=GetBotOwnerGuid()||spiritMap!=me->GetMapId())
-            {
-                me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());
-                WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);
-                recentHostileDamage=0;utilityDelay=0;spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();
-            }
             hexEffigyRetry=hexEffigyRetry>diff?hexEffigyRetry-diff:0;gravenRetry=gravenRetry>diff?gravenRetry-diff:0;cursedRetry=cursedRetry>diff?cursedRetry-diff:0;swiftRetry=swiftRetry>diff?swiftRetry-diff:0;sereneRetry=sereneRetry>diff?sereneRetry-diff:0;
             allyBrewRetry=allyBrewRetry>diff?allyBrewRetry-diff:0;
             brewingRetry=brewingRetry>diff?brewingRetry-diff:0;

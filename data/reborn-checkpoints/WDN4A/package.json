@@ -1,0 +1,11 @@
+{
+  "folder": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_221923_阶段WDN4A_NPC巫医职责与地图相位回归累计测试包",
+  "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_221923_阶段WDN4A_NPC巫医职责与地图相位回归累计测试包.zip",
+  "sha256": "612c440ee63d172bd8774ddc1aa66f89d6d3df1b4d84b8ceccc0b458f86ee85f",
+  "source_count": 28,
+  "changed_source": 1,
+  "new_sql": false,
+  "new_data": false,
+  "includes_V_data": true,
+  "status": "WDN4A lifecycle regression candidate on accepted WDN3E"
+}

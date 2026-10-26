@@ -1,0 +1,278 @@
+[
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "input": "236a2cdcde6d94a78b43df08da726b3b42ca4ba436fecae6b2aff0234d635bce",
+    "output": "236a2cdcde6d94a78b43df08da726b3b42ca4ba436fecae6b2aff0234d635bce",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "0e7b4f3390571f5f9f0d967dec24ff7c134454fcc1c277feb2d06a47020eb6b5",
+      "236a2cdcde6d94a78b43df08da726b3b42ca4ba436fecae6b2aff0234d635bce",
+      "4a42229dcdc880d4a8ec584d5da239538995a4248bf9e23ea260b23d32f4d3dc"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc",
+    "input": "b90e83784c87d9c8e772e8a3760f8b6db20d2771879cbc22b9d270837eb873e0",
+    "output": "b90e83784c87d9c8e772e8a3760f8b6db20d2771879cbc22b9d270837eb873e0",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "b90e83784c87d9c8e772e8a3760f8b6db20d2771879cbc22b9d270837eb873e0"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingFoundation.inc",
+    "input": "94202c8b1cf11675436f9d863c83a50f961338c04049f9356c2f83a2c424c9e7",
+    "output": "94202c8b1cf11675436f9d863c83a50f961338c04049f9356c2f83a2c424c9e7",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "83c9f7a7cd9c0dce56b58e72e2c1244aa486594c096e9f0f9244a448f2b29cf6",
+      "94202c8b1cf11675436f9d863c83a50f961338c04049f9356c2f83a2c424c9e7",
+      "c937ba13a83565545d2b49e15830620d585aac5e6f3986050f030de4002843a4",
+      "f90eafba3822283172f0c11dbab41ad32c0ff6027f2c6e9ec08e2d23938e2909"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingNumbers.h",
+    "input": "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a",
+    "output": "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorMirage154.inc",
+    "input": "e8c4e3be6436c935a1f0ee654aaf44adf631c504168bc2ab0764aade7c6666f2",
+    "output": "e8c4e3be6436c935a1f0ee654aaf44adf631c504168bc2ab0764aade7c6666f2",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "340ebc6f1ccb1f4de9745855babd5d1190dcb74c9ccd779dae73141b6ce78fe0",
+      "e8c4e3be6436c935a1f0ee654aaf44adf631c504168bc2ab0764aade7c6666f2"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h",
+    "input": "d5bec7a65b9c490d7b7a41817d81fd7bce32ef0ce4008733a4c789bbda4b773a",
+    "output": "d5bec7a65b9c490d7b7a41817d81fd7bce32ef0ce4008733a4c789bbda4b773a",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "c73f7e911a53a4f9fabc2defce29d98be67ef38e4b60cc55770bacd5040a19f1",
+      "d5bec7a65b9c490d7b7a41817d81fd7bce32ef0ce4008733a4c789bbda4b773a"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewEcho2.h",
+    "input": "855516211d0dc8902e4bff77a425684ff0de4d34544fec0577d9cdad6f274644",
+    "output": "855516211d0dc8902e4bff77a425684ff0de4d34544fec0577d9cdad6f274644",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "855516211d0dc8902e4bff77a425684ff0de4d34544fec0577d9cdad6f274644"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h",
+    "input": "228b1a65f8744b33602f58e216bacd9393032f17b32cccf06b8f5f7a7e80b73b",
+    "output": "228b1a65f8744b33602f58e216bacd9393032f17b32cccf06b8f5f7a7e80b73b",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "0a2a8ec2b0df50f590d8983d78f3f0732aab99c5cf7caa34f0ad9f9b4d3d2d13",
+      "20c8a1675b273887cffc2a87f8afe06e92a905e526fc6dbaeda5761bafbe2e1a",
+      "228b1a65f8744b33602f58e216bacd9393032f17b32cccf06b8f5f7a7e80b73b",
+      "c86a87e4888844071c28241e0fcfb9382c31d854ba5b2542ce427ff411f9ce79"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcDebuff2.h",
+    "input": "fc922230bea4d4827c255823a5adf12ea908df1fd05243f598dd7c3edc343604",
+    "output": "fc922230bea4d4827c255823a5adf12ea908df1fd05243f598dd7c3edc343604",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "fc922230bea4d4827c255823a5adf12ea908df1fd05243f598dd7c3edc343604"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcEffigy2.h",
+    "input": "add639c08533338b069fd71cb2f316c2a177c914217bba834ad0f2731dbbfff0",
+    "output": "add639c08533338b069fd71cb2f316c2a177c914217bba834ad0f2731dbbfff0",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "5961d1a53cc0d2a547441defc73ae920458e6b52da497c1f4a47046216589d75",
+      "add639c08533338b069fd71cb2f316c2a177c914217bba834ad0f2731dbbfff0"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcIdol2.h",
+    "input": "5e7b2f72269f8cbc5ab28b077f68a932f2790d7b7e1d511e4713877e79e53e61",
+    "output": "5e7b2f72269f8cbc5ab28b077f68a932f2790d7b7e1d511e4713877e79e53e61",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "5e7b2f72269f8cbc5ab28b077f68a932f2790d7b7e1d511e4713877e79e53e61"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcMassWard2.h",
+    "input": "e421a32d6ffa47b5c3a497d63e93197a5818c5d548182d9a0f8d863168b10a31",
+    "output": "e421a32d6ffa47b5c3a497d63e93197a5818c5d548182d9a0f8d863168b10a31",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "e421a32d6ffa47b5c3a497d63e93197a5818c5d548182d9a0f8d863168b10a31"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcMimic2.h",
+    "input": "0a15896679c53c5db44eb5751330bf3dff2d819aacb9d5f9b6ee000baed45311",
+    "output": "0a15896679c53c5db44eb5751330bf3dff2d819aacb9d5f9b6ee000baed45311",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "0a15896679c53c5db44eb5751330bf3dff2d819aacb9d5f9b6ee000baed45311"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcSurvival3.h",
+    "input": "56ab3b143f7baa3fbbc29c480dcf15ae097b260454207c14fe144541c2e77345",
+    "output": "56ab3b143f7baa3fbbc29c480dcf15ae097b260454207c14fe144541c2e77345",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "56ab3b143f7baa3fbbc29c480dcf15ae097b260454207c14fe144541c2e77345",
+      "b3c4e64541f3e57b0686dd41f645658bd268d6081f15963c9a58b3bea41d1091",
+      "d0f66154d663fe022dc416b8f33ec789b87fbb32f27ecbe46762e9d6a936aa0a"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcVoodoo2.h",
+    "input": "7b1cea57b1b4aa568dc5e1e8ef054ecc174b1d60411139f3fb9b7e48e44e30a5",
+    "output": "7b1cea57b1b4aa568dc5e1e8ef054ecc174b1d60411139f3fb9b7e48e44e30a5",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "7b1cea57b1b4aa568dc5e1e8ef054ecc174b1d60411139f3fb9b7e48e44e30a5"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWard1.h",
+    "input": "6e0f91bde670ea2c5ea0c3ef13a2adada88aabfaeb1be18a739555dbc488dfd6",
+    "output": "6e0f91bde670ea2c5ea0c3ef13a2adada88aabfaeb1be18a739555dbc488dfd6",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "6e0f91bde670ea2c5ea0c3ef13a2adada88aabfaeb1be18a739555dbc488dfd6"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSerpent150.inc",
+    "input": "fc9b63dda531fa3e6a5400cbad2d0011faf4161414da4723fd8b90b22180cc1c",
+    "output": "fc9b63dda531fa3e6a5400cbad2d0011faf4161414da4723fd8b90b22180cc1c",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "fc9b63dda531fa3e6a5400cbad2d0011faf4161414da4723fd8b90b22180cc1c"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+    "input": "8f3d9297938e494503a28dc320bfb9cb2517068322225625cf120642e69d2454",
+    "output": "8f3d9297938e494503a28dc320bfb9cb2517068322225625cf120642e69d2454",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "8f3d9297938e494503a28dc320bfb9cb2517068322225625cf120642e69d2454"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc",
+    "input": "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e",
+    "output": "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e"
+    ]
+  },
+  {
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow146.inc",
+    "input": "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614",
+    "output": "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614"
+    ]
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botcommon.h",
+    "input": "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37",
+    "output": "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37"
+    ]
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "input": "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee",
+    "output": "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee"
+    ]
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botgiver.cpp",
+    "input": "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66",
+    "output": "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66"
+    ]
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/botmgr.cpp",
+    "input": "9163f989ec1dc4f831f02855c8b5bd9fd5184f324271af0bd7be4779127b8c04",
+    "output": "9163f989ec1dc4f831f02855c8b5bd9fd5184f324271af0bd7be4779127b8c04",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "9163f989ec1dc4f831f02855c8b5bd9fd5184f324271af0bd7be4779127b8c04"
+    ]
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/bot_ai.cpp",
+    "input": "ae842f6282b28b9e05f37de934e440174c36c55c20d19c7537b0ab81cb9f823e",
+    "output": "ae842f6282b28b9e05f37de934e440174c36c55c20d19c7537b0ab81cb9f823e",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "ae842f6282b28b9e05f37de934e440174c36c55c20d19c7537b0ab81cb9f823e"
+    ]
+  },
+  {
+    "path": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+    "input": "7236a3cbd91d2c94ed54e62b7b1eaf1c16451213dce3e377b132b280309fa167",
+    "output": "2e108aa576dc1748965a9b45aaa51719b3dda9cc617aa8b086667ec9e43da185",
+    "changed": true,
+    "accepted_prior_hashes": [
+      "2cb00b9b8611fe09770cbb642e4aea6d8253049640fa3c3f3a0757ca414dea81",
+      "3824060c74ee53436db6b5de99bee94566f4f625ddd8f9e8e923036996638ad4",
+      "38cb7abc479652ca89774035d0c8be5c687db819d6dc9599662423805f30493e",
+      "537b86833ff44a16f39f2290e57088079ec9b345198e6fd3a0190f93e324335c",
+      "543408d59acce5d32baa3b97f78a2cbbf5198bc9ccb0bc521595c067040bf365",
+      "7236a3cbd91d2c94ed54e62b7b1eaf1c16451213dce3e377b132b280309fa167",
+      "81ec390ea955ebf02c7ad6401c9f298b70c1770193abc2093d38e702a2a7ea7b",
+      "ae1083a815e8e2d8cb882607d6cc0ea64c395a7753fc5048cd378518e4eb28c7",
+      "daa285e981b3474e990869828c6ac34ca39ba40e7aaac5c223d365226e5b9fea",
+      "db12e878420372b743f58b7258c3eac749227732bbbab89ee0bb12e15f919521",
+      "fb7fad9769325bd37a833e6a7a19272699ed9e90d9a72aac6bdc95a2fc0b8d53"
+    ]
+  },
+  {
+    "path": "src/server/game/Entities/Unit/Unit.cpp",
+    "input": "77d597d9fa2686bf4a79ced19077fd01735561ca8c4a2662c615b84c5948b16e",
+    "output": "77d597d9fa2686bf4a79ced19077fd01735561ca8c4a2662c615b84c5948b16e",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "77d597d9fa2686bf4a79ced19077fd01735561ca8c4a2662c615b84c5948b16e"
+    ]
+  },
+  {
+    "path": "src/server/game/Spells/Auras/SpellAuraEffects.cpp",
+    "input": "fac604bdf1fa78230426de9b895e4fba63c2752cd22abefc1d24ee7c6af5b804",
+    "output": "fac604bdf1fa78230426de9b895e4fba63c2752cd22abefc1d24ee7c6af5b804",
+    "changed": false,
+    "accepted_prior_hashes": [
+      "bf7e3e5ac1b1227cff97a6b8627323a26249ddea1e8a92a81a15fa47e557443b",
+      "fac604bdf1fa78230426de9b895e4fba63c2752cd22abefc1d24ee7c6af5b804"
+    ]
+  }
+]
