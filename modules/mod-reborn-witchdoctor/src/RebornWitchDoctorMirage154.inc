@@ -1,3 +1,4 @@
+#include "RebornWitchDoctorNpcSurvival3.h"
 // WD154: Mirage, Senjin Swiftness / Wisdom (authored choice627411).
 namespace WD154
 {
@@ -9,8 +10,8 @@ constexpr char Key[]="RebornWD154.Mirage";
 struct State:DataMap::Base {ObjectGuid clone;};
 constexpr uint32 Cooldown(bool swift){return swift?120000u:180000u;}
 constexpr uint32 Duration(bool wisdom){return wisdom?40000u:20000u;}
-bool Owns(Player* p,uint32 id){return IsDoctor(p)&&p->IsAlive()&&p->HasSpell(id);}
-void Clear(Player* p){auto* s=p->CustomData.Get<State>(Key);if(!s)return;ObjectGuid id=s->clone;s->clone.Clear();if(p->IsInWorld())if(Creature* c=ObjectAccessor::GetCreature(*p,id))if(c->GetEntry()==Entry&&c->GetOwnerGUID()==p->GetGUID())c->DespawnOrUnsummon();}
+bool Owns(Unit* u,uint32 id){if(!u)return false;if(auto*p=u->ToPlayer())return IsDoctor(p)&&p->IsAlive()&&p->HasSpell(id);return WDN3A::Known(u->ToCreature(),id);}
+void Clear(Unit* p){auto* s=p->CustomData.Get<State>(Key);if(!s)return;ObjectGuid id=s->clone;s->clone.Clear();if(p->IsInWorld())if(Creature* c=ObjectAccessor::GetCreature(*p,id))if(c->GetEntry()==Entry&&c->GetOwnerGUID()==p->GetGUID())c->DespawnOrUnsummon();}
 class modifiers:public GlobalScript
 {
 public:modifiers():GlobalScript("reborn_wd154_modifiers"){}
@@ -20,27 +21,27 @@ bool OnIsAffectedBySpellModCheck(SpellInfo const*,SpellInfo const* check,SpellMo
 class cast:public SpellScript
 {
 PrepareSpellScript(cast);
-SpellCastResult Check(){Player* p=GetCaster()->ToPlayer();return Owns(p,Mirage)&&p->GetLevel()>=10?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;}
-void Done(){Player* p=GetCaster()->ToPlayer();if(!Owns(p,Mirage))return;for(uint32 i=0;i<5;++i)p->CastSpell(p,WD87A::Spirit,true);WD87A::Sync(p);}
+SpellCastResult Check(){Unit* p=GetCaster();return Owns(p,Mirage)&&p->GetLevel()>=10?SPELL_CAST_OK:SPELL_FAILED_CASTER_AURASTATE;}
+void Done(){Unit*p=GetCaster();if(!Owns(p,Mirage))return;for(uint32 i=0;i<5;++i)p->CastSpell(p,WD87A::Spirit,true);if(auto*player=p->ToPlayer())WD87A::Sync(player);}
 void Register()override{OnCheckCast+=SpellCheckCastFn(cast::Check);AfterCast+=SpellCastFn(cast::Done);}
 };
 class aura:public AuraScript
 {
 PrepareAuraScript(aura);
  bool automatic=false;
- bool Load()override{Unit* owner=GetUnitOwner();automatic=WD168::IsAutomaticCast(owner?owner->ToPlayer():nullptr,Mirage);return true;}
-void Apply(AuraEffect const*,AuraEffectHandleModes){Player* p=GetTarget()->ToPlayer();if(!Owns(p,Mirage)||GetCasterGUID()!=p->GetGUID())return;
+ bool Load()override{Unit* owner=GetUnitOwner();automatic=WD168::IsAutomaticCast(owner?owner->ToPlayer():nullptr,Mirage)||WDN1::Actor(owner);return true;}
+void Apply(AuraEffect const*,AuraEffectHandleModes){Unit* p=GetTarget();if(!Owns(p,Mirage)||GetCasterGUID()!=p->GetGUID())return;
  if(!p->IsInWorld())return;
  p->CastSpell(p,Speed,true);if(Aura* speed=p->GetAura(Speed,p->GetGUID())){speed->SetMaxDuration(GetMaxDuration());speed->SetDuration(GetDuration());}
- CloneScope origin(automatic?p:nullptr);
+ CloneScope origin(automatic?p->ToPlayer():nullptr);
  if(TempSummon* c=p->SummonCreature(Entry,p->GetPosition(),TEMPSUMMON_TIMED_DESPAWN,std::max(1,GetDuration()))){Clear(p);p->CustomData.GetDefault<State>(Key)->clone=c->GetGUID();}
 }
-void Remove(AuraEffect const*,AuraEffectHandleModes){if(Unit* u=GetTarget())u->RemoveAurasDueToSpell(Speed,GetCasterGUID());}
-void Tick(AuraEffect const*){PreventDefaultAction();Player* p=GetTarget()->ToPlayer();if(!Owns(p,Mirage)||GetCasterGUID()!=p->GetGUID())return;
+void Remove(AuraEffect const*,AuraEffectHandleModes){if(Unit*u=GetTarget()){u->RemoveAurasDueToSpell(Speed,GetCasterGUID());if(u->ToCreature())Clear(u);}}
+void Tick(AuraEffect const*){PreventDefaultAction();Unit* p=GetTarget();if(!Owns(p,Mirage)||GetCasterGUID()!=p->GetGUID())return;
  std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(p,100.0f);Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(p,units,check);Cell::VisitObjects(p,search,100.0f);
  for(Unit* u:units)if(u&&p->IsInMap(u)&&p->InSamePhase(u)&&u->CanHaveThreatList())u->GetThreatMgr().ModifyThreatByPercent(p,-20);
 }
-bool Check(ProcEventInfo& e){Player* p=GetTarget()->ToPlayer();auto* spell=e.GetProcSpell();auto* info=e.GetSpellInfo();
+bool Check(ProcEventInfo& e){Unit* p=GetTarget();auto* spell=e.GetProcSpell();auto* info=e.GetSpellInfo();
  if(!Owns(p,Mirage)||e.GetActor()!=p||GetCasterGUID()!=p->GetGUID()||(e.GetTypeMask()&PROC_FLAG_DONE_PERIODIC)|| (spell&&spell->IsTriggered())|| (info&&info->Id==WD87A::Spirit))return false;
  return (e.GetDamageInfo()&&e.GetDamageInfo()->GetDamage()>0)||(e.GetHealInfo()&&e.GetHealInfo()->GetEffectiveHeal()>0);
 }
@@ -54,14 +55,14 @@ struct AI:ScriptedAI
 {
 ObjectGuid owner;explicit AI(Creature* c):ScriptedAI(c){me->SetReactState(REACT_PASSIVE);me->SetCombatMovement(false);}
 void AttackStart(Unit*)override{}
-void IsSummonedBy(WorldObject* summoner)override{Player* p=summoner?summoner->ToPlayer():nullptr;if(!Owns(p,Mirage)){me->DespawnOrUnsummon();return;}
+void IsSummonedBy(WorldObject* summoner)override{Unit* p=summoner?summoner->ToUnit():nullptr;if(!Owns(p,Mirage)){me->DespawnOrUnsummon();return;}
  owner=p->GetGUID();me->SetOwnerGUID(owner);me->SetCreatorGUID(owner);me->SetFaction(p->GetFaction());me->SetLevel(p->GetLevel());me->SetMaxHealth(std::max(5u,uint32(p->GetLevel())*10));me->SetHealth(me->GetMaxHealth());
  me->SetUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED);me->m_ControlledByPlayer=true;
- for(uint32 i=0;i<3;++i)me->SetVirtualItem(i,p->GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID+(EQUIPMENT_SLOT_MAINHAND+i)*2));
+ for(uint32 i=0;i<3;++i)me->SetVirtualItem(i,p->GetUInt32Value(p->ToPlayer()?PLAYER_VISIBLE_ITEM_1_ENTRYID+(EQUIPMENT_SLOT_MAINHAND+i)*2:UNIT_VIRTUAL_ITEM_SLOT_ID+i));
  me->SetByteValue(UNIT_FIELD_BYTES_2,0,p->GetByteValue(UNIT_FIELD_BYTES_2,0));me->SetByteValue(UNIT_FIELD_BYTES_2,1,p->GetByteValue(UNIT_FIELD_BYTES_2,1));
- me->SetDisplayId(p->GetDisplayId());p->CastSpell(me,Clone,true);me->SetWalk(false);if(automaticCloneOwner==p)return;Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,25.0f,0.f);me->GetMotionMaster()->MovePoint(1,pos);
+ me->SetDisplayId(p->GetDisplayId());p->CastSpell(me,Clone,true);me->SetWalk(false);if(automaticCloneOwner==p||WDN1::Actor(p))return;Position pos=p->GetPosition();p->MovePositionToFirstCollision(pos,25.0f,0.f);me->GetMotionMaster()->MovePoint(1,pos);
 }
-void UpdateAI(uint32)override{Player* p=ObjectAccessor::GetPlayer(*me,owner);if(!Owns(p,Mirage)||!p->IsInMap(me)||!p->InSamePhase(me)||p->CustomData.GetDefault<State>(Key)->clone!=me->GetGUID())me->DespawnOrUnsummon();}
+void UpdateAI(uint32)override{Unit* p=ObjectAccessor::GetUnit(*me,owner);if(!Owns(p,Mirage)||!p->IsInMap(me)||!p->InSamePhase(me)||p->CustomData.GetDefault<State>(Key)->clone!=me->GetGUID())me->DespawnOrUnsummon();}
 };
 CreatureAI* GetAI(Creature* c)const override{return new AI(c);}
 };

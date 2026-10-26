@@ -4,6 +4,7 @@
 #include "Spell.h"
 #include "SpellMgr.h"
 #include "Log.h"
+#include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcSurvival3.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewEcho2.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h"
@@ -19,7 +20,7 @@ namespace
 {
 constexpr uint32 Wrath=9003100,Brew=9003101,Vigil=9003855;
 constexpr uint32 Arrow=9003970, Reclamation=9003980, Eclipse=9004000, Glaive=9004030;
-std::vector<uint32> const supportSpells={WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
+std::vector<uint32> const supportSpells={WDN3A::Death,WDN3A::Slither,WDN3A::Mirage,WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
 std::vector<uint32> const healingSpells={WDN2P::Splash,WDN2P::Toss,WDN2P::Prep,Brew,WDN1C::Healing};
 std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN2B::SpellId,WDN2C::SpellId};
 }
@@ -36,6 +37,8 @@ public:
 
     struct witch_doctor_botAI : public bot_ai
     {
+        WDN3A::State survival;
+        uint32 utilityDelay=0,pullMoveDelay=0,survivalLogDelay=0,recentHostileDamage=0;
         bool preferWrath=false;
         uint32 spiritOwner=0,spiritMap=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
         void Trace(char const* reason,uint32 spell=0,int32 result=0)
@@ -45,16 +48,16 @@ public:
             if(!me->IsInCombat()&&!(owner&&owner->IsInCombat())&&
                !IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL))return;
             diagnosticTimer=10000;
-            LOG_ERROR("npcbots", "[WDN1D3] entry={} owner={} gate={} spell={} result={} commands={} mana={}/{} arrow={} reclaim={}",
+            LOG_ERROR("server", "[WDN3E combat] entry={} owner={} gate={} spell={} result={} commands={} mana={}/{} arrow={} reclaim={} roles={} pull={} utilityMs={} wardKnown={} wardReady={} wardCheck={}",
                 me->GetEntry(),GetBotOwnerGuid(),reason,spell,result,GetBotCommandState(),
-                me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation));
+                me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation),GetBotRoles(),IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL),utilityDelay,WDN1C::Known(me),IsSpellReady(WDN1C::SpellId,0),WDN1C::Known(me)?int32(CheckBotCast(me,WDN1C::SpellId)):-1);
         }
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
-        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("npcbots", "[WDN1D3] initialized entry={}",me->GetEntry()); }
+        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN3E] initialized entry={}",me->GetEntry()); }
 
-        void Reset() override { allyBrewRetry=brewingRetry=0; healingReserve=false;preferWrath=false; hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0; WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
+        void Reset() override { pullMoveDelay=survivalLogDelay=recentHostileDamage=0;utilityDelay=0;survival.Clear(me); allyBrewRetry=brewingRetry=0; healingReserve=false;preferWrath=false; hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0; WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
         void JustDied(Unit* killer) override
-        { WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());bot_ai::JustDied(killer); }
+        { pullMoveDelay=survivalLogDelay=recentHostileDamage=0;utilityDelay=0;survival.Clear(me);WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());bot_ai::JustDied(killer); }
         void InitPowers() override { me->SetPowerType(POWER_MANA);bot_ai::InitPowers(); }
         void ApplyClassPassives() const override { } // No Hunter or Player talent inheritance.
 
@@ -68,6 +71,12 @@ public:
         }
         void InitSpells() override
         {
+            for(uint32 id:{WDN3A::Death,WDN3A::Slither,WDN3A::Mirage})
+            {
+                InitSpellMap(id,true,false);auto*info=sSpellMgr->GetSpellInfo(id);
+                auto const&spells=GetSpellMap();auto it=spells.find(id);
+                if(it!=spells.end()&&it->second)it->second->spellId=info&&me->GetLevel()>=info->SpellLevel?id:0;
+            }
             InitSpellMap(WDN2P::Thistle,true,false);
             auto*thistleInfo=sSpellMgr->GetSpellInfo(WDN2P::Thistle);auto const&thistleMap=GetSpellMap();auto thistle=thistleMap.find(WDN2P::Thistle);
             if(thistle!=thistleMap.end()&&thistle->second)thistle->second->spellId=thistleInfo&&me->GetLevel()>=thistleInfo->SpellLevel?WDN2P::Thistle:0;
@@ -166,7 +175,12 @@ public:
             uint32 preferred=target->IsNonMeleeSpellCast(false,false,true)?WDN2::Lethargy:WDN2::Shrinking;
             if(!GetSpell(preferred)||!WDN2::Known(me,GetSpell(preferred)))
                 preferred=preferred==WDN2::Shrinking?WDN2::Lethargy:WDN2::Shrinking;
-            return CastDebuff(target,preferred,diff,jinxRetry);
+            if(CastDebuff(target,preferred,diff,jinxRetry))return true;
+            uint32 alternative=preferred==WDN2::Shrinking?WDN2::Lethargy:WDN2::Shrinking;
+            uint32 fallbackRetry=0;
+            bool cast=CastDebuff(target,alternative,diff,fallbackRetry);
+            jinxRetry=std::max(jinxRetry,fallbackRetry);
+            return cast;
         }
         bool TryCursedEffigy(Unit*target,uint32 diff)
         {
@@ -189,7 +203,7 @@ public:
         }
         bool TryGravenEffigy(Unit*target,uint32 diff)
         {
-            if(gravenRetry||!WDN2E::CanPlace(me,WDN2E::Graven)||!IsSpellReady(WDN2E::Graven,diff)||
+            if(utilityDelay||gravenRetry||!WDN2E::CanPlace(me,WDN2E::Graven)||!IsSpellReady(WDN2E::Graven,diff)||
                !WDN1::Safe(me,target)||!me->IsWithinDistInMap(target,28.f)||
                !target->HasAuraType(SPELL_AURA_MOD_DECREASE_SPEED)||
                uint64(me->GetPower(POWER_MANA))*100<uint64(me->GetMaxPower(POWER_MANA))*35)return false;
@@ -198,7 +212,7 @@ public:
         }
         bool TryShadowEffigy(Unit*target,uint32 diff)
         {
-            if(effigyRetry||!WDN2E::Known(me)||WDN2E::Current(me)||!IsSpellReady(WDN2E::SpellId,diff)||
+            if(utilityDelay||effigyRetry||!WDN2E::Known(me)||WDN2E::Current(me)||!IsSpellReady(WDN2E::SpellId,diff)||
                !WDN1::Safe(me,target)||!me->IsWithinDistInMap(target,28.f)||
                uint64(me->GetPower(POWER_MANA))*100<uint64(me->GetMaxPower(POWER_MANA))*35)return false;
             effigyRetry=2000;
@@ -213,14 +227,14 @@ public:
         }
         bool TrySereneIdol(uint32 diff)
         {
-            if(sereneRetry||IsCasting()||!IsSpellReady(WDN2D::Serene,diff)||
+            if(utilityDelay||sereneRetry||IsCasting()||!IsSpellReady(WDN2D::Serene,diff)||
                uint64(me->GetPower(POWER_MANA))*100<uint64(me->GetMaxPower(POWER_MANA))*40)return false;
             sereneRetry=2000;if(!WDN2D::SereneNeeded(me))return false;
             return CheckBotCast(me,WDN2D::Serene)==SPELL_CAST_OK&&bot_ai::doCast(me,WDN2D::Serene);
         }
         bool TrySwiftIdol(uint32 diff)
         {
-            if(swiftRetry||IsCasting()||!IsSpellReady(WDN2D::Swift,diff)||
+            if(utilityDelay||swiftRetry||IsCasting()||!IsSpellReady(WDN2D::Swift,diff)||
                uint64(me->GetPower(POWER_MANA))*100<uint64(me->GetMaxPower(POWER_MANA))*50)return false;
             swiftRetry=2000;if(!WDN2D::SwiftNeeded(me))return false;
             return CheckBotCast(me,WDN2D::Swift)==SPELL_CAST_OK&&bot_ai::doCast(me,WDN2D::Swift);
@@ -314,7 +328,7 @@ public:
         }
         bool TryMimic(Unit* target,uint32 diff)
         {
-            if(mimicRetry||!WDN2C::Known(me)||WDN2C::Current(me)||!IsSpellReady(WDN2C::SpellId,diff)||
+            if(utilityDelay||mimicRetry||!WDN2C::Known(me)||WDN2C::Current(me)||!IsSpellReady(WDN2C::SpellId,diff)||
                !WDN1::Safe(me,target)||!me->IsWithinDistInMap(target,28.f)||
                uint64(me->GetPower(POWER_MANA))*100<uint64(me->GetMaxPower(POWER_MANA))*40||target->GetHealthPct()<=40.f)return false;
             if(!GetSpell(Wrath)&&!GetSpell(Arrow)&&!GetSpell(Reclamation))return false;
@@ -323,7 +337,7 @@ public:
         }
         bool TryMassWards(Unit* target,uint32 diff)
         {
-            if(massRetry||!WDN2B::Known(me)||WDN2B::Active(me)||!IsSpellReady(WDN2B::SpellId,diff)||
+            if(utilityDelay||massRetry||!WDN2B::Known(me)||WDN2B::Active(me)||!IsSpellReady(WDN2B::SpellId,diff)||
                !WDN1::Safe(me,target)||!me->IsWithinDistInMap(target,25.f)||
                uint64(me->GetPower(POWER_MANA))*100<uint64(me->GetMaxPower(POWER_MANA))*45)return false;
             massRetry=2000; // Bound nearby scans and rejected-cast retries.
@@ -367,8 +381,20 @@ public:
             // The native autorepeat timer fires subsequent arrows; never re-cast it every AI tick.
             CastOffensive(target,WDN1::AutoShot);
         }
+        static bool IsScheduledUtility(uint32 id)
+        {
+            return id==WDN2D::Serene||id==WDN2D::Swift||id==WDN2E::Graven||id==WDN2E::SpellId||
+                id==WDN2B::SpellId||id==WDN2C::SpellId||id==WDN1C::SpellId;
+        }
         void OnClassSpellGo(SpellInfo const* info) override
         {
+            // Arm only on successful spell-go; failed attempts leave the damage rotation available.
+            if(IsScheduledUtility(info->Id))utilityDelay=4000;
+            if(WDN3A::Defensive(info->Id))
+            {
+                uint32 cooldown=info->GetRecoveryTime();ApplyBotSpellCooldownMods(info,cooldown);
+                SetSpellCooldown(info->Id,cooldown);survival.Begin(me,info->Id);return;
+            }
             // Explicit private rank families need a stable cooldown key even on
             // databases without the optional spell_chain rows for these ranks.
             if(uint32 brewingBase=WDN2P::Base(info->Id))
@@ -383,13 +409,69 @@ public:
                 SetSpellCooldown(base,cooldown);
             }
         }
+        // Mirror the native Hunter/Shaman response, without enabling healer damage or breaking escape.
+        void DamageTaken(Unit* attacker,uint32& damage,DamageEffectType,SpellSchoolMask) override
+        {
+            if(!WDN1::Actor(me)||!attacker||attacker==me||!attacker->IsAlive()||!attacker->IsInWorld()||
+                !me->IsInMap(attacker)||!me->InSamePhase(attacker)||!me->IsValidAttackTarget(attacker))return;
+            if(damage)recentHostileDamage=4000;
+            if(HasRole(NPC_BOT_ROLE_DPS)&&WDN1::Safe(me,attacker))OnOwnerDamagedBy(attacker);
+        }
+        void OwnerAttackedBy(Unit* attacker) override
+        {
+            if(HasRole(NPC_BOT_ROLE_DPS)&&WDN1::Safe(me,attacker))OnOwnerDamagedBy(attacker);
+        }
+        int32 DefenseStatus(uint32 spell,uint32 diff)
+        {
+            if(!WDN3A::Known(me,spell))return -1;
+            if(!IsSpellReady(spell,diff))return -2;
+            return int32(CheckBotCast(me,spell));
+        }
+        void TraceSurvival(char const* gate,uint32 spell=0,int32 result=0)
+        {
+            if(survivalLogDelay||!WDN1::Actor(me)||!me->IsInCombat()||me->GetHealthPct()>40.f)return;
+            survivalLogDelay=3000;
+            LOG_ERROR("server", "[WDN3E] entry={} owner={} gate={} hp={} recentDamageMs={} roles={} commands={} casting={} attackers={} hold={} death={} slither={} mirage={} spell={} result={} defenseStatus(D/S/M)={}/{}/{} mana={}/{}",
+                me->GetEntry(),GetBotOwnerGuid(),gate,me->GetHealthPct(),recentHostileDamage,GetBotRoles(),GetBotCommandState(),IsCasting(),me->getAttackers().size(),survival.spell,
+                me->HasAura(WDN3A::Death,me->GetGUID()),me->HasAura(WDN3A::Slither,me->GetGUID()),me->HasAura(WDN3A::Mirage,me->GetGUID()),spell,result,DefenseStatus(WDN3A::Death,0),DefenseStatus(WDN3A::Slither,0),DefenseStatus(WDN3A::Mirage,0),me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA));
+        }
+        bool TrySurvival(uint32 diff)
+        {
+            if(JumpingOrFalling()||IsDuringTeleport()){TraceSurvival("movement");return false;}
+            if(IsCasting()&&me->GetHealthPct()>25.f){TraceSurvival("casting");return false;}
+            std::vector<uint32> attempted;
+            for(uint32 attempt=0;attempt<3;++attempt)
+            {
+                uint32 rejectedSpell=0;int32 rejected=0;
+                uint32 id=WDN3A::Choose(me,[&](uint32 spell){
+                    if(std::find(attempted.begin(),attempted.end(),spell)!=attempted.end())return false;
+                    rejectedSpell=spell;
+                    rejected=DefenseStatus(spell,diff);return rejected==SPELL_CAST_OK;
+                },recentHostileDamage!=0);
+                if(!id){TraceSurvival("no-eligible-defense",rejectedSpell,rejected);return false;}
+                // At critical health interrupt the current cast only after a defense is eligible.
+                // Native GCD, spell costs, cooldowns and the final doCast checks remain in force.
+                if(IsCasting())me->InterruptNonMeleeSpells(false);
+                if(bot_ai::doCast(me,id)){TraceSurvival("defense-started",id);return true;}
+                attempted.push_back(id);
+            }
+            TraceSurvival("all-defense-casts-rejected");return false;
+        }
         void UpdateAI(uint32 diff) override
         {
+            recentHostileDamage=recentHostileDamage>diff?recentHostileDamage-diff:0;
+            pullMoveDelay=pullMoveDelay>diff?pullMoveDelay-diff:0;
+            survivalLogDelay=survivalLogDelay>diff?survivalLogDelay-diff:0;
+            utilityDelay=utilityDelay>diff?utilityDelay-diff:0;
+            if(IsDuringTeleport())survival.Clear(me);
+            // Before GlobalUpdate/CheckAttackTarget: both may move or acquire targets.
+            // CommonTimers is driven by Creature::Update, so native cooldowns keep ticking during holds.
+            if(survival.Hold(me,diff)){TraceSurvival("defensive-hold");opponent=nullptr;disttarget=nullptr;return;}
             if(spiritOwner!=GetBotOwnerGuid()||spiritMap!=me->GetMapId())
             {
                 me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());
                 WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);
-                spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();
+                recentHostileDamage=0;utilityDelay=0;spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();
             }
             hexEffigyRetry=hexEffigyRetry>diff?hexEffigyRetry-diff:0;gravenRetry=gravenRetry>diff?gravenRetry-diff:0;cursedRetry=cursedRetry>diff?cursedRetry-diff:0;swiftRetry=swiftRetry>diff?swiftRetry-diff:0;sereneRetry=sereneRetry>diff?sereneRetry-diff:0;
             allyBrewRetry=allyBrewRetry>diff?allyBrewRetry-diff:0;
@@ -418,11 +500,13 @@ public:
                 if(me->GetVictim())me->AttackStop();
                 opponent=nullptr;disttarget=nullptr;
             }
-            if(!GlobalUpdate(diff)){Trace("global-update");return;}
+            if(!GlobalUpdate(diff)){TraceSurvival("global-update");Trace("global-update");return;}
             if(IAmFree()||!WDN1::Actor(me))
             { me->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());return; }
             DoVehicleActions(diff);
-            if(!CanBotAttackOnVehicle()||ProcessImmediateNonAttackTarget()){Trace("vehicle-or-immediate");return;}
+            if(!CanBotAttackOnVehicle()){TraceSurvival("vehicle");return;}
+            if(TrySurvival(diff))return;
+            if(ProcessImmediateNonAttackTarget()){TraceSurvival("immediate-action");Trace("vehicle-or-immediate");return;}
             bool const reserveHealingMana=ReserveHealingMana();
             if(TryVoodoo(diff))return;
             if(TryVigil(diff))return;
@@ -432,9 +516,12 @@ public:
             if(reserveHealingMana&&TryManaIdol(diff))return;
             if(TryHealingWard(diff))return;
             if(TryManaIdol(diff))return;
-            if(TrySereneIdol(diff))return;
-            if(TrySwiftIdol(diff))return;
-            if(!HasRole(NPC_BOT_ROLE_DPS)){Trace("support-only");return;}
+            if(!HasRole(NPC_BOT_ROLE_DPS))
+            {
+                if(TrySereneIdol(diff))return;
+                if(TrySwiftIdol(diff))return;
+                Trace("support-only");return;
+            }
             if(!CheckAttackTarget())
             { Trace("no-native-target");me->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);return; }
             Unit* target=opponent?opponent:disttarget;
@@ -445,29 +532,45 @@ public:
             bot_ai::StartAttack(target,false);
             bool pulling=IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL,0,target->GetGUID());
             SpellInfo const* opener=sSpellMgr->GetSpellInfo(GetSpell(Arrow));
-            bool pullInRange=pulling&&opener&&WDN1::Safe(me,target)&&
+            bool pullInRange=pulling&&HasRole(NPC_BOT_ROLE_RANGED)&&opener&&WDN1::Safe(me,target)&&
                 me->GetDistance(target)>opener->GetMinRange(false)&&
                 me->GetDistance(target)<=CalcSpellMaxRange(GetSpell(Arrow));
             if(pullInRange)
             {
                 // A pull needs one settled first shot, not a new random attack point each tick.
                 if(!JumpingOrFalling()&&me->isMoving())me->BotStopMovement();
+                if(me->GetVictim()!=target)me->Attack(target,!HasRole(NPC_BOT_ROLE_RANGED));
+                pullMoveDelay=0;
             }
-            else GetInPosition(pulling&&!me->isMoving(),target); // Keep native STAY/positioning checks.
+            else if(pulling)
+            {
+                // Force acquisition even when the current movement is following the owner.
+                // Native GetInPosition still enforces STAY, CC and positioning permissions.
+                if(!pullMoveDelay){GetInPosition(true,target);pullMoveDelay=750;}
+            }
+            else {pullMoveDelay=0;GetInPosition(false,target);} // Keep native STAY/positioning checks.
             if(!WDN1::Safe(me,target)){Trace("unsafe-target");return;}
+            // A melee pull must reach contact: ranged casts stop the native chase before the first hit.
+            if(pulling&&!HasRole(NPC_BOT_ROLE_RANGED)&&!me->IsWithinMeleeRange(target))return;
+            // Native melee swing checks were missing for the non-ranged DPS branch.
+            if(!HasRole(NPC_BOT_ROLE_RANGED))CheckAttackState();
+            if(!me->IsAlive()||!target->IsAlive())return;
             // Native doCast handles movement/real cast time; do not suppress instant spells.
             KeepAutoShot(target);
             if(reserveHealingMana){Trace("healing-mana-reserve");return;}
             if(!pulling&&TryCursedEffigy(target,diff))return;
             if(!pulling&&TryHexingEffigy(target,diff))return;
-            if(!pulling&&TryGravenEffigy(target,diff))return;
-            if(!pulling&&TryShadowEffigy(target,diff))return;
-            if(!pulling&&TryMassWards(target,diff))return;
-            if(!pulling&&TryMimic(target,diff))return;
+            // Establish Hex/Jinx first; then favor actual combat summons over optional effigies.
             if(!pulling&&MaintainDebuffs(target,diff))return;
-            if(!pulling&&me->IsWithinDistInMap(target,28.0f)&&
+            if(!pulling&&TryMassWards(target,diff))return;
+            if(!pulling&&!utilityDelay&&me->IsWithinDistInMap(target,28.0f)&&
                WDN1C::Known(me)&&!WDN1C::Current(me)&&IsSpellReady(WDN1C::SpellId,diff)&&
                CheckBotCast(me,WDN1C::SpellId)==SPELL_CAST_OK&&bot_ai::doCast(me,WDN1C::SpellId))return;
+            if(!pulling&&TryMimic(target,diff))return;
+            if(!pulling&&TryGravenEffigy(target,diff))return;
+            if(!pulling&&TryShadowEffigy(target,diff))return;
+            if(!pulling&&TrySereneIdol(diff))return;
+            if(!pulling&&TrySwiftIdol(diff))return;
             if(!pulling&&WDN2C::Current(me)&&IsSpellReady(Wrath,diff)&&CastOffensive(target,Wrath))return;
             if(!pulling&&preferWrath&&IsSpellReady(Wrath,diff)&&CastOffensive(target,Wrath)){preferWrath=false;return;}
             if(WDN1::Count(me)<5&&IsSpellReady(Reclamation,diff)&&CastOffensive(target,Reclamation)){preferWrath=true;return;}

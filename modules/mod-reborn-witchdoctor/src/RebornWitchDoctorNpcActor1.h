@@ -65,8 +65,15 @@ inline bool Engaged(Unit* u,Unit* t)
  auto* teammate=victim->ToCreature();
  return teammate&&teammate->IsNPCBot()&&c->GetBotGroup()&&teammate->GetBotGroup()==c->GetBotGroup();
 }
+// WDN3C: offensive summon callbacks also run while their owner is escaping.
+// Read live self-owned auras; no cached target/state and no forced summon removal.
+inline bool Escaping(Creature* c)
+{
+ return c&&(c->HasAura(9003853,c->GetGUID())||c->HasAura(9003859,c->GetGUID())||
+  c->HasAura(9004110,c->GetGUID()));
+}
 inline bool Safe(Unit* u,Unit* t)
-{auto* c=Actor(u);return c&&Engaged(c,t)&&c->IsWithinLOSInMap(t);}
+{auto* c=Actor(u);return c&&!Escaping(c)&&Engaged(c,t)&&c->IsWithinLOSInMap(t);}
 inline uint32 Count(Unit* u)
 {auto* a=u?u->GetAura(Spirit,u->GetGUID()):nullptr;return a?std::min<uint32>(5,a->GetStackAmount()):0;}
 }

@@ -3028,7 +3028,11 @@ void AuraEffect::HandleFeignDeath(AuraApplication const* aurApp, uint8 mode, boo
 
     Unit* target = aurApp->GetTarget();
 
-    if (!target->IsPlayer())
+    // WDN3A: only the recruited-class prototype's self Death Draught uses this path.
+    // Leave unrelated NPCs and every other spell unchanged.
+    bool const npcDraught = GetId() == 9003853 && target->IsNPCBot() &&
+        target->GetEntry() == 900260 && GetCasterGUID() == target->GetGUID();
+    if (!target->IsPlayer() && !npcDraught)
         return;
 
     if (Player* targetPlayer = target->ToPlayer())
@@ -3103,7 +3107,8 @@ void AuraEffect::HandleFeignDeath(AuraApplication const* aurApp, uint8 mode, boo
             if (target->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
             {
                 target->FinishSpell(CURRENT_AUTOREPEAT_SPELL);
-                target->ToPlayer()->SendAutoRepeatCancel(target);
+                if (Player* player = target->ToPlayer())
+                    player->SendAutoRepeatCancel(target);
             }
         }
 

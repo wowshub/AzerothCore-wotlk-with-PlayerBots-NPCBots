@@ -1,0 +1,11 @@
+{
+  "folder": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_214257_阶段WDN3E_NPC巫医近战开怪与受伤应战累计测试包",
+  "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261025\\codexfix_20261025_214257_阶段WDN3E_NPC巫医近战开怪与受伤应战累计测试包.zip",
+  "sha256": "b3ccf4d6ea214aaaccb9281e9734ae54a400d560c50ede21c3b29d592c34f4fd",
+  "source_count": 28,
+  "changed_source": 2,
+  "new_sql": false,
+  "new_data": false,
+  "includes_V_data": true,
+  "status": "WDN3D melee pull failure follow-up; game pending"
+}

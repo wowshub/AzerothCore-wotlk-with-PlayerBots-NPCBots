@@ -53,7 +53,7 @@ inline bool CanPlace(Creature*c,uint32 id)
 }
 inline bool ReactionTarget(Creature*c,Unit*t)
 {
- return WDN1::Actor(c)&&t&&t->IsAlive()&&t->IsInWorld()&&c->IsInMap(t)&&c->InSamePhase(t)&&c->IsValidAttackTarget(t)&&
+ return WDN1::Actor(c)&&!WDN1::Escaping(c)&&t&&t->IsAlive()&&t->IsInWorld()&&c->IsInMap(t)&&c->InSamePhase(t)&&c->IsValidAttackTarget(t)&&
   !t->HasBreakableByDamageCrowdControlAura()&&c->IsWithinLOSInMap(t);
 }
 inline void Queue(Creature*c,Unit*enemy)
@@ -90,7 +90,7 @@ inline void Update(Creature*effigy,ObjectGuid owner,uint32&timer,uint32&remainin
 {
  auto*c=ObjectAccessor::GetCreature(*effigy,owner);if(!c||Current(c)!=effigy){effigy->DespawnOrUnsummon();return;}
  if(diff>=remaining){Clear(c);return;}remaining-=diff;
- if(c->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION)){RemoveFields(c);c->CustomData.GetDefault<State>(Key)->pending.Clear();return;}
+ if(WDN1::Escaping(c)||c->GetBotAI()->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION)){RemoveFields(c);c->CustomData.GetDefault<State>(Key)->pending.Clear();return;}
  if(effigy->GetEntry()==HexEntry)
  {
   auto*s=c->CustomData.GetDefault<State>(Key);if(s->pending.IsEmpty())return;
