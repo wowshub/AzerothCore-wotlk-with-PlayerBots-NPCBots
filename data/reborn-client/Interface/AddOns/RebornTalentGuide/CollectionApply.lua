@@ -19,7 +19,7 @@ function S.CanApply(b,owner)
  if InCombatLockdown()or UnitIsDeadOrGhost('player')then return nil,'请脱战并复活后应用'end
  if owner and not owner:IsShown()then return nil,'请先打开收藏窗口'end
  if b.level>UnitLevel('player')then return nil,'角色等级低于此方案等级'end
- if P.job or RebornTalentGuideWarriorCollection.job or G.job or S.waiting then return nil,'已有应用任务，等待结束或先停止'end
+ if S.ActiveNativeJob() or G.job or S.waiting then return nil,'已有应用任务，等待结束或先停止'end
  local diff,err,current=S.Compare(b);if not current then return nil,err end
  for _,row in ipairs(diff)do if row.delta<0 then return nil,'需要移除已保存点数：'..row.name..'；请自行按原流程重置，不会代付费或洗点'end end
  local ctx={epoch=G.Lifecycle and G.Lifecycle.epoch or 0,guid=UnitGUID('player'),before=S.Fingerprint(current),current=current,diff=diff}

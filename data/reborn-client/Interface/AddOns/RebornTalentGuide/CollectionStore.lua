@@ -12,14 +12,14 @@ function S.DB()
 end
 -- Native class adapters share storage, never character-authoritative ranks.
 function S.NativeData(class)
- if class=='WARRIOR'then return RebornTalentGuideData elseif class=='PALADIN'then return PD end
+ if class=='WARRIOR'then return RebornTalentGuideData elseif class=='PALADIN'then return PD elseif class=='HUNTER'then return RebornTalentGuideHunterData end
 end
 function S.NativeEngine(class)
- if class=='WARRIOR'then return RebornTalentGuideWarriorCollection elseif class=='PALADIN'then return RebornTalentGuidePaladin end
+ if class=='WARRIOR'then return RebornTalentGuideWarriorCollection elseif class=='PALADIN'then return RebornTalentGuidePaladin elseif class=='HUNTER'then return RebornTalentGuideHunter end
 end
 function S.ActiveNativeJob()
  local R=RebornTalentGuideWarriorCollection;local P=RebornTalentGuidePaladin
- if R.job then return R.job,R elseif P.job then return P.job,P end
+ if R.job then return R.job,R elseif P.job then return P.job,P elseif RebornTalentGuideHunter and RebornTalentGuideHunter.job then return RebornTalentGuideHunter.job,RebornTalentGuideHunter end
 end
 function S.StopOwned(reason)
  local job,engine=S.ActiveNativeJob();local T=G.TalentCenter
@@ -92,6 +92,12 @@ function S.Capture(class)
  return b
 end
 function S.Recommendation(class)
+ if class=='HUNTER'then
+  local H=RebornTalentGuideHunter;local p,why=H.Build(H.selected or 1,H.previewCurrent~=false and UnitLevel('player')or H.previewLevel)
+  if not p then return nil,why end
+  local b=S.Blank(class,p.level);for t,tree in ipairs(RebornTalentGuideHunterData.trees)do for i,n in ipairs(tree)do if p.ranks[t][i]>0 then b.ranks[n.id]=p.ranks[t][i]end end end
+  return b,p.title
+ end
  local data=S.NativeData(class)
  if data then
   local p=data.plans[class=='WARRIOR'and G.selected or(RebornTalentGuidePaladin.selected or 1)];local b=S.Blank(class,80)

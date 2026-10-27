@@ -106,3 +106,6 @@ end
 local event=CreateFrame('Frame');event:RegisterEvent('CHARACTER_POINTS_CHANGED');event:RegisterEvent('PLAYER_TALENT_UPDATE');event:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED');event:RegisterEvent('PLAYER_REGEN_DISABLED');event:RegisterEvent('PLAYER_REGEN_ENABLED')
 event:SetScript('OnEvent',function()if A.frame and A.frame:IsShown()then A.Refresh()end end)
 
+
+-- TG24A: hunter uses the same three-column center and its canonical collection engine.
+A.Register('HUNTER',{Open=function()return G.TalentCenter.Open('recommend','HUNTER',RebornTalentGuideHunter.selected or 1)end})

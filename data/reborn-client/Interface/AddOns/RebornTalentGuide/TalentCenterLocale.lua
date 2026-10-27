@@ -3,10 +3,11 @@ local G=RebornTalentGuide
 local L={bindings={}};G.CenterLocale=L
 function L.English()return type(RebornTGViewSettings)=='table'and RebornTGViewSettings.centerLanguage=='enUS'end
 local dictionary={
+ ['编辑收藏']='Edit Favorite',['当前筛选暂无推荐方案。']='No builds match this filter.',['猎人参考方案；应用通过原生接口逐点确认，不自动洗点。']='Hunter reference builds. Each point requires native confirmation; no automatic reset.',
  ['天赋中心']='Talent Center',['推荐天赋']='Recommended Talents',['我的收藏']='My Favorites',
  ['选择职业']='Choose Class',['天赋加点']='Talent Builds',['我的天赋']='My Talents',
  ['战士']='Warrior',['圣骑士']='Paladin',['猎人']='Hunter',['潜行者']='Rogue',['牧师']='Priest',['死亡骑士']='Death Knight',['萨满']='Shaman',['法师']='Mage',['术士']='Warlock',['德鲁伊']='Druid',['恶魔猎手']='Demon Hunter',['武僧']='Monk',['巫医']='Witch Doctor',
- ['巫毒']='Voodoo',['酿造']='Brewing',['暗影狩猎']='Shadowhunting',['武器']='Arms',['狂怒']='Fury',['防护']='Protection',['神圣']='Holy',['惩戒']='Retribution',
+ ['巫毒']='Voodoo',['酿造']='Brewing',['暗影狩猎']='Shadowhunting',['武器']='Arms',['狂怒']='Fury',['防护']='Protection',['神圣']='Holy',['惩戒']='Retribution',['野兽控制']='Beast Mastery',['射击']='Marksmanship',['生存']='Survival',
  ['全部']='All',['练级']='Leveling',['当前等级']='Current Level',['当前天赋加点']='Current Talents',
  ['20级']='Lv. 20',['40级']='Lv. 40',['60级']='Lv. 60',['80级']='Lv. 80',
  ['保存当前的天赋加点']='Save Current Talents',['搜索收藏名称（包含匹配）']='Search by name',
@@ -132,6 +133,7 @@ local titles={['防护 · 副本承伤']='Protection - Dungeon Tank',['狂怒 ·
 function L.Plan(p,field)
  if not p then return''end
  if not L.English()then if field=='rotation'then return p.rotation or{}end;return p[field]or''end
+ if p[field..'EN']then return p[field..'EN']end
  local row=preset[p.title]
  if row then
   if field=='rotation'then return row[5]end
