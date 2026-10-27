@@ -59,7 +59,7 @@ function S.RecommendationProfile(class)
  local meta=S.Profile();local G=RebornTalentGuide
  if class=='WARRIOR'then local p=RebornTalentGuideData.plans[G.selected];meta.scene=p.category;meta.role=p.title:find('防护')and'坦克'or'输出'
  elseif class=='PALADIN'then local p=RebornTalentGuidePaladinData.plans[RebornTalentGuidePaladin.selected or 1];meta.scene=p.category or'PVE';meta.role=p.role or({'治疗','坦克','输出'})[p.spec or 1]
- elseif class=='HUNTER'or class=='ROGUE'then local p=S.NativeData(class).plans[S.NativeEngine(class).selected or 1];meta.scene=p.category;meta.role='输出'
+ elseif class=='HUNTER'or class=='ROGUE'or class=='PRIEST'then local p=S.NativeData(class).plans[S.NativeEngine(class).selected or 1];meta.scene=p.category;meta.role=p.role or'输出'
  elseif class=='WITCHDOCTOR'then local i=G.WD.selected or 1;meta.scene=i==1 and'练级'or'PVE';meta.role=i==4 and'支援'or'输出'end
  return meta
 end

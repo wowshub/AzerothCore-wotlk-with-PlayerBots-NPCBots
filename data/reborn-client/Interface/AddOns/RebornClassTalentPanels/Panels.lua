@@ -111,3 +111,5 @@ event:SetScript('OnEvent',function()if A.frame and A.frame:IsShown()then A.Refre
 A.Register('HUNTER',{Open=function()return G.TalentCenter.Open('recommend','HUNTER',RebornTalentGuideHunter.selected or 1)end})
 
 A.Register('ROGUE',{Open=function()return G.TalentCenter.Open('recommend','ROGUE',RebornTalentGuideRogue.selected or 1)end})
+
+A.Register('PRIEST',{Open=function()return G.TalentCenter.Open('recommend','PRIEST',RebornTalentGuidePriest.selected or 1)end})

@@ -12,14 +12,14 @@ function S.DB()
 end
 -- Native class adapters share storage, never character-authoritative ranks.
 function S.NativeData(class)
- if class=='WARRIOR'then return RebornTalentGuideData elseif class=='PALADIN'then return PD elseif class=='HUNTER'then return RebornTalentGuideHunterData elseif class=='ROGUE'then return RebornTalentGuideRogueData end
+ if class=='WARRIOR'then return RebornTalentGuideData elseif class=='PALADIN'then return PD elseif class=='HUNTER'then return RebornTalentGuideHunterData elseif class=='ROGUE'then return RebornTalentGuideRogueData elseif class=='PRIEST'then return RebornTalentGuidePriestData end
 end
 function S.NativeEngine(class)
- if class=='WARRIOR'then return RebornTalentGuideWarriorCollection elseif class=='PALADIN'then return RebornTalentGuidePaladin elseif class=='HUNTER'then return RebornTalentGuideHunter elseif class=='ROGUE'then return RebornTalentGuideRogue end
+ if class=='WARRIOR'then return RebornTalentGuideWarriorCollection elseif class=='PALADIN'then return RebornTalentGuidePaladin elseif class=='HUNTER'then return RebornTalentGuideHunter elseif class=='ROGUE'then return RebornTalentGuideRogue elseif class=='PRIEST'then return RebornTalentGuidePriest end
 end
 function S.ActiveNativeJob()
  local R=RebornTalentGuideWarriorCollection;local P=RebornTalentGuidePaladin
- if R.job then return R.job,R elseif P.job then return P.job,P elseif RebornTalentGuideHunter and RebornTalentGuideHunter.job then return RebornTalentGuideHunter.job,RebornTalentGuideHunter elseif RebornTalentGuideRogue and RebornTalentGuideRogue.job then return RebornTalentGuideRogue.job,RebornTalentGuideRogue end
+ if R.job then return R.job,R elseif P.job then return P.job,P elseif RebornTalentGuideHunter and RebornTalentGuideHunter.job then return RebornTalentGuideHunter.job,RebornTalentGuideHunter elseif RebornTalentGuideRogue and RebornTalentGuideRogue.job then return RebornTalentGuideRogue.job,RebornTalentGuideRogue elseif RebornTalentGuidePriest and RebornTalentGuidePriest.job then return RebornTalentGuidePriest.job,RebornTalentGuidePriest end
 end
 function S.StopOwned(reason)
  local job,engine=S.ActiveNativeJob();local T=G.TalentCenter
@@ -92,7 +92,7 @@ function S.Capture(class)
  return b
 end
 function S.Recommendation(class)
- if class=='HUNTER'or class=='ROGUE'then
+ if class=='HUNTER'or class=='ROGUE'or class=='PRIEST'then
   local H=S.NativeEngine(class);local p,why=H.Build(H.selected or 1,H.previewCurrent~=false and UnitLevel('player')or H.previewLevel)
   if not p then return nil,why end
   local b=S.Blank(class,p.level);for t,tree in ipairs(S.NativeData(class).trees)do for i,n in ipairs(tree)do if p.ranks[t][i]>0 then b.ranks[n.id]=p.ranks[t][i]end end end
