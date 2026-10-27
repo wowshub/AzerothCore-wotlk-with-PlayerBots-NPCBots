@@ -1,5 +1,5 @@
 local S=RebornTalentCollections;local G=RebornTalentGuide;local C=RebornTalentTreeCanvas;local W=RebornTalentPanelWindows;local PD=RebornTalentGuidePaladinData
-local classes={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',WITCHDOCTOR='巫医'};local specs={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
+local classes={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',WITCHDOCTOR='巫医'};local specs={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
 -- Self-contained controls: no three-slice template regions for skins to resize.
 local function button(parent,x,y,w,label,fn)
  return RebornTalentGuideTheme.Button(parent,x,y,w,25,label,fn)
@@ -86,7 +86,7 @@ local function paint()
  if data then
   local current=S.Capture(b.class)
   for t,tree in ipairs(data.trees)do
-   local board=S.boards[t];board.compactAE=false;board:Show();board:ClearAllPoints();board:SetPoint('TOPLEFT',S.frame,'TOPLEFT',240+(t-1)*254,-133);board:SetSize(248,480);board.canvas:SetSize(228,435);board.width=228;board.height=435;board.title:SetText((b.class=='HUNTER'and RebornTalentGuideHunterData.treeNames or b.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'})[t]);if b.class=='HUNTER'then if board.art then board.art:Hide()end;board:SetBackdropColor(.035,.09,.065,.8)elseif b.class=='WARRIOR'then C.WarriorArt(board,t)else C.Art(board,t)end
+   local board=S.boards[t];board.compactAE=false;board:Show();board:ClearAllPoints();board:SetPoint('TOPLEFT',S.frame,'TOPLEFT',240+(t-1)*254,-133);board:SetSize(248,480);board.canvas:SetSize(228,435);board.width=228;board.height=435;board.title:SetText(((b.class=='HUNTER'or b.class=='ROGUE')and S.NativeData(b.class).treeNames or b.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'})[t]);if b.class=='HUNTER'or b.class=='ROGUE'then if board.art then board.art:Hide()end;board:SetBackdropColor(.035,.09,.065,.8)elseif b.class=='WARRIOR'then C.WarriorArt(board,t)else C.Art(board,t)end
    local items,edges,ids={},{},{};for _,n in ipairs(tree)do ids[n.id]=true end
    for _,n in ipairs(tree)do
     local name,_,icon=GetSpellInfo(n.spells[1]);local item={id=n.id,x=28+(n.col-1)*53,y=20+(n.row-1)*35,size=30,icon=icon or n.icon,spell=n.spells[math.max(1,b.ranks[n.id]or 0)],name=name or n.name,target=b.ranks[n.id]or 0,actual=current and(current.ranks[n.id]or 0)or nil,maximum=n.max,shape=n.max>1 and'circle'or'square'}
@@ -193,8 +193,8 @@ local function input(parent,x,y,w,changed)
 end
 local function create()
  if S.frame then return end
- local f=C.Window('RebornTalentCollectionFrame','天赋收藏 · 战士 / 圣骑士 / 猎人 / 巫医 · TG24A');S.frame=f;W.Register('collection',f)
- S.classTabs={};for i,token in ipairs({'WARRIOR','PALADIN','WITCHDOCTOR','HUNTER'})do local class=token;S.classTabs[token]=button(f,20+(i-1)*53,-40,50,classes[class],function()S.Change(function()S.class=class;S.editor=nil;S.Refresh()end)end)end
+ local f=C.Window('RebornTalentCollectionFrame','天赋收藏 · 战士 / 圣骑士 / 猎人 / 潜行者 / 巫医 · TG24B');S.frame=f;W.Register('collection',f)
+ S.classTabs={};for i,token in ipairs({'WARRIOR','PALADIN','WITCHDOCTOR','HUNTER','ROGUE'})do local class=token;S.classTabs[token]=button(f,20+(i-1)*43,-40,41,classes[class],function()S.Change(function()S.class=class;S.editor=nil;S.Refresh()end)end)end
  S.shareButton=button(f,1030,-3,230,'导入 / 导出',function()S.OpenShare()end);S.shareButton:SetHeight(20)
  S.classText=C.Text(f,20,-78,210,'','GameFontNormal')
  button(f,20,-108,200,'从自己当前已保存配点建立',function()S.Change(function()S.New('current')end)end)

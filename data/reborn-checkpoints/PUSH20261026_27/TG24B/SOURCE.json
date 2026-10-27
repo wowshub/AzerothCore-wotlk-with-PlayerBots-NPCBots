@@ -1,0 +1,213 @@
+{
+  "stage": "TG24B",
+  "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包",
+  "zip_sha256": "48e5fee45dc30b50d539486e0f752c14637724b58e569277fba59bf8efbaa28e",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornClassTalentPanels/Panels.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornClassTalentPanels\\Panels.lua",
+      "input_sha256": "ffefc69aa03a95623a26953417fa5f6689dac000de78e2361031c466f46d0b41",
+      "output_sha256": "ffefc69aa03a95623a26953417fa5f6689dac000de78e2361031c466f46d0b41"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassicSpecHome.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicSpecHome.lua",
+      "input_sha256": "11865b881ccf5002857a6c7bd0a88a7b52ee39a9d7c69a227b2b4acc29f4bc77",
+      "output_sha256": "11865b881ccf5002857a6c7bd0a88a7b52ee39a9d7c69a227b2b4acc29f4bc77"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassTalentEntry.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassTalentEntry.lua",
+      "input_sha256": "001da232d255a348eb7fe6b2e85310ab89e9a298ab37504bff9a3b1318d206fc",
+      "output_sha256": "001da232d255a348eb7fe6b2e85310ab89e9a298ab37504bff9a3b1318d206fc"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionDetails.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionDetails.lua",
+      "input_sha256": "9fc53ec1ed5f4877c1383b534a79510752cf2ce96b2b78cf984d8f7e4551a54e",
+      "output_sha256": "9fc53ec1ed5f4877c1383b534a79510752cf2ce96b2b78cf984d8f7e4551a54e"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionShare.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionShare.lua",
+      "input_sha256": "005dd24ad9ff552590133aa887506cb12b6469db4905b385b55c60299f138526",
+      "output_sha256": "005dd24ad9ff552590133aa887506cb12b6469db4905b385b55c60299f138526"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionStore.lua",
+      "input_sha256": "9816c33b7ad9fa56f2cdb6709e65908148a19290b2edcc4616e77b5d3f014bea",
+      "output_sha256": "9816c33b7ad9fa56f2cdb6709e65908148a19290b2edcc4616e77b5d3f014bea"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionUI.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionUI.lua",
+      "input_sha256": "29f9e15aee01fe3bf8ca023161d79b5557b165b9ca24917f3102c2c8059cd818",
+      "output_sha256": "29f9e15aee01fe3bf8ca023161d79b5557b165b9ca24917f3102c2c8059cd818"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\Lifecycle.lua",
+      "input_sha256": "67f567ad569275bb6e67fee8076462db7a2b90b5e762d1d437ac509064b4e1a3",
+      "output_sha256": "67f567ad569275bb6e67fee8076462db7a2b90b5e762d1d437ac509064b4e1a3"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\RebornTalentGuide.toc",
+      "input_sha256": "a61c2bf7122830db24fdba0d83aface955ed8c921753d0f4cac0bb516238d261",
+      "output_sha256": "a61c2bf7122830db24fdba0d83aface955ed8c921753d0f4cac0bb516238d261"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/Rogue.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "5f2be7f34ce9f3fe3051534f1658571c17119665fc368819c84b3ce8de353bc3",
+      "output_sha256": "5f2be7f34ce9f3fe3051534f1658571c17119665fc368819c84b3ce8de353bc3"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/RogueData.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "4b3523a9654c2d6b86183eb47b29f094295f9ebb4d55660bccb7830030616218",
+      "output_sha256": "4b3523a9654c2d6b86183eb47b29f094295f9ebb4d55660bccb7830030616218"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenter.lua",
+      "input_sha256": "7c14a4cb59d4f36f74a90392b9d41508fdc37c0357104b98e6104a2ed129f2c2",
+      "output_sha256": "7c14a4cb59d4f36f74a90392b9d41508fdc37c0357104b98e6104a2ed129f2c2"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenterLocale.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenterLocale.lua",
+      "input_sha256": "ca329747e73ca653ea5985b26ab9203a59aa90c38539f365d948a8aa1e819e1b",
+      "output_sha256": "ca329747e73ca653ea5985b26ab9203a59aa90c38539f365d948a8aa1e819e1b"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/UnifiedNavigation.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_102233_阶段TG24A_猎人三系天赋中心与收藏累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\UnifiedNavigation.lua",
+      "input_sha256": "63cb933227190f5ad5fc5fb2a36a90bfcafd9578bb3aee04f05575a41bcdbc86",
+      "output_sha256": "63cb933227190f5ad5fc5fb2a36a90bfcafd9578bb3aee04f05575a41bcdbc86"
+    }
+  ],
+  "resources": [
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/Backdrop.blp",
+      "sha256": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp",
+      "sha256": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG4B.tga",
+      "sha256": "2909575133e271bcb966121e9bf204ccab6831b79844f10d5ea271b04559ed7a",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp",
+      "sha256": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp",
+      "sha256": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp",
+      "sha256": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp",
+      "sha256": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp",
+      "sha256": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp",
+      "sha256": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG4B.tga",
+      "sha256": "594c171a9fcb340ccf552843a03dfbf0c926e3094664b948967d3d2e36d30182",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp",
+      "sha256": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp",
+      "sha256": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp",
+      "sha256": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp",
+      "sha256": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp",
+      "sha256": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp",
+      "sha256": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp",
+      "sha256": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp",
+      "sha256": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp",
+      "sha256": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp",
+      "sha256": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp",
+      "sha256": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257",
+      "package": "codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包"
+    }
+  ]
+}

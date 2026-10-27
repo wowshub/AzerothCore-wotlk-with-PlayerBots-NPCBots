@@ -109,3 +109,5 @@ event:SetScript('OnEvent',function()if A.frame and A.frame:IsShown()then A.Refre
 
 -- TG24A: hunter uses the same three-column center and its canonical collection engine.
 A.Register('HUNTER',{Open=function()return G.TalentCenter.Open('recommend','HUNTER',RebornTalentGuideHunter.selected or 1)end})
+
+A.Register('ROGUE',{Open=function()return G.TalentCenter.Open('recommend','ROGUE',RebornTalentGuideRogue.selected or 1)end})

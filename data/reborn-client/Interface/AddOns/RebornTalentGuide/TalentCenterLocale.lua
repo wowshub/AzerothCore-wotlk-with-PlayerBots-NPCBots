@@ -3,6 +3,7 @@ local G=RebornTalentGuide
 local L={bindings={}};G.CenterLocale=L
 function L.English()return type(RebornTGViewSettings)=='table'and RebornTGViewSettings.centerLanguage=='enUS'end
 local dictionary={
+ ['刺杀']='Assassination',['战斗']='Combat',['敏锐']='Subtlety',['原生参考方案；应用通过原生接口逐点确认，不自动洗点。']='Reference builds. Each point requires native confirmation; no automatic reset.',
  ['编辑收藏']='Edit Favorite',['当前筛选暂无推荐方案。']='No builds match this filter.',['猎人参考方案；应用通过原生接口逐点确认，不自动洗点。']='Hunter reference builds. Each point requires native confirmation; no automatic reset.',
  ['天赋中心']='Talent Center',['推荐天赋']='Recommended Talents',['我的收藏']='My Favorites',
  ['选择职业']='Choose Class',['天赋加点']='Talent Builds',['我的天赋']='My Talents',

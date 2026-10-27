@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: Reborn Talent Guide | 天赋中心
-## Notes: TG24A 战士、圣骑士、猎人与巫医推荐、收藏及确认应用
-## Version: TG24A
+## Notes: TG24B 战士、圣骑士、猎人、潜行者与巫医推荐、收藏及确认应用
+## Version: TG24B
 ## OptionalDeps: MultiBot, DragonUI, RebornEquipmentVault, RebornSpectatorAutoWatch, RebornWitchDoctorTalents
 ## SavedVariables: RebornTGEntrySettings, RebornTGScaleDB, RebornTGViewSettings, RebornTalentCollectionsDB
 Data.lua
@@ -29,8 +29,10 @@ TalentPanelWindows.lua
 TalentTreeCanvas.lua
 TalentTreeViews.lua
 HunterData.lua
+RogueData.lua
 WarriorCollection.lua
 Hunter.lua
+Rogue.lua
 CollectionStore.lua
 CollectionDetails.lua
 CollectionApply.lua
