@@ -849,7 +849,8 @@ public:
     // (not a `.dc test` run): kill or raise its bots, or yourself, to exercise the
     // player-led death flow (DCRZ2B) on demand. Only playerbots in the GM's group
     // and the GM are ever touched; other real players never are.
-    //   who: bots | all (bots and you) | me | rezzers | healers | allbuttank | <name>
+    //   who: bots | all (bots and you) | me | rezzers | healers | tank | allbuttank | <name>
+    //   DCGM2A: `tank` = every bot whose role is tank (playerbots and NPCBots), to test a tank death.
     static bool HandleParty(ChatHandler* handler, Tail args)
     {
         Player* gm = handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
@@ -869,7 +870,7 @@ public:
         bool const tierOk = arg == "normal" || arg == "story" || arg == "casual" || arg == "speed";
         if (who.empty() || (act != "die" && act != "rez" && act != "tier") || (act == "tier" && !tierOk))
         {
-            handler->SendSysMessage("usage: .dc party <bots|all|me|rezzers|healers|allbuttank|name> <die|rez>"
+            handler->SendSysMessage("usage: .dc party <bots|all|me|rezzers|healers|tank|allbuttank|name> <die|rez>"
                                     "  |  .dc party bots tier <normal|story|casual|speed>");
             return true;
         }
@@ -923,6 +924,8 @@ public:
             }
             else if (who == "healers")
                 want = isBot && PlayerbotAI::IsHeal(m);
+            else if (who == "tank")
+                want = isBot && PlayerbotAI::IsTank(m);
             else if (who == "allbuttank")
                 want = isBot && !PlayerbotAI::IsTank(m);
             else
@@ -964,6 +967,8 @@ public:
                     want = cls == CLASS_PRIEST || cls == CLASS_PALADIN || cls == CLASS_SHAMAN || cls == CLASS_DRUID;
                 else if (who == "healers")
                     want = bai && bai->HasRole(NPC_BOT_ROLE_HEAL);
+                else if (who == "tank")
+                    want = bai && bai->IsTank();
                 else if (who == "allbuttank")
                     want = !(bai && bai->IsTank());
                 else
