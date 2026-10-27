@@ -121,3 +121,5 @@ A.Register('SHAMAN',{Open=function()return G.TalentCenter.Open('recommend','SHAM
 A.Register('MAGE',{Open=function()return G.TalentCenter.Open('recommend','MAGE',RebornTalentGuideMage.selected or 1)end})
 
 A.Register('WARLOCK',{Open=function()return G.TalentCenter.Open('recommend','WARLOCK',RebornTalentGuideWarlock.selected or 1)end})
+
+A.Register('DRUID',{Open=function()return G.TalentCenter.Open('recommend','DRUID',RebornTalentGuideDruid.selected or 1)end})
