@@ -10,6 +10,7 @@
 #include "ScriptDefines/GlobalScript.h"
 #include "RebornWitchDoctorRanks.h"
 #include "RebornWitchDoctorNpcActor1.h"
+#include "RebornWitchDoctorNpcCleansing5.h"
 #include "RebornWitchDoctorNpcVoodoo2.h"
 #include "RebornWitchDoctorNpcWard1.h"
 #include "RebornWitchDoctorNpcDebuff2.h"
@@ -1404,6 +1405,9 @@ class spell_reborn_wd28a_hexbreak : public SpellScript
     PrepareSpellScript(spell_reborn_wd28a_hexbreak);
     SpellCastResult CheckDoctor()
     {
+        if(WDN1::Actor(GetCaster()))
+            return GetSpellInfo()->Id==9003240 && WDN1::Known(GetCaster(),9003240) &&
+                WDN5D::Eligible(GetCaster(),GetExplTargetUnit()) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player = GetCaster()->ToPlayer();
         return IsDoctor(player) && GetSpellInfo()->Id == 9003240 &&
             player->HasSpell(9003240) && player->GetLevel() >= 16
@@ -1455,6 +1459,9 @@ class spell_reborn_wd29a_allcure : public SpellScript
     PrepareSpellScript(spell_reborn_wd29a_allcure);
     SpellCastResult CheckDoctor()
     {
+        if(WDN1::Actor(GetCaster()))
+            return GetSpellInfo()->Id==9003250 && WDN1::Known(GetCaster(),9003250) &&
+                WDN5D::Eligible(GetCaster(),GetExplTargetUnit()) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player = GetCaster()->ToPlayer();
         return IsDoctor(player) && GetSpellInfo()->Id == 9003250 &&
             player->HasSpell(9003250) && player->GetLevel() >= 28
@@ -2201,6 +2208,8 @@ class spell_reborn_wd44a_mass_allcure : public SpellScript
     PrepareSpellScript(spell_reborn_wd44a_mass_allcure);
     SpellCastResult CheckDoctor()
     {
+        if(WDN1::Actor(GetCaster()))
+            return GetSpellInfo()->Id==9003442 && WDN1::Known(GetCaster(),9003442) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player=GetCaster()->ToPlayer();
         return IsDoctor(player) && player->HasSpell(GetSpellInfo()->Id) && player->HasSpell(9003250) &&
             ((GetSpellInfo()->Id==9003442 && player->GetLevel()>=58)||(WD155::Owns(player,9004122)&&player->GetLevel()>=28))
@@ -2208,6 +2217,18 @@ class spell_reborn_wd44a_mass_allcure : public SpellScript
     }
     void Allies(std::list<WorldObject*>& targets)
     {
+        if(WDN1::Actor(GetCaster()))
+        {
+            targets.clear();
+            std::list<Unit*> units;
+            Acore::AnyUnitInObjectRangeCheck check(GetCaster(),30.f);
+            Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(GetCaster(),units,check);
+            Cell::VisitObjects(GetCaster(),search,30.f);
+            for(Unit* unit:units)if(WDN5D::Eligible(GetCaster(),unit))targets.push_back(unit);
+            if(WDN5D::Eligible(GetCaster(),GetCaster())&&
+               std::find(targets.begin(),targets.end(),GetCaster())==targets.end())targets.push_back(GetCaster());
+            return;
+        }
         targets.clear();Player* player=GetCaster()->ToPlayer();if(!IsDoctor(player))return;
         std::list<Unit*> units;
         Acore::AnyUnitInObjectRangeCheck check(player,30.0f);

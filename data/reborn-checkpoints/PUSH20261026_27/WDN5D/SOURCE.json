@@ -1,0 +1,37 @@
+{
+  "stage": "WDN5D",
+  "package": "codexfix_20261026_083012_阶段WDN5D_NPC巫医破咒净化与复活治疗累计测试包",
+  "zip_sha256": "17f4650579946966e9f311c86b68476eb2ae239f7f95e6de226d6e9d2fff84b6",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_073224_阶段WDN5C_NPC巫医战后复活与治疗日志整合测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+      "input_sha256": "96039c11d6abf7ad4ff18a67c2730d2d357731ac6efbc0dbaa3c0bbb3cb6409a",
+      "output_sha256": "96039c11d6abf7ad4ff18a67c2730d2d357731ac6efbc0dbaa3c0bbb3cb6409a"
+    },
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_073224_阶段WDN5C_NPC巫医战后复活与治疗日志整合测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNpcActor1.h",
+      "input_sha256": "db4fc2ad556ae4f3360ac51f55a0ef0e0d24c3272c0100172a4162766393f31b",
+      "output_sha256": "db4fc2ad556ae4f3360ac51f55a0ef0e0d24c3272c0100172a4162766393f31b"
+    },
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcCleansing5.h",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "fcf5d302a7bb78249bbb4b5f54db12372d9c5fa16c6e3fc1c324db93798fea07",
+      "output_sha256": "fcf5d302a7bb78249bbb4b5f54db12372d9c5fa16c6e3fc1c324db93798fea07"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_073224_阶段WDN5C_NPC巫医战后复活与治疗日志整合测试包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_witch_doctor_ai.cpp",
+      "input_sha256": "7face140e9befcfa4d4c5b5c8507a3d4b4ac2daa49a6b125a2cee529d65ae1be",
+      "output_sha256": "7face140e9befcfa4d4c5b5c8507a3d4b4ac2daa49a6b125a2cee529d65ae1be"
+    }
+  ],
+  "resources": []
+}

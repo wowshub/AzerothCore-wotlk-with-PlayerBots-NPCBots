@@ -7,6 +7,7 @@
 #include "Group.h"
 #include "SpellMgr.h"
 #include "Log.h"
+#include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcCleansing5.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcHealing5.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcSurvival3.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h"
@@ -24,7 +25,7 @@ namespace
 {
 constexpr uint32 Wrath=9003100,Brew=9003101,Vigil=9003855,Reclaim=9003260;
 constexpr uint32 Arrow=9003970, Reclamation=9003980, Eclipse=9004000, Glaive=9004030;
-std::vector<uint32> const supportSpells={Reclaim,WDN3A::Death,WDN3A::Slither,WDN3A::Mirage,WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
+std::vector<uint32> const supportSpells={WDN5D::Hexbreak,WDN5D::Allcure,WDN5D::MassAllcure,Reclaim,WDN3A::Death,WDN3A::Slither,WDN3A::Mirage,WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
 std::vector<uint32> const healingSpells={WDN2P::Splash,WDN2P::Toss,WDN2P::Prep,Brew,WDN1C::Healing};
 std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN1C::SpellId,WDN2B::SpellId,WDN2C::SpellId};
 }
@@ -44,7 +45,7 @@ public:
         WDN3A::State survival;
         uint32 utilityDelay=0,pullMoveDelay=0,survivalLogDelay=0,recentHostileDamage=0;
         bool preferWrath=false;
-        uint32 healMoveDelay=0,healLogDelay=0,rezRetry=0;
+        uint32 healMoveDelay=0,healLogDelay=0,rezRetry=0,cleanseRetry=0;
         uint32 spiritOwner=0,spiritMap=0,spiritPhase=0,spiritInstance=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
         void Trace(char const* reason,uint32 spell=0,int32 result=0)
         {
@@ -58,7 +59,7 @@ public:
                 me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation),GetBotRoles(),IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL),utilityDelay,WDN1C::Known(me),IsSpellReady(WDN1C::SpellId,0),WDN1C::Known(me)?int32(CheckBotCast(me,WDN1C::SpellId)):-1);
         }
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
-        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5C] initialized entry={}",me->GetEntry()); }
+        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5D] initialized entry={}",me->GetEntry()); }
 
         void ClearLocalScheduling()
         {
@@ -66,7 +67,7 @@ public:
             pullMoveDelay=survivalLogDelay=diagnosticTimer=recentHostileDamage=utilityDelay=0;
             hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=0;
             hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0;
-            brewingRetry=allyBrewRetry=healMoveDelay=healLogDelay=rezRetry=0;healingReserve=false;preferWrath=false;
+            brewingRetry=allyBrewRetry=healMoveDelay=healLogDelay=rezRetry=cleanseRetry=0;healingReserve=false;preferWrath=false;
         }
         void Reset() override { ClearLocalScheduling();survival.Clear(me); WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
         void JustDied(Unit* killer) override
@@ -84,6 +85,12 @@ public:
         }
         void InitSpells() override
         {
+            for(uint32 id:{WDN5D::Hexbreak,WDN5D::Allcure,WDN5D::MassAllcure})
+            {
+                InitSpellMap(id,true,false);auto* info=sSpellMgr->GetSpellInfo(id);
+                auto const& spells=GetSpellMap();auto it=spells.find(id);
+                if(it!=spells.end()&&it->second)it->second->spellId=info&&me->GetLevel()>=info->SpellLevel?id:0;
+            }
             for(uint32 id:{WDN3A::Death,WDN3A::Slither,WDN3A::Mirage})
             {
                 InitSpellMap(id,true,false);auto*info=sSpellMgr->GetSpellInfo(id);
@@ -432,6 +439,38 @@ public:
             }
             return true;
         }
+        bool TryCleansing(uint32 diff)
+        {
+            if(!WDN1::Actor(me)||WDN1::Escaping(me)||me->IsMounted()||me->GetVehicle()||IsCasting()||
+               HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION|BOT_COMMAND_NO_CAST)||cleanseRetry)return false;
+            cleanseRetry=750;
+            std::list<Unit*> units;
+            Acore::AnyUnitInObjectRangeCheck check(me,30.f);
+            Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(me,units,check);
+            Cell::VisitObjects(me,search,30.f);
+            if(std::find(units.begin(),units.end(),me)==units.end())units.push_back(me);
+            auto ready=[&](uint32 id)
+            {
+                auto* info=sSpellMgr->GetSpellInfo(id);
+                return info&&WDN1::Known(me,id)&&IsSpellReady(id,diff)&&
+                    int32(me->GetPower(POWER_MANA))>=info->CalcPowerCost(me,info->GetSchoolMask());
+            };
+            bool groupReady=ready(WDN5D::MassAllcure),singleReady=ready(WDN5D::Allcure),curseReady=ready(WDN5D::Hexbreak);
+            uint32 affected=0;Unit* best=nullptr;uint32 bestMask=0;
+            for(Unit* t:units)
+            {
+                if(!WDN5D::Eligible(me,t))continue;
+                uint32 mask=WDN5D::Afflictions(t);if(!mask)continue;
+                ++affected;
+                if(!WDN5D::Choose(1,mask,false,singleReady,curseReady))continue;
+                if(!best||WDN5A::Priority(t->GetHealthPct(),HealingTank(t))<WDN5A::Priority(best->GetHealthPct(),HealingTank(best))||
+                   (WDN5A::Priority(t->GetHealthPct(),HealingTank(t))==WDN5A::Priority(best->GetHealthPct(),HealingTank(best))&&t->GetGUID()<best->GetGUID()))
+                {best=t;bestMask=mask;}
+            }
+            uint32 id=WDN5D::Choose(affected,bestMask,groupReady,singleReady,curseReady);
+            Unit* target=id==WDN5D::MassAllcure?me:best;
+            return id&&WDN5D::Eligible(me,target)&&CheckBotCast(target,id)==SPELL_CAST_OK&&doCast(target,id);
+        }
         bool HasPriorityHealingTarget() override
         {
             if(HasBotCommandState(BOT_COMMAND_MASK_UNMOVING)||IAmFree()||!GetBotOwner()||
@@ -561,6 +600,13 @@ public:
         }
         void OnClassSpellGo(SpellInfo const* info) override
         {
+            if(info->Id==WDN5D::Allcure||info->Id==WDN5D::MassAllcure)
+            {
+                uint32 cooldown=info->GetRecoveryTime();ApplyBotSpellCooldownMods(info,cooldown);
+                // A successful use locks both versions, even if the other toggle is disabled.
+                SetSpellCooldown(WDN5D::Allcure,cooldown);
+                SetSpellCooldown(WDN5D::MassAllcure,cooldown);return;
+            }
             // Arm only on successful spell-go; failed attempts leave the damage rotation available.
             if(IsScheduledUtility(info->Id))utilityDelay=4000;
             if(WDN3A::Defensive(info->Id))
@@ -575,7 +621,7 @@ public:
             uint32 base=WDN1::Base(info->Id);
             if(!base)base=WDN2::Base(info->Id);
             if(info->Id==WDN2O::SpellId||info->Id==WDN1C::Healing||info->Id==Vigil||info->Id==WDN2D::Serene||info->Id==WDN2D::Swift||info->Id==WDN2E::Cursed||info->Id==WDN2E::Graven||info->Id==WDN2E::Hex||info->Id==WDN2E::SpellId||info->Id==WDN2D::SpellId||info->Id==WDN2B::SpellId||info->Id==WDN2C::SpellId)base=info->Id;
-            if(base==WDN2O::SpellId||base==WDN1C::Healing||base==Vigil||base==WDN2D::Serene||base==WDN2D::Swift||base==WDN2E::Cursed||base==WDN2E::Graven||base==WDN2E::Hex||base==WDN2E::SpellId||base==WDN2D::SpellId||base==Reclaim||base==Wrath||base==Brew||base==Arrow||base==Reclamation||base==Eclipse||base==Glaive||base==WDN2::Hex||base==WDN2::Lethargy||base==WDN2::Shrinking||base==WDN2B::SpellId||base==WDN2C::SpellId)
+            if(base==WDN2O::SpellId||base==WDN1C::Healing||base==Vigil||base==WDN2D::Serene||base==WDN2D::Swift||base==WDN2E::Cursed||base==WDN2E::Graven||base==WDN2E::Hex||base==WDN2E::SpellId||base==WDN2D::SpellId||base==WDN5D::Hexbreak||base==Reclaim||base==Wrath||base==Brew||base==Arrow||base==Reclamation||base==Eclipse||base==Glaive||base==WDN2::Hex||base==WDN2::Lethargy||base==WDN2::Shrinking||base==WDN2B::SpellId||base==WDN2C::SpellId)
             {
                 uint32 cooldown=info->GetRecoveryTime();
                 ApplyBotSpellCooldownMods(info,cooldown);
@@ -674,6 +720,7 @@ public:
             WDN2B::Active(me);
             WDN1C::Current(me); // Clear on lost recruitment, role, skill, map or distance.
             diagnosticTimer=diagnosticTimer>diff?diagnosticTimer-diff:0;
+            cleanseRetry=cleanseRetry>diff?cleanseRetry-diff:0;
             rezRetry=rezRetry>diff?rezRetry-diff:0;
             healMoveDelay=healMoveDelay>diff?healMoveDelay-diff:0;
             healLogDelay=healLogDelay>diff?healLogDelay-diff:0;
@@ -700,6 +747,7 @@ public:
             if(TryResurrection(diff))return;
             bool const reserveHealingMana=ReserveHealingMana();
             Unit* healTarget=HealingTarget();
+            if((!healTarget||!WDN5A::Urgent(healTarget->GetHealthPct(),HealingTank(healTarget)))&&TryCleansing(diff))return;
             if(healTarget && TryPriorityHeal(healTarget,diff))return;
             if(healTarget && WDN5A::Urgent(healTarget->GetHealthPct(),HealingTank(healTarget)))
             {
