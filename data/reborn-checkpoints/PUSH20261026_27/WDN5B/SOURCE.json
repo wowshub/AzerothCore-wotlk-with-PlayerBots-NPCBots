@@ -1,0 +1,23 @@
+{
+  "stage": "WDN5B",
+  "package": "codexfix_20261026_065526_阶段WDN5B_NPCBot最终治疗日志覆盖测试包",
+  "zip_sha256": "106293d22cf8b20c7da127a95cbf502d4a20b79682dff69d244f6f5f55f6ae71",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-reborn-bot-telemetry/conf/RebornBotTelemetry.conf.dist",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_065526_阶段WDN5B_NPCBot最终治疗日志覆盖测试包\\backup_原文件\\modules\\mod-reborn-bot-telemetry\\conf\\RebornBotTelemetry.conf.dist",
+      "input_sha256": "b68ef7bdf3b84f0404cc819f7239bb1bab2c019d5ea12edb45ae21f8d5676442",
+      "output_sha256": "b68ef7bdf3b84f0404cc819f7239bb1bab2c019d5ea12edb45ae21f8d5676442"
+    },
+    {
+      "file": "src/server/game/Entities/Unit/Unit.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包\\01_覆盖到源代码根目录\\src\\server\\game\\Entities\\Unit\\Unit.cpp",
+      "input_sha256": "9151c888e946dbc7f97b73bf67792841482b8713e55168040c8314f2d98362b2",
+      "output_sha256": "9151c888e946dbc7f97b73bf67792841482b8713e55168040c8314f2d98362b2"
+    }
+  ],
+  "resources": []
+}

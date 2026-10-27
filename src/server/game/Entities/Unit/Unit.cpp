@@ -81,6 +81,7 @@
 
 #ifdef MOD_NPCERBOTS
 //npcbot
+#include "bot_ai.h"
 #include "botdatamgr.h"
 #include "botmgr.h"
 //end npcbot
@@ -8965,8 +8966,47 @@ int32 Unit::HealBySpell(HealInfo& healInfo, bool critical)
     // calculate heal absorb and reduce healing
     CalcHealAbsorb(healInfo);
 
+#ifdef MOD_NPCERBOTS
+    // WDN5B: per-call diagnostic state, never a cross-hook/thread-local spell slot.
+    Unit* const healCaster = healInfo.GetHealer();
+    Unit* const healTarget = healInfo.GetTarget();
+    bool const npcHealLog = healCaster && healTarget && healCaster->IsNPCBot() &&
+        sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotHealLog", false, false);
+    float const targetHpBefore = npcHealLog ? healTarget->GetHealthPct() : 0.0f;
+#endif
+
     int32 gain = Unit::DealHeal(healInfo.GetHealer(), healInfo.GetTarget(), healInfo.GetHeal());
     healInfo.SetEffectiveHeal(gain);
+
+#ifdef MOD_NPCERBOTS
+    if (npcHealLog)
+    {
+        uint32 const effective = healInfo.GetEffectiveHeal();
+        uint32 const overheal = healInfo.GetHeal() > effective ? healInfo.GetHeal() - effective : 0;
+        uint64 const total = uint64(effective) + overheal;
+        uint32 const minimum = sConfigMgr->GetOption<uint32>("RebornBotTelemetry.NpcBotHealLog.MinHeal", 1, false);
+        if (total && total >= minimum)
+        {
+            Creature* const bot = healCaster->ToCreature();
+            bot_ai* const ai = bot->GetBotAI();
+            bool const partyTarget = ai && (healTarget == bot || ai->IsInBotParty(healTarget));
+            bool const tank = partyTarget && (ai->IsTank(healTarget) ||
+                (!healTarget->getAttackers().empty() &&
+                 (healTarget->GetShapeshiftForm() == FORM_BEAR || healTarget->GetShapeshiftForm() == FORM_DIREBEAR)));
+            char const* const targetType = tank ? "tank" : healTarget->IsNPCBot() ? "npcbot" :
+                healTarget->IsPlayer() ? "player" : healTarget->IsPet() ? "pet" : "unit";
+            SpellInfo const* const info = healInfo.GetSpellInfo();
+            // Same post-absorb accounting as SendHealSpellLog; absorb is not overheal.
+            // Player-type bots use "player" here: no Playerbots module dependency.
+            LOG_INFO("server", "[NPCBOT-HEAL] time={} serverMs={} bot={}({}) casterGuid={} class={} role={} spell={}:{} target={}({}) targetGuid={} heal={} over={} absorb={} targetHpBefore={} inCombat={} mapId={} instanceId={}",
+                GameTime::GetGameTime().count(), getMSTime(), bot->GetName(), bot->GetEntry(), bot->GetGUID().ToString(),
+                uint32(bot->GetBotClass()), ai ? ai->GetBotRoles() : 0, info ? info->Id : 0,
+                info && info->SpellName[0] ? info->SpellName[0] : "unknown", healTarget->GetName(), targetType,
+                healTarget->GetGUID().ToString(), effective, overheal, healInfo.GetAbsorb(), targetHpBefore,
+                uint32(bot->IsInCombat() || healTarget->IsInCombat()), bot->GetMapId(), bot->GetInstanceId());
+        }
+    }
+#endif
 
     SendHealSpellLog(healInfo, critical);
     return gain;

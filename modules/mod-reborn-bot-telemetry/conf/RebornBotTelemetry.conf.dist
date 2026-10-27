@@ -77,3 +77,11 @@ BotTelemetry.IdleEndMs = 30000
 #        (name, entry, distance, health, height, evading), every 30 s. 0 = off.
 #        Default: 15000
 BotTelemetry.HolderLogAfterMs = 15000
+
+# WDN5B: optional final NPCBot direct-healing diagnostics (independent of BotTelemetry.Enable).
+# Written by Unit::HealBySpell to logger "server", INFO, prefix [NPCBOT-HEAL].
+# No changes to dc_fights.jsonl. Does not include summon-cast healing or direct DealHeal calls.
+# Options are read per heal; after a successful .reload config, subsequent heals use new values.
+# Default disabled. MinHeal filters effective + overheal (post-absorb); zero total is omitted.
+RebornBotTelemetry.NpcBotHealLog = 0
+RebornBotTelemetry.NpcBotHealLog.MinHeal = 1
