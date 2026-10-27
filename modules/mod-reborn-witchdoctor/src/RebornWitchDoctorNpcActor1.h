@@ -24,6 +24,12 @@ inline uint32 Base(uint32 id)
  for(auto r:WD19A::WrathRanks)if(r.spell==id)return 9003100;
  for(auto r:WD19A::BrewRanks)if(r.spell==id)return 9003101;
  for(auto r:WD19A::ReclaimRanks)if(r.spell==id)return 9003260;
+ for(auto r:WD19A::SpiritRanks)if(r.spell==id)return 9003140;
+ for(auto r:WD19A::PowerRanks)if(r.spell==id)return 9003180;
+ for(auto r:WD19A::ResourcefulRanks)if(r.spell==id)return 9003190;
+ for(auto r:WD19A::GreaterResourcefulRanks)if(r.spell==id)return 9003280;
+ for(auto r:WD19A::GreaterSpiritRanks)if(r.spell==id)return 9003290;
+ for(auto r:WD19A::GreaterPowerRanks)if(r.spell==id)return 9003300;
  if(id==9003240||id==9003250||id==9003442)return id;
  if(id==AutoShot)return AutoShot;
  if(id>=9004000&&id<=9004006)return 9004000;
@@ -35,7 +41,7 @@ inline uint32 Base(uint32 id)
 inline bool Known(Unit* u,uint32 id)
 {
  auto* c=Actor(u);uint32 base=Base(id);if(!c||!base)return false;
- if(base==9003100||base==9003101||base==9003260||base==9003240||base==9003250||base==9003442){auto* info=sSpellMgr->GetSpellInfo(id);if(!info||c->GetLevel()<info->SpellLevel)return false;}
+ if(base==9003100||base==9003101||base==9003260||base==9003240||base==9003250||base==9003442||base==9003140||base==9003180||base==9003190||base==9003280||base==9003290||base==9003300){auto* info=sSpellMgr->GetSpellInfo(id);if(!info||c->GetLevel()<info->SpellLevel)return false;}
  else if(c->GetLevel()<10)return false;
  auto const& spells=c->GetBotAI()->GetSpellMap();auto it=spells.find(base);
  return it!=spells.end()&&it->second&&it->second->enabled&&it->second->spellId==id;

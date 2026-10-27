@@ -1,0 +1,37 @@
+{
+  "stage": "WDN5G",
+  "package": "codexfix_20261026_092649_阶段WDN5G_NPC巫医巫祝增益与复活联动累计测试包",
+  "zip_sha256": "71c897898eb0aadf58a33fdbb8fdb09c740d48f8118c57e3a38f2adf9b542a8b",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_090633_阶段WDN5F_NPC巫医复活诊断与清本联动累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+      "input_sha256": "ba22a3eb15b59accf3e2faaf43be21f67b7854c5988e61fed8ebce81df39ad5e",
+      "output_sha256": "ba22a3eb15b59accf3e2faaf43be21f67b7854c5988e61fed8ebce81df39ad5e"
+    },
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_090633_阶段WDN5F_NPC巫医复活诊断与清本联动累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNpcActor1.h",
+      "input_sha256": "bdc589f493ee8b7e67db5bbbd7eb39d718da4e35fa7962ebf3bdc3a135c45284",
+      "output_sha256": "bdc589f493ee8b7e67db5bbbd7eb39d718da4e35fa7962ebf3bdc3a135c45284"
+    },
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWuju5.h",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "5cf1a27c9e39fa005b01d195a75157bf9ff57d84f75aae8f71b1608e200fb5ad",
+      "output_sha256": "5cf1a27c9e39fa005b01d195a75157bf9ff57d84f75aae8f71b1608e200fb5ad"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_090633_阶段WDN5F_NPC巫医复活诊断与清本联动累计测试包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_witch_doctor_ai.cpp",
+      "input_sha256": "78425b2d82467a1e1765e1d076d79e345d9e9b81ee7e4552bc3f7e00b37fae14",
+      "output_sha256": "78425b2d82467a1e1765e1d076d79e345d9e9b81ee7e4552bc3f7e00b37fae14"
+    }
+  ],
+  "resources": []
+}

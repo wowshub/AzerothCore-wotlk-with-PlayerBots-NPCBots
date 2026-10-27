@@ -11,6 +11,7 @@
 #include "RebornWitchDoctorRanks.h"
 #include "RebornWitchDoctorNpcActor1.h"
 #include "RebornWitchDoctorNpcCleansing5.h"
+#include "RebornWitchDoctorNpcWuju5.h"
 #include "RebornWitchDoctorNpcVoodoo2.h"
 #include "RebornWitchDoctorNpcWard1.h"
 #include "RebornWitchDoctorNpcDebuff2.h"
@@ -967,6 +968,12 @@ class spell_reborn_wd20a_support : public SpellScript
     PrepareSpellScript(spell_reborn_wd20a_support);
     SpellCastResult CheckDoctor()
     {
+        if(auto* c=WDN1::Actor(GetCaster()))
+            if(WDN5E::Kind(GetSpellInfo()->Id))
+                return WDN1::Known(c,GetSpellInfo()->Id)&&!c->IsInCombat()&&
+                    (WDN5E::Group(GetSpellInfo()->Id)||
+                     (WDN5E::Eligible(c,GetExplTargetUnit(),30.f)&&WDN5E::Need(c,GetExplTargetUnit(),GetSpellInfo()->Id)))
+                    ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         if (WDN1::Actor(GetCaster()))
             return WDN2::Base(GetSpellInfo()->Id)!=WDN2::Hex &&
                 WDN2::Allowed(GetCaster(),GetExplTargetUnit(),GetSpellInfo()->Id)
@@ -976,9 +983,22 @@ class spell_reborn_wd20a_support : public SpellScript
             player->HasSpell(GetSpellInfo()->Id) && player->GetLevel()>=GetSpellInfo()->SpellLevel
             ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
     }
+    void Allies(std::list<WorldObject*>& targets)
+    {
+        auto* c=WDN1::Actor(GetCaster());if(!c)return;
+        targets.clear();uint32 id=GetSpellInfo()->Id;float radius=WDN5E::Radius(id);
+        std::list<Unit*> units;Acore::AnyUnitInObjectRangeCheck check(c,radius);
+        Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(c,units,check);
+        Cell::VisitObjects(c,search,radius);
+        if(std::find(units.begin(),units.end(),c)==units.end())units.push_back(c);
+        for(Unit* t:units)if(WDN5E::Eligible(c,t,radius)&&WDN5E::Need(c,t,id))targets.push_back(t);
+    }
     void Register() override
     {
         OnCheckCast += SpellCheckCastFn(spell_reborn_wd20a_support::CheckDoctor);
+        // Registration has no live Spell; use the initialized binding ID.
+        if(WDN5E::Group(m_scriptSpellId))
+            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_reborn_wd20a_support::Allies,EFFECT_ALL,TARGET_UNIT_CASTER_AREA_RAID);
     }
 };
 class aura_reborn_wd20a_support : public AuraScript
