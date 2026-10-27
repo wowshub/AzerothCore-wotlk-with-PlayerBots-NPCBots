@@ -31,10 +31,12 @@ TalentTreeViews.lua
 HunterData.lua
 RogueData.lua
 PriestData.lua
+DeathKnightData.lua
 WarriorCollection.lua
 Hunter.lua
 Rogue.lua
 Priest.lua
+DeathKnight.lua
 CollectionStore.lua
 CollectionDetails.lua
 CollectionApply.lua

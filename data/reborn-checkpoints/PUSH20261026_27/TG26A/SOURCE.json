@@ -1,0 +1,293 @@
+{
+  "stage": "TG26A",
+  "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包",
+  "zip_sha256": "8971f772a8c7c3e780a8d2d2fe02ea3a8afbc58be14b1195cdf547ec338d557a",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornClassTalentPanels/Panels.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornClassTalentPanels\\Panels.lua",
+      "input_sha256": "1f65e6c1b1036fe5e4be8c835264afdc89f9c4a68d6f03194964f7ba536f626d",
+      "output_sha256": "1f65e6c1b1036fe5e4be8c835264afdc89f9c4a68d6f03194964f7ba536f626d"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassicSpecHome.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicSpecHome.lua",
+      "input_sha256": "41f9d308ed64dc97f22c78fe29ae318ba978b03a4dfd5d1453df0826d0be56db",
+      "output_sha256": "41f9d308ed64dc97f22c78fe29ae318ba978b03a4dfd5d1453df0826d0be56db"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassTalentEntry.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassTalentEntry.lua",
+      "input_sha256": "67428a49325fbc56224e2007c7a71cf9786d9cfcf4738087b87015db59517c42",
+      "output_sha256": "67428a49325fbc56224e2007c7a71cf9786d9cfcf4738087b87015db59517c42"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionDetails.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionDetails.lua",
+      "input_sha256": "a81ddbb370e612a666b76d5899b99f3dad14fd04d9b2d365c1017314c4533e57",
+      "output_sha256": "a81ddbb370e612a666b76d5899b99f3dad14fd04d9b2d365c1017314c4533e57"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionShare.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionShare.lua",
+      "input_sha256": "1fc6aea11e6cf54d7dfeae9f349e723e92a1e813dd4c2398a0dc4cd04c3f4366",
+      "output_sha256": "1fc6aea11e6cf54d7dfeae9f349e723e92a1e813dd4c2398a0dc4cd04c3f4366"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionStore.lua",
+      "input_sha256": "264fd16ef5c1ecf7aec57e5bb02e63e5c8c3451939645bfe6795a51e28fe5573",
+      "output_sha256": "264fd16ef5c1ecf7aec57e5bb02e63e5c8c3451939645bfe6795a51e28fe5573"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionUI.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionUI.lua",
+      "input_sha256": "3a311e64c4606057fe8bad4832187e688880178865f9ecc78b64c82f5053660a",
+      "output_sha256": "3a311e64c4606057fe8bad4832187e688880178865f9ecc78b64c82f5053660a"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/DeathKnight.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "13a920ab1e26d90f535e5dd578563b87809a1a5442ce70215be1f1666e93f9fc",
+      "output_sha256": "13a920ab1e26d90f535e5dd578563b87809a1a5442ce70215be1f1666e93f9fc"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/DeathKnightData.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "c946f3238bf23406d0339d210a012f48cd01bc0fb9c667bfc96426a3cccb092c",
+      "output_sha256": "c946f3238bf23406d0339d210a012f48cd01bc0fb9c667bfc96426a3cccb092c"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\Lifecycle.lua",
+      "input_sha256": "4f74c808c35a7602f93b05b17a712a97913a577298d17b2965cddbf8fddb084e",
+      "output_sha256": "4f74c808c35a7602f93b05b17a712a97913a577298d17b2965cddbf8fddb084e"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\RebornTalentGuide.toc",
+      "input_sha256": "bfdb3333cbe1be5623c3e23031304d4d5de178ec4f40d2b78b5e095fbca6ab6e",
+      "output_sha256": "bfdb3333cbe1be5623c3e23031304d4d5de178ec4f40d2b78b5e095fbca6ab6e"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenter.lua",
+      "input_sha256": "8c44440cf9581a560a57e04d1857538670d3b003c2c1043f21e24542b17b711e",
+      "output_sha256": "8c44440cf9581a560a57e04d1857538670d3b003c2c1043f21e24542b17b711e"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenterLocale.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenterLocale.lua",
+      "input_sha256": "6c1562eb71b674998d83eb29a982705ea822b8606b0badb547504631c4d65919",
+      "output_sha256": "6c1562eb71b674998d83eb29a982705ea822b8606b0badb547504631c4d65919"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/UnifiedNavigation.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_164356_阶段TG25A_牧师三系大面板与三职业专属美术累计客户端包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\UnifiedNavigation.lua",
+      "input_sha256": "8ca9ac0d3a5b8d3eefb5a6953a31882a64cc02d7eaeefc3b9568f5bff28108aa",
+      "output_sha256": "8ca9ac0d3a5b8d3eefb5a6953a31882a64cc02d7eaeefc3b9568f5bff28108aa"
+    }
+  ],
+  "resources": [
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/Backdrop.blp",
+      "sha256": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp",
+      "sha256": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpec1TG26A_blp.blp",
+      "sha256": "91f46bc0594ac2e6d45fef2c528fb0a517cda6aa133038da76705496fb9e8375",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpec2TG26A_blp.blp",
+      "sha256": "a77684401c4b47183121ecdae725f837effe00a12b539ed027a6940064222391",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpec3TG26A_blp.blp",
+      "sha256": "ccf7779e87a048536844fee4b1bf2e8233df71a298af247b4ef1206739989a7e",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpecCardsTG26A_blp.blp",
+      "sha256": "7952f3d29235d1f90322a1502d95d9e1eca027ef19df10613c4b1c9e3e1b7bf7",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG4B.tga",
+      "sha256": "2909575133e271bcb966121e9bf204ccab6831b79844f10d5ea271b04559ed7a",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp",
+      "sha256": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpec1TG25A_blp.blp",
+      "sha256": "d2eedc31116a277469601c652d0ea8c37d4cf60f045a0d27a9603256325e58f8",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpec2TG25A_blp.blp",
+      "sha256": "025b5c5f592343c5bc8010ad50442fe2a21cc83804018f711a67a84de5aba3f9",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpec3TG25A_blp.blp",
+      "sha256": "5e8a31347dae710698ab95181af7921d3aee56d93b9c3797bd1c3c32aa649772",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpecCardsTG25A_blp.blp",
+      "sha256": "94af130836ef12edd484f2de8df99f88ded50d09650e4ec4ce6d2fc73111318c",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp",
+      "sha256": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp",
+      "sha256": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp",
+      "sha256": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp",
+      "sha256": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp",
+      "sha256": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG4B.tga",
+      "sha256": "594c171a9fcb340ccf552843a03dfbf0c926e3094664b948967d3d2e36d30182",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp",
+      "sha256": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpec1TG25A_blp.blp",
+      "sha256": "afa303a985fee2cc1160e6dcdd30e4a3d3b22f9ad1860a5c9b7e6deb20749f19",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpec2TG25A_blp.blp",
+      "sha256": "ebd7724a3a7f59e613b9ab1bf353a7d10ffcd00c7d871df8d953039f628ccbd6",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpec3TG25A_blp.blp",
+      "sha256": "72da5036971bc5466073652de68cf7b3bd955af94da828e3d63f51c3eb7a2868",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpecCardsTG25A_blp.blp",
+      "sha256": "1b71495a35f6020ef529e114e89d5a5e76e32cdc8186e77b7f91431de87620ed",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp",
+      "sha256": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp",
+      "sha256": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp",
+      "sha256": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpec1TG25A_blp.blp",
+      "sha256": "aecda54de2147eec50dae6bee60ef9b0f9754c4700f130f027dade1cf16577c1",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpec2TG25A_blp.blp",
+      "sha256": "c1b78cd63bd17fc2c81d3b4a289dde569abb788c7fbb232f6707257eb9e618bd",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpec3TG25A_blp.blp",
+      "sha256": "2b47bfe8ef07226855991cd373282f88afab9d59c3b4797b5a0fd586c45c4f63",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpecCardsTG25A_blp.blp",
+      "sha256": "403a1e17cc56f86a7b6aac88ef56087cea81392f3f9f509970f03dc0fbd2de03",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp",
+      "sha256": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp",
+      "sha256": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp",
+      "sha256": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp",
+      "sha256": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp",
+      "sha256": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp",
+      "sha256": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp",
+      "sha256": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257",
+      "package": "codexfix_20261026_170836_阶段TG26A_死亡骑士三系天赋大面板累计客户端测试包"
+    }
+  ]
+}

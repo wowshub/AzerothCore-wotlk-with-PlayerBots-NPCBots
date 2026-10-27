@@ -9,8 +9,12 @@ local shellUV={
  ['spec-thumbnailborder-off']={.000488,.157715,.838379,.937012},
  ['spec-dividerline']={.000488,.124512,.937988,.938965},
  ['spec-columndivider']={.982422,.98584,.000488,.418457}}
-local names={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',PRIEST='牧师'}
+local names={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',PRIEST='牧师',DEATHKNIGHT='死亡骑士'}
 local data={
+ DEATHKNIGHT={
+ {name='鲜血',role='生存 / 坦克参考',stats='耐力 · 护甲',style='血红黑铁',icon='Spell_Deathknight_BloodPresence',description='血魔之握、饮血者与符文刃舞；本服替换节点请查看实际说明。',plan=1},
+ {name='冰霜',role='近战输出',stats='力量 · 命中',style='寒蓝冰晶',icon='Spell_Deathknight_FrostPresence',description='双持利刃、冰霜打击与凛风冲击；管理符文和符文能量。',plan=2},
+ {name='邪恶',role='近战输出',stats='力量 · 命中',style='瘟绿墓城',icon='Spell_Deathknight_UnholyPresence',description='疾病、食尸鬼与石像鬼；天灾打击衔接符文循环。',plan=3}},
  PRIEST={
   {name='戒律',role='治疗',stats='智力 · 法术强度',style='护盾与苦修',icon='Spell_Holy_PowerWordShield',description='本服苦修在第七层；净化光芒与末层痛苦压制按实际说明使用。',plan=1},
   {name='神圣',role='治疗',stats='精神 · 法术强度',style='团队治疗',icon='Spell_Holy_GuardianSpirit',description='恢复、治疗之环与守护之魂；注意施法时机和法力。',plan=2},
@@ -43,17 +47,21 @@ local priestEN={
  {name='Discipline',role='Healer',stats='Intellect / Spell power',style='Shields and Penance',description='Penance is in tier 7. Inspect Purifying Light and the Pain Suppression capstone.'},
  {name='Holy',role='Healer',stats='Spirit / Spell power',style='Group healing',description='Renew, Circle of Healing and Guardian Spirit. Manage timing and mana.'},
  {name='Shadow',role='Ranged DPS',stats='Spell power / Hit',style='Sustained damage',description='Shadowform, Vampiric Touch and Mind Flay. Abilities are used manually.'}}
+local deathKnightEN={
+ {name='Blood',role='Survival / Tank reference',stats='Stamina / Armor',style='Blood and black iron',description='Gorefiends Grasp, Blood Drinker and Dancing Rune Weapon. Inspect server-specific replacements.'},
+ {name='Frost',role='Melee DPS',stats='Strength / Hit',style='Frozen citadel',description='Dual wield, Frost Strike and Howling Blast. Manage runes and runic power.'},
+ {name='Unholy',role='Melee DPS',stats='Strength / Hit',style='Plague necropolis',description='Diseases, ghouls and gargoyles. Weave Scourge Strike into your rune cycle.'}}
 local function specFor(token,index)
  local spec=data[token][index]
- if (token~='HUNTER'and token~='ROGUE'and token~='PRIEST')or not G.CenterLocale or not G.CenterLocale.English()then return spec end
- local copy={};for k,v in pairs(spec)do copy[k]=v end;for k,v in pairs((token=='PRIEST'and priestEN or token=='ROGUE'and rogueEN or hunterEN)[index])do copy[k]=v end;return copy
+ if (token~='HUNTER'and token~='ROGUE'and token~='PRIEST'and token~='DEATHKNIGHT')or not G.CenterLocale or not G.CenterLocale.English()then return spec end
+ local copy={};for k,v in pairs(spec)do copy[k]=v end;for k,v in pairs((token=='DEATHKNIGHT'and deathKnightEN or token=='PRIEST'and priestEN or token=='ROGUE'and rogueEN or hunterEN)[index])do copy[k]=v end;return copy
 end
-local function tr(zh,en)if (B.token=='HUNTER'or B.token=='ROGUE'or B.token=='PRIEST')and G.CenterLocale and G.CenterLocale.English()then return en end;return zh end
-local featured={HUNTER={{1387,1386,1803},{1345,1361,2135},{1325,1322,2145}},ROGUE={{280,1719,2071},{223,205,2076},{1722,1714,2081}},PRIEST={{322,1774,1897},{1637,1815,1911},{521,1779,1910}}}
+local function tr(zh,en)if (B.token=='HUNTER'or B.token=='ROGUE'or B.token=='PRIEST'or B.token=='DEATHKNIGHT')and G.CenterLocale and G.CenterLocale.English()then return en end;return zh end
+local featured={DEATHKNIGHT={{1941,1936,1961},{1975,1979,1989},{1984,2216,2000}},HUNTER={{1387,1386,1803},{1345,1361,2135},{1325,1322,2145}},ROGUE={{280,1719,2071},{223,205,2076},{1722,1714,2081}},PRIEST={{322,1774,1897},{1637,1815,1911},{521,1779,1910}}}
 local function native(token)return RebornTalentCollections.NativeData(token)end
 local function scan(token)
  if not G.ClassEntry or G.ClassEntry.PlayerClass()~=token then return nil,'当前不是本人同职业'end
- if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'then return RebornTalentCollections.NativeEngine(token).Scan()end
+ if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'or token=='DEATHKNIGHT'then return RebornTalentCollections.NativeEngine(token).Scan()end
  if token=='WARRIOR'then return G.Scan()end
  return RebornTalentGuidePaladin.Scan()
 end
@@ -104,7 +112,7 @@ function B.RefreshHome()
  if not B.home or not B.token then return end
  B.homeBackground:SetAlpha(1);B.homeBackground:Show()
  local token=B.token;local d=native(token);local ranks=scan(token);local stem=token=='WARRIOR'and'Warrior'or'Paladin'
- B.home.title:SetText(tr('飞升 · '..names[token]..'天赋','Ascension / '..(token=='PRIEST'and'Priest'or token=='ROGUE'and'Rogue'or'Hunter')..' Talents')..' · TG25A')
+ B.home.title:SetText(tr('飞升 · '..names[token]..'天赋','Ascension / '..(token=='DEATHKNIGHT'and'Death Knight'or token=='PRIEST'and'Priest'or token=='ROGUE'and'Rogue'or'Hunter')..' Talents')..' · TG26A')
  B.library:SetText(tr('我的天赋收藏','My favorites'))
  B.home.note:SetText(tr('选择方向，浏览天赋；不会洗点、切换专精或自动加点。','Browse a tree. This does not reset, switch specialization or learn talents.'))
  for i,card in ipairs(B.cards)do
@@ -114,7 +122,7 @@ function B.RefreshHome()
   card.roleIcon:SetTexture('Interface\\Icons\\'..spec.icon)
   card.picture:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..stem..'SpecCardsTG10A_blp')
   card.picture:SetTexCoord((i-1)/3*.75,i/3*.75,0,.60546875)
-  if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'then card.picture:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..({HUNTER='Hunter',ROGUE='Rogue',PRIEST='Priest'})[token]..'SpecCardsTG25A_blp')end
+  if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'or token=='DEATHKNIGHT'then card.picture:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..({HUNTER='Hunter',ROGUE='Rogue',PRIEST='Priest',DEATHKNIGHT='DeathKnight'})[token]..'SpecCards'..(token=='DEATHKNIGHT'and'TG26A'or'TG25A')..'_blp')end
   local tree=d.trees[i];local examples={tree[1],tree[math.ceil(#tree/2)],tree[#tree]};if featured[token]then local byId={};for _,n in ipairs(tree)do byId[n.id]=n end;for j,id in ipairs(featured[token][i])do examples[j]=byId[id]or examples[j]end end
   for j,button in ipairs(card.samples)do local n=examples[j];local _,_,icon=GetSpellInfo(n.spells[1]);button.node=n;button.icon:SetTexture(icon or n.icon)end
   local sum=0;if ranks then for _,n in ipairs(ranks[i])do sum=sum+n end end
@@ -130,7 +138,7 @@ local function createTree()
  B.treeLanguage=C.Button(f,850,-3,150,'中 / EN',function()local L=G.CenterLocale;L.Set(L.English()and'zhCN'or'enUS');B.RefreshTree()end);B.treeLanguage:SetHeight(20)
  B.treeLibrary=C.Button(f,1030,-3,230,'我的天赋收藏',function()RebornTalentCollections.Open(B.token)end);B.treeLibrary:SetHeight(20)
  B.compare=C.Button(f,1030,-40,240,'三系推荐对照',function()
-  local spec=data[B.token][B.selected];if B.token=='HUNTER'or B.token=='ROGUE'or B.token=='PRIEST'then B.tree:Hide();G.TalentCenter.Open('recommend',B.token,spec.plan);return end;G.Navigation.Return(names[B.token],spec.plan);G.Navigation.OpenLarge()
+  local spec=data[B.token][B.selected];if B.token=='HUNTER'or B.token=='ROGUE'or B.token=='PRIEST'or B.token=='DEATHKNIGHT'then B.tree:Hide();G.TalentCenter.Open('recommend',B.token,spec.plan);return end;G.Navigation.Return(names[B.token],spec.plan);G.Navigation.OpenLarge()
  end)
  B.background=f:CreateTexture(nil,'BORDER');B.background:SetPoint('TOPLEFT',7,-30);B.background:SetSize(1280,620)
  B.infoShade=f:CreateTexture(nil,'ARTWORK');B.infoShade:SetPoint('TOPLEFT',915,-82);B.infoShade:SetSize(350,548);B.infoShade:SetTexture(.02,.025,.035,.76)
@@ -144,13 +152,13 @@ end
 function B.RefreshTree()
  if not B.tree or not B.token then return end
  local token=B.token;local index=B.selected or 1;local spec=specFor(token,index);local d=native(token);local ranks,why=scan(token)
- B.tree.title:SetText(tr('飞升 · '..names[token],'Ascension / '..(token=='PRIEST'and'Priest'or token=='ROGUE'and'Rogue'or'Hunter'))..' · '..spec.name..' · TG25A')
+ B.tree.title:SetText(tr('飞升 · '..names[token],'Ascension / '..(token=='DEATHKNIGHT'and'Death Knight'or token=='PRIEST'and'Priest'or token=='ROGUE'and'Rogue'or'Hunter'))..' · '..spec.name..' · TG26A')
  B.back:SetText(tr('返回专精首页','Specializations'));B.treeLibrary:SetText(tr('我的天赋收藏','My favorites'));B.compare:SetText(tr('三系推荐对照','Compare builds'));B.edit:SetText(tr('打开收藏编辑方案','Open favorites'));B.actual:SetText(tr('打开原经典天赋面板','Native talent panel'));B.refresh:SetText(tr('刷新当前点数','Refresh points'))
  B.tree.note:SetText(tr('此页只读；经收藏确认应用。左右下角拖动缩放。','Read-only preview. Confirm in favorites to apply. Drag lower corners to resize.'))
  for i,b in ipairs(B.tabs)do b:SetText((i==index and'● 'or'')..specFor(token,i).name);b:Select(i==index)end
  B.background:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..(token=='WARRIOR'and'Warrior'or'Paladin')..'Spec'..index..'TG10A_blp')
  B.background:SetTexCoord(0,.787109375,0,.755859375);B.background:SetAlpha(1);B.background:Show()
- if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'then B.background:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..({HUNTER='Hunter',ROGUE='Rogue',PRIEST='Priest'})[token]..'Spec'..index..'TG25A_blp');B.board:SetBackdropColor(.015,.02,.025,.50)else B.board:SetBackdropColor(.02,.03,.04,.15)end
+ if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'or token=='DEATHKNIGHT'then B.background:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..({HUNTER='Hunter',ROGUE='Rogue',PRIEST='Priest',DEATHKNIGHT='DeathKnight'})[token]..'Spec'..index..(token=='DEATHKNIGHT'and'TG26A'or'TG25A')..'_blp');B.board:SetBackdropColor(.015,.02,.025,.50)else B.board:SetBackdropColor(.02,.03,.04,.15)end
  local sum=0;local tree=d.trees[index];local edges,items,ids={},{},{}
  for _,n in ipairs(tree)do ids[n.id]=true end
  for i,n in ipairs(tree)do
@@ -169,7 +177,7 @@ function B.RefreshTree()
  B.board.title:SetText(spec.name..tr(' · 当前已学 ',' / Learned: ')..(ranks and sum or tr('未同步','Unavailable')))
  C.ScrollTree(B.board,items,false);C.Paint(B.board,items,edges,{current=true,captionBelow=true})
  B.info:SetText(spec.name..' · '..spec.role..'\n\n'..spec.description..'\n\n主要属性：'..spec.stats..'\n战斗方式：'..spec.style..'\n\n当前本系：'..(ranks and(sum..' 点')or'未同步')..'\n\n层级和前置沿用本服经典Talent数据；本服替换节点在悬停中提示。\n\n'..(why or'点击方向仅作浏览，不会切换实际专精。')..'\n\n可打开收藏编辑，再经原流程核对和确认应用。')
- if (token=='HUNTER'or token=='ROGUE'or token=='PRIEST')and G.CenterLocale.English()then B.info:SetText(spec.name..' / '..spec.role..'\n\n'..spec.description..'\n\nStats: '..spec.stats..'\nStyle: '..spec.style..'\n\nLearned: '..(ranks and sum or 'Unavailable')..'\n\nUses this server talent layout and prerequisites. Browsing does not switch specialization. Apply through the confirmation flow in favorites.')end
+ if (token=='HUNTER'or token=='ROGUE'or token=='PRIEST'or token=='DEATHKNIGHT')and G.CenterLocale.English()then B.info:SetText(spec.name..' / '..spec.role..'\n\n'..spec.description..'\n\nStats: '..spec.stats..'\nStyle: '..spec.style..'\n\nLearned: '..(ranks and sum or 'Unavailable')..'\n\nUses this server talent layout and prerequisites. Browsing does not switch specialization. Apply through the confirmation flow in favorites.')end
  if G.ClassEntry.PlayerClass()==token and not InCombatLockdown()then B.actual:Enable()else B.actual:Disable()end
 end
 function B.ShowTree(token,index)
@@ -194,3 +202,4 @@ end
 local events=CreateFrame('Frame');B.events=events
 for _,name in ipairs({'CHARACTER_POINTS_CHANGED','PLAYER_TALENT_UPDATE','ACTIVE_TALENT_GROUP_CHANGED','PLAYER_REGEN_ENABLED','PLAYER_REGEN_DISABLED'})do events:RegisterEvent(name)end
 events:SetScript('OnEvent',function()if B.home and B.home:IsShown()then B.RefreshHome()end;if B.tree and B.tree:IsShown()then B.RefreshTree()end end)
+
