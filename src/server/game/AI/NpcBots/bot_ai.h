@@ -132,6 +132,11 @@ class bot_ai : public CreatureAI
         EventProcessor* GetEvents() { return &Events; }
         ObjectGuid::LowType GetBotOwnerGuid() const { return _ownerGuid; }
         Player* GetBotOwner() const { return master; }
+        // WDN6B: optional module-owned resolver; ownership remains master.
+        using DungeonFollowResolver = Player* (*)(Creature*);
+        static void SetDungeonFollowResolver(DungeonFollowResolver resolver);
+        Player* GetFollowAnchor() const;
+
         bool SetBotOwner(Player* newowner);
         void CheckOwnerExpiry();
         uint8 GetBotClass() const { return _botclass; }

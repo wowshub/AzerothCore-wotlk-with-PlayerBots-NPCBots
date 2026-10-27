@@ -1,0 +1,44 @@
+{
+  "stage": "WDN6B",
+  "package": "codexfix_20261027_041249_阶段WDN6B_NPCBot清本跟随坦克第2步测试包",
+  "zip_sha256": "9f2b54f3e366a820f8efb1522f4e2dfd8bf1deed4289882769bdd20b9ef4f3bb",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-dungeon-clear/src/DcNpcFollowBridge.h",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "b6f2cb9a17d3754433a8c7080b8f8c99f23b3c6891c4661e34e812ac7be200bd",
+      "output_sha256": "b6f2cb9a17d3754433a8c7080b8f8c99f23b3c6891c4661e34e812ac7be200bd"
+    },
+    {
+      "file": "modules/mod-dungeon-clear/src/mod_dungeon_clear_loader.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_041249_阶段WDN6B_NPCBot清本跟随坦克第2步测试包\\backup_原文件\\modules\\mod-dungeon-clear\\src\\mod_dungeon_clear_loader.cpp",
+      "input_sha256": "d0b62cff61d0417764f84f296e63c49cd1e7beaf7526489813fd6ead83e79956",
+      "output_sha256": "d0b62cff61d0417764f84f296e63c49cd1e7beaf7526489813fd6ead83e79956"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_阶段WDN5I_巫医服务器红字与复活日志刷屏修复\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_ai.cpp",
+      "input_sha256": "be05a2d9a4f1187a597ad88e8a4cde76b826acabab89c4344a6ed5598bd9ec82",
+      "output_sha256": "be05a2d9a4f1187a597ad88e8a4cde76b826acabab89c4344a6ed5598bd9ec82"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_ai.h",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_ai.h",
+      "input_sha256": "3599c757af8e937a8783755a09318841429a60b4a9c69897367ae4b48743b611",
+      "output_sha256": "3599c757af8e937a8783755a09318841429a60b4a9c69897367ae4b48743b611"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/botmgr.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\botmgr.cpp",
+      "input_sha256": "6be2a24095e4b0c9792ff7718cbc7ec334edd292f491637f77aa0572806d6cf4",
+      "output_sha256": "6be2a24095e4b0c9792ff7718cbc7ec334edd292f491637f77aa0572806d6cf4"
+    }
+  ],
+  "resources": []
+}

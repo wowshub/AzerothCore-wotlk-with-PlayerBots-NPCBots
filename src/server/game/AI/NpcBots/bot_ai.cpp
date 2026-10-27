@@ -706,7 +706,7 @@ SpellCastResult bot_ai::CheckBotCast(Unit const* victim, uint32 spellId) const
     if (!IAmFree() && !master->GetBotMgr()->GetBotAllowCombatPositioning())
     {
         Position mpos;
-        _calculatePos(master, mpos);
+        _calculatePos(GetFollowAnchor(), mpos);
 
         if (me->GetDistance(mpos) > float(std::max<uint8>(5, master->GetBotMgr()->GetBotFollowDist() / 8)))
             return SPELL_FAILED_NOT_IDLE;
@@ -1040,10 +1040,33 @@ bool bot_ai::doCast(Unit* victim, uint32 spellId, TriggerCastFlags flags)
 
     return true;
 }
+// WDN6B: registered at script startup, read only on the owning map thread.
+// No per-bot cached pointer: stop/pause/death/map/party changes invalidate immediately.
+namespace { bot_ai::DungeonFollowResolver dungeonFollowResolver = nullptr; }
+void bot_ai::SetDungeonFollowResolver(DungeonFollowResolver resolver)
+{
+    dungeonFollowResolver = resolver;
+}
+Player* bot_ai::GetFollowAnchor() const
+{
+    if (!dungeonFollowResolver || IAmFree() || !master || !me->IsAlive() ||
+        !me->IsInWorld() || !master->IsInWorld() || !me->IsInMap(master) ||
+        !me->InSamePhase(master) || !me->GetMap()->IsDungeon() ||
+        !master->GetGroup() || me->GetBotGroup()!=master->GetGroup() ||
+        HasBotCommandState(BOT_COMMAND_STAY|BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION|BOT_COMMAND_UNBIND))
+        return master;
+    Player* tank=dungeonFollowResolver(me);
+    if (!tank || !tank->IsInWorld() || !tank->IsAlive() ||
+        tank->GetGroup()!=master->GetGroup() || !me->IsInMap(tank) || !me->InSamePhase(tank))
+        return master;
+    return tank;
+}
 //Follow point calculation
 void bot_ai::_calculatePos(Unit const* followUnit, Position& pos, float* speed/* = nullptr*/) const
 {
     Player const* player = followUnit->ToPlayer();
+    // Stable formation slots and configured spacing still belong to the owner.
+    if (!IAmFree() && player!=master && player==GetFollowAnchor()) player=master;
     uint8 followdist = !player ? BotMgr::GetBotFollowDistMax() / 2 : player->GetBotMgr()->GetBotFollowDist();
     float mydist, angle;
 
@@ -1277,6 +1300,7 @@ void bot_ai::SetBotCommandState(uint32 st, bool force, Position* newpos, float* 
             return;
     }
 
+    Player* followAnchor = GetFollowAnchor();
     Vehicle* veh = me->GetVehicle();
     VehicleSeatEntry const* seat = veh ? veh->GetSeatForPassenger(me) : nullptr;
     bool canControl = seat ? (seat->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL) : false;
@@ -1284,15 +1308,15 @@ void bot_ai::SetBotCommandState(uint32 st, bool force, Position* newpos, float* 
     if (mover)
     {
         if ((st & BOT_COMMAND_FOLLOW) && !IsChanneling() &&
-            (force || (!mover->isMoving() && !IsCasting() && master->IsAlive() && !Feasting())))
+            (force || (!mover->isMoving() && !IsCasting() && followAnchor->IsAlive() && !Feasting())))
         {
-            if (!me->IsInMap(master)) return;
+            if (!me->IsInMap(followAnchor)) return;
             if (CCed(mover, true)/* || master->HasUnitState(UNIT_STATE_FLEEING)*/) return;
             float myspeed = 0.0f;
             if (!newpos)
             {
                 ASSERT(!IAmFree());
-                _calculatePos(master, movepos, &myspeed);
+                _calculatePos(followAnchor, movepos, &myspeed);
             }
             else
             {
@@ -18918,9 +18942,10 @@ bool bot_ai::GlobalUpdate(uint32 diff)
         !HasBotCommandState(BOT_COMMAND_STAY) &&
         (!me->GetVehicle() || (!CCed(me->GetVehicleBase(), true) && !me->GetVehicleBase()->GetTarget())))
     {
+        Player* followAnchor = GetFollowAnchor();
         Unit const* mover = me->GetVehicle() ? me->GetVehicleBase() : me;
 
-        if (!master->IsAlive())
+        if (!master->IsAlive() && followAnchor==master)
         {
             //If ghost move to corpse, else move to dead player
             if (master->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_GHOST))
@@ -18939,7 +18964,7 @@ bool bot_ai::GlobalUpdate(uint32 diff)
         }
         else if (!IsCasting(mover) && (!IsShootingWand(mover) || Rand() < 10))
         {
-            Unit const* mmover = !IAmFree() ? master : nullptr;
+            Unit const* mmover = !IAmFree() ? followAnchor : nullptr;
             if (!mmover && me->GetMap()->IsBattleground() && GetBG())
             {
                 Battleground* bg = GetBG();
@@ -18997,7 +19022,7 @@ bool bot_ai::GlobalUpdate(uint32 diff)
             {
                 float speed = 0.0f;
                 _calculatePos(mmover, movepos, &speed);
-                float maxdist = std::max<float>((mmover->IsPlayer() ? float(mmover->ToPlayer()->GetBotMgr()->GetBotFollowDist()) : BotMgr::GetBotFollowDistMax() / 2.f) *
+                float maxdist = std::max<float>((mmover->IsPlayer() ? float((!IAmFree() ? master : mmover->ToPlayer())->GetBotMgr()->GetBotFollowDist()) : BotMgr::GetBotFollowDistMax() / 2.f) *
                     ((mmover->m_movementInfo.GetMovementFlags() & MOVEMENTFLAG_FORWARD) ? 0.125f : mmover->isMoving() ? 0.03125f : 0.25f), 3.f);
                 Position destPos;
                 if (me->isMoving())

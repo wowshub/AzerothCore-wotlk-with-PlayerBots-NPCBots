@@ -1269,7 +1269,7 @@ void BotMgr::Update(uint32 diff)
 
         if (_owner->IsAlive() && (bot->IsAlive() || restrictBots) && !ai->IsTempBot() && !ai->IsDuringTeleport() &&
             (restrictBots || bot->GetMap() != _owner->GetMap() ||
-            (!bot->GetBotAI()->HasBotCommandState(BOT_COMMAND_STAY) && _owner->GetDistance(bot) > SIZE_OF_GRIDS)))
+            (!bot->GetBotAI()->HasBotCommandState(BOT_COMMAND_STAY) && ai->GetFollowAnchor()==_owner && _owner->GetDistance(bot) > SIZE_OF_GRIDS)))
         {
             //_owner->m_Controlled.erase(bot);
             TeleportBot(bot, _owner->GetMap(), _owner, _quickrecall);

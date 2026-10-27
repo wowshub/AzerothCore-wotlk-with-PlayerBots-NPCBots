@@ -1,3 +1,4 @@
+#include "DcNpcFollowBridge.h"
 /*
  * mod-dungeon-clear — module entry point.
  *
@@ -17,6 +18,7 @@ void AddSC_dungeon_clear_dungeon_queue();   // RebornWOW DCQ1A
 
 void Addmod_dungeon_clearScripts()
 {
+    bot_ai::SetDungeonFollowResolver(&DcNpcFollowBridge::Resolve);
     AddSC_dungeon_clear_module();
     AddSC_dungeon_clear_command();
     AddSC_dungeon_clear_addon_hook();
