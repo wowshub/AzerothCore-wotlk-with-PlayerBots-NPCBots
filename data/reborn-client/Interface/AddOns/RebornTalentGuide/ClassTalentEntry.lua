@@ -13,7 +13,7 @@ function E.Open(toggle)
  if InCombatLockdown()then G.Message('请脱战后打开飞升职业天赋面板');return false end
  local token=E.PlayerClass()
  if token=='WITCHDOCTOR'then return false end -- actual WD handlers retain their original behavior
- if token~='WARRIOR'and token~='PALADIN'and token~='HUNTER'and token~='ROGUE'and token~='PRIEST'and token~='DEATHKNIGHT'and token~='SHAMAN'and token~='MAGE'then G.Message('该职业飞升大面板尚未接入，请使用原经典天赋入口');return false end
+ if token~='WARRIOR'and token~='PALADIN'and token~='HUNTER'and token~='ROGUE'and token~='PRIEST'and token~='DEATHKNIGHT'and token~='SHAMAN'and token~='MAGE'and token~='WARLOCK'then G.Message('该职业飞升大面板尚未接入，请使用原经典天赋入口');return false end
  G.fromBot=false
  if RebornWDSpecHome and RebornWDSpecHome:IsShown()then RebornWDSpecHome:Hide()end
  if RebornWDTreePreview and RebornWDTreePreview:IsShown()then RebornWDTreePreview:Hide()end

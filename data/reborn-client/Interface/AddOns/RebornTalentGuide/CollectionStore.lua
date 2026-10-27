@@ -12,14 +12,14 @@ function S.DB()
 end
 -- Native class adapters share storage, never character-authoritative ranks.
 function S.NativeData(class)
- if class=='WARRIOR'then return RebornTalentGuideData elseif class=='PALADIN'then return PD elseif class=='HUNTER'then return RebornTalentGuideHunterData elseif class=='ROGUE'then return RebornTalentGuideRogueData elseif class=='PRIEST'then return RebornTalentGuidePriestData elseif class=='DEATHKNIGHT'then return RebornTalentGuideDeathKnightData elseif class=='SHAMAN'then return RebornTalentGuideShamanData elseif class=='MAGE'then return RebornTalentGuideMageData end
+ if class=='WARRIOR'then return RebornTalentGuideData elseif class=='PALADIN'then return PD elseif class=='HUNTER'then return RebornTalentGuideHunterData elseif class=='ROGUE'then return RebornTalentGuideRogueData elseif class=='PRIEST'then return RebornTalentGuidePriestData elseif class=='DEATHKNIGHT'then return RebornTalentGuideDeathKnightData elseif class=='SHAMAN'then return RebornTalentGuideShamanData elseif class=='MAGE'then return RebornTalentGuideMageData elseif class=='WARLOCK'then return RebornTalentGuideWarlockData end
 end
 function S.NativeEngine(class)
- if class=='WARRIOR'then return RebornTalentGuideWarriorCollection elseif class=='PALADIN'then return RebornTalentGuidePaladin elseif class=='HUNTER'then return RebornTalentGuideHunter elseif class=='ROGUE'then return RebornTalentGuideRogue elseif class=='PRIEST'then return RebornTalentGuidePriest elseif class=='DEATHKNIGHT'then return RebornTalentGuideDeathKnight elseif class=='SHAMAN'then return RebornTalentGuideShaman elseif class=='MAGE'then return RebornTalentGuideMage end
+ if class=='WARRIOR'then return RebornTalentGuideWarriorCollection elseif class=='PALADIN'then return RebornTalentGuidePaladin elseif class=='HUNTER'then return RebornTalentGuideHunter elseif class=='ROGUE'then return RebornTalentGuideRogue elseif class=='PRIEST'then return RebornTalentGuidePriest elseif class=='DEATHKNIGHT'then return RebornTalentGuideDeathKnight elseif class=='SHAMAN'then return RebornTalentGuideShaman elseif class=='MAGE'then return RebornTalentGuideMage elseif class=='WARLOCK'then return RebornTalentGuideWarlock end
 end
 function S.ActiveNativeJob()
  local R=RebornTalentGuideWarriorCollection;local P=RebornTalentGuidePaladin
- if R.job then return R.job,R elseif P.job then return P.job,P elseif RebornTalentGuideHunter and RebornTalentGuideHunter.job then return RebornTalentGuideHunter.job,RebornTalentGuideHunter elseif RebornTalentGuideRogue and RebornTalentGuideRogue.job then return RebornTalentGuideRogue.job,RebornTalentGuideRogue elseif RebornTalentGuidePriest and RebornTalentGuidePriest.job then return RebornTalentGuidePriest.job,RebornTalentGuidePriest elseif RebornTalentGuideDeathKnight and RebornTalentGuideDeathKnight.job then return RebornTalentGuideDeathKnight.job,RebornTalentGuideDeathKnight elseif RebornTalentGuideShaman and RebornTalentGuideShaman.job then return RebornTalentGuideShaman.job,RebornTalentGuideShaman elseif RebornTalentGuideMage and RebornTalentGuideMage.job then return RebornTalentGuideMage.job,RebornTalentGuideMage end
+ if R.job then return R.job,R elseif P.job then return P.job,P elseif RebornTalentGuideHunter and RebornTalentGuideHunter.job then return RebornTalentGuideHunter.job,RebornTalentGuideHunter elseif RebornTalentGuideRogue and RebornTalentGuideRogue.job then return RebornTalentGuideRogue.job,RebornTalentGuideRogue elseif RebornTalentGuidePriest and RebornTalentGuidePriest.job then return RebornTalentGuidePriest.job,RebornTalentGuidePriest elseif RebornTalentGuideDeathKnight and RebornTalentGuideDeathKnight.job then return RebornTalentGuideDeathKnight.job,RebornTalentGuideDeathKnight elseif RebornTalentGuideShaman and RebornTalentGuideShaman.job then return RebornTalentGuideShaman.job,RebornTalentGuideShaman elseif RebornTalentGuideMage and RebornTalentGuideMage.job then return RebornTalentGuideMage.job,RebornTalentGuideMage elseif RebornTalentGuideWarlock and RebornTalentGuideWarlock.job then return RebornTalentGuideWarlock.job,RebornTalentGuideWarlock end
 end
 function S.StopOwned(reason)
  local job,engine=S.ActiveNativeJob();local T=G.TalentCenter
@@ -92,7 +92,7 @@ function S.Capture(class)
  return b
 end
 function S.Recommendation(class)
- if class=='HUNTER'or class=='ROGUE'or class=='PRIEST'or class=='DEATHKNIGHT'or class=='SHAMAN'or class=='MAGE'then
+ if class=='HUNTER'or class=='ROGUE'or class=='PRIEST'or class=='DEATHKNIGHT'or class=='SHAMAN'or class=='MAGE'or class=='WARLOCK'then
   local H=S.NativeEngine(class);local p,why=H.Build(H.selected or 1,H.previewCurrent~=false and UnitLevel('player')or H.previewLevel)
   if not p then return nil,why end
   local b=S.Blank(class,p.level);for t,tree in ipairs(S.NativeData(class).trees)do for i,n in ipairs(tree)do if p.ranks[t][i]>0 then b.ranks[n.id]=p.ranks[t][i]end end end

@@ -34,6 +34,7 @@ PriestData.lua
 DeathKnightData.lua
 ShamanData.lua
 MageData.lua
+WarlockData.lua
 WarriorCollection.lua
 Hunter.lua
 Rogue.lua
@@ -41,6 +42,7 @@ Priest.lua
 DeathKnight.lua
 Shaman.lua
 Mage.lua
+Warlock.lua
 CollectionStore.lua
 CollectionDetails.lua
 CollectionApply.lua
