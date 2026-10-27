@@ -247,6 +247,76 @@ namespace
         SendAddonPayload(player, "DC\tBI_END");
     }
 
+    // RebornWOW DCNPC2A: put an NPCBot into the sender's group, by name. An NPCBot is a creature:
+    // the invite list cannot invite it by name. Its group join is a BotMgr call on its OWNER (the
+    // same one the NPCBot gossip "join group" runs) and it lands in the owner's group. So a bot is
+    // found among (1) the sender's own hired bots, then (2) the hired bots of another character of
+    // the SAME ACCOUNT that is online (a character logged in as a playerbot) and standing in the
+    // sender's group -- its group is then the sender's group. Nobody else's bots are touched.
+    // param = "Name,Name,..." (up to 10).
+    void HandleNpcJoin(Player* player, std::string const& param)
+    {
+        if (!player->GetSession())
+            return;
+        ChatHandler chat(player->GetSession());
+        uint32 const account = player->GetSession()->GetAccountId();
+        auto say = [&chat](std::string const& m) { chat.SendSysMessage(("|cff3da6ff[NPCBot]|r " + m).c_str()); };
+        auto findIn = [](BotMgr* mgr, std::string const& name) -> Creature*
+        {
+            if (!mgr)
+                return nullptr;
+            for (auto const& kv : *mgr->GetBotMap())
+                if (kv.second && kv.second->GetName() == name)
+                    return kv.second;
+            return nullptr;
+        };
+        std::istringstream in(param);
+        std::string n;
+        uint32 asked = 0;
+        while (std::getline(in, n, ',') && asked < 10)
+        {
+            if (n.empty())
+                continue;
+            ++asked;
+            BotMgr* ownerMgr = player->GetBotMgr();
+            Creature* found = findIn(ownerMgr, n);
+            Player* ownerChar = player;
+            std::string elsewhere;
+            if (!found)
+            {
+                for (auto const& kv : ObjectAccessor::GetPlayers())
+                {
+                    Player* p = kv.second;
+                    if (!p || p == player || !p->IsInWorld() || !p->GetSession() ||
+                        p->GetSession()->GetAccountId() != account)
+                        continue;
+                    Creature* bot = findIn(p->GetBotMgr(), n);
+                    if (!bot)
+                        continue;
+                    if (player->GetGroup() && p->GetGroup() == player->GetGroup())
+                    {
+                        found = bot;
+                        ownerMgr = p->GetBotMgr();
+                        ownerChar = p;
+                    }
+                    else
+                        elsewhere = p->GetName();
+                    break;
+                }
+            }
+            if (!found)
+                say(elsewhere.empty()
+                        ? Acore::StringFormat("{} is not one of your hired NPCBots (or your account's characters in this group).", n)
+                        : Acore::StringFormat("{} belongs to {}; put {} in your group first.", n, elsewhere, elsewhere));
+            else if (!found->IsInWorld())
+                say(Acore::StringFormat("{} is not in the world.", n));
+            else if (!ownerMgr->AddBotToGroup(found))
+                say(Acore::StringFormat("{} could not join (the group is full).", n));
+            else if (ownerChar != player)
+                say(Acore::StringFormat("{} (hired by {}) joined your group.", n, ownerChar->GetName()));
+        }
+    }
+
     // DCTEST3A: one run's boss kills and deaths so far (the most recent 30 / 40).
     void SendTestInfo(Player* player, std::string const& runId)
     {
@@ -925,6 +995,13 @@ public:
         if (subCmd == "botinfo")
         {
             SendBotInfo(player, param);
+            return;
+        }
+
+        // RebornWOW DCNPC2A: the panel puts the sender's own NPCBots into the sender's group.
+        if (subCmd == "npcjoin")
+        {
+            HandleNpcJoin(player, param);
             return;
         }
 
