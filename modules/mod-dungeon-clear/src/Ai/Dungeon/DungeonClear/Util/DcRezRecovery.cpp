@@ -4,6 +4,7 @@
  */
 
 #include "DcRezRecovery.h"
+#include "DcNpcPartySnapshot.h"
 
 #include "Ai/Dungeon/DungeonClear/Data/DcNeverTargetRegistry.h"
 #include "Ai/Dungeon/DungeonClear/Data/Events/DungeonEventTables.h"
@@ -96,18 +97,17 @@ namespace
             if(!p->IsInWorld()||!bot->IsInMap(p)||!bot->InSamePhase(p))continue;
             if(p->IsAlive()&&p->getClass()==CLASS_WITCH_DOCTOR&&GET_PLAYERBOT_AI(p))
                 for(auto rank:WD19A::ReclaimRanks)if(p->HasSpell(rank.spell))return p;
-            if(!p->HaveBot())continue;
-            for(auto const& item:*p->GetBotMgr()->GetBotMap())
+        }
+        for (Creature* candidate : DcNpcPartySnapshot::Collect(bot))
+        {
+            auto* c=WDN1::Actor(candidate);if(!c)continue;
+            auto* ai=c->GetBotAI();auto const& spells=ai->GetSpellMap();auto it=spells.find(9003260);
+            if(it==spells.end()||!it->second||!WDN1::Known(c,it->second->spellId)||
+               ai->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION|BOT_COMMAND_NO_CAST))continue;
+            for(Player* dead:players)if(dead->isDead())
             {
-                auto* c=WDN1::Actor(item.second);if(!c||!bot->IsInMap(c)||!bot->InSamePhase(c))continue;
-                auto* ai=c->GetBotAI();auto const& spells=ai->GetSpellMap();auto it=spells.find(9003260);
-                if(it==spells.end()||!it->second||!WDN1::Known(c,it->second->spellId)||
-                   ai->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION|BOT_COMMAND_NO_CAST))continue;
-                for(Player* dead:players)if(dead->isDead())
-                {
-                    WorldObject* body=dead->HasFlag(PLAYER_FLAGS,PLAYER_FLAGS_GHOST)?static_cast<WorldObject*>(dead->GetCorpse()):dead;
-                    if(body&&body->IsInWorld()&&c->IsInMap(body)&&c->InSamePhase(body)&&c->GetDistance(body)<=60.f)return c;
-                }
+                WorldObject* body=dead->HasFlag(PLAYER_FLAGS,PLAYER_FLAGS_GHOST)?static_cast<WorldObject*>(dead->GetCorpse()):dead;
+                if(body&&body->IsInWorld()&&c->IsInMap(body)&&c->InSamePhase(body)&&c->GetDistance(body)<=60.f)return c;
             }
         }
         return nullptr;
@@ -203,6 +203,9 @@ namespace
         for (Player* p : players)
             if (DcCombatFlag::IsEngaged(p))
                 return true;
+        if (!players.empty())
+            for (Creature* c : DcNpcPartySnapshot::Collect(players.front()))
+                if (DcNpcPartySnapshot::Engaged(c)) return true;
         return false;
     }
 

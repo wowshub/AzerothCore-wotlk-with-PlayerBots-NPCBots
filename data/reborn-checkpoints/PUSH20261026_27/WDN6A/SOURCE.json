@@ -1,0 +1,37 @@
+{
+  "stage": "WDN6A",
+  "package": "codexfix_20261027_014154_阶段WDN6A_NPCBot清本成员识别第1步测试包",
+  "zip_sha256": "e306224e08f9488a59041eeb0fdf324950b279db7cd9d8ecf33d04920668222e",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcNpcPartySnapshot.h",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "62ed605f42c15b99805b3784faca5ac8aa88661fcc770c5473a8752ca683ac8d",
+      "output_sha256": "62ed605f42c15b99805b3784faca5ac8aa88661fcc770c5473a8752ca683ac8d"
+    },
+    {
+      "file": "modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcPartyState.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_014154_阶段WDN6A_NPCBot清本成员识别第1步测试包\\backup_原文件\\modules\\mod-dungeon-clear\\src\\Ai\\Dungeon\\DungeonClear\\Util\\DcPartyState.cpp",
+      "input_sha256": "53fab0f588c0b8bc29a208949bb5c66f4dc45675fd18ed6a3d2400a5fdf21709",
+      "output_sha256": "53fab0f588c0b8bc29a208949bb5c66f4dc45675fd18ed6a3d2400a5fdf21709"
+    },
+    {
+      "file": "modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcRezRecovery.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包\\01_覆盖到源代码根目录\\modules\\mod-dungeon-clear\\src\\Ai\\Dungeon\\DungeonClear\\Util\\DcRezRecovery.cpp",
+      "input_sha256": "85741e2862200e2887b76fed048badc19ae7d21543099dc92ededb82cfb895aa",
+      "output_sha256": "85741e2862200e2887b76fed048badc19ae7d21543099dc92ededb82cfb895aa"
+    },
+    {
+      "file": "modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcSmartRest.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_014154_阶段WDN6A_NPCBot清本成员识别第1步测试包\\backup_原文件\\modules\\mod-dungeon-clear\\src\\Ai\\Dungeon\\DungeonClear\\Util\\DcSmartRest.cpp",
+      "input_sha256": "1a1c87655347e410cecde99358f4a3626bbd7d06bc25781ae150462c4c57521a",
+      "output_sha256": "1a1c87655347e410cecde99358f4a3626bbd7d06bc25781ae150462c4c57521a"
+    }
+  ],
+  "resources": []
+}

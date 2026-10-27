@@ -4,6 +4,7 @@
  */
 
 #include "DcPartyState.h"
+#include "DcNpcPartySnapshot.h"
 
 #include "DcTickMemo.h"
 #include "DungeonClearMath.h"
@@ -101,12 +102,10 @@ bool DcPartyState::IsPartyReady(Player* bot, float minHpPct, float minMpPct, flo
     if (!bot)
         return false;
     Group* group = bot->GetGroup();
-    if (!group)
-        return true;  // Solo tank — always "ready."
 
     // One member's readiness against the bars. Factored so the strict 5-man
     // walk and the raid quorum walk below judge a member identically.
-    auto const memberMeetsBars = [&](Player* member)
+    auto const memberMeetsBars = [&](Unit* member)
     {
         if (member != bot)
         {
@@ -147,6 +146,21 @@ bool DcPartyState::IsPartyReady(Player* bot, float minHpPct, float minMpPct, flo
     bool const raid = bot->GetMap() && bot->GetMap()->IsRaid();
     uint32 living = 0;
     uint32 meeting = 0;
+
+    for (Creature* c : DcNpcPartySnapshot::Collect(bot))
+    {
+        if (!c->IsAlive()) continue;
+        bool const ok=memberMeetsBars(c);
+        if (!raid && !ok) return false;
+        if (raid)
+        {
+            ++living;
+            if (ok) ++meeting;
+            else if (c->GetBotAI()->HasRole(NPC_BOT_ROLE_TANK|NPC_BOT_ROLE_HEAL) || c->isMoving())
+                return false;
+        }
+    }
+    if (!group) return true;
 
     for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
     {
@@ -537,17 +551,19 @@ std::string DcPartyState::DescribePartyNotReady(Player* bot,
     if (!bot)
         return "";
     Group* group = bot->GetGroup();
-    if (!group)
-        return "";  // Solo tank — nobody to wait on.
 
     // Keep the addon line short: name a few members, then collapse the rest.
     constexpr size_t MAX_NAMED = 3;
     std::vector<std::string> parts;
     size_t extra = 0;
 
-    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    std::vector<Unit*> roster;
+    for (Creature* c : DcNpcPartySnapshot::Collect(bot)) roster.push_back(c);
+    if (group)
+        for (GroupReference* ref=group->GetFirstMember(); ref; ref=ref->next())
+            if (Player* p=ref->GetSource()) roster.push_back(p);
+    for (Unit* member : roster)
     {
-        Player* member = ref->GetSource();
         if (!member)
             continue;
         if (member->GetMapId() != bot->GetMapId())

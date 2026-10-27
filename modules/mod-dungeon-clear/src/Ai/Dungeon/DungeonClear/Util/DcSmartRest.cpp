@@ -4,6 +4,7 @@
  */
 
 #include "DcSmartRest.h"
+#include "DcNpcPartySnapshot.h"
 
 #include "DcSmartRestDecision.h"
 #include "DungeonClearTuning.h"
@@ -33,8 +34,20 @@ namespace
     // DcPartyState::IsPartyReady gates on. `players` (optional) receives the
     // matching Player* per snapshot row so DescribeWait can name blockers.
     void BuildSnapshot(Player* leader, std::vector<Member>& out,
-                       std::vector<Player*>* players = nullptr)
+                       std::vector<Unit*>* players = nullptr)
     {
+        // Creature rows use native NPC role bits, not PlayerbotAI casts.
+        for (Creature* c : DcNpcPartySnapshot::Collect(leader))
+        {
+            if (!c->IsAlive()) continue;
+            Member m;
+            m.hpPct=c->GetHealthPct();
+            m.isManaUser=c->getPowerType()==POWER_MANA && c->GetMaxPower(POWER_MANA)>0;
+            if (m.isManaUser) m.manaPct=c->GetPowerPct(POWER_MANA);
+            m.isHealer=c->GetBotAI()->HasRole(NPC_BOT_ROLE_HEAL);
+            out.push_back(m);
+            if (players) players->push_back(c);
+        }
         Group* group = leader->GetGroup();
         if (!group)
         {
@@ -181,7 +194,7 @@ namespace DcSmartRest
             return "";
 
         std::vector<Member> members;
-        std::vector<Player*> players;
+        std::vector<Unit*> players;
         BuildSnapshot(leader, members, &players);
 
         PlayerbotAI* leaderAI = GET_PLAYERBOT_AI(leader);
