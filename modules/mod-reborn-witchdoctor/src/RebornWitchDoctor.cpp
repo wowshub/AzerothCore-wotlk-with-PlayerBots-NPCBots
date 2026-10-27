@@ -1480,6 +1480,11 @@ class spell_reborn_wd30a_reclaim : public SpellScript
     PrepareSpellScript(spell_reborn_wd30a_reclaim);
     SpellCastResult CheckDoctor()
     {
+        // WDN5C: only the recruited Witch Doctor's enabled, level-valid rank.
+        if (WDN1::Actor(GetCaster()))
+            return GetSpellInfo()->Id >= 9003260 && GetSpellInfo()->Id <= 9003267 &&
+                WDN1::Known(GetCaster(), GetSpellInfo()->Id) && !GetCaster()->IsInCombat()
+                ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
         Player* player = GetCaster()->ToPlayer();
         return IsDoctor(player) && GetSpellInfo()->Id >= 9003260 && GetSpellInfo()->Id <= 9003267 &&
             player->HasSpell(GetSpellInfo()->Id) && player->GetLevel() >= GetSpellInfo()->SpellLevel

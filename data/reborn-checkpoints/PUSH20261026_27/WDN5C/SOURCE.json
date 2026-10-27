@@ -1,0 +1,30 @@
+{
+  "stage": "WDN5C",
+  "package": "codexfix_20261026_073224_阶段WDN5C_NPC巫医战后复活与治疗日志整合测试包",
+  "zip_sha256": "53d15c09d85f9d8ad0155958c2035c09c59df9af6dd07f90cc0db368b128e8e9",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctor.cpp",
+      "input_sha256": "5b61fafa1c9c20f99e14420c58a18af82f3338b6432ffa61871bef8618e61903",
+      "output_sha256": "5b61fafa1c9c20f99e14420c58a18af82f3338b6432ffa61871bef8618e61903"
+    },
+    {
+      "file": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorNpcActor1.h",
+      "input_sha256": "5bd423a6795d381e62936c56f958f65c0447640a23384d7ebc1a379ce8dc5fce",
+      "output_sha256": "5bd423a6795d381e62936c56f958f65c0447640a23384d7ebc1a379ce8dc5fce"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_witch_doctor_ai.cpp",
+      "input_sha256": "ac6bd323a172b8d3a7099b8bb581fec2e81de9cb5980a364ac7d7f323fbfa4c3",
+      "output_sha256": "ac6bd323a172b8d3a7099b8bb581fec2e81de9cb5980a364ac7d7f323fbfa4c3"
+    }
+  ],
+  "resources": []
+}
