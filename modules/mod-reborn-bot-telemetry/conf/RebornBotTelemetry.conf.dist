@@ -85,3 +85,6 @@ BotTelemetry.HolderLogAfterMs = 15000
 # Default disabled. MinHeal filters effective + overheal (post-absorb); zero total is omitted.
 RebornBotTelemetry.NpcBotHealLog = 0
 RebornBotTelemetry.NpcBotHealLog.MinHeal = 1
+
+# WDN5F: resurrection decisions, one scan per bot per 5 seconds; default off.
+RebornBotTelemetry.NpcBotRezLog = 0

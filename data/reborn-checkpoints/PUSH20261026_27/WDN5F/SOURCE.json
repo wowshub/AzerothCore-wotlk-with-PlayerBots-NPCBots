@@ -1,0 +1,37 @@
+{
+  "stage": "WDN5F",
+  "package": "codexfix_20261026_090633_阶段WDN5F_NPC巫医复活诊断与清本联动累计测试包",
+  "zip_sha256": "44cf52f19c62f34332e858e9bd9263dffaa7903d41226bd0368b35f58e2a0b9e",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcRezDecision.h",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_090633_阶段WDN5F_NPC巫医复活诊断与清本联动累计测试包\\backup_原文件\\modules\\mod-dungeon-clear\\src\\Ai\\Dungeon\\DungeonClear\\Util\\DcRezDecision.h",
+      "input_sha256": "50f7ec984b9f91a1d0c3bb222514b8bf5acf214f253db392b04e04d1afc7df5a",
+      "output_sha256": "50f7ec984b9f91a1d0c3bb222514b8bf5acf214f253db392b04e04d1afc7df5a"
+    },
+    {
+      "file": "modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcRezRecovery.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_090633_阶段WDN5F_NPC巫医复活诊断与清本联动累计测试包\\backup_原文件\\modules\\mod-dungeon-clear\\src\\Ai\\Dungeon\\DungeonClear\\Util\\DcRezRecovery.cpp",
+      "input_sha256": "44a92ce94677ae4d804aec7636c04f439ca87a9083f82450165a313111bb6765",
+      "output_sha256": "44a92ce94677ae4d804aec7636c04f439ca87a9083f82450165a313111bb6765"
+    },
+    {
+      "file": "modules/mod-reborn-bot-telemetry/conf/RebornBotTelemetry.conf.dist",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_083012_阶段WDN5D_NPC巫医破咒净化与复活治疗累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-bot-telemetry\\conf\\RebornBotTelemetry.conf.dist",
+      "input_sha256": "eb95f4686ae6c78adb8379d8c832b56735db5533e1760e269f07f98b64a31149",
+      "output_sha256": "eb95f4686ae6c78adb8379d8c832b56735db5533e1760e269f07f98b64a31149"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_083012_阶段WDN5D_NPC巫医破咒净化与复活治疗累计测试包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_witch_doctor_ai.cpp",
+      "input_sha256": "fb7477e9a0f959fc3e391ecd6d85978fd3652027f93562fb68164bde5013f777",
+      "output_sha256": "fb7477e9a0f959fc3e391ecd6d85978fd3652027f93562fb68164bde5013f777"
+    }
+  ],
+  "resources": []
+}

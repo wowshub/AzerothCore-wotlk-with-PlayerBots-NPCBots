@@ -32,6 +32,7 @@
 
 #include "CellImpl.h"
 #include "Creature.h"
+#include "Corpse.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "Group.h"
@@ -42,6 +43,8 @@
 #include "PlayerbotAI.h"
 #include "Playerbots.h"
 #include "SpellMgr.h"
+#include "botmgr.h"
+#include "../../../../../../mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h"
 #include "Timer.h"
 
 namespace
@@ -66,12 +69,48 @@ namespace
     // trainer (Halls of Stone, paladin "Dvd") was picked as the rezzer and refused forever with
     // "no spell id for name", freezing the run on "coming to resurrect". Require any rank of the
     // class rez (walking the whole chain, custom high ranks included).
-    bool IsRezClass(Player const* p)
+    bool IsRezClass(Player* p)
     {
+        if(p->getClass()==CLASS_WITCH_DOCTOR)
+        {
+            // Its independent class AI already handles Reclaim Soul; never elect it
+            // for the stock priest/paladin/shaman/druid named-spell cast action.
+            if(GET_PLAYERBOT_AI(p))return false;
+            for(auto rank:WD19A::ReclaimRanks)if(p->HasSpell(rank.spell))return true;
+            return false;
+        }
         for (uint32 id = RezSpellFirstRank(p->getClass()); id; id = sSpellMgr->GetNextSpellInChain(id))
             if (p->HasSpell(id))
                 return true;
         return false;
+    }
+
+    Unit* ExternalRezzer(Player* bot)
+    {
+        if(!bot||!bot->IsInWorld())return nullptr;
+        std::vector<Player*> players{bot};
+        if(Group* g=bot->GetGroup())for(GroupReference* ref=g->GetFirstMember();ref;ref=ref->next())
+            if(Player* p=ref->GetSource())if(p!=bot)players.push_back(p);
+        for(Player* p:players)
+        {
+            if(!p->IsInWorld()||!bot->IsInMap(p)||!bot->InSamePhase(p))continue;
+            if(p->IsAlive()&&p->getClass()==CLASS_WITCH_DOCTOR&&GET_PLAYERBOT_AI(p))
+                for(auto rank:WD19A::ReclaimRanks)if(p->HasSpell(rank.spell))return p;
+            if(!p->HaveBot())continue;
+            for(auto const& item:*p->GetBotMgr()->GetBotMap())
+            {
+                auto* c=WDN1::Actor(item.second);if(!c||!bot->IsInMap(c)||!bot->InSamePhase(c))continue;
+                auto* ai=c->GetBotAI();auto const& spells=ai->GetSpellMap();auto it=spells.find(9003260);
+                if(it==spells.end()||!it->second||!WDN1::Known(c,it->second->spellId)||
+                   ai->HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION|BOT_COMMAND_NO_CAST))continue;
+                for(Player* dead:players)if(dead->isDead())
+                {
+                    WorldObject* body=dead->HasFlag(PLAYER_FLAGS,PLAYER_FLAGS_GHOST)?static_cast<WorldObject*>(dead->GetCorpse()):dead;
+                    if(body&&body->IsInWorld()&&c->IsInMap(body)&&c->InSamePhase(body)&&c->GetDistance(body)<=60.f)return c;
+                }
+            }
+        }
+        return nullptr;
     }
 
     // The member whose DcRunState owns this run — DEAD OR ALIVE. This used to be a
@@ -506,7 +545,10 @@ namespace
         in.blockedSinceMs = run.rezBlockedSinceMs;
         in.blockedHoldMaxMs = DC_REZ_BLOCKED_HOLD_MAX_MS;
 
+        Unit* external=ExternalRezzer(bot);in.externalRezzer=external!=nullptr;
         plan.verdict = DcRezDecision::Decide(in, members);
+        if(plan.verdict.reason==DcRezDecision::Reason::WaitingOnExternal&&external)
+            plan.rezzerName=external->GetName();
 
         // Advance the floor's clocks from the verdict we just got. They can only be
         // stamped after the fact — whether a rezzer is left is precisely what the
@@ -580,6 +622,8 @@ namespace
             else if (unsafeStandDown)
                 line = plan.targetName + " died among enemies we haven't pulled \xe2\x80\x94 "
                        "carrying on without them rather than walk into the pack.";
+            else if (plan.verdict.reason == DcRezDecision::Reason::WaitingOnExternal)
+                line = plan.targetName + " died -- waiting for " + plan.rezzerName + " to resurrect them (" + std::to_string(in.timeoutMs/1000) + "s).";
             else if (plan.verdict.reason == DcRezDecision::Reason::WaitingOnHuman)
                 line = plan.targetName + " died \xe2\x80\x94 waiting for you to resurrect them (" +
                        std::to_string(in.timeoutMs / 1000) + "s).";
@@ -672,6 +716,7 @@ namespace DcRezRecovery
         // that is still counting down.
         if (RezBlockedByInstance(bot))
             return true;
+        if(ExternalRezzer(bot))return true;
         Group* group = bot->GetGroup();
         if (!group)
             return bot->IsAlive() && IsRezClass(bot);

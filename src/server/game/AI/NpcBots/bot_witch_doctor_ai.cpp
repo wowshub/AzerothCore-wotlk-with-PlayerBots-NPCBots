@@ -7,6 +7,8 @@
 #include "Group.h"
 #include "SpellMgr.h"
 #include "Log.h"
+#include "Config.h"
+#include "InstanceScript.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcCleansing5.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcHealing5.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcSurvival3.h"
@@ -45,7 +47,7 @@ public:
         WDN3A::State survival;
         uint32 utilityDelay=0,pullMoveDelay=0,survivalLogDelay=0,recentHostileDamage=0;
         bool preferWrath=false;
-        uint32 healMoveDelay=0,healLogDelay=0,rezRetry=0,cleanseRetry=0;
+        uint32 healMoveDelay=0,healLogDelay=0,rezRetry=0,cleanseRetry=0,rezLogDelay=0,rezCastLogDelay=0;
         uint32 spiritOwner=0,spiritMap=0,spiritPhase=0,spiritInstance=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
         void Trace(char const* reason,uint32 spell=0,int32 result=0)
         {
@@ -59,7 +61,7 @@ public:
                 me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation),GetBotRoles(),IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL),utilityDelay,WDN1C::Known(me),IsSpellReady(WDN1C::SpellId,0),WDN1C::Known(me)?int32(CheckBotCast(me,WDN1C::SpellId)):-1);
         }
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
-        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5D] initialized entry={}",me->GetEntry()); }
+        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5F] initialized entry={}",me->GetEntry()); }
 
         void ClearLocalScheduling()
         {
@@ -67,7 +69,7 @@ public:
             pullMoveDelay=survivalLogDelay=diagnosticTimer=recentHostileDamage=utilityDelay=0;
             hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=0;
             hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0;
-            brewingRetry=allyBrewRetry=healMoveDelay=healLogDelay=rezRetry=cleanseRetry=0;healingReserve=false;preferWrath=false;
+            brewingRetry=allyBrewRetry=healMoveDelay=healLogDelay=rezRetry=cleanseRetry=rezLogDelay=rezCastLogDelay=0;healingReserve=false;preferWrath=false;
         }
         void Reset() override { ClearLocalScheduling();survival.Clear(me); WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
         void JustDied(Unit* killer) override
@@ -356,6 +358,54 @@ public:
             }
             return best;
         }
+        // WDN5F: observation only; do not relax resurrection or mutate combat state.
+        void DiagnoseResurrection(uint32 diff)
+        {
+            if(!sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false))return;
+            rezCastLogDelay=rezCastLogDelay>diff?rezCastLogDelay-diff:0;
+            rezLogDelay=rezLogDelay>diff?rezLogDelay-diff:0;if(rezLogDelay)return;
+            rezLogDelay=5000;
+            Player* owner=GetBotOwner();if(!owner||IAmFree()||!me->IsInWorld())return;
+            std::vector<Player*> players{owner};
+            if(Group* group=owner->GetGroup())for(GroupReference* ref=group->GetFirstMember();ref;ref=ref->next())
+                if(Player* p=ref->GetSource())if(p!=owner)players.push_back(p);
+            Unit* blocker=nullptr;
+            auto blocked=[&](Unit* u){if(!blocker&&u&&u->IsInWorld()&&me->IsInMap(u)&&me->InSamePhase(u)&&u->IsInCombat())blocker=u;};
+            for(Player* p:players){blocked(p);if(p->HaveBot())for(auto const& pair:*p->GetBotMgr()->GetBotMap())blocked(pair.second);}
+            uint32 id=GetSpell(Reclaim);auto* info=sSpellMgr->GetSpellInfo(id);
+            int32 cost=info?info->CalcPowerCost(me,info->GetSchoolMask()):-1;
+            bool known=WDN1::Known(me,id),state=me->IsMounted()||me->GetVehicle()||WDN1::Escaping(me)||
+                HasBotCommandState(BOT_COMMAND_FULLSTOP|BOT_COMMAND_INACTION|BOT_COMMAND_NO_CAST);
+            auto report=[&](Unit* dead,WorldObject* body,bool requested,bool selfRez,bool autoRez)
+            {
+                if(!dead||dead->IsAlive())return;
+                bool valid=body&&body->IsInWorld()&&me->IsInMap(body)&&me->InSamePhase(body);
+                float distance=valid?me->GetDistance(body):-1.f;
+                bool los=valid&&me->IsWithinLOSInMap(body,VMAP::ModelIgnoreFlags::M2,LINEOFSIGHT_ALL_CHECKS);
+                bool pending=valid&&owner->GetBotMgr()->IsBeingResurrected(body);
+                char const* reason=!WDN1::Actor(me)?"actor-unavailable":!known?"skill-disabled-or-unlearned":
+                    state?"state-forbidden":me->IsInCombat()?"caster-combat":blocker?"party-combat":
+                    requested?"request-pending":selfRez?"self-resurrection":autoRez?"npc-auto-revive-soon":
+                    pending?"another-rez-in-progress":!valid?"body-map-phase-unavailable":distance>60.f?"outside-scan-range":
+                    IsCasting()?"casting":!IsSpellReady(Reclaim,0)?"cooldown-or-gcd":
+                    cost<0||int32(me->GetPower(POWER_MANA))<cost?"insufficient-mana":
+                    distance>28.f||!los?"approach-needed":"eligible-await-native-cast";
+                auto* instance=me->GetInstanceScript();
+                LOG_INFO("server","[NPCBOT-REZ] bot={} owner={} ownerGuid={} target={} targetGuid={} reason={} spell={} known={} mana={}/{} cost={} distance={} los={} commands={} casting={} combat={} blocker={} blockerGuid={} blockerAttackers={} blockerVictim={} request={} pending={} selfRez={} autoRez={} encounter={} map={} instance={}",
+                    me->GetName(),owner->GetName(),GetBotOwnerGuid(),dead->GetName(),dead->GetGUID().GetCounter(),reason,id,known,
+                    me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),cost,distance,los,GetBotCommandState(),IsCasting(),me->IsInCombat(),
+                    blocker?blocker->GetName():"none",blocker?blocker->GetGUID().GetCounter():0,blocker?blocker->getAttackers().size():0,
+                    blocker&&blocker->GetVictim()?blocker->GetVictim()->GetName():"none",requested,pending,selfRez,autoRez,
+                    instance&&instance->IsEncounterInProgress(),me->GetMapId(),me->GetInstanceId());
+            };
+            for(Player* p:players)
+            {
+                if(!p->IsGameMaster())report(p,p->HasFlag(PLAYER_FLAGS,PLAYER_FLAGS_GHOST)?static_cast<WorldObject*>(p->GetCorpse()):p,
+                    p->isResurrectRequested(),p->GetUInt32Value(PLAYER_SELF_RES_SPELL)!=0,false);
+                if(p->HaveBot())for(auto const& pair:*p->GetBotMgr()->GetBotMap())if(Creature* c=pair.second)
+                    if(c->GetBotAI())report(c,c,false,c->GetBotAI()->GetSelfRezSpell()!=0,c->GetBotAI()->GetReviveTimer()<15000);
+            }
+        }
         // WDN5C: typed corpses, fresh pointers per tick, no combat resurrection.
         WorldObject* ResurrectionTarget()
         {
@@ -430,12 +480,23 @@ public:
                 me->SetStandState(UNIT_STAND_STATE_STAND);
                 SpellCastTargets targets;targets.SetCorpseTarget(corpse);
                 Spell* spell=new Spell(me,info,TRIGGERED_NONE);
-                if(spell->prepare(&targets)==SPELL_CAST_OK)GC_Timer=1500;
+                SpellCastResult result=spell->prepare(&targets);
+                if(result==SPELL_CAST_OK)GC_Timer=1500;
+                if(sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false)&&!rezCastLogDelay)
+                {
+                    rezCastLogDelay=5000;
+                    LOG_INFO("server","[NPCBOT-REZ-CAST] bot={} target={} spell={} prepare={}",me->GetName(),target->GetGUID().GetCounter(),spellId,uint32(result));
+                }
                 // Spell owns its completion/failure lifetime; do not dereference after prepare.
             }
             else if(Unit* unit=target->ToUnit())
             {
-                if(CheckBotCast(unit,spellId)==SPELL_CAST_OK)doCast(unit,spellId);
+                SpellCastResult result=CheckBotCast(unit,spellId);bool started=result==SPELL_CAST_OK&&doCast(unit,spellId);
+                if(sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false)&&!rezCastLogDelay)
+                {
+                    rezCastLogDelay=5000;
+                    LOG_INFO("server","[NPCBOT-REZ-CAST] bot={} target={} spell={} check={} started={}",me->GetName(),unit->GetGUID().GetCounter(),spellId,uint32(result),started);
+                }
             }
             return true;
         }
@@ -737,6 +798,7 @@ public:
                 if(me->GetVictim())me->AttackStop();
                 opponent=nullptr;disttarget=nullptr;
             }
+            DiagnoseResurrection(diff);
             if(!GlobalUpdate(diff)){TraceSurvival("global-update");Trace("global-update");return;}
             if(IAmFree()||!WDN1::Actor(me))
             { me->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());return; }

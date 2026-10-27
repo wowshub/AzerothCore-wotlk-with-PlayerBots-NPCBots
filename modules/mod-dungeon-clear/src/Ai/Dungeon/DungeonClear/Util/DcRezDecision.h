@@ -66,6 +66,7 @@ namespace DcRezDecision
 
     struct Inputs
     {
+        bool          externalRezzer = false; // independently driven NPC/class AI, not a Player roster row
         bool          enabled = true;         // DungeonClear.PostCombatRez
         std::uint32_t nowMs = 0;
         std::uint32_t pendingSinceMs = 0;     // recovery clock; 0 = not running
@@ -120,6 +121,7 @@ namespace DcRezDecision
         NoDeaths,
         Disabled,        // feature off — kernel stands down (glue decides)
         Recovering,      // a bot rezzer is elected and will act
+        WaitingOnExternal, // NPC/class AI owns the cast; bounded by the same recovery timeout
         WaitingOnHuman,  // only a human can rez — hold and prompt
         Wipe,            // everyone on the map is dead
         NoRezzer,        // no living member's class can rez
@@ -255,7 +257,7 @@ namespace DcRezDecision
         // normal recovery once combat drops.
         bool const fractionWipe = in.wipeFractionPct < 100 && !in.partyEngaged &&
                                   total > 0 && dead * 100 >= total * in.wipeFractionPct;
-        if (!anyAlive || fractionWipe)
+        if ((!anyAlive || fractionWipe) && !in.externalRezzer)
         {
             r.outcome = in.regroupOnWipe ? Outcome::Regroup : Outcome::Disable;
             r.reason = Reason::Wipe;
@@ -333,7 +335,7 @@ namespace DcRezDecision
         }
 
         int const botRezzer = botHealer >= 0 ? botHealer : botAny;
-        if (botRezzer < 0 && humanAny < 0)
+        if (botRezzer < 0 && humanAny < 0 && !in.externalRezzer)
         {
             // NO REZ CLASS LEFT — but not necessarily a lost run.
             //
@@ -440,7 +442,7 @@ namespace DcRezDecision
         }
 
         r.outcome = Outcome::Hold;
-        r.reason = botRezzer >= 0 ? Reason::Recovering : Reason::WaitingOnHuman;
+        r.reason = botRezzer >= 0 ? Reason::Recovering : humanAny >= 0 ? Reason::WaitingOnHuman : Reason::WaitingOnExternal;
         if (botRezzer >= 0)
             r.pairs = PickPairs(members);
         return r;
