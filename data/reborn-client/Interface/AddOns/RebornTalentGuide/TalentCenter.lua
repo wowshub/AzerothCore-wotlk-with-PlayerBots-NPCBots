@@ -25,13 +25,13 @@ local function stop()
  if StaticPopup_Hide then for _,key in ipairs({'REBORN_TG_CENTER_DRAFT','REBORN_TG_CENTER_NAME','REBORN_TG_CENTER_RENAME','REBORN_TG_CENTER_DELETE','REBORN_TG_CENTER_NATIVE'})do StaticPopup_Hide(key)end end
 end
 local function plans()
- if T.class=='WITCHDOCTOR'then return RebornTalentGuideWDData.plans elseif T.class=='WARRIOR'then return RebornTalentGuideData.plans elseif T.class=='PALADIN'then return RebornTalentGuidePaladinData.plans elseif T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'then return S.NativeData(T.class).plans end
+ if T.class=='WITCHDOCTOR'then return RebornTalentGuideWDData.plans elseif T.class=='WARRIOR'then return RebornTalentGuideData.plans elseif T.class=='PALADIN'then return RebornTalentGuidePaladinData.plans elseif T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'then return S.NativeData(T.class).plans end
  return {}
 end
 local function selected()return T.selected[T.class]or 1 end
 local function choose(index)
  T.selected[T.class]=index
- if T.class=='WITCHDOCTOR'then W.selected=index elseif T.class=='WARRIOR'then G.selected=index elseif T.class=='PALADIN'then RebornTalentGuidePaladin.selected=index elseif T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'then S.NativeEngine(T.class).selected=index end
+ if T.class=='WITCHDOCTOR'then W.selected=index elseif T.class=='WARRIOR'then G.selected=index elseif T.class=='PALADIN'then RebornTalentGuidePaladin.selected=index elseif T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'then S.NativeEngine(T.class).selected=index end
 end
 local function dataClass()return S.NativeData(T.class)end
 local function current()
@@ -123,7 +123,7 @@ local function create()
  T.apply=button(812,-740,270,'按推荐天赋加点',T.ApplyRecommendation,'red')
  T.rename=button(616,-740,105,'重命名',T.Rename);T.delete=button(730,-740,105,'删除',T.Delete)
  T.applySaved=button(850,-740,230,'比较并应用此天赋',function()S.RequestApply()end,'red')
- T.editSaved=button(1090,-740,190,'编辑收藏',function()local id=T.favorite;if (T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT')and id then stop();T.frame:Hide();S.Open(T.class,function()S.Load(id)end)end end)
+ T.editSaved=button(1090,-740,190,'编辑收藏',function()local id=T.favorite;if (T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN')and id then stop();T.frame:Hide();S.Open(T.class,function()S.Load(id)end)end end)
  T.detailsButton=button(1092,-740,205,'查看方案说明',function()
   if T.details:IsShown()then T.details:Hide()else
    local p=plans()[selected()];local lines={p and L.Plan(p,'title')or L.Text('天赋说明'),p and L.Plan(p,p.purpose and'purpose'or'body')or'',p and L.Plan(p,'stats')or'',p and L.Plan(p,'conflicts')or''}
@@ -135,7 +135,7 @@ local function create()
  T.details:SetBackdrop({bgFile='Interface\\Buttons\\WHITE8X8',edgeFile='Interface\\Tooltips\\UI-Tooltip-Border',edgeSize=12});T.details:SetBackdropColor(.025,.04,.05,1)
  T.detailsText=C.Text(T.details,22,-20,836,'','GameFontHighlight');T.detailsText:SetHeight(470);T.details:Hide()
  T.status=text(420,-779,865,'');T.status:SetHeight(32)
- T.levelButtons={};for i,level in ipairs({0,20,40,60,80})do local value=level;T.levelButtons[i]=button(416+(i-1)*108,-700,102,level==0 and'当前等级'or(level..'级'),function()stop();local adapter=(T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT')and S.NativeEngine(T.class)or W;local target=T.class=='DEATHKNIGHT'and({[0]=0,[20]=55,[40]=60,[60]=70,[80]=80})[value]or value;adapter.previewCurrent=target==0;adapter.previewLevel=target==0 and UnitLevel('player')or target;T.Refresh()end)end
+ T.levelButtons={};for i,level in ipairs({0,20,40,60,80})do local value=level;T.levelButtons[i]=button(416+(i-1)*108,-700,102,level==0 and'当前等级'or(level..'级'),function()stop();local adapter=(T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN')and S.NativeEngine(T.class)or W;local target=T.class=='DEATHKNIGHT'and({[0]=0,[20]=55,[40]=60,[60]=70,[80]=80})[value]or value;adapter.previewCurrent=target==0;adapter.previewLevel=target==0 and UnitLevel('player')or target;T.Refresh()end)end
  f:HookScript('OnHide',stop)
 end
 function T.RefreshList()
@@ -185,8 +185,8 @@ local function paintWD(build,result)
 end
 local function paintNative(build)
  local data=dataClass();if not data then return false end
- local plan=build and S.NativePlan(build)or((T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT')and S.NativeEngine(T.class).Build(selected(),S.NativeEngine(T.class).previewCurrent~=false and UnitLevel('player')or S.NativeEngine(T.class).previewLevel)or data.plans[selected()]);if not plan then return false end
- local own=S.Capture(T.class);local treeNames=(T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT')and S.NativeData(T.class).treeNames or T.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'}
+ local plan=build and S.NativePlan(build)or((T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN')and S.NativeEngine(T.class).Build(selected(),S.NativeEngine(T.class).previewCurrent~=false and UnitLevel('player')or S.NativeEngine(T.class).previewLevel)or data.plans[selected()]);if not plan then return false end
+ local own=S.Capture(T.class);local treeNames=(T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN')and S.NativeData(T.class).treeNames or T.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'}
  for t,tree in ipairs(data.trees)do
   local board=T.boards[t];move(board,416+(t-1)*293,-144,285,498);board.width=265;board.height=450;board.canvas:SetSize(265,450);put(board.title,treeNames[t]);board:Show();local items,edges,ids={},{},{}
   for _,n in ipairs(tree)do ids[n.id]=true end
@@ -207,7 +207,7 @@ function T.Refresh()
  T.planScroll:ClearAllPoints();T.planScroll:SetPoint('TOPLEFT',T.frame,'TOPLEFT',184,favorite and-266 or-188);T.planScroll:SetHeight(favorite and 364 or 430)
  T.RefreshList();for _,b in ipairs(T.boards)do b:Hide()end
  for _,f in ipairs({T.collect,T.apply,T.rename,T.delete,T.applySaved,T.editSaved})do f:Hide()end
- for i,b in ipairs(T.levelButtons)do local lv=T.class=='DEATHKNIGHT'and({0,55,60,70,80})[i]or({0,20,40,60,80})[i];b:SetText(lv==0 and(L.English()and'Current'or'当前等级')or(tostring(lv)..(L.English()and' Lv'or'级'))); if favorite or(T.class~='WITCHDOCTOR'and T.class~='HUNTER'and T.class~='ROGUE'and T.class~='PRIEST'and T.class~='DEATHKNIGHT')then b:Hide()else b:Show()end end
+ for i,b in ipairs(T.levelButtons)do local lv=T.class=='DEATHKNIGHT'and({0,55,60,70,80})[i]or({0,20,40,60,80})[i];b:SetText(lv==0 and(L.English()and'Current'or'当前等级')or(tostring(lv)..(L.English()and' Lv'or'级'))); if favorite or(T.class~='WITCHDOCTOR'and T.class~='HUNTER'and T.class~='ROGUE'and T.class~='PRIEST'and T.class~='DEATHKNIGHT'and T.class~='SHAMAN')then b:Hide()else b:Show()end end
  if favorite then T.detailsButton:Hide()else T.detailsButton:Show()end
  local data=plans();local p=data[selected()];local b,why;local result
  if not favorite and p and T.scene~='全部'and(p.category or 'PVE')~=T.scene then p=nil;why='当前筛选暂无推荐方案。';T.detailsButton:Hide()end
@@ -216,12 +216,12 @@ function T.Refresh()
   else b,why=current()end
   T.heading:SetText(T.favorite and S.editor and S.editor.name or L.Text('当前天赋加点'));put(T.subtitle,T.favorite and'个人收藏 · 只读预览'or'与实际天赋面板已保存配点一致 · 不包含未保存草稿')
   if b then if b.class=='WITCHDOCTOR'then paintWD(b)else paintNative(b)end end
-  if T.favorite and b then if T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'then T.editSaved:Show()end;T.rename:Show();T.delete:Show();T.applySaved:Show();local can,reason=S.CanApply(b,S.frame);enable(T.applySaved,can~=nil);why=reason end
+  if T.favorite and b then if T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'then T.editSaved:Show()end;T.rename:Show();T.delete:Show();T.applySaved:Show();local can,reason=S.CanApply(b,S.frame);enable(T.applySaved,can~=nil);why=reason end
  else
   put(T.heading,p and L.Plan(p,'title') or((names[T.class]or'')..' · 暂无推荐天赋'));put(T.subtitle,'推荐天赋 · '..T.scene..' · 只载入草稿或通过原生加点确认')
   if p then
    if T.class=='WITCHDOCTOR'then local lev=W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player');result,why=W.Build(selected(),lev);if result then paintWD(nil,result);put(T.subtitle,'推荐'..result.level..'级：AE '..result.ae..'/'..result.aeBudget..' · TE '..result.te..'/'..result.teBudget..'；保留已学，只载入草稿。')end
-   else paintNative();if T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'then local H=S.NativeEngine(T.class);local v=H.Build(selected(),H.previewCurrent~=false and UnitLevel('player')or H.previewLevel);if v then T.subtitle:SetText((L.English()and 'Level 'or'等级 ')..v.level..' · '..table.concat(v.split,'/')..' · '..(L.English()and 'Reference allocation' or '本服参考配点'))end end end
+   else paintNative();if T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'then local H=S.NativeEngine(T.class);local v=H.Build(selected(),H.previewCurrent~=false and UnitLevel('player')or H.previewLevel);if v then T.subtitle:SetText((L.English()and 'Level 'or'等级 ')..v.level..' · '..table.concat(v.split,'/')..' · '..(L.English()and 'Reference allocation' or '本服参考配点'))end end end
    T.collect:Show();enable(T.collect,#S.List(T.class)<S.limit);T.apply:Show()
    if T.class=='WITCHDOCTOR'then local draft,reason=W.CheckDraft(selected(),W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player'));enable(T.apply,draft~=nil);why=reason
    else local b=S.Recommendation(T.class);local ctx,reason;if b then ctx,reason=S.CanApply(b,T.frame)end;enable(T.apply,ctx~=nil);why=reason end
@@ -232,10 +232,10 @@ function T.Refresh()
  local summary=G.PointSummary.Current(false)
  if S.Class()==T.class and summary.ae then put(T.summary,summary.reason..'\n|cff65d5efAE 已加点 '..summary.ae..'/'..summary.aeBudget..'  未加点数 '..summary.aeLeft..'|r\n|cffffd060TE 已加点 '..summary.te..'/'..summary.teBudget..'  未加点数 '..summary.teLeft..'|r')
  else put(T.summary,S.Class()==T.class and('角色 '..UnitLevel('player')..'级 · 当前天赋以已保存数据为准')or'浏览其他职业 · 不显示为本人已加点')end
- if (T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT')and S.Class()==T.class then
-  local own=S.Capture(T.class);if own then local total=0;for _,v in pairs(own.ranks)do total=total+v end;local free=GetUnspentTalentPoints(false,false,GetActiveTalentGroup(false,false));T.summary:SetText((L.English()and(T.class=='DEATHKNIGHT'and 'Death Knight Lv. 'or T.class=='PRIEST'and 'Priest Lv. 'or T.class=='ROGUE'and 'Rogue Lv. 'or'Hunter Lv. ')or(names[T.class]..' 等级 '))..UnitLevel('player')..' · '..(L.English()and 'Spent 'or'已加点 ')..total..' / '..(L.English()and 'Unspent 'or'剩余 ')..tostring(free or '—'))end
+ if (T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN')and S.Class()==T.class then
+  local own=S.Capture(T.class);if own then local total=0;for _,v in pairs(own.ranks)do total=total+v end;local free=GetUnspentTalentPoints(false,false,GetActiveTalentGroup(false,false));T.summary:SetText((L.English()and(T.class=='SHAMAN'and 'Shaman Lv. 'or T.class=='DEATHKNIGHT'and 'Death Knight Lv. 'or T.class=='PRIEST'and 'Priest Lv. 'or T.class=='ROGUE'and 'Rogue Lv. 'or'Hunter Lv. ')or(names[T.class]..' 等级 '))..UnitLevel('player')..' · '..(L.English()and 'Spent 'or'已加点 ')..total..' / '..(L.English()and 'Unspent 'or'剩余 ')..tostring(free or '—'))end
  end
- enable(T.actual,S.Class()==T.class and not InCombatLockdown());put(T.status,why or T.message or(favorite and'保存收藏不会改变角色；应用需比较并确认。'or((T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT')and'原生参考方案；应用通过原生接口逐点确认，不自动洗点。'or'按推荐天赋加点：保留已学，只载入草稿；请在实际天赋面板核对保存。')));T.painting=false
+ enable(T.actual,S.Class()==T.class and not InCombatLockdown());put(T.status,why or T.message or(favorite and'保存收藏不会改变角色；应用需比较并确认。'or((T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN')and'原生参考方案；应用通过原生接口逐点确认，不自动洗点。'or'按推荐天赋加点：保留已学，只载入草稿；请在实际天赋面板核对保存。')));T.painting=false
 end
 local oldGOpen=G.Open;local oldSOpen=S.Open
 function T.Open(tab,class,index)

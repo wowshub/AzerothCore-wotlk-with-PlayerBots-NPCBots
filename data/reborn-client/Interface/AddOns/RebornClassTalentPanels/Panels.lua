@@ -115,3 +115,5 @@ A.Register('ROGUE',{Open=function()return G.TalentCenter.Open('recommend','ROGUE
 A.Register('PRIEST',{Open=function()return G.TalentCenter.Open('recommend','PRIEST',RebornTalentGuidePriest.selected or 1)end})
 
 A.Register('DEATHKNIGHT',{Open=function()return G.TalentCenter.Open('recommend','DEATHKNIGHT',RebornTalentGuideDeathKnight.selected or 1)end})
+
+A.Register('SHAMAN',{Open=function()return G.TalentCenter.Open('recommend','SHAMAN',RebornTalentGuideShaman.selected or 1)end})

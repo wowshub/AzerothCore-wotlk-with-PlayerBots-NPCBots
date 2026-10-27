@@ -3,6 +3,7 @@ local G=RebornTalentGuide
 local L={bindings={}};G.CenterLocale=L
 function L.English()return type(RebornTGViewSettings)=='table'and RebornTGViewSettings.centerLanguage=='enUS'end
 local dictionary={
+ ['元素']='Elemental',['增强']='Enhancement',['恢复']='Restoration',
  ['鲜血']='Blood',['冰霜']='Frost',['邪恶']='Unholy',
  ['戒律']='Discipline',['暗影']='Shadow',
  ['刺杀']='Assassination',['战斗']='Combat',['敏锐']='Subtlety',['原生参考方案；应用通过原生接口逐点确认，不自动洗点。']='Reference builds. Each point requires native confirmation; no automatic reset.',
