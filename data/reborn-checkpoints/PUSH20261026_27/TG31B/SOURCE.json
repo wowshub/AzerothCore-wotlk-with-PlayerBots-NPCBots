@@ -1,0 +1,57 @@
+{
+  "stage": "TG31B",
+  "package": "codexfix_20261027_011645_阶段TG31B_圆形小图标与巫医双风格切换",
+  "zip_sha256": "8c1bf9752d2dc364cf3d8747ace1c4fc64d671c81d6d6ea0151e9299ddf8a7b4",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassicSpecHome.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicSpecHome.lua",
+      "input_sha256": "10850bc5ec1e349bc18ebca38a93f82a990da16ababe61ad3394b455eb52d30f",
+      "output_sha256": "10850bc5ec1e349bc18ebca38a93f82a990da16ababe61ad3394b455eb52d30f"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Art.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\Art.lua",
+      "input_sha256": "394c9e44b1c97976b773778d3165655bdcae56c26e9e17589b1c61427ffbd920",
+      "output_sha256": "394c9e44b1c97976b773778d3165655bdcae56c26e9e17589b1c61427ffbd920"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/ArtStyle.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "ca49020d5268f969ac62ad29e7b651ec064e7ed7c91e8f374440b563ca6d4389",
+      "output_sha256": "ca49020d5268f969ac62ad29e7b651ec064e7ed7c91e8f374440b563ca6d4389"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Home.lua",
+      "mode": "new dependency",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_011645_阶段TG31B_圆形小图标与巫医双风格切换\\backup_原文件\\Interface\\AddOns\\RebornWitchDoctorTalents\\Home.lua",
+      "input_sha256": "851b8109b1c7e8195837a58150f825b95e32cd29f49f8402562ff7691ca701dd",
+      "output_sha256": "851b8109b1c7e8195837a58150f825b95e32cd29f49f8402562ff7691ca701dd"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/HomeArt.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\HomeArt.lua",
+      "input_sha256": "2e9770ef981f369c310702dc45dfcd09304795c1706a48658743f63b08ebfd16",
+      "output_sha256": "2e9770ef981f369c310702dc45dfcd09304795c1706a48658743f63b08ebfd16"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_011645_阶段TG31B_圆形小图标与巫医双风格切换\\backup_原文件\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+      "input_sha256": "1e8ffd9aa0b844c0d5a073ef3010442d1b31881d327a722f1eca018aaea35d5b",
+      "output_sha256": "1e8ffd9aa0b844c0d5a073ef3010442d1b31881d327a722f1eca018aaea35d5b"
+    }
+  ],
+  "resources": [
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ClassPortraitRing.blp",
+      "sha256": "4e1864c2145155220e877e4d95477a2b05576caf5bd00bc5c31c3eb1d919df3e",
+      "package": "codexfix_20261027_011645_阶段TG31B_圆形小图标与巫医双风格切换"
+    }
+  ]
+}

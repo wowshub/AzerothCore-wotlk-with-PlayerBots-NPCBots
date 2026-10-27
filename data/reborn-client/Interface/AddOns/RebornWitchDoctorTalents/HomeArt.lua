@@ -19,9 +19,3 @@ RebornWDHomeArt["spec-selected-background3"] = { "Interface\\AddOns\\RebornWitch
 RebornWDHomeArt["spec-selected-background4"] = { "Interface\\AddOns\\RebornWitchDoctorTalents\\Art\\WD8_specialization", 395, 856, 0.582031, 0.774902, 0.419434, 0.837402, false, false }
 
 RebornWDHomeArt["spec-selected-background5"] = { "Interface\\AddOns\\RebornWitchDoctorTalents\\Art\\WD8_specialization", 395, 856, 0.775879, 0.968750, 0.419434, 0.837402, false, false }
-
-RebornWDHomeArt["spec-thumbnail-witchdoctor-voodoo"]={"Interface\\AddOns\\RebornTalentGuide\\Art\\WitchDoctorSpecCardsTG31A_blp",512,310,0.0,0.25,0,0.60546875}
-
-RebornWDHomeArt["spec-thumbnail-witchdoctor-brewing"]={"Interface\\AddOns\\RebornTalentGuide\\Art\\WitchDoctorSpecCardsTG31A_blp",512,310,0.25,0.5,0,0.60546875}
-
-RebornWDHomeArt["spec-thumbnail-witchdoctor-shadowhunting"]={"Interface\\AddOns\\RebornTalentGuide\\Art\\WitchDoctorSpecCardsTG31A_blp",512,310,0.5,0.75,0,0.60546875}

@@ -134,9 +134,9 @@ local function createHome()
   atlas(card,'spec-dividerline',69,-495,290,2);card.sampleTitle=label(card,'代表天赋（展示）',-506,'GameFontHighlightSmall')
   card.samples={}
   for j=1,3 do
-   local button=CreateFrame('Button',nil,card);button:SetPoint('TOPLEFT',140+(j-1)*52,-530);button:SetSize(44,44)
+   local button=CreateFrame('Button',nil,card);button:SetPoint('TOPLEFT',152+(j-1)*44,-535);button:SetSize(36,36)
    button.icon=button:CreateTexture(nil,'ARTWORK');button.icon:SetAllPoints()
-   button.border=button:CreateTexture(nil,'OVERLAY');button.border:SetAllPoints();button.border:SetTexture('Interface\\Buttons\\UI-Quickslot2')
+   button.border=button:CreateTexture(nil,'OVERLAY');button.border:SetAllPoints();button.border:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\ClassPortraitRing');button.border:SetTexCoord(.25,.75,.25,.75)
    button:SetScript('OnEnter',function(self)if not self.node then return end;GameTooltip:SetOwner(self,'ANCHOR_RIGHT');GameTooltip:SetText(tr(self.node.name,self.node.nameEN or self.node.name),1,.82,0);GameTooltip:AddLine('代表节点；点击查看前置，不会自动学习。 / Preview only; inspect prerequisites before learning.',1,1,1,true);GameTooltip:Show()end)
    button:SetScript('OnLeave',function()GameTooltip:Hide()end);button:SetScript('OnClick',function()B.ShowTree(B.token,index)end);card.samples[j]=button
   end
@@ -164,7 +164,7 @@ function B.RefreshHome()
   card.picture:SetTexCoord((i-1)/3*.75,i/3*.75,0,.60546875)
   if token=='HUNTER'or token=='ROGUE'or token=='PRIEST'or token=='DEATHKNIGHT'or token=='SHAMAN'or token=='MAGE'or token=='WARLOCK'or token=='DRUID'or token=='MONK'then card.picture:SetTexture('Interface\\AddOns\\RebornTalentGuide\\Art\\'..({HUNTER='Hunter',ROGUE='Rogue',PRIEST='Priest',DEATHKNIGHT='DeathKnight',SHAMAN='Shaman',MAGE='Mage',WARLOCK='Warlock',DRUID='Druid',MONK='Monk'})[token]..'SpecCards'..(token=='MONK'and'TG31A'or token=='DRUID'and'TG30A'or token=='WARLOCK'and'TG29A'or token=='MAGE'and'TG28A'or token=='SHAMAN'and'TG27A'or token=='DEATHKNIGHT'and'TG26A'or'TG25A')..'_blp')end
   local tree=d.trees[i];local examples={tree[1],tree[math.ceil(#tree/2)],tree[#tree]};if featured[token]then local byId={};for _,n in ipairs(tree)do byId[n.id]=n end;for j,id in ipairs(featured[token][i])do examples[j]=byId[id]or examples[j]end end
-  for j,button in ipairs(card.samples)do local n=examples[j];local _,_,icon=GetSpellInfo(n.spells[1]);button.node=n;button.icon:SetTexture(icon or n.icon)end
+  for j,button in ipairs(card.samples)do local n=examples[j];local _,_,icon=GetSpellInfo(n.spells[1]);button.node=n;SetPortraitToTexture(button.icon,icon or n.icon)end
   local sum=0;if ranks then for _,n in ipairs(ranks[i])do sum=sum+n end end
   card.points:SetText(ranks and(tr('当前已学 ','Learned: ')..sum)or tr('当前点数尚未就绪','Points not available'))
  end
