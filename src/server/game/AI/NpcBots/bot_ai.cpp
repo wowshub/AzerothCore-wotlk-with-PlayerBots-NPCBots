@@ -2430,6 +2430,7 @@ void bot_ai::SetStats(bool force)
         case BOT_CLASS_NECROMANCER:
         case BOT_CLASS_SEA_WITCH:
         case BOT_CLASS_CRYPT_LORD:
+        case BOT_CLASS_WITCH_DOCTOR:
             break;
 
         default:
@@ -7290,7 +7291,9 @@ void bot_ai::_OnHealthUpdate() const
 //Including calcs and set
 void bot_ai::_OnManaUpdate() const
 {
-    if (me->GetMaxPower(POWER_MANA) <= 1)
+    // WDN5A: a custom mana class can start with zero template mana.
+    // Do not let that skip the very calculation which initializes its mana pool.
+    if (me->GetMaxPower(POWER_MANA) <= 1 && _botclass != BOT_CLASS_WITCH_DOCTOR)
         return;
 
     uint8 myclass = _botclass;
@@ -7300,7 +7303,7 @@ void bot_ai::_OnManaUpdate() const
 
     //BOT_LOG_ERROR("entities.player", "_OnManaUpdate(): updating bot %s", me->GetName().c_str());
     bool fullmana = me->GetPower(POWER_MANA) == me->GetMaxPower(POWER_MANA);
-    float pct = fullmana ? 100.f : (float(me->GetPower(POWER_MANA)) * 100.f) / float(me->GetMaxPower(POWER_MANA));
+    float pct = fullmana ? 100.f : me->GetMaxPower(POWER_MANA) ? (float(me->GetPower(POWER_MANA)) * 100.f) / float(me->GetMaxPower(POWER_MANA)) : 0.f;
     float m_basemana = _classinfo->basemana;
     if (_botclass == BOT_CLASS_BM)
         m_basemana = float(BASE_MANA_1_BM) + float(BASE_MANA_10_BM - BASE_MANA_1_BM) * (mylevel/81.f);
@@ -18849,7 +18852,7 @@ bool bot_ai::GlobalUpdate(uint32 diff)
         }
 
         Unit* mover = me->GetVehicle() ? me->GetVehicleBase() : me;
-        if (!HasBotCommandState(BOT_COMMAND_MASK_UNCHASE) && !CCed(mover, true) &&
+        if (!HasPriorityHealingTarget() && !HasBotCommandState(BOT_COMMAND_MASK_UNCHASE) && !CCed(mover, true) &&
             (IAmFree() || master->GetBotMgr()->GetBotAllowCombatPositioning()) &&
             (!mover->isMoving() || Rand() < 50) && !IsCasting(mover) && !IsShootingWand(mover))
         {
@@ -18908,7 +18911,7 @@ bool bot_ai::GlobalUpdate(uint32 diff)
         return false;
 
     //opponent unsafe
-    if ((IsWanderer() || (!IAmFree() && (!_lastTargetGuid || !master->GetBotMgr()->GetBotAllowCombatPositioning()))) &&
+    if (!HasPriorityHealingTarget() && (IsWanderer() || (!IAmFree() && (!_lastTargetGuid || !master->GetBotMgr()->GetBotAllowCombatPositioning()))) &&
         !HasBotCommandState(BOT_COMMAND_STAY) &&
         (!me->GetVehicle() || (!CCed(me->GetVehicleBase(), true) && !me->GetVehicleBase()->GetTarget())))
     {

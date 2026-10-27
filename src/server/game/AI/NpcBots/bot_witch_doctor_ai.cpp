@@ -1,9 +1,11 @@
 // WDN1A: controlled NPCBot Shadowhunting foundation, not a Playerbot context.
 #include "bot_ai.h"
+#include "botmgr.h"
 #include "ScriptMgr.h"
 #include "Spell.h"
 #include "SpellMgr.h"
 #include "Log.h"
+#include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcHealing5.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcSurvival3.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h"
 #include "../../../../../modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewEcho2.h"
@@ -22,7 +24,7 @@ constexpr uint32 Wrath=9003100,Brew=9003101,Vigil=9003855;
 constexpr uint32 Arrow=9003970, Reclamation=9003980, Eclipse=9004000, Glaive=9004030;
 std::vector<uint32> const supportSpells={WDN3A::Death,WDN3A::Slither,WDN3A::Mirage,WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
 std::vector<uint32> const healingSpells={WDN2P::Splash,WDN2P::Toss,WDN2P::Prep,Brew,WDN1C::Healing};
-std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN2B::SpellId,WDN2C::SpellId};
+std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN1C::SpellId,WDN2B::SpellId,WDN2C::SpellId};
 }
 class witch_doctor_bot : public CreatureScript
 {
@@ -40,7 +42,8 @@ public:
         WDN3A::State survival;
         uint32 utilityDelay=0,pullMoveDelay=0,survivalLogDelay=0,recentHostileDamage=0;
         bool preferWrath=false;
-        uint32 spiritOwner=0,spiritMap=0,spiritPhase=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
+        uint32 healMoveDelay=0,healLogDelay=0;
+        uint32 spiritOwner=0,spiritMap=0,spiritPhase=0,spiritInstance=0,diagnosticTimer=0,hexRetry=0,jinxRetry=0,massRetry=0,mimicRetry=0,idolRetry=0,effigyRetry=0,hexEffigyRetry=0,gravenRetry=0,cursedRetry=0,swiftRetry=0,sereneRetry=0,brewingRetry=0,allyBrewRetry=0;
         void Trace(char const* reason,uint32 spell=0,int32 result=0)
         {
             if(diagnosticTimer||IAmFree())return;
@@ -48,16 +51,24 @@ public:
             if(!me->IsInCombat()&&!(owner&&owner->IsInCombat())&&
                !IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL))return;
             diagnosticTimer=10000;
-            LOG_ERROR("server", "[WDN4A combat] entry={} owner={} gate={} spell={} result={} commands={} mana={}/{} arrow={} reclaim={} roles={} pull={} utilityMs={} wardKnown={} wardReady={} wardCheck={}",
+            LOG_ERROR("server", "[WDN5A combat] entry={} owner={} gate={} spell={} result={} commands={} mana={}/{} arrow={} reclaim={} roles={} pull={} utilityMs={} wardKnown={} wardReady={} wardCheck={}",
                 me->GetEntry(),GetBotOwnerGuid(),reason,spell,result,GetBotCommandState(),
                 me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation),GetBotRoles(),IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL),utilityDelay,WDN1C::Known(me),IsSpellReady(WDN1C::SpellId,0),WDN1C::Known(me)?int32(CheckBotCast(me,WDN1C::SpellId)):-1);
         }
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
-        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN4A] initialized entry={}",me->GetEntry()); }
+        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5A] initialized entry={}",me->GetEntry()); }
 
-        void Reset() override { pullMoveDelay=survivalLogDelay=recentHostileDamage=0;utilityDelay=0;survival.Clear(me); allyBrewRetry=brewingRetry=0; healingReserve=false;preferWrath=false; hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0; WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
+        void ClearLocalScheduling()
+        {
+            // These are AI retry delays, not the native spell cooldowns or saved ability settings.
+            pullMoveDelay=survivalLogDelay=diagnosticTimer=recentHostileDamage=utilityDelay=0;
+            hexRetry=jinxRetry=massRetry=mimicRetry=idolRetry=effigyRetry=0;
+            hexEffigyRetry=gravenRetry=cursedRetry=swiftRetry=sereneRetry=0;
+            brewingRetry=allyBrewRetry=healMoveDelay=healLogDelay=0;healingReserve=false;preferWrath=false;
+        }
+        void Reset() override { ClearLocalScheduling();survival.Clear(me); WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me); me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());DefaultInit(); }
         void JustDied(Unit* killer) override
-        { pullMoveDelay=survivalLogDelay=recentHostileDamage=0;utilityDelay=0;survival.Clear(me);WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());bot_ai::JustDied(killer); }
+        { ClearLocalScheduling();survival.Clear(me);WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());bot_ai::JustDied(killer); }
         void InitPowers() override { me->SetPowerType(POWER_MANA);bot_ai::InitPowers(); }
         void ApplyClassPassives() const override { } // No Hunter or Player talent inheritance.
 
@@ -306,19 +317,89 @@ public:
                me->HasAura(9003800)||!IsSpellReady(Vigil,diff))return false;
             return CheckBotCast(me,Vigil)==SPELL_CAST_OK&&bot_ai::doCast(me,Vigil);
         }
-        bool TryAllyBrew(uint32 diff)
+        bool HealingCandidate(Unit* t) const
         {
-            if(allyBrewRetry||!HasRole(NPC_BOT_ROLE_HEAL)||IsCasting()||!WDN2P::Active(me))return false;
-            uint32 spell=GetSpell(Brew);
-            if(!spell||!WDN1::Known(me,spell)||!IsSpellReady(Brew,diff))return false;
-            allyBrewRetry=500; // Bound scans and rejected casts; native cooldown/mana stay authoritative.
-            for(Unit* target:WDN2P::Targets(me))
-            {
-                if(target==me||target->GetHealthPct()>=70.f)continue;
-                if(CheckBotCast(target,spell)==SPELL_CAST_OK&&bot_ai::doCast(target,spell))return true;
-            }
-            return false;
+            return t && t->IsAlive() && t->IsInWorld() && me->IsInMap(t) && me->InSamePhase(t) &&
+                me->IsFriendlyTo(t) && (t==me || ((t->GetTypeId()==TYPEID_PLAYER || t->IsNPCBot()) && IsInBotParty(t))) &&
+                me->IsWithinDistInMap(t,60.f);
         }
+        bool HealingTank(Unit* t) const
+        {
+            // Playerbots may use a bear build without a native NPC/LFG tank flag.
+            // Recognize the actual bear receiving attacks, not a class-name assumption.
+            return IsTank(t) || (t && !t->getAttackers().empty() &&
+                (t->GetShapeshiftForm()==FORM_BEAR || t->GetShapeshiftForm()==FORM_DIREBEAR));
+        }
+        Unit* HealingTarget()
+        {
+            if(!HasRole(NPC_BOT_ROLE_HEAL)||!WDN2P::Active(me))return nullptr;
+            std::list<Unit*> units;
+            Acore::AnyUnitInObjectRangeCheck check(me,60.f);
+            Acore::UnitListSearcher<Acore::AnyUnitInObjectRangeCheck> search(me,units,check);
+            Cell::VisitObjects(me,search,60.f);
+            Unit* best=nullptr;
+            for(Unit* t:units)
+            {
+                if(!HealingCandidate(t)||!WDN5A::NeedsHeal(t->GetHealthPct(),HealingTank(t)))continue;
+                if(!best || WDN5A::Priority(t->GetHealthPct(),HealingTank(t)) < WDN5A::Priority(best->GetHealthPct(),HealingTank(best)) ||
+                   (WDN5A::Priority(t->GetHealthPct(),HealingTank(t)) == WDN5A::Priority(best->GetHealthPct(),HealingTank(best)) && t->GetGUID()<best->GetGUID()))best=t;
+            }
+            return best;
+        }
+        bool HasPriorityHealingTarget() override
+        {
+            if(HasBotCommandState(BOT_COMMAND_MASK_UNMOVING)||IAmFree()||!GetBotOwner()||
+               !GetBotOwner()->GetBotMgr()->GetBotAllowCombatPositioning())return false;
+            Unit* t=HealingTarget();
+            return t && (me->IsInCombat()||t->IsInCombat());
+        }
+        void TraceHealing(char const* gate,Unit* t,uint32 spell=0,int32 result=0)
+        {
+            if(healLogDelay || IAmFree())return;
+            healLogDelay=2000;
+            LOG_ERROR("server","[WDN5A heal] entry={} owner={} gate={} target={} targetGuid={} hp={} tank={} distance={} spell={} result={} mana={}/{} roles={} commands={}",
+                me->GetEntry(),GetBotOwnerGuid(),gate,t?t->GetName():"none",t?t->GetGUID().GetCounter():0,t?t->GetHealthPct():0.f,t?HealingTank(t):false,
+                t?me->GetDistance(t):0.f,spell,result,me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetBotRoles(),GetBotCommandState());
+        }
+        bool CastHealing(Unit* t,uint32 base,uint32 diff)
+        {
+            uint32 spell=GetSpell(base);
+            if(!HealingCandidate(t)||!spell||!IsSpellReady(base,diff))return false;
+            if(base==WDN2P::Toss ? !WDN2P::Known(me,spell) : !WDN1::Known(me,spell))return false;
+            auto result=CheckBotCast(t,spell);
+            if(result!=SPELL_CAST_OK){TraceHealing("check-rejected",t,spell,int32(result));return false;}
+            bool cast=bot_ai::doCast(t,spell);
+            TraceHealing(cast?"cast-started":"prepare-rejected",t,spell);
+            return cast;
+        }
+        bool TryPriorityHeal(Unit* t,uint32 diff)
+        {
+            if(!HealingCandidate(t)||!HasRole(NPC_BOT_ROLE_HEAL)||!WDN2P::Active(me))return false;
+            bool urgent=WDN5A::Urgent(t->GetHealthPct(),HealingTank(t));
+            if(IsCasting()) {TraceHealing("casting",t);return urgent;}
+            // Brewing effects use a 30-yard ally contract. Move into it before selecting
+            // unrelated utility, without routing a friendly target through attack movement.
+            if(t!=me && (!me->IsWithinDistInMap(t,28.f)||!me->IsWithinLOSInMap(t)))
+            {
+                if(!healMoveDelay && !HasBotCommandState(BOT_COMMAND_MASK_UNMOVING) &&
+                   !JumpingOrFalling() && !CCed(me,true) && !me->GetVehicle() &&
+                   GetBotOwner() && GetBotOwner()->GetBotMgr()->GetBotAllowCombatPositioning())
+                {
+                    Position pos=me->GetPosition();
+                    me->MovePositionToFirstCollision(pos,std::max(3.f,me->GetDistance(t)-20.f),me->GetRelativeAngle(t));
+                    BotMovement(BOT_MOVE_POINT,&pos);healMoveDelay=1000;
+                }
+                TraceHealing("approach",t);return true;
+            }
+            if(allyBrewRetry)return false;
+            allyBrewRetry=500;
+            if(WDN2P::Prepared(me)&&CastHealing(t,WDN2P::Toss,diff))return true;
+            if(CastHealing(t,Brew,diff))return true;
+            TraceHealing("cooldown-or-unavailable",t);
+            return false; // Allow mana recovery; the caller reserves this tick from DPS.
+        }
+        bool TryAllyBrew(uint32 diff)
+        { return TryPriorityHeal(HealingTarget(),diff); }
         bool TrySelfHeal(uint32 diff)
         {
             uint32 spell=GetSpell(Brew);
@@ -431,7 +512,7 @@ public:
         {
             if(survivalLogDelay||!WDN1::Actor(me)||!me->IsInCombat()||me->GetHealthPct()>40.f)return;
             survivalLogDelay=3000;
-            LOG_ERROR("server", "[WDN4A] entry={} owner={} gate={} hp={} recentDamageMs={} roles={} commands={} casting={} attackers={} hold={} death={} slither={} mirage={} spell={} result={} defenseStatus(D/S/M)={}/{}/{} mana={}/{}",
+            LOG_ERROR("server", "[WDN5A] entry={} owner={} gate={} hp={} recentDamageMs={} roles={} commands={} casting={} attackers={} hold={} death={} slither={} mirage={} spell={} result={} defenseStatus(D/S/M)={}/{}/{} mana={}/{}",
                 me->GetEntry(),GetBotOwnerGuid(),gate,me->GetHealthPct(),recentHostileDamage,GetBotRoles(),GetBotCommandState(),IsCasting(),me->getAttackers().size(),survival.spell,
                 me->HasAura(WDN3A::Death,me->GetGUID()),me->HasAura(WDN3A::Slither,me->GetGUID()),me->HasAura(WDN3A::Mirage,me->GetGUID()),spell,result,DefenseStatus(WDN3A::Death,0),DefenseStatus(WDN3A::Slither,0),DefenseStatus(WDN3A::Mirage,0),me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA));
         }
@@ -473,14 +554,14 @@ public:
             pullMoveDelay=pullMoveDelay>diff?pullMoveDelay-diff:0;
             survivalLogDelay=survivalLogDelay>diff?survivalLogDelay-diff:0;
             utilityDelay=utilityDelay>diff?utilityDelay-diff:0;
-            if(spiritOwner!=GetBotOwnerGuid()||spiritMap!=me->GetMapId()||spiritPhase!=me->GetPhaseMask())
+            if(spiritOwner!=GetBotOwnerGuid()||spiritMap!=me->GetMapId()||spiritPhase!=me->GetPhaseMask()||spiritInstance!=me->GetInstanceId())
             {
                 // Do not carry a previous combat target or escape into another context.
                 if(spiritOwner){me->AttackStop();me->InterruptSpell(CURRENT_AUTOREPEAT_SPELL);opponent=nullptr;disttarget=nullptr;}
                 survival.Clear(me);
                 me->RemoveAurasDueToSpell(Vigil,me->GetGUID());me->RemoveAurasDueToSpell(WDN1::Spirit,me->GetGUID());
                 WDN2Y::Clear(me);WDN2P::Clear(me);WDN2O::Clear(me);WDN1C::Clear(me);WDN2B::Clear(me);WDN2C::Clear(me);WDN2D::Clear(me);WDN2E::Clear(me);
-                recentHostileDamage=pullMoveDelay=0;utilityDelay=0;spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();spiritPhase=me->GetPhaseMask();
+                ClearLocalScheduling();spiritOwner=GetBotOwnerGuid();spiritMap=me->GetMapId();spiritPhase=me->GetPhaseMask();spiritInstance=me->GetInstanceId();
             }
             StopDisabledOffense();
             if(IsDuringTeleport())survival.Clear(me);
@@ -501,6 +582,8 @@ public:
             WDN2B::Active(me);
             WDN1C::Current(me); // Clear on lost recruitment, role, skill, map or distance.
             diagnosticTimer=diagnosticTimer>diff?diagnosticTimer-diff:0;
+            healMoveDelay=healMoveDelay>diff?healMoveDelay-diff:0;
+            healLogDelay=healLogDelay>diff?healLogDelay-diff:0;
             mimicRetry=mimicRetry>diff?mimicRetry-diff:0;
             massRetry=massRetry>diff?massRetry-diff:0;
             hexRetry=hexRetry>diff?hexRetry-diff:0;
@@ -522,6 +605,14 @@ public:
             if(TrySurvival(diff))return;
             if(ProcessImmediateNonAttackTarget()){TraceSurvival("immediate-action");Trace("vehicle-or-immediate");return;}
             bool const reserveHealingMana=ReserveHealingMana();
+            Unit* healTarget=HealingTarget();
+            if(healTarget && TryPriorityHeal(healTarget,diff))return;
+            if(healTarget && WDN5A::Urgent(healTarget->GetHealthPct(),HealingTank(healTarget)))
+            {
+                if(TryManaIdol(diff))return;
+                if(TryHealingWard(diff))return;
+                TraceHealing("urgent-wait",healTarget);return;
+            }
             if(TryVoodoo(diff))return;
             if(TryVigil(diff))return;
             if(TrySelfHeal(diff))return;

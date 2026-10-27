@@ -393,6 +393,8 @@ class bot_ai : public CreatureAI
         virtual void ReduceCD(uint32 /*diff*/) {}
         bool GlobalUpdate(uint32 diff);
 
+        // Class healing may temporarily own combat positioning, never commands or survival.
+        virtual bool HasPriorityHealingTarget() { return false; }
         virtual bool HealTarget(Unit* /*target*/, uint32 /*diff*/) { return false; }
         virtual bool BuffTarget(Unit* /*target*/, uint32 /*diff*/) { return false; }
 

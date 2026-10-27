@@ -1,0 +1,19 @@
+{
+  "stage": "WDN5A",
+  "package": "codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包",
+  "zip_sha256": "8bce01d1b731ab5d565a08be27bb45330d46a1320277ce2f7dd1ce43546ef373",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [],
+  "resources": [
+    {
+      "path": "02_覆盖到服务器Data/dbc/Spell.dbc",
+      "sha256": "358ce5feac67ca3d73f1d8d71de8ac36e0415a652e21f2eec7b7d9b743f7b75d",
+      "package": "codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包"
+    },
+    {
+      "path": "03_导入现有PATCH-XA/DBFilesClient/Spell.dbc",
+      "sha256": "48a6dc0b616e01492e1d7a2b5f6cc03d8634cb0978b2192b7586aa6442ef0186",
+      "package": "codexfix_20261026_022151_阶段WDN5A_NPC巫医坦克优先治疗与追赶修复累计测试包"
+    }
+  ]
+}
