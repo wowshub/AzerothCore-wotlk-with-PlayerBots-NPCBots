@@ -1,5 +1,5 @@
 local S=RebornTalentCollections;local G=RebornTalentGuide;local C=RebornTalentTreeCanvas;local W=RebornTalentPanelWindows;local PD=RebornTalentGuidePaladinData
-local classes={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',PRIEST='牧师',DEATHKNIGHT='死骑',SHAMAN='萨满',WITCHDOCTOR='巫医'};local specs={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
+local classes={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',PRIEST='牧师',DEATHKNIGHT='死骑',SHAMAN='萨满',MAGE='法师',WITCHDOCTOR='巫医'};local specs={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
 -- Self-contained controls: no three-slice template regions for skins to resize.
 local function button(parent,x,y,w,label,fn)
  return RebornTalentGuideTheme.Button(parent,x,y,w,25,label,fn)
@@ -86,7 +86,7 @@ local function paint()
  if data then
   local current=S.Capture(b.class)
   for t,tree in ipairs(data.trees)do
-   local board=S.boards[t];board.compactAE=false;board:Show();board:ClearAllPoints();board:SetPoint('TOPLEFT',S.frame,'TOPLEFT',240+(t-1)*254,-133);board:SetSize(248,480);board.canvas:SetSize(228,435);board.width=228;board.height=435;board.title:SetText(((b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN')and S.NativeData(b.class).treeNames or b.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'})[t]);if b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'then if board.art then board.art:Hide()end;board:SetBackdropColor(.035,.09,.065,.8)elseif b.class=='WARRIOR'then C.WarriorArt(board,t)else C.Art(board,t)end
+   local board=S.boards[t];board.compactAE=false;board:Show();board:ClearAllPoints();board:SetPoint('TOPLEFT',S.frame,'TOPLEFT',240+(t-1)*254,-133);board:SetSize(248,480);board.canvas:SetSize(228,435);board.width=228;board.height=435;board.title:SetText(((b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'or b.class=='MAGE')and S.NativeData(b.class).treeNames or b.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'})[t]);if b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'or b.class=='MAGE'then if board.art then board.art:Hide()end;board:SetBackdropColor(.035,.09,.065,.8)elseif b.class=='WARRIOR'then C.WarriorArt(board,t)else C.Art(board,t)end
    local items,edges,ids={},{},{};for _,n in ipairs(tree)do ids[n.id]=true end
    for _,n in ipairs(tree)do
     local name,_,icon=GetSpellInfo(n.spells[1]);local item={id=n.id,x=28+(n.col-1)*53,y=20+(n.row-1)*35,size=30,icon=icon or n.icon,spell=n.spells[math.max(1,b.ranks[n.id]or 0)],name=name or n.name,target=b.ranks[n.id]or 0,actual=current and(current.ranks[n.id]or 0)or nil,maximum=n.max,shape=n.max>1 and'circle'or'square'}
@@ -193,22 +193,22 @@ local function input(parent,x,y,w,changed)
 end
 local function create()
  if S.frame then return end
- local f=C.Window('RebornTalentCollectionFrame','天赋收藏 · 战士 / 圣骑士 / 猎人 / 潜行者 / 牧师 / 巫医 · TG25A');S.frame=f;W.Register('collection',f)
- S.classTabs={};for i,token in ipairs({'WARRIOR','PALADIN','WITCHDOCTOR','HUNTER','ROGUE','PRIEST','DEATHKNIGHT','SHAMAN'})do local class=token;S.classTabs[token]=button(f,20+((i-1)%4)*52,-35-math.floor((i-1)/4)*23,50,classes[class],function()S.Change(function()S.class=class;S.editor=nil;S.Refresh()end)end);S.classTabs[token]:SetHeight(20)end
+ local f=C.Window('RebornTalentCollectionFrame','天赋收藏 · TG28A');S.frame=f;W.Register('collection',f)
+ S.classTabs={};for i,token in ipairs({'WARRIOR','PALADIN','WITCHDOCTOR','HUNTER','ROGUE','PRIEST','DEATHKNIGHT','SHAMAN','MAGE'})do local class=token;S.classTabs[token]=button(f,20+((i-1)%3)*70,-35-math.floor((i-1)/3)*23,66,classes[class],function()S.Change(function()S.class=class;S.editor=nil;S.Refresh()end)end);S.classTabs[token]:SetHeight(20)end
  S.shareButton=button(f,1030,-3,230,'导入 / 导出',function()S.OpenShare()end);S.shareButton:SetHeight(20)
- S.classText=C.Text(f,20,-83,210,'','GameFontNormal')
- button(f,20,-108,200,'从自己当前已保存配点建立',function()S.Change(function()S.New('current')end)end)
- button(f,20,-140,200,'收藏当前所选推荐',function()S.Change(function()S.New('recommendation')end)end)
- button(f,20,-172,200,'新建空白方案',function()S.Change(function()S.New('blank')end)end)
- S.listScroll=CreateFrame('ScrollFrame','RebornTalentCollectionList',f,'UIPanelScrollFrameTemplate');S.listScroll:SetPoint('TOPLEFT',20,-274);S.listScroll:SetSize(200,335)
+ S.classText=C.Text(f,20,-106,210,'','GameFontNormal')
+ button(f,20,-131,200,'从自己当前已保存配点建立',function()S.Change(function()S.New('current')end)end)
+ button(f,20,-163,200,'收藏当前所选推荐',function()S.Change(function()S.New('recommendation')end)end)
+ button(f,20,-195,200,'新建空白方案',function()S.Change(function()S.New('blank')end)end)
+ S.listScroll=CreateFrame('ScrollFrame','RebornTalentCollectionList',f,'UIPanelScrollFrameTemplate');S.listScroll:SetPoint('TOPLEFT',20,-318);S.listScroll:SetSize(200,291)
  S.listContent=CreateFrame('Frame',nil,S.listScroll);S.listContent:SetSize(200,395);S.listScroll:SetScrollChild(S.listContent)
- S.searchBox=input(f,20,-207,200,function()end);S.searchBox:SetMaxLetters(128)
+ S.searchBox=input(f,20,-248,200,function()end);S.searchBox:SetMaxLetters(128)
  S.searchBox:SetScript('OnTextChanged',function(self)if not S.painting then S.FilterState().query=self:GetText();S.RefreshList()end end)
  S.searchBox:SetScript('OnEditFocusLost',function()end);S.searchBox:SetScript('OnEnterPressed',function(self)self:ClearFocus()end)
  S.searchBox:SetScript('OnEscapePressed',function(self)self:SetText('');S.FilterState().query='';self:ClearFocus();S.RefreshList()end)
- S.searchHint=C.Text(f,24,-193,196,'搜索名称 / 最新方案资料')
- S.filterScene=button(f,20,-239,96,'用途：全部',function()S.CycleFilter('scene')end)
- S.filterRole=button(f,124,-239,96,'职责：全部',function()S.CycleFilter('role')end)
+ S.searchHint=C.Text(f,24,-230,196,'搜索名称 / 最新方案资料')
+ S.filterScene=button(f,20,-281,96,'用途：全部',function()S.CycleFilter('scene')end)
+ S.filterRole=button(f,124,-281,96,'职责：全部',function()S.CycleFilter('role')end)
  S.noResults=C.Text(S.listContent,4,-12,190,'')
  C.Text(f,242,-42,45,'名称：');S.nameBox=input(f,290,-37,360,function(text)S.editor.name=text end);S.nameBox:SetMaxLetters(96)
  C.Text(f,668,-42,40,'等级');S.levelBox=input(f,712,-37,42,function(text)S.editor.build.level=tonumber(text)or 0 end);S.levelBox:SetMaxLetters(2)

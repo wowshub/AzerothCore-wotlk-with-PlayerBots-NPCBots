@@ -74,7 +74,7 @@ function X.Decode(text)
  end
  for _,key in ipairs(keys)do if data[key]==nil then return nil,'分享缺少必要字段'end end
  if data.rules~=X.rules then return nil,'分享规则版本不兼容'end
- if data.class~='WARRIOR'and data.class~='PALADIN'and data.class~='WITCHDOCTOR'and data.class~='HUNTER'and data.class~='ROGUE'and data.class~='PRIEST'and data.class~='DEATHKNIGHT'and data.class~='SHAMAN'then return nil,'该职业尚未接入收藏分享'end
+ if data.class~='WARRIOR'and data.class~='PALADIN'and data.class~='WITCHDOCTOR'and data.class~='HUNTER'and data.class~='ROGUE'and data.class~='PRIEST'and data.class~='DEATHKNIGHT'and data.class~='SHAMAN'and data.class~='MAGE'then return nil,'该职业尚未接入收藏分享'end
  local level=integer(data.level,10,80);local version=integer(data.source_version,1,S.historyLimit)
  local spec=data.spec~='-'and integer(data.spec,0,2)or nil
  if not level or not version or(data.spec~='-'and spec==nil)then return nil,'等级、专精或来源版本无效'end

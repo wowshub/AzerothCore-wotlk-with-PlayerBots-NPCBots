@@ -33,12 +33,14 @@ RogueData.lua
 PriestData.lua
 DeathKnightData.lua
 ShamanData.lua
+MageData.lua
 WarriorCollection.lua
 Hunter.lua
 Rogue.lua
 Priest.lua
 DeathKnight.lua
 Shaman.lua
+Mage.lua
 CollectionStore.lua
 CollectionDetails.lua
 CollectionApply.lua

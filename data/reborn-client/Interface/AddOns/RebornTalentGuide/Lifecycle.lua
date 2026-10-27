@@ -64,7 +64,7 @@ function L.OnEvent(_,event,...)
  if event=='UNIT_LEVEL'then L.level=UnitLevel('player');L.observedLevel=L.level end
  if event=='PLAYER_LEVEL_UP'or event=='UNIT_LEVEL'or event=='PLAYER_ENTERING_WORLD'then L.needsSnapshot=true end
  if stopEvents[event]or levelChanged then
-  for _,H in ipairs({RebornTalentGuideHunter,RebornTalentGuideRogue,RebornTalentGuidePriest,RebornTalentGuideDeathKnight,RebornTalentGuideShaman})do if H and H.job then H.Stop('角色状态改变，停止后续加点；已确认点数保留')end end
+  for _,H in ipairs({RebornTalentGuideHunter,RebornTalentGuideRogue,RebornTalentGuidePriest,RebornTalentGuideDeathKnight,RebornTalentGuideShaman,RebornTalentGuideMage})do if H and H.job then H.Stop('角色状态改变，停止后续加点；已确认点数保留')end end
   if G.job then G.Stop('角色状态改变，停止后续加点；已确认点数保留')end
   local P=RebornTalentGuidePaladin;if P and P.job then P.Stop('角色状态改变，停止后续加点；已确认点数保留')end
   local R=RebornTalentGuideWarriorCollection;if R and R.job then R.Stop('角色状态改变，停止后续加点；已确认点数保留')end
