@@ -1845,7 +1845,7 @@ MultiBot.tips.units.pvpstatstoraid =
 
 	MultiBot.tips.mage.playbook.frostAoe = "冰霜范围攻击|cffffffff\n"
 		.. "允许法师在战斗中使用冰霜范围攻击法术。|r\n\n"
-		.. "|cffff0000左键点击启用或禁用奥术范围攻击|r\n"
+		.. "|cffff0000左键点击启用或禁用冰霜范围攻击|r\n"
 		.. "|cf9999999(执行命令: 机器人)|r"
 
 	MultiBot.tips.mage.playbook.frost = "冰霜魔法|cffffffff\n"
