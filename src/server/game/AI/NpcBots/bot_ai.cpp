@@ -2512,6 +2512,9 @@ void bot_ai::SetStats(bool force)
             strmult = 0.f; agimult = 2.f; break;
         case BOT_CLASS_CRYPT_LORD:
             strmult = 9.f; agimult = 0.f; break;
+        case BOT_CLASS_WITCH_DOCTOR:
+            // WDN5I: preserve the previous zero stat-to-melee-AP coefficients.
+            strmult = 0.f; agimult = 0.f; break;
         default:
             BOT_LOG_ERROR("entities.player", "_MeleeDamageUpdate(): NIY myclass {}!", uint32(myclass));
             strmult = 0.f; agimult = 0.f; break;

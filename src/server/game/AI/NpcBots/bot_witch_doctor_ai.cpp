@@ -372,7 +372,7 @@ public:
         // WDN5F: observation only; do not relax resurrection or mutate combat state.
         void DiagnoseResurrection(uint32 diff)
         {
-            if(!sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false))return;
+            if(!sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false,false))return;
             rezCastLogDelay=rezCastLogDelay>diff?rezCastLogDelay-diff:0;
             rezLogDelay=rezLogDelay>diff?rezLogDelay-diff:0;if(rezLogDelay)return;
             rezLogDelay=5000;
@@ -493,7 +493,7 @@ public:
                 Spell* spell=new Spell(me,info,TRIGGERED_NONE);
                 SpellCastResult result=spell->prepare(&targets);
                 if(result==SPELL_CAST_OK)GC_Timer=1500;
-                if(sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false)&&!rezCastLogDelay)
+                if(sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false,false)&&!rezCastLogDelay)
                 {
                     rezCastLogDelay=5000;
                     LOG_INFO("server","[NPCBOT-REZ-CAST] bot={} target={} spell={} prepare={}",me->GetName(),target->GetGUID().GetCounter(),spellId,uint32(result));
@@ -503,7 +503,7 @@ public:
             else if(Unit* unit=target->ToUnit())
             {
                 SpellCastResult result=CheckBotCast(unit,spellId);bool started=result==SPELL_CAST_OK&&doCast(unit,spellId);
-                if(sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false)&&!rezCastLogDelay)
+                if(sConfigMgr->GetOption<bool>("RebornBotTelemetry.NpcBotRezLog",false,false)&&!rezCastLogDelay)
                 {
                     rezCastLogDelay=5000;
                     LOG_INFO("server","[NPCBOT-REZ-CAST] bot={} target={} spell={} check={} started={}",me->GetName(),unit->GetGUID().GetCounter(),spellId,uint32(result),started);

@@ -1,0 +1,23 @@
+{
+  "stage": "WDN5I",
+  "package": "codexfix_20261027_阶段WDN5I_巫医服务器红字与复活日志刷屏修复",
+  "zip_sha256": "f5169c53302d43e85492c08cfd4fd858adcb3f8730f3e16aa648461c513e6449",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "src/server/game/AI/NpcBots/bot_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_ai.cpp",
+      "input_sha256": "a223453fbf2ffb438e0de2897500b8f03aa2e266e71f7c273b6bae599000e8ef",
+      "output_sha256": "a223453fbf2ffb438e0de2897500b8f03aa2e266e71f7c273b6bae599000e8ef"
+    },
+    {
+      "file": "src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_142844_阶段TG24B_WDN5H_天赋中心与NPC巫医累计整合测试总包\\01_覆盖到源代码根目录\\src\\server\\game\\AI\\NpcBots\\bot_witch_doctor_ai.cpp",
+      "input_sha256": "d328f77c8b0135caaf317d9f34cfef9a05d74054b93b0ec8af03bad5d141df31",
+      "output_sha256": "d328f77c8b0135caaf317d9f34cfef9a05d74054b93b0ec8af03bad5d141df31"
+    }
+  ],
+  "resources": []
+}
