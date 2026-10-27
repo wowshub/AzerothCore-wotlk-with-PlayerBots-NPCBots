@@ -30,7 +30,7 @@ constexpr uint32 Wrath=9003100,Brew=9003101,Vigil=9003855,Reclaim=9003260;
 constexpr uint32 Arrow=9003970, Reclamation=9003980, Eclipse=9004000, Glaive=9004030;
 std::vector<uint32> const supportSpells={WDN5E::Spirit,WDN5E::Power,WDN5E::Resourceful,WDN5E::GreaterSpirit,WDN5E::GreaterPower,WDN5E::GreaterResourceful,WDN5D::Hexbreak,WDN5D::Allcure,WDN5D::MassAllcure,Reclaim,WDN3A::Death,WDN3A::Slither,WDN3A::Mirage,WDN2P::Thistle,WDN2P::Fish,WDN2P::Bones,WDN2O::SpellId,Vigil,WDN2D::Serene,WDN2D::Swift,WDN2D::SpellId,WDN2E::SpellId,WDN2E::Hex,WDN2E::Graven,WDN2E::Cursed};
 std::vector<uint32> const healingSpells={WDN2P::Splash,WDN2P::Toss,WDN2P::Prep,Brew,WDN1C::Healing};
-std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN1C::SpellId,WDN2B::SpellId,WDN2C::SpellId};
+std::vector<uint32> const damageSpells={Wrath,Arrow,Reclamation,Eclipse,Glaive,WDN1::AutoShot,WDN2::Hex,WDN2::Lethargy,WDN2::Shrinking,WDN2::Mana,WDN1C::SpellId,WDN2B::SpellId,WDN2C::SpellId};
 }
 class witch_doctor_bot : public CreatureScript
 {
@@ -62,7 +62,7 @@ public:
                 me->GetPower(POWER_MANA),me->GetMaxPower(POWER_MANA),GetSpell(Arrow),GetSpell(Reclamation),GetBotRoles(),IsActionNext(NpcBotActionTypes::BOT_ACTION_PULL),utilityDelay,WDN1C::Known(me),IsSpellReady(WDN1C::SpellId,0),WDN1C::Known(me)?int32(CheckBotCast(me,WDN1C::SpellId)):-1);
         }
         explicit witch_doctor_botAI(Creature* c) : bot_ai(c)
-        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5G] initialized entry={}",me->GetEntry()); }
+        { _botclass=BOT_CLASS_WITCH_DOCTOR;InitUnitFlags();LOG_ERROR("server", "[WDN5H] initialized entry={}",me->GetEntry()); }
 
         void ClearLocalScheduling()
         {
@@ -166,6 +166,7 @@ public:
             InitFamily(WDN2::Hex,WD19A::HexRanks);
             InitFamily(WDN2::Lethargy,WD19A::LethargyRanks);
             InitFamily(WDN2::Shrinking,WD19A::ShrinkingRanks);
+            InitFamily(WDN2::Mana,WD19A::ManaJinxRanks);
             InitSpellMap(WDN1C::SpellId,true,false);
             auto* wardInfo=sSpellMgr->GetSpellInfo(WDN1C::SpellId);
             auto const& wardMap=GetSpellMap();auto ward=wardMap.find(WDN1C::SpellId);
@@ -203,15 +204,17 @@ public:
         {
             if(CastDebuff(target,WDN2::Hex,diff,hexRetry))return true;
             if(jinxRetry||WDN2::JinxOccupied(target))return false;
-            uint32 preferred=target->IsNonMeleeSpellCast(false,false,true)?WDN2::Lethargy:WDN2::Shrinking;
-            if(!GetSpell(preferred)||!WDN2::Known(me,GetSpell(preferred)))
-                preferred=preferred==WDN2::Shrinking?WDN2::Lethargy:WDN2::Shrinking;
-            if(CastDebuff(target,preferred,diff,jinxRetry))return true;
-            uint32 alternative=preferred==WDN2::Shrinking?WDN2::Lethargy:WDN2::Shrinking;
-            uint32 fallbackRetry=0;
-            bool cast=CastDebuff(target,alternative,diff,fallbackRetry);
-            jinxRetry=std::max(jinxRetry,fallbackRetry);
-            return cast;
+            uint32 preferred=WDN2::PreferredJinx(target);
+            uint32 order[]={preferred,WDN2::Shrinking,WDN2::Lethargy};
+            for(uint32 i=0;i<3;++i)
+            {
+                if(i&&order[i]==preferred)continue;
+                uint32 retry=0;
+                bool cast=CastDebuff(target,order[i],diff,retry);
+                jinxRetry=std::max(jinxRetry,retry);
+                if(cast)return true;
+            }
+            return false;
         }
         bool TryCursedEffigy(Unit*target,uint32 diff)
         {
@@ -728,7 +731,7 @@ public:
             uint32 base=WDN1::Base(info->Id);
             if(!base)base=WDN2::Base(info->Id);
             if(info->Id==WDN2O::SpellId||info->Id==WDN1C::Healing||info->Id==Vigil||info->Id==WDN2D::Serene||info->Id==WDN2D::Swift||info->Id==WDN2E::Cursed||info->Id==WDN2E::Graven||info->Id==WDN2E::Hex||info->Id==WDN2E::SpellId||info->Id==WDN2D::SpellId||info->Id==WDN2B::SpellId||info->Id==WDN2C::SpellId)base=info->Id;
-            if(WDN5E::Kind(base)||base==WDN2O::SpellId||base==WDN1C::Healing||base==Vigil||base==WDN2D::Serene||base==WDN2D::Swift||base==WDN2E::Cursed||base==WDN2E::Graven||base==WDN2E::Hex||base==WDN2E::SpellId||base==WDN2D::SpellId||base==WDN5D::Hexbreak||base==Reclaim||base==Wrath||base==Brew||base==Arrow||base==Reclamation||base==Eclipse||base==Glaive||base==WDN2::Hex||base==WDN2::Lethargy||base==WDN2::Shrinking||base==WDN2B::SpellId||base==WDN2C::SpellId)
+            if(WDN5E::Kind(base)||base==WDN2O::SpellId||base==WDN1C::Healing||base==Vigil||base==WDN2D::Serene||base==WDN2D::Swift||base==WDN2E::Cursed||base==WDN2E::Graven||base==WDN2E::Hex||base==WDN2E::SpellId||base==WDN2D::SpellId||base==WDN5D::Hexbreak||base==Reclaim||base==Wrath||base==Brew||base==Arrow||base==Reclamation||base==Eclipse||base==Glaive||base==WDN2::Hex||base==WDN2::Lethargy||base==WDN2::Shrinking||base==WDN2::Mana||base==WDN2B::SpellId||base==WDN2C::SpellId)
             {
                 uint32 cooldown=info->GetRecoveryTime();
                 ApplyBotSpellCooldownMods(info,cooldown);
