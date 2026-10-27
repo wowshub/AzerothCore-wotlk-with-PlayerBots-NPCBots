@@ -36,6 +36,7 @@ ShamanData.lua
 MageData.lua
 WarlockData.lua
 DruidData.lua
+MonkData.lua
 WarriorCollection.lua
 Hunter.lua
 Rogue.lua
@@ -45,6 +46,7 @@ Shaman.lua
 Mage.lua
 Warlock.lua
 Druid.lua
+Monk.lua
 CollectionStore.lua
 CollectionDetails.lua
 CollectionApply.lua

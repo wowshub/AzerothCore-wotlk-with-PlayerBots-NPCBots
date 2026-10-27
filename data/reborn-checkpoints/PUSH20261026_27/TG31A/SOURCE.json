@@ -1,0 +1,441 @@
+{
+  "stage": "TG31A",
+  "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包",
+  "zip_sha256": "de7f4d1063633b293bc655360f53c9f90195a47d6db3b2742385322db22bb799",
+  "status": "committed at user request; original candidate/test status retained; not a Release",
+  "files": [
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornClassTalentPanels/Panels.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornClassTalentPanels\\Panels.lua",
+      "input_sha256": "b450f11d4693d93ca729774bc4366e58f54298975697bd8452247a2a21fb9c76",
+      "output_sha256": "b450f11d4693d93ca729774bc4366e58f54298975697bd8452247a2a21fb9c76"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornMonkSpecCard/RebornMonkSpecCard.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "f6361c5f6b07e1981915a4ba78cef006a8c1376185d314371e35e198b2ae6d47",
+      "output_sha256": "f6361c5f6b07e1981915a4ba78cef006a8c1376185d314371e35e198b2ae6d47"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornMonkSpecCard/RebornMonkSpecCard.toc",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "fe79636837e3423c5ace40cc7601ca7777a9b4d27e551ba7056aae4ff1e0d3f2",
+      "output_sha256": "763397aa3a03e09d5215cb49d2e0cca8fb4a5e16157057c41f91a10ae62d11ad"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassicSpecHome.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicSpecHome.lua",
+      "input_sha256": "2985fe9a136b377be324e9e32fa044714a0a8cd2192c08b0b61b9603a47fcb13",
+      "output_sha256": "2985fe9a136b377be324e9e32fa044714a0a8cd2192c08b0b61b9603a47fcb13"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/ClassTalentEntry.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassTalentEntry.lua",
+      "input_sha256": "42945079a93cf02a0ec4f7b10ad54f5a7f960f1ea4be04a5a41fe58a4d8faf25",
+      "output_sha256": "42945079a93cf02a0ec4f7b10ad54f5a7f960f1ea4be04a5a41fe58a4d8faf25"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionDetails.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionDetails.lua",
+      "input_sha256": "02dd5e915eead27df85cebd7db39767343bb1215c90aae31b436cd706c054a53",
+      "output_sha256": "02dd5e915eead27df85cebd7db39767343bb1215c90aae31b436cd706c054a53"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionShare.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionShare.lua",
+      "input_sha256": "d805f081553851f074522ece0d2795cba910e4d29481e638b7869c0cb5e16471",
+      "output_sha256": "d805f081553851f074522ece0d2795cba910e4d29481e638b7869c0cb5e16471"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionStore.lua",
+      "input_sha256": "36e51a8d89ab2efa91070f130d519cadcef792ce0d0848a8efb28f7906df22db",
+      "output_sha256": "36e51a8d89ab2efa91070f130d519cadcef792ce0d0848a8efb28f7906df22db"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/CollectionUI.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\CollectionUI.lua",
+      "input_sha256": "c6ab81d9a411229d7846adf43eeda1688b5ca3f86a5f398ce840d0835894f1e5",
+      "output_sha256": "c6ab81d9a411229d7846adf43eeda1688b5ca3f86a5f398ce840d0835894f1e5"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\Lifecycle.lua",
+      "input_sha256": "9de04273492e6cdc0054c7d9c1fbfa8ef11e1977dcc09c78810f899f721779a4",
+      "output_sha256": "9de04273492e6cdc0054c7d9c1fbfa8ef11e1977dcc09c78810f899f721779a4"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/Monk.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "62d13c35b014cb4e21130f8661771c632ac6ca5bf2d6c1a01706b1f3d1e8e675",
+      "output_sha256": "62d13c35b014cb4e21130f8661771c632ac6ca5bf2d6c1a01706b1f3d1e8e675"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/MonkData.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "7c3b242d12288a4c028156d25c8129c0298ce840b83cb330e95852a0476b3156",
+      "output_sha256": "7c3b242d12288a4c028156d25c8129c0298ce840b83cb330e95852a0476b3156"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\RebornTalentGuide.toc",
+      "input_sha256": "9312ae0dde6071f6eeddd69cd41b817df87d97614cc3c71fd82ebaf71c7740e8",
+      "output_sha256": "9312ae0dde6071f6eeddd69cd41b817df87d97614cc3c71fd82ebaf71c7740e8"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenter.lua",
+      "input_sha256": "4e54735c59a28c7c0b2ad3aed5fb233f77d9c6e3f89efb8eefd3ef36a723667a",
+      "output_sha256": "4e54735c59a28c7c0b2ad3aed5fb233f77d9c6e3f89efb8eefd3ef36a723667a"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenterLocale.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenterLocale.lua",
+      "input_sha256": "7c53c9258c8b5a8c8980929c5eaf33d2e093620322991ce6177c7047b661ebbe",
+      "output_sha256": "7c53c9258c8b5a8c8980929c5eaf33d2e093620322991ce6177c7047b661ebbe"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornTalentGuide/UnifiedNavigation.lua",
+      "mode": "exact base",
+      "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261026\\codexfix_20261026_181138_阶段TG30A_德鲁伊三系天赋大面板累计客户端测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\UnifiedNavigation.lua",
+      "input_sha256": "4c2dc27e9fbb98a234089cb107e2b4bbcce81ae6bb1662ed3d4d04a7ca70f466",
+      "output_sha256": "4c2dc27e9fbb98a234089cb107e2b4bbcce81ae6bb1662ed3d4d04a7ca70f466"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/Art.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "7feb36c1a6f27428bb6cdb2e0fda26a3359e304f9bbb4193c8f37705a9f78d0e",
+      "output_sha256": "7feb36c1a6f27428bb6cdb2e0fda26a3359e304f9bbb4193c8f37705a9f78d0e"
+    },
+    {
+      "file": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/HomeArt.lua",
+      "mode": "new",
+      "base": null,
+      "input_sha256": "b3eaceaf7e139b55bba8941aa8fb49e1d7dd13411581a7a6b77f07c9ff358fae",
+      "output_sha256": "b3eaceaf7e139b55bba8941aa8fb49e1d7dd13411581a7a6b77f07c9ff358fae"
+    }
+  ],
+  "resources": [
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/Backdrop.blp",
+      "sha256": "49782f639d60f39086cb0255c7ea4bd9fc18f3df1149d35976dd2d7484408f81",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ClassicSpecShellTG10A_blp.blp",
+      "sha256": "4b4eaeedfbf3c03ad6a1edace4548e39983b26f8f4c50646cb145edbebb63ee5",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpec1TG26A_blp.blp",
+      "sha256": "91f46bc0594ac2e6d45fef2c528fb0a517cda6aa133038da76705496fb9e8375",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpec2TG26A_blp.blp",
+      "sha256": "a77684401c4b47183121ecdae725f837effe00a12b539ed027a6940064222391",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpec3TG26A_blp.blp",
+      "sha256": "ccf7779e87a048536844fee4b1bf2e8233df71a298af247b4ef1206739989a7e",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DeathKnightSpecCardsTG26A_blp.blp",
+      "sha256": "7952f3d29235d1f90322a1502d95d9e1eca027ef19df10613c4b1c9e3e1b7bf7",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DruidSpec1TG30A_blp.blp",
+      "sha256": "2aab0011dfa0bca43ead6ce1ddbed6095da27795e4ff41d1f486655ca593709c",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DruidSpec2TG30A_blp.blp",
+      "sha256": "e983643b4c7085f86421538595e6fcaf5e4585366a7764b9bf446709b8f08cb0",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DruidSpec3TG30A_blp.blp",
+      "sha256": "fdb86af07c25af0c1fdde2f02a8ae2f8133d969a945ef42d9255cf9391fba271",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/DruidSpecCardsTG30A_blp.blp",
+      "sha256": "bddf330f755ba22e2d2aa4b86e02c21a7a6ad49aad4d7b29b71029bfb197ca54",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG4B.tga",
+      "sha256": "2909575133e271bcb966121e9bf204ccab6831b79844f10d5ea271b04559ed7a",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/GuideGrimoireTG6B_blp.blp",
+      "sha256": "90606de1a8d733a63ecc4d2a703c372d1b70633e20e3b719dd84be6c0db6e7b4",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpec1TG25A_blp.blp",
+      "sha256": "d2eedc31116a277469601c652d0ea8c37d4cf60f045a0d27a9603256325e58f8",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpec2TG25A_blp.blp",
+      "sha256": "025b5c5f592343c5bc8010ad50442fe2a21cc83804018f711a67a84de5aba3f9",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpec3TG25A_blp.blp",
+      "sha256": "5e8a31347dae710698ab95181af7921d3aee56d93b9c3797bd1c3c32aa649772",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/HunterSpecCardsTG25A_blp.blp",
+      "sha256": "94af130836ef12edd484f2de8df99f88ded50d09650e4ec4ce6d2fc73111318c",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MageSpec1TG28A_blp.blp",
+      "sha256": "c27eb47bdf9b85a65ec4086836e18f3938c33d4d0f7de77c1c4ff1afde774a95",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MageSpec2TG28A_blp.blp",
+      "sha256": "f14d2e2b36c6be1acd28f8a35263b46a161d514c73ceb33f9a5bf95035d5a352",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MageSpec3TG28A_blp.blp",
+      "sha256": "45bf076cd902e570714c2f07435d28528740754039ad882925af77d2ff6e0abf",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MageSpecCardsTG28A_blp.blp",
+      "sha256": "5cfdabb35c3f10276e9d50a589fcd6551de21077dfda59894e74c9a68421a785",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MonkSpec1TG31A_blp.blp",
+      "sha256": "16369d020b7b1e4b4b045df1bfad78b1e03ec1aee2fc59cef387fee11d3decdf",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MonkSpec2TG31A_blp.blp",
+      "sha256": "95e78bef352f590b06750e55d99c18e6ac0e7ce1be742259e1c033fc795dd1d1",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MonkSpec3TG31A_blp.blp",
+      "sha256": "5a998db76df1d265a56afa008d423a852e352a056c62f48c22ba29e69e549282",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/MonkSpecCardsTG31A_blp.blp",
+      "sha256": "d84a23579753ae233384406dcbbf46d5e4462bdb05ed4b9ae3bce4e937cc3a7d",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinAscensionTG10A_blp.blp",
+      "sha256": "fdd0bb70bac21c2be9f6056ce1268ce0456d3b092b70201b426787538b8b92ce",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec1TG10A_blp.blp",
+      "sha256": "e46817014c9efdc3bdc2d37dc9893e3250732806c1d13fed08541ea20a728618",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec2TG10A_blp.blp",
+      "sha256": "e73a8df329ac90dc672817fa064f12be92403a71a9e4e6a1839f0886a0f5eeae",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpec3TG10A_blp.blp",
+      "sha256": "31a95f8b05d6b622402dcadfddfde114afd4b04d74cdddd2533fbf40b96500f2",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinSpecCardsTG10A_blp.blp",
+      "sha256": "5256f3bb7b8f540d1980359ab3645d6c80aec5d182602e826f3f303c0010bae5",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG4B.tga",
+      "sha256": "594c171a9fcb340ccf552843a03dfbf0c926e3094664b948967d3d2e36d30182",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PaladinTriptychTG6B_blp.blp",
+      "sha256": "53a1f01bb6edf2a8f1f8a3c50e9040562ea59ae2d3f984e6494d8e357d372eb9",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpec1TG25A_blp.blp",
+      "sha256": "afa303a985fee2cc1160e6dcdd30e4a3d3b22f9ad1860a5c9b7e6deb20749f19",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpec2TG25A_blp.blp",
+      "sha256": "ebd7724a3a7f59e613b9ab1bf353a7d10ffcd00c7d871df8d953039f628ccbd6",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpec3TG25A_blp.blp",
+      "sha256": "72da5036971bc5466073652de68cf7b3bd955af94da828e3d63f51c3eb7a2868",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/PriestSpecCardsTG25A_blp.blp",
+      "sha256": "1b71495a35f6020ef529e114e89d5a5e76e32cdc8186e77b7f91431de87620ed",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentATG11B_blp.blp",
+      "sha256": "37ed8fa91a87d102806c6d723dae777831e6123eb64ded13b106c829248e1b52",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentBTG11B_blp.blp",
+      "sha256": "02abef81fe6fcf45b824364adb0738a196ead764242fdc6c854d1e1e87c106e3",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/QuietTalentCTG11B_blp.blp",
+      "sha256": "e7bee1293c11866a074e7aefbd1b0cd5a90e1c0c9f9b3d3c4dd6feba1e0174db",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpec1TG25A_blp.blp",
+      "sha256": "aecda54de2147eec50dae6bee60ef9b0f9754c4700f130f027dade1cf16577c1",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpec2TG25A_blp.blp",
+      "sha256": "c1b78cd63bd17fc2c81d3b4a289dde569abb788c7fbb232f6707257eb9e618bd",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpec3TG25A_blp.blp",
+      "sha256": "2b47bfe8ef07226855991cd373282f88afab9d59c3b4797b5a0fd586c45c4f63",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/RogueSpecCardsTG25A_blp.blp",
+      "sha256": "403a1e17cc56f86a7b6aac88ef56087cea81392f3f9f509970f03dc0fbd2de03",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ShamanSpec1TG27A_blp.blp",
+      "sha256": "19d331186820a48e212788ba0dfaecf53befe30e03113efba4a385fd1d8ecc6b",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ShamanSpec2TG27A_blp.blp",
+      "sha256": "ae8e05210401aaf4a88ddc3d87ed7c96f1d8443190d87ca01f897553c8fd7662",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ShamanSpec3TG27A_blp.blp",
+      "sha256": "4fa7199cb4ba942cc8c5e464740b00242374d0a0e87df91f2527e7a1a691ae54",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/ShamanSpecCardsTG27A_blp.blp",
+      "sha256": "f83af56b5735b57825979aeaeb19a43fa05bf8c8c469ac56cc20a73e5be07ed8",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/uimicromenu2x.blp",
+      "sha256": "cd5a5ea49562743268881f7728ef299a1ef23491d0f89a7c0a4609fa3ce846bd",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarlockSpec1TG29A_blp.blp",
+      "sha256": "72b749c819f4b64fe7b48a1a35a674cfbebdf995dce7600fdb86b94e0c817363",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarlockSpec2TG29A_blp.blp",
+      "sha256": "2f53d9a47a767eb3c9eb00792eabaf73a054e76135ae49dcdb898c1d511cf6ca",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarlockSpec3TG29A_blp.blp",
+      "sha256": "227860075855129c0eb73edec8dd7407ced4afd7263de18bceb45d33db3ce2b0",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarlockSpecCardsTG29A_blp.blp",
+      "sha256": "5028a68c718c9e17e08e7e69ca4b9776d7c89b84e51f8ca0505e8cd92cdf5f0a",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorAscensionTG10A_blp.blp",
+      "sha256": "f9fc0a65c4a169dd414bcb1de51aa43d56210c75cdb389f2a7e019e59f8c89b9",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec1TG10A_blp.blp",
+      "sha256": "18d3da6ea27300d561a842964bf0c2bff21f564fb0a6459a1d5d9303a40df49d",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec2TG10A_blp.blp",
+      "sha256": "8b53cb4143e0a2575d3c5e8950970eb46b8c4f5693a43a43b9b00db799b12c67",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpec3TG10A_blp.blp",
+      "sha256": "b9c6ae9ec75f58c74ab7c7a4d8e5ffc494c973bcc1c19cbfcc2400a7fc451fe9",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorSpecCardsTG10A_blp.blp",
+      "sha256": "f4ff9462db2543982ccbd33e45d25203fb5343a2a9cfd8e97a181fbf8e8fd61d",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WarriorTriptychTG6B_blp.blp",
+      "sha256": "d004e5ba8c1c3855d751825bff6f41da44ba2886764238fc015bc1d23106b257",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WitchDoctorSpec1TG31A_blp.blp",
+      "sha256": "f0f16e0001910b899807b53e6e3fcc2381c76a50e2b587da7c095fd4f9125f04",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WitchDoctorSpec2TG31A_blp.blp",
+      "sha256": "4c3a744fd4a42f5a284e3f0e2019498c99492bde4ec7202b646aa3813679a63c",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WitchDoctorSpec3TG31A_blp.blp",
+      "sha256": "353b58b824f689651fbad5b87d8da2598d7b274bf4ea51180c059d8d681fa883",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    },
+    {
+      "path": "client/Interface/AddOns/RebornTalentGuide/Art/WitchDoctorSpecCardsTG31A_blp.blp",
+      "sha256": "e2d5315401e558755710118bbbacb262a57a8d44672d3fa2fcc6f2b6cd5e965e",
+      "package": "codexfix_20261026_183939_阶段TG31A_十二职业天赋大面板累计整合测试包"
+    }
+  ]
+}

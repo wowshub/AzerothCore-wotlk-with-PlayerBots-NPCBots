@@ -6,7 +6,7 @@ local P=RebornTalentGuidePaladin
 local S=RebornTalentCollections
 local Windows=RebornTalentPanelWindows
 local N={states={},pageSize=3};G.Navigation=N
-local tokens={['德鲁伊']='DRUID',['术士']='WARLOCK',['死骑']='DEATHKNIGHT',['法师']='MAGE',['萨满']='SHAMAN',['死亡骑士']='DEATHKNIGHT',['牧师']='PRIEST',['潜行者']='ROGUE',['猎人']='HUNTER',['战士']='WARRIOR',['圣骑士']='PALADIN',['巫医']='WITCHDOCTOR'}
+local tokens={['武僧']='MONK',['德鲁伊']='DRUID',['术士']='WARLOCK',['死骑']='DEATHKNIGHT',['法师']='MAGE',['萨满']='SHAMAN',['死亡骑士']='DEATHKNIGHT',['牧师']='PRIEST',['潜行者']='ROGUE',['猎人']='HUNTER',['战士']='WARRIOR',['圣骑士']='PALADIN',['巫医']='WITCHDOCTOR'}
 local names={['战士']={'武器','狂怒','防护'},['圣骑士']={'神圣','防护','惩戒'}}
 local sourceNames={recommended='推荐方案',favorites='我的收藏',tested='实测推荐'}
 function N.State()
@@ -37,7 +37,7 @@ function N.Available(field,value)
  return false
 end
 function N.Stop()
- for _,H in ipairs({RebornTalentGuideHunter,RebornTalentGuideRogue,RebornTalentGuidePriest,RebornTalentGuideDeathKnight,RebornTalentGuideShaman,RebornTalentGuideMage,RebornTalentGuideWarlock,RebornTalentGuideDruid})do if H and H.job and not H.job.owner then H.Stop('切换推荐，停止后续加点')end end
+ for _,H in ipairs({RebornTalentGuideHunter,RebornTalentGuideRogue,RebornTalentGuidePriest,RebornTalentGuideDeathKnight,RebornTalentGuideShaman,RebornTalentGuideMage,RebornTalentGuideWarlock,RebornTalentGuideDruid,RebornTalentGuideMonk})do if H and H.job and not H.job.owner then H.Stop('切换推荐，停止后续加点')end end
  if G.job then G.Stop('切换推荐，停止后续加点')end
  if P.job and not P.job.owner then P.Stop('切换推荐，停止后续加点')end
  if StaticPopup_Hide then for _,key in ipairs({'REBORN_TG_APPLY','REBORN_TG_PALADIN','REBORN_TG_WD_DRAFT','REBORN_TG_BOT_APPLY'})do StaticPopup_Hide(key)end end

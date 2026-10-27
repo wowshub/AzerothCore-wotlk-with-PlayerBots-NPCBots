@@ -1,0 +1,5 @@
+## Interface: 30300
+## Title: Reborn Monk Third Spec Icon
+## Notes: Native side icon / 天赋右侧第三图标
+## Version: MONKSPEC12A
+RebornMonkSpecCard.lua

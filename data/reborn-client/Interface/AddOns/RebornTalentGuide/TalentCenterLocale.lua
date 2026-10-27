@@ -3,6 +3,7 @@ local G=RebornTalentGuide
 local L={bindings={}};G.CenterLocale=L
 function L.English()return type(RebornTGViewSettings)=='table'and RebornTGViewSettings.centerLanguage=='enUS'end
 local dictionary={
+ ['踏风']='Windwalker',['酒仙']='Brewmaster',['织雾']='Mistweaver',
  ['平衡']='Balance',['野性战斗']='Feral Combat',
  ['痛苦']='Affliction',['恶魔学识']='Demonology',['毁灭']='Destruction',
  ['奥术']='Arcane',['火焰']='Fire',

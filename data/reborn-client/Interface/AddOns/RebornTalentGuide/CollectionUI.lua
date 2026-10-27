@@ -1,5 +1,5 @@
 local S=RebornTalentCollections;local G=RebornTalentGuide;local C=RebornTalentTreeCanvas;local W=RebornTalentPanelWindows;local PD=RebornTalentGuidePaladinData
-local classes={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',PRIEST='牧师',DEATHKNIGHT='死骑',SHAMAN='萨满',MAGE='法师',WARLOCK='术士',DRUID='德鲁伊',WITCHDOCTOR='巫医'};local specs={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
+local classes={WARRIOR='战士',PALADIN='圣骑士',HUNTER='猎人',ROGUE='潜行者',PRIEST='牧师',DEATHKNIGHT='死骑',SHAMAN='萨满',MAGE='法师',WARLOCK='术士',DRUID='德鲁伊',MONK='武僧',WITCHDOCTOR='巫医'};local specs={[0]='巫毒',[1]='酿造',[2]='暗影狩猎'}
 -- Self-contained controls: no three-slice template regions for skins to resize.
 local function button(parent,x,y,w,label,fn)
  return RebornTalentGuideTheme.Button(parent,x,y,w,25,label,fn)
@@ -86,7 +86,7 @@ local function paint()
  if data then
   local current=S.Capture(b.class)
   for t,tree in ipairs(data.trees)do
-   local board=S.boards[t];board.compactAE=false;board:Show();board:ClearAllPoints();board:SetPoint('TOPLEFT',S.frame,'TOPLEFT',240+(t-1)*254,-133);board:SetSize(248,480);board.canvas:SetSize(228,435);board.width=228;board.height=435;board.title:SetText(((b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'or b.class=='MAGE'or b.class=='WARLOCK'or b.class=='DRUID')and S.NativeData(b.class).treeNames or b.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'})[t]);if b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'or b.class=='MAGE'or b.class=='WARLOCK'or b.class=='DRUID'then if board.art then board.art:Hide()end;board:SetBackdropColor(.035,.09,.065,.8)elseif b.class=='WARRIOR'then C.WarriorArt(board,t)else C.Art(board,t)end
+   local board=S.boards[t];board.compactAE=false;board:Show();board:ClearAllPoints();board:SetPoint('TOPLEFT',S.frame,'TOPLEFT',240+(t-1)*254,-133);board:SetSize(248,480);board.canvas:SetSize(228,435);board.width=228;board.height=435;board.title:SetText(((b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'or b.class=='MAGE'or b.class=='WARLOCK'or b.class=='DRUID'or b.class=='MONK')and S.NativeData(b.class).treeNames or b.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'})[t]);if b.class=='HUNTER'or b.class=='ROGUE'or b.class=='PRIEST'or b.class=='DEATHKNIGHT'or b.class=='SHAMAN'or b.class=='MAGE'or b.class=='WARLOCK'or b.class=='DRUID'or b.class=='MONK'then if board.art then board.art:Hide()end;board:SetBackdropColor(.035,.09,.065,.8)elseif b.class=='WARRIOR'then C.WarriorArt(board,t)else C.Art(board,t)end
    local items,edges,ids={},{},{};for _,n in ipairs(tree)do ids[n.id]=true end
    for _,n in ipairs(tree)do
     local name,_,icon=GetSpellInfo(n.spells[1]);local item={id=n.id,x=28+(n.col-1)*53,y=20+(n.row-1)*35,size=30,icon=icon or n.icon,spell=n.spells[math.max(1,b.ranks[n.id]or 0)],name=name or n.name,target=b.ranks[n.id]or 0,actual=current and(current.ranks[n.id]or 0)or nil,maximum=n.max,shape=n.max>1 and'circle'or'square'}
@@ -193,8 +193,8 @@ local function input(parent,x,y,w,changed)
 end
 local function create()
  if S.frame then return end
- local f=C.Window('RebornTalentCollectionFrame','天赋收藏 · TG30A');S.frame=f;W.Register('collection',f)
- S.classTabs={};for i,token in ipairs({'WARRIOR','PALADIN','WITCHDOCTOR','HUNTER','ROGUE','PRIEST','DEATHKNIGHT','SHAMAN','MAGE','WARLOCK','DRUID'})do local class=token;S.classTabs[token]=button(f,20+((i-1)%4)*52,-35-math.floor((i-1)/4)*23,50,classes[class],function()S.Change(function()S.class=class;S.editor=nil;S.Refresh()end)end);S.classTabs[token]:SetHeight(20)end
+ local f=C.Window('RebornTalentCollectionFrame','天赋收藏 · TG31A');S.frame=f;W.Register('collection',f)
+ S.classTabs={};for i,token in ipairs({'WARRIOR','PALADIN','WITCHDOCTOR','HUNTER','ROGUE','PRIEST','DEATHKNIGHT','SHAMAN','MAGE','WARLOCK','DRUID','MONK'})do local class=token;S.classTabs[token]=button(f,20+((i-1)%4)*52,-35-math.floor((i-1)/4)*23,50,classes[class],function()S.Change(function()S.class=class;S.editor=nil;S.Refresh()end)end);S.classTabs[token]:SetHeight(20)end
  S.shareButton=button(f,1030,-3,230,'导入 / 导出',function()S.OpenShare()end);S.shareButton:SetHeight(20)
  S.classText=C.Text(f,20,-106,210,'','GameFontNormal')
  button(f,20,-131,200,'从自己当前已保存配点建立',function()S.Change(function()S.New('current')end)end)
