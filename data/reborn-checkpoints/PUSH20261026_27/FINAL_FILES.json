@@ -1,0 +1,537 @@
+[
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctor.cpp",
+    "committed_sha256": "ba22a3eb15b59accf3e2faaf43be21f67b7854c5988e61fed8ebce81df39ad5e",
+    "package_sha256": "ba22a3eb15b59accf3e2faaf43be21f67b7854c5988e61fed8ebce81df39ad5e"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewing130.inc",
+    "committed_sha256": "35c321b93d941cc4fac59603662da72e9bb81956deb0204f498b407c6a3000a6",
+    "package_sha256": "b90e83784c87d9c8e772e8a3760f8b6db20d2771879cbc22b9d270837eb873e0"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingFoundation.inc",
+    "committed_sha256": "5e2b3295e6b2b910e8a1713ac05d9ffbb411370aadbd336ae872b5dd8571fe90",
+    "package_sha256": "94202c8b1cf11675436f9d863c83a50f961338c04049f9356c2f83a2c424c9e7"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBrewingNumbers.h",
+    "committed_sha256": "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a",
+    "package_sha256": "79be9050f6d217c9e02bf48c0d2e012c14209536e1b1cff78da25eb3c1f6316a"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorMirage154.inc",
+    "committed_sha256": "ed2a4698ebbd83dc0cf22c1a90b5be9fc0c7acaddd06df6804efbb95c8c56d35",
+    "package_sha256": "e8c4e3be6436c935a1f0ee654aaf44adf631c504168bc2ab0764aade7c6666f2"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcActor1.h",
+    "committed_sha256": "bdc589f493ee8b7e67db5bbbd7eb39d718da4e35fa7962ebf3bdc3a135c45284",
+    "package_sha256": "bdc589f493ee8b7e67db5bbbd7eb39d718da4e35fa7962ebf3bdc3a135c45284"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewEcho2.h",
+    "committed_sha256": "855516211d0dc8902e4bff77a425684ff0de4d34544fec0577d9cdad6f274644",
+    "package_sha256": "855516211d0dc8902e4bff77a425684ff0de4d34544fec0577d9cdad6f274644"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcBrewing2.h",
+    "committed_sha256": "e32cf4386993578210ab03932d2d9f5cde9f087c0d2570b3691cec46d2558757",
+    "package_sha256": "228b1a65f8744b33602f58e216bacd9393032f17b32cccf06b8f5f7a7e80b73b"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcDebuff2.h",
+    "committed_sha256": "271515044d96871a898c4ff0a41d9a4ec4b010d85bc3f8324075938bc43b8470",
+    "package_sha256": "271515044d96871a898c4ff0a41d9a4ec4b010d85bc3f8324075938bc43b8470"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcEffigy2.h",
+    "committed_sha256": "308816a9b5835e15a027fd510a9310828d7bf6ea0f6aea91877dce86bcffb711",
+    "package_sha256": "add639c08533338b069fd71cb2f316c2a177c914217bba834ad0f2731dbbfff0"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcHealing5.h",
+    "committed_sha256": "609f496780ac0705efb81798aad0541bc0a0f3977d2349fad8602e89d224eccd",
+    "package_sha256": "609f496780ac0705efb81798aad0541bc0a0f3977d2349fad8602e89d224eccd"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcIdol2.h",
+    "committed_sha256": "22bbb757cb54b31e223a4c74ddd2d46cbbc518e8b882d7aa7427c2f628991b73",
+    "package_sha256": "5e7b2f72269f8cbc5ab28b077f68a932f2790d7b7e1d511e4713877e79e53e61"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcMassWard2.h",
+    "committed_sha256": "e500cdb5cdc6d59879b03cf6859284a390c0067281180a2c2e3cb43199bba654",
+    "package_sha256": "e421a32d6ffa47b5c3a497d63e93197a5818c5d548182d9a0f8d863168b10a31"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcMimic2.h",
+    "committed_sha256": "20e7c457ea87da920c6f38175c33082e25e5ec273e5985c3ede38cc7dfde203e",
+    "package_sha256": "0a15896679c53c5db44eb5751330bf3dff2d819aacb9d5f9b6ee000baed45311"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcSurvival3.h",
+    "committed_sha256": "5712c127da456b480a0c5eae4ef56bdce6146bf6c8cf01bb12cfc54db8ff14de",
+    "package_sha256": "56ab3b143f7baa3fbbc29c480dcf15ae097b260454207c14fe144541c2e77345"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcVoodoo2.h",
+    "committed_sha256": "8cbe80e27298ec862075108094501f87121b86b59a275b2e95e011114a12573a",
+    "package_sha256": "7b1cea57b1b4aa568dc5e1e8ef054ecc174b1d60411139f3fb9b7e48e44e30a5"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWard1.h",
+    "committed_sha256": "87af87b71517360578ef5fc9d9a2a75246d38f280a3f5bc5d9413bac487d6758",
+    "package_sha256": "6e0f91bde670ea2c5ea0c3ef13a2adada88aabfaeb1be18a739555dbc488dfd6"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorSerpent150.inc",
+    "committed_sha256": "93b2d7ba499b553118743edb2a6e419262fd155cd3bb616e4c5099ac75b393d2",
+    "package_sha256": "fc9b63dda531fa3e6a5400cbad2d0011faf4161414da4723fd8b90b22180cc1c"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow143.inc",
+    "committed_sha256": "2cc9d80f7da8f7063ba6be9240425017f7467abaf4c5586053a619dd370004e7",
+    "package_sha256": "8f3d9297938e494503a28dc320bfb9cb2517068322225625cf120642e69d2454"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow145.inc",
+    "committed_sha256": "07af21282c9c9bfc1456071c2fdfc80fcb56df1e89bc9c5adf67ea142e1e8c10",
+    "package_sha256": "753e3ae145588ac08a8b23c9b0eaea819e04c08cf9c8a6a64eef4555f01f003e"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorShadow146.inc",
+    "committed_sha256": "14b83686d692c7a1531a1dbd6c04b01685cf9e93cf20fa31efed6475b539f9e2",
+    "package_sha256": "6a67628a124ab78c46533825d96999131ce3deada47865801a2c5af5eeb88614"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/bot_ai.cpp",
+    "committed_sha256": "be05a2d9a4f1187a597ad88e8a4cde76b826acabab89c4344a6ed5598bd9ec82",
+    "package_sha256": "be05a2d9a4f1187a597ad88e8a4cde76b826acabab89c4344a6ed5598bd9ec82"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/bot_ai.h",
+    "committed_sha256": "3599c757af8e937a8783755a09318841429a60b4a9c69897367ae4b48743b611",
+    "package_sha256": "3599c757af8e937a8783755a09318841429a60b4a9c69897367ae4b48743b611"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/bot_witch_doctor_ai.cpp",
+    "committed_sha256": "d328f77c8b0135caaf317d9f34cfef9a05d74054b93b0ec8af03bad5d141df31",
+    "package_sha256": "d328f77c8b0135caaf317d9f34cfef9a05d74054b93b0ec8af03bad5d141df31"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/botcommon.h",
+    "committed_sha256": "042f1b0d3ed4c8b3713e07c0add040e028d548e4cc3178ad8e6e753a48991d43",
+    "package_sha256": "bdbb4f91dab63c7105cbc5e7980115ff6dae160654839948c97b6bb4e5d81e37"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "committed_sha256": "b7a32548ac691d8d8eb11f5fbb584362ed065c0ae495adb7e36af47595db97fb",
+    "package_sha256": "459f0d288fa2c44c28e8ef65222c6fb13f5f8c4b3a7cdef68b3a089d163969ee"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/botgiver.cpp",
+    "committed_sha256": "63d5c18d260bf1d89da6f4b6b401c8b5070113e2acd51a7cfa2bfeb27e10b71e",
+    "package_sha256": "98ee3b4608a3f53710c7f11fa5bfe435705394e897cf3b9eec73f3fd70b61c66"
+  },
+  {
+    "path": "source/src/server/game/AI/NpcBots/botmgr.cpp",
+    "committed_sha256": "6be2a24095e4b0c9792ff7718cbc7ec334edd292f491637f77aa0572806d6cf4",
+    "package_sha256": "6be2a24095e4b0c9792ff7718cbc7ec334edd292f491637f77aa0572806d6cf4"
+  },
+  {
+    "path": "source/src/server/game/Entities/Unit/Unit.cpp",
+    "committed_sha256": "9151c888e946dbc7f97b73bf67792841482b8713e55168040c8314f2d98362b2",
+    "package_sha256": "9151c888e946dbc7f97b73bf67792841482b8713e55168040c8314f2d98362b2"
+  },
+  {
+    "path": "source/src/server/game/Spells/Auras/SpellAuraEffects.cpp",
+    "committed_sha256": "eff3a67dbb906dbe058013d9772d8f6eb4ed7127f72d5d3568959e6fc807b6dd",
+    "package_sha256": "fac604bdf1fa78230426de9b895e4fba63c2752cd22abefc1d24ee7c6af5b804"
+  },
+  {
+    "path": "source/modules/mod-reborn-bot-telemetry/conf/RebornBotTelemetry.conf.dist",
+    "committed_sha256": "eb95f4686ae6c78adb8379d8c832b56735db5533e1760e269f07f98b64a31149",
+    "package_sha256": "eb95f4686ae6c78adb8379d8c832b56735db5533e1760e269f07f98b64a31149"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcCleansing5.h",
+    "committed_sha256": "fcf5d302a7bb78249bbb4b5f54db12372d9c5fa16c6e3fc1c324db93798fea07",
+    "package_sha256": "fcf5d302a7bb78249bbb4b5f54db12372d9c5fa16c6e3fc1c324db93798fea07"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcRezDecision.h",
+    "committed_sha256": "50f7ec984b9f91a1d0c3bb222514b8bf5acf214f253db392b04e04d1afc7df5a",
+    "package_sha256": "50f7ec984b9f91a1d0c3bb222514b8bf5acf214f253db392b04e04d1afc7df5a"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcRezRecovery.cpp",
+    "committed_sha256": "85741e2862200e2887b76fed048badc19ae7d21543099dc92ededb82cfb895aa",
+    "package_sha256": "85741e2862200e2887b76fed048badc19ae7d21543099dc92ededb82cfb895aa"
+  },
+  {
+    "path": "source/modules/mod-reborn-witchdoctor/src/RebornWitchDoctorNpcWuju5.h",
+    "committed_sha256": "5cf1a27c9e39fa005b01d195a75157bf9ff57d84f75aae8f71b1608e200fb5ad",
+    "package_sha256": "5cf1a27c9e39fa005b01d195a75157bf9ff57d84f75aae8f71b1608e200fb5ad"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornClassTalentPanels/Panels.lua",
+    "committed_sha256": "b450f11d4693d93ca729774bc4366e58f54298975697bd8452247a2a21fb9c76",
+    "package_sha256": "b450f11d4693d93ca729774bc4366e58f54298975697bd8452247a2a21fb9c76"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornClassTalentPanels/RebornClassTalentPanels.toc",
+    "committed_sha256": "bf63cea79808d0e036208c0626a1c2e944f82482941d66de1d438154387d0b24",
+    "package_sha256": "cf7071964abd841d8bb06074ff1a58ef9fa834a2c1068ae05656532b71876a17"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/ApplyFeedback.lua",
+    "committed_sha256": "6b4f333f5baff1906623a1f2246ec45f995f18b4bee0fb3df41e4e4ad4c49fe5",
+    "package_sha256": "80e4172a7fee5f4c29f972797feb98d2c8de216e8c6b0e40e70475e9fda4e8b8"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/BotPresentation.lua",
+    "committed_sha256": "186d95625d264175c10694d3c0c121ad16715da053c7e4ef4985e274d63065ae",
+    "package_sha256": "186d95625d264175c10694d3c0c121ad16715da053c7e4ef4985e274d63065ae"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/ClassicSpecHome.lua",
+    "committed_sha256": "10850bc5ec1e349bc18ebca38a93f82a990da16ababe61ad3394b455eb52d30f",
+    "package_sha256": "10850bc5ec1e349bc18ebca38a93f82a990da16ababe61ad3394b455eb52d30f"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/ClassTalentEntry.lua",
+    "committed_sha256": "42945079a93cf02a0ec4f7b10ad54f5a7f960f1ea4be04a5a41fe58a4d8faf25",
+    "package_sha256": "42945079a93cf02a0ec4f7b10ad54f5a7f960f1ea4be04a5a41fe58a4d8faf25"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/CollectionApply.lua",
+    "committed_sha256": "6e556dd0ab26e57406bd8749957d16bfb8252e552d1ecb8663980a708069fdda",
+    "package_sha256": "6e556dd0ab26e57406bd8749957d16bfb8252e552d1ecb8663980a708069fdda"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/CollectionDetails.lua",
+    "committed_sha256": "02dd5e915eead27df85cebd7db39767343bb1215c90aae31b436cd706c054a53",
+    "package_sha256": "02dd5e915eead27df85cebd7db39767343bb1215c90aae31b436cd706c054a53"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/CollectionShare.lua",
+    "committed_sha256": "d805f081553851f074522ece0d2795cba910e4d29481e638b7869c0cb5e16471",
+    "package_sha256": "d805f081553851f074522ece0d2795cba910e4d29481e638b7869c0cb5e16471"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/CollectionShareUI.lua",
+    "committed_sha256": "a9d268c95d6de5c4908122a8875ce655f397a4dce7b27939c40b0acb37dea58b",
+    "package_sha256": "191a7fbb2bc679af83647bc566b8d9c67eb8c6e5bcc42740b8739715201fe75e"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/CollectionStore.lua",
+    "committed_sha256": "36e51a8d89ab2efa91070f130d519cadcef792ce0d0848a8efb28f7906df22db",
+    "package_sha256": "36e51a8d89ab2efa91070f130d519cadcef792ce0d0848a8efb28f7906df22db"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/CollectionUI.lua",
+    "committed_sha256": "c6ab81d9a411229d7846adf43eeda1688b5ca3f86a5f398ce840d0835894f1e5",
+    "package_sha256": "c6ab81d9a411229d7846adf43eeda1688b5ca3f86a5f398ce840d0835894f1e5"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Core.lua",
+    "committed_sha256": "8fc0f3c1a4ced47471db91ea5b9a384ab6d2d68dcc55ab3330e72071994b61ac",
+    "package_sha256": "4d135cce7929e5cb9a801eee1c14d3fb2f125f6c5d1edf6e0b66ae5dfda0805c"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Data.lua",
+    "committed_sha256": "d744f05ce8d0a7988455c429b9373aa1a5345582bf74829bcbe4e64986424d9b",
+    "package_sha256": "b7cad2f7f202781876d21ca48ca9e0cae6c8b5d2df8b8c380ae64edd0b00504a"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/EntryPoints.lua",
+    "committed_sha256": "1114ddd357286388059ba284005b24395cff1676266e4202524854a786634a28",
+    "package_sha256": "d79c3cc9da9c1f10444d4e80d013cf08b32149ff0a9b2be6365106aa733f91ff"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Hunter.lua",
+    "committed_sha256": "28d807fbcafce3520026182fe5117c3e9417299ebc96e9613d2661dffde9c40b",
+    "package_sha256": "28d807fbcafce3520026182fe5117c3e9417299ebc96e9613d2661dffde9c40b"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/HunterData.lua",
+    "committed_sha256": "d80804827d3de7b4762bec9bfd5f586afe3d28d206f33517e419f4680d7ac854",
+    "package_sha256": "d80804827d3de7b4762bec9bfd5f586afe3d28d206f33517e419f4680d7ac854"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Lifecycle.lua",
+    "committed_sha256": "9de04273492e6cdc0054c7d9c1fbfa8ef11e1977dcc09c78810f899f721779a4",
+    "package_sha256": "9de04273492e6cdc0054c7d9c1fbfa8ef11e1977dcc09c78810f899f721779a4"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/MultiBotCompat.lua",
+    "committed_sha256": "275214a48a4ef1f4714bdedfae8b563b7e5afe7fcd89ef35554a839046b4b8ae",
+    "package_sha256": "5196620a75a3cb9ff0d677d98025091124751f387ae5baea65eda865bed15304"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Paladin.lua",
+    "committed_sha256": "3faea9837d8a639a59339cc2f8517a45e86b3cf61360abbbba5845c599666611",
+    "package_sha256": "a8847e266768e87403f58597a5dafb12b2b1bf5459d356250f29be279c5f49e3"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/PaladinData.lua",
+    "committed_sha256": "1a90b207a7e6feb729cce44d40efc278ebb9272aa85ac3d86ed67575baaf2291",
+    "package_sha256": "98177a98b5a0301f2cb51a01d535df96e15f6d7160ec77956bdf9d267a772422"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/PaladinPVPData.lua",
+    "committed_sha256": "0eb534846106dd73f528d49613a880db0d5ac4c0110f6a05ce152708de79d74e",
+    "package_sha256": "ed63a1d73a6fb6c9beb6efab4d38cb9ab04c19a1bbeba1a64736df5a3189fc55"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/PaladinUI.lua",
+    "committed_sha256": "4daa14bbd99deb06c393c1e11826abf8df34e5b835a413fe3f62b1efb9e07f3a",
+    "package_sha256": "e595a2d47e521071dbc368b6eb75702a9fdaa56dba2182949ef0e1dbc126277e"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/PointSummary.lua",
+    "committed_sha256": "411121bd473df890a758973f1cb934e1645f11f1f41bd138b99c643d5229a287",
+    "package_sha256": "a816e949e79c0f087be6ecba169b831ea424d47e51b0d24a7bd8034c409e5888"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+    "committed_sha256": "9312ae0dde6071f6eeddd69cd41b817df87d97614cc3c71fd82ebaf71c7740e8",
+    "package_sha256": "9312ae0dde6071f6eeddd69cd41b817df87d97614cc3c71fd82ebaf71c7740e8"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/RecommendationEvidence.lua",
+    "committed_sha256": "6be531f3123c9b2a6c1ee55e9d5a4735bbd422c54482cc80af9af042dcb8294d",
+    "package_sha256": "a2fc49df15418b0a9619276bbd1c279bd0c932d29f165da9cb9d0abcde1a9165"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/RecommendationEvidenceData.lua",
+    "committed_sha256": "1a294560b9a212a0dfb29ec05d857be5d5594e7fa2e50031eee4798a79843ce0",
+    "package_sha256": "9a5219abd96251fb88a0d04a57a3c49ea4f9a7b471eb7271aeadf14fa967d99f"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Scale.lua",
+    "committed_sha256": "d1994fb8cfc358517c3a61ef95c2bd2509cb010a512d457f07a4acd8f3ee1fcc",
+    "package_sha256": "7743e419f23b2f794bf9be13a022e4a60a503c2683e861e7dd30ffe88ed32f68"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+    "committed_sha256": "4e54735c59a28c7c0b2ad3aed5fb233f77d9c6e3f89efb8eefd3ef36a723667a",
+    "package_sha256": "4e54735c59a28c7c0b2ad3aed5fb233f77d9c6e3f89efb8eefd3ef36a723667a"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/TalentCenterLocale.lua",
+    "committed_sha256": "7c53c9258c8b5a8c8980929c5eaf33d2e093620322991ce6177c7047b661ebbe",
+    "package_sha256": "7c53c9258c8b5a8c8980929c5eaf33d2e093620322991ce6177c7047b661ebbe"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/TalentPanelWindows.lua",
+    "committed_sha256": "e2e10b99369403cf27ea8df50f64785d180f2f41094b3fbef120e645150360e3",
+    "package_sha256": "79f8d2a0b6a8aa0ed8da5f1b91e809039faba3993899d99d019fe4203a1afddc"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/TalentTreeCanvas.lua",
+    "committed_sha256": "bb6e1bede6bc90ef8e248c9291de4b5c45f6b86627f87ec85707018d4c23af6b",
+    "package_sha256": "6114b581c0311f0105cde1e4bd8364be63490fb8c7e606254e107518778582ec"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/TalentTreeViews.lua",
+    "committed_sha256": "74056130a9546f3899c461c00279d56d6a0d1bdda32b5aacedd4f49bfd8f0d2a",
+    "package_sha256": "457bf10811dbfbb9b7d01a9c3b50703a2389847bdcf739156f29bf160f8db03e"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Theme.lua",
+    "committed_sha256": "ff12ee241b22d503e7107f2e737968122f169a1f94fd27a2421f79cd0aeab752",
+    "package_sha256": "ff12ee241b22d503e7107f2e737968122f169a1f94fd27a2421f79cd0aeab752"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/UI.lua",
+    "committed_sha256": "d65e78efc2125f1f69824d0ca9e35523c2781b9e14e2d0ab7cca3ac0029ce4f8",
+    "package_sha256": "3c2de62e2281c187c1a03b10b837a5b3fde970b50ebc1360988728a39c82f03c"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/UnifiedNavigation.lua",
+    "committed_sha256": "4c2dc27e9fbb98a234089cb107e2b4bbcce81ae6bb1662ed3d4d04a7ca70f466",
+    "package_sha256": "4c2dc27e9fbb98a234089cb107e2b4bbcce81ae6bb1662ed3d4d04a7ca70f466"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/WarriorCollection.lua",
+    "committed_sha256": "37727eb92b2f2da6b83293a1b875e4cd6972a23af423aff41a66449a95fa9d14",
+    "package_sha256": "efd7b6deaad08ce8ac7593eccad89c7d719a495099da0845ce0f7511c3aac423"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/WitchDoctor.lua",
+    "committed_sha256": "4903d9b479afe0b126da4bd66d80b48bb0bba6baf147776632720b54409e5ba6",
+    "package_sha256": "274862776910282ecde7f8054996d392cf0ae867a8d2862c159322c1dcd8d86a"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/WitchDoctorData.lua",
+    "committed_sha256": "df06d6aa235205c52bf9f7fb7142d02989ace7af5c13f046d888f54aba9a7ac8",
+    "package_sha256": "1d7ffefe0873bc22345de89a074b3ec060a8eb3d95bca45442c46f9f8faa1187"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/WitchDoctorUI.lua",
+    "committed_sha256": "01956677bbeebec6ec277293c4aa957faa5ad49131ec2c4b39cba87d7a6d993f",
+    "package_sha256": "c84ff9e8dd1b684b10063746142ec700f27cda87e149ccde8cc5e3957a0b6c4d"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Rogue.lua",
+    "committed_sha256": "5f2be7f34ce9f3fe3051534f1658571c17119665fc368819c84b3ce8de353bc3",
+    "package_sha256": "5f2be7f34ce9f3fe3051534f1658571c17119665fc368819c84b3ce8de353bc3"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/RogueData.lua",
+    "committed_sha256": "4b3523a9654c2d6b86183eb47b29f094295f9ebb4d55660bccb7830030616218",
+    "package_sha256": "4b3523a9654c2d6b86183eb47b29f094295f9ebb4d55660bccb7830030616218"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Priest.lua",
+    "committed_sha256": "50d41c98c536182d1596cb41577df6adc64596062506821943424736abe89c00",
+    "package_sha256": "50d41c98c536182d1596cb41577df6adc64596062506821943424736abe89c00"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/PriestData.lua",
+    "committed_sha256": "decd5ecfd40fe0a6a5a471250c6a52718c1ca4d792508195339c28da5f6cc82b",
+    "package_sha256": "decd5ecfd40fe0a6a5a471250c6a52718c1ca4d792508195339c28da5f6cc82b"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/DeathKnight.lua",
+    "committed_sha256": "13a920ab1e26d90f535e5dd578563b87809a1a5442ce70215be1f1666e93f9fc",
+    "package_sha256": "13a920ab1e26d90f535e5dd578563b87809a1a5442ce70215be1f1666e93f9fc"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/DeathKnightData.lua",
+    "committed_sha256": "c946f3238bf23406d0339d210a012f48cd01bc0fb9c667bfc96426a3cccb092c",
+    "package_sha256": "c946f3238bf23406d0339d210a012f48cd01bc0fb9c667bfc96426a3cccb092c"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Shaman.lua",
+    "committed_sha256": "74f347576b882c98c8c74609483e173677a9d6b6e3f2f8d515f3000dd9ffbb8d",
+    "package_sha256": "74f347576b882c98c8c74609483e173677a9d6b6e3f2f8d515f3000dd9ffbb8d"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/ShamanData.lua",
+    "committed_sha256": "9ead41be6bbb5b7af3e9885ae718198f4e9979398e671cc9a9eb10be2010d29f",
+    "package_sha256": "9ead41be6bbb5b7af3e9885ae718198f4e9979398e671cc9a9eb10be2010d29f"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Mage.lua",
+    "committed_sha256": "8bd67bdbac1da4008629b3552c78f7f2a6e9b007311d30decdd6d73f9ac3dc6e",
+    "package_sha256": "8bd67bdbac1da4008629b3552c78f7f2a6e9b007311d30decdd6d73f9ac3dc6e"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/MageData.lua",
+    "committed_sha256": "789fb7bf29b8f782cc8b748e45801020371d4d10a58689a2f18d1b3d1c9367b7",
+    "package_sha256": "789fb7bf29b8f782cc8b748e45801020371d4d10a58689a2f18d1b3d1c9367b7"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Warlock.lua",
+    "committed_sha256": "747f0d3fcd369b06ac09735ed6b69c41f5e9dfdee316c2de8135725ae5cf1369",
+    "package_sha256": "747f0d3fcd369b06ac09735ed6b69c41f5e9dfdee316c2de8135725ae5cf1369"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/WarlockData.lua",
+    "committed_sha256": "af52bbd3b9a2e7a1dcf11124cf9301e2e784132eceeda9d95a3fa3dffe229991",
+    "package_sha256": "af52bbd3b9a2e7a1dcf11124cf9301e2e784132eceeda9d95a3fa3dffe229991"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Druid.lua",
+    "committed_sha256": "37f1c4c7cc1b7e113083247e3e63607de689170c437749181b2e668f3b3c8e2e",
+    "package_sha256": "37f1c4c7cc1b7e113083247e3e63607de689170c437749181b2e668f3b3c8e2e"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/DruidData.lua",
+    "committed_sha256": "62d5a6fa2c56476cf9e04cf571ea9d76e930587f1e586a1790754dcc1bd02ab9",
+    "package_sha256": "62d5a6fa2c56476cf9e04cf571ea9d76e930587f1e586a1790754dcc1bd02ab9"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornMonkSpecCard/RebornMonkSpecCard.lua",
+    "committed_sha256": "f6361c5f6b07e1981915a4ba78cef006a8c1376185d314371e35e198b2ae6d47",
+    "package_sha256": "f6361c5f6b07e1981915a4ba78cef006a8c1376185d314371e35e198b2ae6d47"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornMonkSpecCard/RebornMonkSpecCard.toc",
+    "committed_sha256": "763397aa3a03e09d5215cb49d2e0cca8fb4a5e16157057c41f91a10ae62d11ad",
+    "package_sha256": "fe79636837e3423c5ace40cc7601ca7777a9b4d27e551ba7056aae4ff1e0d3f2"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/Monk.lua",
+    "committed_sha256": "62d13c35b014cb4e21130f8661771c632ac6ca5bf2d6c1a01706b1f3d1e8e675",
+    "package_sha256": "62d13c35b014cb4e21130f8661771c632ac6ca5bf2d6c1a01706b1f3d1e8e675"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornTalentGuide/MonkData.lua",
+    "committed_sha256": "7c3b242d12288a4c028156d25c8129c0298ce840b83cb330e95852a0476b3156",
+    "package_sha256": "7c3b242d12288a4c028156d25c8129c0298ce840b83cb330e95852a0476b3156"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornWitchDoctorTalents/Art.lua",
+    "committed_sha256": "394c9e44b1c97976b773778d3165655bdcae56c26e9e17589b1c61427ffbd920",
+    "package_sha256": "394c9e44b1c97976b773778d3165655bdcae56c26e9e17589b1c61427ffbd920"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornWitchDoctorTalents/HomeArt.lua",
+    "committed_sha256": "2e9770ef981f369c310702dc45dfcd09304795c1706a48658743f63b08ebfd16",
+    "package_sha256": "2e9770ef981f369c310702dc45dfcd09304795c1706a48658743f63b08ebfd16"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornWitchDoctorTalents/ArtStyle.lua",
+    "committed_sha256": "ca49020d5268f969ac62ad29e7b651ec064e7ed7c91e8f374440b563ca6d4389",
+    "package_sha256": "ca49020d5268f969ac62ad29e7b651ec064e7ed7c91e8f374440b563ca6d4389"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornWitchDoctorTalents/Home.lua",
+    "committed_sha256": "851b8109b1c7e8195837a58150f825b95e32cd29f49f8402562ff7691ca701dd",
+    "package_sha256": "851b8109b1c7e8195837a58150f825b95e32cd29f49f8402562ff7691ca701dd"
+  },
+  {
+    "path": "client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "committed_sha256": "1e8ffd9aa0b844c0d5a073ef3010442d1b31881d327a722f1eca018aaea35d5b",
+    "package_sha256": "1e8ffd9aa0b844c0d5a073ef3010442d1b31881d327a722f1eca018aaea35d5b"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcNpcPartySnapshot.h",
+    "committed_sha256": "62ed605f42c15b99805b3784faca5ac8aa88661fcc770c5473a8752ca683ac8d",
+    "package_sha256": "62ed605f42c15b99805b3784faca5ac8aa88661fcc770c5473a8752ca683ac8d"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcPartyState.cpp",
+    "committed_sha256": "53fab0f588c0b8bc29a208949bb5c66f4dc45675fd18ed6a3d2400a5fdf21709",
+    "package_sha256": "53fab0f588c0b8bc29a208949bb5c66f4dc45675fd18ed6a3d2400a5fdf21709"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/Ai/Dungeon/DungeonClear/Util/DcSmartRest.cpp",
+    "committed_sha256": "1a1c87655347e410cecde99358f4a3626bbd7d06bc25781ae150462c4c57521a",
+    "package_sha256": "1a1c87655347e410cecde99358f4a3626bbd7d06bc25781ae150462c4c57521a"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/DcNpcFollowBridge.h",
+    "committed_sha256": "b6f2cb9a17d3754433a8c7080b8f8c99f23b3c6891c4661e34e812ac7be200bd",
+    "package_sha256": "b6f2cb9a17d3754433a8c7080b8f8c99f23b3c6891c4661e34e812ac7be200bd"
+  },
+  {
+    "path": "source/modules/mod-dungeon-clear/src/mod_dungeon_clear_loader.cpp",
+    "committed_sha256": "d0b62cff61d0417764f84f296e63c49cd1e7beaf7526489813fd6ead83e79956",
+    "package_sha256": "d0b62cff61d0417764f84f296e63c49cd1e7beaf7526489813fd6ead83e79956"
+  },
+  {
+    "path": "source/modules/mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "committed_sha256": "59c8f4e341af2f98511614315ab548cf4fbb09186ad3f195abf07cc5de669e0b",
+    "package_sha256": "9c3a985ff32fc7f25e7f5e9b86723ca7ef843b2b6e5af101fc171175309e85dc"
+  },
+  {
+    "path": "source/modules/mod-playerbots/src/Bot/Engine/Engine.cpp",
+    "committed_sha256": "f4ef128fb3848642c91b507ee216965d4f5ab46071ae403fc5a84624ead55988",
+    "package_sha256": "f4ef128fb3848642c91b507ee216965d4f5ab46071ae403fc5a84624ead55988"
+  },
+  {
+    "path": "source/modules/mod-playerbots/src/Bot/Engine/Engine.h",
+    "committed_sha256": "1d1760d88d47cc51b9bb52cd6c372862855304cbfb99729e41e3fca9886c9a22",
+    "package_sha256": "1d1760d88d47cc51b9bb52cd6c372862855304cbfb99729e41e3fca9886c9a22"
+  },
+  {
+    "path": "client/Interface/AddOns/MultiBot/Locales/MultiBotLanguage-zhCN.lua",
+    "committed_sha256": "be8b97c4f8688a1b446a9ae4da6dc17ec71582ba6f5b630e8702fd9d2a74cff4",
+    "package_sha256": "eea9395f5ed16dc13a5ef9131c5333b76cc5c24935dbd5818868d053f4c1bdb1"
+  }
+]
