@@ -1,0 +1,22 @@
+diff --git a/Interface/AddOns/zzzMoPItemTooltips/Core.lua b/Interface/AddOns/zzzMoPItemTooltips/Core.lua
+--- a/Interface/AddOns/zzzMoPItemTooltips/Core.lua
++++ b/Interface/AddOns/zzzMoPItemTooltips/Core.lua
+@@ -895,8 +895,18 @@ local function HookToAllTooltips()
+                     local link = select(1, ...)
+                     local slot = select(2, ...)
+                     local shift = select(3, ...)
++                    -- MOPFIX1: the client reads the tooltip handed over as the 4th argument. If our scratch
++                    -- tooltip did not take the item (no link, not an item link, item not in the client cache yet)
++                    -- it holds no item and the client dereferences a null pointer (crash 0x00620727 / +0xBC).
++                    -- Then let the game do its normal compare with its own tooltip.
++                    if type(link) ~= "string" or not link:find("item:", 1, true) then
++                        return oSetHyperlinkCompareItem(self, ...)
++                    end
+                     MoPITCompTooltip:ClearLines()
+                     MoPITCompTooltip:SetHyperlink(link)
++                    if not MoPITCompTooltip:GetItem() then
++                        return oSetHyperlinkCompareItem(self, ...)
++                    end
+                     local success = oSetHyperlinkCompareItem(self, link, slot, shift, MoPITCompTooltip)
+                     if success then
+                         PerformTooltipChange(self)
