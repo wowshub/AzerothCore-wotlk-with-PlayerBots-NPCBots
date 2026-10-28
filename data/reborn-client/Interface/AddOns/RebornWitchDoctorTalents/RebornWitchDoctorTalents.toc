@@ -26,3 +26,8 @@ Routing.lua
 NumericTooltip.lua
 
 HitRating.lua
+
+BotTalentModel.lua
+BotTalentCodec.lua
+BotTalentRules.lua
+BotTalentPanel.lua

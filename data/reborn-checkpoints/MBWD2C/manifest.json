@@ -1,0 +1,151 @@
+[
+  {
+    "part": "01_覆盖到源代码根目录",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanel.inc",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "3cc70d09e8731ef9131e9d082c5a32b160d3eea644d10b1027462dc8d92ca05f",
+    "output_sha256": "3cc70d09e8731ef9131e9d082c5a32b160d3eea644d10b1027462dc8d92ca05f",
+    "accepted_known_hashes": [
+      "3cc70d09e8731ef9131e9d082c5a32b160d3eea644d10b1027462dc8d92ca05f",
+      "7c400cd3ba26ae54c68bc9fe18efda57879210ecad56265d2f73d4452e634bf2"
+    ]
+  },
+  {
+    "part": "01_覆盖到源代码根目录",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanelQuotePolicy.h",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "7ffc862dd7b576da50755bf927278f1b1e0adc2d20f1e01aa74f06a848660802",
+    "output_sha256": "7ffc862dd7b576da50755bf927278f1b1e0adc2d20f1e01aa74f06a848660802",
+    "accepted_known_hashes": [
+      "7ffc862dd7b576da50755bf927278f1b1e0adc2d20f1e01aa74f06a848660802"
+    ]
+  },
+  {
+    "part": "01_覆盖到源代码根目录",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanelRelay.inc",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "7b22835be8581f612e34f5d862d1739c7f76eef501a01770125e4a9e72c06696",
+    "output_sha256": "7b22835be8581f612e34f5d862d1739c7f76eef501a01770125e4a9e72c06696",
+    "accepted_known_hashes": [
+      "1a4e54591eb97730a6badcaa0c1a1394ca34eb4d7f5dbe2762c0838bcc15bdb0",
+      "7b22835be8581f612e34f5d862d1739c7f76eef501a01770125e4a9e72c06696"
+    ]
+  },
+  {
+    "part": "01_覆盖到源代码根目录",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "ddfe7eb164b25cc6a2bdaca22fd4414b568bc8428c127bf8425a59c738352b8b",
+    "output_sha256": "e6bdb4210454413ef77a095074da06f6d2d5e4e63f1c71c477b941845f839e1d",
+    "accepted_known_hashes": [
+      "9f1a6380a6f17eb4bab27fe7a11a8e3e19782b9c0f8c047f785727f567fed664",
+      "ddfe7eb164b25cc6a2bdaca22fd4414b568bc8428c127bf8425a59c738352b8b",
+      "e6bdb4210454413ef77a095074da06f6d2d5e4e63f1c71c477b941845f839e1d",
+      "ea576eece711333ed9d408c576be461b5bba020cf7c02da7883e8f39009fb1ce"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/MultiBot/MultiBot.toc",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "b1cc8b32ee999093f8728a897fa842fd1993d323f46a44a1e6892709cf88c838",
+    "output_sha256": "b1cc8b32ee999093f8728a897fa842fd1993d323f46a44a1e6892709cf88c838",
+    "accepted_known_hashes": [
+      "b1cc8b32ee999093f8728a897fa842fd1993d323f46a44a1e6892709cf88c838"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/MultiBot/Core/MultiBotEngine.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "53a2c1efd63eaab7f658b313849b73747e4e89ae117617fbee34af5f12574f57",
+    "output_sha256": "53a2c1efd63eaab7f658b313849b73747e4e89ae117617fbee34af5f12574f57",
+    "accepted_known_hashes": [
+      "53a2c1efd63eaab7f658b313849b73747e4e89ae117617fbee34af5f12574f57"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/MultiBot/Core/MultiBotEvery.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "9508e1ad01892f821e6dac6ac56e7dcd5a62981c3e71b1f300a85f9d0e8840c5",
+    "output_sha256": "9508e1ad01892f821e6dac6ac56e7dcd5a62981c3e71b1f300a85f9d0e8840c5",
+    "accepted_known_hashes": [
+      "9508e1ad01892f821e6dac6ac56e7dcd5a62981c3e71b1f300a85f9d0e8840c5",
+      "d521e6d03de337261f5b79a3454ed1d310a47738fd77dcb9b7cd45559e0c4952"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/MultiBot/Core/MultiBotHandler.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "fb14be8449d90948c45c38b5e1e6e979c5d4e02871b02c04eb490a26b1c6ce50",
+    "output_sha256": "fb14be8449d90948c45c38b5e1e6e979c5d4e02871b02c04eb490a26b1c6ce50",
+    "accepted_known_hashes": [
+      "fb14be8449d90948c45c38b5e1e6e979c5d4e02871b02c04eb490a26b1c6ce50"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "b59483b9864ca1573a2c082a58c2a1095385c1cb57505b3b5377cd93eec544ea",
+    "output_sha256": "b59483b9864ca1573a2c082a58c2a1095385c1cb57505b3b5377cd93eec544ea",
+    "accepted_known_hashes": [
+      "b59483b9864ca1573a2c082a58c2a1095385c1cb57505b3b5377cd93eec544ea"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/BotTalentCodec.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "751a331cdd747cdfd0f1e8afa3c27ccbf107542ec403e18f769f9654a3206f90",
+    "output_sha256": "751a331cdd747cdfd0f1e8afa3c27ccbf107542ec403e18f769f9654a3206f90",
+    "accepted_known_hashes": [
+      "751a331cdd747cdfd0f1e8afa3c27ccbf107542ec403e18f769f9654a3206f90"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/BotTalentModel.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "c9af4f57ea45edd234ca588297530eb9e30ab5e095c919d75363051ad897b15a",
+    "output_sha256": "c9af4f57ea45edd234ca588297530eb9e30ab5e095c919d75363051ad897b15a",
+    "accepted_known_hashes": [
+      "3b5153e1f2ab92f61f0a4bc41c7b77dd235a0d158633afb71098783de8034583",
+      "c9af4f57ea45edd234ca588297530eb9e30ab5e095c919d75363051ad897b15a"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "5cfcef07f61c9e0939107f5d87f94bb113730f2c12ed37f633cef47be000fedb",
+    "output_sha256": "5cfcef07f61c9e0939107f5d87f94bb113730f2c12ed37f633cef47be000fedb",
+    "accepted_known_hashes": [
+      "5cfcef07f61c9e0939107f5d87f94bb113730f2c12ed37f633cef47be000fedb",
+      "6b9fc92ab1cc222ec1500d6ae85f919578102a58e47fc37c80bb964867bc9a33"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/BotTalentRules.lua",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "b922c7ae2647a4f0134ad4b4b9c8a1860baa2019217e67bfaf90df2252891d6e",
+    "output_sha256": "b922c7ae2647a4f0134ad4b4b9c8a1860baa2019217e67bfaf90df2252891d6e",
+    "accepted_known_hashes": [
+      "b922c7ae2647a4f0134ad4b4b9c8a1860baa2019217e67bfaf90df2252891d6e"
+    ]
+  },
+  {
+    "part": "02_覆盖到客户端根目录",
+    "path": "Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "baseline_package": "MBWD2B",
+    "baseline_sha256": "65b23dcb62659a0abd53fc0e53780e9ad68b473634a1e66488506fac4474608e",
+    "output_sha256": "65b23dcb62659a0abd53fc0e53780e9ad68b473634a1e66488506fac4474608e",
+    "accepted_known_hashes": [
+      "1e8ffd9aa0b844c0d5a073ef3010442d1b31881d327a722f1eca018aaea35d5b",
+      "65b23dcb62659a0abd53fc0e53780e9ad68b473634a1e66488506fac4474608e"
+    ]
+  }
+]

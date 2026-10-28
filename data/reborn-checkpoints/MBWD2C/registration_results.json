@@ -1,0 +1,44 @@
+{
+  "bad1": {
+    "exit_code": 1,
+    "asan_use_after_free": false,
+    "asan_fault": true,
+    "same_registration_stack": true,
+    "pass": false
+  },
+  "bad9": {
+    "exit_code": 1,
+    "asan_use_after_free": false,
+    "asan_fault": true,
+    "same_registration_stack": false,
+    "pass": false
+  },
+  "good1": {
+    "exit_code": 0,
+    "asan_use_after_free": false,
+    "asan_fault": false,
+    "same_registration_stack": false,
+    "pass": true
+  },
+  "good9": {
+    "exit_code": 0,
+    "asan_use_after_free": false,
+    "asan_fault": false,
+    "same_registration_stack": false,
+    "pass": true
+  },
+  "flat": {
+    "exit_code": 0,
+    "asan_use_after_free": false,
+    "asan_fault": false,
+    "same_registration_stack": false,
+    "pass": true
+  },
+  "scope": "Native ChatCommandBuilder/header + native LoadFromBuilder/LoadCommandsIntoMap/Tokenize; no database or full worldserver startup",
+  "native_sources": {
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Chat\\ChatCommands\\ChatCommand.cpp": "429439aad9a22a8cbe43a6c160632d0da541416a8aaf2a39e012a234f3523104",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Chat\\ChatCommands\\ChatCommand.h": "f4df0704a566b42b13672fd894a8c90083ecda7cf8fb2d9dfa5789e5f5676105",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\common\\Utilities\\Tokenize.cpp": "6d39538af0ed88727560e6048240af8fa144eec6386e471abf9960741bf363b0",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexwork_MBWD2C\\01_\u8986\u76d6\u5230\u6e90\u4ee3\u7801\u6839\u76ee\u5f55\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp": "e6bdb4210454413ef77a095074da06f6d2d5e4e63f1c71c477b941845f839e1d"
+  }
+}

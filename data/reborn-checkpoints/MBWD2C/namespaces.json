@@ -1,0 +1,11 @@
+{
+  "RebornWitchDoctor.cpp": [
+    "WD36B::Commands"
+  ],
+  "RebornWitchDoctorTalents.cpp": [
+    "WD5A::Commands"
+  ],
+  "RebornWitchDoctorLifecycle165.inc": [
+    "WD165::Commands"
+  ]
+}

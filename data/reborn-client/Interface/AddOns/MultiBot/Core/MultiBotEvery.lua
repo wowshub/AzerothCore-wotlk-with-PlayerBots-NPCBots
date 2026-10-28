@@ -201,6 +201,16 @@ MultiBot.addEvery = function(pFrame, pCombat, pNormal)
             print("[MultiBot] 找不到该机器人，请重新组队或选中它后再打开。 / Bot unavailable; regroup or target that bot.")
             return
         end
+        local _,class,classID=UnitClass(unit)
+        if class=="WITCHDOCTOR" or classID==13 or pButton.getClass()=="WitchDoctor" then
+            MultiBot.auto.talent=false;MultiBot.talent:Hide();pButton.setDisable()
+            if RebornWDBotTalents and RebornWDBotTalents.Open then
+                RebornWDBotTalents.Open(unit,pButton.getName())
+            else
+                print("[MultiBot] 请启用/更新巫医天赋插件。 / Enable or update Witch Doctor Talents.")
+            end
+            return
+        end
         local level=UnitLevel(unit)
         if not level or level<1 then
             print("[MultiBot] 等级数据未就绪，请靠近后重试。 / Level unavailable; move closer and retry.");return

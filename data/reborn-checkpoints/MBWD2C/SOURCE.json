@@ -1,0 +1,57 @@
+{
+  "stage": "MBWD2C",
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包.zip",
+  "package_sha256": "7a701e7c8535d924b6e7ee59ee4a464208d054a88c3d751995af0f8adacf15c6",
+  "files": [
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotPanel.inc",
+      "target": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanel.inc",
+      "sha256": "3cc70d09e8731ef9131e9d082c5a32b160d3eea644d10b1027462dc8d92ca05f"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotPanelQuotePolicy.h",
+      "target": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanelQuotePolicy.h",
+      "sha256": "7ffc862dd7b576da50755bf927278f1b1e0adc2d20f1e01aa74f06a848660802"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotPanelRelay.inc",
+      "target": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanelRelay.inc",
+      "sha256": "7b22835be8581f612e34f5d862d1739c7f76eef501a01770125e4a9e72c06696"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+      "target": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "sha256": "e6bdb4210454413ef77a095074da06f6d2d5e4e63f1c71c477b941845f839e1d"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\MultiBot\\Core\\MultiBotEvery.lua",
+      "target": "data/reborn-client/Interface/AddOns/MultiBot/Core/MultiBotEvery.lua",
+      "sha256": "9508e1ad01892f821e6dac6ac56e7dcd5a62981c3e71b1f300a85f9d0e8840c5"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentCodec.lua",
+      "target": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentCodec.lua",
+      "sha256": "751a331cdd747cdfd0f1e8afa3c27ccbf107542ec403e18f769f9654a3206f90"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentModel.lua",
+      "target": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentModel.lua",
+      "sha256": "c9af4f57ea45edd234ca588297530eb9e30ab5e095c919d75363051ad897b15a"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentPanel.lua",
+      "target": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+      "sha256": "5cfcef07f61c9e0939107f5d87f94bb113730f2c12ed37f633cef47be000fedb"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentRules.lua",
+      "target": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentRules.lua",
+      "sha256": "b922c7ae2647a4f0134ad4b4b9c8a1860baa2019217e67bfaf90df2252891d6e"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_201636_阶段MBWD2C_wdbot启动崩溃修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+      "target": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "sha256": "65b23dcb62659a0abd53fc0e53780e9ad68b473634a1e66488506fac4474608e"
+    }
+  ]
+}

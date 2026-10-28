@@ -14,10 +14,13 @@
 #include "RebornWitchDoctorBotJob174.h"
 #include "../../mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h"
 #include "RebornWitchDoctorBotProfiles173.h"
+#include "RebornWitchDoctorBotPanelQuotePolicy.h"
 #include "Playerbots.h"
 #include "Trainer.h"
 #include "Creature.h"
 #include "ObjectMgr.h"
+#include "ObjectAccessor.h"
+#include "PlayerbotAI.h"
 #include "RebornWitchDoctorTalentNodes.h"
 #include "RebornWitchDoctorBudget.h"
 #include "WitchDoctorTalentPolicy.h"
@@ -303,15 +306,17 @@ uint32 ProfilePoints(Player* p)
     return level<10 ? 0 : (level>80 ? 71 : level-9);
 }
 bool ResetPrice(uint32& gold);
+#include "RebornWitchDoctorBotPanelRelay.inc"
 void ProfileReply(Player* p,char const* result)
 {
     State* s=p->CustomData.GetDefault<State>(Key);
+    BotPanelMoney(p);
     if(s->layoutMismatch) result="layout";
     uint32 resetGold=0;
-    if(ResetPrice(resetGold)) ChatHandler(p->GetSession()).PSendSysMessage("WD16P|{}",resetGold);
-    else ChatHandler(p->GetSession()).PSendSysMessage("WD16P|invalid");
+    if(ResetPrice(resetGold)) BotPanelChat(p).PSendSysMessage("WD16P|{}",resetGold);
+    else BotPanelChat(p).PSendSysMessage("WD16P|invalid");
     if(s->hexProtocol) {
-        auto chat=ChatHandler(p->GetSession());
+        auto chat=BotPanelChat(p);
         uint32 seq=++s->snapshotSequence;
         chat.PSendSysMessage("WD139B|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",seq,WD139::Version,WD139::Hash,result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE,WD139::HexSize);
         for(uint32 slot=0;slot<3;++slot) {
@@ -325,9 +330,9 @@ void ProfileReply(Player* p,char const* result)
     }
     // Legacy clients may only see builds that round-trip without truncation.
     for(auto const& build:s->aeMasks) if(!WD139::LegacyCompatible(build)) {
-        ChatHandler(p->GetSession()).SendSysMessage("WD139A: update the talent addon; this layout is not compatible with WD16.");return;
+        BotPanelChat(p).SendSysMessage("WD139A: update the talent addon; this layout is not compatible with WD16.");return;
     }
-    ChatHandler(p->GetSession()).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,WD139::LegacyDecimal(s->aeMasks[0]),WD139::LegacyDecimal(s->aeMasks[1]),WD139::LegacyDecimal(s->aeMasks[2]),WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE);
+    BotPanelChat(p).PSendSysMessage("WD16|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",result,s->revision,s->active,s->builds,s->specs[0],s->specs[1],s->specs[2],p->GetLevel(),s->loaded?1:0,ProfilePoints(p),s->unlocked,s->modern?1:0,WD139::LegacyDecimal(s->aeMasks[0]),WD139::LegacyDecimal(s->aeMasks[1]),WD139::LegacyDecimal(s->aeMasks[2]),WD67Budget::AE(p->GetLevel())+s->testAE,WD67Budget::TE(p->GetLevel())+s->testTE);
 }
 bool ProfileReady(Player* p,bool mutation)
 {
@@ -409,7 +414,7 @@ bool ResetQuote(ChatHandler* h,uint32 rev,uint32 slot)
     { ProfileReply(p,"invalid");return true; }
     s->resetSlot=slot;s->resetRevision=rev;s->resetGold=gold;
     s->resetQuoteTime=std::chrono::steady_clock::now();s->resetQuoteValid=true;
-    ChatHandler(p->GetSession()).PSendSysMessage("WD16Q|{}|{}|{}",rev,slot,gold);return true;
+    BotPanelChat(p).PSendSysMessage("WD16Q|{}|{}|{}",rev,slot,gold);return true;
 }
 bool ResetConfirm(ChatHandler* h,uint32 rev,uint32 slot,uint32 quotedGold)
 {
@@ -893,6 +898,7 @@ bool Check168(ChatHandler* h)
 
 #include "RebornWitchDoctorBotBuild173.inc"
 #include "RebornWitchDoctorBotJob174.inc"
+#include "RebornWitchDoctorBotPanel.inc"
 
 class Commands : public CommandScript
 {
@@ -900,7 +906,21 @@ public:
     Commands():CommandScript("reborn_wd5a_commands"){}
     ChatCommandTable GetCommands() const override
     {
+        // MBWD2C: ChatCommandBuilder holds a reference to child tables.
+        // A braced temporary vector here dangles before startup registration.
+        static ChatCommandTable wdbotCommands={
+                {"state",BotPanelState,SEC_PLAYER,Console::No},
+                {"join",BotPanelJoin,SEC_PLAYER,Console::No},
+                {"bind",BotPanelBind,SEC_PLAYER,Console::No},
+                {"save",BotPanelSave,SEC_PLAYER,Console::No},
+                {"activate",BotPanelActivate,SEC_PLAYER,Console::No},
+                {"resetquote",BotPanelResetQuote,SEC_PLAYER,Console::No},
+                {"reset",BotPanelReset,SEC_PLAYER,Console::No},
+                {"unlockquote",BotPanelUnlockQuote,SEC_PLAYER,Console::No},
+                {"unlock",BotPanelUnlock,SEC_PLAYER,Console::No},
+        };
         static ChatCommandTable cmds={
+            {"wdbot", wdbotCommands},
             {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
             {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
             {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},
