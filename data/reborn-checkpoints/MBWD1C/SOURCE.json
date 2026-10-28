@@ -1,0 +1,32 @@
+{
+  "stage": "MBWD1C",
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_174331_阶段MBWD1C_天赋按钮单位识别报错修复累计包.zip",
+  "package_sha256": "d82434d3c3d8291444f54bf20bcfc0f19ced32ceaa39852023fc3ecce9c98221",
+  "files": [
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_174331_阶段MBWD1C_天赋按钮单位识别报错修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\MultiBot\\Core\\MultiBotEngine.lua",
+      "target": "data/reborn-client/Interface/AddOns/MultiBot/Core/MultiBotEngine.lua",
+      "sha256": "53a2c1efd63eaab7f658b313849b73747e4e89ae117617fbee34af5f12574f57"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_174331_阶段MBWD1C_天赋按钮单位识别报错修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\MultiBot\\Core\\MultiBotEvery.lua",
+      "target": "data/reborn-client/Interface/AddOns/MultiBot/Core/MultiBotEvery.lua",
+      "sha256": "d521e6d03de337261f5b79a3454ed1d310a47738fd77dcb9b7cd45559e0c4952"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_174331_阶段MBWD1C_天赋按钮单位识别报错修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\MultiBot\\Core\\MultiBotHandler.lua",
+      "target": "data/reborn-client/Interface/AddOns/MultiBot/Core/MultiBotHandler.lua",
+      "sha256": "fb14be8449d90948c45c38b5e1e6e979c5d4e02871b02c04eb490a26b1c6ce50"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_174331_阶段MBWD1C_天赋按钮单位识别报错修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\MultiBot\\MultiBot.toc",
+      "target": "data/reborn-client/Interface/AddOns/MultiBot/MultiBot.toc",
+      "sha256": "b1cc8b32ee999093f8728a897fa842fd1993d323f46a44a1e6892709cf88c838"
+    },
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_174331_阶段MBWD1C_天赋按钮单位识别报错修复累计包\\02_覆盖到客户端根目录\\Interface\\AddOns\\MultiBot\\Strategies\\MultiBotWitchDoctor.lua",
+      "target": "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+      "sha256": "b59483b9864ca1573a2c082a58c2a1095385c1cb57505b3b5377cd93eec544ea"
+    }
+  ]
+}

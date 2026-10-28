@@ -43,6 +43,7 @@ Strategies\MultiBotRogue.lua
 Strategies\MultiBotShaman.lua
 Strategies\MultiBotWarlock.lua
 Strategies\MultiBotWarrior.lua
+Strategies\MultiBotWitchDoctor.lua
 Core\MultiBotEvery.lua
 UI\MultiBotStats.lua
 UI\MultiBotSpell.lua

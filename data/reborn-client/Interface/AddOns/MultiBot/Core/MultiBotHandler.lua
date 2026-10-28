@@ -1311,6 +1311,11 @@ MultiBot:SetScript("OnEvent", function()
 			-- RebornWOW MB1A: custom classes (Witch Doctor...) map to "Unknown" and have no
 			-- class bar; skip it and keep the shared buttons instead of erroring.
 			local tAddClass = MultiBot["add" .. tButton.class]
+            -- MBWD1A: the native WD strategy is an unambiguous capability marker.
+            if MultiBot.WDHasStrategy and (MultiBot.WDHasStrategy(tButton.combat, "wd169 combat")
+                or MultiBot.WDHasStrategy(tButton.normal, "wd169 support")) then
+                tAddClass = MultiBot.addWitchDoctor
+            end
 			if(type(tAddClass) == "function") then tAddClass(tFrame, tButton.combat, tButton.normal) end
 			MultiBot.addEvery(tFrame, tButton.combat, tButton.normal)
 
