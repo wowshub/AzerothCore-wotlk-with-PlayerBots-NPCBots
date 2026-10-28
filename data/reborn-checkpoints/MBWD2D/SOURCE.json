@@ -1,0 +1,12 @@
+{
+  "stage": "MBWD2D",
+  "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_222159_阶段MBWD2D_Playerbot天赋滚动报错修复包.zip",
+  "package_sha256": "69d3977434b4639b90a2db9498aee11e0cba384a555516ba9eec012346827dfa",
+  "files": [
+    {
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_222159_阶段MBWD2D_Playerbot天赋滚动报错修复包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentPanel.lua",
+      "target": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+      "sha256": "02904eedafb59d556b177e2b668d718ba364fe4f64dd88a41724f7e965b99666"
+    }
+  ]
+}

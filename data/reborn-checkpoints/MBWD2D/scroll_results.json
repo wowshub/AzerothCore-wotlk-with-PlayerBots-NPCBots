@@ -1,0 +1,17 @@
+{
+  "bottomNodes": 6,
+  "brewingNodes": 45,
+  "viewport": 522,
+  "classNodes": 38,
+  "range": 182,
+  "content": 704,
+  "anonymous_original_template_error_reproduced": true,
+  "named_original_template_onload_wheel_range": "PASS",
+  "slider_icon_background_wheel": "PASS",
+  "spec_switch_scaling_reopen": "PASS",
+  "existing_model_payment_regression": "PASS",
+  "game": "未运行",
+  "native_lua_source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\Patch-20261016WD62巫医技能收尾\\patch-enUS-5\\Interface\\SharedXML\\SharedUIPanelTemplates.lua",
+  "native_lua_sha256": "1b90f017d17b96dd6974e8fff764d4489fdafeb204dc77d0d22e3d347204893c",
+  "native_xml_sha256": "268f4971d10e68481883f2c465c6883dbfbebe267c11614f39a79280f89772fb"
+}

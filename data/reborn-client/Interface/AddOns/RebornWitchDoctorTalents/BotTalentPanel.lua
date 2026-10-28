@@ -67,6 +67,11 @@ local function view(spec)
     selectedView=spec==nil and "home" or "tree"
     if selectedView=="home" then home:Show();tree:Hide() else home:Hide();tree:Show() end
     if spec~=nil then
+        if tree.scroll then
+            local bar=tree.scroll.ScrollBar or _G[tree.scroll:GetName().."ScrollBar"]
+            if bar then bar:SetValue(0) end
+            tree.scroll:SetVerticalScroll(0)
+        end
         atlas(tree.bg,"talents-background-witchdoctor-"..specs[spec+1].key:lower())
         for _,b in ipairs(nodes) do
             if b.node.Tab=="Class" or b.node.Tab==specs[spec+1].key then b:Show() else b:Hide() end
@@ -124,9 +129,21 @@ local function create()
     tree=CreateFrame("Frame",nil,frame);tree:SetPoint("TOPLEFT",16,-118);tree:SetSize(1288,570)
     tree.bg=tree:CreateTexture(nil,"BACKGROUND");tree.bg:SetAllPoints(tree);tree.bg:SetAlpha(.45)
     tree.label=text(tree,"",20,-5,1240)
-    local scroll=CreateFrame("ScrollFrame",nil,tree,"UIPanelScrollFrameTemplate")
+    -- MBWD2D: legacy OnLoad and wheel scripts resolve $parentScrollBar
+    -- through self:GetName(). An anonymous templated ScrollFrame is invalid.
+    local scroll=CreateFrame("ScrollFrame","RebornWDBotTalentScroll",tree,"UIPanelScrollFrameTemplate")
+    tree.scroll=scroll
+    local function wheel(_,delta)
+        local bar=scroll.ScrollBar or _G[scroll:GetName().."ScrollBar"]
+        if not bar then return end
+        local low,high=bar:GetMinMaxValues()
+        bar:SetValue(math.max(low,math.min(high,bar:GetValue()-delta*64)))
+    end
+    scroll:EnableMouseWheel(true);scroll:SetScript("OnMouseWheel",wheel)
+    tree:EnableMouseWheel(true);tree:SetScript("OnMouseWheel",wheel)
     scroll:SetPoint("TOPLEFT",10,-32);scroll:SetSize(1244,522)
     local content=CreateFrame("Frame",nil,scroll);content:SetSize(1244,900);scroll:SetScrollChild(content)
+    content:EnableMouseWheel(true);content:SetScript("OnMouseWheel",wheel)
     local maxRow=0
     local byCell,byID={},{}
     local function cell(n)return n.Tab..":"..(n.PositionX or 0)..":"..(n.PositionY or 0)end
@@ -148,6 +165,7 @@ local function create()
         b.border=b:CreateTexture(nil,"OVERLAY");b.border:SetTexture("Interface\\Buttons\\UI-Quickslot2");b.border:SetPoint("CENTER");b.border:SetSize(size+18,size+18)
         b.rank=text(b,"",0,-size,size+5,"GameFontNormalSmall")
         b:RegisterForClicks("LeftButtonUp","RightButtonUp")
+        b:EnableMouseWheel(true);b:SetScript("OnMouseWheel",wheel)
         b:SetScript("OnClick",function(_,mouse)M.SetNode(n.ID,mouse=="RightButton" and -1 or 1)end)
         b:SetScript("OnEnter",function(self)
             GameTooltip:SetOwner(self,"ANCHOR_RIGHT")

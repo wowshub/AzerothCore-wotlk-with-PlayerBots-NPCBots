@@ -1,0 +1,9 @@
+{
+  "lua51_parse_files": 1,
+  "protocol_identity_draft_confirmation": "PASS",
+  "actual_ui_creation_tooltips": "PASS",
+  "self_state_isolation": "PASS",
+  "payment_quote_consent_expiry_wallet_ownership": "PASS",
+  "game": "未运行",
+  "database_transactions": "未运行"
+}
