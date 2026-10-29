@@ -388,6 +388,50 @@ local function OnServer(msg)
     elseif kind == "ERR" then
         Status(f[2] or "?", true)
         state.batch = nil
+    elseif kind == "SN_START" then   -- LAB3C: the time points
+        state.snapNew = {}
+        state.snapXNew = {}
+    elseif kind == "SN" then
+        if state.snapNew then
+            state.snapNew[#state.snapNew + 1] = { id = tonumber(f[2]) or 0, ts = tonumber(f[3]) or 0, type = f[4] or "", who = f[5] or "",
+                                                 name = f[6] or "", tables = tonumber(f[7]) or 0, bytes = tonumber(f[8]) or 0 }
+        end
+    elseif kind == "SNX" then   -- LAB3D: what going back to that point would change (id 0 = the official original)
+        if state.snapXNew then
+            state.snapXNew[tonumber(f[2]) or 0] = { add = tonumber(f[3]) or 0, del = tonumber(f[4]) or 0, chg = tonumber(f[5]) or 0 }
+        end
+    elseif kind == "SN_END" then
+        state.snaps = state.snapNew or {}
+        state.snapX = state.snapXNew or {}
+        state.snapNew = nil
+        state.snapXNew = nil
+        state.snapInfo = { ok = f[2] == "1", count = tonumber(f[3]) or 0, bytes = tonumber(f[4]) or 0,
+                           autoMin = tonumber(f[5]) or 0, keep = tonumber(f[6]) or 0, days = tonumber(f[7]) or 0 }
+        if state.snapSel then   -- the chosen point may be gone
+            local found = false
+            if state.snapSel == 0 then found = true end
+            for _, e in ipairs(state.snaps) do if e.id == state.snapSel then found = true end end
+            if not found then state.snapSel = nil end
+        end
+        if ui.FillSnaps then ui.FillSnaps() end
+    elseif kind == "SD_START" then
+        state.diffNew = { id = tonumber(f[2]) or 0, ts = tonumber(f[3]) or 0, name = f[4] or "", lines = {}, tables = 0 }
+    elseif kind == "SD" then
+        local d = state.diffNew
+        if d then
+            d.tables = d.tables + 1
+            d.lines[#d.lines + 1] = { head = true, kind = f[2] or "", loot = tonumber(f[3]) or 0,
+                                      add = tonumber(f[4]) or 0, del = tonumber(f[5]) or 0, chg = tonumber(f[6]) or 0 }
+        end
+    elseif kind == "SDI" then
+        local d = state.diffNew
+        if d then
+            d.lines[#d.lines + 1] = { op = f[4] or "", item = tonumber(f[5]) or 0, name = f[6] or "", from = f[7] or "", to = f[8] or "" }
+        end
+    elseif kind == "SD_END" then
+        state.diff = state.diffNew
+        state.diffNew = nil
+        if ui.FillDiff then ui.FillDiff() end
     elseif kind == "LS" then   -- LAB3B: the size of the change log
         state.logStat = { rows = tonumber(f[2]) or 0, bytes = tonumber(f[3]) or 0, warn = tonumber(f[4]) or 20, crit = tonumber(f[5]) or 100,
                           keep = tonumber(f[6]) or 30, baseRows = tonumber(f[7]) or 0, baseBytes = tonumber(f[8]) or 0 }
@@ -1501,7 +1545,12 @@ function ui.RefreshLogSize()
         end)
         b:SetScript("OnLeave", function() GameTooltip:Hide() end)
         ui.logStatBtn = b
+        local sb = Button(ui.main, 90, "时间点", "Time points", function() ui.ShowSnaps() end)   -- LAB3C
+        sb:SetPoint("LEFT", b, "RIGHT", 6, 0)
+        sb:SetFrameLevel(ui.main:GetFrameLevel() + 5)
+        ui.snapBtn = sb
     end
+    if ui.snapBtn then if state.canEdit then ui.snapBtn:Show() else ui.snapBtn:Hide() end end
     if not (st and state.canEdit) then ui.logStatBtn:Hide() return end
     local lvl = ui.LogLevel()
     local color = lvl == 2 and "|cffff3030" or (lvl == 1 and "|cffffa020" or "|cff55ff55")
@@ -1585,6 +1634,289 @@ function ui.FillLog()
         lines[#lines + 1] = string.format("|cff9d9d9d#%d %s|r %s  |cffffd100%s #%d|r  %s", e.id, date("%m-%d %H:%M", e.ts), e.who, e.kind, e.loot, e.action)
     end
     ui.logPop.text:SetText(#lines > 0 and table.concat(lines, "\n") or T("还没有任何改动。", "No changes yet."))
+end
+
+-- =========================================================================
+-- LAB3C: time points. A time point is a copy of every loot table the workshop has changed; the server saves
+-- them by hand (named) and automatically (when something changed), and can put all the tables back to one.
+-- =========================================================================
+local SNAP_TYPE = {
+    manual = { "手动", "Manual", "|cff55ff55" },
+    auto = { "自动", "Auto", "|cff9d9d9d" },
+    before = { "回退前", "Before", "|cffffa020" },
+    origin = { "官方", "Official", "|cff40c0ff" },
+}
+
+-- LAB3D: the two tabs. Mine = manual points, newest first, with the official original last; Auto = automatic and "before" points.
+local SNAP_ORIGIN = { id = 0, ts = 0, type = "origin", who = "", name = "官方原始", tables = 0, bytes = 0 }
+
+function ui.SnapRows()
+    local mine, auto = {}, {}
+    for _, e in ipairs(state.snaps or {}) do
+        if e.type == "manual" then mine[#mine + 1] = e else auto[#auto + 1] = e end
+    end
+    mine[#mine + 1] = SNAP_ORIGIN
+    return mine, auto
+end
+
+-- "+a -d ~c" for one point, or a note when it equals the tables now
+function ui.SnapSummary(id)
+    local x = state.snapX and state.snapX[id]
+    if not x then return "|cff777777?|r" end
+    if x.add + x.del + x.chg == 0 then return "|cff55ff55" .. T("和现在一样", "same as now") .. "|r" end
+    return string.format("|cff55ff55+%d|r |cffff6060-%d|r |cffffa020~%d|r", x.add, x.del, x.chg)
+end
+
+function ui.FillSnaps()
+    local p = ui.snapPop
+    if not p then return end
+    local info = state.snapInfo
+    if info and not info.ok then
+        p.info:SetText("|cffff6060" .. T("时间点的数据表还没建：请在 world 库执行 LAB3C_snapshot_tables.sql，然后重启或重新打开。", "The time point tables are missing: run LAB3C_snapshot_tables.sql on the world database.") .. "|r")
+    elseif info then
+        local auto = info.autoMin > 0 and string.format(T("自动：每 %d 分钟看一次，有改动才存；自动点最多留 %d 个、%d 天（0=不限）。", "Auto: every %d min, only when something changed; keeps %d points / %d days (0 = no limit)."), info.autoMin, info.keep, info.days)
+                                       or T("自动保存已在服务端配置里关闭。", "Automatic points are switched off in the server config.")
+        p.info:SetText(string.format(T("共 %d 个时间点，约 %s。%s 手动保存的永不自动删除。", "%d time point(s), about %s. %s Manual ones are never deleted automatically."), info.count, Mb(info.bytes), auto))
+    else
+        p.info:SetText(T("读取中…", "Loading…"))
+    end
+    local mine, auto = ui.SnapRows()
+    local rows = (state.snapTab == "auto") and auto or mine
+    if rows == auto and #rows == 0 then rows = { { text = T("还没有自动保存的时间点（每次改动之后，服务端会按配置的间隔自动存）。", "No automatic points yet (the server saves one at the configured interval after changes).") } } end
+    p.list:Set(rows, true)
+    if state.snapTab ~= "auto" then p.tabMine.under:Show() else p.tabMine.under:Hide() end
+    if state.snapTab == "auto" then p.tabAuto.under:Show() else p.tabAuto.under:Hide() end
+    p.tabMine:SetText(string.format("%s (%d)", T("我的时间点", "My points"), #mine - 1))
+    p.tabAuto:SetText(string.format("%s (%d)", T("自动与回退前", "Auto & before"), #auto))
+    -- the current state sits above the list: how far it is from the newest point shown in this tab
+    local newest = rows[1] and rows[1].id ~= nil and rows[1].id ~= 0 and rows[1] or nil
+    if newest then
+        local x = state.snapX and state.snapX[newest.id]
+        if x and x.add + x.del + x.chg == 0 then
+            p.cur:SetText("|cff55ff55● " .. T("当前状态", "Current state") .. "|r  |cff9d9d9d" .. string.format(T("和最新的 #%d 一致，没有未保存的改动", "same as the newest #%d, nothing unsaved"), newest.id) .. "|r")
+        else
+            p.cur:SetText("|cffffd100● " .. T("当前状态", "Current state") .. "|r  |cff9d9d9d" .. string.format(T("距最新的 #%d 以来，回到它会：", "since the newest #%d, going back to it would: "), newest.id) .. "|r" .. ui.SnapSummary(newest.id))
+        end
+    else
+        p.cur:SetText("|cffffd100● " .. T("当前状态", "Current state") .. "|r  |cff9d9d9d" .. T("还没有时间点，点“保存当前…”存一个", "no time points yet; use \"Save now…\"") .. "|r")
+    end
+    local has = state.snapSel ~= nil
+    for _, b in ipairs({ p.diffBtn, p.goBtn, p.delBtn }) do
+        if has then b:Enable() else b:Disable() end
+    end
+    if state.snapSel == 0 then p.delBtn:Disable() end   -- the official original cannot be deleted
+    p.saveBtn:Enable()
+end
+
+function ui.FillDiff()
+    local p = ui.snapPop
+    if not p or not state.diff then return end
+    local d = state.diff
+    local rows = d.lines
+    if #rows == 0 then rows = { { text = T("和现在完全一样：回到它不会改任何东西。", "Identical to now: going back changes nothing.") } } end
+    local label = d.id == 0 and d.name or string.format("#%d「%s」", d.id, d.name)
+    p.diffTitle:SetText(string.format(T("和现在相比，回到 %s 会改变 %d 张表：", "Compared with now, going back to %s changes %d table(s):"), label, d.tables))
+    p.diffList:Set(rows)
+    p.view = "diff"
+    ui.SnapView()
+end
+
+function ui.SnapView()
+    local p = ui.snapPop
+    if not p then return end
+    local diff = p.view == "diff"
+    if diff then p.listHost:Hide(); p.diffHost:Show(); p.diffTitle:Show(); p.info:Hide() else p.listHost:Show(); p.diffHost:Hide(); p.diffTitle:Hide(); p.info:Show() end
+    for _, b in ipairs({ p.saveBtn, p.diffBtn, p.delBtn }) do if diff then b:Hide() else b:Show() end end
+    if diff then p.backBtn:Show() else p.backBtn:Hide() end
+    p.goBtn:Show()
+end
+
+function ui.AskSnapName()
+    StaticPopupDialogs["REBORN_LOOTLAB_SNAPSAVE"] = {
+        text = T("给这个时间点起个名字（例如：调好 Boss 掉率之前）。它会保存现在所有改过的掉落表，手动保存的不会被自动删除。", "Name this time point (e.g. \"before tuning the boss\"). It keeps every loot table changed so far; manual ones are never deleted automatically."),
+        button1 = ACCEPT or "OK", button2 = CANCEL or "Cancel",
+        hasEditBox = 1, maxLetters = 60,
+        OnShow = function(self) self.editBox:SetText(date("%m-%d %H:%M ", time())); self.editBox:HighlightText(0, 0) end,
+        OnAccept = function(self)
+            local n = self.editBox:GetText() or ""
+            n = n:gsub("^%s+", ""):gsub("%s+$", "")
+            Cmd("snapsave " .. n)
+            Status(T("已发送，等服务端回答…", "Sent, waiting for the server…"))
+        end,
+        EditBoxOnEnterPressed = function(self)
+            local n = (self:GetText() or ""):gsub("^%s+", ""):gsub("%s+$", "")
+            Cmd("snapsave " .. n)
+            self:GetParent():Hide()
+        end,
+        timeout = 0, whileDead = 1, hideOnEscape = 1,
+    }
+    StaticPopup_Show("REBORN_LOOTLAB_SNAPSAVE")
+end
+
+function ui.ShowSnaps()
+    if not ui.snapPop then
+        local p = CreateFrame("Frame", "RebornLootLabSnapPop", UIParent)
+        p:SetSize(680, 480)
+        p:SetPoint("CENTER")
+        p:SetFrameStrata("FULLSCREEN_DIALOG")
+        p:SetToplevel(true)
+        p:EnableMouse(true)
+        p:SetMovable(true)
+        p:RegisterForDrag("LeftButton")
+        p:SetScript("OnDragStart", p.StartMoving)
+        p:SetScript("OnDragStop", p.StopMovingOrSizing)
+        p:SetBackdrop({
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+            tile = true, tileSize = 32, edgeSize = 32,
+            insets = { left = 11, right = 12, top = 12, bottom = 11 },
+        })
+        local t = p:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        t:SetPoint("TOP", 0, -18)
+        Bind(t, "时间点（爆率的历史版本）", "Time points (versions of the drop rates)")
+        p.info = p:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        p.info:SetPoint("TOPLEFT", 24, -44)
+        p.info:SetPoint("RIGHT", -24, 0)
+        p.info:SetJustifyH("LEFT")
+        p.info:SetHeight(30)
+        p.info:SetJustifyV("TOP")
+        p.diffTitle = p:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        p.diffTitle:SetPoint("TOPLEFT", 24, -48)
+        p.diffTitle:SetPoint("RIGHT", -24, 0)
+        p.diffTitle:SetJustifyH("LEFT")
+        p.diffTitle:Hide()
+
+        p.listHost = CreateFrame("Frame", nil, p)
+        p.listHost:SetPoint("TOPLEFT", 22, -80)
+        p.listHost:SetPoint("BOTTOMRIGHT", -22, 56)
+        local function MakeTab(key, zh, en, x)
+            local b = Button(p.listHost, 150, zh, en, function() state.snapTab = key; state.snapSel = nil; if p.list then p.list.offset = 0 end; ui.FillSnaps() end)
+            b:SetPoint("TOPLEFT", x, 0)
+            local u = b:CreateTexture(nil, "OVERLAY")
+            u:SetTexture(1, 0.82, 0, 0.9)
+            u:SetHeight(2)
+            u:SetPoint("BOTTOMLEFT", 6, 0)
+            u:SetPoint("BOTTOMRIGHT", -6, 0)
+            b.under = u
+            return b
+        end
+        p.tabMine = MakeTab("mine", "我的时间点", "My points", 0)
+        p.tabAuto = MakeTab("auto", "自动与回退前", "Auto & before", 154)
+        p.cur = p.listHost:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        p.cur:SetPoint("TOPLEFT", 4, -28)
+        p.cur:SetPoint("RIGHT", 0, 0)
+        p.cur:SetJustifyH("LEFT")
+        p.listBody = CreateFrame("Frame", nil, p.listHost)
+        p.listBody:SetPoint("TOPLEFT", 0, -48)
+        p.listBody:SetPoint("BOTTOMRIGHT", 0, 0)
+        p.list = MakeList(p.listBody, 600, 13, 20, function(row, e)
+            if e.text then
+                row.icon:SetTexture(nil)
+                row.left:SetText("|cff9d9d9d" .. e.text .. "|r"); row.right:SetText("")
+                return
+            end
+            local ty = SNAP_TYPE[e.type] or { e.type, e.type, "|cffffffff" }
+            if e.id == 0 then
+                row.icon:SetTexture("Interface\\Icons\\INV_Misc_Book_09")
+                row.left:SetText(string.format("|cff40c0ff%s|r  |cff9d9d9d%s|r", T("官方原始", "Official original"), T("没改过的样子：所有改过的表回到官方原样", "the untouched state: every changed table back to its official copy")))
+            else
+                row.icon:SetTexture("Interface\\Icons\\INV_Misc_PocketWatch_01")
+                local nm = e.name
+                if e.type == "before" then nm = nm:gsub("回到 #(%d+) 之前自动保存", T("回到 #%1 之前的状态（自动）", "state before going back to #%1 (auto)")) end
+                row.left:SetText(string.format("|cff9d9d9d#%d %s|r  %s[%s]|r  %s  |cff777777%s|r", e.id, date("%m-%d %H:%M", e.ts), ty[3], T(ty[1], ty[2]), nm, e.who))
+            end
+            row.right:SetText(ui.SnapSummary(e.id))
+        end, function(e) return state.snapSel == e.id end)
+        for _, row in ipairs(p.list.rows) do
+            row:SetScript("OnClick", function(self)
+                if self.data and self.data.id then state.snapSel = self.data.id; ui.FillSnaps() end
+            end)
+            row:SetScript("OnEnter", function(self)
+                local e = self.data
+                if not e or not e.id then return end
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                if e.id == 0 then
+                    GameTooltip:AddLine(T("官方原始", "Official original"), 0.25, 0.75, 1)
+                    GameTooltip:AddLine(T("掉落工坊改过的每张表都回到官方原样。先“查看差异”；回去之前会自动存一个“回退前”点。", "Every table the workshop changed goes back to its official copy. Check \"What would change\" first; a Before point is saved automatically."), 0.8, 0.8, 0.8, true)
+                    GameTooltip:Show()
+                    return
+                end
+                GameTooltip:AddLine(string.format("#%d  %s", e.id, e.name), 1, 0.82, 0)
+                GameTooltip:AddLine(date("%Y-%m-%d %H:%M", e.ts) .. "  " .. e.who, 1, 1, 1)
+                GameTooltip:AddLine(string.format(T("包含 %d 张改过的掉落表，约 %s", "Holds %d changed loot tables, about %s"), e.tables, Mb(e.bytes)), 0.8, 0.8, 0.8)
+                GameTooltip:AddLine(T("先点“查看差异”看看回去会改什么，再点“回到此时间点”。", "Use \"What would change\" first, then \"Go back to this\"."), 0.6, 1, 0.6, true)
+                GameTooltip:Show()
+            end)
+            row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        end
+
+        p.diffHost = CreateFrame("Frame", nil, p)
+        p.diffHost:SetPoint("TOPLEFT", 22, -80)
+        p.diffHost:SetPoint("BOTTOMRIGHT", -22, 56)
+        p.diffList = MakeList(p.diffHost, 600, 17, 20, function(row, d)
+            row.icon:SetTexture(nil)
+            if d.text then
+                row.left:SetText("|cff9d9d9d" .. d.text .. "|r"); row.right:SetText("")
+            elseif d.head then
+                row.left:SetText("|cffffd100" .. KindName(d.kind) .. " #" .. d.loot .. "|r")
+                row.right:SetText(string.format("|cff55ff55+%d|r  |cffff6060-%d|r  |cffffa020~%d|r", d.add, d.del, d.chg))
+            else
+                local mark = d.op == "+" and "|cff55ff55" .. T("回到后会加入", "will be added") or (d.op == "-" and "|cffff6060" .. T("回到后会移除", "will be removed") or "|cffffa020" .. T("回到后会改为", "will change to"))
+                row.left:SetText("   " .. mark .. "|r  " .. (d.name ~= "" and d.name or "?") .. "  |cffaaaaaa#" .. d.item .. "|r")
+                if d.op == "+" then row.right:SetText(d.to)
+                elseif d.op == "-" then row.right:SetText(d.from)
+                else row.right:SetText(d.from .. " > " .. d.to) end
+            end
+        end)
+        p.diffHost:Hide()
+
+        p.saveBtn = Button(p, 120, "保存当前…", "Save now…", function() ui.AskSnapName() end)
+        p.saveBtn:SetPoint("BOTTOMLEFT", 24, 18)
+        p.diffBtn = Button(p, 110, "查看差异", "What would change", function()
+            if state.snapSel then Cmd("snapdiff " .. state.snapSel); Status(T("正在比较…", "Comparing…")) end
+        end)
+        p.diffBtn:SetPoint("LEFT", p.saveBtn, "RIGHT", 4, 0)
+        p.goBtn = Button(p, 130, "回到此时间点", "Go back to this", function()
+            local id = p.view == "diff" and state.diff and state.diff.id or state.snapSel
+            if not id then return end
+            StaticPopupDialogs["REBORN_LOOTLAB_SNAPGO"] = {
+                text = string.format(id == 0 and T("把所有改过的掉落表都回到官方原样？现在的状态会先自动存成一个“回退前”时间点，之后还能再回来。", "Put every changed loot table back to its official copy? The current state is saved first as a \"Before\" point, so you can come back.")
+                                   or T("把所有改过的掉落表都回到时间点 #%d？现在的状态会先自动存成一个“回退前”时间点，之后还能再回来。", "Put every changed loot table back to time point #%d? The current state is saved first as a \"Before\" point, so you can come back."), id),
+                button1 = ACCEPT or "OK", button2 = CANCEL or "Cancel",
+                OnAccept = function() Cmd("snaprestore " .. id); Status(T("已发送，等服务端回答…", "Sent, waiting for the server…")); p.view = "list"; ui.SnapView() end,
+                timeout = 0, whileDead = 1, hideOnEscape = 1,
+            }
+            StaticPopup_Show("REBORN_LOOTLAB_SNAPGO")
+        end)
+        p.goBtn:SetPoint("LEFT", p.diffBtn, "RIGHT", 4, 0)
+        p.delBtn = Button(p, 80, "删除", "Delete", function()
+            local id = state.snapSel
+            if not id then return end
+            StaticPopupDialogs["REBORN_LOOTLAB_SNAPDEL"] = {
+                text = string.format(T("删除时间点 #%d？删掉之后回不去了。", "Delete time point #%d? It cannot be brought back."), id),
+                button1 = ACCEPT or "OK", button2 = CANCEL or "Cancel",
+                OnAccept = function() Cmd("snapdel " .. id) end,
+                timeout = 0, whileDead = 1, hideOnEscape = 1,
+            }
+            StaticPopup_Show("REBORN_LOOTLAB_SNAPDEL")
+        end)
+        p.delBtn:SetPoint("LEFT", p.goBtn, "RIGHT", 4, 0)
+        p.backBtn = Button(p, 90, "返回", "Back", function() p.view = "list"; ui.SnapView() end)
+        p.backBtn:SetPoint("BOTTOMLEFT", 24, 18)
+        p.backBtn:Hide()
+        local close = Button(p, 80, "关闭", "Close", function() p:Hide() end)
+        close:SetPoint("BOTTOMRIGHT", -24, 18)
+        p.view = "list"
+        if UISpecialFrames then table.insert(UISpecialFrames, "RebornLootLabSnapPop") end
+        ui.snapPop = p
+    end
+    ui.snapPop.view = "list"
+    ui.SnapView()
+    ui.snapPop.info:SetText(T("读取中…", "Loading…"))
+    Cmd("snaplist")
+    ui.FillSnaps()
+    ui.snapPop:Show()
+    ui.snapPop:Raise()
 end
 
 function ui.BuildEditBar(mid)

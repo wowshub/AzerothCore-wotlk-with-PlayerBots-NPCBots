@@ -81,3 +81,31 @@ RebornLootLab.Log.KeepDays = 30
 #
 
 RebornLootLab.Log.ArchiveDir = lootlab_archive
+
+###################################################################################################
+# LAB3C 时间点
+###################################################################################################
+
+#
+#    RebornLootLab.Snapshot.AutoMinutes
+#        Description: 每隔多少分钟自动保存一个时间点（只有改动日志有新内容、且内容真的变了才会存）。0 = 关闭自动时间点。
+#        Default:     60
+#
+
+RebornLootLab.Snapshot.AutoMinutes = 60
+
+#
+#    RebornLootLab.Snapshot.AutoKeep
+#        Description: 自动时间点（含"回到某时间点之前自动保存"的那种）最多保留多少个，更早的删除。0 = 不限个数。手动保存的永不自动删除。
+#        Default:     48
+#
+
+RebornLootLab.Snapshot.AutoKeep = 48
+
+#
+#    RebornLootLab.Snapshot.AutoKeepDays
+#        Description: 自动时间点最多保留多少天。0 = 不限天数。
+#        Default:     14
+#
+
+RebornLootLab.Snapshot.AutoKeepDays = 14

@@ -11,11 +11,14 @@
 #include "StringFormat.h"
 #include "WorldPacket.h"
 #include <algorithm>
+#include <functional>
 #include <cstdio>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <cstdlib>
+#include <cmath>
+#include <limits>
 #include <map>
 #include <mutex>
 #include <set>
@@ -1068,6 +1071,413 @@ namespace
         res.msg = Acore::StringFormat("已把 {} 条旧日志归档到 {}，并从数据库清理", ids.size(), path);
         return res;
     }
+
+    // =====================================================================
+    // LAB3C: time points. A time point is a copy of the CURRENT content of every loot table the workshop has
+    // ever changed (the tables listed in reborn_lootlab_baseline), taken at one moment:
+    //   manual  - a GM saved it with a name
+    //   auto    - taken every Snapshot.AutoMinutes when something changed since the last one (same content = skipped)
+    //   before  - taken automatically just before going back to a time point, so going back can be undone
+    // Going back to a time point puts every changed table to its content at that time; a table the time point
+    // does not hold (it was first changed later) goes back to its official copy. Every table that really changes
+    // gets a log row, and the loot stores are read again like after any edit.
+    // Automatic and "before" points are pruned (Snapshot.AutoKeep newest, Snapshot.AutoKeepDays); manual ones never.
+    //   Snapshot.AutoMinutes = 60    0 turns the automatic points off
+    //   Snapshot.AutoKeep = 48       how many automatic / before points to keep (0 = no count limit)
+    //   Snapshot.AutoKeepDays = 14   how many days they live (0 = no age limit)
+    // =====================================================================
+    struct StateRow
+    {
+        std::string kind;
+        uint32 lootId;
+        std::string json;
+    };
+
+    bool SnapTablesExist()
+    {
+        return Q("SHOW TABLES LIKE 'reborn_lootlab_snapshot'") && Q("SHOW TABLES LIKE 'reborn_lootlab_snapshot_row'") && Q("SHOW TABLES LIKE 'reborn_lootlab_baseline'");
+    }
+
+    std::vector<StateRow> CaptureState()
+    {
+        std::vector<StateRow> out;
+        std::vector<std::pair<std::string, uint32>> keys;
+        if (QueryResult b = Q("SELECT kind, loot_id FROM reborn_lootlab_baseline ORDER BY kind, loot_id"))
+            do
+            {
+                Field* f = b->Fetch();
+                keys.emplace_back(f[0].Get<std::string>(), f[1].Get<uint32>());
+            } while (b->NextRow());
+        for (auto const& kv : keys)
+            if (Kind const* k = FindKind(kv.first))
+                out.push_back({ kv.first, kv.second, Snapshot(*k, kv.second) });
+        return out;
+    }
+
+    std::string StateHash(std::vector<StateRow> const& rows)
+    {
+        std::string all;
+        for (StateRow const& r : rows)
+            all += r.kind + ":" + Id(r.lootId) + "=" + r.json + "\n";
+        if (QueryResult q = Q("SELECT MD5('" + Esc(all) + "')"))
+            return q->Fetch()[0].Get<std::string>();
+        return std::string();
+    }
+
+    // returns the new id; 0 when skipIfSame and the content equals the newest time point
+    uint32 SaveSnapshot(std::string const& type, std::string const& name, std::string const& who, bool skipIfSame, bool& same)
+    {
+        same = false;
+        std::vector<StateRow> const rows = CaptureState();
+        std::string const hash = StateHash(rows);
+        if (skipIfSame)
+            if (QueryResult q = Q("SELECT hash FROM reborn_lootlab_snapshot ORDER BY id DESC LIMIT 1"))
+                if (q->Fetch()[0].Get<std::string>() == hash)
+                {
+                    same = true;
+                    return 0;
+                }
+        uint64 bytes = 0;
+        for (StateRow const& r : rows)
+            bytes += r.json.size() + r.kind.size() + 20;
+        WorldDatabase.DirectExecute("INSERT INTO reborn_lootlab_snapshot (name, snap_type, who, tables_n, bytes, hash) VALUES ('{}', '{}', '{}', {}, {}, '{}')",
+                                    Esc(Clip(name, 80)), type, Esc(who), rows.size(), bytes, hash);
+        uint32 id = 0;
+        if (QueryResult q = Q("SELECT MAX(id) FROM reborn_lootlab_snapshot"))
+            id = q->Fetch()[0].Get<uint32>();
+        if (!id)
+            return 0;
+        auto trans = WorldDatabase.BeginTransaction();
+        for (StateRow const& r : rows)
+            trans->Append("INSERT INTO reborn_lootlab_snapshot_row (snap_id, kind, loot_id, rows_json) VALUES (" + Id(id) + ", '" + r.kind + "', " + Id(r.lootId) + ", '" + Esc(r.json) + "')");
+        WorldDatabase.DirectCommitTransaction(trans);
+        return id;
+    }
+
+    void DeleteSnapshot(uint32 id)
+    {
+        WorldDatabase.DirectExecute("DELETE FROM reborn_lootlab_snapshot_row WHERE snap_id = {}", id);
+        WorldDatabase.DirectExecute("DELETE FROM reborn_lootlab_snapshot WHERE id = {}", id);
+    }
+
+    void PruneSnapshots()
+    {
+        uint32 const keep = sConfigMgr->GetOption<uint32>("RebornLootLab.Snapshot.AutoKeep", 48);
+        uint32 const days = sConfigMgr->GetOption<uint32>("RebornLootLab.Snapshot.AutoKeepDays", 14);
+        std::vector<uint32> del;
+        if (QueryResult r = Q("SELECT id, UNIX_TIMESTAMP(at) FROM reborn_lootlab_snapshot WHERE snap_type <> 'manual' ORDER BY id DESC"))
+        {
+            uint32 n = 0;
+            uint64 const now = static_cast<uint64>(std::time(nullptr));
+            do
+            {
+                ++n;
+                Field* f = r->Fetch();
+                uint64 const at = f[1].Get<uint64>();
+                if ((keep && n > keep) || (days && now > at && now - at > static_cast<uint64>(days) * 86400))
+                    del.push_back(f[0].Get<uint32>());
+            } while (r->NextRow());
+        }
+        for (uint32 id : del)
+            DeleteSnapshot(id);
+    }
+
+    // the rows of one loot table, keyed by (item, reference)
+    struct RowV
+    {
+        float chance = 0;
+        uint32 minC = 1, maxC = 1, group = 0, quest = 0, ref = 0;
+    };
+    typedef std::map<std::pair<uint32, uint32>, RowV> RowMap;
+
+    RowMap RowsOf(std::string const& json)
+    {
+        RowMap m;
+        if (QueryResult r = Q("SELECT jt.Item, jt.Reference, jt.Chance, jt.QuestRequired, jt.GroupId, jt.MinCount, jt.MaxCount FROM JSON_TABLE('" + Esc(json) +
+                              "', '$[*]' COLUMNS (Item INT PATH '$.Item', Reference INT PATH '$.Reference', Chance FLOAT PATH '$.Chance', QuestRequired INT PATH '$.QuestRequired', "
+                              "GroupId INT PATH '$.GroupId', MinCount INT PATH '$.MinCount', MaxCount INT PATH '$.MaxCount')) jt"))
+            do
+            {
+                Field* f = r->Fetch();
+                RowV v;
+                v.ref = f[1].Get<uint32>();
+                v.chance = f[2].Get<float>();
+                v.quest = f[3].Get<uint32>();
+                v.group = f[4].Get<uint32>();
+                v.minC = f[5].Get<uint32>();
+                v.maxC = f[6].Get<uint32>();
+                m[{ f[0].Get<uint32>(), v.ref }] = v;
+            } while (r->NextRow());
+        return m;
+    }
+
+    bool SameRow(RowV const& a, RowV const& b)
+    {
+        return std::fabs(a.chance - b.chance) < 0.0001f && a.minC == b.minC && a.maxC == b.maxC && a.group == b.group && a.quest == b.quest;
+    }
+
+    std::string RowText(RowV const& v)
+    {
+        return Acore::StringFormat("{:g}% x{}-{} g{}{}", v.chance, v.minC, v.maxC, v.group, v.quest ? " q" : "");
+    }
+
+    // what a table holds in a time point: its row there, or the official copy when the time point does not have it
+    std::map<std::pair<std::string, uint32>, std::string> SnapshotTables(uint32 snapId)
+    {
+        std::map<std::pair<std::string, uint32>, std::string> m;
+        if (QueryResult b = Q("SELECT kind, loot_id, rows_json FROM reborn_lootlab_baseline"))
+            do
+            {
+                Field* f = b->Fetch();
+                m[{ f[0].Get<std::string>(), f[1].Get<uint32>() }] = f[2].Get<std::string>();
+            } while (b->NextRow());
+        if (QueryResult r = Q("SELECT kind, loot_id, rows_json FROM reborn_lootlab_snapshot_row WHERE snap_id = " + Id(snapId)))
+            do
+            {
+                Field* f = r->Fetch();
+                m[{ f[0].Get<std::string>(), f[1].Get<uint32>() }] = f[2].Get<std::string>();
+            } while (r->NextRow());
+        return m;
+    }
+
+    bool SnapshotExists(uint32 id, std::string* name = nullptr, uint64* at = nullptr)
+    {
+        if (id == 0)   // LAB3D: the official original, not stored: every changed table at its baseline copy
+        {
+            if (name)
+                *name = "官方原始";
+            if (at)
+                *at = 0;
+            return true;
+        }
+        if (QueryResult q = Q("SELECT name, UNIX_TIMESTAMP(at) FROM reborn_lootlab_snapshot WHERE id = " + Id(id)))
+        {
+            if (name)
+                *name = q->Fetch()[0].Get<std::string>();
+            if (at)
+                *at = q->Fetch()[1].Get<uint64>();
+            return true;
+        }
+        return false;
+    }
+
+    struct DiffCnt
+    {
+        uint32 add = 0, del = 0, chg = 0;
+    };
+
+    // how many rows going back to a time point would add / remove / change, against the tables as they are now
+    // curJson / curRows are read once by the caller and shared by all the points of one list
+    DiffCnt CountDiff(uint32 snapId, std::map<std::pair<std::string, uint32>, std::string> const& curJson,
+                      std::map<std::pair<std::string, uint32>, RowMap>& curRows)
+    {
+        DiffCnt c;
+        for (auto const& kv : SnapshotTables(snapId))
+        {
+            auto cj = curJson.find(kv.first);
+            if (cj == curJson.end() || cj->second == kv.second)
+                continue;
+            auto cr = curRows.find(kv.first);
+            if (cr == curRows.end())
+                cr = curRows.emplace(kv.first, RowsOf(cj->second)).first;
+            RowMap const want = RowsOf(kv.second);
+            RowMap const& have = cr->second;
+            for (auto const& w : want)
+            {
+                auto it = have.find(w.first);
+                if (it == have.end())
+                    ++c.add;
+                else if (!SameRow(it->second, w.second))
+                    ++c.chg;
+            }
+            for (auto const& h : have)
+                if (want.find(h.first) == want.end())
+                    ++c.del;
+        }
+        return c;
+    }
+
+    // LAB3D: "SN" lines (manual points first, then automatic / before points, newest first), one "SNX" line per point with
+    // what going back would change, and the official original as id 0. SNX is only sent for the newest points.
+    void SendSnapList(Player* p)
+    {
+        Send(p, "SN_START");
+        bool const ok = SnapTablesExist();
+        uint64 total = 0;
+        uint32 count = 0;
+        std::vector<uint32> ids;
+        if (ok)
+            for (char const* where : { "snap_type = 'manual'", "snap_type <> 'manual'" })
+                if (QueryResult r = Q(std::string("SELECT id, UNIX_TIMESTAMP(at), snap_type, who, name, tables_n, bytes FROM reborn_lootlab_snapshot WHERE ") + where + " ORDER BY id DESC LIMIT 100"))
+                    do
+                    {
+                        Field* f = r->Fetch();
+                        ++count;
+                        total += f[6].Get<uint64>();
+                        ids.push_back(f[0].Get<uint32>());
+                        Send(p, Acore::StringFormat("SN	{}	{}	{}	{}	{}	{}	{}", f[0].Get<uint32>(), f[1].Get<uint64>(), f[2].Get<std::string>(), Fld(f[3].Get<std::string>()),
+                                                    Fld(Clip(f[4].Get<std::string>(), 80)), f[5].Get<uint32>(), f[6].Get<uint64>()));
+                    } while (r->NextRow());
+        if (ok)
+        {
+            std::map<std::pair<std::string, uint32>, std::string> curJson;
+            for (StateRow const& r : CaptureState())
+                curJson[{ r.kind, r.lootId }] = r.json;
+            std::map<std::pair<std::string, uint32>, RowMap> curRows;
+            uint32 n = 0;
+            ids.push_back(0);   // the original is last in the list but always summarised
+            std::sort(ids.begin(), ids.end(), std::greater<uint32>());
+            for (uint32 id : ids)
+            {
+                if (id != 0 && ++n > 40)
+                    continue;
+                DiffCnt const c = CountDiff(id, curJson, curRows);
+                Send(p, Acore::StringFormat("SNX	{}	{}	{}	{}", id, c.add, c.del, c.chg));
+            }
+        }
+        Send(p, Acore::StringFormat("SN_END	{}	{}	{}	{}	{}	{}", ok ? 1 : 0, count, total,
+                                    sConfigMgr->GetOption<uint32>("RebornLootLab.Snapshot.AutoMinutes", 60), sConfigMgr->GetOption<uint32>("RebornLootLab.Snapshot.AutoKeep", 48),
+                                    sConfigMgr->GetOption<uint32>("RebornLootLab.Snapshot.AutoKeepDays", 14)));
+    }
+
+    // what going back to a time point would change, table by table (nothing is changed here)
+    void SendSnapDiff(Player* p, uint32 snapId)
+    {
+        std::string name;
+        uint64 at = 0;
+        if (!SnapTablesExist() || !SnapshotExists(snapId, &name, &at))
+        {
+            Send(p, "ERR\t没有这个时间点");
+            return;
+        }
+        Send(p, Acore::StringFormat("SD_START\t{}\t{}\t{}", snapId, at, Fld(name)));
+        uint32 tables = 0, lines = 0;
+        for (auto const& kv : SnapshotTables(snapId))
+        {
+            Kind const* k = FindKind(kv.first.first);
+            if (!k)
+                continue;
+            uint32 const lootId = kv.first.second;
+            RowMap const want = RowsOf(kv.second);
+            RowMap const have = RowsOf(Snapshot(*k, lootId));
+            uint32 add = 0, del = 0, chg = 0;
+            std::vector<std::string> detail;
+            auto itemName = [](uint32 item) -> std::string
+            {
+                if (QueryResult q = Q("SELECT name FROM item_template WHERE entry = " + Id(item)))
+                    return Fld(Clip(q->Fetch()[0].Get<std::string>(), 40));
+                return std::string();
+            };
+            for (auto const& w : want)
+            {
+                auto it = have.find(w.first);
+                if (it == have.end())
+                {
+                    ++add;
+                    detail.push_back(Acore::StringFormat("+\t{}\t{}\t\t{}", w.first.first, itemName(w.first.first), RowText(w.second)));
+                }
+                else if (!SameRow(it->second, w.second))
+                {
+                    ++chg;
+                    detail.push_back(Acore::StringFormat("~\t{}\t{}\t{}\t{}", w.first.first, itemName(w.first.first), RowText(it->second), RowText(w.second)));
+                }
+            }
+            for (auto const& h : have)
+                if (want.find(h.first) == want.end())
+                {
+                    ++del;
+                    detail.push_back(Acore::StringFormat("-\t{}\t{}\t{}\t", h.first.first, itemName(h.first.first), RowText(h.second)));
+                }
+            if (!add && !del && !chg)
+                continue;
+            ++tables;
+            Send(p, Acore::StringFormat("SD\t{}\t{}\t{}\t{}\t{}", k->key, lootId, add, del, chg));
+            for (std::string const& d : detail)
+                if (lines < 400)
+                {
+                    ++lines;
+                    Send(p, Acore::StringFormat("SDI\t{}\t{}\t{}", k->key, lootId, d));
+                }
+        }
+        Send(p, Acore::StringFormat("SD_END\t{}\t{}", snapId, tables));
+    }
+
+    EditResult RestoreSnapshot(Player* gm, uint32 snapId)
+    {
+        EditResult res;
+        if (!SnapTablesExist() || !SnapshotExists(snapId))
+        {
+            res.msg = "没有这个时间点";
+            return res;
+        }
+        // first keep where we are, so going back can be undone with the "before" point
+        bool same = false;
+        uint32 const beforeId = SaveSnapshot("before", (snapId ? Acore::StringFormat("回到 #{} 之前自动保存", snapId) : std::string("回到官方原始之前自动保存")), gm->GetName(), true, same);
+        uint32 changed = 0, kept = 0;
+        for (auto const& kv : SnapshotTables(snapId))
+        {
+            Kind const* k = FindKind(kv.first.first);
+            if (!k)
+                continue;
+            std::string const cur = Snapshot(*k, kv.first.second);
+            RowMap const want = RowsOf(kv.second), have = RowsOf(cur);
+            bool differs = want.size() != have.size();
+            if (!differs)
+                for (auto const& w : want)
+                {
+                    auto it = have.find(w.first);
+                    if (it == have.end() || !SameRow(it->second, w.second))
+                    {
+                        differs = true;
+                        break;
+                    }
+                }
+            if (!differs)
+            {
+                ++kept;
+                continue;
+            }
+            ApplySnapshot(*k, kv.first.second, kv.second);
+            WriteLog(gm, *k, kv.first.second, Acore::StringFormat("go back to time point #{}", snapId), cur, Snapshot(*k, kv.first.second), false);
+            MarkDirty(k->key);
+            ++changed;
+        }
+        LOG_INFO("module", "[LootLab] {} went back to time point #{}: {} table(s) changed, {} already the same", gm->GetName(), snapId, changed, kept);
+        res.ok = true;
+        res.msg = (snapId ? Acore::StringFormat("已回到时间点 #{}：改回 {} 张表，{} 张本来就一样", snapId, changed, kept) : Acore::StringFormat("已回到官方原始：改回 {} 张表，{} 张本来就一样", changed, kept)) +
+                  (beforeId ? Acore::StringFormat("。回来之前的状态已存为时间点 #{}，想反悔就回到它", beforeId) : std::string());
+        return res;
+    }
+
+    // the automatic points: called from the world thread, every Snapshot.AutoMinutes, only when the change log moved
+    void AutoSnapshotTick(uint32 diff)
+    {
+        static uint32 acc = 0;
+        static uint64 lastSeen = std::numeric_limits<uint64>::max();
+        uint32 const minutes = sConfigMgr->GetOption<uint32>("RebornLootLab.Snapshot.AutoMinutes", 60);
+        if (!minutes)
+            return;
+        acc += diff;
+        if (acc < minutes * 60000u)
+            return;
+        acc = 0;
+        if (!SnapTablesExist() || !Q("SHOW TABLES LIKE 'reborn_lootlab_log'"))
+            return;
+        uint64 cur = 0;
+        if (QueryResult q = Q("SELECT IFNULL(MAX(id), 0) FROM reborn_lootlab_log"))
+            cur = q->Fetch()[0].Get<uint64>();
+        if (cur == lastSeen)
+            return;
+        lastSeen = cur;
+        bool same = false;
+        std::vector<StateRow> const probe = CaptureState();
+        if (probe.empty())
+            return;
+        uint32 const id = SaveSnapshot("auto", "自动", "system", true, same);
+        if (id)
+            LOG_INFO("module", "[LootLab] automatic time point #{} saved ({} table(s))", id, probe.size());
+        PruneSnapshots();
+    }
 }
 
 class RebornLootLabCommandScript : public CommandScript
@@ -1144,6 +1554,61 @@ public:
             EditResult er = ArchiveLog(gm, days);
             Send(gm, std::string("ED\t") + (er.ok ? "1" : "0") + "\t" + Fld(er.msg));
             SendLogSize(gm);
+            return true;
+        }
+        if (what == "snaplist")   // LAB3C
+        {
+            SendSnapList(gm);
+            return true;
+        }
+        if (what == "snapdiff" && w.size() >= 2)
+        {
+            SendSnapDiff(gm, Num(w[1]));
+            return true;
+        }
+        if (what == "snapsave" || what == "snaprestore" || what == "snapdel")
+        {
+            if (!MayEdit(gm))
+            {
+                Send(gm, std::string("ED\t0\t") + (EditLocked() ? "正式服已锁定，不能编辑" : (EditEnabled() ? "你的账号等级不够编辑" : "编辑功能没有开启（服务端配置 RebornLootLab.Edit.Enable）")));
+                return true;
+            }
+            if (!SnapTablesExist())
+            {
+                Send(gm, "ED\t0\t" + Fld("时间点的数据表还没建：请在 world 库执行 LAB3C_snapshot_tables.sql"));
+                return true;
+            }
+            EditResult er;
+            if (what == "snapsave")
+            {
+                std::string name = Rest(line, 1);
+                if (name.empty())
+                    name = "手动时间点";
+                bool same = false;
+                uint32 const id = SaveSnapshot("manual", name, gm->GetName(), false, same);
+                er.ok = id != 0;
+                er.msg = id ? Acore::StringFormat("已保存时间点 #{}（{}）", id, Clip(name, 60)) : std::string("保存失败");
+            }
+            else if (what == "snaprestore" && w.size() >= 2)
+                er = RestoreSnapshot(gm, Num(w[1]));
+            else if (what == "snapdel" && w.size() >= 2)
+            {
+                uint32 const id = Num(w[1]);
+                if (id == 0)
+                    er.msg = "官方原始不能删除";
+                else if (SnapshotExists(id))
+                {
+                    DeleteSnapshot(id);
+                    er.ok = true;
+                    er.msg = Acore::StringFormat("已删除时间点 #{}", id);
+                }
+                else
+                    er.msg = "没有这个时间点";
+            }
+            else
+                er.msg = "命令参数不对";
+            Send(gm, std::string("ED\t") + (er.ok ? "1" : "0") + "\t" + Fld(er.msg));
+            SendSnapList(gm);
             return true;
         }
         if (what == "who" && w.size() >= 2)
@@ -1247,8 +1712,9 @@ class RebornLootLabWorldScript : public WorldScript
 public:
     RebornLootLabWorldScript() : WorldScript("RebornLootLabWorldScript") { }
 
-    void OnUpdate(uint32 /*diff*/) override
+    void OnUpdate(uint32 diff) override
     {
+        AutoSnapshotTick(diff);   // LAB3C
         std::set<std::string> todo;
         {
             std::lock_guard<std::mutex> lock(g_dirtyMu);
