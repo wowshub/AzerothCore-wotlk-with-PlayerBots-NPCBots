@@ -1,0 +1,79 @@
+[
+  {
+    "stage": "MBWD4C",
+    "repo": "pb",
+    "path": "src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\pb\\src\\Ai\\Class\\WitchDoctor\\WitchDoctorAiObjectContext.h",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "96a83414cf917dcb62b0d52c5b5aeae4d2b9be5879326f34a580720bc3154e4b",
+    "output_sha256": "fbac8c959398cb43c464e64276f47836542614e15c2c8493cda0ce024d11ed7b",
+    "adaptation": "exclude WD205 only"
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotDecisionTrace4C.h",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotDecisionTrace4C.h",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "5ea96015a9a6d60c460d6cb26a6181953f81acbc26d827d39fcebfcf371e2c45",
+    "output_sha256": "5ea96015a9a6d60c460d6cb26a6181953f81acbc26d827d39fcebfcf371e2c45",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotDecisionTrace4C.inc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotDecisionTrace4C.inc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "252a6eb78b8c3387ba0e1901130a8cd30633f90b8070235f5c15e86a0a6ffdaa",
+    "output_sha256": "252a6eb78b8c3387ba0e1901130a8cd30633f90b8070235f5c15e86a0a6ffdaa",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "a075bc885eb7a0bd2c29f8d05205e660ac447344a20ef3c0b16fbf13f829405f",
+    "output_sha256": "a075bc885eb7a0bd2c29f8d05205e660ac447344a20ef3c0b16fbf13f829405f",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotDecisionPanel.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotDecisionPanel.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "9c6ff93595e1132f4dd5ee490debabf33f0259bc55a87a5cd857daab2d3766eb",
+    "output_sha256": "9c6ff93595e1132f4dd5ee490debabf33f0259bc55a87a5cd857daab2d3766eb",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotSummonPanel.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotSummonPanel.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "b8350ef7a768bc8cef488b7241e184f606ae4be8f2e5b4eeea9dd0a5b8cdc15d",
+    "output_sha256": "b8350ef7a768bc8cef488b7241e184f606ae4be8f2e5b4eeea9dd0a5b8cdc15d",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD4C\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_025550_阶段MBWD4C_MultiBot巫医策略天赋召唤诊断累计整合测试包.zip",
+    "package_sha256": "a90de4812ebcd0f2d9f1e5a9c17597719f397860b8a8553786a0fc10facb6c8f",
+    "source_sha256": "ab9acdc5a587d82267b2769d273e5ae41f39abaca0657c13e93528fafb835919",
+    "output_sha256": "ab9acdc5a587d82267b2769d273e5ae41f39abaca0657c13e93528fafb835919",
+    "adaptation": "none"
+  }
+]

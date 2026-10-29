@@ -18,6 +18,7 @@
 #include "RebornWitchDoctorBotControls3.h"
 #include "RebornWitchDoctorBotSummonPolicy4.h"
 #include "RebornWitchDoctorBotAutoSummon4B.h"
+#include "RebornWitchDoctorBotDecisionTrace4C.h"
 #include "Playerbots.h"
 #include "Trainer.h"
 #include "Creature.h"
@@ -906,6 +907,7 @@ bool Check168(ChatHandler* h)
 #include "RebornWitchDoctorBotPanel.inc"
 #include "RebornWitchDoctorBotSummon4.inc"
 #include "RebornWitchDoctorBotAutoSummon4B.inc"
+#include "RebornWitchDoctorBotDecisionTrace4C.inc"
 
 class Commands : public CommandScript
 {
@@ -934,6 +936,7 @@ public:
             {"wdwardcast",BotWardCast4,SEC_PLAYER,Console::No},
             {"wdautostate",BotAutoState4B,SEC_PLAYER,Console::No},
             {"wdautoset",BotAutoSet4B,SEC_PLAYER,Console::No},
+            {"wdwhystate",BotWhyState4C,SEC_PLAYER,Console::No},
             {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
             {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
             {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},
@@ -1013,6 +1016,7 @@ public:
         WD174::Forget(p);
         p->CustomData.Erase(WDMB3::Key);
         p->CustomData.Erase(WDAS4::Key);
+        p->CustomData.Erase(WDWHY4::Key);
         State* s=p->CustomData.GetDefault<State>(Key);Remove(p,s);p->CustomData.Erase(Key);
     }
 };

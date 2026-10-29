@@ -111,7 +111,11 @@ local function create()
         c.cast=button(c,"施放 / Cast",244,-62,86,function()confirm(k)end)
         cards[key]=c
     end
-    status=text(frame,18,-490,462,51)
+    status=text(frame,18,-490,462,30)
+    button(frame,"AI原因 / Why",18,-524,160,function()
+        local unit=MultiBot and MultiBot.toUnit and MultiBot.toUnit(S.name)
+        if unit and RebornWDBotDecision then RebornWDBotDecision.Open(unit,S.name) end
+    end)
     frame:SetScript("OnHide",function()StaticPopup_Hide("REBORN_WDBOT_SUMMON")end)
     UISpecialFrames[#UISpecialFrames+1]="RebornWDBotSummonPanel";frame:Hide()
 end

@@ -2,7 +2,7 @@
 ## Title: Reborn Witch Doctor Talents
 ## Notes: CoA原版美术适配；巫医天赋
 ## Version: WD9A
-## SavedVariables: RebornWDButtonPosition, RebornWDLanguage, RebornWD8Equipment, RebornWDArtStyle, RebornWDBotRolePosition, RebornWDBotSummonPosition
+## SavedVariables: RebornWDButtonPosition, RebornWDLanguage, RebornWD8Equipment, RebornWDArtStyle, RebornWDBotRolePosition, RebornWDBotSummonPosition, RebornWDBotDecisionPosition
 Data.lua
 Art.lua
 WD5A.lua
@@ -35,3 +35,5 @@ BotTalentPanel.lua
 BotTalentRolePanel.lua
 
 BotSummonPanel.lua
+
+BotDecisionPanel.lua
