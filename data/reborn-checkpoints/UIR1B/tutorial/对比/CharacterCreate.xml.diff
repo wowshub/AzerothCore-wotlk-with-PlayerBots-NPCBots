@@ -1,0 +1,10 @@
+--- UIR1A/CharacterCreate.xml
++++ UIR1B/CharacterCreate.xml
+@@ -2479,4 +2479,7 @@
+ 			</OnKeyDown>
+ 		</Scripts>
+ 	</Frame>
++
++	<CheckButton name="RebornSethrakPreviewButton" inherits="CharCreateRaceButtonTemplate" parent="CharacterCreate" hidden="true"/>
++	<CheckButton name="RebornOgrePreviewButton" inherits="CharCreateRaceButtonTemplate" parent="CharacterCreate" hidden="true"/>
+ </Ui>

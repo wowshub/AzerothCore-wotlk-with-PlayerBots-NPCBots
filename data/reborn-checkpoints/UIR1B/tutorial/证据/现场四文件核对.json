@@ -1,0 +1,30 @@
+[
+  {
+    "mpq": "Patch-YB.mpq",
+    "path": "Interface/GlueXML/CharacterCreate.xml",
+    "frozen_sha256": "00a4edaa09ce6186125cafc392df251114559f8cffcf5bc3549d26dc62e8aba3",
+    "installed_sha256": "00a4edaa09ce6186125cafc392df251114559f8cffcf5bc3549d26dc62e8aba3",
+    "match": true
+  },
+  {
+    "mpq": "Patch-YB.mpq",
+    "path": "Interface/GlueXML/RebornRacePreview.lua",
+    "frozen_sha256": "77aaa4c53bc8b75d73a979f5dd6cc9e0908afc5d989105a1c7f816a7af3e5d7d",
+    "installed_sha256": "77aaa4c53bc8b75d73a979f5dd6cc9e0908afc5d989105a1c7f816a7af3e5d7d",
+    "match": true
+  },
+  {
+    "mpq": "Patch-YB.mpq",
+    "path": "Reborn/Preview/UIR1B/Sethrak/icon-round.blp",
+    "frozen_sha256": "442dc2f2e3f061ae5c04a8fd58ff9b545bde50b8d803819ccde076dbe67b3155",
+    "installed_sha256": "442dc2f2e3f061ae5c04a8fd58ff9b545bde50b8d803819ccde076dbe67b3155",
+    "match": true
+  },
+  {
+    "mpq": "Patch-YC.mpq",
+    "path": "Reborn/Preview/UIR1B/Ogre/icon-round.blp",
+    "frozen_sha256": "e75aca44cc3fa310c4d57d586ec93ceeb745c640fce73ae78a853f247c213559",
+    "installed_sha256": "e75aca44cc3fa310c4d57d586ec93ceeb745c640fce73ae78a853f247c213559",
+    "match": true
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "Lua5.1 parse",
+    "same-row opposite relative anchors +/-70",
+    "same size62 scale0.78",
+    "native Alliance/Horde rings",
+    "selection highlight",
+    "create blocked and restored",
+    "paid service hides previews",
+    "XML parsed",
+    "Sethrak corners transparent and center retained",
+    "Ogre corners transparent and center retained"
+  ],
+  "game": "not run",
+  "model_black_silhouette": "reported by user, not fixed in UIR1B"
+}

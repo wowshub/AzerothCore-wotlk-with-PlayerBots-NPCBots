@@ -1,0 +1,62 @@
+[
+  {
+    "path": "对比/CharacterCreate.xml.diff",
+    "bytes": 400,
+    "sha256": "670f457c481c3d63a41ba13c440a71e0c8027984ec907e45fc4abfce3f788aa6"
+  },
+  {
+    "path": "对比/RebornRacePreview.lua.diff",
+    "bytes": 3848,
+    "sha256": "4c50312450e49ffb88098f0d22deea1d96335ee207c4f3be76f4fbf2e912b6c1"
+  },
+  {
+    "path": "对比/初始基线_尚未加预览/CharacterCreate.xml",
+    "bytes": 90650,
+    "sha256": "64fc96e289275669b6f7b090b59802927ce5a8153f66b3d15d550f9f75ebee0d"
+  },
+  {
+    "path": "对比/原文件_UIR1A/CharacterCreate.xml",
+    "bytes": 90691,
+    "sha256": "319f836d3793cb2b939efc90bbcdbfc861ce5f8171f45a8e58589777392a4b19"
+  },
+  {
+    "path": "对比/原文件_UIR1A/RebornRacePreview.lua",
+    "bytes": 7531,
+    "sha256": "fbfc7f32d48b2c7d4d3f20391aefc5bb956de0458d0521ede423ae09590ce681"
+  },
+  {
+    "path": "对比/新文件_UIR1B/CharacterCreate.xml",
+    "bytes": 90950,
+    "sha256": "00a4edaa09ce6186125cafc392df251114559f8cffcf5bc3549d26dc62e8aba3"
+  },
+  {
+    "path": "对比/新文件_UIR1B/RebornRacePreview.lua",
+    "bytes": 8633,
+    "sha256": "77aaa4c53bc8b75d73a979f5dd6cc9e0908afc5d989105a1c7f816a7af3e5d7d"
+  },
+  {
+    "path": "对比/未修改的依赖/CharacterCreate.lua",
+    "bytes": 209265,
+    "sha256": "5f46c8d098bad7f90fb033110993ce64712e86775adc1c3390ee29f9a1a77d37"
+  },
+  {
+    "path": "工具原件/build_UIR1B.py",
+    "bytes": 5184,
+    "sha256": "e9c1f0b0699ec9a0bf873f3ae32fec45a7c54df202bc753ee763833156760f1e"
+  },
+  {
+    "path": "蛇人与双头食人魔_图标添加与逐行解释.md",
+    "bytes": 26290,
+    "sha256": "ed14aacbf501c30cf9e47d11a35ff8181e5cf85be2c07ccaef8502807396ffaa"
+  },
+  {
+    "path": "证据/原交付离线检查.json",
+    "bytes": 478,
+    "sha256": "abfae94390ef1b2248af0fb4ef2e229371116181635931ffa1a2537bf709ca0e"
+  },
+  {
+    "path": "证据/现场四文件核对.json",
+    "bytes": 1194,
+    "sha256": "c900f3bf00c32ed74490c6da7e77d946446aa68b61a4e3ef4a3b982fff3d43b8"
+  }
+]

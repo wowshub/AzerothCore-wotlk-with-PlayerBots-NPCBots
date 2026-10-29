@@ -1,0 +1,6 @@
+# Preserve exact source snapshots; allow their original CRLF line endings.
+tutorial/** -text whitespace=cr-at-eol
+tools/** -text whitespace=cr-at-eol
+tutorial/**/*.xml whitespace=-trailing-space,-space-before-tab,cr-at-eol
+tutorial/**/*.lua whitespace=-trailing-space,-space-before-tab,cr-at-eol
+tutorial/**/*.diff whitespace=-trailing-space,-space-before-tab,cr-at-eol

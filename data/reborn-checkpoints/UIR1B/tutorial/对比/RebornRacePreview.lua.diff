@@ -1,0 +1,78 @@
+--- UIR1A/RebornRacePreview.lua
++++ UIR1B/RebornRacePreview.lua
+@@ -57,6 +57,8 @@
+ end
+ local function Close()
+     active = false
++    if RebornSethrakPreviewButton then RebornSethrakPreviewButton:SetChecked(false) end
++    if RebornOgrePreviewButton then RebornOgrePreviewButton:SetChecked(false) end
+     if preview then preview:Hide() end
+ end
+ local function Build()
+@@ -78,13 +80,13 @@
+         active = false
+         if self.model then self.model:Hide(); Call(self.model, "ClearModel") end
+     end)
+-    Label(preview, "新种族预览 · UIR1A · 暂不开放创建", 570, 0, -18)
++    Label(preview, "新种族预览 · UIR1B · 暂不开放创建", 570, 0, -18)
+     preview.tabs = {}
+     for i,e in ipairs(entries) do
+         local b = CreateFrame("CheckButton", nil, preview)
+         b:SetSize(38, 38)
+         b:SetPoint("TOP", preview, "TOP", i == 1 and -160 or 160, -64)
+-        b:SetNormalTexture(prefix..e.key.."\\icon.blp")
++        b:SetNormalTexture("Reborn\\Preview\\UIR1B\\"..e.key.."\\icon-round.blp")
+         b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+         b:SetCheckedTexture("Interface\\Buttons\\CheckButtonHilight", "ADD")
+         local idx = i
+@@ -136,23 +138,34 @@
+ local originalOnShow = CharacterCreate_OnShow
+ function CharacterCreate_OnShow(...)
+     if originalOnShow then originalOnShow(...) end
+-    if not launcher then
+-        launcher = CreateFrame("Frame", "RebornRacePreviewEntryUIR1A", CharacterCreate)
+-        launcher:SetSize(300, 65)
+-        launcher:SetPoint("TOP", CharacterCreate, "TOP", 0, -35)
+-        launcher:SetFrameStrata("HIGH")
+-        for i,e in ipairs(entries) do
+-            local b=CreateFrame("Button", nil, launcher)
+-            b:SetSize(38,38)
+-            b:SetPoint("TOP", launcher, "TOP", i==1 and -90 or 90, -22)
+-            b:SetNormalTexture(prefix..e.key.."\\icon.blp")
+-            b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+-            local idx=i
+-            b:SetScript("OnClick", function() Open(idx) end)
+-            Label(b, e.title.." · 预览", 180, 0, 18)
+-        end
++    -- UIR1B: XML-owned buttons reuse the exact native circular race template.
++    local buttons = { RebornSethrakPreviewButton, RebornOgrePreviewButton }
++    local neighbours = { CharCreateRaceButton23, CharCreateRaceButton25 }
++    for i,b in ipairs(buttons) do
++        local e=entries[i]
++        local anchor=neighbours[i]
++        local index=i
++        b:ClearAllPoints()
++        b:SetSize(62,62)
++        b:SetScale(0.78)
++        -- Existing top-row centers are +/-185, separated by 70 units.
++        -- A relative center step follows the current anchor even after resizing.
++        b:SetPoint("CENTER", anchor, "CENTER", i==1 and -70 or 70, 0)
++        b:SetFrameStrata("HIGH")
++        if CharCreateRaceButtonsFrame then b:SetFrameLevel(CharCreateRaceButtonsFrame:GetFrameLevel()+20) end
++        b:SetNormalTexture("Reborn\\Preview\\UIR1B\\"..e.key.."\\icon-round.blp")
++        b:SetPushedTexture("Reborn\\Preview\\UIR1B\\"..e.key.."\\icon-round.blp")
++        b.borderfaction:SetTexture("Interface\\Glues\\CharacterCreate\\"..(i==1 and "AlliRoundRaceOk" or "HordeRoundRaceOk"))
++        b.borderfaction:SetAlpha(1)
++        b.borderfaction:Show()
++        b.nameFrame.text:SetText(i==1 and "蛇人" or "双头食人魔")
++        b.tooltip=e.title.." · 预览 / 开发中"
++        b:SetScript("OnClick", function()
++            Open(index)
++            for j,other in ipairs(buttons) do other:SetChecked(j==index) end
++        end)
++        if PAID_SERVICE_TYPE then b:Hide() else b:Show() end
+     end
+-    launcher:Show()
+ end
+ local originalOnHide = CharacterCreate_OnHide
+ function CharacterCreate_OnHide(...)
