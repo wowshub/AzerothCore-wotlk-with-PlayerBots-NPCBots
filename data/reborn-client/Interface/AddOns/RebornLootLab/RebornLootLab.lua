@@ -41,6 +41,7 @@ local state = {
     sim = nil, simBusy = false,
     items = {}, itemPage = 0, itemMore = false, itemText = "", item = nil,
     who = nil, rightMode = "items",
+    picks = {}, pickAnchor = nil, batch = nil,   -- LAB3C2: several items picked in the search list
     canEdit = false, editLocked = false, editEnabled = false, editMode = false, log = {},
 }
 local ui = {}
@@ -386,10 +387,13 @@ local function OnServer(msg)
         if built and RefreshAll then RefreshAll() end
     elseif kind == "ERR" then
         Status(f[2] or "?", true)
+        state.batch = nil
     elseif kind == "LS" then   -- LAB3B: the size of the change log
         state.logStat = { rows = tonumber(f[2]) or 0, bytes = tonumber(f[3]) or 0, warn = tonumber(f[4]) or 20, crit = tonumber(f[5]) or 100,
                           keep = tonumber(f[6]) or 30, baseRows = tonumber(f[7]) or 0, baseBytes = tonumber(f[8]) or 0 }
         if ui.RefreshLogSize then ui.RefreshLogSize() end
+    elseif kind == "ED" and state.batch and state.batch.i > 0 then   -- LAB3C2: an answer inside a batch add
+        ui.BatchAnswer(f[2] == "1", f[3])
     elseif kind == "ED" then
         local ok = f[2] == "1"
         Status((ok and T("已完成：", "Done: ") or T("没有改：", "Not changed: ")) .. (f[3] or ""), not ok)
@@ -885,7 +889,7 @@ local function BuildRight(main)
         row.icon:SetTexture(d.icon ~= "" and d.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
         row.left:SetText("|cff" .. QCol(d.q)[4] .. Pick(d.zh, d.name) .. "|r")
         row.right:SetText("|cffaaaaaa" .. d.id .. "|r")
-    end, function(d) return state.item and state.item.id == d.id end)
+    end, function(d) return state.picks[d.id] end)
     ui.whoList = MakeList(host, 232, 17, 18, function(row, d)
         row.icon:SetTexture(SourceIcon(d.kind, 0))
         local nm = Pick(d.zh, d.name)
@@ -894,12 +898,16 @@ local function BuildRight(main)
         row.right:SetText(d.via ~= 0 and "|cff66ccff" .. T("引用", "ref") .. "|r" or Fmt(d.chance))
     end)
     for _, row in ipairs(ui.itemList.rows) do
-        row:SetScript("OnClick", function(self)
-            if self.data then state.item = self.data; RefreshAll() end
+        row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        row:SetScript("OnClick", function(self, button)
+            local d = self.data
+            if not d then return end
+            if button == "RightButton" then ui.ItemMenu(d) return end
+            ui.PickItem(d)
         end)
         row:SetScript("OnEnter", function(self)
             local d = self.data
-            if d then ui.ItemTip(self, d.id, Pick(d.zh, d.name), d.q, {}) end
+            if d then ui.ItemTip(self, d.id, Pick(d.zh, d.name), d.q, { T("Ctrl+点击多选，Shift+点击连选，右键菜单可加入爆率", "Ctrl+click to pick more, Shift+click for a range, right-click to add to the loot table") }) end
         end)
         row:SetScript("OnLeave", function() GameTooltip:Hide() end)
     end
@@ -934,6 +942,17 @@ local function BuildRight(main)
         if state.itemMore then Cmd("items " .. (state.itemPage + 1) .. " " .. state.itemText) end
     end)
     ui.itemNext:SetPoint("BOTTOMRIGHT", -10, 8)
+    -- LAB3C2: add everything picked to the loot table in the middle
+    ui.itemAddBtn = Button(right, 118, "加入爆率", "Add to loot", function() ui.OpenBatchAdd() end)
+    ui.itemAddBtn.noBind = true
+    ui.itemAddBtn:SetPoint("BOTTOM", 0, 8)
+    ui.itemAddBtn:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:AddLine(T("加入爆率", "Add to loot"))
+        GameTooltip:AddLine(T("把搜索结果里选中的物品一次加进中间这张掉落表。Ctrl+点击多选，Shift+点击连选；也可以右键物品。需要打开编辑模式并选中一张掉落表。", "Adds the items picked in the search list to the loot table in the middle. Ctrl+click picks more, Shift+click picks a range; right-click an item works too. Needs edit mode and a selected loot table."), 1, 1, 1, true)
+        GameTooltip:Show()
+    end)
+    ui.itemAddBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
 function RefreshAll()
@@ -1043,12 +1062,14 @@ function RefreshAll()
         for _, r in ipairs(ui.itemList.rows) do r:Hide() end
         ui.itemPrev:Hide()
         ui.itemNext:Hide()
+        ui.itemAddBtn:Hide()
     else
         ui.backBtn:Hide()
         ui.itemList:Set(state.items, true)
         for _, r in ipairs(ui.whoList.rows) do r:Hide() end
         ui.itemPrev:Show()
         ui.itemNext:Show()
+        ui.itemAddBtn:Show()
         if state.itemPage > 0 then ui.itemPrev:Enable() else ui.itemPrev:Disable() end
         if state.itemMore then ui.itemNext:Enable() else ui.itemNext:Disable() end
     end
@@ -1057,6 +1078,7 @@ function RefreshAll()
     end
     if ui.Label3D then ui.Label3D() end
     if ui.RefreshEdit then ui.RefreshEdit() end
+    if ui.RefreshPicks then ui.RefreshPicks() end
 end
 
 -- =========================================================================
@@ -1176,6 +1198,205 @@ local function FillPop(mode, d)
     end
     p:Show()
     p:Raise()
+end
+
+-- ---- LAB3C2: pick several items in the search list and add them to the open loot table
+-- the picked items in list order (the page the player sees)
+local function PickedList()
+    local out = {}
+    for _, d in ipairs(state.items) do
+        if state.picks[d.id] then out[#out + 1] = d end
+    end
+    return out
+end
+local function PickCount() return #PickedList() end
+
+function ui.PickItem(d)
+    if IsControlKeyDown() then   -- toggle this one
+        if state.picks[d.id] then state.picks[d.id] = nil else state.picks[d.id] = true end
+        state.pickAnchor = d.id
+    elseif IsShiftKeyDown() and state.pickAnchor then   -- everything between the anchor and this one
+        local a, b
+        for i, x in ipairs(state.items) do
+            if x.id == state.pickAnchor then a = i end
+            if x.id == d.id then b = i end
+        end
+        if a and b then
+            if a > b then a, b = b, a end
+            for i = a, b do state.picks[state.items[i].id] = true end
+        else
+            state.picks[d.id] = true
+        end
+    else   -- a plain click: just this one (as before)
+        state.picks = { [d.id] = true }
+        state.pickAnchor = d.id
+    end
+    state.item = d
+    RefreshAll()
+end
+
+function ui.RefreshPicks()
+    local b = ui.itemAddBtn
+    if not b then return end
+    local n = PickCount()
+    b:SetText(string.format(T("加入爆率 (%d)", "Add to loot (%d)"), n))
+    if n > 0 and state.canEdit and state.editMode and state.sel then b:Enable() else b:Disable() end
+end
+
+function ui.ItemMenu(d)
+    if not state.picks[d.id] then   -- right-click on something not picked: it becomes the pick
+        state.picks = { [d.id] = true }
+        state.pickAnchor = d.id
+        state.item = d
+        RefreshAll()
+    end
+    local n = PickCount()
+    local canAdd = state.canEdit and state.editMode and state.sel
+    local menu = {
+        { text = Pick(d.zh, d.name), isTitle = true, notCheckable = true },
+        { text = canAdd and string.format(T("把选中的 %d 件加入爆率…", "Add the %d picked item(s) to the loot table…"), n)
+                       or T("加入爆率（先开编辑模式并选一张掉落表）", "Add to loot (turn on edit mode and pick a loot table first)"),
+          disabled = not canAdd, notCheckable = true, func = function() ui.OpenBatchAdd() end },
+        { text = T("谁掉落它", "Who drops it"), notCheckable = true, func = function() state.item = d; Cmd("who " .. d.id); Status(T("正在查找…", "Looking…")) end },
+        { text = T("清除选择", "Clear the picks"), notCheckable = true, func = function() state.picks = {}; RefreshAll() end },
+        { text = CANCEL or "Cancel", notCheckable = true },
+    }
+    ui.OpenMenu(menu, nil)
+end
+
+function ui.BuildBatchPop()
+    if ui.bpop then return ui.bpop end
+    local p = CreateFrame("Frame", "RebornLootLabBatchPop", UIParent)
+    p:SetSize(360, 330)
+    p:SetPoint("CENTER")
+    p:SetFrameStrata("FULLSCREEN_DIALOG")
+    p:SetToplevel(true)
+    p:EnableMouse(true)
+    p:SetMovable(true)
+    p:RegisterForDrag("LeftButton")
+    p:SetScript("OnDragStart", p.StartMoving)
+    p:SetScript("OnDragStop", p.StopMovingOrSizing)
+    p:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = { left = 11, right = 12, top = 12, bottom = 11 },
+    })
+    p.title = p:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    p.title:SetPoint("TOP", 0, -18)
+    p.target = p:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    p.target:SetPoint("TOPLEFT", 24, -46)
+    p.target:SetPoint("RIGHT", -24, 0)
+    p.target:SetJustifyH("LEFT")
+    p.names = p:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    p.names:SetPoint("TOPLEFT", 24, -68)
+    p.names:SetPoint("RIGHT", -24, 0)
+    p.names:SetJustifyH("LEFT")
+    p.names:SetHeight(84)
+    p.names:SetJustifyV("TOP")
+
+    local function Row(y, zh, en, val)
+        local l = p:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        l:SetPoint("TOPLEFT", 24, y)
+        Bind(l, zh, en)
+        local e = EditField(p, 90)
+        e:SetPoint("TOPLEFT", 190, y + 4)
+        e:SetMaxLetters(10)
+        e:SetText(val)
+        return e
+    end
+    p.chance = Row(-162, "每件的掉率 %（0–100）", "Chance % each (0-100)", "10")
+    p.min = Row(-188, "最少数量", "Min count", "1")
+    p.max = Row(-214, "最多数量", "Max count", "1")
+    p.group = Row(-240, "分组（0=各自独立）", "Group (0 = own roll)", "0")
+    p.note = p:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    p.note:SetPoint("TOPLEFT", 24, -264)
+    p.note:SetPoint("RIGHT", -24, 0)
+    p.note:SetJustifyH("LEFT")
+    p.note:SetText("|cffffaa55" .. T("这张表里已有的物品会跳过。加完之后可以在日志里看到，也可以用“撤销”逐步退回。", "Items the table already has are skipped. Every add is logged and \"Undo\" steps back one at a time.") .. "|r")
+
+    p.ok = Button(p, 110, "全部加入", "Add them all", function() ui.RunBatch() end)
+    p.ok:SetPoint("BOTTOMLEFT", 24, 20)
+    p.cancel = Button(p, 90, "取消", "Cancel", function() p:Hide() end)
+    p.cancel:SetPoint("LEFT", p.ok, "RIGHT", 6, 0)
+    if UISpecialFrames then table.insert(UISpecialFrames, "RebornLootLabBatchPop") end
+    p:Hide()
+    ui.bpop = p
+    return p
+end
+
+function ui.OpenBatchAdd()
+    if not (state.canEdit and state.editMode and state.sel) then
+        Status(T("先打开编辑模式并选一张掉落表", "Turn on edit mode and pick a loot table first"), true)
+        return
+    end
+    local list = PickedList()
+    if #list == 0 then Status(T("先在搜索结果里选物品", "Pick items in the search list first"), true) return end
+    local p = ui.BuildBatchPop()
+    p.items = list
+    p.title:SetText(string.format(T("加入 %d 件物品", "Add %d item(s)"), #list))
+    p.target:SetText(T("加到：", "Into: ") .. "|cffffd100" .. (state.sel.name or "") .. "|r  (" .. KindName(state.sel.kind) .. " " .. state.sel.loot .. ")")
+    local lines = {}
+    for i, d in ipairs(list) do
+        if i > 6 then lines[#lines + 1] = string.format(T("……还有 %d 件", "… and %d more"), #list - 6) break end
+        lines[#lines + 1] = "|cff" .. QCol(d.q)[4] .. Pick(d.zh, d.name) .. "|r  #" .. d.id
+    end
+    p.names:SetText(table.concat(lines, "\n"))
+    p:Show()
+    p:Raise()
+end
+
+-- one add at a time: the next goes out when the server has answered the last one (no chat flood)
+local function BatchNext()
+    local b = state.batch
+    if not b then return end
+    b.i = b.i + 1
+    local d = b.list[b.i]
+    if not d then
+        local msg = string.format(T("批量加入完成：成功 %d 件", "Batch add finished: %d added"), b.ok)
+        if b.skip > 0 then msg = msg .. string.format(T("，已有跳过 %d 件", ", %d already there"), b.skip) end
+        if #b.fail > 0 then msg = msg .. string.format(T("，失败 %d 件（%s）", ", %d failed (%s)"), #b.fail, table.concat(b.fail, "; ")) end
+        Status(msg, #b.fail > 0)
+        DEFAULT_CHAT_FRAME:AddMessage("|cff55ff55[LootLab]|r " .. msg)
+        state.batch = nil
+        if b.ok > 0 and state.sel then
+            local s = state.sel
+            SelectSource(s.kind, s.loot, s.name, s.id, s.info)
+        end
+        return
+    end
+    Status(string.format(T("批量加入 %d/%d …", "Batch add %d/%d …"), b.i, #b.list))
+    EditCmd("add", string.format("%d %.4f %d %d %d", d.id, b.v.chance, b.v.min, b.v.max, b.v.group))
+end
+
+-- called by the ED / ERR answers; returns true when the answer belonged to a batch
+function ui.BatchAnswer(ok, text)
+    local b = state.batch
+    if not b or b.i == 0 then return false end
+    if ok then b.ok = b.ok + 1 else b.fail[#b.fail + 1] = tostring(b.list[b.i].id) .. ": " .. (text or "?") end
+    BatchNext()
+    return true
+end
+
+function ui.RunBatch()
+    local p = ui.bpop
+    if not p or not p.items or not state.sel then return end
+    local chance = tonumber(p.chance:GetText())
+    local minC = tonumber(p.min:GetText())
+    local maxC = tonumber(p.max:GetText())
+    local group = tonumber(p.group:GetText())
+    if not chance or chance < 0 or chance > 100 then Status(T("掉率要在 0 到 100 之间", "Chance must be between 0 and 100"), true) return end
+    if not minC or not maxC or minC < 1 or maxC < minC or maxC > 255 then Status(T("数量：最少至少 1，最多不小于最少，不超过 255", "Count: min at least 1, max not below min, at most 255"), true) return end
+    if not group or group < 0 or group > 255 then Status(T("分组要在 0 到 255 之间", "Group must be between 0 and 255"), true) return end
+    local have = {}
+    for _, r in ipairs(state.loot or {}) do if r.item then have[r.item] = true end end
+    local list, skip = {}, 0
+    for _, d in ipairs(p.items) do
+        if have[d.id] then skip = skip + 1 else list[#list + 1] = d end
+    end
+    p:Hide()
+    state.batch = { list = list, i = 0, ok = 0, skip = skip, fail = {}, v = { chance = chance, min = math.floor(minC), max = math.floor(maxC), group = math.floor(group) } }
+    BatchNext()
 end
 
 function ui.OpenEdit(d) FillPop("set", d) end
