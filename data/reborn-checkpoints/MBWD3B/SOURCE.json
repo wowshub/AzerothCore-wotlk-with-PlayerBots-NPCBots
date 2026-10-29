@@ -1,0 +1,35 @@
+[
+  {
+    "stage": "MBWD3B",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3B\\main\\data\\reborn-client\\Interface\\AddOns\\MultiBot\\Strategies\\MultiBotWitchDoctor.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_234149_阶段MBWD3B_巫医输出治疗方案快捷切换客户端测试包.zip",
+    "package_sha256": "4238a2abe6ab393b6a8bfac7f3d26bad6a8019ff587a314291164f3c8a296428",
+    "source_sha256": "adae54c3acf3b2a8ff2a125044183897a8448e6380c131c7243722c2ffc79ceb",
+    "output_sha256": "adae54c3acf3b2a8ff2a125044183897a8448e6380c131c7243722c2ffc79ceb",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3B",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentRolePanel.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3B\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentRolePanel.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_234149_阶段MBWD3B_巫医输出治疗方案快捷切换客户端测试包.zip",
+    "package_sha256": "4238a2abe6ab393b6a8bfac7f3d26bad6a8019ff587a314291164f3c8a296428",
+    "source_sha256": "0682545be4f41bc23d25a40706f76640ebb92bbf28d0c390f36e8082e491e2c6",
+    "output_sha256": "0682545be4f41bc23d25a40706f76640ebb92bbf28d0c390f36e8082e491e2c6",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3B",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3B\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\RebornWitchDoctorTalents.toc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_234149_阶段MBWD3B_巫医输出治疗方案快捷切换客户端测试包.zip",
+    "package_sha256": "4238a2abe6ab393b6a8bfac7f3d26bad6a8019ff587a314291164f3c8a296428",
+    "source_sha256": "ce749a97c3bb4f7058a6219384d0ffc759e071be7af5ad0c51e5bbb0fdf49765",
+    "output_sha256": "ce749a97c3bb4f7058a6219384d0ffc759e071be7af5ad0c51e5bbb0fdf49765",
+    "adaptation": "none"
+  }
+]

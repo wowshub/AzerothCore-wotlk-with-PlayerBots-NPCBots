@@ -80,9 +80,22 @@ function MultiBot.addWitchDoctor(frame, combat, normal)
     }
     for i,e in ipairs(entries) do
         local b=book.addButton(e[1],0,(i-1)*30,e[2],tip(e[3],e[4]))
-        b.doLeft=info -- explicit information cards, never fake enabled strategies
+        b.doLeft=info
+        if e[1]=="Cure" and not MultiBot.WDControls then
+            b.tip=tip(e[3],"由巫医原生逻辑判断；通用 cure 不等于巫医净化总开关。\nHandled by native WD logic; generic cure is a separate strategy.\n自动净化图标由可选的MBWD3A提供。/ The automatic cleansing toggle requires optional MBWD3A.")
+        end
+        if e[1]=="DPS" or e[1]=="Heal" then
+            local role=e[1]=="Heal" and "heal" or "dps"
+            b.doLeft=function()
+                local m=RebornWDBotTalents
+                local unit=MultiBot.toUnit and MultiBot.toUnit(frame.name)
+                if m and m.OpenRole and unit then m.OpenRole(unit,frame.name,role)
+                elseif DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("请加载巫医机器人天赋插件并确认机器人在队伍中。 / Load the bot talent addon and check the group.") end
+            end
+        end
     end
     frame.addButton("WDRefresh",-150,0,"inv_misc_pocketwatch_01",tip("刷新策略 / Refresh strategies",
         "重新读取服务器战斗与脱战策略。\nRead combat and non-combat strategies from the server.")).doLeft=function(b) request(b,"co ?");if MultiBot.WDControls then MultiBot.WDControls.Refresh(b.getName()) end end
     if MultiBot.WDControls then MultiBot.WDControls.Attach(frame) end
+    if RebornWDBotTalents and RebornWDBotTalents.RegisterRoleObserver then RebornWDBotTalents.RegisterRoleObserver(frame) end
 end
