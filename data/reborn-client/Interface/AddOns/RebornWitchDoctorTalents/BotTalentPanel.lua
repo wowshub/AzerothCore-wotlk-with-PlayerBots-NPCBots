@@ -28,6 +28,17 @@ local function button(parent,label,x,y,w,callback,role)
     b:HookScript("OnEnter",function(self)self.hover=true;paint(self)end);b:HookScript("OnLeave",function(self)self.hover=false;paint(self)end)
     b:SetScript("OnEnable",paint);b:SetScript("OnDisable",paint);paint(b);return b
 end
+local function english()
+    local locale=RebornTalentGuide and RebornTalentGuide.CenterLocale
+    if locale and locale.English then return locale.English()end
+    local lang=GetLocale and GetLocale()or "zhCN"
+    return lang=="enUS"or lang=="enGB"
+end
+local function compactMoney(value)
+    if value==nil then return english()and "Unknown"or "未同步"end
+    local g,s,c=math.floor(value/10000),math.floor(value/100)%100,value%100
+    return english()and(g.."g "..s.."s "..c.."c")or(g.."金"..s.."银"..c.."铜")
+end
 local function atlas(t,key)
     local a=(RebornWDHomeArt and RebornWDHomeArt[key]) or (RebornWDArt and RebornWDArt[key])
     if not a then t:SetTexture(0.02,0.035,0.05,.95);return end
@@ -218,9 +229,9 @@ local function create()
     content:SetHeight((maxRow+2)*64)
     join=button(frame,"启用系统 / Enroll",25,-704,220,function()M.Join()end)
     bind=button(frame,"绑定所选专精 / Bind spec",255,-704,260,function()
-        StaticPopupDialogs.REBORN_WDBOT_BIND={text="将 %s 的当前保存槽绑定为 %s？之后改专精需要重置。 / Bind this bot build? Changing it later requires a reset.",button1=YES,button2=NO,timeout=30,hideOnEscape=true,
+        StaticPopupDialogs.REBORN_WDBOT_BIND={text=english()and "Bind %s to %s?\nChanging specialization requires a reset."or "将 %s 绑定为%s？\n更换专精需重置。",button1=english()and "Confirm"or "确认绑定",button2=english()and "Cancel"or "取消",timeout=30,hideOnEscape=true,
             OnAccept=function(_,data) if data and data.guid==M.guid and data.revision==M.revision and data.slot==M.slot and data.spec==M.spec then M.Bind() end end}
-        StaticPopup_Show("REBORN_WDBOT_BIND",M.name,specs[M.spec+1].name,{guid=M.guid,revision=M.revision,slot=M.slot,spec=M.spec})
+        StaticPopup_Show("REBORN_WDBOT_BIND",M.name..(english()and " · Build "or " · 方案 ")..(M.slot+1),english()and specs[M.spec+1].key or specs[M.spec+1].name:match("^(.-) / "),{guid=M.guid,revision=M.revision,slot=M.slot,spec=M.spec})
     end)
     save=button(frame,"保存机器人加点 / Save",525,-704,255,function()M.Save()end)
     activate=button(frame,"激活本方案 / Activate",790,-704,250,function()M.Activate()end)
@@ -236,16 +247,15 @@ local function create()
 end
 function M.ShowQuote(q)
     if not frame or not frame:IsShown() then M.CancelQuote();M.Message("面板已关闭，请重开后重新询价 / Panel closed; reopen and request a new quote.");return end
-    local action=q.kind=="reset" and "重置 / Reset" or "永久解锁 / Permanently unlock"
-    local effect=q.kind=="reset" and "清空此方案的专精与全部已保存点数；其他方案保留。\nClears this build's specialization and saved points; other builds are kept." or
-        "一次性购买，之后切换免费；不重置或激活已有方案。\nOne-time purchase; switching is free. Existing builds are not reset or activated."
-    local label=action.." "..q.name.." · 方案 / Build "..(q.slot+1).."？\n"..
-        "费用 / Cost: "..q.gold.."g\n"..
-        "支付者 / Payer: "..q.name.."（机器人自身金币 / bot's own gold）\n"..
-        "报价时机器人余额 / Bot balance at quote: "..coins(q.balance).."\n"..
-        (q.level and ("需要机器人等级 / Required bot level: "..q.level.."\n") or "")..effect..
-        "\n报价55秒后失效；不会自动重发。 / Expires in 55 seconds; no automatic retry."
-    StaticPopupDialogs.REBORN_WDBOT_PAY={text=label,button1="确认支付 / Confirm",button2="取消 / Cancel",timeout=55,
+    local en=english();local resetting=q.kind=="reset"
+    local action=en and(resetting and "Reset"or "Unlock")or(resetting and "重置"or "解锁")
+    local label=action.." "..q.name..(en and " · Build "or " 的方案 ")..(q.slot+1).."?\n"..
+        (en and "Cost: "or "费用：")..q.gold..(en and "g (bot gold)"or "金币（机器人支付）").."\n"..
+        (en and "Balance: "or "余额：")..compactMoney(q.balance).."\n"..
+        (q.level and((en and "Requires level "or "要求：")..q.level..(en and ""or "级").."\n")or "")..
+        (en and(resetting and "Clears this build. Other builds are kept."or "One-time unlock. Switching is free.")or
+            (resetting and "清空本方案加点，其他方案不变。"or "一次解锁，切换免费。"))
+    StaticPopupDialogs.REBORN_WDBOT_PAY={text=label,button1=en and("Confirm "..action:lower())or("确认"..action),button2=en and "Cancel"or "取消",timeout=55,
         whileDead=false,hideOnEscape=true,
         OnAccept=function(_,data) if frame:IsShown() then M.ConfirmQuote(data) end end,
         OnCancel=function(_,data) if M.quote==data then M.CancelQuote() end end}

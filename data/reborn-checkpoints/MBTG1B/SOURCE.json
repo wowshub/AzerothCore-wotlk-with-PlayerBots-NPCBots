@@ -1,0 +1,24 @@
+[
+  {
+    "stage": "MBTG1B",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornTalentGuide/BotRecommendations.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1B\\main\\data\\reborn-client\\Interface\\AddOns\\RebornTalentGuide\\BotRecommendations.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_072902_阶段MBTG1B_机器人确认弹窗精简客户端补丁.zip",
+    "package_sha256": "d790232b5f0a906fea84fb2f7381243c46da728c8d11c4642d6da6edff3968ed",
+    "source_sha256": "4fd5048ae6543a0a9a5a93ef9a20ea76c6ae2e230931eba7a454b5f63f837be6",
+    "output_sha256": "4fd5048ae6543a0a9a5a93ef9a20ea76c6ae2e230931eba7a454b5f63f837be6",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1B",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1B\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentPanel.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_072902_阶段MBTG1B_机器人确认弹窗精简客户端补丁.zip",
+    "package_sha256": "d790232b5f0a906fea84fb2f7381243c46da728c8d11c4642d6da6edff3968ed",
+    "source_sha256": "42b4572c0f288843607e2a89a1773868fadda5fb01280bbc9742317e7fab5afd",
+    "output_sha256": "42b4572c0f288843607e2a89a1773868fadda5fb01280bbc9742317e7fab5afd",
+    "adaptation": "none"
+  }
+]

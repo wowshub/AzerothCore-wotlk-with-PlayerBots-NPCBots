@@ -1,6 +1,17 @@
 -- MBTG1A: explicit bot target; never forwards to the self learning API.
 local G,S=RebornTalentGuide,RebornTalentCollections
 local B={};G.BotRecommendations=B
+local function english()
+    local locale=RebornTalentGuide and RebornTalentGuide.CenterLocale
+    if locale and locale.English then return locale.English()end
+    local lang=GetLocale and GetLocale()or "zhCN"
+    return lang=="enUS"or lang=="enGB"
+end
+local function compactMoney(value)
+    if value==nil then return english()and "Unknown"or "未同步"end
+    local g,s,c=math.floor(value/10000),math.floor(value/100)%100,value%100
+    return english()and(g.."g "..s.."s "..c.."c")or(g.."金"..s.."银"..c.."铜")
+end
 local tokens={[1]='WARRIOR',[2]='PALADIN',[3]='HUNTER',[4]='ROGUE',[5]='PRIEST',[6]='DEATHKNIGHT',[7]='SHAMAN',[8]='MAGE',[9]='WARLOCK',[11]='DRUID',[13]='WITCHDOCTOR'}
 local serial=math.floor(GetTime()*1000)%1000000000
 local function say(text)B.message=text;if G.TalentCenter then G.TalentCenter.Message(text)end end
@@ -91,7 +102,8 @@ function B.Apply()
  if B.class=='WITCHDOCTOR'then value,why=wdDraft(index)else if not B.loaded then say('请刷新机器人状态');return end;value,why=nativePlan(index)end
  if not value then say(why);return end
  local guid,stamp=B.guid,B.stamp
- StaticPopupDialogs.REBORN_BT_APPLY={text='将推荐应用到 '..B.name..'？ / Apply to this bot?\n保留已保存点数，不自动洗点或付费。巫医只载入机器人草稿，仍需保存。',button1=YES,button2=CANCEL,timeout=30,hideOnEscape=true,OnAccept=function()
+ StaticPopupDialogs.REBORN_BT_APPLY={text=(english()and("Apply recommendations to "..B.name.."?\nKeeps learned talents. No automatic reset.")or("为 "..B.name.." 应用推荐？\n保留已加点，不会自动洗点。"))..
+  (B.class=='WITCHDOCTOR'and(english()and"\nLoads a bot draft; save it separately."or"\n只载入机器人草稿，需手动保存。")or""),button1=english()and"Apply"or"应用推荐",button2=english()and"Cancel"or"取消",timeout=30,hideOnEscape=true,OnAccept=function()
   if not B.mode or B.guid~=guid or not valid()or B.pending or T.class~=B.class or(T.selected[B.class]or 1)~=index then say('对象或推荐已改变，请重试');return end
   if B.class=='WITCHDOCTOR'then local now,err=wdDraft(index);if not now or now.before~=value.before or now.revision~=value.revision or now.slot~=value.slot or now.mask~=value.mask then say(err or'机器人方案已改变');return end;local M=RebornWDBotTalents;M.draftAE=now.mask;M.Message('推荐已载入机器人草稿，请核对并保存');if M.ShowPanel then M.ShowPanel()end;say('已载入机器人草稿；尚未保存 / Bot draft loaded, not saved.')
   else if B.stamp~=stamp then say('机器人快照已改变，请重新确认');return end;B.job={guid=guid,group=B.group,index=index,queue=value,pos=1};advance()end
@@ -130,7 +142,16 @@ function B.Receive(message)
   B.pending=nil;local q={};for i=2,7 do q[i]=tonumber(fields[i]);if not q[i]then say('报价格式不完整');return true end end
   local id,guid,token=B.id,B.guid,B.nonce;B.payToken=token;local currency=({'金币 / Gold','DP','VP'})[q[3]+1]
   if not currency then return true end
-  StaticPopupDialogs.REBORN_BT_PAY={text='解锁 '..B.name..' · 方案 '..(q[2]+1)..'？\n支付来源：机器人所属账号 '..q[7]..'（金币为机器人自身余额）\n费用 '..q[4]..' '..currency..'；余额 '..q[5]..'；要求等级 '..q[6]..'。\n三选一，一次性支付。 / One currency, one-time payment.',button1='确认支付 / Confirm',button2=CANCEL,timeout=50,hideOnEscape=true,OnAccept=function()if not B.mode or B.payToken~=token or B.guid~=guid or B.id~=id or not valid()or B.pending or not G.TalentCenter.frame:IsShown()then say('对象改变或报价取消，请重新询价');return end;B.payToken=nil;request('btubuy',token)end,OnCancel=function()B.payToken=nil end};StaticPopup_Show('REBORN_BT_PAY')
+  local en=english()
+  local payer=q[3]==0 and(en and"Bot gold"or"机器人金币")or((en and"Account "or"账号：")..q[7])
+  local unit=q[3]==0 and(en and"g"or"金币")or currency
+  local label=(en and"Unlock "or"解锁 ")..B.name..(en and" · Build "or" 的方案 ")..(q[2]+1).."?\n"..
+    (en and"Cost: "or"费用：")..q[4].." "..unit.."\n"..
+    (en and"Payer: "or"支付：")..payer.."\n"..
+    (en and"Balance: "or"余额：")..q[5].." "..unit.."\n"..
+    (en and"Requires level "or"要求：")..q[6]..(en and""or"级").."\n"..
+    (en and"One-time unlock. Switching is free."or"一次解锁，切换免费。")
+  StaticPopupDialogs.REBORN_BT_PAY={text=label,button1=en and"Confirm unlock"or"确认解锁",button2=en and"Cancel"or"取消",timeout=50,hideOnEscape=true,OnAccept=function()if not B.mode or B.payToken~=token or B.guid~=guid or B.id~=id or not valid()or B.pending or not G.TalentCenter.frame:IsShown()then say('对象改变或报价取消，请重新询价');return end;B.payToken=nil;request('btubuy',token)end,OnCancel=function()B.payToken=nil end};StaticPopup_Show('REBORN_BT_PAY')
  elseif kind=='BOUGHT'or kind=='RECOVERY_REQUIRED'then
   B.pending=nil;say(kind=='BOUGHT'and'服务器确认已解锁 / Unlock confirmed.'or'已保存购买权益，需刷新恢复；不要重复付款 / Receipt saved, refresh to recover.')
   if B.class=='WITCHDOCTOR'then local M=RebornWDBotTalents;if M and M.guid==B.guid and not M.pending then M.Query()end else B.Query()end
