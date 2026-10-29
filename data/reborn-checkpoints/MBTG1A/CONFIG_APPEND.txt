@@ -1,0 +1,7 @@
+# Append to existing worldserver.conf; do not replace the whole configuration.
+# Each unlocked build is a one-time purchase, choose exactly one currency.
+Reborn.BotTalents.Unlock.Gold = 1000
+Reborn.BotTalents.Unlock.DP = 100
+Reborn.BotTalents.Unlock.VP = 100
+# WD third slot still follows existing RebornWD13.ThirdSlot.Enable/MinLevel.
+# Classic native talent storage supports only two specs. No third-slot charge.

@@ -1,0 +1,100 @@
+[
+  {
+    "stage": "MBTG1A",
+    "repo": "pb",
+    "path": "src/Ai/Base/Actions/ChangeTalentsAction.cpp",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\pb\\src\\Ai\\Base\\Actions\\ChangeTalentsAction.cpp",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "e31eaddc6098a6d1c415c1b7f0c53cac601188561992225401887571d0a117f2",
+    "output_sha256": "e31eaddc6098a6d1c415c1b7f0c53cac601188561992225401887571d0a117f2",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "data/reborn-checkpoints/MBTG1A/CONFIG_APPEND.txt",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\data\\reborn-checkpoints\\MBTG1A\\CONFIG_APPEND.txt",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "4f41b2ad4c244831c534d9690dd72d2b4fd03289477d0423c5142590fcb26738",
+    "output_sha256": "4f41b2ad4c244831c534d9690dd72d2b4fd03289477d0423c5142590fcb26738",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornBotTalents1.inc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornBotTalents1.inc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "3956f7e7172c92768bd42031c78ca429a6f08c65c78703c4bc8960eb859af6ad",
+    "output_sha256": "3956f7e7172c92768bd42031c78ca429a6f08c65c78703c4bc8960eb859af6ad",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "ae1dd6ac2d15f37b4a78bff0ed443bc644b8a6cf966dc5748d05163fe97e0f79",
+    "output_sha256": "ae1dd6ac2d15f37b4a78bff0ed443bc644b8a6cf966dc5748d05163fe97e0f79",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornTalentGuide/BotRecommendations.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\data\\reborn-client\\Interface\\AddOns\\RebornTalentGuide\\BotRecommendations.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "57ccc2a4c57ee1ead3227b424d359ac5bee65abf00c04204a93c5c960b313b78",
+    "output_sha256": "57ccc2a4c57ee1ead3227b424d359ac5bee65abf00c04204a93c5c960b313b78",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\data\\reborn-client\\Interface\\AddOns\\RebornTalentGuide\\RebornTalentGuide.toc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "28b0143c4c114071ef04353e2943c817cf723ab05fd658aa1f8fe846617db31a",
+    "output_sha256": "28b0143c4c114071ef04353e2943c817cf723ab05fd658aa1f8fe846617db31a",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\data\\reborn-client\\Interface\\AddOns\\RebornTalentGuide\\TalentCenter.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "784b0243d7110927a17e5f4b380fa45da2e68b1627314b20a12df9dd9f1c76f1",
+    "output_sha256": "784b0243d7110927a17e5f4b380fa45da2e68b1627314b20a12df9dd9f1c76f1",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\data\\reborn-client\\Interface\\AddOns\\RebornWitchDoctorTalents\\BotTalentPanel.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_060604_阶段MBTG1A_机器人推荐加点三币支付与彩色面板累计测试包.zip",
+    "package_sha256": "5617c976e5b8b41c17b56abcbf134f1ba82b14015177eb10057b52408707e4ff",
+    "source_sha256": "41690ded4f719a0f9ee1f368258b017276793816121afeafce5ba6ec0bdfb755",
+    "output_sha256": "41690ded4f719a0f9ee1f368258b017276793816121afeafce5ba6ec0bdfb755",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "path": "data/customfixsql/characters/reborn_multibot/MBTG1A/03_mbtg1a_bot_talent_purchase.sql",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBTG1A\\main\\data\\customfixsql\\characters\\reborn_multibot\\MBTG1A\\03_mbtg1a_bot_talent_purchase.sql",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexsql_20261028_060604_阶段MBTG1A_CHARACTERS天赋权益累计SQL专用包.zip",
+    "package_sha256": "f9fb4ccc631056dffd27918fd0f9142574f408c40750549f8b321b3536b9b245",
+    "output_sha256": "c294b3eb4780b3f9c7198d3773dacdf8fb46ec629f88bc45fd31914400da0e6d",
+    "adaptation": "SQL exact bytes"
+  }
+]

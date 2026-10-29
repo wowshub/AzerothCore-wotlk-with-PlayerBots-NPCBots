@@ -39,6 +39,9 @@
 #include "RebornWitchDoctorNodeLayout.h"
 #include "RebornWitchDoctorLegacyCodec.h"
 #include <string_view>
+#include <map>
+#include "World.h"
+#include "DBCStores.h"
 #include <array>
 #include <sstream>
 #include <chrono>
@@ -459,13 +462,21 @@ bool PurchasePolicy(uint32 slot,uint32& level,uint32& gold)
     gold=sConfigMgr->GetOption<uint32>("RebornWD13.ThirdSlot.Gold",1000);
     return level>=1 && level<=80 && gold<=200000;
 }
+// MBTG1A: keep human pricing intact; legacy bot gold routes share config.
+bool ActorPurchasePolicy(Player* p,uint32 slot,uint32& level,uint32& gold)
+{
+    if(!PurchasePolicy(slot,level,gold))return false;
+    auto* ai=GET_PLAYERBOT_AI(p);
+    if(ai&&!ai->IsRealPlayer())gold=sConfigMgr->GetOption<uint32>("Reborn.BotTalents.Unlock.Gold",1000);
+    return gold>0&&gold<=200000;
+}
 void TrainerOptions(Player* p)
 {
     if (!ProfileReady(p,false)) return;
     State* s=p->CustomData.GetDefault<State>(Key);
     s->quoteValid=false;s->panelQuoteValid=false;
     uint32 level=0,gold=0;
-    if (s->unlocked>=3 || !PurchasePolicy(s->unlocked,level,gold)) return;
+    if (s->unlocked>=3 || !ActorPurchasePolicy(p,s->unlocked,level,gold)) return;
     s->quoteSlot=s->unlocked;s->quoteLevel=level;s->quoteGold=gold;
     s->quoteTime=std::chrono::steady_clock::now();s->quoteValid=true;
     std::string label="解锁方案 "+std::to_string(s->unlocked+1)+" / Unlock build "+std::to_string(s->unlocked+1)+
@@ -481,7 +492,7 @@ void TrainerPurchase(Player* p)
     bool valid=s->quoteValid;s->quoteValid=false; // single-use, including failures
     uint32 slot=s->quoteSlot,level=0,gold=0;
     if (!valid || std::chrono::steady_clock::now()-s->quoteTime>std::chrono::seconds(60) ||
-        !PurchasePolicy(slot,level,gold) || level!=s->quoteLevel || gold!=s->quoteGold)
+        !ActorPurchasePolicy(p,slot,level,gold) || level!=s->quoteLevel || gold!=s->quoteGold)
     { ChatHandler(p->GetSession()).SendSysMessage("WD16: 报价已失效，请重新与导师对话。 / Quote expired; reopen the trainer.");return; }
     if (!ProfileReady(p,true)) return;
     if (s->unlocked!=slot || p->GetLevel()<level)
@@ -523,7 +534,7 @@ bool PanelUnlockQuote(ChatHandler* h,uint32 sequence,uint32 revision,uint32 slot
     if(s->layoutMismatch || !s->hexProtocol || revision!=s->revision) return error("refresh");
     if(slot<1 || slot>2 || slot!=s->unlocked) return error("slot");
     uint32 level=0,gold=0;
-    if(!PurchasePolicy(slot,level,gold)) return error("disabled");
+    if(!ActorPurchasePolicy(p,slot,level,gold)) return error("disabled");
     s->quoteSlot=slot;s->quoteGold=gold;s->quoteLevel=level;
     s->quoteTime=std::chrono::steady_clock::now();
     s->panelQuoteRevision=revision;
@@ -905,6 +916,7 @@ bool Check168(ChatHandler* h)
 #include "RebornWitchDoctorBotBuild173.inc"
 #include "RebornWitchDoctorBotJob174.inc"
 #include "RebornWitchDoctorBotPanel.inc"
+#include "RebornBotTalents1.inc"
 #include "RebornWitchDoctorBotSummon4.inc"
 #include "RebornWitchDoctorBotAutoSummon4B.inc"
 #include "RebornWitchDoctorBotDecisionTrace4C.inc"
@@ -937,6 +949,11 @@ public:
             {"wdautostate",BotAutoState4B,SEC_PLAYER,Console::No},
             {"wdautoset",BotAutoSet4B,SEC_PLAYER,Console::No},
             {"wdwhystate",BotWhyState4C,SEC_PLAYER,Console::No},
+            {"btstate",BT1::Read,SEC_PLAYER,Console::No},
+            {"btswitch",BT1::Switch,SEC_PLAYER,Console::No},
+            {"btpoint",BT1::Point,SEC_PLAYER,Console::No},
+            {"btuquote",BT1::Ask,SEC_PLAYER,Console::No},
+            {"btubuy",BT1::Buy,SEC_PLAYER,Console::No},
             {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
             {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
             {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},
@@ -993,6 +1010,7 @@ public:
     Players():PlayerScript("reborn_wd5a_player"){}
     void OnPlayerLogin(Player* p) override
     {
+        if (BT1::Classic(p) && GET_PLAYERBOT_AI(p) && !GET_PLAYERBOT_AI(p)->IsRealPlayer() && BT1::Storage()) BT1::Recover(p);
         if (!Doctor(p)) return;
         WDMB3::LoadPersistent(p);
         WDAS4::LoadPersistent(p);
@@ -1002,6 +1020,7 @@ public:
     }
     void OnPlayerDeleteFromDB(CharacterDatabaseTransaction trans,uint32 guid) override
     {
+        if(BT1::Storage())trans->Append("DELETE FROM reborn_bt1_receipt WHERE guid={}",guid);
         if(WDMB3::PersistenceAvailable())
             trans->Append("DELETE FROM reborn_mbwd_preferences WHERE guid={}",guid);
         if(WDAS4::PersistenceAvailable())
@@ -1017,6 +1036,7 @@ public:
         p->CustomData.Erase(WDMB3::Key);
         p->CustomData.Erase(WDAS4::Key);
         p->CustomData.Erase(WDWHY4::Key);
+        p->CustomData.Erase(BT1::QuoteKey);
         State* s=p->CustomData.GetDefault<State>(Key);Remove(p,s);p->CustomData.Erase(Key);
     }
 };

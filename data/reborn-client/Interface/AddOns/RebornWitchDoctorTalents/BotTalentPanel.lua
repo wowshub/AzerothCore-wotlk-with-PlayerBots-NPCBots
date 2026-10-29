@@ -10,9 +10,23 @@ local function text(parent,value,x,y,width,font)
     local t=parent:CreateFontString(nil,"OVERLAY",font or "GameFontNormal")
     t:SetPoint("TOPLEFT",x,y);t:SetWidth(width);t:SetJustifyH("LEFT");t:SetText(value);return t
 end
-local function button(parent,label,x,y,w,callback)
-    local b=CreateFrame("Button",nil,parent,"UIPanelButtonTemplate")
-    b:SetPoint("TOPLEFT",x,y);b:SetSize(w,28);b:SetText(label);b:SetScript("OnClick",callback);return b
+local palette={normal={.055,.085,.115},selected={.10,.20,.29},active={.045,.24,.15},primary={.38,.07,.055},danger={.25,.11,.045},purchase={.23,.17,.055}}
+local function paint(b)
+    local on=b:IsEnabled();on=on and on~=0
+    local c=on and(palette[b.stateRole or b.role]or palette.normal)or{.045,.05,.06}
+    local boost=on and b.hover and .045 or 0
+    b:SetBackdropColor(c[1]+boost,c[2]+boost,c[3]+boost,1)
+    local active=b.stateRole=="active";local selected=b.stateRole=="selected"
+    b:SetBackdropBorderColor(on and(active and .95 or selected and .43 or .34)or .18,on and(active and .76 or selected and .72 or .40)or .20,on and(active and .32 or selected and .90 or .46)or .22,1)
+    b.label:SetTextColor(on and .94 or .43,on and .94 or .46,on and .86 or .49)
+end
+local function button(parent,label,x,y,w,callback,role)
+    local b=CreateFrame("Button",nil,parent);b.role=role or "normal"
+    b:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8",edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",edgeSize=8,insets={left=2,right=2,top=2,bottom=2}})
+    b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlightSmall");b.label:SetPoint("CENTER");b.label:SetWidth(w-12);b:SetFontString(b.label)
+    b:SetPoint("TOPLEFT",x,y);b:SetSize(w,28);b:SetText(label);b:SetScript("OnClick",callback)
+    b:HookScript("OnEnter",function(self)self.hover=true;paint(self)end);b:HookScript("OnLeave",function(self)self.hover=false;paint(self)end)
+    b:SetScript("OnEnable",paint);b:SetScript("OnDisable",paint);paint(b);return b
 end
 local function atlas(t,key)
     local a=(RebornWDHomeArt and RebornWDHomeArt[key]) or (RebornWDArt and RebornWDArt[key])
@@ -39,12 +53,19 @@ local function refresh()
         b:SetText("方案 / Build "..i..(M.loaded and i-1==M.active and " ★" or ""))
         if not open then b:SetText("方案 / Build "..i.." [锁定 / Locked]") end
         enable(b,M.loaded and not M.pending and (open or i-1==M.unlocked))
-        b:SetAlpha(i-1==M.slot and 1 or .65)
+        b.stateRole=M.loaded and i-1==M.active and "active"or i-1==M.slot and "selected"or nil
+        if M.loaded and i-1==M.active then b:SetText("方案 / Build "..i.." · 已激活 / Active")end
+        paint(b)
     end
     for i,c in ipairs(cards) do
         local chosen=M.loaded and M.specs[M.slot+1]==i-1
         c.state:SetText(chosen and (M.slot==M.active and "已激活 / Active" or "已绑定此方案 / Bound") or "浏览 / Preview")
         c.state:SetTextColor(chosen and .3 or .8,chosen and 1 or .8,.3)
+        local live=M.loaded and M.specs[M.active+1]==i-1
+        if live then c.state:SetText("当前激活 / Active now")end
+        c:SetBackdropBorderColor(live and .94 or chosen and .4 or .25,live and .76 or chosen and .7 or .3,live and .3 or chosen and .9 or .35,1)
+        c:SetBackdropColor(live and .03 or .02,live and .13 or .035,live and .08 or .05,.8)
+        if c.view then c.view.stateRole=live and "active"or chosen and "selected"or nil;paint(c.view)end
     end
     enable(save,M.CanEdit() and M.HasDrafts())
     enable(bind,M.loaded and M.modern and not M.pending and M.slot<M.unlocked and M.specs[M.slot+1]==3 and not M.HasDrafts())
@@ -116,14 +137,14 @@ local function create()
     home=CreateFrame("Frame",nil,frame);home:SetPoint("TOPLEFT",16,-118);home:SetSize(1288,570)
     local bg=home:CreateTexture(nil,"BACKGROUND");bg:SetAllPoints(home);atlas(bg,"spec-background")
     for i,sp in ipairs(specs) do
-        local c=CreateFrame("Frame",nil,home);c:SetPoint("TOPLEFT",(i-1)*428,0);c:SetSize(428,570)
+        local c=CreateFrame("Frame",nil,home);c:SetPoint("TOPLEFT",(i-1)*428,0);c:SetSize(428,570);c:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8",edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",edgeSize=8})
         local image=c:CreateTexture(nil,"ARTWORK");image:SetPoint("TOPLEFT",43,-36);image:SetSize(342,207)
         atlas(image,"spec-thumbnail-witchdoctor-"..sp.key:lower())
         text(c,sp.name,42,-266,345,"GameFontNormalLarge")
         text(c,sp.role,42,-306,345)
         c.state=text(c,"",42,-360,345)
         text(c,"选择卡片只浏览；绑定与保存需另行确认。\nSelecting a card previews its tree. Bind and save separately.",42,-406,345)
-        local index=i-1;button(c,"查看天赋 / View talents",42,-490,345,function()view(index)end)
+        local index=i-1;c.view=button(c,"查看天赋 / View talents",42,-490,345,function()view(index)end)
         cards[i]=c
     end
     tree=CreateFrame("Frame",nil,frame);tree:SetPoint("TOPLEFT",16,-118);tree:SetSize(1288,570)
@@ -205,7 +226,9 @@ local function create()
     activate=button(frame,"激活本方案 / Activate",790,-704,250,function()M.Activate()end)
     reset=button(frame,"重置方案 / Reset build",1050,-704,242,function()M.QuoteReset()end)
     unlock=button(frame,"解锁方案 / Unlock build",1050,-744,242,function()M.QuoteUnlock()end)
-    text(frame,"本人天赋独立 · 机器人自身金币支付 · 确认前先核对报价\nOwn talents are separate. The bot pays from its own balance after confirmation.",25,-745,1000,"GameFontNormalSmall")
+    save.role="primary";activate.role="primary";reset.role="danger";unlock.role="purchase"
+    button(frame,"推荐 / Recommend",25,-665,200,function()if RebornTalentGuide and RebornTalentGuide.BotRecommendations then RebornTalentGuide.BotRecommendations.Open(M.name)end end)
+    text(frame,"本人天赋独立 · 机器人自身金币 / 所属账号DP、VP · 确认前先核对报价\nOwn talents are separate. Gold: bot character. DP/VP: bot account. Confirm before paying.",25,-745,1000,"GameFontNormalSmall")
     status=text(frame,"",25,-784,1260,"GameFontNormalSmall")
     frame:SetScript("OnHide",function()M.CancelQuote()end)
     UISpecialFrames[#UISpecialFrames+1]="RebornWDBotTalentPanel"
@@ -229,6 +252,7 @@ function M.ShowQuote(q)
     StaticPopup_Show("REBORN_WDBOT_PAY",nil,nil,q)
 end
 M.changed=refresh
+function M.ShowPanel()if frame then frame:Show();view(M.spec)end end
 function M.Open(unit,name)
     if not frame then create() end
     if frame:IsShown() and M.guid==UnitGUID(unit) then frame:Hide();return end

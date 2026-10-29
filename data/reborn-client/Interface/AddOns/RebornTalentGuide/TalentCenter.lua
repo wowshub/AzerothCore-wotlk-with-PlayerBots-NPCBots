@@ -28,6 +28,10 @@ local function plans()
  if T.class=='WITCHDOCTOR'then return RebornTalentGuideWDData.plans elseif T.class=='WARRIOR'then return RebornTalentGuideData.plans elseif T.class=='PALADIN'then return RebornTalentGuidePaladinData.plans elseif T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK'then return S.NativeData(T.class).plans end
  return {}
 end
+local function subjectLevel()
+ local B=G.BotRecommendations
+ return B and B.mode and B.level or UnitLevel('player')
+end
 local function selected()return T.selected[T.class]or 1 end
 local function choose(index)
  T.selected[T.class]=index
@@ -38,8 +42,9 @@ local function current()
  local b,why=S.Capture(T.class);return b,why
 end
 function T.ApplyRecommendation()
+ if G.BotRecommendations and G.BotRecommendations.mode then return G.BotRecommendations.Apply()end
  if T.class=='WITCHDOCTOR'then
-  local index,level=selected(),W.previewCurrent and UnitLevel('player')or W.previewLevel
+  local index,level=selected(),W.previewCurrent and subjectLevel()or W.previewLevel
   local result,why=W.CheckDraft(index,level);if not result then T.Message(why);return end
   StaticPopupDialogs.REBORN_TG_CENTER_DRAFT={text='保留全部已学点数，增加 AE '..result.addedAE..' / TE '..result.addedTE..'？\n只载入草稿，请到实际天赋面板核对保存。',button1='载入草稿',button2=CANCEL,timeout=0,whileDead=false,hideOnEscape=true,OnAccept=function()
    if T.class~='WITCHDOCTOR'or selected()~=index then T.Message('当前推荐已改变，请重新确认');return end
@@ -166,7 +171,7 @@ local function paintWD(build,result)
  local spec=result and result.plan.spec or build.spec
  for i,tab in ipairs({'Class',({[0]='Voodoo',[1]='Brewing',[2]='Shadowhunting'})[spec]})do
   local board=T.boards[i];move(board,416+(i-1)*440,-144,432,498);board.width=412;board.height=450;board.canvas:SetSize(412,450);board:Show();put(board.title,i==1 and'巫医 · 通用 AE'or(specNames[spec]..' · 专精 TE'))
-  G.TreeViews.PaintWD(board,tab,{mask=mask},T.choices,T.Refresh,true)
+  G.TreeViews.PaintWD(board,tab,{mask=mask},T.choices,T.Refresh,not(G.BotRecommendations and G.BotRecommendations.mode))
   if build then for _,item in ipairs(board.items)do item.onClick=nil;item.tooltip=function(t,n)local d=RebornTalentGuideWDData.nodes[n.id];t:SetText(d.name);t:AddLine((T.favorite and'收藏配点 'or'当前已保存 ')..n.target..'/'..n.maximum,1,.85,.3,true);t:AddLine(d.effects[math.max(1,n.target)]or'',1,1,1,true);t:AddLine(d.limit,1,.7,.4,true)end end end
   if L.English()then for _,item in ipairs(board.items)do
    item.tooltip=function(t,n)
@@ -185,8 +190,8 @@ local function paintWD(build,result)
 end
 local function paintNative(build)
  local data=dataClass();if not data then return false end
- local plan=build and S.NativePlan(build)or((T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK')and S.NativeEngine(T.class).Build(selected(),S.NativeEngine(T.class).previewCurrent~=false and UnitLevel('player')or S.NativeEngine(T.class).previewLevel)or data.plans[selected()]);if not plan then return false end
- local own=S.Capture(T.class);local treeNames=(T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK')and S.NativeData(T.class).treeNames or T.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'}
+ local plan=build and S.NativePlan(build)or((T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK')and S.NativeEngine(T.class).Build(selected(),S.NativeEngine(T.class).previewCurrent~=false and subjectLevel()or S.NativeEngine(T.class).previewLevel)or data.plans[selected()]);if not plan then return false end
+ local B=G.BotRecommendations;local own;if B and B.mode then if B.loaded and B.class==T.class then own={ranks=B.ranks}end else own=S.Capture(T.class)end;local treeNames=(T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK')and S.NativeData(T.class).treeNames or T.class=='WARRIOR'and{'武器','狂怒','防护'}or{'神圣','防护','惩戒'}
  for t,tree in ipairs(data.trees)do
   local board=T.boards[t];move(board,416+(t-1)*293,-144,285,498);board.width=265;board.height=450;board.canvas:SetSize(265,450);put(board.title,treeNames[t]);board:Show();local items,edges,ids={},{},{}
   for _,n in ipairs(tree)do ids[n.id]=true end
@@ -220,10 +225,10 @@ function T.Refresh()
  else
   put(T.heading,p and L.Plan(p,'title') or((names[T.class]or'')..' · 暂无推荐天赋'));put(T.subtitle,'推荐天赋 · '..T.scene..' · 只载入草稿或通过原生加点确认')
   if p then
-   if T.class=='WITCHDOCTOR'then local lev=W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player');result,why=W.Build(selected(),lev);if result then paintWD(nil,result);put(T.subtitle,'推荐'..result.level..'级：AE '..result.ae..'/'..result.aeBudget..' · TE '..result.te..'/'..result.teBudget..'；保留已学，只载入草稿。')end
-   else paintNative();if T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK'then local H=S.NativeEngine(T.class);local v=H.Build(selected(),H.previewCurrent~=false and UnitLevel('player')or H.previewLevel);if v then T.subtitle:SetText((L.English()and 'Level 'or'等级 ')..v.level..' · '..table.concat(v.split,'/')..' · '..(L.English()and 'Reference allocation' or '本服参考配点'))end end end
+   if T.class=='WITCHDOCTOR'then local lev=W.previewCurrent and subjectLevel()or W.previewLevel or subjectLevel();result,why=W.Build(selected(),lev);if result then paintWD(nil,result);put(T.subtitle,'推荐'..result.level..'级：AE '..result.ae..'/'..result.aeBudget..' · TE '..result.te..'/'..result.teBudget..'；保留已学，只载入草稿。')end
+   else paintNative();if T.class=='HUNTER'or T.class=='ROGUE'or T.class=='PRIEST'or T.class=='DEATHKNIGHT'or T.class=='SHAMAN'or T.class=='MAGE'or T.class=='WARLOCK'or T.class=='DRUID'or T.class=='MONK'then local H=S.NativeEngine(T.class);local v=H.Build(selected(),H.previewCurrent~=false and subjectLevel()or H.previewLevel);if v then T.subtitle:SetText((L.English()and 'Level 'or'等级 ')..v.level..' · '..table.concat(v.split,'/')..' · '..(L.English()and 'Reference allocation' or '本服参考配点'))end end end
    T.collect:Show();enable(T.collect,#S.List(T.class)<S.limit);T.apply:Show()
-   if T.class=='WITCHDOCTOR'then local draft,reason=W.CheckDraft(selected(),W.previewCurrent and UnitLevel('player')or W.previewLevel or UnitLevel('player'));enable(T.apply,draft~=nil);why=reason
+   if T.class=='WITCHDOCTOR'then local draft,reason=W.CheckDraft(selected(),W.previewCurrent and subjectLevel()or W.previewLevel or subjectLevel());enable(T.apply,draft~=nil);why=reason
    else local b=S.Recommendation(T.class);local ctx,reason;if b then ctx,reason=S.CanApply(b,T.frame)end;enable(T.apply,ctx~=nil);why=reason end
   end
  end

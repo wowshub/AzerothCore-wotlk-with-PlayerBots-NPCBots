@@ -69,3 +69,5 @@ ApplyFeedback.lua
 
 TalentCenterLocale.lua
 TalentCenter.lua
+
+BotRecommendations.lua
