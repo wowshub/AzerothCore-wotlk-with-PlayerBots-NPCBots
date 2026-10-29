@@ -16,6 +16,7 @@
 #include "RebornWitchDoctorBotProfiles173.h"
 #include "RebornWitchDoctorBotPanelQuotePolicy.h"
 #include "RebornWitchDoctorBotControls3.h"
+#include "RebornWitchDoctorBotSummonPolicy4.h"
 #include "Playerbots.h"
 #include "Trainer.h"
 #include "Creature.h"
@@ -901,6 +902,7 @@ bool Check168(ChatHandler* h)
 #include "RebornWitchDoctorBotBuild173.inc"
 #include "RebornWitchDoctorBotJob174.inc"
 #include "RebornWitchDoctorBotPanel.inc"
+#include "RebornWitchDoctorBotSummon4.inc"
 
 class Commands : public CommandScript
 {
@@ -925,6 +927,8 @@ public:
         static ChatCommandTable cmds={
             {"wdbot", wdbotCommands},
             {"wdcontrol", controls},
+            {"wdwardstate",BotWardState4,SEC_PLAYER,Console::No},
+            {"wdwardcast",BotWardCast4,SEC_PLAYER,Console::No},
             {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
             {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
             {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},

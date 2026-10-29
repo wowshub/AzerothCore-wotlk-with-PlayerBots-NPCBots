@@ -71,6 +71,12 @@ function MultiBot.addWitchDoctor(frame, combat, normal)
     local book=frame.addFrame("WDGuide",-122,30);book:Hide()
     frame.addButton("WDPlaybook",-120,0,"inv_misc_book_06",tip("巫医策略手册 / Witch Doctor guide",
         "左键展开职业图标与说明 / Click for role and ability guidance.")).doLeft=function() MultiBot.ShowHideSwitch(book) end
+    local function openSummons()
+        local unit=MultiBot.toUnit and MultiBot.toUnit(frame.name)
+        if RebornWDBotSummons and unit then RebornWDBotSummons.Open(unit,frame.name)
+        elseif DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("请加载巫医召唤面板并确认机器人在队伍中。 / Load the WD summon panel and check the group.") end
+    end
+    frame.addButton("WDWardPanel",-240,0,"spell_nature_guardianward",tip("守卫与召唤管理 / Wards and summons","读取真实技能、冷却与召唤槽；确认后手动施放。 / Read real readiness and slots; confirm a manual cast.")).doLeft=openSummons
     local entries={
         {"DPS","ability_hunter_rapidkilling","输出 / DPS","暗影狩猎：远程输出；巫毒：法术输出。\nShadowhunting: ranged DPS; Voodoo: spell DPS.\n需使用相应天赋方案，本按钮仅说明。/ Requires the matching active plan; information only."},
         {"Heal","spell_nature_healingwavegreater","治疗 / Healing","酿造方案优先治疗，战斗按钮必须开启；脱战支援单独控制。\nBrewing prioritizes healing; combat must be enabled. Out-of-combat support is separate.\n本按钮不切换天赋。/ This button does not switch talents."},
@@ -81,6 +87,7 @@ function MultiBot.addWitchDoctor(frame, combat, normal)
     for i,e in ipairs(entries) do
         local b=book.addButton(e[1],0,(i-1)*30,e[2],tip(e[3],e[4]))
         b.doLeft=info
+        if e[1]=="Summons" then b.doLeft=openSummons end
         if e[1]=="Cure" and not MultiBot.WDControls then
             b.tip=tip(e[3],"由巫医原生逻辑判断；通用 cure 不等于巫医净化总开关。\nHandled by native WD logic; generic cure is a separate strategy.\n自动净化图标由可选的MBWD3A提供。/ The automatic cleansing toggle requires optional MBWD3A.")
         end
