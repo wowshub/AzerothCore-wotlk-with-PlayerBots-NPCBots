@@ -1,0 +1,1078 @@
+#include "Chat.h"
+#include "ChatCommand.h"
+#include "Config.h"
+#include "LootMgr.h"
+#include "Log.h"
+#include "DBCStores.h"
+#include "DatabaseEnv.h"
+#include "Player.h"
+#include "ScriptMgr.h"
+#include "World.h"
+#include "StringFormat.h"
+#include "WorldPacket.h"
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <map>
+#include <mutex>
+#include <set>
+#include <random>
+#include <string>
+#include <vector>
+
+using namespace Acore::ChatCommands;
+
+// LAB1 (掉落工坊 / LootLab): read-only. The GM panel sends ".lootlab ui <what> ..." and gets addon lines
+// "LL\t<kind>\t<fields...>". Nothing here writes to the database.
+
+namespace
+{
+    // One row per kind of loot table. Everything the commands do (list, read, who uses it, who drops an item,
+    // simulate) is driven by this table, so a new kind of source is one more row.
+    struct Kind
+    {
+        char const* key;
+        char const* zh;
+        char const* en;
+        char const* table;      // the loot template table
+        uint32 cond;            // conditions.SourceTypeOrReferenceId of that table
+        // the list of sources: `from` with aliases, the columns, the fixed filter
+        char const* from;
+        char const* idCol;      // the source's own id
+        char const* lootCol;    // the loot template entry it uses
+        char const* nameCol;
+        char const* zhCol;
+        char const* info;       // an SQL expression, a short text per source
+        char const* where;
+        char const* rankCol;    // empty: no rank filter
+        char const* mapExists;  // empty: no map filter; {MAP} is replaced
+        // who uses a loot entry: `ufrom` WHERE `ucol` = id
+        char const* ufrom;
+        char const* uid;
+        char const* uname;
+        char const* uzh;
+        char const* ucol;
+        char const* uwhere;
+        bool area;              // the loot entry is an area id
+    };
+
+    std::string const CT_LOC = "LEFT JOIN creature_template_locale l ON l.entry = ct.entry AND l.locale = 'zhCN'";
+    std::string const IT_LOC = "LEFT JOIN item_template_locale l ON l.ID = it.entry AND l.locale = 'zhCN'";
+
+    char const* const CT_FROM = "creature_template ct LEFT JOIN creature_template_locale l ON l.entry = ct.entry AND l.locale = 'zhCN'";
+    char const* const GT_FROM = "gameobject_template gt LEFT JOIN gameobject_template_locale l ON l.entry = gt.entry AND l.locale = 'zhCN'";
+    char const* const IT_FROM = "item_template it LEFT JOIN item_template_locale l ON l.ID = it.entry AND l.locale = 'zhCN'";
+    char const* const CT_INFO =
+        "CONCAT('Lv ', ct.minlevel, '-', ct.maxlevel, '  ', CASE ct.`rank` WHEN 0 THEN '普通' WHEN 1 THEN '精英' WHEN 2 THEN '稀有精英' WHEN 3 THEN '首领' ELSE '稀有' END)";
+    char const* const CT_MAP = "EXISTS (SELECT 1 FROM creature c WHERE c.id1 = ct.entry AND c.map = {MAP})";
+
+    Kind const KINDS[] =
+    {
+        { "creature", "怪物掉落", "Creature loot", "creature_loot_template", 1,
+          CT_FROM, "ct.entry", "ct.lootid", "ct.name", "IFNULL(l.Name, '')", CT_INFO, "ct.lootid > 0", "ct.`rank`", CT_MAP,
+          CT_FROM, "ct.entry", "ct.name", "IFNULL(l.Name, '')", "ct.lootid", "1 = 1", false },
+        { "gameobject", "游戏物件", "Game objects", "gameobject_loot_template", 4,
+          GT_FROM, "gt.entry", "gt.data1", "gt.name", "IFNULL(l.name, '')", "CONCAT('type ', gt.type)", "gt.type = 3 AND gt.data1 > 0", "",
+          "EXISTS (SELECT 1 FROM gameobject g WHERE g.id = gt.entry AND g.map = {MAP})",
+          GT_FROM, "gt.entry", "gt.name", "IFNULL(l.name, '')", "gt.data1", "gt.type = 3", false },
+        { "skinning", "剥皮", "Skinning", "skinning_loot_template", 11,
+          CT_FROM, "ct.entry", "ct.skinloot", "ct.name", "IFNULL(l.Name, '')", CT_INFO, "ct.skinloot > 0", "ct.`rank`", CT_MAP,
+          CT_FROM, "ct.entry", "ct.name", "IFNULL(l.Name, '')", "ct.skinloot", "1 = 1", false },
+        { "pickpocketing", "偷窃", "Pickpocketing", "pickpocketing_loot_template", 8,
+          CT_FROM, "ct.entry", "ct.pickpocketloot", "ct.name", "IFNULL(l.Name, '')", CT_INFO, "ct.pickpocketloot > 0", "ct.`rank`", CT_MAP,
+          CT_FROM, "ct.entry", "ct.name", "IFNULL(l.Name, '')", "ct.pickpocketloot", "1 = 1", false },
+        { "fishing", "钓鱼", "Fishing", "fishing_loot_template", 3,
+          "fishing_loot_template t", "t.Entry", "t.Entry", "''", "''", "''", "1 = 1", "", "",
+          "", "", "", "", "", "", true },
+        { "item", "可打开的物品", "Containers", "item_loot_template", 5,
+          IT_FROM, "it.entry", "it.entry", "it.name", "IFNULL(l.Name, '')", "''", "1 = 1", "", "",
+          IT_FROM, "it.entry", "it.name", "IFNULL(l.Name, '')", "it.entry", "1 = 1", false },
+        { "disenchant", "分解", "Disenchanting", "disenchant_loot_template", 2,
+          "disenchant_loot_template t", "t.Entry", "t.Entry", "''", "''",
+          "IFNULL((SELECT it.name FROM item_template it WHERE it.DisenchantID = t.Entry LIMIT 1), '')", "1 = 1", "", "",
+          IT_FROM, "it.entry", "it.name", "IFNULL(l.Name, '')", "it.DisenchantID", "1 = 1", false },
+        { "prospecting", "选矿", "Prospecting", "prospecting_loot_template", 9,
+          IT_FROM, "it.entry", "it.entry", "it.name", "IFNULL(l.Name, '')", "''", "1 = 1", "", "",
+          IT_FROM, "it.entry", "it.name", "IFNULL(l.Name, '')", "it.entry", "1 = 1", false },
+        { "milling", "研磨", "Milling", "milling_loot_template", 7,
+          IT_FROM, "it.entry", "it.entry", "it.name", "IFNULL(l.Name, '')", "''", "1 = 1", "", "",
+          IT_FROM, "it.entry", "it.name", "IFNULL(l.Name, '')", "it.entry", "1 = 1", false },
+        { "reference", "引用表", "Reference tables", "reference_loot_template", 10,
+          // a reference table has no name: its info is the first three items it holds, so the list says what is inside
+          "reference_loot_template t", "t.Entry", "t.Entry", "''", "''",
+          "IFNULL((SELECT SUBSTRING_INDEX(GROUP_CONCAT(IFNULL(l2.Name, i2.name) ORDER BY r.Chance DESC SEPARATOR ', '), ', ', 3) "
+          "FROM reference_loot_template r JOIN item_template i2 ON i2.entry = r.Item AND r.Reference = 0 "
+          "LEFT JOIN item_template_locale l2 ON l2.ID = i2.entry AND l2.locale = 'zhCN' WHERE r.Entry = t.Entry), '')",
+          "1 = 1", "", "",
+          "", "", "", "", "", "", false },
+    };
+    constexpr std::size_t KIND_COUNT = sizeof(KINDS) / sizeof(KINDS[0]);
+
+    Kind const* FindKind(std::string const& key)
+    {
+        for (Kind const& k : KINDS)
+            if (key == k.key)
+                return &k;
+        return nullptr;
+    }
+
+    bool IsNumber(std::string const& s)
+    {
+        return !s.empty() && s.size() < 10 && std::all_of(s.begin(), s.end(), [](char ch) { return ch >= '0' && ch <= '9'; });
+    }
+
+    uint32 Num(std::string const& s)
+    {
+        return IsNumber(s) ? static_cast<uint32>(std::strtoul(s.c_str(), nullptr, 10)) : 0;
+    }
+
+    std::string Fld(std::string s)
+    {
+        for (char& ch : s)
+            if (ch == '\t' || ch == '\n' || ch == '\r' || ch == '|')
+                ch = ' ';
+        return s;
+    }
+
+    std::string Clip(std::string s, std::size_t max = 250)
+    {
+        if (s.size() <= max)
+            return s;
+        std::size_t cut = max;
+        while (cut > 0 && (static_cast<unsigned char>(s[cut]) & 0xC0) == 0x80)
+            --cut;
+        s.resize(cut);
+        return s;
+    }
+
+    void Send(Player* player, std::string const& payload)
+    {
+        WorldPacket data;
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_PARTY, LANG_ADDON, player->GetGUID(), ObjectGuid::Empty,
+                                     Clip("LL\t" + payload), CHAT_TAG_NONE, player->GetName());
+        player->SendDirectMessage(&data);
+    }
+
+    std::vector<std::string> Split(std::string const& text)
+    {
+        std::vector<std::string> out;
+        std::size_t i = 0;
+        while (i < text.size())
+        {
+            while (i < text.size() && text[i] == ' ')
+                ++i;
+            std::size_t j = i;
+            while (j < text.size() && text[j] != ' ')
+                ++j;
+            if (j > i)
+                out.push_back(text.substr(i, j - i));
+            i = j;
+        }
+        return out;
+    }
+
+    std::string Rest(std::string const& text, std::size_t skip)
+    {
+        std::size_t i = 0;
+        for (std::size_t w = 0; w < skip; ++w)
+        {
+            while (i < text.size() && text[i] == ' ')
+                ++i;
+            while (i < text.size() && text[i] != ' ')
+                ++i;
+        }
+        while (i < text.size() && text[i] == ' ')
+            ++i;
+        return text.substr(i);
+    }
+
+    std::string Sub(std::string s, char const* token, std::string const& value)
+    {
+        std::size_t p = 0;
+        std::string const t = token;
+        while ((p = s.find(t, p)) != std::string::npos)
+        {
+            s.replace(p, t.size(), value);
+            p += value.size();
+        }
+        return s;
+    }
+
+    std::string Id(uint32 n) { return std::to_string(n); }
+
+    QueryResult Q(std::string const& sql)
+    {
+        return WorldDatabase.Query("{}", sql);
+    }
+
+    std::string IconOfDisplay(uint32 displayId)
+    {
+        ItemDisplayInfoEntry const* e = sItemDisplayInfoStore.LookupEntry(displayId);
+        if (e && e->inventoryIcon && *e->inventoryIcon)
+            return std::string("Interface\\Icons\\") + e->inventoryIcon;
+        return "Interface\\Icons\\INV_Misc_QuestionMark";
+    }
+
+    // The server's own DBC structure leaves out the model file name of a creature, so CreatureModelData.dbc is read here
+    // (id = field 0, model name = field 2, a string offset), once, from the server's data folder.
+    std::map<uint32, std::string> const& ModelPaths()
+    {
+        static std::map<uint32, std::string> paths;
+        static bool loaded = false;
+        if (loaded)
+            return paths;
+        loaded = true;
+        std::string const file = sWorld->GetDataPath() + "dbc/CreatureModelData.dbc";
+        FILE* f = fopen(file.c_str(), "rb");
+        if (!f)
+        {
+            LOG_WARN("module", "[LootLab] cannot open {}: creature heads will show as icons", file);
+            return paths;
+        }
+        uint32 h[5] = { 0, 0, 0, 0, 0 };
+        if (fread(h, 4, 5, f) == 5 && h[0] == 0x43424457 && h[3] >= 12 && h[1] < 200000 && h[4] < 16000000)
+        {
+            std::vector<char> rec(static_cast<std::size_t>(h[1]) * h[3]);
+            std::vector<char> str(h[4] + 1, '\0');
+            if (fread(rec.data(), 1, rec.size(), f) == rec.size() && fread(str.data(), 1, h[4], f) == h[4])
+                for (uint32 i = 0; i < h[1]; ++i)
+                {
+                    uint32 const* r = reinterpret_cast<uint32 const*>(rec.data() + static_cast<std::size_t>(i) * h[3]);
+                    if (r[2] < h[4] && str[r[2]])
+                        paths[r[0]] = &str[r[2]];
+                }
+        }
+        fclose(f);
+        return paths;
+    }
+
+    std::string ModelOf(char const* kindKey, uint32 displayId)
+    {
+        if (!displayId)
+            return "";
+        if (std::string(kindKey) == "gameobject")
+        {
+            if (GameObjectDisplayInfoEntry const* d = sGameObjectDisplayInfoStore.LookupEntry(displayId))
+                return d->filename ? d->filename : "";
+            return "";
+        }
+        if (CreatureDisplayInfoEntry const* e = sCreatureDisplayInfoStore.LookupEntry(displayId))
+        {
+            auto const& m = ModelPaths();
+            auto it = m.find(e->ModelId);
+            if (it != m.end())
+                return it->second;
+        }
+        return "";
+    }
+
+    std::string AreaNameOf(uint32 id, LocaleConstant loc)
+    {
+        if (AreaTableEntry const* e = sAreaTableStore.LookupEntry(id))
+            return (e->area_name[loc] && *e->area_name[loc]) ? e->area_name[loc] : (e->area_name[0] ? e->area_name[0] : "?");
+        return "?";
+    }
+
+    std::string MapNameOf(uint32 id, LocaleConstant loc)
+    {
+        if (MapEntry const* e = sMapStore.LookupEntry(id))
+            return (e->name[loc] && *e->name[loc]) ? e->name[loc] : (e->name[0] ? e->name[0] : "?");
+        return "?";
+    }
+
+    void Fail(ChatHandler* handler, Player* p, std::string const& what)
+    {
+        Send(p, "ERR\t" + Fld(what));
+        handler->PSendSysMessage("|cffff0000[掉落工坊]|r {}", what);
+    }
+
+    // ---- kinds: the tabs, with how many loot tables each has
+    void SendKinds(Player* p)
+    {
+        Send(p, "KD_START");
+        for (Kind const& k : KINDS)
+        {
+            uint32 n = 0;
+            if (QueryResult r = Q(std::string("SELECT COUNT(DISTINCT Entry) FROM ") + k.table))
+                n = r->Fetch()[0].Get<uint32>();
+            Send(p, Acore::StringFormat("KD\t{}\t{}\t{}\t{}\t{}\t{}", k.key, k.zh, k.en, n, k.rankCol[0] ? 1 : 0, k.mapExists[0] ? 1 : 0));
+        }
+        Send(p, "KD_END");
+    }
+
+    // ---- the maps that have something to look at (the world tree's top level)
+    void SendMaps(Player* p)
+    {
+        LocaleConstant const loc = p->GetSession()->GetSessionDbcLocale();
+        Send(p, "MP_START");
+        // dungeons, raids, battlegrounds and the open world, by the map table (instance type 0 = world)
+        for (uint32 i = 0; i < sMapStore.GetNumRows(); ++i)
+            if (MapEntry const* e = sMapStore.LookupEntry(i))
+                if (e->IsDungeon() || e->IsRaid() || i == 0 || i == 1 || i == 530 || i == 571)
+                    Send(p, Acore::StringFormat("MP\t{}\t{}\t{}", i, e->IsDungeon() ? (e->IsRaid() ? 2 : 1) : 0, Fld(MapNameOf(i, loc))));
+        Send(p, "MP_END");
+    }
+
+    // ---- the list of sources of one kind
+    void SendList(Player* p, Kind const& k, int rank, int mapId, uint32 page, std::string text)
+    {
+        LocaleConstant const loc = p->GetSession()->GetSessionDbcLocale();
+        text.erase(std::remove_if(text.begin(), text.end(), [](char ch) { return ch == '%' || ch == '_' || ch == '\\' || ch == '\''; }), text.end());
+        WorldDatabase.EscapeString(text);
+
+        std::string where = std::string("(") + k.where + ") AND EXISTS (SELECT 1 FROM " + k.table + " x WHERE x.Entry = " + k.lootCol + ")";
+        if (rank >= 0 && k.rankCol[0])
+            where += std::string(" AND ") + k.rankCol + " = " + Id(static_cast<uint32>(rank));
+        if (mapId >= 0 && k.mapExists[0])
+            where += " AND " + Sub(k.mapExists, "{MAP}", Id(static_cast<uint32>(mapId)));
+        if (!text.empty())
+        {
+            if (IsNumber(text))
+                where += std::string(" AND (") + k.idCol + " = " + Id(Num(text)) + " OR " + k.lootCol + " = " + Id(Num(text)) + ")";
+            else if (!k.area)
+                where += std::string(" AND (") + k.nameCol + " LIKE '%" + text + "%' OR " + k.zhCol + " LIKE '%" + text + "%')";
+        }
+
+        constexpr uint32 PAGE = 40;
+        bool const one = std::string(k.idCol) == "t.Entry";   // the loot tables themselves (fishing, disenchant, reference): one row per entry
+        std::string sql = std::string("SELECT ") + (one ? "DISTINCT " : "") + k.idCol + ", " + k.lootCol + ", " + k.nameCol + ", " + k.zhCol + ", " + k.info + ", " + (k.rankCol[0] ? k.rankCol : "0") + ", " + (k.rankCol[0] ? "ct.`type`, ct.family" : "0, 0") + ", " +
+                          (k.rankCol[0] ? "IFNULL((SELECT m.CreatureDisplayID FROM creature_template_model m WHERE m.CreatureID = ct.entry ORDER BY m.Idx LIMIT 1), 0)"
+                                        : (std::string(k.key) == "gameobject" ? "gt.displayId" : "0")) +
+                          " FROM " + k.from + " WHERE " + where + " ORDER BY " + k.idCol + " LIMIT " + Id(PAGE + 1) + " OFFSET " + Id(page * PAGE);
+        QueryResult r = Q(sql);
+        uint32 count = 0;
+        bool more = false;
+        if (!r)
+            LOG_INFO("module", "[LootLab] list of '{}' returned no rows (an empty result, or a SQL error above): {}", k.key, sql);
+        Send(p, Acore::StringFormat("SRC_START\t{}\t{}", k.key, page));
+        try
+        {
+        if (r)
+        {
+            do
+            {
+                if (count == PAGE)
+                {
+                    more = true;
+                    break;
+                }
+                Field* f = r->Fetch();
+                uint32 const id = f[0].Get<uint32>();
+                std::string name = Fld(f[2].Get<std::string>());
+                std::string zh = Fld(f[3].Get<std::string>());
+                std::string info = Fld(f[4].Get<std::string>());
+                if (k.area)
+                {
+                    name = Fld(AreaNameOf(id, LOCALE_enUS));
+                    zh = Fld(AreaNameOf(id, loc));
+                }
+                Send(p, Acore::StringFormat("SRC\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", id, f[1].Get<uint32>(), f[5].Get<uint32>(), f[6].Get<uint32>(), f[7].Get<uint32>(), Fld(ModelOf(k.key, f[8].Get<uint32>())), Clip(info, 40), name, zh, f[8].Get<uint32>()));
+                ++count;
+            } while (r->NextRow());
+        }
+        }
+        catch (std::exception const& e)
+        {
+            LOG_ERROR("module", "[LootLab] list of '{}' failed after {} rows: {}", k.key, count, e.what());
+            Send(p, "ERR\tlist " + std::string(k.key) + ": " + Fld(e.what()));
+        }
+        Send(p, Acore::StringFormat("SRC_END\t{}\t{}\t{}", page, more ? 1 : 0, count));
+    }
+
+    // ---- one loot table
+    void SendLoot(Player* p, Kind const& k, uint32 lootId)
+    {
+        std::map<uint32, uint32> conds;
+        if (QueryResult c = Q("SELECT SourceEntry, COUNT(*) FROM conditions WHERE SourceTypeOrReferenceId = " + Id(k.cond) +
+                              " AND SourceGroup = " + Id(lootId) + " GROUP BY SourceEntry"))
+            do
+                conds[c->Fetch()[0].Get<uint32>()] = c->Fetch()[1].Get<uint32>();
+            while (c->NextRow());
+
+        QueryResult r = Q(std::string("SELECT g.Item, g.Chance, g.MinCount, g.MaxCount, g.GroupId, g.QuestRequired, g.Reference, i.Quality, i.displayid, "
+                                      "IFNULL(i.name, ''), IFNULL(l.Name, '') FROM ") + k.table + " g LEFT JOIN item_template i ON i.entry = g.Item "
+                          "LEFT JOIN item_template_locale l ON l.ID = g.Item AND l.locale = 'zhCN' WHERE g.Entry = " + Id(lootId) +
+                          " ORDER BY g.GroupId, g.Reference, g.Item LIMIT 250");
+        Send(p, Acore::StringFormat("LT_START\t{}\t{}", k.key, lootId));
+        uint32 n = 0;
+        if (r)
+        {
+            do
+            {
+                Field* f = r->Fetch();
+                uint32 const item = f[0].Get<uint32>();
+                uint32 const ref = f[6].Get<uint32>();
+                uint32 nc = 0;
+                if (auto it = conds.find(item); it != conds.end())
+                    nc = it->second;
+                std::string icon = ref ? "Interface\\Icons\\INV_Misc_Note_01" : IconOfDisplay(f[8].Get<uint32>());
+                std::string nameEn = Fld(f[9].Get<std::string>()), nameZh = Fld(f[10].Get<std::string>());
+                if (ref)
+                {
+                    // a reference line says what is inside: "<count>|<first items>"
+                    nameEn = nameZh = "0|";
+                    if (QueryResult s = Q("SELECT COUNT(*), SUBSTRING_INDEX(GROUP_CONCAT(i.name ORDER BY r.Chance DESC SEPARATOR ', '), ', ', 3), "
+                                          "SUBSTRING_INDEX(GROUP_CONCAT(IFNULL(l.Name, i.name) ORDER BY r.Chance DESC SEPARATOR ', '), ', ', 3) "
+                                          "FROM reference_loot_template r JOIN item_template i ON i.entry = r.Item AND r.Reference = 0 "
+                                          "LEFT JOIN item_template_locale l ON l.ID = i.entry AND l.locale = 'zhCN' WHERE r.Entry = " + Id(ref)))
+                    {
+                        Field* sf = s->Fetch();
+                        uint32 const cnt = sf[0].Get<uint32>();
+                        nameEn = Id(cnt) + "|" + Clip(Fld(sf[1].Get<std::string>()), 60);
+                        nameZh = Id(cnt) + "|" + Clip(Fld(sf[2].Get<std::string>()), 60);
+                    }
+                }
+                Send(p, Acore::StringFormat("LT\t{}\t{}\t{:.2f}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", k.key, ref ? 0 : item, f[1].Get<float>(),
+                                            f[2].Get<uint32>(), f[3].Get<uint32>(), f[4].Get<uint32>(), f[5].Get<uint32>(), nc, ref,
+                                            ref ? 0 : f[7].Get<uint32>(), icon, nameEn + "\t" + nameZh));
+                ++n;
+            } while (r->NextRow());
+        }
+        Send(p, Acore::StringFormat("LT_END\t{}\t{}\t{}", k.key, lootId, n));
+    }
+
+    // ---- who uses a loot table ("被 N 个来源使用")
+    void SendUsers(Player* p, Kind const& k, uint32 lootId)
+    {
+        LocaleConstant const loc = p->GetSession()->GetSessionDbcLocale();
+        Send(p, Acore::StringFormat("US_START\t{}\t{}", k.key, lootId));
+        uint32 total = 0, sent = 0;
+        if (k.area)
+        {
+            total = 1;
+            Send(p, Acore::StringFormat("US\t{}\t{}\t{}", lootId, Fld(AreaNameOf(lootId, LOCALE_enUS)), Fld(AreaNameOf(lootId, loc))));
+            sent = 1;
+        }
+        else if (!k.ufrom[0])
+        {
+            // a reference table: every loot table of every kind that has a line pointing at it
+            for (Kind const& o : KINDS)
+            {
+                if (QueryResult r = Q(std::string("SELECT COUNT(DISTINCT Entry), MIN(Entry) FROM ") + o.table + " WHERE Reference = " + Id(lootId)))
+                {
+                    Field* f = r->Fetch();
+                    uint32 const n = f[0].Get<uint32>();
+                    if (!n)
+                        continue;
+                    total += n;
+                    if (sent < 12)
+                    {
+                        ++sent;
+                        Send(p, Acore::StringFormat("US\t{}\t{}\t{}", f[1].Get<uint32>(), Fld(std::string(o.en) + " x" + Id(n)), Fld(std::string(o.zh) + " x" + Id(n))));
+                    }
+                }
+            }
+        }
+        else
+        {
+            std::string const where = std::string(k.ucol) + " = " + Id(lootId) + " AND " + k.uwhere;
+            if (QueryResult c = Q(std::string("SELECT COUNT(*) FROM ") + k.ufrom + " WHERE " + where))
+                total = c->Fetch()[0].Get<uint32>();
+            if (QueryResult r = Q(std::string("SELECT ") + k.uid + ", " + k.uname + ", " + k.uzh + " FROM " + k.ufrom + " WHERE " + where + " ORDER BY " + k.uid + " LIMIT 12"))
+                do
+                {
+                    Field* f = r->Fetch();
+                    Send(p, Acore::StringFormat("US\t{}\t{}\t{}", f[0].Get<uint32>(), Fld(f[1].Get<std::string>()), Fld(f[2].Get<std::string>())));
+                    ++sent;
+                } while (r->NextRow());
+        }
+        Send(p, Acore::StringFormat("US_END\t{}\t{}\t{}", k.key, lootId, total));
+    }
+
+    // ---- simulate: roll a table many times with the server's own rules (without conditions and quest lines)
+    struct SimRow
+    {
+        uint32 item, ref, minC, maxC, group;
+        float chance;
+    };
+
+    struct Sim
+    {
+        std::map<uint32, std::vector<SimRow>> cache;   // table + entry
+        std::mt19937 rng{std::random_device{}()};
+        uint32 skippedQuest = 0;
+
+        std::vector<SimRow> const& Rows(Kind const& k, uint32 entry)
+        {
+            uint32 const key = (static_cast<uint32>(&k - KINDS) << 28) ^ entry;   // entries are well below 2^28
+            auto it = cache.find(key);
+            if (it != cache.end())
+                return it->second;
+            std::vector<SimRow> v;
+            if (QueryResult r = Q(std::string("SELECT Item, Reference, MinCount, MaxCount, GroupId, Chance, QuestRequired FROM ") + k.table +
+                                  " WHERE Entry = " + Id(entry)))
+                do
+                {
+                    Field* f = r->Fetch();
+                    if (f[6].Get<uint32>() && !f[1].Get<uint32>())
+                    {
+                        ++skippedQuest;
+                        continue;
+                    }
+                    v.push_back({ f[0].Get<uint32>(), f[1].Get<uint32>(), std::max<uint32>(1, f[2].Get<uint32>()), std::max<uint32>(1, f[3].Get<uint32>()),
+                                  f[4].Get<uint32>(), std::fabs(f[5].Get<float>()) });
+                } while (r->NextRow());
+            return cache.emplace(key, std::move(v)).first->second;
+        }
+
+        float Roll() { return std::uniform_real_distribution<float>(0.f, 100.f)(rng); }
+        uint32 Between(uint32 a, uint32 b) { return a >= b ? a : std::uniform_int_distribution<uint32>(a, b)(rng); }
+
+        void Emit(Kind const& k, SimRow const& row, uint32 depth, std::map<uint32, std::pair<uint32, uint32>>& out, std::map<uint32, bool>& seen)
+        {
+            if (row.ref)
+            {
+                if (depth >= 3)
+                    return;
+                Kind const& rk = *FindKind("reference");
+                uint32 const times = row.maxC;
+                for (uint32 t = 0; t < times; ++t)
+                    Table(rk, row.ref, depth + 1, out, seen);
+                return;
+            }
+            uint32 const qty = Between(row.minC, row.maxC);
+            out[row.item].second += qty;
+            if (!seen[row.item])
+            {
+                seen[row.item] = true;
+                out[row.item].first += 1;
+            }
+            (void)k;
+        }
+
+        void Table(Kind const& k, uint32 entry, uint32 depth, std::map<uint32, std::pair<uint32, uint32>>& out, std::map<uint32, bool>& seen)
+        {
+            std::vector<SimRow> const& rows = Rows(k, entry);
+            std::map<uint32, std::vector<SimRow const*>> groups;
+            for (SimRow const& row : rows)
+            {
+                if (row.group == 0)
+                {
+                    if (row.chance >= 100.f || Roll() < row.chance)
+                        Emit(k, row, depth, out, seen);
+                }
+                else
+                    groups[row.group].push_back(&row);
+            }
+            for (auto& g : groups)
+            {
+                std::vector<SimRow const*> equal;
+                float sum = 0.f;
+                for (SimRow const* row : g.second)
+                    if (row->chance > 0.f)
+                        sum += row->chance;
+                    else
+                        equal.push_back(row);
+                float r = Roll();
+                bool done = false;
+                for (SimRow const* row : g.second)
+                {
+                    if (row->chance <= 0.f)
+                        continue;
+                    if (r < row->chance)
+                    {
+                        Emit(k, *row, depth, out, seen);
+                        done = true;
+                        break;
+                    }
+                    r -= row->chance;
+                }
+                if (!done && !equal.empty() && sum < 100.f)
+                    Emit(k, *equal[std::uniform_int_distribution<std::size_t>(0, equal.size() - 1)(rng)], depth, out, seen);
+            }
+        }
+    };
+
+    void SendSim(Player* p, Kind const& k, uint32 lootId, uint32 runs)
+    {
+        uint32 const maxRuns = std::max<uint32>(1, sConfigMgr->GetOption<uint32>("RebornLootLab.SimMaxRuns", 20000));
+        runs = std::min(std::max<uint32>(1, runs), maxRuns);
+        Sim sim;
+        std::map<uint32, std::pair<uint32, uint32>> out;   // item -> (runs it dropped in, total quantity)
+        std::map<uint32, std::pair<uint32, uint32>> total;
+        for (uint32 i = 0; i < runs; ++i)
+        {
+            std::map<uint32, bool> seen;
+            std::map<uint32, std::pair<uint32, uint32>> one;
+            sim.Table(k, lootId, 0, one, seen);
+            for (auto const& kv : one)
+            {
+                total[kv.first].first += 1;
+                total[kv.first].second += kv.second.second;
+            }
+        }
+        std::vector<std::pair<uint32, std::pair<uint32, uint32>>> order(total.begin(), total.end());
+        std::sort(order.begin(), order.end(), [](auto const& a, auto const& b) { return a.second.first > b.second.first; });
+
+        Send(p, Acore::StringFormat("SM_START\t{}\t{}\t{}", k.key, lootId, runs));
+        uint32 sent = 0;
+        for (auto const& kv : order)
+        {
+            if (sent >= 60)
+                break;
+            ++sent;
+            std::string name, zh, icon = "Interface\\Icons\\INV_Misc_QuestionMark";
+            uint32 quality = 1;
+            if (QueryResult r = Q("SELECT i.Quality, i.displayid, i.name, IFNULL(l.Name, '') FROM item_template i LEFT JOIN item_template_locale l ON l.ID = i.entry "
+                                  "AND l.locale = 'zhCN' WHERE i.entry = " + Id(kv.first)))
+            {
+                Field* f = r->Fetch();
+                quality = f[0].Get<uint32>();
+                icon = IconOfDisplay(f[1].Get<uint32>());
+                name = Fld(f[2].Get<std::string>());
+                zh = Fld(f[3].Get<std::string>());
+            }
+            Send(p, Acore::StringFormat("SM\t{}\t{}\t{}\t{}\t{}\t{}\t{}", kv.first, kv.second.first, kv.second.second, quality, icon, name, zh));
+        }
+        Send(p, Acore::StringFormat("SM_END\t{}\t{}\t{}\t{}", k.key, lootId, runs, sim.skippedQuest));
+    }
+
+    // ---- reverse lookup: who drops this item
+    void SendWho(Player* p, uint32 item)
+    {
+        Send(p, Acore::StringFormat("WH_START\t{}", item));
+        uint32 sent = 0;
+        auto owner = [&](Kind const& k, uint32 lootId, float chance, uint32 quest, uint32 via)
+        {
+            if (sent >= 60)
+                return;
+            ++sent;
+            uint32 users = 0;
+            std::string name, zh;
+            if (k.area)
+            {
+                users = 1;
+                name = AreaNameOf(lootId, LOCALE_enUS);
+                zh = AreaNameOf(lootId, p->GetSession()->GetSessionDbcLocale());
+            }
+            else if (k.ufrom[0])
+            {
+                std::string const where = std::string(k.ucol) + " = " + Id(lootId) + " AND " + k.uwhere;
+                if (QueryResult c = Q(std::string("SELECT COUNT(*) FROM ") + k.ufrom + " WHERE " + where))
+                    users = c->Fetch()[0].Get<uint32>();
+                if (QueryResult r = Q(std::string("SELECT ") + k.uname + ", " + k.uzh + " FROM " + k.ufrom + " WHERE " + where + " ORDER BY " + k.uid + " LIMIT 1"))
+                {
+                    name = r->Fetch()[0].Get<std::string>();
+                    zh = r->Fetch()[1].Get<std::string>();
+                }
+            }
+            Send(p, Acore::StringFormat("WH\t{}\t{}\t{:.2f}\t{}\t{}\t{}\t{}\t{}", k.key, lootId, chance, quest, via, users, Fld(name), Fld(zh)));
+        };
+
+        for (Kind const& k : KINDS)
+        {
+            if (QueryResult r = Q(std::string("SELECT Entry, Chance, QuestRequired FROM ") + k.table + " WHERE Item = " + Id(item) + " AND Reference = 0 ORDER BY Entry LIMIT 30"))
+                do
+                {
+                    Field* f = r->Fetch();
+                    owner(k, f[0].Get<uint32>(), std::fabs(f[1].Get<float>()), f[2].Get<uint32>(), 0);
+                } while (r->NextRow());
+        }
+        // one step through the reference tables: tables that point at a reference table holding the item
+        if (QueryResult refs = Q("SELECT DISTINCT Entry FROM reference_loot_template WHERE Item = " + Id(item) + " AND Reference = 0 LIMIT 8"))
+            do
+            {
+                uint32 const ref = refs->Fetch()[0].Get<uint32>();
+                for (Kind const& k : KINDS)
+                    if (QueryResult r = Q(std::string("SELECT DISTINCT Entry FROM ") + k.table + " WHERE Reference = " + Id(ref) + " ORDER BY Entry LIMIT 8"))
+                        do
+                            owner(k, r->Fetch()[0].Get<uint32>(), 0.f, 0, ref);
+                        while (r->NextRow());
+            } while (refs->NextRow());
+        Send(p, Acore::StringFormat("WH_END\t{}\t{}", item, sent));
+    }
+
+    // ---- item search for the reverse lookup
+    void SendItems(Player* p, uint32 page, std::string text)
+    {
+        text.erase(std::remove_if(text.begin(), text.end(), [](char ch) { return ch == '%' || ch == '_' || ch == '\\' || ch == '\''; }), text.end());
+        WorldDatabase.EscapeString(text);
+        std::string where = "1 = 1";
+        if (!text.empty())
+            where = IsNumber(text) ? "i.entry = " + Id(Num(text)) : "(i.name LIKE '%" + text + "%' OR l.Name LIKE '%" + text + "%')";
+        constexpr uint32 PAGE = 30;
+        QueryResult r = Q("SELECT i.entry, i.Quality, i.displayid, i.name, IFNULL(l.Name, '') FROM item_template i LEFT JOIN item_template_locale l ON l.ID = i.entry "
+                          "AND l.locale = 'zhCN' WHERE " + where + " ORDER BY i.Quality DESC, i.entry LIMIT " + Id(PAGE + 1) + " OFFSET " + Id(page * PAGE));
+        uint32 count = 0;
+        bool more = false;
+        Send(p, Acore::StringFormat("IT_START\t{}", page));
+        if (r)
+            do
+            {
+                if (count == PAGE)
+                {
+                    more = true;
+                    break;
+                }
+                Field* f = r->Fetch();
+                Send(p, Acore::StringFormat("IT\t{}\t{}\t{}\t{}\t{}", f[0].Get<uint32>(), f[1].Get<uint32>(), IconOfDisplay(f[2].Get<uint32>()),
+                                            Fld(f[3].Get<std::string>()), Fld(f[4].Get<std::string>())));
+                ++count;
+            } while (r->NextRow());
+        Send(p, Acore::StringFormat("IT_END\t{}\t{}\t{}", page, more ? 1 : 0, count));
+    }
+
+    // ---- the change log (LAB2 fills it; here it is only read)
+    void SendLog(Player* p)
+    {
+        Send(p, "LG_START");
+        QueryResult has = Q("SHOW TABLES LIKE 'reborn_lootlab_log'");
+        if (has)
+            if (QueryResult r = Q("SELECT id, UNIX_TIMESTAMP(at), who, kind, loot_id, action FROM reborn_lootlab_log ORDER BY id DESC LIMIT 60"))
+                do
+                {
+                    Field* f = r->Fetch();
+                    Send(p, Acore::StringFormat("LG\t{}\t{}\t{}\t{}\t{}\t{}", f[0].Get<uint32>(), f[1].Get<uint64>(), Fld(f[2].Get<std::string>()),
+                                                Fld(f[3].Get<std::string>()), f[4].Get<uint32>(), Fld(Clip(f[5].Get<std::string>(), 80))));
+                } while (r->NextRow());
+        Send(p, Acore::StringFormat("LG_END\t{}", has ? 1 : 0));
+    }
+
+    // =====================================================================
+    // LAB2: editing one loot table. Off unless RebornLootLab.Edit.Enable = 1.
+    //   Edit.Lock = 1           production lock: nobody edits, whatever their level
+    //   Edit.MinSecurity = 3    the lowest account level that may edit (3 = administrator)
+    // Before the first change to a table its official content is saved once (INSERT IGNORE, never overwritten);
+    // every change writes a log row holding the rows before and after; "restore" and "undo" read those back.
+    // Snapshots are JSON made by MySQL (JSON_ARRAYAGG) and read back with JSON_TABLE, so no JSON is parsed here.
+    // =====================================================================
+    bool EditEnabled() { return sConfigMgr->GetOption<bool>("RebornLootLab.Edit.Enable", false); }
+    bool EditLocked() { return sConfigMgr->GetOption<bool>("RebornLootLab.Edit.Lock", false); }
+    bool MayEdit(Player* p)
+    {
+        return EditEnabled() && !EditLocked() &&
+               static_cast<uint32>(p->GetSession()->GetSecurity()) >= sConfigMgr->GetOption<uint32>("RebornLootLab.Edit.MinSecurity", 3);
+    }
+
+    std::mutex g_dirtyMu;
+    std::set<std::string> g_dirty;   // kinds whose loot store must be read again (done on the world thread, see the WorldScript)
+
+    void ReloadKind(std::string const& key)
+    {
+        if (key == "creature") { LoadLootTemplates_Creature(); LootTemplates_Creature.CheckLootRefs(); }
+        else if (key == "gameobject") { LoadLootTemplates_Gameobject(); LootTemplates_Gameobject.CheckLootRefs(); }
+        else if (key == "skinning") { LoadLootTemplates_Skinning(); LootTemplates_Skinning.CheckLootRefs(); }
+        else if (key == "pickpocketing") { LoadLootTemplates_Pickpocketing(); LootTemplates_Pickpocketing.CheckLootRefs(); }
+        else if (key == "fishing") { LoadLootTemplates_Fishing(); LootTemplates_Fishing.CheckLootRefs(); }
+        else if (key == "item") { LoadLootTemplates_Item(); LootTemplates_Item.CheckLootRefs(); }
+        else if (key == "disenchant") { LoadLootTemplates_Disenchant(); LootTemplates_Disenchant.CheckLootRefs(); }
+        else if (key == "prospecting") { LoadLootTemplates_Prospecting(); LootTemplates_Prospecting.CheckLootRefs(); }
+        else if (key == "milling") { LoadLootTemplates_Milling(); LootTemplates_Milling.CheckLootRefs(); }
+        else if (key == "reference") { LoadLootTemplates_Reference(); }
+    }
+
+    std::string Snapshot(Kind const& k, uint32 lootId)
+    {
+        std::string out = "[]";
+        if (QueryResult r = Q(std::string("SELECT CAST(IFNULL(JSON_ARRAYAGG(JSON_OBJECT('Entry', Entry, 'Item', Item, 'Reference', Reference, 'Chance', Chance, "
+                                          "'QuestRequired', QuestRequired, 'LootMode', LootMode, 'GroupId', GroupId, 'MinCount', MinCount, 'MaxCount', MaxCount, "
+                                          "'Comment', IFNULL(Comment, ''))), '[]') AS CHAR) FROM ") + k.table + " WHERE Entry = " + Id(lootId)))
+            out = r->Fetch()[0].Get<std::string>();
+        return out.empty() ? "[]" : out;
+    }
+
+    std::string Esc(std::string s)
+    {
+        WorldDatabase.EscapeString(s);
+        return s;
+    }
+
+    // replace the whole table of one loot id by a snapshot
+    void ApplySnapshot(Kind const& k, uint32 lootId, std::string const& json)
+    {
+        auto trans = WorldDatabase.BeginTransaction();
+        trans->Append(std::string("DELETE FROM ") + k.table + " WHERE Entry = " + Id(lootId));
+        trans->Append(std::string("INSERT INTO ") + k.table + " (Entry, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, Comment) "
+                      "SELECT jt.Entry, jt.Item, jt.Reference, jt.Chance, jt.QuestRequired, jt.LootMode, jt.GroupId, jt.MinCount, jt.MaxCount, jt.Comment FROM JSON_TABLE('" +
+                      Esc(json) + "', '$[*]' COLUMNS (Entry INT PATH '$.Entry', Item INT PATH '$.Item', Reference INT PATH '$.Reference', Chance FLOAT PATH '$.Chance', "
+                      "QuestRequired INT PATH '$.QuestRequired', LootMode INT PATH '$.LootMode', GroupId INT PATH '$.GroupId', MinCount INT PATH '$.MinCount', "
+                      "MaxCount INT PATH '$.MaxCount', Comment VARCHAR(255) PATH '$.Comment')) jt");
+        WorldDatabase.DirectCommitTransaction(trans);
+    }
+
+    void MarkDirty(std::string const& key)
+    {
+        std::lock_guard<std::mutex> lock(g_dirtyMu);
+        g_dirty.insert(key);
+    }
+
+    void WriteLog(Player* gm, Kind const& k, uint32 lootId, std::string const& action, std::string const& oldRows, std::string const& newRows, bool reverted)
+    {
+        WorldDatabase.DirectExecute("INSERT INTO reborn_lootlab_log (who, kind, loot_id, action, old_rows, new_rows, reverted) VALUES ('{}', '{}', {}, '{}', '{}', '{}', {})",
+                                    Esc(gm->GetName()), k.key, lootId, Esc(Clip(action, 250)), Esc(oldRows), Esc(newRows), reverted ? 1 : 0);
+    }
+
+    struct EditResult
+    {
+        bool ok = false;
+        std::string msg;
+    };
+
+    // runs the statements, keeping the official copy, the log and the reload
+    EditResult RunEdit(Player* gm, Kind const& k, uint32 lootId, std::string const& action, std::vector<std::string> const& statements)
+    {
+        EditResult res;
+        std::string const oldRows = Snapshot(k, lootId);
+        WorldDatabase.DirectExecute("INSERT IGNORE INTO reborn_lootlab_baseline (kind, loot_id, rows_json) VALUES ('{}', {}, '{}')", k.key, lootId, Esc(oldRows));
+        auto trans = WorldDatabase.BeginTransaction();
+        for (std::string const& s : statements)
+            trans->Append(s);
+        WorldDatabase.DirectCommitTransaction(trans);
+        std::string const newRows = Snapshot(k, lootId);
+        WriteLog(gm, k, lootId, action, oldRows, newRows, false);
+        MarkDirty(k.key);
+        res.ok = true;
+        res.msg = action;
+        return res;
+    }
+
+    EditResult HandleEdit(Player* gm, Kind const& k, uint32 lootId, std::vector<std::string> const& w)
+    {
+        EditResult bad;
+        std::string const& op = w[3];
+        std::string const table = k.table;
+        auto rowExists = [&](uint32 item)
+        {
+            QueryResult r = Q("SELECT 1 FROM " + table + " WHERE Entry = " + Id(lootId) + " AND Item = " + Id(item) + " AND Reference = 0 LIMIT 1");
+            return r != nullptr;
+        };
+        auto numberOk = [](float chance, uint32 minC, uint32 maxC, uint32 group)
+        {
+            return chance >= 0.f && chance <= 100.f && minC >= 1 && maxC >= minC && maxC <= 255 && group <= 255;
+        };
+
+        if ((op == "set" && w.size() >= 10) || (op == "add" && w.size() >= 9))
+        {
+            uint32 const item = Num(w[4]);
+            float const chance = static_cast<float>(std::atof(w[5].c_str()));
+            uint32 const minC = Num(w[6]), maxC = Num(w[7]), group = Num(w[8]);
+            uint32 const quest = op == "set" ? (Num(w[9]) ? 1 : 0) : 0;
+            if (!item || !numberOk(chance, minC, maxC, group))
+            {
+                bad.msg = "数值不合法（概率 0–100，数量 1–255 且最小不大于最大，分组 0–255）";
+                return bad;
+            }
+            if (op == "set")
+            {
+                if (!rowExists(item))
+                {
+                    bad.msg = "这张表里没有这件物品（引用行暂不能在这里改）";
+                    return bad;
+                }
+                return RunEdit(gm, k, lootId, Acore::StringFormat("set item {} chance={:.4f} count={}-{} group={} quest={}", item, chance, minC, maxC, group, quest),
+                               { "UPDATE " + table + " SET Chance = " + Acore::StringFormat("{:.4f}", chance) + ", MinCount = " + Id(minC) + ", MaxCount = " + Id(maxC) +
+                                 ", GroupId = " + Id(group) + ", QuestRequired = " + Id(quest) + " WHERE Entry = " + Id(lootId) + " AND Item = " + Id(item) + " AND Reference = 0" });
+            }
+            // add
+            if (!Q("SELECT 1 FROM item_template WHERE entry = " + Id(item)))
+            {
+                bad.msg = "没有这件物品";
+                return bad;
+            }
+            if (Q("SELECT 1 FROM " + table + " WHERE Entry = " + Id(lootId) + " AND Item = " + Id(item) + " LIMIT 1"))
+            {
+                bad.msg = "这张表里已经有这件物品了，请改它的行";
+                return bad;
+            }
+            return RunEdit(gm, k, lootId, Acore::StringFormat("add item {} chance={:.4f} count={}-{} group={}", item, chance, minC, maxC, group),
+                           { "INSERT INTO " + table + " (Entry, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, Comment) VALUES (" + Id(lootId) + ", " +
+                             Id(item) + ", 0, " + Acore::StringFormat("{:.4f}", chance) + ", 0, 1, " + Id(group) + ", " + Id(minC) + ", " + Id(maxC) + ", 'LootLab')" });
+        }
+        if (op == "del" && w.size() >= 5)
+        {
+            uint32 const item = Num(w[4]);
+            if (!item || !rowExists(item))
+            {
+                bad.msg = "这张表里没有这件物品（引用行暂不能在这里删）";
+                return bad;
+            }
+            return RunEdit(gm, k, lootId, Acore::StringFormat("del item {}", item),
+                           { "DELETE FROM " + table + " WHERE Entry = " + Id(lootId) + " AND Item = " + Id(item) + " AND Reference = 0" });
+        }
+        if (op == "restore")
+        {
+            QueryResult b = Q("SELECT rows_json FROM reborn_lootlab_baseline WHERE kind = '" + std::string(k.key) + "' AND loot_id = " + Id(lootId));
+            if (!b)
+            {
+                bad.msg = "这张表还没有被工坊改过，现在就是官方内容";
+                return bad;
+            }
+            std::string const official = b->Fetch()[0].Get<std::string>();
+            std::string const oldRows = Snapshot(k, lootId);
+            ApplySnapshot(k, lootId, official);
+            WriteLog(gm, k, lootId, "restore official", oldRows, Snapshot(k, lootId), false);
+            MarkDirty(k.key);
+            EditResult ok;
+            ok.ok = true;
+            ok.msg = "已还原为官方爆率";
+            return ok;
+        }
+        if (op == "undo")
+        {
+            QueryResult l = Q("SELECT id, old_rows FROM reborn_lootlab_log WHERE kind = '" + std::string(k.key) + "' AND loot_id = " + Id(lootId) + " AND reverted = 0 ORDER BY id DESC LIMIT 1");
+            if (!l)
+            {
+                bad.msg = "没有可以撤销的改动";
+                return bad;
+            }
+            Field* f = l->Fetch();
+            uint32 const logId = f[0].Get<uint32>();
+            std::string const before = f[1].Get<std::string>();
+            std::string const current = Snapshot(k, lootId);
+            ApplySnapshot(k, lootId, before);
+            WorldDatabase.DirectExecute("UPDATE reborn_lootlab_log SET reverted = 1 WHERE id = {}", logId);
+            WriteLog(gm, k, lootId, "undo #" + Id(logId), current, Snapshot(k, lootId), true);
+            MarkDirty(k.key);
+            EditResult ok;
+            ok.ok = true;
+            ok.msg = "已撤销上一步改动";
+            return ok;
+        }
+        bad.msg = "编辑命令参数不对: " + op;
+        return bad;
+    }
+}
+
+class RebornLootLabCommandScript : public CommandScript
+{
+public:
+    RebornLootLabCommandScript() : CommandScript("RebornLootLabCommandScript") { }
+
+    ChatCommandTable GetCommands() const override
+    {
+        static ChatCommandTable subCommands =
+        {
+            { "ui", HandleUi, SEC_GAMEMASTER, Console::No }
+        };
+        static ChatCommandTable rootCommands =
+        {
+            { "lootlab", subCommands }
+        };
+        return rootCommands;
+    }
+
+    static bool HandleUi(ChatHandler* handler, Optional<Tail> tail)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm)
+            return false;
+        std::string line = tail ? std::string(tail->data(), tail->size()) : std::string();
+        std::vector<std::string> w = Split(line);
+        if (w.empty())
+        {
+            handler->SendSysMessage("用法: .lootlab ui ping|kinds|maps|list|loot|users|sim|who|items|log|edit ...");
+            return true;
+        }
+        std::string const& what = w[0];
+
+        if (what == "ping")
+        {
+            Send(gm, Acore::StringFormat("PONG\t{}\t{}\t{}\t{}", sConfigMgr->GetOption<bool>("RebornLootLab.Enable", true) ? 1 : 0,
+                                         MayEdit(gm) ? 1 : 0, EditLocked() ? 1 : 0, EditEnabled() ? 1 : 0));
+            return true;
+        }
+        if (!sConfigMgr->GetOption<bool>("RebornLootLab.Enable", true))
+        {
+            Fail(handler, gm, "掉落工坊已在配置中关闭");
+            return true;
+        }
+        if (what == "kinds")
+        {
+            SendKinds(gm);
+            return true;
+        }
+        if (what == "maps")
+        {
+            SendMaps(gm);
+            return true;
+        }
+        if (what == "log")
+        {
+            SendLog(gm);
+            return true;
+        }
+        if (what == "who" && w.size() >= 2)
+        {
+            SendWho(gm, Num(w[1]));
+            return true;
+        }
+        if (what == "items" && w.size() >= 2)
+        {
+            SendItems(gm, Num(w[1]), Rest(line, 2));
+            return true;
+        }
+
+        // the rest all start with a kind
+        Kind const* k = w.size() >= 2 ? FindKind(w[1]) : nullptr;
+        if (!k)
+        {
+            Fail(handler, gm, "未知的来源类型");
+            return true;
+        }
+        if (what == "list" && w.size() >= 5)
+        {
+            // list <kind> <rank|-1> <map|-1> <page> [text...]
+            int const rank = w[2] == "-1" ? -1 : static_cast<int>(Num(w[2]));
+            int const mapId = w[3] == "-1" ? -1 : static_cast<int>(Num(w[3]));
+            SendList(gm, *k, rank, mapId, w.size() >= 5 ? Num(w[4]) : 0, Rest(line, 5));
+            return true;
+        }
+        if (what == "loot" && w.size() >= 3)
+        {
+            SendLoot(gm, *k, Num(w[2]));
+            return true;
+        }
+        if (what == "users" && w.size() >= 3)
+        {
+            SendUsers(gm, *k, Num(w[2]));
+            return true;
+        }
+        if (what == "edit" && w.size() >= 4)
+        {
+            if (!MayEdit(gm))
+            {
+                Send(gm, std::string("ED\t0\t") + (EditLocked() ? "正式服已锁定，不能编辑" : (EditEnabled() ? "你的账号等级不够编辑" : "编辑功能没有开启（服务端配置 RebornLootLab.Edit.Enable）")));
+                return true;
+            }
+            EditResult er = HandleEdit(gm, *k, Num(w[2]), w);
+            Send(gm, std::string("ED\t") + (er.ok ? "1" : "0") + "\t" + Fld(er.msg));
+            return true;
+        }
+        if (what == "sim" && w.size() >= 4)
+        {
+            SendSim(gm, *k, Num(w[2]), Num(w[3]));
+            return true;
+        }
+        Fail(handler, gm, "命令参数不对: " + what);
+        return true;
+    }
+};
+
+// A changed loot table is read again here, on the world thread (the same way the treasure panel does it), never from the command.
+class RebornLootLabWorldScript : public WorldScript
+{
+public:
+    RebornLootLabWorldScript() : WorldScript("RebornLootLabWorldScript") { }
+
+    void OnUpdate(uint32 /*diff*/) override
+    {
+        std::set<std::string> todo;
+        {
+            std::lock_guard<std::mutex> lock(g_dirtyMu);
+            if (g_dirty.empty())
+                return;
+            todo.swap(g_dirty);
+        }
+        for (std::string const& key : todo)
+        {
+            ReloadKind(key);
+            LOG_INFO("module", "[LootLab] loot store '{}' read again after an edit", key);
+        }
+    }
+};
+
+void AddSC_mod_reborn_lootlab()
+{
+    new RebornLootLabCommandScript();
+    new RebornLootLabWorldScript();
+}

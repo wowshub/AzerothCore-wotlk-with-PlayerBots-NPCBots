@@ -1,0 +1,8 @@
+﻿## Interface: 30300
+## Title: |cff00ff00Reborn|r LootLab (掉落工坊)
+## Notes: GM 掉落表浏览 / 模拟 / 物品反查 (LAB2, 浏览/编辑/撤销/还原官方)
+## Author: Claude (阶段 LAB1)
+## Version: 2.0.0
+## SavedVariables: RebornLootLabDB
+
+RebornLootLab.lua
