@@ -1,0 +1,2 @@
+# Keep exact tutorial source snapshots.
+tutorial/*.lua -text whitespace=cr-at-eol

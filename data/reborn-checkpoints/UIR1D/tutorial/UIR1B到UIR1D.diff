@@ -1,0 +1,46 @@
+--- UIR1B
++++ UIR1D
+@@ -4,6 +4,34 @@
+     { key="Sethrak", title="联盟 · 蛇人", detail="Sethrak / 蛇人\n固定男性外观 · 预览 / 开发中\n本项目指定联盟归属，尚未开放创建。", scale=0.65, z=-0.75 },
+     { key="Ogre", title="部落 · 双头食人魔", detail="Ogre / 双头食人魔\n仅双头外观 · 预览 / 开发中\n源文件在 Female 目录，不代表已提供女性款。", scale=0.75, z=-0.65 },
+ }
++-- UIR1C: localized racial descriptions supplied by the user; display text only.
++local racialDescriptions = {
++    Sethrak = table.concat({
++        "静电盘绕：对8码内的敌人造成自然伤害，并使其移动速度降低40%，持续6秒。冷却：2分钟。",
++        "鳞甲：装备提供的护甲提高2%。",
++        "蛇形反射：躲闪几率提高1%。",
++        "风暴之血：自然伤害和治疗效果提高1%。",
++        "抗毒体质：中毒效果持续时间缩短15%。",
++    }, "\n\n"),
++    Ogre = table.concat({
++        "头槌：使附近一名敌人昏迷2秒。冷却：2分钟。",
++        "蛮力：力量提高2%。",
++        "厚皮：装备提供的护甲提高2%。",
++        "重手：使用锤类和拳套武器时，精准提高3点。",
++        "食人魔烹饪：烹饪技能提高5点。",
++    }, "\n\n"),
++}
++-- UIR1D: white heading, yellow race introduction, white racial traits.
++local raceTooltipNames = { Sethrak = "蛇人", Ogre = "双头食人魔" }
++local raceIntroductions = {
++    Sethrak = "蛇人拥有坚韧的鳞甲与敏捷的身姿，善于运用风暴和自然之力。灵巧的反应与抗毒体质，让他们能从容应对危险。",
++    Ogre = "双头食人魔体格魁梧，拥有强大的力量与厚实的皮肤。两颗头颅共同观察战场，以沉重的打击压制敌人。",
++}
++local function RaceTooltip(entry)
++    return "|cffffffff"..raceTooltipNames[entry.key].."|r\n\n"
++        .."|cffffd200"..raceIntroductions[entry.key].."|r\n\n"
++        .."|cffffffff- "..racialDescriptions[entry.key]:gsub("\n\n", "\n\n- ").."|r"
++end
+ local prefix = "Reborn\\Preview\\UIR1A\\"
+ local function Call(model, method, ...)
+     if model and type(model[method]) == "function" then
+@@ -159,7 +187,7 @@
+         b.borderfaction:SetAlpha(1)
+         b.borderfaction:Show()
+         b.nameFrame.text:SetText(i==1 and "蛇人" or "双头食人魔")
+-        b.tooltip=e.title.." · 预览 / 开发中"
++        b.tooltip=RaceTooltip(e)
+         b:SetScript("OnClick", function()
+             Open(index)
+             for j,other in ipairs(buttons) do other:SetChecked(j==index) end

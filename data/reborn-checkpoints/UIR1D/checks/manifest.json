@@ -1,0 +1,8 @@
+{
+  "installed_input_sha256": "3e630cd522bfba9e050f725071a6b0de7e321b55ceb759b6148ca9e78519dbec",
+  "output_sha256": "6a9154f605dd0133c6280fa9bb76f033450b3a8c6207341249ff40862aed988f",
+  "input_stage": "UIR1C",
+  "source_of_traits": "user supplied 种族出生属性.txt; inherited UIR1C",
+  "intro": "本批中文展示简介，不新增机制",
+  "path": "Interface/GlueXML/RebornRacePreview.lua"
+}
