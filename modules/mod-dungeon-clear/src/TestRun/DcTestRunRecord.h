@@ -122,6 +122,26 @@ namespace DcTestRunRecord
         std::string healers;            // RebornWOW DCBOSS1B: the healers' state when this death was seen
     };
 
+    // RebornWOW DCWD1A (schema 24): one row of the spell ledger (see TestRun/DcSpellLedger.h).
+    struct SpellRow
+    {
+        std::string owner;
+        std::uint32_t sourceEntry = 0;   // 0 = the member itself, else a summon's creature entry
+        std::string source;
+        std::uint32_t spellId = 0;       // 0 = melee, 4294967295 = effect with no spell remembered
+        std::string spell;
+        std::uint32_t started = 0, succeeded = 0, cancelled = 0, triggered = 0;
+        std::uint32_t hits = 0, heals = 0;
+        std::uint64_t damage = 0, overkill = 0, healSelf = 0, healOther = 0;
+    };
+
+    struct SpellOwnerTotals
+    {
+        std::string owner;
+        std::uint64_t damageAll = 0, overkillAll = 0, healAll = 0;
+        std::uint64_t damageUnattributed = 0, healUnattributed = 0;
+    };
+
     // RebornWOW DCBOSS1A: damage the party took, by source and spell, and healing by healer.
     struct DamageSource
     {
@@ -243,7 +263,9 @@ namespace DcTestRunRecord
         //     glyphs, gear.
         // 23: RebornWOW DCPREP1A -- comp[].prep (item level, key stats, flask/elixir/food worn,
         //     potions and food carried) and `joined` (the same for the human who joined the party).
-        std::uint32_t schema = 23;
+        // 24: RebornWOW DCWD1A -- spellRows / spellTotals: per party member and per spell, the casts
+        //     (started / succeeded / cancelled / triggered) and the effects (damage, hits, heals).
+        std::uint32_t schema = 24;
         std::string runId;
         std::string planId;       // owning `.dc test plan`, "" for ad-hoc runs
         std::string dungeon;      // registry token
@@ -314,6 +336,8 @@ namespace DcTestRunRecord
         std::vector<HealSource> healDone;
         std::uint64_t damageTakenTotal = 0;
         std::vector<HealerStat> healerStats;   // RebornWOW DCBOSS1B (schema 20)
+        std::vector<SpellRow> spellRows;       // RebornWOW DCWD1A (schema 24)
+        std::vector<SpellOwnerTotals> spellTotals;
         std::vector<StatusEntry> statusTimeline;
         std::vector<PauseEntry> pauses;
         std::uint32_t finalMap = 0;

@@ -32,6 +32,7 @@
 #include "Ai/Dungeon/DungeonClear/DcValueKeys.h"
 #include "Ai/Dungeon/DungeonClear/Util/ChunkedPathfinder.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcAnchorDone.h"
+#include "Ai/Dungeon/DungeonClear/Util/DcCombatFlag.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcEngageGeometry.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcRun.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcStatusPublisher.h"
@@ -161,7 +162,8 @@ namespace
             // 100% reach LEGIT` and the wedge looked like a healthy fight.
             bool const trigger =
                 DungeonClearMath::IsUnresolvableCombatHolder(asCreature != nullptr,
-                                                             asCreature && asCreature->IsTrigger());
+                                                             asCreature && asCreature->IsTrigger(),
+                                                             asCreature ? asCreature->GetEntry() : 0);
             bool const legitimate = reachable && canAttackMe && !trigger;
             if (DcDiag::IsLegitimatePvECombatHolder(pvp, legitimate))
                 anyLegitimatePvEHolder = true;
@@ -225,8 +227,12 @@ namespace
         // the snapshot cannot drift from the hatch on the one field a reader
         // will trust it on. Only the per-holder legitimacy above is mirrored by
         // hand, and only because the trigger throws that detail away.
+        // Attackers count only when SEEN, exactly as the trigger counts them —
+        // `attackers=2` next to `phantomCombat=False` is how tr-20261018-101829-1's
+        // unseen Reservists read while the hatch sat shut.
         m.phantomCombat = DungeonClearMath::IsPhantomCombat(
-            /*inCombat*/ true, m.attackerCount > 0, !m.victim.empty(), hasLegitimateHolder);
+            /*inCombat*/ true, DcCombatFlag::HasSeenAttacker(member), !m.victim.empty(),
+            hasLegitimateHolder);
     }
 
     // Wrap-safe "how long ago", clamped: a zero stamp means "never", not "forever".

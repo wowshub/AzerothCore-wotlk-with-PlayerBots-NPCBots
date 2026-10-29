@@ -768,6 +768,13 @@ bool DungeonClearEngageTrashAction::Execute(Event /*event*/)
             target = fresh;
     }
 
+    // A target whose walk-in was given up (EngageWalkGivenUp below) is left to
+    // Advance until the give-up lapses; the trigger may well keep naming it.
+    DcApproachState& appr =
+        context->GetValue<DcApproachState&>(DcKey::ApproachState)->Get();
+    if (target && appr.engageWalkGivenUp.Has(target->GetGUID(), getMSTime()))
+        target = nullptr;
+
     if (!target)
     {
         if (!stickyGuid.IsEmpty())
@@ -809,8 +816,6 @@ bool DungeonClearEngageTrashAction::Execute(Event /*event*/)
     // ticks we take the tick back and walk in ourselves — but only for a pack the
     // CHUNKED router says is reachable, so a genuinely unreachable pack (across a gap,
     // behind a gate) still falls through to Advance rather than grinding at it.
-    DcApproachState& appr =
-        context->GetValue<DcApproachState&>(DcKey::ApproachState)->Get();
     float const targetDist = bot->GetDistance(target);
     if (targetDist > DC_ENGAGE_RANGE && !IsDirectlyReachable(bot, target))
     {
@@ -877,6 +882,39 @@ bool DungeonClearEngageTrashAction::Execute(Event /*event*/)
             return true;
         default:
             break;
+    }
+
+    // A walk-in that is not getting any nearer is given up and the tick handed to
+    // Advance (DungeonClearMath::EngageWalkGivenUp). Out of combat only: in a
+    // fight the combat engine owns the tank and the gap is no measure of anything.
+    if (!bot->IsInCombat())
+    {
+        uint32 const nowMs = getMSTime();
+        if (appr.engageWalkWatchTarget != target->GetGUID())
+        {
+            appr.engageWalkWatchTarget = target->GetGUID();
+            appr.engageWalkWatch = DungeonClearMath::WalkInWatch{};
+        }
+        if (DungeonClearMath::EngageWalkGivenUp(appr.engageWalkWatch, bot->GetExactDist(target),
+                                                DC_STUCK_DISPLACEMENT, nowMs,
+                                                DC_ENGAGE_WALK_GIVEUP_MS,
+                                                DC_ENGAGE_WALK_TICK_GAP_MS))
+        {
+            LOG_INFO("playerbots.dungeonclear",
+                     "[DC:{}] engage trash: walk-in on {} {} made no ground for {} ms "
+                     "({:.1f}yd, best {:.1f}yd) -> given up for {}s, advance resumes",
+                     bot->GetName(), target->GetName(), target->GetGUID().ToString(),
+                     nowMs - appr.engageWalkWatch.progressMs, bot->GetExactDist(target),
+                     appr.engageWalkWatch.bestDist, DC_ENGAGE_WALK_GIVEN_UP_MS / 1000);
+            appr.engageWalkGivenUp.Add(target->GetGUID(), nowMs, DC_ENGAGE_WALK_GIVEN_UP_MS);
+            appr.engageWalkWatchTarget.Clear();
+            appr.engageWalkWatch = DungeonClearMath::WalkInWatch{};
+            appr.engageWalkTarget.Clear();
+            appr.engageWalkMs = 0;
+            appr.stuckCount = 0;  // the frozen walk-in was never Advance's own failure
+            context->GetValue<ObjectGuid>(DcKey::EngageTrashTarget)->Set(ObjectGuid::Empty);
+            return false;
+        }
     }
 
     // Stamp a live walk-in so Advance leaves it alone on the ticks this action
@@ -1199,6 +1237,30 @@ bool DungeonClearRoomPreClearHoldAction::Execute(Event /*event*/)
 
 bool DungeonClearClearStalledAction::Execute(Event /*event*/)
 {
+    // The stall's own pull is over (DungeonClearMath::StallPullIsDone): clear the
+    // stall and hand the tick back to Advance, which re-stalls within
+    // DC_STUCK_LIMIT refused moves if the way really is shut. Waiting for Advance
+    // to clear it could never work — this trigger outranks Advance (20 vs 15), so
+    // while ANY reachable hostile was left the tank went on pulling them, 115yd
+    // from the boss in tr-20261019-182249-1, until the 120s stall watchdog ended a
+    // run with the whole party alive and out of combat.
+    ObjectGuid const lastAnnounced =
+        context->GetValue<ObjectGuid>(DcKey::FallbackTarget)->Get();
+    if (!lastAnnounced.IsEmpty())
+    {
+        Unit* const prev = ObjectAccessor::GetUnit(*bot, lastAnnounced);
+        if (DungeonClearMath::StallPullIsDone(prev && prev->IsAlive(), bot->IsInCombat()))
+        {
+            LOG_INFO("playerbots.dungeonclear",
+                     "[DC:{}] clear stalled: the stall's pull {} is done -> stall cleared, "
+                     "advance retries", bot->GetName(), lastAnnounced.ToString());
+            context->GetValue<ObjectGuid>(DcKey::FallbackTarget)->Set(ObjectGuid::Empty);
+            context->GetValue<DcApproachState&>(DcKey::ApproachState)->Get().stuckCount = 0;
+            ClearStall(context);
+            return false;
+        }
+    }
+
     Unit* target = DcTargeting::FindNearestReachableHostile(bot);
     if (!target)
     {
@@ -1215,17 +1277,13 @@ bool DungeonClearClearStalledAction::Execute(Event /*event*/)
 
     // Announce target on first selection. Suppress repeats while we're still
     // working on the same one.
-    ObjectGuid const lastAnnounced =
-        context->GetValue<ObjectGuid>(DcKey::FallbackTarget)->Get();
     if (lastAnnounced != target->GetGUID())
     {
         context->GetValue<ObjectGuid>(DcKey::FallbackTarget)->Set(target->GetGUID());
         DcStatusPublisher::SendAddonMessage(botAI, "CHAT\tClearing path \xe2\x80\x94 pulling " + std::string(target->GetName()) + ".");
     }
 
-    // Don't clear the stall reason here — only a successful Advance does that.
-    // If pathing to the boss is still blocked after this kill, we want the
-    // stall trigger to fire again next tick.
+    // The stall stays until this pull is done (top of this action).
     return EngageDirect(target);
 }
 

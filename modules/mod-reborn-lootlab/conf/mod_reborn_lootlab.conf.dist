@@ -1,0 +1,50 @@
+#
+# Reborn LootLab Module Configuration
+# 掉落工坊配置文件 (阶段 LAB1, 只读)
+#
+
+[worldserver]
+
+###################################################################################################
+#    RebornLootLab.Enable
+#        Description: 是否启用掉落工坊 (.lootlab 命令)。
+#        Default:     1 (启用)
+#                     0 (禁用)
+#
+
+RebornLootLab.Enable = 1
+
+#
+#    RebornLootLab.SimMaxRuns
+#        Description: “模拟掉落”一次最多模拟的次数。
+#        Default:     20000
+#
+
+RebornLootLab.SimMaxRuns = 20000
+
+
+#
+#    RebornLootLab.Edit.Enable
+#        Description: 是否允许在掉落工坊里编辑掉落表（改概率/数量/分组、添加/删除物品、撤销、还原官方）。
+#                     改动直接写 world 库，并在首次改动前自动保存一份官方原样（reborn_lootlab_baseline，只存一次）。
+#        Default:     0 (关闭，只读)
+#                     1 (开启)
+#
+
+RebornLootLab.Edit.Enable = 0
+
+#
+#    RebornLootLab.Edit.Lock
+#        Description: 正式服锁定：置 1 后无论什么账号等级，都不能编辑（只读）。
+#        Default:     0
+#
+
+RebornLootLab.Edit.Lock = 0
+
+#
+#    RebornLootLab.Edit.MinSecurity
+#        Description: 允许编辑的最低账号等级（0 玩家 1 版主 2 游戏管理员 3 管理员）。
+#        Default:     3
+#
+
+RebornLootLab.Edit.MinSecurity = 3

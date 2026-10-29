@@ -350,6 +350,18 @@ namespace
             // to island, which no arrival step can express — so Done is its yield.
             // Repeatable: it never completes; the predicate going false ends it.
             {578, 9},
+            // Stratholme "Climb out of the trap-alley pit": a POSITION is the
+            // gate — StrTrapAlleyPitDue reads true only while the tank is in the
+            // pit under the Scarlet trap alley — and its lone step (hook 64,
+            // RescueFromTrapAlleyPit) teleports the party out and reports Done.
+            // Repeatable: never latched, a second fall re-fires it.
+            {329, 7},
+            // Karazhan "Climb out from under the Guardian's Library": a POSITION
+            // is the gate — LibraryPitDue reads true only while the tank is in the
+            // castle-shell void under the library — and its lone step (hook 65,
+            // RescueFromLibraryPit) teleports the party out and reports Done.
+            // Repeatable: never latched, a second fall re-fires it.
+            {532, 4},
         };
         for (Row const& r : kRows)
             if (r.mapId == mapId && r.eventId == eventId)
@@ -623,7 +635,7 @@ TEST(DungeonEventIntegrityTest, IsolatedWingObjectivesAppearInExactlyOneWing)
     {
         DungeonWingLayout const* layout = DungeonWingRegistry::Get(patch.mapId);
         if (!layout || !layout->isolated)
-            continue;  // single-wing, or label-only (Maraudon) — no filter applied
+            continue;  // single-wing, or label-only — no filter applied
         for (DungeonBossInfo const& e : patch.add)
         {
             if (e.kind != DungeonAnchorKind::Objective)
@@ -1431,6 +1443,12 @@ TEST(DungeonEventIntegrityTest, StepsOwnMovementIsConfinedToVettedEvents)
         // tank while they happen.) And Done has to yield: every island clear,
         // Varos and Urom are ground fights for the objectives and the stock engine.
         {578, 9},
+        // Stratholme "Climb out of the trap-alley pit": hook 64 teleports the
+        // party out of the pit; the per-tick hold has no anchor to hold it at.
+        {329, 7},
+        // Karazhan "Climb out from under the Guardian's Library": hook 65 teleports
+        // the party back up; the per-tick hold has no anchor to hold it at.
+        {532, 4},
     };
 
     for (DungeonEvent const& ev : DungeonEventRegistry::AllEvents())

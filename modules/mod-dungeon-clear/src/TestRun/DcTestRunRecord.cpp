@@ -71,6 +71,43 @@ namespace DcTestRunRecord
             return s.str();
         }
 
+        // RebornWOW DCWD1A: ,"spellTotals":[...],"spellRows":[...]
+        std::string SpellLedgerJson(Record const& rec)
+        {
+            std::ostringstream s;
+            s << ",\"spellTotals\":[";
+            for (std::size_t i = 0; i < rec.spellTotals.size(); ++i)
+            {
+                SpellOwnerTotals const& t = rec.spellTotals[i];
+                if (i)
+                    s << ',';
+                s << "{\"owner\":";
+                AppendEscaped(s, t.owner);
+                s << ",\"damageAll\":" << t.damageAll << ",\"overkillAll\":" << t.overkillAll
+                  << ",\"healAll\":" << t.healAll << ",\"damageUnattributed\":" << t.damageUnattributed
+                  << ",\"healUnattributed\":" << t.healUnattributed << '}';
+            }
+            s << "],\"spellRows\":[";
+            for (std::size_t i = 0; i < rec.spellRows.size(); ++i)
+            {
+                SpellRow const& r = rec.spellRows[i];
+                if (i)
+                    s << ',';
+                s << "{\"owner\":";
+                AppendEscaped(s, r.owner);
+                s << ",\"sourceEntry\":" << r.sourceEntry << ",\"source\":";
+                AppendEscaped(s, r.source);
+                s << ",\"spellId\":" << r.spellId << ",\"spell\":";
+                AppendEscaped(s, r.spell);
+                s << ",\"started\":" << r.started << ",\"succeeded\":" << r.succeeded << ",\"cancelled\":" << r.cancelled
+                  << ",\"triggered\":" << r.triggered << ",\"hits\":" << r.hits << ",\"heals\":" << r.heals
+                  << ",\"damage\":" << r.damage << ",\"overkill\":" << r.overkill << ",\"healSelf\":" << r.healSelf
+                  << ",\"healOther\":" << r.healOther << '}';
+            }
+            s << ']';
+            return s.str();
+        }
+
         void AppendStatus(std::ostringstream& s, StatusEntry const& e)
         {
             s << "{\"t\":" << e.t << ",\"state\":";
@@ -313,6 +350,7 @@ namespace DcTestRunRecord
           << ",\"tierClass\":\"" << TierClass(rec) << '"'  // RebornWOW DCGM1B3
           << ",\"gm\":\"" << EscapeJson(rec.gmName) << '"'  // RebornWOW DCTEST10A
           << DamageJson(rec)  // RebornWOW DCBOSS1A
+          << SpellLedgerJson(rec)  // RebornWOW DCWD1A
           << ",\"clean\":" << (rec.cheatTier.empty() && rec.cheats.empty() ? "true" : "false")
           << ",\"cheats\":[";
         for (std::size_t i = 0; i < rec.cheats.size(); ++i)

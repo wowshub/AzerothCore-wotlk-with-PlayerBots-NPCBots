@@ -30,6 +30,7 @@
 #include "Util/DcPlayerbotsConfig.h"
 #include "World.h"
 #include "TestRun/DcDeathLog.h"  // RebornWOW DCBOSS1A
+#include "TestRun/DcSpellLedger.h"  // RebornWOW DCWD1A
 #include "TestRun/DcPrepSnapshot.h"  // RebornWOW DCPREP1A
 #include "Spell.h"                // RebornWOW DCBOSS1C
 #include "SpellInfo.h"
@@ -227,6 +228,10 @@ void DcTestRunJob::ReassertMaster()
         // toward the invisible driver parked outside the instance.
         botAI->ChangeStrategy("-follow", BOT_STATE_NON_COMBAT);
         botAI->ChangeStrategy("-follow", BOT_STATE_COMBAT);
+        // That rebuild ran while the master was cleared, so stock playerbots left
+        // out the master-gated "avoid aoe". Put it back with the master.
+        if (DC_PB_CONFIG(AutoAvoidAoe, autoAvoidAoe) && !botAI->HasStrategy("avoid aoe", BOT_STATE_COMBAT))
+            botAI->ChangeStrategy("+avoid aoe", BOT_STATE_COMBAT);
     }
 }
 
@@ -1189,15 +1194,25 @@ void DcTestRunJob::TickGrouping()
         // this strip covers the pre-enable / paused window. A GM master sticks:
         // FindNewMaster() only re-resolves a null or bot master.
         Player* gm = FindGm();
+        uint32 avoidAoe = 0;
         for (Slot const& slot : _slots)
             if (Player* bot = ObjectAccessor::FindPlayer(slot.guid))
                 if (PlayerbotAI* botAI = GET_PLAYERBOT_AI(bot))
                 {
                     if (gm)
                         botAI->SetMaster(gm);
+                    // Roster members log in masterless, so provisioning built their
+                    // strategies without playerbots' master-gated "avoid aoe".
+                    // Rebuild now that the GM is their master. Pool bots have had
+                    // the GM as master since login and get the same set back.
+                    botAI->ResetStrategies();
                     botAI->ChangeStrategy("-follow", BOT_STATE_NON_COMBAT);
                     botAI->ChangeStrategy("-follow", BOT_STATE_COMBAT);
+                    if (botAI->HasStrategy("avoid aoe", BOT_STATE_COMBAT))
+                        ++avoidAoe;
                 }
+        LOG_INFO("playerbots.dungeonclear", "TESTRUN {} grouped: avoid aoe on {}/{} members", RunId(), avoidAoe,
+                 _slots.size());
 
         EnterStage(Stage::Teleporting);
         return;
@@ -1698,6 +1713,7 @@ void DcTestRunJob::TrackDeaths(Player* tank)
         if (!member || !member->IsInWorld())
             return;
         DcDeathLog::Track(member->GetGUID(), _record.runId);  // RebornWOW DCBOSS1A: idempotent
+        DcSpellLedger::Track(member->GetGUID(), _record.runId, member->GetName());  // RebornWOW DCWD1A: idempotent
         bool const alive = member->IsAlive();
         auto const [it, fresh] = _aliveLast.emplace(member->GetGUID(), alive);
         if (fresh)
@@ -2507,12 +2523,18 @@ void DcTestRunJob::TickMonitoring(uint32 dt)
                 DcTestRunRecord::BossKill kill;
                 kill.t = _totalMs / 1000;
                 kill.via = "mask";
+                // Prefer the boss: an objective sharing the bit (the Iron Clad
+                // Door on Mr. Smite's 3) sorts first by the objective-before-boss
+                // tie-break and would otherwise take the boss's kill. A bit that
+                // only an objective owns (Stratholme's Dathrohan 6, Slaughterhouse
+                // 11) keeps the objective's name.
                 for (BossRef const& ref : _roster)
-                    if (ref.encounterIndex == bit)
+                    if (ref.encounterIndex == bit && (ref.isBoss || kill.name.empty()))
                     {
                         kill.entry = ref.entry;
                         kill.name = ref.name;
-                        break;
+                        if (ref.isBoss)
+                            break;
                     }
                 if (kill.name.empty())
                     kill.name = "encounter #" + std::to_string(bit);
@@ -3097,6 +3119,46 @@ void DcTestRunJob::Teardown()
             _record.healDone.push_back(std::move(h));
         }
         DcDeathLog::Untrack(_record.runId);
+    }
+    // RebornWOW DCWD1A: the spell ledger, then stop keeping it
+    {
+        std::vector<DcSpellLedger::Row> rows;
+        std::vector<DcSpellLedger::OwnerTotals> totals;
+        DcSpellLedger::Snapshot(_record.runId, 240, &rows, &totals);
+        for (DcSpellLedger::OwnerTotals const& t : totals)
+        {
+            DcTestRunRecord::SpellOwnerTotals o;
+            o.owner = t.owner;
+            o.damageAll = t.damageAll;
+            o.overkillAll = t.overkillAll;
+            o.healAll = t.healAll;
+            o.damageUnattributed = t.damageUnattributed;
+            o.healUnattributed = t.healUnattributed;
+            _record.spellTotals.push_back(std::move(o));
+            LOG_INFO("playerbots.dungeonclear", "TESTRUN {} DCWD1A {} damage={} (unattributed {}) overkill={} heal={} (unattributed {})",
+                     _record.runId, t.owner, t.damageAll, t.damageUnattributed, t.overkillAll, t.healAll, t.healUnattributed);
+        }
+        for (DcSpellLedger::Row const& r : rows)
+        {
+            DcTestRunRecord::SpellRow d;
+            d.owner = r.owner;
+            d.sourceEntry = r.sourceEntry;
+            d.source = r.source;
+            d.spellId = r.spellId;
+            d.spell = r.spell;
+            d.started = r.started;
+            d.succeeded = r.succeeded;
+            d.cancelled = r.cancelled;
+            d.triggered = r.triggered;
+            d.hits = r.hits;
+            d.heals = r.heals;
+            d.damage = r.damage;
+            d.overkill = r.overkill;
+            d.healSelf = r.healSelf;
+            d.healOther = r.healOther;
+            _record.spellRows.push_back(std::move(d));
+        }
+        DcSpellLedger::Untrack(_record.runId);
     }
     _record.endedAtMs = NowUnixMs();
     _record.durationS = static_cast<uint32>((_record.endedAtMs - _record.startedAtMs) / 1000);

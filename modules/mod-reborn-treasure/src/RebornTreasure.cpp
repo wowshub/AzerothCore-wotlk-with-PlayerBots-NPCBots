@@ -1,6 +1,7 @@
 #include "RebornTreasure.h"
 #include "Chat.h"
 #include "Config.h"
+#include "ConditionMgr.h"
 #include "DatabaseEnv.h"
 #include "GameObject.h"
 #include "Item.h"
@@ -238,6 +239,9 @@ void RebornTreasureMgr::Update(uint32 diff)
         m_lootDirty = false;
         LoadLootTemplates_Gameobject();
         LootTemplates_Gameobject.CheckLootRefs();
+        // TREAS3A: like `.reload gameobject_loot_template`: rebuilding the loot tables drops every condition attached to
+        // them (ours and the other gameobjects'), so the conditions are read again and put back
+        sConditionMgr->LoadConditions(true);
     }
 
     // TREAS2A4: a chest that was looted empty is removed here (an unowned summoned chest would otherwise stay and refill)
@@ -1069,6 +1073,12 @@ uint32 RebornTreasureMgr::CopyType(uint32 from, std::string& err)
         "INSERT INTO gameobject_loot_template (Entry, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, Comment) "
         "SELECT {}, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, 'TREAS2B copy' "
         "FROM gameobject_loot_template WHERE Entry = {}", entry, from);
+    WorldDatabase.Execute(   // TREAS3A: the conditions of the loot lines come along
+        "INSERT INTO conditions (SourceTypeOrReferenceId, SourceGroup, SourceEntry, SourceId, ElseGroup, ConditionTypeOrReference, "
+        "ConditionTarget, ConditionValue1, ConditionValue2, ConditionValue3, NegativeCondition, ErrorType, ErrorTextId, ScriptName, Comment) "
+        "SELECT 4, {}, SourceEntry, SourceId, ElseGroup, ConditionTypeOrReference, ConditionTarget, ConditionValue1, ConditionValue2, "
+        "ConditionValue3, NegativeCondition, ErrorType, ErrorTextId, ScriptName, 'TREAS3A copy' "
+        "FROM conditions WHERE SourceTypeOrReferenceId = 4 AND SourceGroup = {}", entry, from);
     MarkLootDirty();
     return entry;
 }
@@ -1095,6 +1105,7 @@ bool RebornTreasureMgr::DeleteType(uint32 entry, std::string& err)
     m_types.erase(entry);
     WorldDatabase.Execute("DELETE FROM reborn_treasure_types WHERE entry = {}", entry);
     WorldDatabase.Execute("DELETE FROM gameobject_loot_template WHERE Entry = {}", entry);
+    WorldDatabase.Execute("DELETE FROM conditions WHERE SourceTypeOrReferenceId = 4 AND SourceGroup = {}", entry);   // TREAS3A
     m_lootDirty = true;
     return true;
 }

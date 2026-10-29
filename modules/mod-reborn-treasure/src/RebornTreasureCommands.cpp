@@ -3,6 +3,7 @@
 #include "ChatCommand.h"
 #include "DBCStores.h"
 #include "DatabaseEnv.h"
+#include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
@@ -125,7 +126,8 @@ namespace
     {
         Send(p, Acore::StringFormat("LT_START\t{}", entry));
         QueryResult r = WorldDatabase.Query(
-            "SELECT g.Item, g.Chance, g.MinCount, g.MaxCount, g.GroupId, IFNULL(i.Quality, 0), IFNULL(i.displayid, 0), IFNULL(i.name, ''), IFNULL(l.Name, '') "
+            "SELECT g.Item, g.Chance, g.MinCount, g.MaxCount, g.GroupId, IFNULL(i.Quality, 0), IFNULL(i.displayid, 0), IFNULL(i.name, ''), IFNULL(l.Name, ''), "
+            "g.QuestRequired, (SELECT COUNT(*) FROM conditions c WHERE c.SourceTypeOrReferenceId = 4 AND c.SourceGroup = g.Entry AND c.SourceEntry = g.Item) "
             "FROM gameobject_loot_template g LEFT JOIN item_template i ON i.entry = g.Item "
             "LEFT JOIN item_template_locale l ON l.ID = g.Item AND l.locale = 'zhCN' "
             "WHERE g.Entry = {} AND g.Reference = 0 ORDER BY g.GroupId, g.Item LIMIT 120", entry);
@@ -134,8 +136,10 @@ namespace
             do
             {
                 Field* f = r->Fetch();
-                Send(p, Acore::StringFormat("LT\t{}\t{}\t{:.2f}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", entry, f[0].Get<uint32>(), f[1].Get<float>(),
+                // the quest flag and the condition count come before the long texts: a clipped line loses only a name
+                Send(p, Acore::StringFormat("LT\t{}\t{}\t{:.2f}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", entry, f[0].Get<uint32>(), f[1].Get<float>(),
                                             f[2].Get<uint32>(), f[3].Get<uint32>(), f[4].Get<uint32>(), f[5].Get<uint32>(),
+                                            f[9].Get<bool>() ? 1 : 0, f[10].Get<uint64>(),
                                             IconOfDisplay(f[6].Get<uint32>()), Fld(f[7].Get<std::string>()), Fld(f[8].Get<std::string>())));
             } while (r->NextRow());
         }
@@ -201,6 +205,85 @@ namespace
             } while (r->NextRow());
         }
         Send(p, Acore::StringFormat("IT_END\t{}\t{}\t{}", page, more ? 1 : 0, count));
+    }
+
+    // TREAS3A: quests by id or by part of the (English / Chinese) name
+    void SendQuests(Player* p, std::string text)
+    {
+        text.erase(std::remove_if(text.begin(), text.end(), [](char ch) { return ch == '%' || ch == '_' || ch == '\\' || ch == '\''; }), text.end());
+        WorldDatabase.EscapeString(text);
+        Send(p, "QS_START");
+        if (!text.empty())
+        {
+            std::string where = IsNumber(text) ? Acore::StringFormat("q.ID = {}", Num(text))
+                                               : Acore::StringFormat("(q.LogTitle LIKE '%{}%' OR l.Title LIKE '%{}%')", text, text);
+            QueryResult r = WorldDatabase.Query(
+                "SELECT q.ID, q.QuestLevel, q.LogTitle, IFNULL(l.Title, '') FROM quest_template q "
+                "LEFT JOIN quest_template_locale l ON l.ID = q.ID AND l.locale = 'zhCN' WHERE {} ORDER BY q.ID LIMIT 15", where);
+            if (r)
+                do
+                {
+                    Field* f = r->Fetch();
+                    Send(p, Acore::StringFormat("QS\t{}\t{}\t{}\t{}", f[0].Get<uint32>(), f[1].Get<int32>(),
+                                                Fld(Clip(f[2].Get<std::string>(), 60)), Fld(Clip(f[3].Get<std::string>(), 60))));
+                } while (r->NextRow());
+        }
+        Send(p, "QS_END");
+    }
+
+    // TREAS3A: one quest and the items it asks for (the quest-item wizard fills a loot table from this)
+    void SendQuestInfo(Player* p, uint32 id)
+    {
+        QueryResult r = WorldDatabase.Query(
+            "SELECT q.QuestLevel, q.LogTitle, IFNULL(l.Title, ''), q.RequiredItemId1, q.RequiredItemId2, q.RequiredItemId3, q.RequiredItemId4, "
+            "q.RequiredItemId5, q.RequiredItemId6, q.RequiredItemCount1, q.RequiredItemCount2, q.RequiredItemCount3, q.RequiredItemCount4, "
+            "q.RequiredItemCount5, q.RequiredItemCount6 FROM quest_template q "
+            "LEFT JOIN quest_template_locale l ON l.ID = q.ID AND l.locale = 'zhCN' WHERE q.ID = {}", id);
+        if (!r)
+        {
+            Send(p, "ERR\t没有这个任务: " + std::to_string(id));
+            return;
+        }
+        Field* f = r->Fetch();
+        Send(p, Acore::StringFormat("QI\t{}\t{}\t{}\t{}", id, f[0].Get<int32>(), Fld(Clip(f[1].Get<std::string>(), 60)), Fld(Clip(f[2].Get<std::string>(), 60))));
+        for (uint32 i = 0; i < 6; ++i)
+        {
+            uint32 const item = f[3 + i].Get<uint32>();
+            uint32 const count = f[9 + i].Get<uint32>();
+            if (!item)
+                continue;
+            QueryResult ir = WorldDatabase.Query(
+                "SELECT i.Quality, i.displayid, i.name, IFNULL(l.Name, '') FROM item_template i "
+                "LEFT JOIN item_template_locale l ON l.ID = i.entry AND l.locale = 'zhCN' WHERE i.entry = {}", item);
+            if (!ir)
+                continue;
+            Field* g = ir->Fetch();
+            Send(p, Acore::StringFormat("QIT\t{}\t{}\t{}\t{}\t{}\t{}", item, count, g[0].Get<uint32>(), IconOfDisplay(g[1].Get<uint32>()),
+                                        Fld(Clip(g[2].Get<std::string>(), 60)), Fld(Clip(g[3].Get<std::string>(), 60))));
+        }
+        Send(p, Acore::StringFormat("QI_END\t{}", id));
+    }
+
+    // TREAS3A: the conditions a loot line can have. Only these (type, what the values mean) are written by the panel.
+    bool CondOk(uint32 type, uint32 neg, uint32 v1, uint32 v2, uint32 v3, std::string& why)
+    {
+        (void)v3;
+        if (neg > 1) { why = "取反只能是 0 或 1"; return false; }
+        switch (type)
+        {
+            case 1:  return v1 > 0 ? true : (why = "光环要写法术编号", false);                         // CONDITION_AURA
+            case 2:  return (v1 > 0 && v2 >= 1 && v2 <= 1000) ? true : (why = "持有物品要写物品编号和数量", false);   // CONDITION_ITEM
+            case 6:  return (v1 == 67 || v1 == 469) ? true : (why = "阵营只能是 67（部落）或 469（联盟）", false);       // CONDITION_TEAM
+            case 8:                                                                                   // CONDITION_QUESTREWARDED
+            case 9:                                                                                   // CONDITION_QUESTTAKEN
+            case 14:                                                                                  // CONDITION_QUEST_NONE
+            case 28:                                                                                  // CONDITION_QUEST_COMPLETE
+                if (!v1 || !sObjectMgr->GetQuestTemplate(v1)) { why = "没有这个任务"; return false; }
+                return true;
+            case 15: case 16: return v1 > 0 ? true : (why = "职业 / 种族掩码不能是 0", false);    // CONDITION_CLASS / CONDITION_RACE (bit masks)
+            case 27: return (v1 >= 1 && v1 <= 255 && v2 <= 4) ? true : (why = "等级 1–255，比较方式 0–4", false);  // CONDITION_LEVEL
+            default: why = Acore::StringFormat("不支持的条件类型 {}", type); return false;
+        }
     }
 
     // TREASFIX2: icons for the chest-type list, by category. The names come from the item display table (so the
@@ -447,7 +530,7 @@ public:
         std::vector<std::string> w = Split(line);
         if (w.empty())
         {
-            handler->SendSysMessage("用法: .treasure ui types|loot|items|looks|typeset|typenew|typecopy|typedel|lootset|lootdel|spawns|spawngo|spawnshow|spawndel|spawnhere|spawnrespawn|spawncomment|spawnclue|spawntype ...");
+            handler->SendSysMessage("用法: .treasure ui types|loot|items|looks|typeset|typenew|typecopy|typedel|lootset|lootdel|lootcond|lootcondclr|lootcondadd|quests|questinfo|spawns|spawngo|spawnshow|spawndel|spawnhere|spawnrespawn|spawncomment|spawnclue|spawntype ...");
             return true;
         }
         std::string const& what = w[0];
@@ -660,8 +743,144 @@ public:
                 Send(gm, Acore::StringFormat("OK\tspawntype\t{}", Num(w[1])));
             return true;
         }
-        if (what == "lootset" && w.size() >= 7)        // lootset <entry> <item> <chance> <min> <max> <group>
+        // ---- TREAS3A: quests and the conditions of a loot line
+        if (what == "quests")                          // quests <id | part of a name>
         {
+            SendQuests(gm, Rest(line, 1));
+            return true;
+        }
+        if (what == "questinfo" && w.size() >= 2)      // questinfo <id>
+        {
+            SendQuestInfo(gm, Num(w[1]));
+            return true;
+        }
+        // ---- TREAS3B: give a quest / take it away again, to test quest-item chests with any character.
+        // questadd <id> [name] ignores faction, race and prerequisite quests (like `.quest add`); questdel <id> [name] clears
+        // it from the log and from the handed-in list so it can be taken again. The target is the named player, else the
+        // player the GM has selected, else the GM.
+        if ((what == "questadd" || what == "questdel") && w.size() >= 2)
+        {
+            Quest const* quest = sObjectMgr->GetQuestTemplate(Num(w[1]));
+            if (!quest)
+            {
+                Fail(handler, gm, "没有这个任务: " + w[1]);
+                return true;
+            }
+            Player* target = gm;
+            if (w.size() >= 3)
+            {
+                target = ObjectAccessor::FindPlayerByName(w[2]);
+                if (!target)
+                {
+                    Fail(handler, gm, "找不到在线角色: " + w[2]);
+                    return true;
+                }
+            }
+            else if (Unit* sel = gm->GetSelectedUnit(); sel && sel->IsPlayer())
+                target = sel->ToPlayer();
+
+            uint32 const id = quest->GetQuestId();
+            std::string const who = target->GetName();
+            if (what == "questadd")
+            {
+                if (target->IsActiveQuest(id))
+                {
+                    Fail(handler, gm, who + " 已经接着这个任务了");
+                    return true;
+                }
+                if (target->IsQuestRewarded(id))
+                    target->RemoveRewardedQuest(id);   // handed in before: forget it so the quest can be taken again
+                if (!target->CanAddQuest(quest, true))
+                {
+                    Fail(handler, gm, who + " 的任务日志满了或不能接这个任务");
+                    return true;
+                }
+                target->AddQuestAndCheckCompletion(quest, nullptr);
+                Send(gm, Acore::StringFormat("OK\tquestadd\t{} <- {}", id, Fld(who)));
+                handler->PSendSysMessage("|cff00ff00[野外寻宝]|r 已把任务 {} ({}) 给了 {}", id, quest->GetTitle(), who);
+            }
+            else
+            {
+                for (uint8 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
+                {
+                    uint32 const logQuest = target->GetQuestSlotQuestId(slot);
+                    if (logQuest == id)
+                    {
+                        target->SetQuestSlot(slot, 0);
+                        target->TakeQuestSourceItem(logQuest, false);
+                    }
+                }
+                target->RemoveRewardedQuest(id);
+                target->RemoveActiveQuest(id, false);
+                Send(gm, Acore::StringFormat("OK\tquestdel\t{} <- {}", id, Fld(who)));
+                handler->PSendSysMessage("|cff00ff00[野外寻宝]|r 已从 {} 身上去掉任务 {} ({})", who, id, quest->GetTitle());
+            }
+            return true;
+        }
+        if (what == "lootcond" && w.size() >= 3)       // lootcond <entry> <item>: the line's conditions
+        {
+            uint32 const entry = Num(w[1]), item = Num(w[2]);
+            Send(gm, Acore::StringFormat("CD_START\t{}\t{}", entry, item));
+            QueryResult r = WorldDatabase.Query(
+                "SELECT ConditionTypeOrReference, NegativeCondition, ConditionValue1, ConditionValue2, ConditionValue3 FROM conditions "
+                "WHERE SourceTypeOrReferenceId = 4 AND SourceGroup = {} AND SourceEntry = {} AND ElseGroup = 0 ORDER BY ConditionTypeOrReference, ConditionValue1", entry, item);
+            if (r)
+                do
+                {
+                    Field* f = r->Fetch();
+                    Send(gm, Acore::StringFormat("CD\t{}\t{}\t{}\t{}\t{}\t{}\t{}", entry, item, f[0].Get<int32>(), f[1].Get<uint32>(),
+                                                 f[2].Get<uint32>(), f[3].Get<uint32>(), f[4].Get<uint32>()));
+                } while (r->NextRow());
+            Send(gm, Acore::StringFormat("CD_END\t{}\t{}", entry, item));
+            return true;
+        }
+        if ((what == "lootcondclr" && w.size() >= 3) || (what == "lootcondadd" && w.size() >= 8))
+        {
+            // lootcondclr <entry> <item>  |  lootcondadd <entry> <item> <type> <negate> <v1> <v2> <v3>
+            uint32 const entry = Num(w[1]), item = Num(w[2]);
+            TreasureType condType;
+            if (!sRebornTreasure->GetType(entry, condType))
+            {
+                Fail(handler, gm, "没有这种宝箱");
+                return true;
+            }
+            if (what == "lootcondclr")
+            {
+                WorldDatabase.Execute("DELETE FROM conditions WHERE SourceTypeOrReferenceId = 4 AND SourceGroup = {} AND SourceEntry = {}", entry, item);
+                sRebornTreasure->MarkLootDirty();
+                Send(gm, Acore::StringFormat("OK\tlootcondclr\t{}\t{}", entry, item));
+                return true;
+            }
+            uint32 const type = Num(w[3]), neg = Num(w[4]), v1 = Num(w[5]), v2 = Num(w[6]), v3 = Num(w[7]);
+            std::string why;
+            if (!CondOk(type, neg, v1, v2, v3, why))
+            {
+                Fail(handler, gm, why);
+                return true;
+            }
+            QueryResult have = WorldDatabase.Query("SELECT COUNT(*) FROM gameobject_loot_template WHERE Entry = {} AND Item = {}", entry, item);
+            if (!have || have->Fetch()[0].Get<uint64>() == 0)
+            {
+                Fail(handler, gm, "掉落表里没有这件物品（先保存掉落，再加条件）");
+                return true;
+            }
+            QueryResult many = WorldDatabase.Query("SELECT COUNT(*) FROM conditions WHERE SourceTypeOrReferenceId = 4 AND SourceGroup = {} AND SourceEntry = {}", entry, item);
+            if (many && many->Fetch()[0].Get<uint64>() >= 5)
+            {
+                Fail(handler, gm, "一件物品最多 5 个条件");
+                return true;
+            }
+            WorldDatabase.Execute(
+                "INSERT INTO conditions (SourceTypeOrReferenceId, SourceGroup, SourceEntry, SourceId, ElseGroup, ConditionTypeOrReference, ConditionTarget, "
+                "ConditionValue1, ConditionValue2, ConditionValue3, NegativeCondition, ErrorType, ErrorTextId, ScriptName, Comment) "
+                "VALUES (4, {}, {}, 0, 0, {}, 0, {}, {}, {}, {}, 0, 0, '', 'TREAS3A panel')", entry, item, type, v1, v2, v3, neg);
+            sRebornTreasure->MarkLootDirty();
+            Send(gm, Acore::StringFormat("OK\tlootcondadd\t{}\t{}", entry, item));
+            return true;
+        }
+        if (what == "lootset" && w.size() >= 7)        // lootset <entry> <item> <chance> <min> <max> <group> [quest 0|1]
+        {
+            bool const questFlag = w.size() >= 8 && Num(w[7]) != 0;   // TREAS3A: only for players who need the item for a quest
             uint32 entry = Num(w[1]);
             uint32 item = Num(w[2]);
             float chance = static_cast<float>(std::atof(w[3].c_str()));
@@ -688,13 +907,20 @@ public:
             chance = std::max(0.0f, std::min(chance, 100.0f));
             WorldDatabase.Execute(
                 "REPLACE INTO gameobject_loot_template (Entry, Item, Reference, Chance, QuestRequired, LootMode, GroupId, MinCount, MaxCount, Comment) "
-                "VALUES ({}, {}, 0, {}, 0, 1, {}, {}, {}, 'TREAS2A panel')", entry, item, chance, group, mn, mx);
+                "VALUES ({}, {}, 0, {}, {}, 1, {}, {}, {}, 'TREAS2A panel')", entry, item, chance, questFlag ? 1 : 0, group, mn, mx);
             sRebornTreasure->MarkLootDirty();
             Send(gm, Acore::StringFormat("OK\tlootset\t{}\t{}", entry, item));
             return true;
         }
         if (what == "lootdel" && w.size() >= 3)        // lootdel <entry> <item>
         {
+            TreasureType delType;
+            if (!sRebornTreasure->GetType(Num(w[1]), delType))   // TREAS3A: only our own chest types
+            {
+                Fail(handler, gm, "没有这种宝箱");
+                return true;
+            }
+            WorldDatabase.Execute("DELETE FROM conditions WHERE SourceTypeOrReferenceId = 4 AND SourceGroup = {} AND SourceEntry = {}", Num(w[1]), Num(w[2]));
             WorldDatabase.Execute("DELETE FROM gameobject_loot_template WHERE Entry = {} AND Item = {}", Num(w[1]), Num(w[2]));
             sRebornTreasure->MarkLootDirty();
             Send(gm, Acore::StringFormat("OK\tlootdel\t{}\t{}", Num(w[1]), Num(w[2])));

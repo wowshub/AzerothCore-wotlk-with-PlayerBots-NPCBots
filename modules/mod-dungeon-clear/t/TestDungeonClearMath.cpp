@@ -1707,6 +1707,30 @@ TEST(DungeonClearStuckCombatTest, StoppedHolderStopsProsecutingAndStaysStopped)
     EXPECT_TRUE(prosecuting(40.0f));
 }
 
+// The engage-range clause judges the nearest holder the bot can SEE. A holder out of
+// LOS — tr-20261018-101829-1's Angerforge Reservists, 14-16yd away on the floor ~11yd
+// below the tank — is in range by the numbers, but no playerbots action can target it
+// (AttackersValue requires LOS), so treating it as toe-to-toe kept the hatch shut for
+// the whole 900s no-progress window. The trigger passes +inf when no holder is seen.
+TEST(DungeonClearStuckCombatTest, UnseenHolderInRangeProsecutesOnlyWhileClosing)
+{
+    constexpr float engageRange = 22.0f;
+    constexpr float unseen = std::numeric_limits<float>::infinity();
+
+    // What the old code saw: a legitimate holder at 14.4yd -> "a fight", forever.
+    EXPECT_TRUE(DungeonClearMath::IsHolderProsecutingFight(true, 14.4f, engageRange, false));
+
+    // Same holder, judged by SEEN distance: stationary below us -> not a fight, so the
+    // hatch's streak clock runs and the force-clear fires.
+    EXPECT_FALSE(DungeonClearMath::IsHolderProsecutingFight(true, unseen, engageRange, false));
+    EXPECT_TRUE(DungeonClearMath::IsPhantomCombat(
+        true, /*hasAttacker (seen)*/ false, false,
+        DungeonClearMath::IsHolderProsecutingFight(true, unseen, engageRange, false)));
+
+    // A mob chasing us around a corner is unseen too, but it is CLOSING — still a fight.
+    EXPECT_TRUE(DungeonClearMath::IsHolderProsecutingFight(true, unseen, engageRange, true));
+}
+
 // The streak gate: a transient phantom tick must not fire; only a phantom state held
 // continuously for the timeout does, and any break resets the clock.
 TEST(DungeonClearStuckCombatTest, StreakGateArmsHoldsAndFires)
@@ -2895,6 +2919,30 @@ TEST(DungeonClearMathTest, RepathOffLevelIsSpentOnce)
     EXPECT_FALSE(DungeonClearMath::ShouldRepathOffLevel(-14.2f, 5.0f, true));
 }
 
+// tr-20261018-101829-3: tank 30yd from Emperor Thaurissan, 5.1yd under his
+// throne, stock PathGenerator NOPATH to him, boss in plain view.
+TEST(DungeonClearMathTest, NoRouteToADaisBossFallsBackToSight)
+{
+    EXPECT_TRUE(DungeonClearMath::ProbeSaysSameFloor(false, false, false, 0.0f, 32.3f, true));
+}
+
+TEST(DungeonClearMathTest, NoRouteAndNoSightIsAnotherFloor)
+{
+    // A boss a storey away is behind the floor slab.
+    EXPECT_FALSE(DungeonClearMath::ProbeSaysSameFloor(false, false, false, 0.0f, 32.3f, false));
+}
+
+TEST(DungeonClearMathTest, ARouteStillDecidesByLengthWhateverTheSight)
+{
+    // Walkway over Rethilgore: in sight, but the stairs make it a long walk.
+    EXPECT_FALSE(DungeonClearMath::ProbeSaysSameFloor(true, true, true, 80.0f, 32.3f, true));
+    EXPECT_TRUE(DungeonClearMath::ProbeSaysSameFloor(true, true, true, 30.0f, 32.3f, false));
+    // INCOMPLETE is an answer ("not reachable from here"), not a fall-back.
+    EXPECT_FALSE(DungeonClearMath::ProbeSaysSameFloor(true, false, true, 20.0f, 32.3f, true));
+    // A short route that ends on the wrong level is not the boss's floor.
+    EXPECT_FALSE(DungeonClearMath::ProbeSaysSameFloor(true, true, false, 20.0f, 32.3f, true));
+}
+
 TEST(DungeonClearMathTest, RejoinGapGrowsWhileSinkingUnderTheRoutePoint)
 {
     // tr-20260927-101342-8: 2D deviation 3.2 -> 0.0yd while the tank walked the
@@ -3349,6 +3397,81 @@ TEST(DungeonClearRoomTrashTest, AllRefusedFallsBackToTheNearest)
     EXPECT_EQ(DungeonClearMath::PickRoomTrashIndex(dist, {true}), 1);
 }
 
+// sk-20261019-105358 (-70/-72/-73): an Angerforge summon inside the geometry held
+// every member on refused routes until the stall watchdog. Five seconds of
+// refusals on the same holder give it up; a move or a new holder restarts.
+TEST(DungeonClearAssistTest, ARefusedHolderIsGivenUp)
+{
+    using DungeonClearMath::AssistCloseGivenUp;
+    uint32_t since = 0;
+    EXPECT_FALSE(AssistCloseGivenUp(false, true, 1000, 5000, since));
+    EXPECT_EQ(since, 1000u);
+    EXPECT_FALSE(AssistCloseGivenUp(false, true, 5999, 5000, since));
+    EXPECT_TRUE(AssistCloseGivenUp(false, true, 6000, 5000, since));
+    // A move that goes restarts the clock.
+    EXPECT_FALSE(AssistCloseGivenUp(true, true, 6100, 5000, since));
+    EXPECT_EQ(since, 0u);
+    EXPECT_FALSE(AssistCloseGivenUp(false, true, 6200, 5000, since));
+    EXPECT_FALSE(AssistCloseGivenUp(false, true, 11199, 5000, since));
+    // A new holder starts its own refusals now.
+    EXPECT_FALSE(AssistCloseGivenUp(false, false, 11200, 5000, since));
+    EXPECT_EQ(since, 11200u);
+    EXPECT_TRUE(AssistCloseGivenUp(false, true, 16200, 5000, since));
+    // getMSTime 0 still starts a clock.
+    since = 0;
+    EXPECT_FALSE(AssistCloseGivenUp(false, true, 0, 5000, since));
+    EXPECT_NE(since, 0u);
+}
+
+// tr-20261019-182249-1: the walk-in on a Doomforge Arcanasmith stood still at
+// (781.7,31.9) for 100s. Eight seconds without closing give it up; a walk that
+// closes, or a gap in the ticks, restarts the measure.
+TEST(DungeonClearEngageTrashTest, AWalkInThatGainsNoGroundIsGivenUp)
+{
+    using DungeonClearMath::EngageWalkGivenUp;
+    DungeonClearMath::WalkInWatch w;
+    EXPECT_FALSE(EngageWalkGivenUp(w, 40.0f, 0.5f, 1000, 8000, 2000));
+    // Frozen: the same 40yd tick after tick.
+    uint32_t t = 1000;
+    for (; t < 8900; t += 200)
+        EXPECT_FALSE(EngageWalkGivenUp(w, 40.0f, 0.5f, t, 8000, 2000));
+    EXPECT_TRUE(EngageWalkGivenUp(w, 40.0f, 0.5f, 9000, 8000, 2000));
+
+    // A walk that closes never trips it.
+    DungeonClearMath::WalkInWatch walking;
+    float d = 60.0f;
+    for (uint32_t ms = 0; ms < 20000; ms += 200, d -= 1.0f)
+        EXPECT_FALSE(EngageWalkGivenUp(walking, d, 0.5f, ms + 1, 8000, 2000));
+
+    // Losing the tick for longer than the gap restarts the window.
+    DungeonClearMath::WalkInWatch held;
+    EXPECT_FALSE(EngageWalkGivenUp(held, 30.0f, 0.5f, 1000, 8000, 2000));
+    EXPECT_FALSE(EngageWalkGivenUp(held, 30.0f, 0.5f, 7000, 8000, 2000));
+    EXPECT_FALSE(EngageWalkGivenUp(held, 30.0f, 0.5f, 10000, 8000, 2000));
+}
+
+// tr-20261019-182249-1: the stall outlived its own pull — the fallback went on
+// pulling every reachable mob and Advance never got the tick that clears it.
+TEST(DungeonClearStallTest, TheStallEndsWithItsPull)
+{
+    EXPECT_TRUE(DungeonClearMath::StallPullIsDone(false, false));
+    // Still fighting it, or anything else: not yet.
+    EXPECT_FALSE(DungeonClearMath::StallPullIsDone(true, false));
+    EXPECT_FALSE(DungeonClearMath::StallPullIsDone(false, true));
+    EXPECT_FALSE(DungeonClearMath::StallPullIsDone(true, true));
+}
+
+TEST(DungeonClearStallTest, AnArbiterDeferralIsNotStuck)
+{
+    // A refused move counts toward DC_STUCK_LIMIT...
+    EXPECT_TRUE(DungeonClearMath::MoveToFallbackCountsStuck(false, false));
+    // ...unless the arbiter only deferred it behind a move that still holds.
+    EXPECT_FALSE(DungeonClearMath::MoveToFallbackCountsStuck(false, true));
+    // An issued move is never stuck.
+    EXPECT_FALSE(DungeonClearMath::MoveToFallbackCountsStuck(true, false));
+    EXPECT_FALSE(DungeonClearMath::MoveToFallbackCountsStuck(true, true));
+}
+
 TEST(DungeonClearRoomTrashTest, AKillDropsTheRefusals)
 {
     EXPECT_TRUE(DungeonClearMath::ShouldDropLaneRefusals(23u, 24u));
@@ -3370,4 +3493,30 @@ TEST(DungeonClearMathTest, RegroupAnchorKeepsAFightablePack)
 {
     EXPECT_TRUE(DungeonClearMath::IsRegroupAnchorCandidate(25.0f, 100.0f, true));
     EXPECT_TRUE(DungeonClearMath::IsRegroupAnchorCandidate(100.0f, 100.0f, true));
+}
+
+// Blizzard (Shade of Aran) is a template-unselectable static spawn with no TRIGGER
+// flag: it outlives Aran and held three Karazhan members flagged for 199s, read as a
+// LEGIT holder (tr-20261022-104155-559).
+TEST(DungeonClearStuckCombatTest, UnflaggedScriptHelpersAreUnresolvableByEntry)
+{
+    EXPECT_TRUE(DungeonClearMath::IsUnresolvableCombatHolder(true, false, 17161));
+    // Only creatures, and only listed entries.
+    EXPECT_FALSE(DungeonClearMath::IsUnresolvableCombatHolder(false, false, 17161));
+    EXPECT_FALSE(DungeonClearMath::IsUnresolvableCombatHolder(true, false, 16524));  // Aran himself
+}
+
+// The leader-assist groupmate fallback's hysteresis. Unlatched it is the plain
+// co-located threshold; latched on the member it just yielded beside, it holds out
+// to the release band, so a follower trailing the tank at 5-6yd can no longer flip
+// the rung every tick (tr-20261022-104155-559 / -193320-1035).
+TEST(DungeonClearLeaderAssistTest, GroupmateFallbackHasHysteresis)
+{
+    float const in = 5.0f, out = 15.0f;
+    EXPECT_TRUE(DungeonClearMath::LeaderAssistFallbackYields(4.2f, false, in, out));
+    EXPECT_FALSE(DungeonClearMath::LeaderAssistFallbackYields(5.6f, false, in, out));
+    EXPECT_TRUE(DungeonClearMath::LeaderAssistFallbackYields(5.6f, true, in, out));
+    EXPECT_TRUE(DungeonClearMath::LeaderAssistFallbackYields(15.0f, true, in, out));
+    // A real round-the-corner distance walks again.
+    EXPECT_FALSE(DungeonClearMath::LeaderAssistFallbackYields(15.1f, true, in, out));
 }

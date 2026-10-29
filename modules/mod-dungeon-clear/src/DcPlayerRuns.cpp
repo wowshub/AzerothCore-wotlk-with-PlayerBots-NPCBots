@@ -594,6 +594,21 @@ namespace DcPlayerRuns
             return;
         std::lock_guard<std::mutex> lock(gMtx);
         auto it = gActive.find(tank->GetGUID());
+        // RebornWOW DCREC1A: the record is filed under the bot that started the run, but the run can be
+        // disabled through another member (the owner is resolved by DcLeaderSignal::FindRunOwner; with the
+        // tank dead and no leader the terminal rung can fire from any living member). Then the lookup by
+        // that member's guid found nothing and the record stayed "running" for good while the panel
+        // already said "off". Look it up by the real player the run belongs to instead.
+        if (it == gActive.end())
+            if (Player* owner = OwnerOf(tank))
+            {
+                uint32 const ownerLow = owner->GetGUID().GetCounter();
+                for (auto cand = gActive.begin(); cand != gActive.end(); ++cand)
+                    if (cand->second.owner == ownerLow &&
+                        (it == gActive.end() || (cand->second.instance == tank->GetInstanceId() &&
+                                                 cand->second.map == tank->GetMapId())))
+                        it = cand;
+            }
         if (it != gActive.end())
             FinishLocked(it, reason);
     }

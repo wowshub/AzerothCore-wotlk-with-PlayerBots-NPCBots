@@ -518,6 +518,14 @@ struct DcRunState
     uint32 eventProgressSeq = 0;
     std::vector<DcTestExtra> testExtras;
 
+    // Stratholme's trap-alley pit rescues this run (StratholmeEvents.cpp,
+    // DcStratTrapAlley.h), published as the `stratPitRescues` test extra.
+    uint32 stratPitRescues = 0;
+
+    // Karazhan's library-pit rescues this run (KarazhanEvents.cpp,
+    // DcKaraLibraryPit.h), published as the `karaPitRescues` test extra.
+    uint32 karaPitRescues = 0;
+
     void BumpEventProgress() { ++eventProgressSeq; }
 
     void SetTestExtra(std::string const& key, std::string value, bool numeric = false)
