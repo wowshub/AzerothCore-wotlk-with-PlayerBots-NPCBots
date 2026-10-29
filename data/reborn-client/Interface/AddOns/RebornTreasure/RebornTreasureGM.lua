@@ -6,7 +6,7 @@
 -- =========================================================================
 
 local ADDON_PREFIX = "TR"
-local PANEL_VERSION = "1.4.4"   -- shown in the title bar, so a stale copy of this file is easy to spot
+local PANEL_VERSION = "1.5.0"   -- shown in the title bar, so a stale copy of this file is easy to spot
 -- the panel speaks Chinese unless the GM switched to English (the 中文/EN button in the title bar);
 -- with no choice saved it follows the DungeonClear panel's language, else Chinese
 local function IsZh()
@@ -63,6 +63,8 @@ local state = {
     lootAsked = {},    -- entry -> true once `loot <entry>` was sent
     lootNew = {},
     lootWork = {},     -- entry -> the working copy of the loot table (a draft until Save)
+    questTitle = {},   -- quest id -> { en, zh } (TREAS3A)
+    titleAsked = {},
     lootRow = 0,
     pool = { cat = "all", page = 0, text = "", items = {}, more = false },
     poolOffset = 0,
@@ -747,7 +749,9 @@ function ui.ItemTip(owner, anchor, id, label, quality, lines)
             GameTooltip:AddLine(T("客户端还没有这件物品的数据，所以不显示完整提示。", "The client has no data for this item yet, so the full tooltip is skipped."), 1, 0.5, 0.2, true)
         end
     end
-    for _, l in ipairs(lines or {}) do GameTooltip:AddLine(l[1], l[2] or 1, l[3] or 0.82, l[4] or 0, true) end
+    for _, l in ipairs(lines or {}) do
+        if l then GameTooltip:AddLine(l[1], l[2] or 1, l[3] or 0.82, l[4] or 0, true) end
+    end
     GameTooltip:Show()
 end
 
@@ -769,13 +773,28 @@ local function LootList(entry)
     return state.lootWork[entry] or state.lootByType[entry]
 end
 
+local function CopyConds(list)
+    if not list then return nil end
+    local out = {}
+    for i, c in ipairs(list) do out[i] = { type = c.type, neg = c.neg, v1 = c.v1, v2 = c.v2, v3 = c.v3 } end
+    return out
+end
+
+local function CondKey(list)
+    local parts = {}
+    for _, c in ipairs(list or {}) do parts[#parts + 1] = string.format("%d:%d:%d:%d:%d", c.type, c.neg, c.v1, c.v2, c.v3) end
+    table.sort(parts)
+    return table.concat(parts, ",")
+end
+
 local function WorkList(entry)
     local w = state.lootWork[entry]
     if not w then
         w = {}
         for _, it in ipairs(state.lootByType[entry] or {}) do
             w[#w + 1] = { item = it.item, chance = it.chance, min = it.min, max = it.max, group = it.group,
-                          q = it.q, icon = it.icon, name = it.name, zh = it.zh }
+                          q = it.q, icon = it.icon, name = it.name, zh = it.zh,
+                          quest = it.quest, nconds = it.nconds, conds = CopyConds(it.conds), condsBase = CopyConds(it.condsBase) }
         end
         state.lootWork[entry] = w
     end
@@ -792,8 +811,18 @@ function ui.LootDiff(entry)
     for _, it in ipairs(work) do
         wm[it.item] = true
         local s = sm[it.item]
-        if not s or s.chance ~= it.chance or s.min ~= it.min or s.max ~= it.max or s.group ~= it.group then
-            cmds[#cmds + 1] = string.format("lootset %d %d %g %d %d %d", entry, it.item, it.chance, it.min, it.max, it.group)
+        if not s or s.chance ~= it.chance or s.min ~= it.min or s.max ~= it.max or s.group ~= it.group
+           or (s.quest and true or false) ~= (it.quest and true or false) then
+            cmds[#cmds + 1] = string.format("lootset %d %d %g %d %d %d %d", entry, it.item, it.chance, it.min, it.max, it.group, it.quest and 1 or 0)
+        end
+        local condsChanged
+        if not s then condsChanged = it.conds ~= nil and #it.conds > 0
+        else condsChanged = it.conds ~= nil and it.condsBase ~= nil and CondKey(it.conds) ~= CondKey(it.condsBase) end
+        if condsChanged then   -- the conditions are written after the line itself exists
+            cmds[#cmds + 1] = string.format("lootcondclr %d %d", entry, it.item)
+            for _, c in ipairs(it.conds) do
+                cmds[#cmds + 1] = string.format("lootcondadd %d %d %d %d %d %d %d", entry, it.item, c.type, c.neg, c.v1, c.v2, c.v3)
+            end
         end
     end
     for _, it in ipairs(state.lootByType[entry] or {}) do
@@ -843,7 +872,8 @@ function ui.AddLoot(id, meta)
     end
     local m = MetaFor(id, meta)
     local w = WorkList(t.entry)
-    w[#w + 1] = { item = id, chance = 100, min = 1, max = 1, group = 0, q = m.q, icon = m.icon, name = m.name, zh = m.zh }
+    w[#w + 1] = { item = id, chance = 100, min = 1, max = 1, group = 0, q = m.q, icon = m.icon, name = m.name, zh = m.zh,
+                  quest = false, nconds = 0, conds = {}, condsBase = {} }
     state.lootRow = 1000   -- scroll to the new one
     ui.TouchLoot(t.entry)
     Status(T("已加入掉落表（还没保存，点“保存”才生效）", "Added to the loot table (not saved yet: click Save)"))
@@ -858,7 +888,7 @@ function ui.DeleteLoot(entry, item)
     ui.TouchLoot(entry)
 end
 
-local function SetLootLine(entry, item, chance, mn, mx, group)
+local function SetLootLine(entry, item, chance, mn, mx, group, quest, conds)
     if not LootReady(entry) then return end
     for _, it in ipairs(WorkList(entry)) do
         if it.item == item then
@@ -866,6 +896,11 @@ local function SetLootLine(entry, item, chance, mn, mx, group)
             if mn then it.min = mn end
             if mx then it.max = mx end
             if group then it.group = group end
+            if quest ~= nil then it.quest = quest end
+            if conds then
+                it.conds = CopyConds(conds)
+                if it.condsBase == nil and (it.nconds or 0) == 0 then it.condsBase = {} end   -- nothing was there before
+            end
         end
     end
     ui.TouchLoot(entry)
@@ -909,6 +944,8 @@ function ui.RefreshLoot()
             if it.chance >= 100 then cell.chance:SetTextColor(1, 1, 1) else cell.chance:SetTextColor(1, 0.82, 0.2) end
             cell.count:SetText(CountText(it))
             cell.group:SetText(it.group > 0 and ("G" .. it.group) or "")
+            local nc = it.conds and #it.conds or it.nconds or 0
+            cell.flag:SetText((it.quest and ("|cffff9933" .. T("任", "Q") .. "|r") or "") .. (nc > 0 and ("|cff55ccff" .. T("条", "C") .. "|r") or ""))
             local was
             for _, s in ipairs(serverList) do if s.item == it.item then was = s end end
             if not was or was.chance ~= it.chance or was.min ~= it.min or was.max ~= it.max or was.group ~= it.group then
@@ -966,6 +1003,7 @@ function ui.LayoutLoot()
         cell.chance = Small("BOTTOMLEFT", 3, 3)
         cell.count = Small("TOPRIGHT", -3, -3)
         cell.group = Small("TOPLEFT", 3, -3)
+        cell.flag = Small("BOTTOMRIGHT", -3, 3)
         cell.group:SetTextColor(0.5, 0.8, 1)
         cell.mod = cell:CreateTexture(nil, "OVERLAY")   -- an orange dot: new or changed, not saved yet
         cell.mod:SetSize(9, 9)
@@ -979,7 +1017,9 @@ function ui.LayoutLoot()
                 { " ", 1, 1, 1 },
                 { string.format(T("概率 %s   数量 %d-%d   组 %d", "Chance %s   Count %d-%d   Group %d"), ChanceText(it.chance), it.min, it.max, it.group), 1, 0.82, 0 },
                 { T("点击：改概率、数量、组    右键：更多", "Click: edit chance, count, group    Right-click: more"), 0.7, 0.7, 0.7 },
-                (it.q >= 8) and { T("品质 " .. it.q .. "：客户端没有这个品质的颜色，开箱时拾取窗口会报 Lua 错误，不要放进宝箱。", "Quality " .. it.q .. ": the client has no colour for it, the loot window gives a Lua error; keep it out of chests."), 1, 0.3, 0.3 } or nil,
+                it.quest and { T("任务物品：只给正在做、还缺这件物品的任务的人", "Quest item: only for players on a quest that still needs it"), 1, 0.6, 0.2 } or false,
+                ((it.conds and #it.conds or it.nconds or 0) > 0) and { string.format(T("条件 %d 个：点开能看", "%d condition(s): click to see"), it.conds and #it.conds or it.nconds), 0.4, 0.8, 1 } or false,
+                (it.q >= 8) and { T("品质 " .. it.q .. "：客户端没有这个品质的颜色，开箱时拾取窗口会报 Lua 错误，不要放进宝箱。", "Quality " .. it.q .. ": the client has no colour for it, the loot window gives a Lua error; keep it out of chests."), 1, 0.3, 0.3 } or false,
             })
         end)
         cell:SetScript("OnLeave", function() GameTooltip:Hide() end)
@@ -1025,6 +1065,20 @@ local function BuildLootGrid(area)
     area:EnableMouseWheel(true)
     area:SetScript("OnMouseWheel", function(_, d) state.lootRow = (state.lootRow or 0) - d; ui.RefreshLoot() end)
     ui.lootCells = {}
+    local wiz = CreateFrame("Button", nil, area, "UIPanelButtonTemplate")   -- the quest-item wizard
+    wiz:SetSize(112, 20)
+    wiz:SetPoint("TOPLEFT", 104, -7)
+    Bind(wiz, "按任务添加", "From a quest")
+    wiz:SetScript("OnClick", function() ui.QuestWizard() end)
+    Tip(wiz, "按任务添加物品", "Add the items of a quest", T("输入任务编号或名字，会把这个任务要收集的物品加进这种宝箱的掉落表，并设成“任务物品”。",
+        "Type a quest id or name: the items it asks for go into this chest's loot table as quest items."))
+    local qtest = CreateFrame("Button", nil, area, "UIPanelButtonTemplate")   -- TREAS3B: give / take away a quest to test with
+    qtest:SetSize(112, 20)
+    qtest:SetPoint("LEFT", wiz, "RIGHT", 6, 0)
+    Bind(qtest, "任务测试", "Quest test")
+    qtest:SetScript("OnClick", function() ui.QuestTestMenu() end)
+    Tip(qtest, "任务测试（GM）", "Quest test (GM)", T("给选中的角色、输入名字的在线角色或你自己接任务，不管阵营、种族、前置任务；也可以把任务去掉，让他再接一次。用来测任务物品宝箱。",
+        "Give a quest to the selected character, a named online character or yourself, ignoring faction, race and prerequisites; or take it away so it can be taken again. For testing quest-item chests."))
     ui.lootCount = area:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     ui.lootCount:SetPoint("TOPRIGHT", -10, -10)
     ui.lootEmpty = area:CreateFontString(nil, "OVERLAY", "GameFontDisable")
@@ -1035,10 +1089,190 @@ local function BuildLootGrid(area)
 end
 
 -- ---------------------------------------------------------------- the editor of one loot line
+-- ---------------------------------------------------------------- conditions of a loot line (TREAS3A)
+-- A loot line can be "a quest item" (only players who are on a quest that still needs it get it) and can carry up to
+-- three conditions (all must be true). The conditions are rows of the server's `conditions` table; only the types below
+-- are written by the panel.
+local COND_TYPES = {
+    [9]  = { zh = "正在做任务", en = "Is doing the quest", kind = "quest" },
+    [28] = { zh = "任务做完还没交", en = "Quest done, not handed in", kind = "quest" },
+    [8]  = { zh = "已经交过任务", en = "Has handed the quest in", kind = "quest" },
+    [14] = { zh = "从没接过任务", en = "Never took the quest", kind = "quest" },
+    [6]  = { zh = "阵营", en = "Faction", kind = "team" },
+    [15] = { zh = "职业", en = "Class", kind = "class" },
+    [16] = { zh = "种族", en = "Race", kind = "race" },
+    [27] = { zh = "等级", en = "Level", kind = "level" },
+    [1]  = { zh = "身上有光环", en = "Has the aura", kind = "aura" },
+    [2]  = { zh = "背包里有物品", en = "Has the item", kind = "item" },
+}
+local COND_ORDER = { 9, 28, 8, 14, 6, 15, 16, 27, 1, 2 }
+local COND_MAX = 3
+local CLASS_NAMES = { { 1, "战士", "Warrior" }, { 2, "圣骑士", "Paladin" }, { 3, "猎人", "Hunter" }, { 4, "盗贼", "Rogue" },
+    { 5, "牧师", "Priest" }, { 6, "死亡骑士", "Death Knight" }, { 7, "萨满", "Shaman" }, { 8, "法师", "Mage" },
+    { 9, "术士", "Warlock" }, { 11, "德鲁伊", "Druid" }, { 13, "巫医", "Witch Doctor" }, { 14, "武僧", "Monk" } }
+local RACE_NAMES = { { 1, "人类", "Human" }, { 2, "兽人", "Orc" }, { 3, "矮人", "Dwarf" }, { 4, "暗夜精灵", "Night Elf" },
+    { 5, "亡灵", "Undead" }, { 6, "牛头人", "Tauren" }, { 7, "侏儒", "Gnome" }, { 8, "巨魔", "Troll" },
+    { 10, "血精灵", "Blood Elf" }, { 11, "德莱尼", "Draenei" } }
+local CMP_NAMES = { [0] = { "等于", "equal to" }, [1] = { "大于", "above" }, [2] = { "小于", "below" },
+                    [3] = { "至少", "at least" }, [4] = { "至多", "at most" } }
+
+local function MaskNames(list, mask)
+    local out = {}
+    for _, e in ipairs(list) do
+        if bit.band(mask, bit.lshift(1, e[1] - 1)) ~= 0 then out[#out + 1] = T(e[2], e[3]) end
+    end
+    return #out > 0 and table.concat(out, "/") or tostring(mask)
+end
+
+local function QuestLabel(id)
+    local q = state.questTitle[id]
+    if not q then return "#" .. id end
+    local title = (IsZh() and q.zh ~= "" and q.zh) or q.en
+    return "[" .. title .. "] #" .. id
+end
+
+local function DescribeCond(c)
+    local ty = COND_TYPES[c.type]
+    if not ty then return "?" end
+    local v = ""
+    if ty.kind == "quest" then v = QuestLabel(c.v1)
+    elseif ty.kind == "team" then v = c.v1 == 469 and T("联盟", "Alliance") or T("部落", "Horde")
+    elseif ty.kind == "class" then v = MaskNames(CLASS_NAMES, c.v1)
+    elseif ty.kind == "race" then v = MaskNames(RACE_NAMES, c.v1)
+    elseif ty.kind == "level" then v = T(CMP_NAMES[c.v2] and CMP_NAMES[c.v2][1] or "?", CMP_NAMES[c.v2] and CMP_NAMES[c.v2][2] or "?") .. " " .. c.v1
+    elseif ty.kind == "aura" then v = "#" .. c.v1
+    elseif ty.kind == "item" then v = "#" .. c.v1 .. " x" .. c.v2 end
+    return (c.neg == 1 and ("|cffff6060" .. T("不是：", "NOT: ") .. "|r") or "") .. T(ty.zh, ty.en) .. "  " .. v
+end
+
+local function NewCond(ty)
+    local c = { type = ty, neg = 0, v1 = 0, v2 = 0, v3 = 0 }
+    local kind = COND_TYPES[ty].kind
+    if kind == "team" then c.v1 = 67
+    elseif kind == "class" then c.v1 = 1
+    elseif kind == "race" then c.v1 = 1
+    elseif kind == "level" then c.v1 = 60; c.v2 = 3
+    elseif kind == "item" then c.v2 = 1 end
+    return c
+end
+
+-- the quest's name is asked for once per id (the answers fill state.questTitle)
+local function AskQuestTitle(id)
+    if id and id > 0 and not state.questTitle[id] and not state.titleAsked[id] then
+        state.titleAsked[id] = true
+        Cmd("quests " .. id)
+    end
+end
+
+local function CondRowsRefresh()
+    local f = ui.lootEditor
+    if not (f and f.condRows) then return end
+    f.filling = true
+    for i, row in ipairs(f.condRows) do
+        local c = f.conds[i]
+        if c then
+            local ty = COND_TYPES[c.type]
+            row:Show()
+            row.type:SetText(T(ty.zh, ty.en))
+            row.v1:SetText(tostring(c.v1))
+            row.v2:SetText(tostring(c.v2))
+            if ty.kind == "item" then row.v2:Show() else row.v2:Hide() end
+            if ty.kind == "quest" or ty.kind == "team" or ty.kind == "class" or ty.kind == "race" or ty.kind == "level" then row.pick:Show() else row.pick:Hide() end
+            row.neg:SetChecked(c.neg == 1)
+            row.desc:SetText(DescribeCond(c))
+            if ty.kind == "quest" then AskQuestTitle(c.v1) end
+        else
+            row:Hide()
+        end
+    end
+    f.filling = false
+    if f.addHint then ShowIf(f.addHint, #f.conds == 0) end
+    if f.loadingText then ShowIf(f.loadingText, f.loading and true or false) end
+end
+ui.RefreshCondRows = CondRowsRefresh
+
+local function AddCond(ty)
+    local f = ui.lootEditor
+    if not f then return nil end
+    if f.loading then Status(T("条件还在读取，稍等一下", "The conditions are still loading"), true) return nil end
+    if #f.conds >= COND_MAX then Status(T("一件物品最多 3 个条件", "At most 3 conditions per item"), true) return nil end
+    local c = NewCond(ty)
+    f.conds[#f.conds + 1] = c
+    CondRowsRefresh()
+    return c
+end
+
+local function SetCondType(i, ty)
+    local f = ui.lootEditor
+    local old = f.conds[i]
+    if not old then return end
+    local c = NewCond(ty)
+    c.neg = old.neg
+    f.conds[i] = c
+    CondRowsRefresh()
+end
+
+-- pick a quest by id or by name (the answer of `quests` opens a menu); `done(id)` gets the chosen id
+local function PickQuest(done)
+    ui.Popup("REBORN_TREASURE_INPUT", T("任务编号，或任务名字的一部分（中文英文都行）", "Quest id, or part of its name (Chinese or English)"), nil, {
+        default = "", fn = function(text)
+            text = CleanText(text or ""):gsub("^%s+", ""):gsub("%s+$", "")
+            if text == "" then return end
+            local id = tonumber(text)
+            if id then
+                done(math.floor(id))
+            else
+                state.questPick = done
+                Cmd("quests " .. text)
+            end
+        end })
+end
+
+local function PickMenu(list, current, set)
+    local menu = {}
+    for _, e in ipairs(list) do
+        menu[#menu + 1] = { text = T(e[2], e[3]), notCheckable = true, func = function() set(e[1]) end }
+    end
+    menu[#menu + 1] = { text = T("取消", "Cancel"), notCheckable = true }
+    ui.lootPickMenu = ui.lootPickMenu or CreateFrame("Frame", "RebornTreasureGMPickMenu", UIParent, "UIDropDownMenuTemplate")
+    ui.OpenMenu(menu, ui.lootPickMenu)
+end
+
+local function RowPick(i)
+    local f = ui.lootEditor
+    local c = f.conds[i]
+    if not c then return end
+    local kind = COND_TYPES[c.type].kind
+    if kind == "quest" then
+        PickQuest(function(id) c.v1 = id; CondRowsRefresh(); AskQuestTitle(id) end)
+    elseif kind == "team" then
+        PickMenu({ { 469, "联盟", "Alliance" }, { 67, "部落", "Horde" } }, c.v1, function(v) c.v1 = v; CondRowsRefresh() end)
+    elseif kind == "class" then
+        PickMenu(CLASS_NAMES, c.v1, function(id) c.v1 = bit.lshift(1, id - 1); CondRowsRefresh() end)
+    elseif kind == "race" then
+        PickMenu(RACE_NAMES, c.v1, function(id) c.v1 = bit.lshift(1, id - 1); CondRowsRefresh() end)
+    elseif kind == "level" then
+        local list = {}
+        for k = 0, 4 do list[#list + 1] = { k, CMP_NAMES[k][1], CMP_NAMES[k][2] } end
+        PickMenu(list, c.v2, function(v) c.v2 = v; CondRowsRefresh() end)
+    end
+end
+
+local function RowTypeMenu(i)
+    local menu = {}
+    for _, ty in ipairs(COND_ORDER) do
+        menu[#menu + 1] = { text = T(COND_TYPES[ty].zh, COND_TYPES[ty].en), notCheckable = true, func = function() SetCondType(i, ty) end }
+    end
+    menu[#menu + 1] = { text = T("取消", "Cancel"), notCheckable = true }
+    ui.lootPickMenu = ui.lootPickMenu or CreateFrame("Frame", "RebornTreasureGMPickMenu", UIParent, "UIDropDownMenuTemplate")
+    ui.OpenMenu(menu, ui.lootPickMenu)
+end
+
+-- ---------------------------------------------------------------- the editor of one loot line
 local function BuildLootEditor(main)
     local f = CreateFrame("Frame", "RebornTreasureLootEditor", main)
-    f:SetSize(330, 250)
-    f:SetPoint("CENTER", UIParent, "CENTER", -80, 40)
+    f:SetSize(470, 480)
+    f:SetPoint("CENTER", UIParent, "CENTER", -80, 20)
     f:SetFrameStrata("FULLSCREEN_DIALOG")
     f:SetToplevel(true)
     f:SetClampedToScreen(true)
@@ -1051,6 +1285,7 @@ local function BuildLootEditor(main)
     })
     f:EnableMouse(true)
     f:Hide()
+    f.conds = {}
     local solid = f:CreateTexture(nil, "BACKGROUND")
     solid:SetPoint("TOPLEFT", 7, -7)
     solid:SetPoint("BOTTOMRIGHT", -7, 7)
@@ -1096,6 +1331,119 @@ local function BuildLootEditor(main)
     f.eMax = Field("最多数量", "Max count", -156, "掉落时最多几个（1–255）。", "Most pieces when it drops (1-255).")
     f.eGroup = Field("组（0 = 无）", "Group (0 = none)", -184, "同一组（编号相同、大于 0）里的物品一次只掉其中一件，概率是组内的相对权重。", "Lines sharing a group number above 0 drop only one of them; the chances are weights inside the group.")
 
+    -- quest item
+    f.cQuest = CreateFrame("CheckButton", nil, f, "UICheckButtonTemplate")
+    f.cQuest:SetSize(24, 24)
+    f.cQuest:SetPoint("TOPLEFT", 14, -206)
+    local qt = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    qt:SetPoint("LEFT", f.cQuest, "RIGHT", 2, 0)
+    qt:SetWidth(400)
+    qt:SetJustifyH("LEFT")
+    Bind(qt, "任务物品：只给正在做、还缺这件物品的任务的人", "Quest item: only for players on a quest that still needs it")
+    Tip(f.cQuest, "任务物品", "Quest item", T("勾上后，只有“正在做一个需要这件物品、而且还没收集够”的任务的玩家才能看到、拿到它。物品本身要是某个任务的收集物品。",
+        "Only players with a quest that still needs this item see and get it. The item must be a quest's required item."))
+
+    -- conditions
+    local ch = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    ch:SetPoint("TOPLEFT", 20, -240)
+    Bind(ch, "条件（全部满足才会掉）", "Conditions (all must be met to drop)")
+    f.addHint = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    f.addHint:SetPoint("LEFT", ch, "RIGHT", 10, 0)
+    Bind(f.addHint, "没有条件：所有人都能掉。点下面的按钮加。", "No condition: everyone can get it. Use the buttons below.")
+    f.loadingText = f:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    f.loadingText:SetPoint("TOPLEFT", 20, -300)
+    Bind(f.loadingText, "读取条件中…", "Loading the conditions…")
+
+    local function Preset(k, zh, en, fn, tipZh, tipEn)
+        local b = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+        b:SetSize(104, 22)
+        b:SetPoint("TOPLEFT", 20 + (k - 1) * 108, -262)
+        Bind(b, zh, en)
+        b:SetScript("OnClick", fn)
+        Tip(b, zh, en, T(tipZh, tipEn))
+        return b
+    end
+    Preset(1, "+任务进行中", "+On quest", function()
+        local c = AddCond(9)
+        if c then RowPick(#f.conds) end
+    end, "加一个“正在做任务”条件，并马上让你选任务。", "Adds an 'is doing the quest' condition and asks for the quest.")
+    Preset(2, "+仅部落", "+Horde", function() local c = AddCond(6); if c then c.v1 = 67; CondRowsRefresh() end end, "只有部落玩家掉。", "Horde players only.")
+    Preset(3, "+仅联盟", "+Alliance", function() local c = AddCond(6); if c then c.v1 = 469; CondRowsRefresh() end end, "只有联盟玩家掉。", "Alliance players only.")
+    Preset(4, "+其它条件", "+Other", function()
+        local menu = {}
+        for _, ty in ipairs(COND_ORDER) do
+            menu[#menu + 1] = { text = T(COND_TYPES[ty].zh, COND_TYPES[ty].en), notCheckable = true, func = function() AddCond(ty) end }
+        end
+        menu[#menu + 1] = { text = T("取消", "Cancel"), notCheckable = true }
+        ui.lootPickMenu = ui.lootPickMenu or CreateFrame("Frame", "RebornTreasureGMPickMenu", UIParent, "UIDropDownMenuTemplate")
+        ui.OpenMenu(menu, ui.lootPickMenu)
+    end, "从全部条件类型里选一个。", "Pick from every condition type.")
+
+    f.condRows = {}
+    for i = 1, COND_MAX do
+        local row = CreateFrame("Frame", nil, f)
+        row:SetSize(440, 44)
+        row:SetPoint("TOPLEFT", 16, -292 - (i - 1) * 48)
+        row.index = i
+        row.type = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+        row.type:SetSize(150, 22)
+        row.type:SetPoint("TOPLEFT", 0, 0)
+        row.type:SetScript("OnClick", function() RowTypeMenu(i) end)
+        row.v1 = EditField(row, 70, true)
+        row.v1:SetPoint("TOPLEFT", 160, -1)
+        row.v2 = EditField(row, 44, true)
+        row.v2:SetPoint("TOPLEFT", 238, -1)
+        row.pick = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+        row.pick:SetSize(40, 22)
+        row.pick:SetPoint("TOPLEFT", 290, 0)
+        Bind(row.pick, "选…", "Pick…")
+        row.pick:SetScript("OnClick", function() RowPick(i) end)
+        row.neg = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
+        row.neg:SetSize(22, 22)
+        row.neg:SetPoint("TOPLEFT", 340, 0)
+        local nt = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        nt:SetPoint("LEFT", row.neg, "RIGHT", 0, 0)
+        Bind(nt, "取反", "NOT")
+        Tip(row.neg, "取反", "Negate", T("勾上表示“不满足这个条件才掉”，比如“没接过任务”。", "Drops when the condition is NOT met."))
+        row.del = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+        row.del:SetSize(26, 22)
+        row.del:SetPoint("TOPLEFT", 410, 0)
+        row.del:SetText("x")
+        row.del:SetScript("OnClick", function()
+            table.remove(f.conds, i)
+            CondRowsRefresh()
+        end)
+        row.desc = row:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+        row.desc:SetPoint("TOPLEFT", 4, -26)
+        row.desc:SetWidth(430)
+        row.desc:SetJustifyH("LEFT")
+        row.v1:SetScript("OnTextChanged", function(self)
+            if f.filling then return end
+            local c = f.conds[i]
+            if not c then return end
+            c.v1 = math.floor(tonumber(self:GetText()) or 0)
+            row.desc:SetText(DescribeCond(c))
+            if COND_TYPES[c.type].kind == "quest" then
+                f.titleToken = (f.titleToken or 0) + 1
+                local tok = f.titleToken
+                ui.After(0.7, function() if tok == f.titleToken then AskQuestTitle(c.v1); row.desc:SetText(DescribeCond(c)) end end)
+            end
+        end)
+        row.v2:SetScript("OnTextChanged", function(self)
+            if f.filling then return end
+            local c = f.conds[i]
+            if not c then return end
+            c.v2 = math.floor(tonumber(self:GetText()) or 0)
+            row.desc:SetText(DescribeCond(c))
+        end)
+        row.neg:SetScript("OnClick", function(self)
+            local c = f.conds[i]
+            if c then c.neg = self:GetChecked() and 1 or 0; row.desc:SetText(DescribeCond(c)) end
+        end)
+        row:Hide()
+        f.condRows[i] = row
+    end
+
     local apply = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     apply:SetSize(90, 24)
     apply:SetPoint("BOTTOMLEFT", 20, 16)
@@ -1110,6 +1458,11 @@ local function BuildLootEditor(main)
         if e then ui.DeleteLoot(e.entry, e.item.item) end
         f:Hide()
     end)
+    local note = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    note:SetPoint("LEFT", del, "RIGHT", 12, 0)
+    note:SetPoint("RIGHT", f, "RIGHT", -16, 0)
+    note:SetJustifyH("LEFT")
+    Bind(note, "应用后还要点卡片上的“保存”才生效。", "After Apply, click Save on the card.")
     ui.lootEditor = f
 end
 
@@ -1126,6 +1479,16 @@ function ui.EditLoot(it)
     f.eMin:SetText(tostring(it.min))
     f.eMax:SetText(tostring(it.max))
     f.eGroup:SetText(tostring(it.group))
+    f.cQuest:SetChecked(it.quest and true or false)
+    if it.conds then
+        f.conds, f.loading = CopyConds(it.conds), false
+    elseif (it.nconds or 0) > 0 then
+        f.conds, f.loading = {}, true
+        Cmd(string.format("lootcond %d %d", t.entry, it.item))
+    else
+        f.conds, f.loading = {}, false
+    end
+    CondRowsRefresh()
     f:Show()
     f:Raise()
 end
@@ -1138,9 +1501,112 @@ function ui.ApplyLootEdit()
     local mn = math.max(1, math.min(255, math.floor(tonumber(f.eMin:GetText()) or 1)))
     local mx = math.max(mn, math.min(255, math.floor(tonumber(f.eMax:GetText()) or mn)))
     local grp = math.max(0, math.min(255, math.floor(tonumber(f.eGroup:GetText()) or 0)))
-    SetLootLine(e.entry, e.item.item, chance, mn, mx, grp)
+    local conds
+    if not f.loading then
+        for _, c in ipairs(f.conds) do
+            if c.v1 <= 0 then Status(T("有条件还没填完（编号或数值是 0）", "A condition is not filled in yet"), true) return end
+        end
+        conds = f.conds
+    end
+    SetLootLine(e.entry, e.item.item, chance, mn, mx, grp, f.cQuest:GetChecked() and true or false, conds)
     f:Hide()
 end
+
+-- the quest-item wizard: a quest id or name -> the items the quest asks for go into the loot table as quest items
+function ui.ApplyQuestInfo(info)
+    local t = Selected()
+    if not t then return end
+    if info.id and info.id > 0 then state.lastQuest = info.id end  -- TREAS3B
+    if #info.items == 0 then
+        Status(T("这个任务没有要收集的物品（只有“杀怪”或“对话”之类的目标）", "This quest asks for no items (kill or talk objectives only)"), true)
+        return
+    end
+    local added = 0
+    for _, it in ipairs(info.items) do
+        ui.AddLoot(it.item, { q = it.q, icon = it.icon, name = it.name, zh = it.zh })
+        for _, line in ipairs(LootList(t.entry) or {}) do
+            if line.item == it.item then
+                SetLootLine(t.entry, it.item, nil, nil, nil, nil, true)
+                added = added + 1
+            end
+        end
+    end
+    local title = (IsZh() and info.zh ~= "" and info.zh) or info.title
+    Status(string.format(T("任务《%s》：%d 件任务物品已加入掉落表（还没保存）", "Quest '%s': %d quest items added (not saved yet)"), title, added))
+end
+
+-- TREAS3B: `questadd` / `questdel <id> [name]`: the named character, else the selected player, else the GM
+function ui.QuestTestMenu()
+    -- who == nil: the selected character (yourself when nobody is selected); a name: that online character
+    local function Do(verb, id, who)
+        id = math.floor(tonumber(id) or 0)
+        if id <= 0 then return end
+        state.lastQuest = id
+        if who then state.lastWho = who end
+        Cmd(verb .. " " .. id .. (who and (" " .. who) or ""))
+    end
+    local function AskName(done)
+        ui.Popup("REBORN_TREASURE_INPUT", T("角色名（要在线）", "Character name (must be online)"), nil, {
+            default = state.lastWho or "", fn = function(text)
+                text = CleanText(text or ""):gsub("%s+", "")
+                if text == "" then return end
+                done(text)
+            end })
+    end
+    local me = UnitName and UnitName("player")
+    local last, who = state.lastQuest, state.lastWho
+    local menu = {
+        { text = T("任务测试：不管阵营、种族、前置任务", "Quest test: ignores faction, race and prerequisites"), isTitle = true, notCheckable = true },
+        { text = T("接任务（选中的角色，没选就是自己）…", "Give a quest (selected character, else you)…"), notCheckable = true,
+          func = function() PickQuest(function(id) Do("questadd", id) end) end },
+        { text = T("去掉任务（选中的角色，没选就是自己）…", "Take a quest away (selected character, else you)…"), notCheckable = true,
+          func = function() PickQuest(function(id) Do("questdel", id) end) end },
+        { text = T("给指定角色接任务（输角色名）…", "Give a quest to a named character…"), notCheckable = true,
+          func = function() AskName(function(name) PickQuest(function(id) Do("questadd", id, name) end) end) end },
+        { text = T("去掉指定角色的任务（输角色名）…", "Take a quest away from a named character…"), notCheckable = true,
+          func = function() AskName(function(name) PickQuest(function(id) Do("questdel", id, name) end) end) end },
+    }
+    if me and me ~= "" then
+        menu[#menu + 1] = { text = T("给我自己接任务…", "Give myself a quest…"), notCheckable = true,
+            func = function() PickQuest(function(id) Do("questadd", id, me) end) end }
+        menu[#menu + 1] = { text = T("去掉我自己的任务…", "Take a quest away from myself…"), notCheckable = true,
+            func = function() PickQuest(function(id) Do("questdel", id, me) end) end }
+    end
+    if last then
+        menu[#menu + 1] = { text = string.format(T("接上次的任务 %d（选中的角色）", "Give the last quest %d (selected)"), last), notCheckable = true,
+            func = function() Do("questadd", last) end }
+        menu[#menu + 1] = { text = string.format(T("去掉上次的任务 %d（选中的角色）", "Take the last quest %d away (selected)"), last), notCheckable = true,
+            func = function() Do("questdel", last) end }
+        if who then
+            menu[#menu + 1] = { text = string.format(T("给 %s 接上次的任务 %d", "Give %s the last quest %d"), who, last), notCheckable = true,
+                func = function() Do("questadd", last, who) end }
+            menu[#menu + 1] = { text = string.format(T("去掉 %s 的上次任务 %d", "Take quest %d away from %s"), who, last), notCheckable = true,
+                func = function() Do("questdel", last, who) end }
+        end
+    end
+    menu[#menu + 1] = { text = T("取消", "Cancel"), notCheckable = true }
+    ui.questTestMenu = ui.questTestMenu or CreateFrame("Frame", "RebornTreasureGMQuestTestMenu", UIParent, "UIDropDownMenuTemplate")
+    ui.OpenMenu(menu, ui.questTestMenu)
+end
+
+function ui.QuestWizard()
+    local t = Selected()
+    if not t then Status(T("先选一种宝箱", "Pick a chest type first"), true) return end
+    ui.Popup("REBORN_TREASURE_INPUT", T("任务编号，或任务名字的一部分。会把这个任务要收集的物品加进掉落表，并设成“任务物品”。", "Quest id, or part of its name. The items the quest asks for are added as quest items."), nil, {
+        default = "", fn = function(text)
+            text = CleanText(text or ""):gsub("^%s+", ""):gsub("%s+$", "")
+            if text == "" then return end
+            local id = tonumber(text)
+            if id then
+                state.qiWizard = true
+                Cmd("questinfo " .. math.floor(id))
+            else
+                state.questPick = function(qid) state.qiWizard = true; Cmd("questinfo " .. qid) end
+                Cmd("quests " .. text)
+            end
+        end })
+end
+
 
 -- ---------------------------------------------------------------- the item pool
 local POOL_CATS = {
@@ -1649,14 +2115,18 @@ end
 function ui.RunTimers(elapsed)
     local list = state.timers
     if list and #list > 0 then
-        for i = #list, 1, -1 do
-            local tm = list[i]
+        -- the ones that are due run in the order they were added (a long frame can make several due at once: a Save sends
+        -- "clear the conditions" and then "add them", and that order matters)
+        local due, keep = {}, {}
+        for _, tm in ipairs(list) do
             tm.t = tm.t - elapsed
-            if tm.t <= 0 then
-                table.remove(list, i)
-                local ok, err = pcall(tm.fn)
-                if not ok then DEFAULT_CHAT_FRAME:AddMessage("|cffff3333[RebornTreasure GM] " .. tostring(err) .. "|r") end
-            end
+            if tm.t <= 0 then due[#due + 1] = tm else keep[#keep + 1] = tm end
+        end
+        for i = #list, 1, -1 do list[i] = nil end
+        for _, tm in ipairs(keep) do list[#list + 1] = tm end
+        for _, tm in ipairs(due) do
+            local ok, err = pcall(tm.fn)
+            if not ok then DEFAULT_CHAT_FRAME:AddMessage("|cffff3333[RebornTreasure GM] " .. tostring(err) .. "|r") end
         end
     end
     -- the spawn list: ask again every 15 s, redraw every second (the respawn countdown)
@@ -2720,7 +3190,8 @@ local function OnServer(msg)
         local entry = tonumber(f[2])
         local line = {
             item = tonumber(f[3]) or 0, chance = tonumber(f[4]) or 0, min = tonumber(f[5]) or 1, max = tonumber(f[6]) or 1,
-            group = tonumber(f[7]) or 0, q = tonumber(f[8]) or 1, icon = f[9] or "", name = f[10] or "", zh = f[11] or "",
+            group = tonumber(f[7]) or 0, q = tonumber(f[8]) or 1, quest = f[9] == "1", nconds = tonumber(f[10]) or 0,
+            icon = f[11] or "", name = f[12] or "", zh = f[13] or "",
         }
         local list = state.lootNew[entry or 0]
         if list then list[#list + 1] = line end
@@ -2737,6 +3208,75 @@ local function OnServer(msg)
         end
         ui.RefreshLoot()
         ui.RefreshPool()
+    elseif kind == "CD_START" then
+        state.cdNew = { entry = tonumber(f[2]), item = tonumber(f[3]), list = {} }
+    elseif kind == "CD" then
+        if state.cdNew then
+            state.cdNew.list[#state.cdNew.list + 1] = { type = tonumber(f[4]) or 0, neg = tonumber(f[5]) or 0,
+                v1 = tonumber(f[6]) or 0, v2 = tonumber(f[7]) or 0, v3 = tonumber(f[8]) or 0 }
+        end
+    elseif kind == "CD_END" then
+        local n = state.cdNew
+        state.cdNew = nil
+        if n then
+            for _, list in ipairs({ state.lootByType[n.entry] or {}, state.lootWork[n.entry] or {} }) do
+                for _, it in ipairs(list) do
+                    if it.item == n.item then
+                        it.conds, it.condsBase = CopyConds(n.list), CopyConds(n.list)
+                    end
+                end
+            end
+            local ed = ui.lootEditor
+            if ed and ed.editing and ed.editing.entry == n.entry and ed.editing.item.item == n.item and ed.loading then
+                ed.conds, ed.loading = CopyConds(n.list), false
+                ui.RefreshCondRows()
+            end
+        end
+    elseif kind == "QS_START" then
+        state.qsNew = {}
+    elseif kind == "QS" then
+        if state.qsNew then
+            local id = tonumber(f[2]) or 0
+            state.qsNew[#state.qsNew + 1] = { id = id, level = tonumber(f[3]) or 0, title = f[4] or "", zh = f[5] or "" }
+            state.questTitle[id] = { en = f[4] or "", zh = f[5] or "" }
+        end
+    elseif kind == "QS_END" then
+        local list = state.qsNew or {}
+        state.qsNew = nil
+        local pick = state.questPick
+        state.questPick = nil
+        if pick then
+            if #list == 0 then
+                Status(T("没有找到这个任务", "No such quest found"), true)
+            elseif #list == 1 then
+                pick(list[1].id)
+            else
+                local menu = { { text = T("选一个任务", "Pick a quest"), isTitle = true, notCheckable = true } }
+                for _, q in ipairs(list) do
+                    menu[#menu + 1] = { text = string.format("#%d  [%d]  %s", q.id, q.level, (IsZh() and q.zh ~= "" and q.zh) or q.title),
+                                        notCheckable = true, func = function() pick(q.id) end }
+                end
+                menu[#menu + 1] = { text = T("取消", "Cancel"), notCheckable = true }
+                ui.questMenu = ui.questMenu or CreateFrame("Frame", "RebornTreasureGMQuestMenu", UIParent, "UIDropDownMenuTemplate")
+                ui.OpenMenu(menu, ui.questMenu)
+            end
+        end
+        if ui.RefreshCondRows then ui.RefreshCondRows() end
+    elseif kind == "QI" then
+        state.qiNew = { id = tonumber(f[2]) or 0, level = tonumber(f[3]) or 0, title = f[4] or "", zh = f[5] or "", items = {} }
+        state.questTitle[state.qiNew.id] = { en = f[4] or "", zh = f[5] or "" }
+    elseif kind == "QIT" then
+        if state.qiNew then
+            state.qiNew.items[#state.qiNew.items + 1] = { item = tonumber(f[2]) or 0, count = tonumber(f[3]) or 1, q = tonumber(f[4]) or 1,
+                icon = f[5] or "", name = f[6] or "", zh = f[7] or "" }
+        end
+    elseif kind == "QI_END" then
+        local info = state.qiNew
+        state.qiNew = nil
+        if info and state.qiWizard then
+            state.qiWizard = nil
+            ui.ApplyQuestInfo(info)
+        end
     elseif kind == "IT_START" then
         state.poolNew = { cat = f[2], page = tonumber(f[3]) or 0, items = {} }
     elseif kind == "IT" then
@@ -2780,14 +3320,16 @@ local function OnServer(msg)
             spawngo = T("已传送", "Teleported"), spawnshow = T("宝箱已显示", "Chest shown"), spawndel = T("点位已删除", "Spawn deleted"),
             spawnhere = T("点位已移到脚下", "Spawn moved here"), spawnrespawn = T("刷新时间已保存", "Respawn saved"),
             spawncomment = T("备注已保存", "Note saved"), spawnclue = T("线索已保存", "Clue saved"), spawntype = T("种类已改", "Type changed"),
-            lootset = T("掉落已保存", "Loot saved"), lootdel = T("已从掉落表删除", "Removed from the loot table") }
+            lootset = T("掉落已保存", "Loot saved"), lootdel = T("已从掉落表删除", "Removed from the loot table"),
+            lootcondadd = T("条件已保存", "Condition saved"), lootcondclr = T("条件已清除", "Conditions cleared"),
+            questadd = T("已接任务", "Quest given"), questdel = T("已去掉任务", "Quest taken away") }
         Status((names[what] or what) .. (f[3] and ("  " .. f[3]) or ""))
         if what == "spawnsnap" then
             Status(string.format(T("贴地：移动 %s 个，在水下 %s 个，没处理 %s 个（地图没加载）", "Snapped: %s moved, %s under water, %s skipped (map not loaded)"),
                 f[4] or "0", f[5] or "0", f[6] or "0"))
         end
         if what == "typeset" then RefreshLooks() end
-        if what == "lootset" or what == "lootdel" then
+        if what == "lootset" or what == "lootdel" or what == "lootcondadd" or what == "lootcondclr" then
             Status(T("掉落表已保存", "Loot table saved") .. "  " .. (f[4] or ""))
             local entry = tonumber(f[3])
             if entry and not state.lootReread then
