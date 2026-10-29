@@ -5359,7 +5359,8 @@ void RegisterHallsOfLightningRoster(std::vector<BossRosterPatch>& t);
 // --- wing layouts (one appender per split map) ---------------------------
 // Records which boss credit-entries belong to which wing of a multi-wing map;
 // aggregated by DungeonWingRegistry. Only split maps appear here. Maraudon has
-// no events (wings + one roster removal) and lives in MaraudonEvents.cpp.
+// no events (wings + one roster removal) and lives in MaraudonEvents.cpp; like
+// Blackrock Spire its wing is chosen per run (WingSelect::Explicit).
 void RegisterDireMaulWings(std::unordered_map<uint32, DungeonWingLayout>& store);
 void RegisterScarletMonasteryWings(std::unordered_map<uint32, DungeonWingLayout>& store);
 void RegisterMaraudonWings(std::unordered_map<uint32, DungeonWingLayout>& store);

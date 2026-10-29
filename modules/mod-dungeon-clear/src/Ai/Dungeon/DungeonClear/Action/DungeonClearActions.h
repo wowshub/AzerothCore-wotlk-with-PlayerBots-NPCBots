@@ -1037,6 +1037,11 @@ public:
     {
     }
     bool Execute(Event event) override;
+
+private:
+    // The flagged groupmate the groupmate fallback last yielded beside — the latch
+    // half of DC_LEADER_ASSIST_COLOCATED_RELEASE's hysteresis.
+    ObjectGuid _colocatedFighter;
 };
 
 #endif

@@ -418,6 +418,52 @@ namespace
     }
 }
 
+void DungeonEventExecutor::RelocateParty(Player* bot, AiObjectContext* context, float lx, float ly, float lz)
+{
+    bot->GetMotionMaster()->Clear();
+    bot->NearTeleportTo(lx, ly, lz, bot->GetOrientation());
+    PullStrandedFollowersAcross(bot, lx, ly, lz);
+    // Backstop for whatever combat survived the caller's combat gate (a
+    // follower flagged by something the leader was not, an add that landed on
+    // the teleport tick, or TeleportParty's bounded hold expiring). Everything
+    // the party was fighting is now on the far side of the break.
+    DropCombatLeftBehind(bot);
+    // The leader just moved a long way in zero ticks: every cached route
+    // artifact — the long-path polyline, its follower cursor, and any
+    // in-flight async build (submitted from the PRE-teleport position) —
+    // now describes the wrong start. Left alone, the next Advance re-enters
+    // the stale polyline with a straight opening spline back toward the
+    // old cursor and the tank sprints the wrong way (seen live: post-Brazen
+    // drop-off, tank ran back toward the Old Hillsbrad entrance until a
+    // stray mob interrupted it). Invalidate it all; EnsureLongPath rebuilds
+    // from the post-teleport position (and its start-drift guard discards
+    // any result the old position already baked).
+    {
+        DcApproachState& appr =
+            context->GetValue<DcApproachState&>(DcKey::ApproachState)->Get();
+        appr.longPathTargetEntry = 0;
+        appr.longPathExpiresMs = 0;
+        appr.pendingPathJob = 0;   // orphaned result reaped by the mailbox sweep
+        appr.pendingPathSinceMs = 0;
+        context->GetValue<ChunkedPathfinder::Result&>(DcKey::LongPath)->Reset();
+        context->GetValue<DungeonFollowerState&>(DcKey::FollowerState)->Get() =
+            DungeonFollowerState{};
+        context->GetValue<uint32>(DcKey::CurrentHop)->Set(0u);
+        // AND THE TARGET ITSELF. The objective latches cleared the moment
+        // this returns Done, but NextDungeonBossValue is a CACHED value: for
+        // the rest of its interval it keeps naming the objective we just
+        // completed, whose anchor is the checkpoint — now 360yd overhead and
+        // on the far side of the break. Advance duly builds a route to it,
+        // gets an unreachable partial that wanders off across the landing
+        // chamber, and glides it. Live on Azjol-Nerub: one second after the
+        // teleport the tank issued a 110yd spline from the landing back
+        // NORTH to (565.9, 572.3, 300.8) and ran it. Dropping the cache here
+        // makes the next tick re-derive with the latch already in place.
+        context->GetValue<std::optional<DungeonBossInfo>>(DcKey::NextDungeonBoss)
+            ->Reset();
+    }
+}
+
 bool DungeonEventExecutor::IsOnDropLanding(Player* bot, EventStep const& step)
 {
     if (!bot)
@@ -1109,48 +1155,7 @@ StepResult DungeonEventExecutor::RunStep(Player* bot, AiObjectContext* context,
                 HopTo(bot, step.x, step.y, step.z);
                 return StepResult::Running;
             }
-            bot->GetMotionMaster()->Clear();
-            bot->NearTeleportTo(step.landX, step.landY, step.landZ, bot->GetOrientation());
-            PullStrandedFollowersAcross(bot, step.landX, step.landY, step.landZ);
-            // Backstop for whatever combat survived the gate above (a follower
-            // flagged by something the leader was not, an add that landed on the
-            // teleport tick, or the bounded hold expiring). Everything the party
-            // was fighting is now on the far side of the break.
-            DropCombatLeftBehind(bot);
-            // The leader just moved a long way in zero ticks: every cached route
-            // artifact — the long-path polyline, its follower cursor, and any
-            // in-flight async build (submitted from the PRE-teleport position) —
-            // now describes the wrong start. Left alone, the next Advance re-enters
-            // the stale polyline with a straight opening spline back toward the
-            // old cursor and the tank sprints the wrong way (seen live: post-Brazen
-            // drop-off, tank ran back toward the Old Hillsbrad entrance until a
-            // stray mob interrupted it). Invalidate it all; EnsureLongPath rebuilds
-            // from the post-teleport position (and its start-drift guard discards
-            // any result the old position already baked).
-            {
-                DcApproachState& appr =
-                    context->GetValue<DcApproachState&>(DcKey::ApproachState)->Get();
-                appr.longPathTargetEntry = 0;
-                appr.longPathExpiresMs = 0;
-                appr.pendingPathJob = 0;   // orphaned result reaped by the mailbox sweep
-                appr.pendingPathSinceMs = 0;
-                context->GetValue<ChunkedPathfinder::Result&>(DcKey::LongPath)->Reset();
-                context->GetValue<DungeonFollowerState&>(DcKey::FollowerState)->Get() =
-                    DungeonFollowerState{};
-                context->GetValue<uint32>(DcKey::CurrentHop)->Set(0u);
-                // AND THE TARGET ITSELF. The objective latches cleared the moment
-                // this returns Done, but NextDungeonBossValue is a CACHED value: for
-                // the rest of its interval it keeps naming the objective we just
-                // completed, whose anchor is the checkpoint — now 360yd overhead and
-                // on the far side of the break. Advance duly builds a route to it,
-                // gets an unreachable partial that wanders off across the landing
-                // chamber, and glides it. Live on Azjol-Nerub: one second after the
-                // teleport the tank issued a 110yd spline from the landing back
-                // NORTH to (565.9, 572.3, 300.8) and ran it. Dropping the cache here
-                // makes the next tick re-derive with the latch already in place.
-                context->GetValue<std::optional<DungeonBossInfo>>(DcKey::NextDungeonBoss)
-                    ->Reset();
-            }
+            RelocateParty(bot, context, step.landX, step.landY, step.landZ);
             LOG_DEBUG("playerbots.dungeonclear",
                       "[dungeon-clear] {} TeleportParty: ({:.1f},{:.1f},{:.1f}) -> "
                       "landing ({:.1f},{:.1f},{:.1f})",

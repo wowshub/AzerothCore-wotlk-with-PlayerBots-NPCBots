@@ -614,6 +614,12 @@ namespace DungeonClearMath
     // walks away from a stationary holder only makes the distance WORSE. The first
     // sample arms the watchdog and counts as closing, so the streak clock in
     // ShouldBreakStuckCombat only starts once the holder has demonstrably stopped.
+    //
+    // `holderDist` is the distance to the nearest holder the bot can SEE (+inf when
+    // none is in LOS), not to the nearest holder outright. "In engage range is a
+    // fight" assumes the two sides can trade blows; a holder 14yd away on the floor
+    // below cannot be targeted by any playerbots action (AttackersValue requires
+    // LOS), so it is only a fight while it is CLOSING (tr-20261018-101829-1).
     inline bool IsHolderProsecutingFight(bool haveHolder, float holderDist,
                                          float engageRange, bool closing)
     {
@@ -649,9 +655,38 @@ namespace DungeonClearMath
     // force-clear combat in the middle of a legitimate boss fight, which is the
     // one outcome the breaker's raid stand-down exists to prevent. TRIGGER is a
     // permanent property of the creature template; selectable is encounter state.
-    inline bool IsUnresolvableCombatHolder(bool isCreature, bool isTrigger)
+    //
+    // UNFLAGGED SCRIPT HELPERS are listed by entry instead. Each row is a creature
+    // that is unselectable by template, never by encounter state, but carries no
+    // TRIGGER flag — so the airtight test above misses it. Keep every row justified.
+    //   17161 Blizzard (Shade of Aran): a STATIC spawn the Aran fight only switches
+    //         on, so it outlives Aran and keeps flagging the raid. Teardown of
+    //         tr-20261022-104155-559 read `Blizzard (Shade of Aran) 17161 7.5yd
+    //         reach LEGIT` over three members for 199s; the leader-assist fallback
+    //         walked the tank at them until the Netherspite leg stalled.
+    inline bool IsUnflaggedScriptHelper(uint32 entry)
     {
-        return isCreature && isTrigger;
+        switch (entry)
+        {
+            case 17161:  // Blizzard (Shade of Aran), Karazhan
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    // Leader-assist groupmate fallback, with hysteresis (DC_LEADER_ASSIST_COLOCATED_
+    // RELEASE): yield inside `colocated`, and keep yielding out to `release` for the
+    // member the rung last yielded beside. True = yield the tick to the ladder.
+    inline bool LeaderAssistFallbackYields(float memberDist, bool latchedOnMember,
+                                           float colocated, float release)
+    {
+        return memberDist <= colocated || (latchedOnMember && memberDist <= release);
+    }
+
+    inline bool IsUnresolvableCombatHolder(bool isCreature, bool isTrigger, uint32 entry = 0)
+    {
+        return isCreature && (isTrigger || IsUnflaggedScriptHelper(entry));
     }
 
     // "Can this follower attack from where it stands?" for the camp-assist handoff,
@@ -1321,6 +1356,27 @@ namespace DungeonClearMath
         return !alreadySpent && std::fabs(dz) > levelTolerance;
     }
 
+    // Verdict of a stock path probe to a VERTICALLY SEPARATED boss: is the bot in
+    // the boss's room / on its floor? `routed` = the probe returned NORMAL or
+    // INCOMPLETE (stock had an opinion), `normal` = NORMAL, `endOnLevel` = the
+    // route ends on the boss's level, `los` = the bot can see the boss.
+    //
+    // A route that exists answers the question by its length, as before. NO route
+    // at all (PATHFIND_NOPATH) answers nothing: the probe cannot tell "a floor up"
+    // from "on a dais the mesh doesn't join", so the question falls back to sight.
+    // A boss a storey away is behind a floor slab; one on a throne is in plain view.
+    // Treating NOPATH as "a floor away" parked tr-20261018-101829-3 5.1yd under
+    // Emperor Thaurissan's throne for 7 minutes: not at the boss, not in his room
+    // (so no room clear and no pre-clear hold), and Advance pursued a destination
+    // stock refused every tick.
+    inline bool ProbeSaysSameFloor(bool routed, bool normal, bool endOnLevel,
+                                   float pathLength, float range, bool los)
+    {
+        if (!routed)
+            return los;
+        return normal && endOnLevel && pathLength <= range;
+    }
+
     struct RejoinProgressVerdict
     {
         bool  progressed = false;  // the gap set a new best: re-entry is working
@@ -1544,6 +1600,82 @@ namespace DungeonClearMath
     {
         return liveNow < liveAtWrite;
     }
+    // The stalled fallback (DungeonClearClearStalledAction) pulls one nearby mob
+    // and is then done: once that mob is gone and the fight is over, the stall is
+    // cleared and Advance tries the route again.
+    inline bool StallPullIsDone(bool pullTargetAlive, bool inCombat)
+    {
+        return !pullTargetAlive && !inCombat;
+    }
+
+    // Advance's per-point MoveTo fallback: does this refused move count toward
+    // DC_STUCK_LIMIT? Not when the movement arbiter only deferred it — an
+    // equal-or-higher priority move still holds, which is a wait, not a shut way.
+    // Counting those turned ~1s of a post-pull hold into a "movement isn't
+    // progressing" stall (tr-20261019-182249-2). Pursuit already reads a deferred
+    // move as alive.
+    inline bool MoveToFallbackCountsStuck(bool moved, bool deferred)
+    {
+        return !moved && !deferred;
+    }
+
+    // Engage-trash's walk-in on one target: is it getting any nearer? True once the
+    // distance has not improved by `minClose` for `limitMs` of walking. A gap
+    // between ticks longer than `gapMs` (the action lost the tick to a leash
+    // hold, a long-route deferral, a fight) restarts the window rather than
+    // counting the time away against it.
+    //
+    // tr-20261019-182249-1 / sk-20261019-105358-31: the walk-in on a Doomforge
+    // Arcanasmith past Argelmach's door stopped every tick to re-aim and Advance
+    // re-issued its spline in between; the tank stood at (781.7,31.9) for 100s
+    // through 118 yields, the stuck count it never reset climbed to the limit, and
+    // the stall it set ended the run.
+    struct WalkInWatch
+    {
+        float bestDist = -1.0f;
+        uint32_t progressMs = 0;
+        uint32_t lastTickMs = 0;
+    };
+
+    inline bool EngageWalkGivenUp(WalkInWatch& w, float dist, float minClose, uint32_t nowMs,
+                                  uint32_t limitMs, uint32_t gapMs)
+    {
+        bool const restart = w.bestDist < 0.0f || nowMs - w.lastTickMs > gapMs;
+        if (restart || dist < w.bestDist - minClose)
+        {
+            w.bestDist = dist;
+            w.progressMs = nowMs;
+        }
+        w.lastTickMs = nowMs;
+        return nowMs - w.progressMs >= limitMs;
+    }
+
+    // The assist camp's no-LOS close-in on a fight holder: true once every move
+    // toward the SAME holder has been refused for `limitMs` running. A move that
+    // goes restarts it; so does a new holder (its refusals start now).
+    // `refusedSince` is the caller's state, 0 = not refusing.
+    //
+    // sk-20261019-105358 (-70/-72/-73, 2/17): a Reservist or Medic General
+    // Angerforge summons at a random offset landed inside the geometry west of the
+    // fight. Same floor, so the level gate passed it; every member drove at it on
+    // a refused route (900-2000 refusals each), kept re-seeding combat on it over
+    // the stuck-combat breaker, and walked off the tank until the stall watchdog.
+    inline bool AssistCloseGivenUp(bool moved, bool sameTarget, uint32_t nowMs,
+                                   uint32_t limitMs, uint32_t& refusedSince)
+    {
+        if (moved)
+        {
+            refusedSince = 0;
+            return false;
+        }
+        if (!sameTarget || refusedSince == 0)
+        {
+            refusedSince = nowMs != 0 ? nowMs : 1;
+            return false;
+        }
+        return nowMs - refusedSince >= limitMs;
+    }
+
 }
 
 #endif
