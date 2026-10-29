@@ -1,0 +1,137 @@
+[
+  {
+    "side": "client",
+    "table": "SkillLineAbility",
+    "input_sha256": "f37406b5cc7612e51e8e5fdf4da5fee57f0195e226eae328e54cf874a7cfd92f",
+    "output_sha256": "4d61070b77e80338abdf417d141fa5a268745f547ead41915fc5037a03a64b2f",
+    "output": "02_MPQ导入目录/导入PATCH-XA/DBFilesClient/SkillLineAbility.dbc",
+    "changes": [
+      {
+        "row": 248,
+        "field": 4,
+        "old": 111,
+        "new": 4207
+      },
+      {
+        "row": 252,
+        "field": 4,
+        "old": 495,
+        "new": 4591
+      },
+      {
+        "row": 254,
+        "field": 4,
+        "old": 1147,
+        "new": 5243
+      },
+      {
+        "row": 256,
+        "field": 4,
+        "old": 105,
+        "new": 4201
+      },
+      {
+        "row": 2928,
+        "field": 4,
+        "old": 1063,
+        "new": 5159
+      },
+      {
+        "row": 3213,
+        "field": 4,
+        "old": 167,
+        "new": 4263
+      },
+      {
+        "row": 3214,
+        "field": 4,
+        "old": 1123,
+        "new": 5219
+      }
+    ],
+    "other_fields_and_strings_preserved": true
+  },
+  {
+    "side": "client",
+    "table": "SkillRaceClassInfo",
+    "input_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "output_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "output": "02_MPQ导入目录/导入PATCH-XA/DBFilesClient/SkillRaceClassInfo.dbc",
+    "changes": [],
+    "other_fields_and_strings_preserved": true
+  },
+  {
+    "side": "server",
+    "table": "SkillLineAbility",
+    "input_sha256": "e56891be9750da00e2ceb0ad67a3c230813012b262604a9a176c19b2278e5c7e",
+    "output_sha256": "e5937dd33e799ce62b5062a3d409822cdfd37e86ed5c34e12165801efd03a18b",
+    "output": "03_覆盖到服务端根目录/Data/dbc/SkillLineAbility.dbc",
+    "changes": [
+      {
+        "row": 248,
+        "field": 4,
+        "old": 111,
+        "new": 4207
+      },
+      {
+        "row": 252,
+        "field": 4,
+        "old": 495,
+        "new": 4591
+      },
+      {
+        "row": 254,
+        "field": 4,
+        "old": 1147,
+        "new": 5243
+      },
+      {
+        "row": 256,
+        "field": 4,
+        "old": 105,
+        "new": 4201
+      },
+      {
+        "row": 2928,
+        "field": 4,
+        "old": 1063,
+        "new": 5159
+      },
+      {
+        "row": 3213,
+        "field": 4,
+        "old": 167,
+        "new": 4263
+      },
+      {
+        "row": 3214,
+        "field": 4,
+        "old": 1123,
+        "new": 5219
+      },
+      {
+        "row": 8438,
+        "field": 4,
+        "old": 9293,
+        "new": 13389
+      }
+    ],
+    "other_fields_and_strings_preserved": true
+  },
+  {
+    "side": "server",
+    "table": "SkillRaceClassInfo",
+    "input_sha256": "60ced756dc203c6d5e1e8a405e4543218a800e6027d126092d3d41e49d3b1a9a",
+    "output_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "output": "03_覆盖到服务端根目录/Data/dbc/SkillRaceClassInfo.dbc",
+    "changes": [
+      {
+        "row": 330,
+        "field": 3,
+        "old": 3661,
+        "new": 7757
+      }
+    ],
+    "other_fields_and_strings_preserved": true
+  }
+]

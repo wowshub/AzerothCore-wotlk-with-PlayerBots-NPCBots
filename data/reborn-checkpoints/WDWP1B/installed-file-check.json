@@ -1,0 +1,30 @@
+[
+  {
+    "side": "client",
+    "table": "SkillLineAbility",
+    "installed_sha256": "4d61070b77e80338abdf417d141fa5a268745f547ead41915fc5037a03a64b2f",
+    "frozen_sha256": "4d61070b77e80338abdf417d141fa5a268745f547ead41915fc5037a03a64b2f",
+    "match": true
+  },
+  {
+    "side": "client",
+    "table": "SkillRaceClassInfo",
+    "installed_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "frozen_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "match": true
+  },
+  {
+    "side": "server",
+    "table": "SkillLineAbility",
+    "installed_sha256": "e5937dd33e799ce62b5062a3d409822cdfd37e86ed5c34e12165801efd03a18b",
+    "frozen_sha256": "e5937dd33e799ce62b5062a3d409822cdfd37e86ed5c34e12165801efd03a18b",
+    "match": true
+  },
+  {
+    "side": "server",
+    "table": "SkillRaceClassInfo",
+    "installed_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "frozen_sha256": "6e3158366e674a3170f7b2dfeef16031d354e21aca983f8e11d1993fe69398ed",
+    "match": true
+  }
+]

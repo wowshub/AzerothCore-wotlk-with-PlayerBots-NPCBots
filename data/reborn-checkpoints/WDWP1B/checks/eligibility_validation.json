@@ -1,0 +1,236 @@
+[
+  {
+    "side": "client",
+    "weapon": "单手斧",
+    "spell": 196,
+    "skill": 44,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      335,
+      628,
+      629,
+      630,
+      912
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "双手斧",
+    "spell": 197,
+    "skill": 172,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      122,
+      621,
+      622,
+      701,
+      907,
+      970
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "单手锤",
+    "spell": 198,
+    "skill": 54,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      135,
+      636,
+      637,
+      643,
+      644,
+      888,
+      914
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "双手锤",
+    "spell": 199,
+    "skill": 160,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      123,
+      124,
+      624,
+      625,
+      702,
+      908
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "长柄武器",
+    "spell": 200,
+    "skill": 229,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      915
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "单手剑",
+    "spell": 201,
+    "skill": 43,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      140,
+      328,
+      638,
+      880,
+      881,
+      885,
+      910
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "双手剑",
+    "spell": 202,
+    "skill": 55,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      125,
+      626,
+      898,
+      901
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "client",
+    "weapon": "拳套",
+    "spell": 15590,
+    "skill": 473,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      330
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "单手斧",
+    "spell": 196,
+    "skill": 44,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      335,
+      628,
+      629,
+      630,
+      912
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "双手斧",
+    "spell": 197,
+    "skill": 172,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      122,
+      621,
+      622,
+      701,
+      907,
+      970
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "单手锤",
+    "spell": 198,
+    "skill": 54,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      135,
+      636,
+      637,
+      643,
+      644,
+      888,
+      914
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "双手锤",
+    "spell": 199,
+    "skill": 160,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      123,
+      124,
+      624,
+      625,
+      702,
+      908
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "长柄武器",
+    "spell": 200,
+    "skill": 229,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      915
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "单手剑",
+    "spell": 201,
+    "skill": 43,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      140,
+      328,
+      638,
+      880,
+      881,
+      885,
+      910
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "双手剑",
+    "spell": 202,
+    "skill": 55,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      125,
+      626,
+      898,
+      901
+    ],
+    "race_bits_1_through_32_covered": true
+  },
+  {
+    "side": "server",
+    "weapon": "拳套",
+    "spell": 15590,
+    "skill": 473,
+    "class13_ability_allowed": true,
+    "normal_skill_rows": [
+      330
+    ],
+    "race_bits_1_through_32_covered": true
+  }
+]
