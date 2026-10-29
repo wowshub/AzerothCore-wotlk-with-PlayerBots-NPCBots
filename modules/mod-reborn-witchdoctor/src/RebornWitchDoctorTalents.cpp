@@ -42,6 +42,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <unordered_set>
+#include "RebornWitchDoctorBotPreferences3C.inc"
 using namespace Acore::ChatCommands;
 namespace WD161Bridge { void Apply(Player*,bool,bool); }
 namespace WD160Bridge { void Apply(Player*,bool,bool); }
@@ -981,9 +982,15 @@ public:
     void OnPlayerLogin(Player* p) override
     {
         if (!Doctor(p)) return;
+        WDMB3::LoadPersistent(p);
         State* s=p->CustomData.GetDefault<State>(Key);
         // Read existing builds only on login; first UI query creates a blank row.
         if (!Enabled() || !Load(p,s)) { s->loaded=false;ClearEffects(p,s); }
+    }
+    void OnPlayerDeleteFromDB(CharacterDatabaseTransaction trans,uint32 guid) override
+    {
+        if(WDMB3::PersistenceAvailable())
+            trans->Append("DELETE FROM reborn_mbwd_preferences WHERE guid={}",guid);
     }
     void OnPlayerLevelChanged(Player* p,uint8) override
     { if (Doctor(p)) Apply(p,p->CustomData.GetDefault<State>(Key)); }
@@ -992,6 +999,7 @@ public:
     void OnPlayerLogout(Player* p) override
     {
         WD174::Forget(p);
+        p->CustomData.Erase(WDMB3::Key);
         State* s=p->CustomData.GetDefault<State>(Key);Remove(p,s);p->CustomData.Erase(Key);
     }
 };

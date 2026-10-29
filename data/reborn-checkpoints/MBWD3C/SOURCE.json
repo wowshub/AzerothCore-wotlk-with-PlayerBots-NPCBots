@@ -1,0 +1,67 @@
+[
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotControls3.h",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotControls3.h",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_004025_阶段MBWD3C_巫医策略偏好跨登录保存累计测试包.zip",
+    "package_sha256": "20111314430f9dd4e50b67d70ece38d01a16776f0db58333c6af6f0b0bf554e7",
+    "source_sha256": "d2fb0c4d8612d8294af362ed00baa30b09d77f862e6504aec5bf101944737744",
+    "output_sha256": "d2fb0c4d8612d8294af362ed00baa30b09d77f862e6504aec5bf101944737744",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanel.inc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotPanel.inc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_004025_阶段MBWD3C_巫医策略偏好跨登录保存累计测试包.zip",
+    "package_sha256": "20111314430f9dd4e50b67d70ece38d01a16776f0db58333c6af6f0b0bf554e7",
+    "source_sha256": "8dd04e2d54f718f32998205962baafcee78d83eb139b1a2a2e94d5ef965a4478",
+    "output_sha256": "8dd04e2d54f718f32998205962baafcee78d83eb139b1a2a2e94d5ef965a4478",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPreferences3C.inc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotPreferences3C.inc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_004025_阶段MBWD3C_巫医策略偏好跨登录保存累计测试包.zip",
+    "package_sha256": "20111314430f9dd4e50b67d70ece38d01a16776f0db58333c6af6f0b0bf554e7",
+    "source_sha256": "17298a0d956991384af6090bb4d43fb9eafc13f216255a79b14726730b2da1ea",
+    "output_sha256": "17298a0d956991384af6090bb4d43fb9eafc13f216255a79b14726730b2da1ea",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3C\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_004025_阶段MBWD3C_巫医策略偏好跨登录保存累计测试包.zip",
+    "package_sha256": "20111314430f9dd4e50b67d70ece38d01a16776f0db58333c6af6f0b0bf554e7",
+    "source_sha256": "6bd9a8e2635ba1cc39b15f147f8c3a7b794ff70adb9364ff5ea2eea3fe10b516",
+    "output_sha256": "6bd9a8e2635ba1cc39b15f147f8c3a7b794ff70adb9364ff5ea2eea3fe10b516",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctorControls.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3C\\main\\data\\reborn-client\\Interface\\AddOns\\MultiBot\\Strategies\\MultiBotWitchDoctorControls.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexfix_20261028_004025_阶段MBWD3C_巫医策略偏好跨登录保存累计测试包.zip",
+    "package_sha256": "20111314430f9dd4e50b67d70ece38d01a16776f0db58333c6af6f0b0bf554e7",
+    "source_sha256": "ce3ac6c6e1d09593a1305341731817aa24a45c0a277305a20ffcd58d9f08f879",
+    "output_sha256": "ce3ac6c6e1d09593a1305341731817aa24a45c0a277305a20ffcd58d9f08f879",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "path": "data/customfixsql/characters/reborn_multibot/MBWD3C/01_mbwd3c_preferences.sql",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3C\\main\\data\\customfixsql\\characters\\reborn_multibot\\MBWD3C\\01_mbwd3c_preferences.sql",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\codexsql_20261028_004025_阶段MBWD3C_CHARACTERS偏好存储专用包.zip",
+    "package_sha256": "fd490386c091fbe0b8f9481a742f26cdff1b4bfa95ea2d07206ff71a54450267",
+    "output_sha256": "9441884413ecbe43271cc014326f6d8d63d7156cd34d0a0fee0afaa15ab58488",
+    "adaptation": "SQL exact bytes"
+  }
+]

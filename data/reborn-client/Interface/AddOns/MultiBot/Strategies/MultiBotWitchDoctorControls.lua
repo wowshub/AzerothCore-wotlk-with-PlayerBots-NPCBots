@@ -28,7 +28,9 @@ local function paint(row)
             if row.known and enabled(row.mask,e.bit)then b.setEnable()end
             local state=row.known and (enabled(row.mask,e.bit)and "已启用 / Enabled"or "已关闭 / Disabled")or "未读取 / Unknown"
             b.tip="|cffffd100"..e.title.."|r\n"..e.body.."\n"..state..
-                "\n仅当前登录会话，默认开启。/ Session only; enabled by default.\n"..
+                "\n"..(row.storage=="persistent" and "服务端偏好已保存，重登保留。/ Saved on server; retained after relog.\n" or
+                 row.storage=="unavailable" and "持久化不可用，请先导入3C角色库SQL。/ Storage unavailable; install 3C Characters SQL.\n" or
+                 "持久化尚未确认；只显示当前会话状态。/ Persistence unconfirmed; showing session state.\n")..
                 (row.pending and "等待服务器确认… / Waiting for server confirmation..."or row.message or "左键切换；亮起以服务器回读为准。/ Click to toggle; light follows server state.")
         end
     end
@@ -41,7 +43,7 @@ local function request(row,op,args)
     if row.pending then return false end
     if not valid(row)then row.known=false;row.message="已离队或身份改变，请刷新。/ Bot unavailable; refresh.";paint(row);return false end
     sequence=sequence%2147483646+1
-    row.nonce=sequence;row.pending=true;row.sent=GetTime();row.retry=row.sent+15;row.message=nil
+    row.storage=nil;row.nonce=sequence;row.pending=true;row.sent=GetTime();row.retry=row.sent+15;row.message=nil
     paint(row)
     SendChatMessage(".wdcontrol "..op.." "..row.id.." "..row.nonce..(args and " "..args or ""),"SAY")
     return true
@@ -81,10 +83,13 @@ function C.OnMessage(message)
     for _,row in pairs(rows)do
         if row.pending and row.id==id and row.nonce==nonce then
             if not valid(row)then row.pending=false;row.known=false;paint(row);return true end
+            local storage=payload:match("^STORE|1|(%a+)$")
+            if storage=="persistent" or storage=="unavailable" then row.storage=storage;paint(row);return true end
             local reason=payload:match("^ERROR|([%w_]+)$")
             if reason then
                 row.pending=false;row.known=false
-                row.message="读取/设置被拒绝 / Request rejected: "..reason;paint(row);return true
+                row.message=reason=="storage" and "保存未获确认，请刷新核对并检查角色库SQL。/ Save unconfirmed; refresh and check Characters SQL." or
+                    ("读取/设置被拒绝 / Request rejected: "..reason);paint(row);return true
             end
             local version,status,revision,mask=payload:match("^STATE|(%d+)|(%a+)|(%d+)|(%d+)$")
             version=tonumber(version);revision=tonumber(revision);mask=tonumber(mask)
@@ -101,6 +106,11 @@ end
 local events=CreateFrame("Frame","MultiBotWitchDoctorControlsEvents")
 events:RegisterEvent("CHAT_MSG_SYSTEM")
 events:SetScript("OnEvent",function(_,event,message)if event=="CHAT_MSG_SYSTEM"then C.OnMessage(message)end end)
+if ChatFrame_AddMessageEventFilter then
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM",function(_,_,message)
+        return type(message)=="string" and message:match("^WDMB3|")~=nil
+    end)
+end
 local elapsed=0
 events:SetScript("OnUpdate",function(_,dt)
     elapsed=elapsed+dt;if elapsed<.5 then return end;elapsed=0

@@ -1,13 +1,13 @@
 #pragma once
 #include "DataMap.h"
 #include "Player.h"
-// MBWD3A: session-only automatic preferences. No SQL or talent ownership writes.
+// MBWD3C: memory-only reads in AI; persistence is loaded outside the tick.
 namespace WDMB3
 {
 inline constexpr uint32 Buff=1,Cure=2,All=Buff|Cure,Version=1;
 inline constexpr char Key[]="Reborn.MBWD3A.AutomaticPreferences";
 struct Snapshot { uint32 revision=0,mask=All; };
-enum class Result { Ok,Stale,Invalid };
+enum class Result { Ok,Stale,Invalid,Database };
 struct Update { Snapshot value;Result result; };
 constexpr Update Apply(Snapshot current,uint32 expected,uint32 mask)
 {
@@ -28,7 +28,10 @@ constexpr uint32 Category(uint32 spell)
 }
 constexpr bool AllowsMask(uint32 mask,uint32 spell)
 { auto category=Category(spell);return !category || EnabledMask(mask,category); }
-struct State : DataMap::Base { Snapshot value; };
+struct State : DataMap::Base { Snapshot value;bool persistent=false; };
+bool PersistenceAvailable();
+bool LoadPersistent(Player*);
+Update SetPersistent(Player*,uint32 expected,uint32 mask);
 inline Snapshot Read(Player* player)
 {
     if(player) if(auto* s=player->CustomData.Get<State>(Key)) return s->value;

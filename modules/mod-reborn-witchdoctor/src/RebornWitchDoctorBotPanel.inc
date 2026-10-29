@@ -154,12 +154,17 @@ bool BotControlReply(ChatHandler* h,uint32 guid,uint32 nonce,WDMB3::Snapshot val
 bool BotControlState(ChatHandler* h,uint32 guid,uint32 nonce)
 {
     auto* bot=BotPanelTarget(h,guid,nonce,false,"WDMB3");if(!bot) return true;
+    bool stored=WDMB3::LoadPersistent(bot);
+    h->PSendSysMessage("WDMB3|{}|{}|STORE|1|{}",guid,nonce,stored?"persistent":"unavailable");
     return BotControlReply(h,guid,nonce,WDMB3::Read(bot),"ok");
 }
 bool BotControlSet(ChatHandler* h,uint32 guid,uint32 nonce,uint32 expected,uint32 mask)
 {
     auto* bot=BotPanelTarget(h,guid,nonce,false,"WDMB3");if(!bot) return true;
-    auto result=WDMB3::Set(bot,expected,mask);
+    auto result=WDMB3::SetPersistent(bot,expected,mask);
+    if(result.result==WDMB3::Result::Database)
+    { h->PSendSysMessage("WDMB3|{}|{}|ERROR|storage",guid,nonce);return true; }
+    h->PSendSysMessage("WDMB3|{}|{}|STORE|1|persistent",guid,nonce);
     return BotControlReply(h,guid,nonce,result.value,result.result==WDMB3::Result::Ok?"ok":
         result.result==WDMB3::Result::Stale?"stale":"invalid");
 }
