@@ -1,0 +1,79 @@
+[
+  {
+    "stage": "MBWD3A",
+    "repo": "pb",
+    "path": "src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\pb\\src\\Ai\\Class\\WitchDoctor\\WitchDoctorAiObjectContext.h",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "d4e8493b448095807def5d32525cae47e38f7e9ea6ea0d2cc42505007d5a85eb",
+    "output_sha256": "ab59ff256f2f58ce780aef8150a50b0f2b48afbae1555d7d08a0e4678a871bc8",
+    "adaptation": "exclude WD205 only"
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotControls3.h",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotControls3.h",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "9b32785da8d10bf0a05d6dc820164db9a5ddef7087f504cf7c1edb1560136893",
+    "output_sha256": "9b32785da8d10bf0a05d6dc820164db9a5ddef7087f504cf7c1edb1560136893",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanel.inc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorBotPanel.inc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "5351004fab055bb17b0d35c41f8bc92b31b59252f876ca323e2be1d999781961",
+    "output_sha256": "5351004fab055bb17b0d35c41f8bc92b31b59252f876ca323e2be1d999781961",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "path": "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\main\\modules\\mod-reborn-witchdoctor\\src\\RebornWitchDoctorTalents.cpp",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "68a2197391555188a80a9f137007e6d3a37eb838be1299471aa6834ad6c22d73",
+    "output_sha256": "68a2197391555188a80a9f137007e6d3a37eb838be1299471aa6834ad6c22d73",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/MultiBot/MultiBot.toc",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\main\\data\\reborn-client\\Interface\\AddOns\\MultiBot\\MultiBot.toc",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "68d97fb83889180e699229dcb154015728ce808ba143a401d6ad600817bd2c52",
+    "output_sha256": "68d97fb83889180e699229dcb154015728ce808ba143a401d6ad600817bd2c52",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\main\\data\\reborn-client\\Interface\\AddOns\\MultiBot\\Strategies\\MultiBotWitchDoctor.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "f617186a9c0e9acfc695c19ae5c274ca620298101f4856678ca923f5f62bcf33",
+    "output_sha256": "f617186a9c0e9acfc695c19ae5c274ca620298101f4856678ca923f5f62bcf33",
+    "adaptation": "none"
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "path": "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctorControls.lua",
+    "staged": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261028\\release_MB20261028\\stages\\MBWD3A\\main\\data\\reborn-client\\Interface\\AddOns\\MultiBot\\Strategies\\MultiBotWitchDoctorControls.lua",
+    "package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261027\\codexfix_20261027_231821_阶段MBWD3A_MultiBot巫医自动增益净化累计测试包.zip",
+    "package_sha256": "e35d91e88a0e0b8f21a39bfc655c319506ebd23704cd6f5f788abfdb4f5ab9b0",
+    "source_sha256": "e1a35ce2c241a7fa11b2a9b29de6d2034ee590cad3388d6be485c41101a71298",
+    "output_sha256": "e1a35ce2c241a7fa11b2a9b29de6d2034ee590cad3388d6be485c41101a71298",
+    "adaptation": "none"
+  }
+]

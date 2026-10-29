@@ -76,12 +76,13 @@ function MultiBot.addWitchDoctor(frame, combat, normal)
         {"Heal","spell_nature_healingwavegreater","治疗 / Healing","酿造方案优先治疗，战斗按钮必须开启；脱战支援单独控制。\nBrewing prioritizes healing; combat must be enabled. Out-of-combat support is separate.\n本按钮不切换天赋。/ This button does not switch talents."},
         {"Tank","inv_shield_06","坦克 / Tank","巫医尚无独立主坦克轮转，不能照搬德鲁伊熊形态策略。\nNo native main-tank rotation; druid bear strategies do not apply.\n坦克辅助仅影响选怪。/ Tank assist only affects target selection."},
         {"Summons","spell_nature_guardianward","守卫与召唤 / Wards and summons","由巫医原生逻辑按已学技能、冷却、蓝量与战况选择。\nNative logic checks learned spells, cooldowns, mana and combat conditions.\n不是萨满图腾开关。/ Not the shaman totems toggle."},
-        {"Cure","spell_nature_nullifypoison","治疗与净化 / Healing and cleansing","由原生逻辑判断；通用 cure 不等于巫医净化总开关。\nHandled by native logic; generic cure is not a WD cleansing master switch."},
+        {"Cure","spell_nature_nullifypoison","治疗与净化 / Healing and cleansing","使用职业栏的自动净化图标控制原生净化；不会关闭酿造治疗。\nThe automatic cleansing icon controls native cures without disabling Brewing healing.\n通用 cure 策略与此开关分开。/ The generic cure strategy is separate."},
     }
     for i,e in ipairs(entries) do
         local b=book.addButton(e[1],0,(i-1)*30,e[2],tip(e[3],e[4]))
         b.doLeft=info -- explicit information cards, never fake enabled strategies
     end
     frame.addButton("WDRefresh",-150,0,"inv_misc_pocketwatch_01",tip("刷新策略 / Refresh strategies",
-        "重新读取服务器战斗与脱战策略。\nRead combat and non-combat strategies from the server.")).doLeft=function(b) request(b,"co ?") end
+        "重新读取服务器战斗与脱战策略。\nRead combat and non-combat strategies from the server.")).doLeft=function(b) request(b,"co ?");if MultiBot.WDControls then MultiBot.WDControls.Refresh(b.getName()) end end
+    if MultiBot.WDControls then MultiBot.WDControls.Attach(frame) end
 end

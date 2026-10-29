@@ -35,10 +35,10 @@ inline bool BotPanelConsumeQuote(Player* bot,Player* owner,uint32 quoteNonce,uin
     q->id.active=false; // single use, including a rejected confirmation
     return valid;
 }
-Player* BotPanelTarget(ChatHandler* h,uint32 guid,uint32 nonce,bool mutation)
+Player* BotPanelTarget(ChatHandler* h,uint32 guid,uint32 nonce,bool mutation,char const* prefix="WDBOT")
 {
     auto fail=[&](char const* reason)->Player* {
-        h->PSendSysMessage("WDBOT|{}|{}|ERROR|{}",guid,nonce,reason);return nullptr;
+        h->PSendSysMessage("{}|{}|{}|ERROR|{}",prefix,guid,nonce,reason);return nullptr;
     };
     Player* owner=h->GetSession()?h->GetSession()->GetPlayer():nullptr;
     if(!owner || !owner->IsInWorld() || !guid || !nonce || nonce>2147483647u) return fail("identity");
@@ -142,4 +142,24 @@ bool BotPanelUnlock(ChatHandler* h,uint32 guid,uint32 nonce,uint32 quoteNonce,ui
     if(!s || bot->GetLevel()<s->quoteLevel)
     { BotPanelInvalidateQuote(bot);chat.SendSysMessage("ERROR|level");return true; }
     return PanelUnlockBuy(&chat,nonce,token,revision,slot);
+}
+
+// MBWD3A uses a separate wire prefix, so preference replies cannot complete
+// a talent/payment request with an accidentally equal client nonce.
+bool BotControlReply(ChatHandler* h,uint32 guid,uint32 nonce,WDMB3::Snapshot value,char const* status)
+{
+    h->PSendSysMessage("WDMB3|{}|{}|STATE|{}|{}|{}|{}",guid,nonce,WDMB3::Version,status,value.revision,value.mask);
+    return true;
+}
+bool BotControlState(ChatHandler* h,uint32 guid,uint32 nonce)
+{
+    auto* bot=BotPanelTarget(h,guid,nonce,false,"WDMB3");if(!bot) return true;
+    return BotControlReply(h,guid,nonce,WDMB3::Read(bot),"ok");
+}
+bool BotControlSet(ChatHandler* h,uint32 guid,uint32 nonce,uint32 expected,uint32 mask)
+{
+    auto* bot=BotPanelTarget(h,guid,nonce,false,"WDMB3");if(!bot) return true;
+    auto result=WDMB3::Set(bot,expected,mask);
+    return BotControlReply(h,guid,nonce,result.value,result.result==WDMB3::Result::Ok?"ok":
+        result.result==WDMB3::Result::Stale?"stale":"invalid");
 }

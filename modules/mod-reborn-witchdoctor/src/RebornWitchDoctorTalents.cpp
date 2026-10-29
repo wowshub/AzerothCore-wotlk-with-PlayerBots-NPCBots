@@ -15,6 +15,7 @@
 #include "../../mod-playerbots/src/Ai/Class/WitchDoctor/WitchDoctorTeam171.h"
 #include "RebornWitchDoctorBotProfiles173.h"
 #include "RebornWitchDoctorBotPanelQuotePolicy.h"
+#include "RebornWitchDoctorBotControls3.h"
 #include "Playerbots.h"
 #include "Trainer.h"
 #include "Creature.h"
@@ -908,6 +909,7 @@ public:
     {
         // MBWD2C: ChatCommandBuilder holds a reference to child tables.
         // A braced temporary vector here dangles before startup registration.
+        static ChatCommandTable controls={ {"state",BotControlState,SEC_PLAYER,Console::No}, {"set",BotControlSet,SEC_PLAYER,Console::No} };
         static ChatCommandTable wdbotCommands={
                 {"state",BotPanelState,SEC_PLAYER,Console::No},
                 {"join",BotPanelJoin,SEC_PLAYER,Console::No},
@@ -921,6 +923,7 @@ public:
         };
         static ChatCommandTable cmds={
             {"wdbot", wdbotCommands},
+            {"wdcontrol", controls},
             {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
             {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
             {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},
