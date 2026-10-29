@@ -48,3 +48,36 @@ RebornLootLab.Edit.Lock = 0
 #
 
 RebornLootLab.Edit.MinSecurity = 3
+
+#
+#    RebornLootLab.Log.WarnMB
+#        Description: 改动日志达到这个大小（MB）时，掉落工坊顶部的日志大小变橙色并提示归档。
+#        Default:     20
+#
+
+RebornLootLab.Log.WarnMB = 20
+
+#
+#    RebornLootLab.Log.CriticalMB
+#        Description: 达到这个大小（MB）时变红色，强烈建议归档。
+#        Default:     100
+#
+
+RebornLootLab.Log.CriticalMB = 100
+
+#
+#    RebornLootLab.Log.KeepDays
+#        Description: “归档并清理”对话框里默认保留的天数：更早的日志写入文件，再从数据库删除。
+#                     每张表最新的一条日志总会保留，所以"撤销"和"还原官方"不受影响。
+#        Default:     30
+#
+
+RebornLootLab.Log.KeepDays = 30
+
+#
+#    RebornLootLab.Log.ArchiveDir
+#        Description: 归档文件（每行一个 JSON）写到哪个目录；相对路径是相对 worldserver 的运行目录。
+#        Default:     lootlab_archive
+#
+
+RebornLootLab.Log.ArchiveDir = lootlab_archive

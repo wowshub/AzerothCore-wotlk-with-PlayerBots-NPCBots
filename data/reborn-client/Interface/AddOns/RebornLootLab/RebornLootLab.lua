@@ -7,7 +7,7 @@
 -- =========================================================================
 
 local ADDON_PREFIX = "LL"
-local PANEL_VERSION = "2.0.0"
+local PANEL_VERSION = (GetAddOnMetadata and GetAddOnMetadata("RebornLootLab", "Version")) or "2.2.0"   -- the title shows the .toc version
 local SIM_RUNS = 1000
 local PAGE_ROWS = 16
 
@@ -379,15 +379,22 @@ local function OnServer(msg)
         state.online = true
         if f[2] ~= "1" then Status(T("掉落工坊在服务端配置中关闭", "LootLab is switched off in the server config"), true) end
         state.canEdit = f[3] == "1"
+        if state.canEdit then Cmd("logsize") end   -- LAB3B
         state.editLocked = f[4] == "1"
         state.editEnabled = f[5] == "1"
         if state.editLocked then Status(T("正式服已锁定：只能看，不能改", "Production lock is on: view only"), true) end
         if built and RefreshAll then RefreshAll() end
     elseif kind == "ERR" then
         Status(f[2] or "?", true)
+    elseif kind == "LS" then   -- LAB3B: the size of the change log
+        state.logStat = { rows = tonumber(f[2]) or 0, bytes = tonumber(f[3]) or 0, warn = tonumber(f[4]) or 20, crit = tonumber(f[5]) or 100,
+                          keep = tonumber(f[6]) or 30, baseRows = tonumber(f[7]) or 0, baseBytes = tonumber(f[8]) or 0 }
+        if ui.RefreshLogSize then ui.RefreshLogSize() end
     elseif kind == "ED" then
         local ok = f[2] == "1"
         Status((ok and T("已完成：", "Done: ") or T("没有改：", "Not changed: ")) .. (f[3] or ""), not ok)
+        if state.canEdit then Cmd("logsize") end
+        DEFAULT_CHAT_FRAME:AddMessage((ok and "|cff55ff55" or "|cffffa020") .. "[LootLab]|r " .. (ok and T("已完成：", "Done: ") or T("没有改：", "Not changed: ")) .. (f[3] or ""))
         if ok and state.sel then
             local s = state.sel
             SelectSource(s.kind, s.loot, s.name, s.id, s.info)   -- read the table and its users again
@@ -1220,6 +1227,100 @@ function ui.ConfirmRestore()
     StaticPopup_Show("REBORN_LOOTLAB_RESTORE")
 end
 
+-- LAB3A: every table the workshop has changed goes back to the official content
+function ui.ConfirmRestoreAll()
+    StaticPopupDialogs["REBORN_LOOTLAB_RESTOREALL"] = {
+        text = T("把工坊改过的【所有】掉落表都还原成官方原样？每张表现在的改动都会被替换（日志里留有记录）。", "Restore ALL the loot tables the workshop has changed to the official content? Their current changes are replaced (the log keeps a record)."),
+        button1 = ACCEPT or "OK", button2 = CANCEL or "Cancel",
+        OnAccept = function()
+            Cmd("restoreall")
+            Status(T("已发送，等服务端回答…", "Sent, waiting for the server…"))
+        end,
+        timeout = 0, whileDead = 1, hideOnEscape = 1,
+    }
+    StaticPopup_Show("REBORN_LOOTLAB_RESTOREALL")
+end
+
+-- LAB3B: how big the change log is, in a colour that says whether it is time to archive
+local function Mb(bytes)
+    if bytes < 1024 * 100 then return string.format("%.0f KB", bytes / 1024) end
+    return string.format("%.1f MB", bytes / 1048576)
+end
+
+function ui.LogLevel()
+    local st = state.logStat
+    if not st then return 0 end
+    local mb = st.bytes / 1048576
+    if mb >= st.crit then return 2 end
+    if mb >= st.warn then return 1 end
+    return 0
+end
+
+function ui.RefreshLogSize()
+    local st = state.logStat
+    if not ui.main then return end
+    if not ui.logStatBtn then
+        local b = CreateFrame("Button", "RebornLootLabLogSize", ui.main)
+        b:SetSize(420, 22)
+        b:SetPoint("TOP", ui.main, "TOP", 40, -10)
+        b:SetNormalFontObject("GameFontNormalLarge")
+        b:SetHighlightFontObject("GameFontHighlightLarge")
+        b:SetFrameLevel(ui.main:GetFrameLevel() + 5)
+        b:SetScript("OnClick", function() Cmd("log"); Cmd("logsize"); ui.ShowLog() end)
+        b:SetScript("OnEnter", function(self)
+            local s = state.logStat
+            if not s then return end
+            GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+            GameTooltip:AddLine(T("改动日志的大小", "Size of the change log"))
+            GameTooltip:AddLine(string.format(T("日志 %d 条，%s；官方原样备份 %d 张表，%s。", "Log: %d entries, %s; official copies: %d tables, %s."),
+                s.rows, Mb(s.bytes), s.baseRows, Mb(s.baseBytes)), 1, 1, 1, true)
+            GameTooltip:AddLine(string.format(T("橙色从 %d MB 起提示，红色从 %d MB 起强烈建议。", "Orange from %d MB, red from %d MB."), s.warn, s.crit), 1, 1, 1, true)
+            GameTooltip:AddLine(T("点一下打开日志，里面有“归档并清理”：把旧日志写到服务器文件再从数据库删除，每张表最新一条保留，撤销和还原官方不受影响。", "Click to open the log; \"Archive and clean\" writes old entries to a file on the server and removes them from the database. The newest entry of each table stays, so undo and restore official still work."), 0.8, 0.8, 0.8, true)
+            GameTooltip:Show()
+        end)
+        b:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        ui.logStatBtn = b
+    end
+    if not (st and state.canEdit) then ui.logStatBtn:Hide() return end
+    local lvl = ui.LogLevel()
+    local color = lvl == 2 and "|cffff3030" or (lvl == 1 and "|cffffa020" or "|cff55ff55")
+    local text = string.format(T("日志 %s · %d 条", "Log %s · %d entries"), Mb(st.bytes), st.rows)
+    if lvl == 2 then text = text .. T("  ！请尽快归档", "  ! archive it now")
+    elseif lvl == 1 then text = text .. T("  ！建议归档", "  ! consider archiving") end
+    ui.logStatBtn:SetText(color .. text .. "|r")
+    ui.logStatBtn:Show()
+    if lvl > 0 and not state.logWarned then   -- once per session, in the chat too
+        state.logWarned = true
+        DEFAULT_CHAT_FRAME:AddMessage(string.format("%s[LootLab]|r %s", color,
+            string.format(T("改动日志已 %s（%d 条），建议在掉落工坊里“日志 → 归档并清理”。", "The change log is %s (%d entries); open Log -> Archive and clean in the workshop."), Mb(st.bytes), st.rows)))
+    end
+end
+
+function ui.AskArchive()
+    local st = state.logStat or {}
+    StaticPopupDialogs["REBORN_LOOTLAB_ARCHIVE"] = {
+        text = string.format(T("归档并清理改动日志：保留最近多少天？更早的日志会写进服务器上的文件（归档目录里的 .jsonl），再从数据库删除。每张表最新的一条总会保留，撤销和还原官方不受影响。\n\n现在：%s，%d 条。", "Archive and clean the change log: keep how many days? Older entries are written to a file on the server (a .jsonl in the archive folder), then removed from the database. The newest entry of each table always stays, so undo and restore official still work.\n\nNow: %s, %d entries."),
+            Mb(st.bytes or 0), st.rows or 0),
+        button1 = ACCEPT or "OK", button2 = CANCEL or "Cancel",
+        hasEditBox = 1, maxLetters = 4,
+        OnShow = function(self) self.editBox:SetText(tostring(st.keep or 30)); self.editBox:HighlightText() end,
+        OnAccept = function(self)
+            local d = tonumber(self.editBox:GetText())
+            if not d or d < 0 then Status(T("请填天数（0 到 3650）", "Enter a number of days (0 to 3650)"), true) return end
+            Cmd("logarchive " .. math.floor(d))
+            Status(T("已发送，等服务端回答…", "Sent, waiting for the server…"))
+            DEFAULT_CHAT_FRAME:AddMessage("|cff55ff55[LootLab]|r " .. string.format(T("已请求归档 %d 天前的旧日志，等服务端回答…", "Archive of the log older than %d days requested, waiting for the server..."), math.floor(d)))
+        end,
+        EditBoxOnEnterPressed = function(self)
+            local d = tonumber(self:GetText())
+            if d and d >= 0 then Cmd("logarchive " .. math.floor(d)); Status(T("已发送，等服务端回答…", "Sent, waiting for the server…")) end
+            self:GetParent():Hide()
+        end,
+        timeout = 0, whileDead = 1, hideOnEscape = 1,
+    }
+    StaticPopup_Show("REBORN_LOOTLAB_ARCHIVE")
+end
+
 -- the change log, newest first
 function ui.ShowLog()
     if not ui.logPop then
@@ -1244,7 +1345,10 @@ function ui.ShowLog()
         p.text:SetJustifyH("LEFT")
         p.text:SetJustifyV("TOP")
         local close = Button(p, 90, "关闭", "Close", function() p:Hide() end)
-        close:SetPoint("BOTTOM", 0, 18)
+        close:SetPoint("BOTTOM", 80, 18)
+        local arch = Button(p, 150, "归档并清理…", "Archive and clean…", function() ui.AskArchive() end)   -- LAB3B
+        arch:SetPoint("BOTTOM", -60, 18)
+        p.arch = arch
         if UISpecialFrames then table.insert(UISpecialFrames, "RebornLootLabLogPop") end
         ui.logPop = p
     end
@@ -1282,6 +1386,15 @@ function ui.BuildEditBar(mid)
     ui.restoreBtn:SetPoint("LEFT", ui.undoBtn, "RIGHT", 4, 0)
     ui.logBtn = Button(bar, 58, "日志", "Log", function() Cmd("log"); ui.ShowLog() end)
     ui.logBtn:SetPoint("LEFT", ui.restoreBtn, "RIGHT", 4, 0)
+    ui.restoreAllBtn = Button(bar, 98, "还原全部", "Restore all", function() ui.ConfirmRestoreAll() end)  -- LAB3A
+    ui.restoreAllBtn:SetPoint("LEFT", ui.logBtn, "RIGHT", 4, 0)
+    ui.restoreAllBtn:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:AddLine(T("还原全部", "Restore all"))
+        GameTooltip:AddLine(T("把工坊改过的每一张掉落表都还原成官方原样，不用一张一张点。", "Puts every loot table the workshop changed back to the official content, no need to go table by table."), 1, 1, 1, true)
+        GameTooltip:Show()
+    end)
+    ui.restoreAllBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
     bar:Hide()
 end
 
@@ -1295,6 +1408,9 @@ function ui.RefreshEdit()
     local on = state.canEdit and state.editMode and state.sel ~= nil
     for _, b in ipairs({ ui.addBtn, ui.undoBtn, ui.restoreBtn }) do
         if b then if on then b:Enable() else b:Disable() end end
+    end
+    if ui.restoreAllBtn then   -- LAB3A: needs no selected table, only the edit mode
+        if state.canEdit and state.editMode then ui.restoreAllBtn:Enable() else ui.restoreAllBtn:Disable() end
     end
 end
 

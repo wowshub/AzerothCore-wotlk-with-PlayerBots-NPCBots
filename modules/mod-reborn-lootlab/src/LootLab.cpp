@@ -12,6 +12,9 @@
 #include "WorldPacket.h"
 #include <algorithm>
 #include <cstdio>
+#include <ctime>
+#include <filesystem>
+#include <fstream>
 #include <cstdlib>
 #include <map>
 #include <mutex>
@@ -931,6 +934,140 @@ namespace
         bad.msg = "编辑命令参数不对: " + op;
         return bad;
     }
+
+    // =====================================================================
+    // LAB3B: the size of the change log, and "archive and clean".
+    //   Log.WarnMB = 20       the size from which the panel warns (orange)
+    //   Log.CriticalMB = 100  the size from which the panel insists (red)
+    //   Log.KeepDays = 30     the default of the archive dialog: logs older than this go to a file
+    //   Log.ArchiveDir        where the archive files (one JSON object per line) are written
+    // The size is the real size of the stored text (the rows before and after of every change); the
+    // table file on disk is a little larger. Archiving writes the old log rows to a file FIRST and
+    // deletes them from the database only after the file was written without error. The newest log row
+    // of every table is always kept, so "undo" still works for each table; the official copies
+    // (reborn_lootlab_baseline) are never touched, so "restore official" is not affected.
+    // =====================================================================
+    std::string JsonStr(std::string const& s)
+    {
+        std::string o = "\"";
+        for (unsigned char c : s)
+        {
+            switch (c)
+            {
+                case '"': o += "\\\""; break;
+                case '\\': o += "\\\\"; break;
+                case '\n': o += "\\n"; break;
+                case '\r': o += "\\r"; break;
+                case '\t': o += "\\t"; break;
+                default:
+                    if (c < 0x20)
+                    {
+                        char b[8];
+                        std::snprintf(b, sizeof b, "\\u%04x", c);
+                        o += b;
+                    }
+                    else
+                        o += static_cast<char>(c);
+            }
+        }
+        return o + "\"";
+    }
+
+    void SendLogSize(Player* p)
+    {
+        uint32 const warn = sConfigMgr->GetOption<uint32>("RebornLootLab.Log.WarnMB", 20);
+        uint32 const crit = sConfigMgr->GetOption<uint32>("RebornLootLab.Log.CriticalMB", 100);
+        uint32 const keep = sConfigMgr->GetOption<uint32>("RebornLootLab.Log.KeepDays", 30);
+        uint64 rows = 0, bytes = 0, baseRows = 0, baseBytes = 0;
+        if (Q("SHOW TABLES LIKE 'reborn_lootlab_log'"))
+            if (QueryResult r = Q("SELECT COUNT(*), CAST(IFNULL(SUM(LENGTH(IFNULL(old_rows, '')) + LENGTH(IFNULL(new_rows, '')) + LENGTH(action) + LENGTH(who) + LENGTH(kind) + 40), 0) AS UNSIGNED) FROM reborn_lootlab_log"))
+            {
+                rows = r->Fetch()[0].Get<uint64>();
+                bytes = r->Fetch()[1].Get<uint64>();
+            }
+        if (Q("SHOW TABLES LIKE 'reborn_lootlab_baseline'"))
+            if (QueryResult r = Q("SELECT COUNT(*), CAST(IFNULL(SUM(LENGTH(rows_json) + LENGTH(IFNULL(conds_json, '')) + LENGTH(kind) + 30), 0) AS UNSIGNED) FROM reborn_lootlab_baseline"))
+            {
+                baseRows = r->Fetch()[0].Get<uint64>();
+                baseBytes = r->Fetch()[1].Get<uint64>();
+            }
+        Send(p, Acore::StringFormat("LS\t{}\t{}\t{}\t{}\t{}\t{}\t{}", rows, bytes, warn, crit, keep, baseRows, baseBytes));
+    }
+
+    EditResult ArchiveLog(Player* gm, uint32 days)
+    {
+        EditResult res;
+        if (!Q("SHOW TABLES LIKE 'reborn_lootlab_log'"))
+        {
+            res.msg = "日志表不存在";
+            return res;
+        }
+        std::string const where = "at < NOW() - INTERVAL " + Id(days) + " DAY AND id NOT IN (SELECT mid FROM (SELECT MAX(id) AS mid FROM reborn_lootlab_log GROUP BY kind, loot_id) latest)";
+        QueryResult c = Q("SELECT COUNT(*) FROM reborn_lootlab_log WHERE " + where);
+        if (!c || !c->Fetch()[0].Get<uint64>())
+        {
+            res.msg = "没有可以归档的旧日志（每张表最新的一条会保留）";
+            return res;
+        }
+        std::string const dir = sConfigMgr->GetOption<std::string>("RebornLootLab.Log.ArchiveDir", "lootlab_archive");
+        std::error_code ec;
+        std::filesystem::create_directories(dir, ec);
+        if (ec)
+        {
+            res.msg = "不能创建归档目录 " + dir;
+            return res;
+        }
+        char stamp[32];
+        std::time_t const now = std::time(nullptr);
+        std::strftime(stamp, sizeof stamp, "%Y%m%d_%H%M%S", std::localtime(&now));
+        std::string const path = dir + "/lootlab_log_" + stamp + ".jsonl";
+        std::ofstream out(path, std::ios::binary);
+        if (!out)
+        {
+            res.msg = "不能写归档文件 " + path;
+            return res;
+        }
+        std::vector<uint32> ids;
+        uint32 last = 0;
+        for (;;)
+        {
+            QueryResult r = Q("SELECT id, UNIX_TIMESTAMP(at), who, kind, loot_id, action, reverted, IFNULL(old_rows, ''), IFNULL(new_rows, '') FROM reborn_lootlab_log WHERE id > " +
+                              Id(last) + " AND " + where + " ORDER BY id LIMIT 200");
+            if (!r)
+                break;
+            do
+            {
+                Field* f = r->Fetch();
+                uint32 const id = f[0].Get<uint32>();
+                last = id;
+                ids.push_back(id);
+                out << "{\"id\":" << id << ",\"at\":" << f[1].Get<uint64>() << ",\"who\":" << JsonStr(f[2].Get<std::string>()) << ",\"kind\":" << JsonStr(f[3].Get<std::string>())
+                    << ",\"loot_id\":" << f[4].Get<uint32>() << ",\"action\":" << JsonStr(f[5].Get<std::string>()) << ",\"reverted\":" << static_cast<uint32>(f[6].Get<uint8>())
+                    << ",\"old_rows\":" << JsonStr(f[7].Get<std::string>()) << ",\"new_rows\":" << JsonStr(f[8].Get<std::string>()) << "}\n";
+            } while (r->NextRow());
+        }
+        out.flush();
+        bool const good = out.good();
+        out.close();
+        if (!good || ids.empty())
+        {
+            std::filesystem::remove(path, ec);
+            res.msg = "写归档文件失败，没有删除任何日志";
+            return res;
+        }
+        for (std::size_t i = 0; i < ids.size(); i += 500)
+        {
+            std::string list;
+            for (std::size_t j = i; j < ids.size() && j < i + 500; ++j)
+                list += (list.empty() ? "" : ",") + Id(ids[j]);
+            WorldDatabase.DirectExecute("DELETE FROM reborn_lootlab_log WHERE id IN (" + list + ")");
+        }
+        Q("OPTIMIZE TABLE reborn_lootlab_log");
+        LOG_INFO("module", "[LootLab] {} archived {} old log row(s) to {} and removed them from the database", gm->GetName(), ids.size(), path);
+        res.ok = true;
+        res.msg = Acore::StringFormat("已把 {} 条旧日志归档到 {}，并从数据库清理", ids.size(), path);
+        return res;
+    }
 }
 
 class RebornLootLabCommandScript : public CommandScript
@@ -991,6 +1128,24 @@ public:
             SendLog(gm);
             return true;
         }
+        if (what == "logsize")   // LAB3B
+        {
+            SendLogSize(gm);
+            return true;
+        }
+        if (what == "logarchive" && w.size() >= 2)   // LAB3B: logarchive <days>
+        {
+            if (!MayEdit(gm))
+            {
+                Send(gm, std::string("ED\t0\t") + (EditLocked() ? "正式服已锁定，不能编辑" : (EditEnabled() ? "你的账号等级不够编辑" : "编辑功能没有开启（服务端配置 RebornLootLab.Edit.Enable）")));
+                return true;
+            }
+            uint32 const days = std::min<uint32>(Num(w[1]), 3650);
+            EditResult er = ArchiveLog(gm, days);
+            Send(gm, std::string("ED\t") + (er.ok ? "1" : "0") + "\t" + Fld(er.msg));
+            SendLogSize(gm);
+            return true;
+        }
         if (what == "who" && w.size() >= 2)
         {
             SendWho(gm, Num(w[1]));
@@ -999,6 +1154,44 @@ public:
         if (what == "items" && w.size() >= 2)
         {
             SendItems(gm, Num(w[1]), Rest(line, 2));
+            return true;
+        }
+
+        // LAB3A: restoreall -- every table the workshop has changed (one row per table in reborn_lootlab_baseline)
+        // goes back to its official content; each one is logged like a single "restore official".
+        if (what == "restoreall")
+        {
+            if (!MayEdit(gm))
+            {
+                Send(gm, std::string("ED\t0\t") + (EditLocked() ? "正式服已锁定，不能编辑" : (EditEnabled() ? "你的账号等级不够编辑" : "编辑功能没有开启（服务端配置 RebornLootLab.Edit.Enable）")));
+                return true;
+            }
+            struct Saved { std::string kind; uint32 lootId; std::string official; };
+            std::vector<Saved> saved;
+            if (QueryResult b = Q("SELECT kind, loot_id, rows_json FROM reborn_lootlab_baseline ORDER BY kind, loot_id"))
+                do
+                {
+                    Field* f = b->Fetch();
+                    saved.push_back({ f[0].Get<std::string>(), f[1].Get<uint32>(), f[2].Get<std::string>() });
+                } while (b->NextRow());
+            uint32 restored = 0, skipped = 0;
+            for (Saved const& sv : saved)
+            {
+                Kind const* kk = FindKind(sv.kind);
+                if (!kk)
+                {
+                    ++skipped;
+                    continue;
+                }
+                std::string const oldRows = Snapshot(*kk, sv.lootId);
+                ApplySnapshot(*kk, sv.lootId, sv.official);
+                WriteLog(gm, *kk, sv.lootId, "restore official (all)", oldRows, Snapshot(*kk, sv.lootId), false);
+                MarkDirty(kk->key);
+                ++restored;
+            }
+            LOG_INFO("module", "[LootLab] {} restored {} loot table(s) to the official content ({} skipped)", gm->GetName(), restored, skipped);
+            Send(gm, std::string("ED\t1\t") + (saved.empty() ? Fld("还没有改过任何掉落表，现在都是官方内容")
+                                                             : Fld(Acore::StringFormat("已把 {} 张掉落表还原为官方爆率", restored) + (skipped ? Acore::StringFormat("（{} 张不认识的类型已跳过）", skipped) : std::string()))));
             return true;
         }
 
