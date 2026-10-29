@@ -104,5 +104,6 @@ function MultiBot.addWitchDoctor(frame, combat, normal)
     frame.addButton("WDRefresh",-150,0,"inv_misc_pocketwatch_01",tip("刷新策略 / Refresh strategies",
         "重新读取服务器战斗与脱战策略。\nRead combat and non-combat strategies from the server.")).doLeft=function(b) request(b,"co ?");if MultiBot.WDControls then MultiBot.WDControls.Refresh(b.getName()) end end
     if MultiBot.WDControls then MultiBot.WDControls.Attach(frame) end
+    if MultiBot.WDAutoSummons then MultiBot.WDAutoSummons.Attach(frame) end
     if RebornWDBotTalents and RebornWDBotTalents.RegisterRoleObserver then RebornWDBotTalents.RegisterRoleObserver(frame) end
 end

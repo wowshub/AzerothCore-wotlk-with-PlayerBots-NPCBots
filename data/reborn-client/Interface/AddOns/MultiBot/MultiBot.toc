@@ -44,6 +44,7 @@ Strategies\MultiBotShaman.lua
 Strategies\MultiBotWarlock.lua
 Strategies\MultiBotWarrior.lua
 Strategies\MultiBotWitchDoctorControls.lua
+Strategies\MultiBotWitchDoctorAutoSummons.lua
 Strategies\MultiBotWitchDoctor.lua
 Core\MultiBotEvery.lua
 UI\MultiBotStats.lua

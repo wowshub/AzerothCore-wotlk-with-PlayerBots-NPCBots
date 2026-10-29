@@ -17,6 +17,7 @@
 #include "RebornWitchDoctorBotPanelQuotePolicy.h"
 #include "RebornWitchDoctorBotControls3.h"
 #include "RebornWitchDoctorBotSummonPolicy4.h"
+#include "RebornWitchDoctorBotAutoSummon4B.h"
 #include "Playerbots.h"
 #include "Trainer.h"
 #include "Creature.h"
@@ -44,6 +45,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "RebornWitchDoctorBotPreferences3C.inc"
+#include "RebornWitchDoctorBotAutoSummonStore4B.inc"
 using namespace Acore::ChatCommands;
 namespace WD161Bridge { void Apply(Player*,bool,bool); }
 namespace WD160Bridge { void Apply(Player*,bool,bool); }
@@ -903,6 +905,7 @@ bool Check168(ChatHandler* h)
 #include "RebornWitchDoctorBotJob174.inc"
 #include "RebornWitchDoctorBotPanel.inc"
 #include "RebornWitchDoctorBotSummon4.inc"
+#include "RebornWitchDoctorBotAutoSummon4B.inc"
 
 class Commands : public CommandScript
 {
@@ -929,6 +932,8 @@ public:
             {"wdcontrol", controls},
             {"wdwardstate",BotWardState4,SEC_PLAYER,Console::No},
             {"wdwardcast",BotWardCast4,SEC_PLAYER,Console::No},
+            {"wdautostate",BotAutoState4B,SEC_PLAYER,Console::No},
+            {"wdautoset",BotAutoSet4B,SEC_PLAYER,Console::No},
             {"wd174start",BotStart174,SEC_GAMEMASTER,Console::No},
             {"wd174state",BotState174,SEC_GAMEMASTER,Console::No},
             {"wd174stop",BotStop174,SEC_GAMEMASTER,Console::No},
@@ -987,6 +992,7 @@ public:
     {
         if (!Doctor(p)) return;
         WDMB3::LoadPersistent(p);
+        WDAS4::LoadPersistent(p);
         State* s=p->CustomData.GetDefault<State>(Key);
         // Read existing builds only on login; first UI query creates a blank row.
         if (!Enabled() || !Load(p,s)) { s->loaded=false;ClearEffects(p,s); }
@@ -995,6 +1001,8 @@ public:
     {
         if(WDMB3::PersistenceAvailable())
             trans->Append("DELETE FROM reborn_mbwd_preferences WHERE guid={}",guid);
+        if(WDAS4::PersistenceAvailable())
+            trans->Append("DELETE FROM reborn_mbwd_summons WHERE guid={}",guid);
     }
     void OnPlayerLevelChanged(Player* p,uint8) override
     { if (Doctor(p)) Apply(p,p->CustomData.GetDefault<State>(Key)); }
@@ -1004,6 +1012,7 @@ public:
     {
         WD174::Forget(p);
         p->CustomData.Erase(WDMB3::Key);
+        p->CustomData.Erase(WDAS4::Key);
         State* s=p->CustomData.GetDefault<State>(Key);Remove(p,s);p->CustomData.Erase(Key);
     }
 };

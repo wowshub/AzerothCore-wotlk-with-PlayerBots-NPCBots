@@ -9,6 +9,7 @@ local reasons={ready="基础条件就绪 / Ready for native checks",unlearned="�
     busy="正在施法 / Casting",cooldown="技能冷却中 / Cooldown",gcd="公共冷却中 / Global cooldown",resource="资源不足 / Not enough power",
     moving="移动中 / Moving",changed="技能或替换已变化 / Spell changed",duplicate="重复请求已拒绝 / Duplicate request"}
 local frame,title,summary,status
+local preferenceView
 local cards={}
 local sequence=math.floor(GetTime()*1000)%2000000000
 local generation=0
@@ -110,9 +111,35 @@ local function create()
         c.cast=button(c,"施放 / Cast",244,-62,86,function()confirm(k)end)
         cards[key]=c
     end
-    status=text(frame,18,-490,714,51)
+    status=text(frame,18,-490,462,51)
     frame:SetScript("OnHide",function()StaticPopup_Hide("REBORN_WDBOT_SUMMON")end)
     UISpecialFrames[#UISpecialFrames+1]="RebornWDBotSummonPanel";frame:Hide()
+end
+local function attachPreferences()
+    local controller=MultiBot and MultiBot.WDAutoSummons
+    if not controller then return end
+    if not preferenceView then
+        local view={buttons={}}
+        function view:IsShown()return frame:IsShown()end
+        view.addButton=function(key,_,_,icon)
+            if view.buttons[key]then return view.buttons[key]end
+            local b=CreateFrame("Button",nil,frame);view.buttons[key]=b
+            b:SetPoint("TOPLEFT",key=="WDAutoWards"and 500 or 615,-494);b:SetSize(100,38)
+            b:SetHighlightTexture("Interface/Buttons/ButtonHilight-Square","ADD")
+            b.icon=b:CreateTexture(nil,"ARTWORK");b.icon:SetPoint("TOPLEFT",3,-8);b.icon:SetSize(22,22);b.icon:SetTexture("Interface\\Icons\\"..icon)
+            b.label=b:CreateFontString(nil,"OVERLAY","GameFontNormalSmall");b.label:SetPoint("TOPLEFT",28,-2);b.label:SetSize(70,34)
+            b.label:SetText(key=="WDAutoWards"and "自动守卫\nAuto slots"or "大型召唤\nMajor")
+            b.setEnable=function()b.icon:SetDesaturated(false);b.label:SetTextColor(.3,1,.4);return b end
+            b.setDisable=function()b.icon:SetDesaturated(true);b.label:SetTextColor(.65,.65,.65);return b end
+            b:SetScript("OnClick",function()if b.doLeft then b.doLeft(b)end end)
+            b:SetScript("OnEnter",function(self)GameTooltip:SetOwner(self,"ANCHOR_TOP");GameTooltip:SetText(self.tip or "");GameTooltip:Show()end)
+            b:SetScript("OnLeave",function()GameTooltip:Hide()end)
+            return b
+        end
+        preferenceView=view
+    end
+    preferenceView.name=S.name
+    controller.Attach(preferenceView)
 end
 function S.Open(unit,name)
     if S.pending then S.message="请等待当前请求。 / Wait for the pending request.";paint();return false end
@@ -123,7 +150,7 @@ function S.Open(unit,name)
     if not frame then create()end
     if frame:IsShown()and S.guid==guid then frame:Hide();return true end
     generation=generation+1;S.guid=guid;S.id=id;S.name=name;S.rows={};S.header=nil;S.loaded=false;S.updated=0
-    frame:Show();return S.Refresh()
+    frame:Show();attachPreferences();return S.Refresh()
 end
 local function fields(payload)
     local out={};for v in (payload.."|"):gmatch("(.-)|")do out[#out+1]=v end;return out
