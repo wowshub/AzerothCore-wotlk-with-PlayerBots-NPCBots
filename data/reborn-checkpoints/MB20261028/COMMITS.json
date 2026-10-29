@@ -1,0 +1,160 @@
+[
+  {
+    "stage": "MBWD3A",
+    "repo": "playerbots",
+    "sha": "9b78abe4319c58cd1a29b3824446f9f703a4bf44",
+    "paths": [
+      "src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "data/reborn-checkpoints/MBWD3A/ACCEPTANCE.md"
+    ]
+  },
+  {
+    "stage": "MBWD3A",
+    "repo": "main",
+    "sha": "2abf0f3ee9d68ac03e121cd5b6a9e4dc2b85e486",
+    "paths": [
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotControls3.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanel.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "data/reborn-client/Interface/AddOns/MultiBot/MultiBot.toc",
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctorControls.lua",
+      "modules/mod-playerbots",
+      "data/reborn-checkpoints/MBWD3A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBWD3A/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBWD3B",
+    "repo": "main",
+    "sha": "9254dbc938c00f25cc7738961d48292e22641473",
+    "paths": [
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentRolePanel.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "data/reborn-checkpoints/MBWD3B/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBWD3B/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBWD3C",
+    "repo": "main",
+    "sha": "c6c276acc4e572b38db245117044c61b87cbdacc",
+    "paths": [
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotControls3.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPanel.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotPreferences3C.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctorControls.lua",
+      "data/customfixsql/characters/reborn_multibot/MBWD3C/01_mbwd3c_preferences.sql",
+      "data/reborn-checkpoints/MBWD3C/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBWD3C/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBWD4A",
+    "repo": "main",
+    "sha": "fd8b40073c0f45672f94879eeb43040e47836859",
+    "paths": [
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotSummon4.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotSummonPolicy4.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotSummonPanel.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "data/reborn-checkpoints/MBWD4A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBWD4A/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBWD4B",
+    "repo": "playerbots",
+    "sha": "131314b8a51f2a821d1888c9ab053686ac238306",
+    "paths": [
+      "src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "data/reborn-checkpoints/MBWD4B/ACCEPTANCE.md"
+    ]
+  },
+  {
+    "stage": "MBWD4B",
+    "repo": "main",
+    "sha": "1ef25596a9993d088941d72fa1bc2a15f0c48853",
+    "paths": [
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotAutoSummon4B.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotAutoSummon4B.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotAutoSummonStore4B.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "data/reborn-client/Interface/AddOns/MultiBot/MultiBot.toc",
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctor.lua",
+      "data/reborn-client/Interface/AddOns/MultiBot/Strategies/MultiBotWitchDoctorAutoSummons.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotSummonPanel.lua",
+      "data/customfixsql/characters/reborn_multibot/MBWD4B/02_mbwd4b_summon_preferences.sql",
+      "modules/mod-playerbots",
+      "data/reborn-checkpoints/MBWD4B/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBWD4B/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "playerbots",
+    "sha": "ef1106c32ec60371a0dda7ba926c7557f128c09f",
+    "paths": [
+      "src/Ai/Class/WitchDoctor/WitchDoctorAiObjectContext.h",
+      "data/reborn-checkpoints/MBWD4C/ACCEPTANCE.md"
+    ]
+  },
+  {
+    "stage": "MBWD4C",
+    "repo": "main",
+    "sha": "61d89bcaa3960b852ec0fea1c6b2ba5ca67ac3d4",
+    "paths": [
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotDecisionTrace4C.h",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorBotDecisionTrace4C.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotDecisionPanel.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotSummonPanel.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/RebornWitchDoctorTalents.toc",
+      "modules/mod-playerbots",
+      "data/reborn-checkpoints/MBWD4C/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBWD4C/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "playerbots",
+    "sha": "e85232a489d0f54efccc96a8ec33b063e0a4794b",
+    "paths": [
+      "src/Ai/Base/Actions/ChangeTalentsAction.cpp",
+      "data/reborn-checkpoints/MBTG1A/ACCEPTANCE.md"
+    ]
+  },
+  {
+    "stage": "MBTG1A",
+    "repo": "main",
+    "sha": "ae0531ff53b6b988774a85398916ef3ccce87ff6",
+    "paths": [
+      "data/reborn-checkpoints/MBTG1A/CONFIG_APPEND.txt",
+      "modules/mod-reborn-witchdoctor/src/RebornBotTalents1.inc",
+      "modules/mod-reborn-witchdoctor/src/RebornWitchDoctorTalents.cpp",
+      "data/reborn-client/Interface/AddOns/RebornTalentGuide/BotRecommendations.lua",
+      "data/reborn-client/Interface/AddOns/RebornTalentGuide/RebornTalentGuide.toc",
+      "data/reborn-client/Interface/AddOns/RebornTalentGuide/TalentCenter.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+      "data/customfixsql/characters/reborn_multibot/MBTG1A/03_mbtg1a_bot_talent_purchase.sql",
+      "modules/mod-playerbots",
+      "data/reborn-checkpoints/MBTG1A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBTG1A/SOURCE.json"
+    ]
+  },
+  {
+    "stage": "MBTG1B",
+    "repo": "main",
+    "sha": "cfe37ba60ebf8e0cc98ee7ab468af576b7f2d468",
+    "paths": [
+      "data/reborn-client/Interface/AddOns/RebornTalentGuide/BotRecommendations.lua",
+      "data/reborn-client/Interface/AddOns/RebornWitchDoctorTalents/BotTalentPanel.lua",
+      "data/reborn-checkpoints/MBTG1B/ACCEPTANCE.md",
+      "data/reborn-checkpoints/MBTG1B/SOURCE.json"
+    ]
+  }
+]
