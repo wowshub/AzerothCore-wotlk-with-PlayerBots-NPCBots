@@ -1,0 +1,33 @@
+					<CheckButton name="CharCreateWitchHunterPreviewButton" inherits="CharCreateClassButtonTemplate" frameStrata="HIGH" motionScriptsWhileDisabled="true">
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="CharCreateClassFrame" relativePoint="TOP" x="62" y="-18"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self:SetID(0);
+                                self:Enable();
+							</OnLoad>
+							<OnClick>
+								self:SetChecked(0); -- WHUI1A: presentation only; keep the current native class.
+							</OnClick>
+							<OnEnter>
+								if ( self.tooltip ) then
+									CharacterCreateTooltip:SetOwner(self);
+									CharacterCreateTooltip:SetText(self.tooltip);
+								end
+							</OnEnter>
+							<OnLeave>
+								CharacterCreateTooltip:Hide();
+							</OnLeave>
+						</Scripts>
+						<NormalTexture name="$parentNormalTexture" file="Interface\Glues\CharacterCreate\Reborn-WitchHunter-Classes">
+							<TexCoords left="0.875" right="1" top="0.75" bottom="1"/>
+						</NormalTexture>
+						<PushedTexture name="$parentPushedTexture" file="Interface\Glues\CharacterCreate\Reborn-WitchHunter-Classes">
+							<Size x="42" y="42"/>
+							<Anchors>
+								<Anchor point="CENTER" x="2" y="-2"/>
+							</Anchors>
+							<TexCoords left="0.875" right="1" top="0.75" bottom="1"/>
+						</PushedTexture>
+					</CheckButton>

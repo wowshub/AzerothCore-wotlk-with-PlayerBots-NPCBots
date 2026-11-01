@@ -1,0 +1,33 @@
+{
+  "lua": "Lua 5.1 via lupa.lua51",
+  "passed": 24,
+  "checks": [
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261031\\codexwork_WHUI1A\\inputs\\Interface\\GlueXML\\CharacterCreate.lua: Lua 5.1 parse",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261031\\codexfix_20261031_阶段WHUI1A_猎巫者圆形图标与武僧对称入口\\02_覆盖到客户端根目录\\01_导入到Patch-YB.mpq\\Interface\\GlueXML\\CharacterCreate.lua: Lua 5.1 parse",
+    "One unique Witch Hunter XML button",
+    "XML changes consist only of the new button; all old nodes intact",
+    "New click has no native class/create call",
+    "Lua old content byte-equivalent after removing two additions",
+    "Witch Doctor -62 / Monk 0 / Witch Hunter +62; same row",
+    "42px portrait and 48px neutral ring match existing buttons",
+    "Existing highlight and checked texture size retained",
+    "Authoritative class parent / frame level / strata",
+    "Correct label and development tooltip",
+    "Normal create page visible, enabled for hover, not selected",
+    "Repeated layout reuses neutral ring",
+    "Paid-service page hides this development entry",
+    "Back to normal create page restores visibility",
+    "Actual XML click does not select a native class or create a character",
+    "Actual OnLeave hides tooltip",
+    "Missing frame guard returns safely",
+    "Donor round atlas has original dimensions",
+    "Selected Witch Hunter tile has transparent corner and visible centre",
+    "Original CoA atlas copied byte-identically, only private path differs",
+    "Package changes no DBC/SQL/DLL/EXE and has no forbidden installer types",
+    "Live YB CharacterCreate.lua still equals input; not modified by this package",
+    "Live YB CharacterCreate.xml still equals input; not modified by this package"
+  ],
+  "game_test": "未测",
+  "deployment": "未部署",
+  "visual_screenshot": "未测"
+}

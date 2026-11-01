@@ -1,0 +1,23 @@
+[
+  {
+    "mpq": "Patch-YB.mpq",
+    "path": "Interface/GlueXML/CharacterCreate.lua",
+    "sha256": "8b642d53bad071f0d43ca3d963028cae8c1aa592e7ac8929b51a2cd7c31fe211",
+    "expected_sha256": "8b642d53bad071f0d43ca3d963028cae8c1aa592e7ac8929b51a2cd7c31fe211",
+    "matches": true
+  },
+  {
+    "mpq": "Patch-YB.mpq",
+    "path": "Interface/GlueXML/CharacterCreate.xml",
+    "sha256": "2c93de6a700f9f444b2ae78e00f9ae7ae6321345ae924296c2b7a7ecaf8cc00d",
+    "expected_sha256": "2c93de6a700f9f444b2ae78e00f9ae7ae6321345ae924296c2b7a7ecaf8cc00d",
+    "matches": true
+  },
+  {
+    "mpq": "Patch-XB.mpq",
+    "path": "Interface/Glues/CharacterCreate/Reborn-WitchHunter-Classes.blp",
+    "sha256": "9c2620d39056b12e72078aee09361917bb35644ea2348e183d35856a18815a8e",
+    "expected_sha256": "9c2620d39056b12e72078aee09361917bb35644ea2348e183d35856a18815a8e",
+    "matches": true
+  }
+]

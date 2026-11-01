@@ -1,0 +1,48 @@
+{
+  "sources": {
+    "Interface\\GlueXML\\CharacterCreate.lua": [
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+        "sha256": "5e7f121c8a0cfbe8e5faffd988efbc29804cd99c4ae2a7c448d3b5020a86348d",
+        "size": 199624
+      },
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-XA.mpq",
+        "sha256": "5f46c8d098bad7f90fb033110993ce64712e86775adc1c3390ee29f9a1a77d37",
+        "size": 209265
+      },
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-YB.mpq",
+        "sha256": "653f854e00b2f91b83e91bb8df74424fe5b7596aeff66ed97fcee2f65616e056",
+        "size": 222819
+      }
+    ],
+    "Interface\\GlueXML\\CharacterCreate.xml": [
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+        "sha256": "233583b630ac8b8adcb8209470035660ef923c0da839ca9f58ea7d34bcbc1317",
+        "size": 89336
+      },
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-XA.mpq",
+        "sha256": "64fc96e289275669b6f7b090b59802927ce5a8153f66b3d15d550f9f75ebee0d",
+        "size": 90650
+      },
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-YB.mpq",
+        "sha256": "4c3759dc58b89c821acdeaa11385850da554d54c6e8fae7bf73241e36859f6dd",
+        "size": 93434
+      }
+    ],
+    "Interface\\GlueXML\\GlueParent.xml": [
+      {
+        "mpq": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+        "sha256": "7658781cbda1f99b3ba460938454705ab915cfcc585947f9895b5076ab63d397",
+        "size": 629
+      }
+    ]
+  },
+  "errors": [
+    "(WindowsPath('D:/000rebornWOW/000RebornWOWHighForkPRO/beascendclient/newrebornWOWli20261031beAscend/Data/Patch-Housing.MPQ'), 5)"
+  ]
+}

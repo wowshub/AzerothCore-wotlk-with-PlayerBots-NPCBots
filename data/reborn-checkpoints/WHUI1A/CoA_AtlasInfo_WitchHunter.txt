@@ -1,0 +1,1 @@
+    ["class-round-witchhunter"] = { "Interface\\Glues\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-ROUND", 128, 128, 0.875, 1, 0.75, 1, false, false },

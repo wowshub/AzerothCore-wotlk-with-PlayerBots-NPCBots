@@ -1,0 +1,28 @@
+[
+  {
+    "path": "Interface/GlueXML/CharacterCreate.lua",
+    "input_mpq": "Patch-YB.mpq",
+    "input_sha256": "653f854e00b2f91b83e91bb8df74424fe5b7596aeff66ed97fcee2f65616e056",
+    "output_sha256": "8b642d53bad071f0d43ca3d963028cae8c1aa592e7ac8929b51a2cd7c31fe211"
+  },
+  {
+    "path": "Interface/GlueXML/CharacterCreate.xml",
+    "input_mpq": "Patch-YB.mpq",
+    "input_sha256": "4c3759dc58b89c821acdeaa11385850da554d54c6e8fae7bf73241e36859f6dd",
+    "output_sha256": "2c93de6a700f9f444b2ae78e00f9ae7ae6321345ae924296c2b7a7ecaf8cc00d"
+  },
+  {
+    "path": "Interface/Glues/CharacterCreate/Reborn-WitchHunter-Classes.blp",
+    "output_mpq": "Patch-XB.mpq",
+    "source_mpq": "D:/game/ascend/COALauncher/coawowClinet20260930OFFICIAL/Data/patch-A.MPQ",
+    "source_path": "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES-ROUND.blp",
+    "source_sha256": "9c2620d39056b12e72078aee09361917bb35644ea2348e183d35856a18815a8e",
+    "output_sha256": "9c2620d39056b12e72078aee09361917bb35644ea2348e183d35856a18815a8e",
+    "texcoords": [
+      0.875,
+      1,
+      0.75,
+      1
+    ]
+  }
+]
