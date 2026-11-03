@@ -1,0 +1,94 @@
+###################################################################################################
+# mod-reborn-housing (HOME1A + HOME1B)
+###################################################################################################
+
+# Housing.Enable
+#     Description: Turn the housing commands (.home ...) on or off.
+#     Default:     1
+Housing.Enable = 1
+
+# Housing.MaxObjectsPerPlot
+#     Description: How many pieces of decor one plot may hold. GMs are not limited.
+#     Default:     60
+Housing.MaxObjectsPerPlot = 60
+
+# Housing.DefaultPlotRadius
+#     Description: Radius (yards) of a new plot when .home plot create gets no radius.
+#     Default:     30
+Housing.DefaultPlotRadius = 30
+
+# Housing.MaxPlotRadius
+#     Description: Largest radius a GM can give a plot.
+#     Default:     80
+Housing.MaxPlotRadius = 80
+
+# Housing.Mark.OnCreate
+#     Description: .home plot create also puts a flag in the middle and posts along the edge.
+#     Default:     1
+Housing.Mark.OnCreate = 1
+
+# Housing.Mark.FlagEntry / PostEntry
+#     Description: gameobject_template entries used for the flag (middle) and the edge posts. 0 = none.
+#                  19664 Night Elf Owl Banner, 19665 Night Elf Tree Banner, 19457 Lamp Post.
+#     Default:     19664 / 19457
+Housing.Mark.FlagEntry = 19664
+Housing.Mark.PostEntry = 19457
+
+# Housing.Mark.PostSpacing
+#     Description: Yards between edge posts (at least 8 posts, at most 48 per plot).
+#     Default:     12
+Housing.Mark.PostSpacing = 12
+
+# Housing.Show.Entry / Seconds / Spacing / Cooldown
+#     Description: .home plot show: gameobject entry (31576 Medium Brazier), how long it stays,
+#                  yards between pieces (12 to 64 pieces), seconds before the player may use it again.
+#     Default:     31576 / 30 / 8 / 10
+Housing.Show.Entry = 31576
+Housing.Show.Seconds = 30
+Housing.Show.Spacing = 8
+Housing.Show.Cooldown = 10
+
+###################################################################################################
+# HOME4: several plots per player, buying plots, teleport home
+###################################################################################################
+
+# Housing.Plot.BuyEnabled
+#     Description: Players may buy extra plots themselves with .home plot buy (GMs always can).
+#     Default:     1
+Housing.Plot.BuyEnabled = 1
+
+# Housing.Plot.MaxPerPlayer
+#     Description: How many plots one player may own. 0 = no limit. GMs are not limited.
+#     Default:     5
+Housing.Plot.MaxPerPlayer = 5
+
+# Housing.Plot.Price
+#     Description: Price of one plot in COPPER (10000000 = 1000 gold). Capped at 2000000000.
+#     Default:     10000000
+Housing.Plot.Price = 10000000
+
+# Housing.Plot.FirstFree
+#     Description: The first plot of a player costs nothing.
+#     Default:     0
+Housing.Plot.FirstFree = 0
+
+# Housing.Plot.BuyMaps
+#     Description: Map ids where players may buy plots (comma separated). GMs may anywhere outside instances.
+#     Default:     0,1,530,571  (Eastern Kingdoms, Kalimdor, Outland, Northrend)
+Housing.Plot.BuyMaps = "0,1,530,571"
+
+# Housing.Tp.Cooldown
+#     Description: Seconds a player must wait between .home tp. GMs have no cooldown.
+#     Default:     60
+Housing.Tp.Cooldown = 60
+
+# Housing.Tp.SkipCost
+#     Description: COPPER to skip the wait with ".home tp <id> pay" (100000 = 10 gold). 0 = cannot skip.
+#     Default:     100000
+Housing.Tp.SkipCost = 100000
+
+# Housing.Scale.Min / Max
+#     Description: Smallest and largest per-piece scale the server accepts (.home put / .home set).
+#     Default:     0.25 / 4
+Housing.Scale.Min = 0.25
+Housing.Scale.Max = 4
