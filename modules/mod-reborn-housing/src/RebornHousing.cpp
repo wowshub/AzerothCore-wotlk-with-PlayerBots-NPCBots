@@ -51,6 +51,7 @@ namespace
         uint32 mapId = 0;
         float x = 0.0f, y = 0.0f, z = 0.0f;
         float radius = 0.0f;
+        uint32 shape = 0;   // HOME5C: 0 = circle (radius), 1 = square (radius = half of a side)
     };
 
     struct ObjectRow
@@ -70,6 +71,65 @@ namespace
         return sConfigMgr->GetOption<bool>("Housing.Enable", true);
     }
 
+    // HOME5C: plot shape kept in memory (plot_id -> 1 for squares; circles are the default and not stored)
+    std::unordered_map<uint32, uint32>& ShapeCache()
+    {
+        static std::unordered_map<uint32, uint32> cache;
+        return cache;
+    }
+
+    uint32 ShapeOf(uint32 plotId)
+    {
+        auto it = ShapeCache().find(plotId);
+        return it == ShapeCache().end() ? 0u : it->second;
+    }
+
+    // Does a shape (circle or axis-aligned square, `r` = radius / half side) centred at (x1, y1) touch another?
+    bool ShapesOverlap(uint32 s1, float x1, float y1, float r1, uint32 s2, float x2, float y2, float r2)
+    {
+        float dx = std::fabs(x1 - x2), dy = std::fabs(y1 - y2);
+        if (s1 == 0 && s2 == 0)
+            return dx * dx + dy * dy < (r1 + r2) * (r1 + r2);
+        if (s1 == 1 && s2 == 1)
+            return dx < r1 + r2 && dy < r1 + r2;
+        // circle against square: distance from the circle centre to the nearest point of the square
+        float cr = s1 == 0 ? r1 : r2;
+        float sr = s1 == 0 ? r2 : r1;
+        float ex = std::max(dx - sr, 0.0f), ey = std::max(dy - sr, 0.0f);
+        return ex * ex + ey * ey < cr * cr;
+    }
+
+    // The k-th of n posts along the edge of a plot (circle: equal angles; square: equal steps round the perimeter).
+    void EdgePoint(Plot const& plot, uint32 k, uint32 n, float& x, float& y, float& facing)
+    {
+        float t = static_cast<float>(k) / static_cast<float>(std::max<uint32>(n, 1));
+        if (plot.shape == 1)
+        {
+            float r = plot.radius;
+            float d = t * 8.0f * r;           // distance walked along the perimeter
+            uint32 side = static_cast<uint32>(d / (2.0f * r));
+            float u = d - static_cast<float>(side) * 2.0f * r;
+            float lx = 0.0f, ly = 0.0f;
+            switch (side % 4)
+            {
+                case 0: lx = -r + u; ly = -r; break;
+                case 1: lx = r;      ly = -r + u; break;
+                case 2: lx = r - u;  ly = r; break;
+                default: lx = -r;    ly = r - u; break;
+            }
+            x = plot.x + lx;
+            y = plot.y + ly;
+            facing = std::atan2(ly, lx);
+        }
+        else
+        {
+            float a = 2.0f * kPi * t;
+            x = plot.x + plot.radius * std::cos(a);
+            y = plot.y + plot.radius * std::sin(a);
+            facing = a;
+        }
+    }
+
     bool LoadPlotWhere(std::string const& where, Plot& out)
     {
         QueryResult r = WorldDatabase.Query(
@@ -84,6 +144,7 @@ namespace
         out.y = f[4].Get<float>();
         out.z = f[5].Get<float>();
         out.radius = f[6].Get<float>();
+        out.shape = ShapeOf(out.id);
         return true;
     }
 
@@ -115,6 +176,8 @@ namespace
             return false;
         float dx = x - plot.x;
         float dy = y - plot.y;
+        if (plot.shape == 1)
+            return std::fabs(dx) <= plot.radius && std::fabs(dy) <= plot.radius;
         return dx * dx + dy * dy <= plot.radius * plot.radius;
     }
 
@@ -140,6 +203,7 @@ namespace
         p.y = f[4].Get<float>();
         p.z = f[5].Get<float>();
         p.radius = f[6].Get<float>();
+        p.shape = ShapeOf(p.id);
         return p;
     }
 
@@ -183,7 +247,7 @@ namespace
     }
 
     // true when a circle (map, x, y, radius) touches an existing plot; the plot is returned in `hit`
-    bool OverlapsAnyPlot(uint32 mapId, float x, float y, float radius, uint32& hit)
+    bool OverlapsAnyPlot(uint32 mapId, float x, float y, float radius, uint32& hit, uint32 shape = 0)
     {
         QueryResult r = WorldDatabase.Query("SELECT plot_id, x, y, radius FROM reborn_housing_plot WHERE map_id = {}", mapId);
         if (!r)
@@ -191,12 +255,10 @@ namespace
         do
         {
             Field* f = r->Fetch();
-            float dx = x - f[1].Get<float>();
-            float dy = y - f[2].Get<float>();
-            float limit = radius + f[3].Get<float>();
-            if (dx * dx + dy * dy < limit * limit)
+            uint32 otherId = f[0].Get<uint32>();
+            if (ShapesOverlap(shape, x, y, radius, ShapeOf(otherId), f[1].Get<float>(), f[2].Get<float>(), f[3].Get<float>()))
             {
-                hit = f[0].Get<uint32>();
+                hit = otherId;
                 return true;
             }
         } while (r->NextRow());
@@ -342,6 +404,41 @@ namespace
         }
     }
 
+    // HOME5C: plot shape column (0 circle, 1 square); added here when the SQL was not imported
+    void EnsureShapeColumn()
+    {
+        QueryResult r = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() "
+            "AND table_name = 'reborn_housing_plot' AND column_name = 'shape'");
+        if (r && r->Fetch()[0].Get<uint64>() == 0)
+        {
+            WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_plot` ADD COLUMN `shape` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+            LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_plot.shape was missing and has been added.");
+        }
+        // HOME4A: more than one plot per player. Its SQL drops the unique key with PREPARE/EXECUTE, which some import tools
+        // skip silently; then every second plot is refused by the database. Do it here with plain statements.
+        QueryResult uk = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() "
+            "AND table_name = 'reborn_housing_plot' AND index_name = 'uk_owner'");
+        if (uk && uk->Fetch()[0].Get<uint64>() > 0)
+        {
+            WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_plot` DROP INDEX `uk_owner`");
+            LOG_WARN("server.loading", ">> mod-reborn-housing: the one-plot-per-player key uk_owner was still there and has been dropped.");
+        }
+        QueryResult ix = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() "
+            "AND table_name = 'reborn_housing_plot' AND index_name = 'ix_owner'");
+        if (ix && ix->Fetch()[0].Get<uint64>() == 0)
+            WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_plot` ADD INDEX `ix_owner` (`owner_guid`)");
+
+        QueryResult sq = WorldDatabase.Query("SELECT plot_id, shape FROM reborn_housing_plot WHERE shape <> 0");
+        if (sq)
+        {
+            do
+            {
+                Field* f = sq->Fetch();
+                ShapeCache()[f[0].Get<uint32>()] = f[1].Get<uint32>();
+            } while (sq->NextRow());
+        }
+    }
+
     float LookupScale(uint32 spawnId)
     {
         std::lock_guard<std::mutex> guard(ScaleLock());
@@ -424,9 +521,10 @@ namespace
         return h;
     }
 
-    uint32 RingCount(float radius, float spacing, uint32 minN, uint32 maxN)
+    uint32 RingCount(float radius, float spacing, uint32 minN, uint32 maxN, uint32 shape = 0)
     {
-        float n = std::floor(2.0f * kPi * radius / std::max(spacing, 2.0f) + 0.5f);
+        float perimeter = shape == 1 ? 8.0f * radius : 2.0f * kPi * radius;
+        float n = std::floor(perimeter / std::max(spacing, 2.0f) + 0.5f);
         uint32 count = n < 0.0f ? 0u : static_cast<uint32>(n);
         return std::min(std::max(count, minN), maxN);
     }
@@ -489,11 +587,12 @@ namespace
 
         if (postEntry)
         {
-            uint32 n = RingCount(plot.radius, spacing, 8, 48);
+            uint32 n = RingCount(plot.radius, spacing, 8, 48, plot.shape);
             for (uint32 k = 0; k < n; ++k)
             {
-                float a = 2.0f * kPi * static_cast<float>(k) / static_cast<float>(n);
-                if (!put(postEntry, 2, plot.x + plot.radius * std::cos(a), plot.y + plot.radius * std::sin(a), a))
+                float px = 0.0f, py = 0.0f, a = 0.0f;
+                EdgePoint(plot, k, n, px, py, a);
+                if (!put(postEntry, 2, px, py, a))
                     return false;
                 ++posts;
             }
@@ -533,6 +632,7 @@ public:
             { "delete", HandlePlotDelete, SEC_GAMEMASTER, Console::No },
             { "mark",   HandlePlotMark,   SEC_GAMEMASTER, Console::No },
             { "show",   HandlePlotShow,   SEC_PLAYER,     Console::No },
+            { "preview", HandlePlotPreview, SEC_PLAYER,   Console::No },
             { "mylist", HandlePlotMyList, SEC_PLAYER,     Console::No },
             { "buy",    HandlePlotBuy,    SEC_PLAYER,     Console::No },
             { "rename", HandlePlotRename, SEC_PLAYER,     Console::No }
@@ -601,11 +701,21 @@ public:
     }
 
     // Inserts the plot where `at` stands and puts the markers (when enabled). `plotIdOut` is the new plot_id.
-    static bool CreatePlotAt(ChatHandler* handler, Player* at, uint32 ownerGuid, std::string const& ownerName, float radius, uint32& plotIdOut)
+    static bool CreatePlotAt(ChatHandler* handler, Player* at, uint32 ownerGuid, std::string const& ownerName, float radius, uint32& plotIdOut,
+        uint32 shape = 0, std::string plotName = std::string())
     {
+        if (plotName.empty())
+            plotName = ownerName;
+        WorldDatabase.EscapeString(plotName);
+        uint32 plotsBefore = PlotCountOf(ownerGuid);
         WorldDatabase.DirectExecute(
-            "INSERT INTO reborn_housing_plot (owner_guid, map_id, x, y, z, radius, name) VALUES ({}, {}, {}, {}, {}, {}, '{}')",
-            ownerGuid, at->GetMapId(), at->GetPositionX(), at->GetPositionY(), at->GetPositionZ(), radius, ownerName);
+            "INSERT INTO reborn_housing_plot (owner_guid, map_id, x, y, z, radius, name, shape) VALUES ({}, {}, {}, {}, {}, {}, '{}', {})",
+            ownerGuid, at->GetMapId(), at->GetPositionX(), at->GetPositionY(), at->GetPositionZ(), radius, plotName, shape);
+        if (PlotCountOf(ownerGuid) <= plotsBefore)
+        {
+            handler->SendErrorMessage("地块没能建立：数据库拒绝了新地块（常见原因：地块表里还留着“一人一块”的限制，HOME4A 的 SQL 没生效）。重启服务端会自动修复，之后再试。没有扣钱。");
+            return false;
+        }
 
         Plot created;
         if (!LoadPlotWhere("plot_id = (SELECT MAX(plot_id) FROM reborn_housing_plot WHERE owner_guid = " + std::to_string(ownerGuid) + ")", created))
@@ -614,6 +724,8 @@ public:
             return false;
         }
         plotIdOut = created.id;
+        ShapeCache()[created.id] = shape;
+        created.shape = shape;
 
         if (sConfigMgr->GetOption<bool>("Housing.Mark.OnCreate", true))
         {
@@ -643,8 +755,8 @@ public:
         if (PlotCountOf(who->GetGUID().GetCounter()) > 1)
             handler->PSendSysMessage("（共 {} 块地，这里显示的是你站着的那块或同地图最近的一块；.home plot mylist 看全部。）",
                 PlotCountOf(who->GetGUID().GetCounter()));
-        handler->PSendSysMessage("地块 {}：地图 {}，中心 ({:.1f}, {:.1f}, {:.1f})，半径 {:.0f} 码，已摆放 {} / {}。",
-            plot.id, plot.mapId, plot.x, plot.y, plot.z, plot.radius, ObjectCount(plot.id),
+        handler->PSendSysMessage("地块 {}（{}）：地图 {}，中心 ({:.1f}, {:.1f}, {:.1f})，{} {:.0f} 码，已摆放 {} / {}。",
+            plot.id, plot.shape == 1 ? "方形" : "圆形", plot.mapId, plot.x, plot.y, plot.z, plot.shape == 1 ? "半边长" : "半径", plot.radius, ObjectCount(plot.id),
             sConfigMgr->GetOption<uint32>("Housing.MaxObjectsPerPlot", 60));
         if (plot.mapId != player->GetMapId())
             handler->PSendSysMessage("你现在不在这块地所在的地图（地图 {}）。", plot.mapId);
@@ -717,67 +829,125 @@ public:
         return true;
     }
 
-    // .home plot buy   buy another plot centred where you stand
-    static bool HandlePlotBuy(ChatHandler* handler)
+    // HOME5C: the size tiers "radius:price,radius:price" (price in copper) from Housing.Plot.Tiers
+    struct PlotTier { float radius; uint32 price; };
+
+    static std::vector<PlotTier> PlotTiers()
+    {
+        std::vector<PlotTier> tiers;
+        std::string text = sConfigMgr->GetOption<std::string>("Housing.Plot.Tiers", "15:1000000,30:5000000,50:20000000");
+        size_t pos = 0;
+        while (pos < text.size())
+        {
+            size_t end = text.find(',', pos);
+            if (end == std::string::npos)
+                end = text.size();
+            std::string item = text.substr(pos, end - pos);
+            size_t colon = item.find(':');
+            if (colon != std::string::npos)
+            {
+                float r = static_cast<float>(std::atof(item.substr(0, colon).c_str()));
+                uint32 price = static_cast<uint32>(std::min<double>(std::atof(item.substr(colon + 1).c_str()), 2000000000.0));
+                if (r >= 5.0f && r <= 500.0f)
+                    tiers.push_back({ r, price });
+            }
+            pos = end + 1;
+        }
+        if (tiers.empty())
+            tiers.push_back({ 30.0f, ConfigCopper("Housing.Plot.Price", 10000000u) });
+        return tiers;
+    }
+
+    // price of one tier for this buyer: circle costs Housing.Plot.CirclePercent (default 120) of the tier price, a square the plain price;
+    // the first plot may be free (Housing.Plot.FirstFree)
+    static uint32 TierPrice(PlotTier const& tier, uint32 shape, bool gm, uint32 ownedCount)
+    {
+        if (gm)
+            return 0;
+        if (ownedCount == 0 && sConfigMgr->GetOption<bool>("Housing.Plot.FirstFree", false))
+            return 0;
+        uint64 price = tier.price;
+        if (shape == 0)
+            price = price * sConfigMgr->GetOption<uint32>("Housing.Plot.CirclePercent", 120u) / 100u;
+        return static_cast<uint32>(std::min<uint64>(price, 2000000000u));
+    }
+
+    // .home plot buy [radius] [shape 0=circle 1=square] [name...]   buy another plot centred where you stand
+    //   no arguments: a circle of Housing.DefaultPlotRadius. A player's radius must be one of Housing.Plot.Tiers; a GM may use any.
+    static bool HandlePlotBuy(ChatHandler* handler, Optional<float> radiusArg, Optional<uint32> shapeArg, Optional<Tail> nameArg)
     {
         Player* player = handler->GetPlayer();
         if (!player || !Enabled())
             return false;
         bool gm = IsGM(player);
+        auto fail = [&](std::string const& text)
+        {
+            handler->SendErrorMessage("{}", text);
+            UiReply(player, false, text);
+            return false;
+        };
         if (!sConfigMgr->GetOption<bool>("Housing.Plot.BuyEnabled", true) && !gm)
-        {
-            handler->SendErrorMessage("现在不能自己购买地块，请联系 GM。");
-            return false;
-        }
+            return fail("现在不能自己购买地块，请联系 GM。");
         if (!gm && (player->IsInCombat() || !player->IsAlive()))
-        {
-            handler->SendErrorMessage("战斗中或死亡时不能购买地块。");
-            return false;
-        }
+            return fail("战斗中或死亡时不能购买地块。");
         Map* map = player->GetMap();
         if (map->Instanceable())
-        {
-            handler->SendErrorMessage("副本、战场里不能建地块。");
-            return false;
-        }
+            return fail("副本、战场里不能建地块。");
         if (!gm && !MapInList(sConfigMgr->GetOption<std::string>("Housing.Plot.BuyMaps", "0,1,530,571"), player->GetMapId()))
-        {
-            handler->SendErrorMessage("这张地图（{}）不允许购买地块。", player->GetMapId());
-            return false;
-        }
+            return fail("这张地图（" + std::to_string(player->GetMapId()) + "）不允许购买地块。");
 
         uint32 guid = player->GetGUID().GetCounter();
         uint32 count = PlotCountOf(guid);
         uint32 max = sConfigMgr->GetOption<uint32>("Housing.Plot.MaxPerPlayer", 5);
         if (!gm && max && count >= max)
-        {
-            handler->SendErrorMessage("你已经有 {} 块地，达到上限 {}。", count, max);
-            return false;
-        }
+            return fail("你已经有 " + std::to_string(count) + " 块地，达到上限 " + std::to_string(max) + "。");
 
-        uint32 price = gm ? 0 : ConfigCopper("Housing.Plot.Price", 10000000u);
-        if (count == 0 && sConfigMgr->GetOption<bool>("Housing.Plot.FirstFree", false))
-            price = 0;
+        uint32 shape = shapeArg ? *shapeArg : 0u;
+        if (shape > 1)
+            return fail("形状只能是 0（圆形）或 1（方形）。");
+
+        std::vector<PlotTier> tiers = PlotTiers();
+        float radius = radiusArg ? *radiusArg : sConfigMgr->GetOption<float>("Housing.DefaultPlotRadius", 30.0f);
+        PlotTier const* tier = nullptr;
+        for (PlotTier const& t : tiers)
+            if (std::fabs(t.radius - radius) < 0.5f)
+                tier = &t;
+        if (gm)
+        {
+            float maxRadius = sConfigMgr->GetOption<float>("Housing.MaxPlotRadius", 80.0f);
+            if (radius < 5.0f || radius > maxRadius)
+                return fail("半径必须在 5 到 " + std::to_string(static_cast<int>(maxRadius)) + " 码之间。");
+        }
+        else if (!tier)
+            return fail("没有这个大小的地块。可选：" + std::to_string(static_cast<int>(tiers.front().radius)) + " 码等。");
+
+        uint32 price = tier ? TierPrice(*tier, shape, gm, count) : 0;
         if (player->GetMoney() < price)
-        {
-            handler->SendErrorMessage("钱不够：购买一块地需要 {}。", MoneyText(price));
-            return false;
-        }
+            return fail("钱不够：购买这块地需要 " + MoneyText(price) + "。");
 
-        float radius = sConfigMgr->GetOption<float>("Housing.DefaultPlotRadius", 30.0f);
         uint32 hit = 0;
-        if (OverlapsAnyPlot(player->GetMapId(), player->GetPositionX(), player->GetPositionY(), radius, hit))
-        {
-            handler->SendErrorMessage("这里离地块 {} 太近（会重叠）。请走远一点再买。", hit);
-            return false;
-        }
+        if (OverlapsAnyPlot(player->GetMapId(), player->GetPositionX(), player->GetPositionY(), radius, hit, shape))
+            return fail("这里离地块 " + std::to_string(hit) + " 太近（会重叠）。请走远一点再买。");
+
+        std::string name = nameArg ? UiText(std::string(*nameArg), 30) : std::string();
+        while (!name.empty() && name.front() == ' ')
+            name.erase(name.begin());
+        while (!name.empty() && name.back() == ' ')
+            name.pop_back();
 
         uint32 plotId = 0;
-        if (!CreatePlotAt(handler, player, guid, player->GetName(), radius, plotId))
+        if (!CreatePlotAt(handler, player, guid, player->GetName(), radius, plotId, shape, name))
+        {
+            UiReply(player, false, "地块没能建立（服务端数据库拒绝了新地块），没有扣钱。详见聊天框。");
             return false;
+        }
         if (price)
             player->ModifyMoney(-static_cast<int32>(price));
-        handler->PSendSysMessage("已购买地块 {}（半径 {} 码），花费 {}。你现在共 {} 块。", plotId, radius, MoneyText(price), count + 1);
+        std::string done = "已购买地块 " + std::to_string(plotId) + "（" + (shape == 1 ? "方形 边长 " : "圆形 半径 ") +
+            std::to_string(static_cast<int>(shape == 1 ? radius * 2.0f : radius)) + " 码），花费 " + MoneyText(price) +
+            "。你现在共 " + std::to_string(count + 1) + " 块。";
+        handler->SendSysMessage(done);
+        UiReply(player, true, done);
         return true;
     }
 
@@ -930,9 +1100,9 @@ public:
             return false;
         Plot plot;
         std::string where = "map_id = " + std::to_string(gm->GetMapId()) +
-            " AND POW(x - " + std::to_string(gm->GetPositionX()) + ", 2) + POW(y - " + std::to_string(gm->GetPositionY()) +
-            ", 2) <= radius * radius";
-        if (!LoadPlotWhere(where, plot))
+            " AND ABS(x - " + std::to_string(gm->GetPositionX()) + ") <= radius AND ABS(y - " + std::to_string(gm->GetPositionY()) +
+            ") <= radius";   // bounding box; the exact shape is checked next
+        if (!LoadPlotWhere(where, plot) || !InsidePlot(plot, gm->GetMapId(), gm->GetPositionX(), gm->GetPositionY()))
         {
             handler->SendErrorMessage("你不在任何地块里面。请站到地块范围内再用。");
             return false;
@@ -952,6 +1122,86 @@ public:
             return false;
         }
         handler->PSendSysMessage("地块 {}：清掉旧标记 {} 个，立了中心旗帜 {} 面、边界桩 {} 根。", plot.id, removed, flags, posts);
+        return true;
+    }
+
+    // .home plot preview <radius> [shape 0=circle 1=square]   shows how big a plot would be: a ring of braziers
+    // centred where you stand, for Housing.Show.Seconds. Nothing is bought. Used by the client's buy window.
+    static bool HandlePlotPreview(ChatHandler* handler, float radius, Optional<uint32> shapeArg)
+    {
+        Player* player = handler->GetPlayer();
+        if (!player || !Enabled())
+            return false;
+        bool gm = IsGM(player);
+        auto fail = [&](std::string const& text)
+        {
+            handler->SendErrorMessage("{}", text);
+            UiReply(player, false, text);
+            return false;
+        };
+        if (player->GetMap()->Instanceable())
+            return fail("副本、战场里不能预览地块。");
+        uint32 shape = shapeArg ? *shapeArg : 0u;
+        if (shape > 1)
+            return fail("形状只能是 0（圆形）或 1（方形）。");
+        if (!std::isfinite(radius) || radius < 5.0f)
+            return fail("半径太小。");
+        float maxRadius = sConfigMgr->GetOption<float>("Housing.MaxPlotRadius", 80.0f);
+        if (radius > maxRadius)
+            return fail("半径最大 " + std::to_string(static_cast<int>(maxRadius)) + " 码。");
+        if (!gm)
+        {
+            bool known = false;
+            for (PlotTier const& t : PlotTiers())
+                if (std::fabs(t.radius - radius) < 0.5f)
+                    known = true;
+            if (!known)
+                return fail("没有这个大小的地块。");
+        }
+
+        static std::unordered_map<uint32, time_t> lastPreview;
+        time_t now = time(nullptr);
+        time_t& last = lastPreview[player->GetGUID().GetCounter()];
+        uint32 cooldown = sConfigMgr->GetOption<uint32>("Housing.Show.Cooldown", 10);
+        if (now - last < static_cast<time_t>(cooldown))
+            return fail("请稍等几秒再预览。");
+        last = now;
+
+        Plot temp;
+        temp.mapId = player->GetMapId();
+        temp.x = player->GetPositionX();
+        temp.y = player->GetPositionY();
+        temp.z = player->GetPositionZ();
+        temp.radius = radius;
+        temp.shape = shape;
+
+        uint32 entry = sConfigMgr->GetOption<uint32>("Housing.Show.Entry", 31576);
+        uint32 seconds = sConfigMgr->GetOption<uint32>("Housing.Show.Seconds", 30);
+        float spacing = sConfigMgr->GetOption<float>("Housing.Show.Spacing", 8.0f);
+        uint32 n = RingCount(radius, spacing, 12, 64, shape);
+        if (shape == 1)
+            n = ((n + 3) / 4) * 4;   // a multiple of 4 so every corner gets a brazier
+        Map* map = player->GetMap();
+        uint32 made = 0;
+        for (uint32 k = 0; k < n; ++k)
+        {
+            float x = 0.0f, y = 0.0f, a = 0.0f;
+            EdgePoint(temp, k, n, x, y, a);
+            float z = GroundZ(map, player->GetPhaseMask(), x, y, temp.z);
+            if (player->SummonGameObject(entry, x, y, z, a, 0.0f, 0.0f, 0.0f, 1.0f, seconds, false))
+                ++made;
+        }
+        if (!made)
+            return fail("没能显示预览（模板 " + std::to_string(entry) + " 可能不存在，见 Housing.Show.Entry）。");
+
+        std::string text = std::string(shape == 1 ? "方形 边长 " : "圆形 半径 ") +
+            std::to_string(static_cast<int>(shape == 1 ? radius * 2.0f : radius)) + " 码：已用 " + std::to_string(made) +
+            " 个火盆标出，约 " + std::to_string(seconds) + " 秒后消失（中心在你脚下）。";
+        uint32 hit = 0;
+        if (OverlapsAnyPlot(player->GetMapId(), temp.x, temp.y, radius, hit, shape))
+            text += "注意：这里会和地块 " + std::to_string(hit) + " 重叠，买不了。";
+        handler->SendSysMessage(text);
+        UiReply(player, true, text);
         return true;
     }
 
@@ -1009,14 +1259,13 @@ public:
         uint32 entry = sConfigMgr->GetOption<uint32>("Housing.Show.Entry", 31576);
         uint32 seconds = sConfigMgr->GetOption<uint32>("Housing.Show.Seconds", 30);
         float spacing = sConfigMgr->GetOption<float>("Housing.Show.Spacing", 8.0f);
-        uint32 n = RingCount(plot.radius, spacing, 12, 64);
+        uint32 n = RingCount(plot.radius, spacing, 12, 64, plot.shape);
         Map* map = player->GetMap();
         uint32 made = 0;
         for (uint32 k = 0; k < n; ++k)
         {
-            float a = 2.0f * kPi * static_cast<float>(k) / static_cast<float>(n);
-            float x = plot.x + plot.radius * std::cos(a);
-            float y = plot.y + plot.radius * std::sin(a);
+            float x = 0.0f, y = 0.0f, a = 0.0f;
+            EdgePoint(plot, k, n, x, y, a);
             float z = GroundZ(map, player->GetPhaseMask(), x, y, plot.z);
             if (player->SummonGameObject(entry, x, y, z, a, 0.0f, 0.0f, 0.0f, 1.0f, seconds, false))
                 ++made;
@@ -1094,10 +1343,13 @@ public:
                     std::string plotName = f[8].Get<std::string>();
                     if (plotName == player->GetName())
                         plotName.clear();
-                    out.Line(Acore::StringFormat("P|{}|{}|{:.1f}|{:.1f}|{:.1f}|{:.0f}|{}|{}|{}|{}",
-                        p.id, p.mapId, p.x, p.y, p.z, p.radius, ObjectCount(p.id), maxObjs, f[7].Get<std::string>(), UiText(plotName, 30)));
+                    out.Line(Acore::StringFormat("P|{}|{}|{:.1f}|{:.1f}|{:.1f}|{:.0f}|{}|{}|{}|{}|{}",
+                        p.id, p.mapId, p.x, p.y, p.z, p.radius, ObjectCount(p.id), maxObjs, f[7].Get<std::string>(), UiText(plotName, 30), p.shape));
                 } while (r->NextRow());
             }
+            // HOME5C: the sizes on sale: B|radius|circle price|square price (what THIS player pays, copper)
+            for (PlotTier const& t : PlotTiers())
+                out.Line(Acore::StringFormat("B|{:.0f}|{}|{}", t.radius, TierPrice(t, 0, gm, count), TierPrice(t, 1, gm, count)));
             out.Line("Z");
             return true;
         }
@@ -1189,6 +1441,7 @@ public:
                     Plot p;
                     p.id = f[0].Get<uint32>(); p.ownerGuid = f[1].Get<uint32>(); p.mapId = f[2].Get<uint32>();
                     p.x = f[3].Get<float>(); p.y = f[4].Get<float>(); p.z = f[5].Get<float>(); p.radius = f[6].Get<float>();
+                    p.shape = ShapeOf(p.id);
                     if (InsidePlot(p, player->GetMapId(), player->GetPositionX(), player->GetPositionY()))
                     {
                         plot = p;
@@ -1537,7 +1790,7 @@ class RebornHousingWorldScript : public WorldScript
 {
 public:
     RebornHousingWorldScript() : WorldScript("RebornHousingWorldScript", { WORLDHOOK_ON_STARTUP }) { }
-    void OnStartup() override { EnsureScaleColumn(); }
+    void OnStartup() override { EnsureScaleColumn(); EnsureShapeColumn(); }
 };
 
 void AddSC_mod_reborn_housing()

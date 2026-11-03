@@ -92,3 +92,15 @@ Housing.Tp.SkipCost = 100000
 #     Default:     0.25 / 4
 Housing.Scale.Min = 0.25
 Housing.Scale.Max = 4
+
+# Housing.Plot.Tiers
+#     Description: Plot sizes on sale, "radius:price" pairs separated by commas; price in COPPER
+#                  (1000000 = 100 gold). A player can only buy these radii; a GM may use any (5 to Housing.MaxPlotRadius).
+#                  For a square the radius is half of a side (radius 30 = a 60 x 60 square).
+#     Default:     "15:1000000,30:5000000,50:20000000"   (15 yd 100g, 30 yd 500g, 50 yd 2000g)
+Housing.Plot.Tiers = "15:1000000,30:5000000,50:20000000"
+
+# Housing.Plot.CirclePercent
+#     Description: A circular plot costs this percent of the tier price; a square costs the plain tier price.
+#     Default:     120
+Housing.Plot.CirclePercent = 120
