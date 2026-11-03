@@ -64,6 +64,7 @@ namespace
         uint32 mapId = 0;
         float x = 0.0f, y = 0.0f, z = 0.0f, o = 0.0f;
         float scale = 1.0f;
+        float pitch = 0.0f, roll = 0.0f;   // HOME6A: tilt about the Y and X axis, radians
     };
 
     bool Enabled()
@@ -151,7 +152,7 @@ namespace
     bool LoadObject(uint32 objectId, ObjectRow& out)
     {
         QueryResult r = WorldDatabase.Query(
-            "SELECT object_id, plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale "
+            "SELECT object_id, plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll "
             "FROM reborn_housing_object WHERE object_id = {}", objectId);
         if (!r)
             return false;
@@ -167,6 +168,8 @@ namespace
         out.z = f[8].Get<float>();
         out.o = f[9].Get<float>();
         out.scale = f[10].Get<float>();
+        out.pitch = f[11].Get<float>();
+        out.roll = f[12].Get<float>();
         return true;
     }
 
@@ -404,6 +407,21 @@ namespace
         }
     }
 
+    // HOME6A: pitch / roll (radians) of a placed piece; added here when the SQL was not imported
+    void EnsureTiltColumns()
+    {
+        for (char const* column : { "pitch", "roll" })
+        {
+            QueryResult r = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() "
+                "AND table_name = 'reborn_housing_object' AND column_name = '{}'", column);
+            if (r && r->Fetch()[0].Get<uint64>() == 0)
+            {
+                WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_object` ADD COLUMN `{}` FLOAT NOT NULL DEFAULT 0", column);
+                LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_object.{} was missing and has been added.", column);
+            }
+        }
+    }
+
     // HOME5C: plot shape column (0 circle, 1 square); added here when the SQL was not imported
     void EnsureShapeColumn()
     {
@@ -461,7 +479,8 @@ namespace
 
     // Spawns one gameobject the same way the core's ".gobject add" does: create, save to the
     // `gameobject` table, then load a clean instance from the database.
-    bool SpawnDecor(Player* player, uint32 entry, float x, float y, float z, float o, uint32& spawnIdOut, float scale = 1.0f)
+    bool SpawnDecor(Player* player, uint32 entry, float x, float y, float z, float o, uint32& spawnIdOut, float scale = 1.0f,
+        float pitch = 0.0f, float roll = 0.0f)
     {
         Map* map = player->GetMap();
         GameObjectTemplate const* info = sObjectMgr->GetGameObjectTemplate(entry);
@@ -471,6 +490,9 @@ namespace
         GameObject* object = new GameObject();
         ObjectGuid::LowType guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
         G3D::Quat rotation = G3D::Quat::fromAxisAngleRotation(G3D::Vector3::unitZ(), o);
+        if (pitch != 0.0f || roll != 0.0f)   // HOME6A: Rz(o) * Ry(pitch) * Rx(roll)
+            rotation = rotation * G3D::Quat::fromAxisAngleRotation(G3D::Vector3::unitY(), pitch) *
+                G3D::Quat::fromAxisAngleRotation(G3D::Vector3::unitX(), roll);
         if (!object->Create(guidLow, entry, map, player->GetPhaseMaskForSpawn(), x, y, z, o, rotation, 0, GO_STATE_READY))
         {
             delete object;
@@ -1380,17 +1402,17 @@ public:
             return true;
         out.Line(Acore::StringFormat("T|{}", plot.id));
         QueryResult r = WorldDatabase.Query(
-            "SELECT o.object_id, IFNULL(c.category, ''), IFNULL(c.name_zh, '?'), o.x, o.y, o.z, o.o, o.catalog_id, o.scale FROM reborn_housing_object o "
+            "SELECT o.object_id, IFNULL(c.category, ''), IFNULL(c.name_zh, '?'), o.x, o.y, o.z, o.o, o.catalog_id, o.scale, o.pitch, o.roll FROM reborn_housing_object o "
             "LEFT JOIN reborn_housing_catalog c ON c.catalog_id = o.catalog_id WHERE o.plot_id = {} ORDER BY o.object_id LIMIT 200", plot.id);
         if (r)
         {
             do
             {
                 Field* f = r->Fetch();
-                out.Line(Acore::StringFormat("J|{}|{}|{}|{:.1f}|{:.1f}|{}|{}|{:.3f}|{:.3f}|{:.3f}|{:.4f}|{:.3f}", plot.id, f[0].Get<uint32>(),
+                out.Line(Acore::StringFormat("J|{}|{}|{}|{:.1f}|{:.1f}|{}|{}|{:.3f}|{:.3f}|{:.3f}|{:.4f}|{:.3f}|{:.4f}|{:.4f}", plot.id, f[0].Get<uint32>(),
                     UiText(f[1].Get<std::string>(), 16), f[3].Get<float>() - plot.x, f[4].Get<float>() - plot.y,
                     UiText(f[2].Get<std::string>(), 30), f[7].Get<uint32>(), f[3].Get<float>(), f[4].Get<float>(), f[5].Get<float>(),
-                    f[6].Get<float>(), f[8].Get<float>()));
+                    f[6].Get<float>(), f[8].Get<float>(), f[9].Get<float>(), f[10].Get<float>()));
             } while (r->NextRow());
         }
         out.Line(Acore::StringFormat("Y|{}", plot.id));
@@ -1572,7 +1594,8 @@ public:
 
     // Replaces the spawned decor of an object row by one at a new place/facing (the core cannot move a
     // loaded gameobject for the clients that already see it, so it is removed and spawned again).
-    static bool Respawn(ChatHandler* handler, Player* player, ObjectRow const& row, float x, float y, float z, float o, float newScale = -1.0f)
+    static bool Respawn(ChatHandler* handler, Player* player, ObjectRow const& row, float x, float y, float z, float o, float newScale,
+        float pitch, float roll)
     {
         float scale = newScale > 0.0f ? newScale : row.scale;
         if (!DespawnDecor(player, row.spawnId))
@@ -1581,16 +1604,16 @@ public:
             return false;
         }
         uint32 newSpawn = 0;
-        if (!SpawnDecor(player, row.entry, x, y, z, o, newSpawn, scale))
+        if (!SpawnDecor(player, row.entry, x, y, z, o, newSpawn, scale, pitch, roll))
         {
             // put the old one back so nothing is lost
-            if (SpawnDecor(player, row.entry, row.x, row.y, row.z, row.o, newSpawn, row.scale))
+            if (SpawnDecor(player, row.entry, row.x, row.y, row.z, row.o, newSpawn, row.scale, row.pitch, row.roll))
                 WorldDatabase.Execute("UPDATE reborn_housing_object SET spawn_id = {} WHERE object_id = {}", newSpawn, row.id);
             handler->SendErrorMessage("重新摆放失败，已放回原位。");
             return false;
         }
-        WorldDatabase.Execute("UPDATE reborn_housing_object SET spawn_id = {}, x = {}, y = {}, z = {}, o = {}, scale = {} WHERE object_id = {}",
-            newSpawn, x, y, z, o, scale, row.id);
+        WorldDatabase.Execute("UPDATE reborn_housing_object SET spawn_id = {}, x = {}, y = {}, z = {}, o = {}, scale = {}, pitch = {}, roll = {} WHERE object_id = {}",
+            newSpawn, x, y, z, o, scale, pitch, roll, row.id);
         return true;
     }
 
@@ -1623,6 +1646,19 @@ public:
         return false;
     }
 
+    // pitch is kept below +-89 degrees (the three angles stop being unique at +-90), roll wrapped into -pi..pi
+    static void CleanTilt(Optional<float> const& pitchArg, Optional<float> const& rollArg, float& pitch, float& roll)
+    {
+        pitch = pitchArg ? *pitchArg : 0.0f;
+        roll = rollArg ? *rollArg : 0.0f;
+        if (!std::isfinite(pitch)) pitch = 0.0f;
+        if (!std::isfinite(roll)) roll = 0.0f;
+        pitch = std::min(std::max(pitch, -1.553f), 1.553f);
+        roll = std::fmod(roll, 2.0f * kPi);
+        if (roll > kPi) roll -= 2.0f * kPi;
+        if (roll < -kPi) roll += 2.0f * kPi;
+    }
+
     static bool CheckPutArgs(ChatHandler* handler, Player* player, float x, float y, float z, float& o, Optional<float> const& scaleArg, float& scale, Plot& plot)
     {
         auto fail = [&](std::string const& text)
@@ -1652,8 +1688,9 @@ public:
         return true;
     }
 
-    // .home put <catalog_id> <x> <y> <z> <o> [scale]
-    static bool HandlePut(ChatHandler* handler, uint32 catalogId, float x, float y, float z, float o, Optional<float> scaleArg)
+    // .home put <catalog_id> <x> <y> <z> <o> [scale] [pitch] [roll]     (angles in radians)
+    static bool HandlePut(ChatHandler* handler, uint32 catalogId, float x, float y, float z, float o, Optional<float> scaleArg,
+        Optional<float> pitchArg, Optional<float> rollArg)
     {
         Player* player = handler->GetPlayer();
         if (!player || !Enabled())
@@ -1662,6 +1699,8 @@ public:
         float scale = 1.0f;
         if (!CheckPutArgs(handler, player, x, y, z, o, scaleArg, scale, plot))
             return false;
+        float pitch = 0.0f, roll = 0.0f;
+        CleanTilt(pitchArg, rollArg, pitch, roll);
 
         uint32 cap = sConfigMgr->GetOption<uint32>("Housing.MaxObjectsPerPlot", 60);
         if (!IsGM(player) && ObjectCount(plot.id) >= cap)
@@ -1680,15 +1719,15 @@ public:
         }
         uint32 entry = cr->Fetch()[0].Get<uint32>();
         uint32 spawnId = 0;
-        if (!SpawnDecor(player, entry, x, y, z, o, spawnId, scale))
+        if (!SpawnDecor(player, entry, x, y, z, o, spawnId, scale, pitch, roll))
         {
             handler->SendErrorMessage("摆放失败（模板 {} 不可用）。", entry);
             UiReply(player, false, "摆放失败，模板不可用。");
             return false;
         }
         WorldDatabase.Execute(
-            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
-            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, scale);
+            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
+            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, scale, pitch, roll);
         QueryResult idr = WorldDatabase.Query("SELECT MAX(object_id) FROM reborn_housing_object WHERE spawn_id = {}", spawnId);
         uint32 objectId = idr ? idr->Fetch()[0].Get<uint32>() : 0;
         handler->PSendSysMessage("已摆放 {}（物件编号 {}，大小 {:.2f}）。", CatalogName(catalogId), objectId, scale);
@@ -1696,8 +1735,9 @@ public:
         return true;
     }
 
-    // .home set <object_id> <x> <y> <z> <o> [scale]
-    static bool HandleSet(ChatHandler* handler, uint32 objectId, float x, float y, float z, float o, Optional<float> scaleArg)
+    // .home set <object_id> <x> <y> <z> <o> [scale] [pitch] [roll]     (angles in radians; pitch/roll left out = keep as they are)
+    static bool HandleSet(ChatHandler* handler, uint32 objectId, float x, float y, float z, float o, Optional<float> scaleArg,
+        Optional<float> pitchArg, Optional<float> rollArg)
     {
         Player* player = handler->GetPlayer();
         if (!player || !Enabled())
@@ -1719,7 +1759,10 @@ public:
             UiReply(player, false, "不能把物件挪到另一块地。");
             return false;
         }
-        if (!Respawn(handler, player, row, x, y, z, o, scale))
+        float pitch = row.pitch, roll = row.roll;
+        if (pitchArg || rollArg)
+            CleanTilt(pitchArg, rollArg, pitch, roll);
+        if (!Respawn(handler, player, row, x, y, z, o, scale, pitch, roll))
         {
             UiReply(player, false, "物件离得太远或没加载，请走近一些再试。");
             return false;
@@ -1744,7 +1787,7 @@ public:
             handler->SendErrorMessage("你不在地块范围里，不能把家具挪到这里。");
             return false;
         }
-        if (!Respawn(handler, player, row, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), row.o))
+        if (!Respawn(handler, player, row, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), row.o, -1.0f, row.pitch, row.roll))
             return false;
         handler->PSendSysMessage("物件 {} 已挪到你脚下。", objectId);
         return true;
@@ -1763,7 +1806,7 @@ public:
         float o = std::fmod(row.o + degrees * kPi / 180.0f, 2.0f * kPi);
         if (o < 0.0f)
             o += 2.0f * kPi;
-        if (!Respawn(handler, player, row, row.x, row.y, row.z, o))
+        if (!Respawn(handler, player, row, row.x, row.y, row.z, o, -1.0f, row.pitch, row.roll))
             return false;
         handler->PSendSysMessage("物件 {} 已旋转 {:.0f} 度。", objectId, degrees);
         return true;
@@ -1790,7 +1833,7 @@ class RebornHousingWorldScript : public WorldScript
 {
 public:
     RebornHousingWorldScript() : WorldScript("RebornHousingWorldScript", { WORLDHOOK_ON_STARTUP }) { }
-    void OnStartup() override { EnsureScaleColumn(); EnsureShapeColumn(); }
+    void OnStartup() override { EnsureScaleColumn(); EnsureTiltColumns(); EnsureShapeColumn(); }
 };
 
 void AddSC_mod_reborn_housing()

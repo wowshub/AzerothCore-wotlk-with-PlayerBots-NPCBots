@@ -25,3 +25,9 @@ data/customfixsql/world/housing/{HOME1A,HOME1B,HOME4A,H3A,H3C}。按顺序执行
   现在服务端启动时用普通 ALTER 去掉它，购买时核对插入是否成功。
 - SQL：data/customfixsql/world/housing/HOME5C（加 shape 列，服务端也会自补）。
 - 未测试：非 GM 账号下的真实三档价格与扣费；GM 自定义半径；方形地块里摆家具的边界；多人同时购买。
+
+## 2026-11-02 追加：HOME6A 三轴旋转（用户确认通过："多面旋转可以的 不错 通过"）
+- 家具表 reborn_housing_object 新增 pitch、roll（弧度，启动时自动补列）；.home put/set 增加俯仰、侧倾参数；J 行带出两个角。
+- 服务端用 Rz(朝向)·Ry(俯仰)·Rx(侧倾) 合成四元数；俯仰限制 ±89°。客户端三轴球环旋转，世界轴。
+- 离线自测：4000 组角度往返误差约 1e-15。
+- 未测试：局部轴旋转（未做）、编辑服务端家具时原物体仍显示（原有行为）、重启服务端后大批量倾斜家具的显示。
