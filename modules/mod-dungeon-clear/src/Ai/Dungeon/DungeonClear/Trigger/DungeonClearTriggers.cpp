@@ -946,7 +946,8 @@ bool DungeonClearRecoverStrandedTrigger::IsActive()
     // Evaluate is the failsafe's clock owner: it ticks the leader's no-progress
     // clock as a side effect (leader-only inside; a no-op on followers and on
     // off/paused runs) and returns true only when a rescue teleport is due.
-    return DcStrandedRecovery::Evaluate(bot);
+    // DCSTR2A: ...or a member has trailed the tank long enough for the fast catch-up.
+    return DcStrandedRecovery::Evaluate(bot) || DcStrandedRecovery::CatchUpDue(bot);
 }
 
 bool DungeonClearStalledTrigger::IsActive()

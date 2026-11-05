@@ -2656,6 +2656,7 @@ bool DungeonClearRecoverStrandedAction::Execute(Event /*event*/)
     // strays to the tank and re-arm the clock; the whole decision + relocation
     // lives in the glue.
     DcStrandedRecovery::Recover(bot);
+    DcStrandedRecovery::CatchUp(bot);  // DCSTR2A
     return true;
 }
 

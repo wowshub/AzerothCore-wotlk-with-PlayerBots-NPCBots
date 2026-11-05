@@ -536,6 +536,9 @@ bool DcSkipAction::Execute(Event event)
         DcStatusPublisher::SendAddonMessage(botAI, "CHAT\tSkipped " + current->name + ". No bosses left \xe2\x80\x94 disabling.");
         DcRun::Of(context).enabled = false;
         DcStatusPublisher::UnmarkActiveTank(bot->GetGUID());
+        // DCREC2A: this path switches the run off without DisableDungeonClear, so the player's record stayed
+        // "running" for good; close it like every other end of a run.
+        DcPlayerRuns::OnRunEnded(bot, "Skipped the last boss â dungeon clear disabled.");
     }
 
     // Trigger instant status addon message update
@@ -807,6 +810,12 @@ bool DcBossesAction::Execute(Event event)
                 panelRows.push_back(info);
     }
 
+    // DCSTAT3B: the same rows go to the run record (bosses and objectives of this run's list, not events)
+    std::vector<DcPlayerRuns::ChecklistRow> recordRows;
+    std::unordered_set<uint32> runEntries;
+    for (DungeonBossInfo const& info : bosses)
+        runEntries.insert(info.entry);
+
     for (DungeonBossInfo const& info : panelRows)
     {
         // Travel objectives (BossRosterRegistry) are not creatures and carry no
@@ -835,6 +844,8 @@ bool DcBossesAction::Execute(Event event)
                    << static_cast<int>(info.x) << "\t" << static_cast<int>(info.y) << "\t"
                    << static_cast<int>(info.z) << "\t\t" << ann;
             DcStatusPublisher::SendAddonMessage(botAI, objMsg.str());
+            if (runEntries.count(info.entry))
+                recordRows.push_back({ info.name, objStatus == "dead" });
 
             if (!silent)
             {
@@ -900,6 +911,8 @@ bool DcBossesAction::Execute(Event event)
                  << wing << "\t" << ann;
 
         DcStatusPublisher::SendAddonMessage(botAI, addonMsg.str());
+        if (runEntries.count(info.entry))
+            recordRows.push_back({ info.name, statusStr == "dead" });
 
         if (!silent)
         {
@@ -914,6 +927,8 @@ bool DcBossesAction::Execute(Event event)
             DcStatusPublisher::SendAddonMessage(botAI, "CHAT\t" + line.str());
         }
     }
+
+    DcPlayerRuns::OnChecklist(bot, recordRows);   // DCSTAT3B
 
     // A room-aggro PRE-CLEAR event (IsRoomAggroPreClear) must be DONE before its
     // boss is pulled, so it has to sort just BEFORE that boss in the panel — not

@@ -59,6 +59,7 @@ namespace DcPrep
         std::uint32_t level = 0;
         std::string role;                 // tank | heal | dps
         std::string talents;              // points in the three tabs, "5/31/35"
+        std::vector<std::string> warns;   // DCP1C-B: build does not fit the role (DcRoleFitDecision codes)
         std::uint32_t avgIlvl = 0;
         std::uint32_t minIlvl = 0;        // the weakest equipped piece
         std::uint32_t emptySlots = 0;     // empty slots among the ones every class fills

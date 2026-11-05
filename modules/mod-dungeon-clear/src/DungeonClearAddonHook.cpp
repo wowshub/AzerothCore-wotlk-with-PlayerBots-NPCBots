@@ -385,6 +385,7 @@ namespace
     //   PRP_S <name> hp power powerType armor ap rap sp healSp crit rcrit scrit hit rhit shit haste expertise defense dodge parry block resilience
     //   PRP_B <name> <F|E|W> <aura spell id> <seconds left>      (worn flask / elixir / food)
     //   PRP_K <name> <H|M|F|E|W> <item id> <count>               (carried: health / mana potion, flask, elixir, food)
+    //   PRP_W <name> <code,code,...>                             (DCP1C-B: the build does not fit the role)
     //   PRP_END
     std::string F1(float v)
     {
@@ -427,9 +428,10 @@ namespace
             {
                 for (GroupReference* r = group->GetFirstMember(); r; r = r->next())
                 {
-                    // a real person can carry a PlayerbotAI too (IsRealPlayer); only a true bot is skipped
-                    PlayerbotAI* ownerAi = r->GetSource() ? GET_PLAYERBOT_AI(r->GetSource()) : nullptr;
-                    if (Player* m = r->GetSource(); m && m->IsInWorld() && !(ownerAi && !ownerAi->IsRealPlayer()))
+                    // DCPREP2B: every group member is asked, not only the real people. A character handed to the AI
+                    // (Ereer, self-bot) is a player the person owns and can hire NPCBots; playerbots hold none, so
+                    // asking them costs nothing (GetBotMgr() is null).
+                    if (Player* m = r->GetSource(); m && m->IsInWorld())
                         owners.push_back(m);
                 }
             }
@@ -438,13 +440,19 @@ namespace
             for (Player* owner : owners)
             {
                 BotMgr* mgr = owner->GetBotMgr();
+                // DCPREP2B: which owners were asked and how many NPCBots each holds (why a bot is missing)
+                LOG_INFO("module", "mod-dungeon-clear: readiness: owner {} has {} NPCBot(s)", owner->GetName(),
+                         mgr ? mgr->GetBotMap()->size() : 0);
                 if (!mgr)
                     continue;
                 for (auto const& kv : *mgr->GetBotMap())
                 {
                     Creature* bot = kv.second;
                     if (!bot || !bot->IsInWorld())
+                    {
+                        LOG_INFO("module", "mod-dungeon-clear: readiness: NPCBot of {} skipped (not in world)", owner->GetName());
                         continue;
+                    }
                     bool dup = false;
                     for (auto const& have : rows)
                         dup = dup || have.first == bot->GetName();
@@ -465,6 +473,13 @@ namespace
                 n, s.classId, s.level, s.role, s.avgIlvl, s.minIlvl, s.emptySlots, s.durabilityPct,
                 s.needsPet ? 1 : 0, s.hasPet ? 1 : 0, AddonField(s.talents))
                 + (s.npcBot ? "\tn" : "")));
+            if (!s.warns.empty())  // DCP1C-B
+            {
+                std::string codes;
+                for (std::string const& w : s.warns)
+                    codes += (codes.empty() ? "" : ",") + w;
+                SendAddonPayload(player, ClipPayload(Acore::StringFormat("DC\tPRP_W\t{}\t{}", n, codes)));
+            }
             DcPrep::Stats const& t = s.stats;
             std::string line = Acore::StringFormat("DC\tPRP_S\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", n, t.hp, t.mana, t.powerType,
                                                    t.armor, t.ap, t.rap, t.sp, t.healSp);

@@ -369,6 +369,51 @@ DungeonClear.StrandedRecovery = 1
 DungeonClear.StrandedRecoveryNoProgressSecs = 60
 
 #
+#    DungeonClear.StrandedCatchUpSecs
+#        Fast catch-up (RebornWOW DCSTR2A), independent of the no-progress
+#        failsafe above. A bot -- or a character you have put on auto-play --
+#        that trails the leader tank beyond the distance its advance gate waits
+#        at (StrandedCatchUpDist, or the gate if tighter) for this many seconds, with nobody
+#        fighting, is put beside the tank. Covers the case where a wave or a
+#        pull draws the tank off and the rest have not reacted yet. Not used
+#        while a pull maneuver holds the party at its camp. A character that is
+#        not on auto-play is never moved.
+#            0 = off
+#
+#        Default: 5
+#
+
+DungeonClear.StrandedCatchUpSecs = 5
+
+#
+#    DungeonClear.StrandedCatchUpDist
+#        Fast catch-up only. Yards behind the leader tank past which a member
+#        starts counting. Never looser than the distance the tank's advance
+#        gate waits at (PartyMaxSpread, 25 by default) -- the 20-30 yd band is
+#        where a member stands awkwardly: too far to keep up, not far enough
+#        for the 60 s failsafe.
+#
+#        Default: 20
+#
+
+DungeonClear.StrandedCatchUpDist = 20
+
+#
+#    DungeonClear.StrandedCatchUpCombatDist
+#        Fast catch-up only (RebornWOW DCSTR2B). While the party is fighting,
+#        a member that is itself out of combat and further than this many yards
+#        from the leader tank counts as trailing and is moved after
+#        StrandedCatchUpSecs. Dungeons with back-to-back waves (Violet Hold)
+#        are never "out of combat", so without this the straggler is left
+#        where it stands. Never smaller than StrandedCatchUpDist.
+#            0 = never move anyone while the party is fighting
+#
+#        Default: 30
+#
+
+DungeonClear.StrandedCatchUpCombatDist = 30
+
+#
 #    DungeonClear.UnreachableCombatPurgeSecs
 #        The other half of "the run has frozen". Not a party member stranded out
 #        of range, but a MOB stranded out of REACH that has the party in combat

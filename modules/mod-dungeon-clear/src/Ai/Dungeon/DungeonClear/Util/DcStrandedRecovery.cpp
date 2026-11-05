@@ -21,9 +21,11 @@
 #include "Ai/Dungeon/DungeonClear/Util/DcStrandedDecision.h"
 #include "Ai/Dungeon/DungeonClear/Util/DcTargeting.h"
 
+#include <algorithm>
 #include <cmath>
 #include <optional>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -146,6 +148,159 @@ namespace
         d.anchor = d.runOwner;
         return d;
     }
+
+    // RebornWOW DCSTR2A: set a stray down beside the anchor. Shared by the no-progress rescue
+    // (Recover) and the fast catch-up (CatchUp) so both land the same way.
+    // Fan the strays out a little around the tank so they don't stack on one point, and drop any
+    // stale follow spline that would otherwise drag them straight back toward wherever they were
+    // stuck. Fan out only onto ground at the tank's height (DCSTR1A): on a ramp, a bridge or a
+    // ledge the fan-out spot can be thin air (the HoL Slag Furnace ramp, 2026-10-18: a stray set
+    // down 2.6yd off the edge fell 20yd); there the stray goes onto the tank's own spot instead --
+    // stacked, but standing where the tank stands.
+    //
+    // DCSTR2C: returns false, and moves nobody, when the tank's own spot has no ground under it (Violet
+    // Hold 2026-10-28: the user's hosted character was set down at the tank's position twice and fell
+    // 40yd into the void). Never put a member where the floor is not.
+    bool PlaceBesideAnchor(Player* leader, Player* member, uint32 moved)
+    {
+        float const lx = leader->GetPositionX();
+        float const ly = leader->GetPositionY();
+        float const lz = leader->GetPositionZ();
+        float const under = leader->GetMap()->GetHeight(leader->GetPhaseMask(), lx, ly, lz + 2.0f, true, 6.0f);
+        if (under <= INVALID_HEIGHT + 1.0f || std::fabs(under - lz) > 2.5f)
+        {
+            static std::unordered_map<ObjectGuid, uint32> s_skipLogged;   // one line per member per 10 s
+            uint32 const nowMs = getMSTime();
+            uint32& last = s_skipLogged[member->GetGUID()];
+            if (!last || getMSTimeDiff(last, nowMs) >= 10000u)
+            {
+                last = nowMs;
+            LOG_INFO("playerbots.dungeonclear",
+                     "[DC:{}] teleport to the tank skipped for {}: no ground under the tank (z {:.1f}, ground {:.1f}, map {} at {:.1f},{:.1f})",
+                     leader->GetName(), member->GetName(), lz, under, leader->GetMapId(), lx, ly);
+            }
+            return false;
+        }
+        float const angle = leader->GetOrientation() + static_cast<float>(moved) * 0.7f;
+        float const off = 1.5f + 0.5f * static_cast<float>(moved);
+        float tx = lx + std::cos(angle) * off;
+        float ty = ly + std::sin(angle) * off;
+        float const groundZ = leader->GetMap()->GetHeight(leader->GetPhaseMask(), tx, ty,
+                                                          lz + 2.0f, true, 6.0f);
+        if (groundZ <= INVALID_HEIGHT + 1.0f || std::fabs(groundZ - lz) > 1.5f)
+        {
+            tx = lx;
+            ty = ly;
+        }
+        member->GetMotionMaster()->Clear();
+        member->NearTeleportTo(tx, ty, lz, member->GetOrientation(),
+                               /*casting*/ false, /*vehicle*/ false, /*withPet*/ true);
+        return true;
+    }
+
+    // RebornWOW DCSTR2A: when each member was first seen too far from the tank (getMSTime), keyed by
+    // member guid. Written only from the clock owner's tick (the same single-threaded cross-bot
+    // access the run-state clocks use); an entry is dropped the moment the member is back in
+    // range, dead, in a fight or gone.
+    std::unordered_map<ObjectGuid, uint32> s_farSince;
+
+    // RebornWOW DCSTR2A: the fast catch-up scan. A member trailing the tank for StrandedCatchUpSecs
+    // is put beside it, without waiting for the 60 s no-progress failsafe. Live 2026-10-28 (Violet
+    // Hold): a wave drew the tank off, the hosted DPS/healer had not reacted yet, and they stood
+    // where they were while the tank fought alone -- the no-progress clock never ran out (the
+    // fights re-armed it) and a self-botted character is never rescued by it (DCSTR1A).
+    //
+    // Everything here is about NOT teleporting someone who is where they should be:
+    //   * paused run, boss stand-down, Karazhan chess, any party engagement or the tank in
+    //     combat: nobody is moved, and the timers reset;
+    //   * a pull maneuver (gate waived) or a camp-anchored gate holds the party away from the tank
+    //     on purpose, so the scan is off there -- the same rule as the test harness's catch-up;
+    //   * a member in combat itself, dead, mid-teleport or on a vehicle is not moved and its timer
+    //     restarts;
+    //   * only members with a PlayerbotAI (bots, and self-botted characters on auto-play). A
+    //     character nobody has handed to the AI is never relocated: the person decides.
+    // The distance is StrandedCatchUpDist (20), or the tank's advance gate if that is tighter (min 10 yd).
+    // Returns whether anyone is due; `due` (optional) receives them.
+    bool ScanCatchUp(Player* bot, std::vector<Player*>* due)
+    {
+        Driver const driver = ResolveDriver(bot);
+        if (!driver.runOwner || !driver.anchor || driver.clockOwner != bot)
+            return false;
+
+        Player* const leader = driver.anchor;
+        PlayerbotAI* const leaderAI = GET_PLAYERBOT_AI(driver.runOwner);
+        uint32 const secs = DcSettings::GetUInt(bot, "StrandedCatchUpSecs");
+        if (!leaderAI || secs == 0 || !DcStrandedRecovery::Enabled(bot) || !leader->IsInWorld() ||
+            leader->isDead())
+        {
+            s_farSince.clear();
+            return false;
+        }
+
+        // DCSTR2B: a fight no longer switches the scan off (Violet Hold is one fight after another, so
+        // the straggler 80-100 yd back was never moved). While the party fights only a member that is
+        // itself out of combat and beyond StrandedCatchUpCombatDist is moved.
+        bool const fighting = leader->IsInCombat() || DcCombatFlag::AnyPartyEngagement(leader);
+        DcRunState const& run = DcRun::Of(leaderAI);
+        if (!run.enabled || run.paused || DcBossStandDown::IsActive(bot) || DcKarazhan::ChessIsOn(bot))
+        {
+            s_farSince.clear();
+            return false;
+        }
+
+        DcPartyState::SpreadGate const gate = DcPartyState::LeaderGate(bot);
+        if (gate.maxSpread >= 50000.0f || gate.anchor)
+        {
+            s_farSince.clear();
+            return false;
+        }
+        // 20 yd by default, never looser than what the tank's gate waits at: a member 20-30 yd back
+        // is exactly the one that stands there awkwardly (the tank holds at 25, the follow gives up).
+        float limit = std::max(std::min(static_cast<float>(DcSettings::GetUInt(bot, "StrandedCatchUpDist")),
+                                        RescueSpread(bot)), 10.0f);
+        if (fighting)
+        {
+            uint32 const combatDist = DcSettings::GetUInt(bot, "StrandedCatchUpCombatDist");
+            if (combatDist == 0)  // 0 = no catch-up teleport while the party fights
+            {
+                s_farSince.clear();
+                return false;
+            }
+            limit = std::max(limit, static_cast<float>(combatDist));
+        }
+
+        Group* const group = leader->GetGroup();
+        if (!group)
+        {
+            s_farSince.clear();
+            return false;
+        }
+
+        uint32 const now = getMSTime();
+        std::unordered_map<ObjectGuid, uint32> next;
+        bool any = false;
+        for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+        {
+            Player* const member = ref->GetSource();
+            if (!member || member == leader || !member->IsInWorld() || !member->IsAlive() ||
+                member->IsBeingTeleported() || member->GetMapId() != leader->GetMapId() ||
+                member->GetVehicle() || member->IsInCombat() || !GET_PLAYERBOT_AI(member))
+                continue;
+            if (leader->GetDistance(member) <= limit)
+                continue;
+            auto const it = s_farSince.find(member->GetGUID());
+            uint32 const since = it != s_farSince.end() ? it->second : now;
+            next[member->GetGUID()] = since;
+            if (getMSTimeDiff(since, now) >= secs * 1000u)
+            {
+                any = true;
+                if (due)
+                    due->push_back(member);
+            }
+        }
+        s_farSince.swap(next);
+        return any;
+    }
 }
 
 namespace DcStrandedRecovery
@@ -248,9 +403,6 @@ namespace DcStrandedRecovery
             return;
 
         float const maxSpread = RescueSpread(bot);
-        float const lx = leader->GetPositionX();
-        float const ly = leader->GetPositionY();
-        float const lz = leader->GetPositionZ();
 
         uint32 moved = 0;
         for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
@@ -286,31 +438,8 @@ namespace DcStrandedRecovery
             if (strandedDist <= maxSpread)
                 continue;                       // in range — not stranded
 
-            // Fan the strays out a little around the tank so they don't stack on
-            // one point, and drop any stale follow spline that would otherwise drag
-            // them straight back toward wherever they were stuck.
-            float const angle = leader->GetOrientation() + static_cast<float>(moved) * 0.7f;
-            float const off = 1.5f + 0.5f * static_cast<float>(moved);
-            float tx = lx + std::cos(angle) * off;
-            float ty = ly + std::sin(angle) * off;
-            // RebornWOW DCSTR1A: fan out only onto ground at the tank's height. On a
-            // ramp, a bridge or a ledge the fan-out spot can be thin air (the HoL Slag
-            // Furnace ramp, 2026-10-18: a stray set down 2.6yd off the edge fell 20yd);
-            // there the stray goes onto the tank's own spot instead -- stacked, but
-            // standing where the tank stands.
-            {
-                float const groundZ = leader->GetMap()->GetHeight(leader->GetPhaseMask(), tx, ty,
-                                                                  lz + 2.0f, true, 6.0f);
-                if (groundZ <= INVALID_HEIGHT + 1.0f || std::fabs(groundZ - lz) > 1.5f)
-                {
-                    tx = lx;
-                    ty = ly;
-                }
-            }
-
-            member->GetMotionMaster()->Clear();
-            member->NearTeleportTo(tx, ty, lz, member->GetOrientation(),
-                                   /*casting*/ false, /*vehicle*/ false, /*withPet*/ true);
+            if (!PlaceBesideAnchor(leader, member, moved))
+                continue;
             ++moved;
 
             LOG_INFO("playerbots.dungeonclear",
@@ -373,5 +502,48 @@ namespace DcStrandedRecovery
             leaderAI,
             "CHAT\tRescued " + std::to_string(moved) +
                 (moved == 1 ? " stuck party member." : " stuck party members."));
+    }
+
+    bool CatchUpDue(Player* bot)
+    {
+        if (!bot || bot->isDead())
+            return false;
+        return ScanCatchUp(bot, nullptr);
+    }
+
+    void CatchUp(Player* bot)
+    {
+        if (!bot || bot->isDead())
+            return;
+        std::vector<Player*> due;
+        if (!ScanCatchUp(bot, &due) || due.empty())
+            return;
+
+        Driver const driver = ResolveDriver(bot);
+        Player* const leader = driver.anchor;
+        PlayerbotAI* const leaderAI = GET_PLAYERBOT_AI(driver.runOwner);
+        if (!leader || !leaderAI)
+            return;
+
+        uint32 moved = 0;
+        for (Player* member : due)
+        {
+            float const dist = leader->GetDistance(member);
+            if (!PlaceBesideAnchor(leader, member, moved))
+                continue;   // no ground under the tank: keep the timer, try again on a later tick
+            s_farSince.erase(member->GetGUID());
+            ++moved;
+            LOG_INFO("playerbots.dungeonclear",
+                     "[DC:{}] catch-up: {} was {:.0f}yd behind the tank for {}s -> moved to the tank",
+                     leader->GetName(), member->GetName(), dist,
+                     DcSettings::GetUInt(bot, "StrandedCatchUpSecs"));
+        }
+        if (moved == 0)
+            return;
+        DcStatusPublisher::SendAddonMessage(
+            leaderAI,
+            "CHAT\tMoved " + std::to_string(moved) +
+                (moved == 1 ? " party member that fell behind the tank."
+                            : " party members that fell behind the tank."));
     }
 }

@@ -8,6 +8,7 @@
 #include "DBCStores.h"
 #include "Group.h"
 #include "Map.h"
+#include "Log.h"
 #include "ObjectAccessor.h"
 #include "Player.h"
 #include "PlayerbotAI.h"
@@ -59,8 +60,17 @@ namespace
         uint32 map = 0, instance = 0;
         bool heroic = false;
         time_t start = 0, end = 0;
+        time_t rosterAt = 0;   // DCSTAT3D: when the roster was last compared with the party
         uint32 total = 0, restarts = 0;
         std::vector<RunEvent> bosses, deaths;
+        // DCSTAT3B: the panel's checklist (see DcPlayerRuns::OnChecklist); t = seconds into the run when it was first seen done
+        struct CheckRow
+        {
+            std::string name;
+            bool done = false;
+            uint32 t = 0;
+        };
+        std::vector<CheckRow> checklist;
         std::vector<Member> members;
         std::string tier, result = "running", reason;
         std::vector<uint32> viewers;  // DCRUN1B: real players who get the record (owner first)
@@ -333,7 +343,14 @@ namespace
         Esc(s, r.tier);
         s << ",\"bossTotal\":" << r.total << ",\"restarts\":" << r.restarts << ",\"bosses\":";
         EscEvents(s, r.bosses);
-        s << ",\"deaths\":";
+        s << ",\"checklist\":[";
+        for (std::size_t i = 0; i < r.checklist.size(); ++i)
+        {
+            s << (i ? "," : "") << "{\"name\":";
+            Esc(s, r.checklist[i].name);
+            s << ",\"done\":" << (r.checklist[i].done ? "true" : "false") << ",\"t\":" << r.checklist[i].t << '}';
+        }
+        s << "],\"deaths\":";
         EscEvents(s, r.deaths);
         s << ",\"taken\":[";
         for (std::size_t i = 0; i < r.taken.size(); ++i)
@@ -431,27 +448,66 @@ namespace
         }
         else
             add(tank);
-        // the owner's NPCBots in the same map (they are creatures, not group members)
-        if (owner->GetMap() == tank->GetMap())
-            if (BotMgr* mgr = owner->GetBotMgr())
-                for (auto const& kv : *mgr->GetBotMap())
-                    if (Creature* bot = kv.second; bot && bot->IsInWorld() && bot->FindMap() == tank->GetMap())  // DCCRASH1A: GetMap() asserts for a bot that is not on a map
+        // DCSTAT3B: the NPCBots of every player in the party, not only the owner's (a character handed to the AI, or a
+        // second character of the same account, hires its own); they are creatures, not group members. Same rule as the
+        // readiness panel (DCPREP2B).
+        std::vector<Player*> hirers;
+        if (Group* g = tank->GetGroup())
+        {
+            for (GroupReference* r = g->GetFirstMember(); r; r = r->next())
+                if (Player* p = r->GetSource())
+                    hirers.push_back(p);
+        }
+        if (std::find(hirers.begin(), hirers.end(), owner) == hirers.end())
+            hirers.push_back(owner);
+        for (Player* hirer : hirers)
+        {
+            if (!hirer->IsInWorld() || hirer->FindMap() != tank->FindMap())
+                continue;
+            BotMgr* mgr = hirer->GetBotMgr();
+            if (!mgr)
+                continue;
+            for (auto const& kv : *mgr->GetBotMap())
+                if (Creature* bot = kv.second; bot && bot->IsInWorld() && bot->FindMap() == tank->FindMap())  // DCCRASH1A: GetMap() asserts for a bot that is not on a map
+                {
+                    bool dup = false;
+                    for (Member const& have : out)
+                        dup = dup || have.name == bot->GetName();
+                    if (dup)
+                        continue;
+                    Member m;
+                    m.name = bot->GetName();
+                    bot_ai const* ai = bot->GetBotAI();
+                    m.cls = ai ? ai->GetBotClass() : 0;
+                    m.level = bot->GetLevel();
+                    m.kind = 'n';
+                    DcPrep::Snapshot const prep = DcPrep::CaptureBot(bot);  // DCSTAT2B (DCPREP2A)
+                    if (prep.valid)
                     {
-                        Member m;
-                        m.name = bot->GetName();
-                        bot_ai const* ai = bot->GetBotAI();
-                        m.cls = ai ? ai->GetBotClass() : 0;
-                        m.level = bot->GetLevel();
-                        m.kind = 'n';
-                        DcPrep::Snapshot const prep = DcPrep::CaptureBot(bot);  // DCSTAT2B (DCPREP2A)
-                        if (prep.valid)
-                        {
-                            m.ilvl = prep.avgIlvl;
-                            m.role = prep.role;
-                        }
-                        out.push_back(m);
+                        m.ilvl = prep.avgIlvl;
+                        m.role = prep.role;
                     }
+                    out.push_back(m);
+                }
+        }
         return out;
+    }
+
+    // DCSTAT3D: the roster is taken when the run starts, so an NPCBot that is summoned or arrives a little later
+    // (or someone who joined) was never on it, and its row and numbers were missing from the statistics. Add
+    // whoever is in the party now and is not on the roster yet (matched by name; nothing is removed or changed).
+    void MergeRoster(Run& r, std::vector<Member> const& now)
+    {
+        for (Member const& m : now)
+        {
+            bool have = false;
+            for (Member const& x : r.members)
+                have = have || x.name == m.name;
+            if (have)
+                continue;
+            r.members.push_back(m);
+            LOG_INFO("module", "DCSTAT3D: roster of run {} gained {} (kind {}, class {})", r.id, m.name, m.kind, m.cls);
+        }
     }
 
     Run const* FindLocked(uint32 owner, std::string const& id)
@@ -547,6 +603,7 @@ namespace DcPlayerRuns
             if (it->second.instance == inst && it->second.map == map)
             {
                 ++it->second.restarts;           // `dc on` again mid-run
+                MergeRoster(it->second, members);  // DCSTAT3D
                 AddViewers(it->second, viewers);  // DCRUN1B: whoever joined since
                 TrackMembers(tank, it->second.id);  // DCSTAT2A: idempotent; picks up whoever joined
                 return;
@@ -564,6 +621,7 @@ namespace DcPlayerRuns
                 Run r = last;
                 ForgetDoneLocked(r.id);          // DCRUN1B: every viewer's copy
                 AddViewers(r, viewers);
+                MergeRoster(r, members);   // DCSTAT3D
                 r.result = "running";
                 r.reason.clear();
                 r.end = 0;
@@ -586,6 +644,60 @@ namespace DcPlayerRuns
         r.viewers = viewers;                     // DCRUN1B
         TrackMembers(tank, r.id);                // DCSTAT2A
         gActive[tank->GetGUID()] = std::move(r);
+    }
+
+    void OnChecklist(Player* tank, std::vector<ChecklistRow> const& rows)
+    {
+        if (!tank || rows.empty())
+            return;
+        // DCSTAT3D: every ~10 s compare the party with the roster (the panel talks to us all the time while a run is on)
+        std::vector<Member> fresh;
+        bool due = false;
+        {
+            std::lock_guard<std::mutex> lock(gMtx);
+            auto at = gActive.find(tank->GetGUID());
+            if (at == gActive.end())
+                return;
+            time_t const t = time(nullptr);
+            if (t - at->second.rosterAt >= 10)
+            {
+                at->second.rosterAt = t;
+                due = true;
+            }
+        }
+        if (due)
+            if (Player* owner = OwnerOf(tank))
+                fresh = Snapshot(tank, owner);
+        std::lock_guard<std::mutex> lock(gMtx);
+        auto it = gActive.find(tank->GetGUID());
+        if (it == gActive.end())
+            return;
+        Run& r = it->second;
+        MergeRoster(r, fresh);
+        uint32 const now = static_cast<uint32>(time(nullptr) - r.start);
+        for (ChecklistRow const& row : rows)
+        {
+            Run::CheckRow* have = nullptr;
+            for (Run::CheckRow& x : r.checklist)
+                if (x.name == row.name)
+                {
+                    have = &x;
+                    break;
+                }
+            if (!have)
+            {
+                if (r.checklist.size() >= 64)
+                    continue;
+                r.checklist.push_back(Run::CheckRow());
+                have = &r.checklist.back();
+                have->name = row.name;
+            }
+            if (row.done && !have->done)
+            {
+                have->done = true;
+                have->t = now;
+            }
+        }
     }
 
     void OnRunEnded(Player* tank, std::string const& reason)
@@ -611,6 +723,8 @@ namespace DcPlayerRuns
             }
         if (it != gActive.end())
             FinishLocked(it, reason);
+        else  // DCREC2A: say so, a record that stays "running" has to be traceable
+            LOG_INFO("playerbots.dungeonclear", "[DC:{}] run end: no open record to close ({})", tank->GetName(), reason);
     }
 
     void RegisterScripts()
@@ -641,10 +755,19 @@ namespace DcPlayerRuns
             std::string name = "?";
             if (MapEntry const* m = sMapStore.LookupEntry(r.map))
                 name = (m->name[loc] && *m->name[loc]) ? m->name[loc] : (m->name[0] ? m->name[0] : "?");
+            // DCSTAT3B: with a checklist the numbers are the panel's (done rows / rows), else the recorded boss deaths
+            uint32 doneN = static_cast<uint32>(r.bosses.size()), totalN = r.total;
+            if (!r.checklist.empty())
+            {
+                doneN = 0;
+                for (Run::CheckRow const& x : r.checklist)
+                    doneN += x.done ? 1 : 0;
+                totalN = std::max<uint32>(r.total, static_cast<uint32>(r.checklist.size()));
+            }
             send(Acore::StringFormat("DC\tMR\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", r.id, r.map,
                                      r.heroic ? 1 : 0, static_cast<uint64>(r.start),
-                                     static_cast<uint64>((r.end ? r.end : now) - r.start), r.result, r.bosses.size(),
-                                     r.total, r.deaths.size(), r.tier, TokenFor(r.map), Clean(name)));
+                                     static_cast<uint64>((r.end ? r.end : now) - r.start), r.result, doneN,
+                                     totalN, r.deaths.size(), r.tier, TokenFor(r.map), Clean(name)));
         }
         send("DC\tMR_END");
     }
@@ -684,8 +807,18 @@ namespace DcPlayerRuns
         for (Member const& m : copy.members)  // DCSTAT2A: item level and role per member
             if (m.ilvl > 0 || !m.role.empty())
                 send(Acore::StringFormat("DC\tMRX\t{}\tI\t{}\t{}\t{}", cid, Clean(m.name), m.ilvl, Clean(m.role)));
-        for (RunEvent const& e : copy.bosses)
-            send(Acore::StringFormat("DC\tMRX\t{}\tB\t{}\t{}", cid, e.t, Clean(e.name)));
+        if (!copy.checklist.empty())   // DCSTAT3B: the panel's rows; B = done, BN = not done (the recorded boss deaths stay in the fight blocks)
+        {
+            for (Run::CheckRow const& x : copy.checklist)
+                if (x.done)
+                    send(Acore::StringFormat("DC\tMRX\t{}\tB\t{}\t{}", cid, x.t, Clean(x.name)));
+            for (Run::CheckRow const& x : copy.checklist)
+                if (!x.done)
+                    send(Acore::StringFormat("DC\tMRX\t{}\tBN\t{}", cid, Clean(x.name)));
+        }
+        else
+            for (RunEvent const& e : copy.bosses)
+                send(Acore::StringFormat("DC\tMRX\t{}\tB\t{}\t{}", cid, e.t, Clean(e.name)));
         for (RunEvent const& e : copy.deaths)
         {
             send(Acore::StringFormat("DC\tMRX\t{}\tD\t{}\t{}", cid, e.t, Clean(e.name)));

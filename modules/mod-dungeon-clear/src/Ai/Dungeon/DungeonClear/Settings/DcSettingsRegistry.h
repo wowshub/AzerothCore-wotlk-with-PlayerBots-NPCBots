@@ -190,6 +190,11 @@ inline constexpr DcSettingDef kDcSettings[] =
     // DcStrandedRecovery.
     { "StrandedRecovery",              DcType::Bool,   1,   0,    1,  true  },
     { "StrandedRecoveryNoProgressSecs", DcType::UInt,  60,  60, 3600,  true  },
+    // RebornWOW DCSTR2A: seconds a bot or self-botted member may trail the leader tank (beyond its
+    // advance-gate distance, out of combat) before it is put beside the tank. 0 = off.
+    { "StrandedCatchUpSecs",           DcType::UInt,   5,   0,  600,  true  },  // DCSTR2B 15 -> 5
+    { "StrandedCatchUpDist",           DcType::UInt,  20,  10,   60,  true  },  // DCSTR2A yards
+    { "StrandedCatchUpCombatDist",     DcType::UInt,  30,   0,   80,  true  },  // DCSTR2B yards, while the party fights; 0 = off
 
     // Unreachable-holder combat purge. The other half of "the run has frozen":
     // not a member stranded out of range, but a MOB stranded out of reach that

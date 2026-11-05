@@ -231,7 +231,18 @@ namespace
     std::string EnableSelf(Player* player)
     {
         if (sPlayerbotAIConfig.selfBotLevel != 1 || player->CanBeGameMaster())
-            return ToggleSelf(player);
+        {
+            // RebornWOW DCSB2D: a GM turned on from the panel was never put on the hand-back
+            // list, so the AI kept playing the character after leaving the dungeon (it ran
+            // through a battleground gate and into the enemy). Same hand-back as everyone else.
+            std::string const why = ToggleSelf(player);
+            if (IsSelfBot(player))   // the reply text is a message either way, so ask the state
+            {
+                std::lock_guard<std::mutex> lock(g_grantLock);
+                g_granted[player->GetGUID().GetCounter()] = 1;
+            }
+            return why;
+        }
         if (!ActiveTankOf(player))
             return "Auto-play is only available inside a dungeon while your party runs dungeon clear.";
         PlayerbotsMgr::instance().AddPlayerbotData(player, true);
@@ -380,6 +391,11 @@ std::string DcSelfBot::StateLine(Player* player)
         return "DC\tSELFBOT\t0\t";
     bool const on = IsSelfBot(player);
     return std::string("DC\tSELFBOT\t") + (on ? "1" : "0") + "\t" + (on ? RoleOf(player) : std::string());
+}
+
+std::string DcSelfBot::HostedRole(Player* player)
+{
+    return player && IsSelfBot(player) ? RoleOf(player) : std::string();
 }
 
 void DcSelfBot::Forget(Player* player)

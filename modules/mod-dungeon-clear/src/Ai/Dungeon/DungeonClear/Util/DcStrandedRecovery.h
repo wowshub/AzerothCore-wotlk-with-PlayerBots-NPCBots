@@ -62,6 +62,15 @@ namespace DcStrandedRecovery
     // driver is NOT exempt from the teleport when the anchor is a corpse — the
     // sole survivor is routinely both the driver and the stray.
     void Recover(Player* bot);
+
+    // RebornWOW DCSTR2A: fast catch-up, separate from the no-progress failsafe above. True when a
+    // bot or self-botted member has trailed the leader tank beyond StrandedCatchUpDist (or the advance gate, if tighter) for
+    // DungeonClear.StrandedCatchUpSecs (out of combat, no pull maneuver in flight). Same single
+    // clock-owner rule as Evaluate: a no-op on every other bot. CatchUp then puts those members
+    // beside the tank. See the scan in DcStrandedRecovery.cpp for what keeps it from moving anyone
+    // who is where they should be.
+    bool CatchUpDue(Player* bot);
+    void CatchUp(Player* bot);
 }
 
 #endif  // _PLAYERBOT_DCSTRANDEDRECOVERY_H

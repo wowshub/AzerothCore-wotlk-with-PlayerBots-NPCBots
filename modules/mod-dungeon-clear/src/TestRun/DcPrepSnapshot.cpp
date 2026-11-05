@@ -4,6 +4,8 @@
  */
 
 #include "TestRun/DcPrepSnapshot.h"
+#include "TestRun/DcRoleFitDecision.h"
+#include "Util/DcSelfBot.h"
 
 #include <algorithm>
 #include <sstream>
@@ -165,10 +167,11 @@ namespace DcPrep
             }
         }
 
-        std::string Talents(Player* p)
+        // points in the three trees of the active spec
+        void TalentPoints(Player* p, std::uint32_t (&points)[3])
         {
             std::uint8_t const spec = p->GetActiveSpec();
-            std::uint32_t points[3] = { 0, 0, 0 };
+            points[0] = points[1] = points[2] = 0;
             for (std::uint32_t i = 0; i < sTalentStore.GetNumRows(); ++i)
             {
                 TalentEntry const* talent = sTalentStore.LookupEntry(i);
@@ -183,6 +186,12 @@ namespace DcPrep
                         learned = r + 1;
                 points[tab->tabpage] += learned;
             }
+        }
+
+        std::string Talents(Player* p)
+        {
+            std::uint32_t points[3];
+            TalentPoints(p, points);
             return Acore::StringFormat("{}/{}/{}", points[0], points[1], points[2]);
         }
     }
@@ -198,6 +207,24 @@ namespace DcPrep
         s.role = !role.empty() ? role : (PlayerbotAI::IsTank(p) ? "tank" : (PlayerbotAI::IsHeal(p) ? "heal" : "dps"));
         s.talents = Talents(p);
         s.avgIlvl = static_cast<std::uint32_t>(p->GetAverageItemLevel() + 0.5f);
+
+        // RebornWOW DCP1C-B: does the build fit the role? A self-botted player is judged against the
+        // role it handed to the AI (the spec may be exactly what is wrong); anyone else against the
+        // role of this snapshot.
+        {
+            DcRoleFit::Inputs fit;
+            fit.classId = s.classId;
+            fit.level = s.level;
+            std::string const hosted = DcSelfBot::HostedRole(p);
+            fit.role = hosted.empty() ? s.role : hosted;
+            TalentPoints(p, fit.points);
+            if (Item* mh = p->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND))
+                fit.mainHandTwoHand = mh->GetTemplate() && mh->GetTemplate()->InventoryType == INVTYPE_2HWEAPON;
+            if (Item* oh = p->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND))
+                fit.offHandShield = oh->GetTemplate() && oh->GetTemplate()->Class == ITEM_CLASS_ARMOR &&
+                                    oh->GetTemplate()->SubClass == ITEM_SUBCLASS_ARMOR_SHIELD;
+            s.warns = DcRoleFit::Decide(fit);
+        }
 
         // the slots every class fills: no shirt, tabard, ranged or off-hand (not every class has one)
         static constexpr std::uint8_t kRequired[] = {
@@ -373,6 +400,9 @@ namespace DcPrep
         o << "],\"stock\":[";
         for (std::size_t i = 0; i < s.stock.size(); ++i)
             o << (i ? "," : "") << "[\"" << s.stock[i].kind << "\"," << s.stock[i].itemId << ',' << s.stock[i].count << ']';
+        o << "],\"warns\":[";  // DCP1C-B
+        for (std::size_t i = 0; i < s.warns.size(); ++i)
+            o << (i ? "," : "") << '"' << s.warns[i] << '"';
         o << "]}";
         return o.str();
     }

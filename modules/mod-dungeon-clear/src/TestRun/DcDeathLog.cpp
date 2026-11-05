@@ -85,6 +85,38 @@ namespace DcDeathLog
         std::mutex g_mu;
         std::unordered_map<ObjectGuid, Victim> g_victims;
         std::unordered_map<ObjectGuid, OutRec> g_out;   // DCSTAT3A
+        struct BotTaken   // DCSTAT3C
+        {
+            std::string runId;
+            std::string name;
+            std::uint64_t taken = 0;
+            std::unordered_map<std::string, SourceTotal> dmg;   // by source + spell, like a player's
+            Pending pending;
+        };
+        std::unordered_map<ObjectGuid, BotTaken> g_botTaken;
+
+        // the entry of one NPCBot for the run of the player who hired it; nullptr when that player is not tracked
+        // (call with g_mu held)
+        BotTaken* BotEntry(Unit* victim)
+        {
+            Creature* bot = victim->ToCreature();
+            if (!bot || !bot->IsNPCBot())
+                return nullptr;
+            Player* owner = bot->GetBotOwner();
+            if (!owner)
+                return nullptr;
+            auto vit = g_victims.find(owner->GetGUID());
+            if (vit == g_victims.end())
+                return nullptr;
+            BotTaken& b = g_botTaken[bot->GetGUID()];
+            if (b.runId != vit->second.runId)
+            {
+                b = BotTaken();
+                b.runId = vit->second.runId;
+                b.name = bot->GetName();
+            }
+            return &b;
+        }
         constexpr std::size_t kTargetCap = 120;
         std::atomic<std::uint32_t> g_count{0};
 
@@ -103,8 +135,23 @@ namespace DcDeathLog
 
         void Remember(Unit* target, Unit* attacker, SpellInfo const* si)
         {
-            if (!g_count.load(std::memory_order_relaxed) || !target || !target->IsPlayer())
+            if (!g_count.load(std::memory_order_relaxed) || !target)
                 return;
+            if (!target->IsPlayer())
+            {
+                if (!target->IsCreature() || !target->ToCreature()->IsNPCBot())
+                    return;
+                std::lock_guard<std::mutex> lock(g_mu);   // DCSTAT3C
+                BotTaken* b = BotEntry(target);
+                if (!b)
+                    return;
+                b->pending.set = true;
+                b->pending.attacker = attacker ? attacker->GetGUID() : ObjectGuid::Empty;
+                b->pending.ms = NowMs();
+                b->pending.spellId = si ? si->Id : 0;
+                b->pending.spell = SpellLabel(si);
+                return;
+            }
             std::lock_guard<std::mutex> lock(g_mu);
             auto it = g_victims.find(target->GetGUID());
             if (it == g_victims.end())
@@ -142,6 +189,54 @@ namespace DcDeathLog
             void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& /*damage*/, SpellInfo const* spellInfo) override
             {
                 Remember(target, attacker, spellInfo);
+            }
+
+            // DCSTAT3C: damage an NPCBot takes, added to the run of the player who hired it
+            void TakenByBot(Unit* attacker, Unit* victim, std::uint32_t damage)
+            {
+                Creature* bot = victim->ToCreature();
+                if (!bot || !bot->IsNPCBot())
+                    return;
+                std::uint32_t const took = std::min<std::uint32_t>(damage, bot->GetHealth());  // no overkill
+                if (!took)
+                    return;
+                std::string const srcName = attacker ? attacker->GetName() : std::string("environment");
+                ObjectGuid const from = attacker ? attacker->GetGUID() : ObjectGuid::Empty;
+                std::lock_guard<std::mutex> lock(g_mu);
+                BotTaken* b = BotEntry(victim);
+                if (!b)
+                    return;
+                b->taken += took;
+
+                std::uint32_t const now = NowMs();
+                std::uint32_t spellId = 0;
+                std::string spell;
+                if (b->pending.set && b->pending.attacker == from && now - b->pending.ms <= kPendingMs)
+                {
+                    spellId = b->pending.spellId;
+                    spell = b->pending.spell;
+                }
+                b->pending.set = false;
+
+                std::string key = srcName + "|" + (spell.empty() ? std::string("?") : spell);
+                auto row = b->dmg.find(key);
+                if (row == b->dmg.end())
+                {
+                    bool const overflow = b->dmg.size() >= kKeyCap;
+                    if (overflow)
+                        key = "other|";
+                    row = b->dmg.find(key);
+                    if (row == b->dmg.end())
+                    {
+                        SourceTotal t;
+                        t.src = overflow ? std::string("other") : srcName;
+                        t.spell = overflow ? std::string() : spell;
+                        t.spellId = overflow ? 0 : spellId;
+                        row = b->dmg.emplace(key, std::move(t)).first;
+                    }
+                }
+                row->second.total += took;
+                row->second.hits += 1;
             }
 
             // DCSTAT3A: a hit on a creature, credited to the tracked member behind the attacker
@@ -207,6 +302,7 @@ namespace DcDeathLog
             {
                 if (damage && victim && g_count.load(std::memory_order_relaxed) && !victim->IsPlayer())
                 {
+                    TakenByBot(attacker, victim, damage);   // DCSTAT3C
                     DealtByParty(attacker, victim, damage);
                     return;
                 }
@@ -313,6 +409,8 @@ namespace DcDeathLog
         std::lock_guard<std::mutex> lock(g_mu);
         for (auto it = g_out.begin(); it != g_out.end();)
             it = it->second.runId == runId ? g_out.erase(it) : std::next(it);
+        for (auto it = g_botTaken.begin(); it != g_botTaken.end();)   // DCSTAT3C
+            it = it->second.runId == runId ? g_botTaken.erase(it) : std::next(it);
         for (auto it = g_victims.begin(); it != g_victims.end();)
         {
             if (it->second.runId == runId)
@@ -418,6 +516,25 @@ namespace DcDeathLog
                 for (auto const& h : v.healBy)
                     heal[h.first] += h.second;
             }
+            for (auto const& entry : g_botTaken)   // DCSTAT3C
+            {
+                BotTaken const& b = entry.second;
+                if (b.runId != runId)
+                    continue;
+                sum += b.taken;
+                for (auto const& row : b.dmg)
+                {
+                    SourceTotal& a = src[row.first];
+                    if (a.src.empty())
+                    {
+                        a.src = row.second.src;
+                        a.spell = row.second.spell;
+                        a.spellId = row.second.spellId;
+                    }
+                    a.total += row.second.total;
+                    a.hits += row.second.hits;
+                }
+            }
         }
         if (taken)
             *taken = sum;
@@ -485,6 +602,12 @@ namespace DcDeathLog
                 }
             }
             for (auto const& e : g_victims)
+                if (e.second.runId == runId && !e.second.name.empty())
+                {
+                    members[e.second.name].name = e.second.name;
+                    members[e.second.name].taken += e.second.taken;
+                }
+            for (auto const& e : g_botTaken)   // DCSTAT3C
                 if (e.second.runId == runId && !e.second.name.empty())
                 {
                     members[e.second.name].name = e.second.name;

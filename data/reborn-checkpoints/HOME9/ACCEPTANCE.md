@@ -15,3 +15,8 @@
 ## 未纳入
 - DCLANG1A（DungeonClear 坐标窗口中英切换）在独立 addon 仓库，其工作树混有其它阶段未提交改动，未在本次推送。
 - WEAPDECOR1A–1G、WPICK1A/1B/2（拾取点）、2A：未测试，未纳入；核心 GameObject 钩子与 mod-reborn-pickups 不在本提交。
+
+## 追加（同日）：mod-dungeon-clear 服务端 DCP1C-B / DCSTAT3B / DCBAR2A / DCSET1A（reborn115–119）
+用户 2026-11-05 要求连同提交，"后面如果有问题再提出来修复"：这些**没有逐项验收记录**，属于随累计提交，状态为候选/未逐项验证。
+内容：开打前角色职责与天赋装备不符提示(DcRoleFitDecision.h)、战报未完成检查项带名字、无 BOSS 副本进度条改数目标/事件、策略卡"设置…"按钮及追上传送设置。需重新编译 worldserver；无 SQL。
+插件侧在独立仓库 wowshub/mod-dungeon-clear-addon（3.6-reborn115–120，含用户测试通过的 DCLANG1A 坐标窗口中英切换）。

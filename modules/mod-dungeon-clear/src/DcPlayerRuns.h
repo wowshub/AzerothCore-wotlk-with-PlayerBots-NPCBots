@@ -26,6 +26,7 @@
 #include "Define.h"
 #include <functional>
 #include <string>
+#include <vector>
 
 class Player;
 
@@ -35,6 +36,17 @@ namespace DcPlayerRuns
 
     void OnRunStarted(Player* tank, uint32 bossTotal);
     void OnRunEnded(Player* tank, std::string const& reason);
+
+    // DCSTAT3B: the run's checklist, exactly the rows the panel lists (bosses and objectives, not events) with
+    // done / not done. Sent by the boss-list builder every time it runs for the tank; the record keeps the first
+    // moment each row was seen done, so the statistics agree with the panel (Violet Hold: four objectives, only
+    // two of which are creatures that die as dungeon bosses).
+    struct ChecklistRow
+    {
+        std::string name;
+        bool done = false;
+    };
+    void OnChecklist(Player* tank, std::vector<ChecklistRow> const& rows);
     void RegisterScripts();
 
     // Addon "myruns": MR_START, MR <fields>..., MR_END.

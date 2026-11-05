@@ -40,6 +40,10 @@ namespace DcSelfBot
     // Forget the remembered role (logout).
     void Forget(Player* player);
 
+    // RebornWOW DCP1C-B: the role (tank|heal|dps) the player handed to the AI, or "" when the
+    // character is not self-botted. The readiness warnings judge the build against this role.
+    std::string HostedRole(Player* player);
+
     // RebornWOW DCSB2A: the run-time watcher (asks real teammates, hands back on leaving).
     void RegisterScripts();
 }
