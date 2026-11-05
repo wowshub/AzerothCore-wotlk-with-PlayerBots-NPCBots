@@ -104,3 +104,60 @@ Housing.Plot.Tiers = "15:1000000,30:5000000,50:20000000"
 #     Description: A circular plot costs this percent of the tier price; a square costs the plain tier price.
 #     Default:     120
 Housing.Plot.CirclePercent = 120
+
+
+#
+#    Housing.Acquire.Mode
+#        Description: How a piece of server furniture is paid for when a player places it (GMs never pay).
+#                     The price and materials of each piece are in the table reborn_housing_recipe.
+#        Default:     0 - free (nothing is charged)
+#                     1 - gold: the piece's gold_copper is taken from the player (the materials are only shown as a hint)
+#                     2 - materials: the listed materials are taken from the bags
+#
+
+Housing.Acquire.Mode = 0
+
+#
+#    Housing.Acquire.GoldPercent
+#        Description: Scales every gold price of the recipe table (100 = as written, 50 = half, 200 = double). Mode 1 only.
+#        Default:     100
+#
+
+Housing.Acquire.GoldPercent = 100
+
+
+#
+#    Housing.Acquire.Inventory
+#        Description: Furniture stock per character. 1 = a piece must be in the character's stock to be placed
+#                     (buy it with .home buy, make it with .home craft, or get it by drop / pickup / GM grant);
+#                     placing takes one copy, removing a piece gives the copy back to the plot owner.
+#                     0 = the old behaviour (Housing.Acquire.Mode decides what placing costs). GMs never use stock.
+#        Default:     0
+#
+
+Housing.Acquire.Inventory = 0
+
+#
+#    Housing.Rarity.PriceMultiplier
+#        Description: Price of one copy in percent of the recipe's gold, for rarity 1..5. 0 = cannot be bought with gold.
+#        Default:     "100,200,400,800,0"
+#
+
+Housing.Rarity.PriceMultiplier = "100,200,400,800,0"
+
+#
+#    Housing.Rarity.DefaultWays
+#        Description: How a piece of that rarity can be obtained when the recipe row sets no ways of its own
+#                     (1 = buy, 2 = craft, 4 = drop / pickup; add them up), for rarity 1..5.
+#        Default:     "3,3,7,4,4"
+#
+
+Housing.Rarity.DefaultWays = "3,3,7,4,4"
+
+#
+#    Housing.Rarity.MaxOwned
+#        Description: How many copies of one piece a character can hold, for rarity 1..5.
+#        Default:     "99,99,99,99,1"
+#
+
+Housing.Rarity.MaxOwned = "99,99,99,99,1"

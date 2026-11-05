@@ -30,6 +30,7 @@
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "Transport.h"
+#include <unordered_set>
 #include <algorithm>
 #include <cmath>
 #include <ctime>
@@ -362,6 +363,100 @@ namespace
         return std::min<uint32>(v, 2000000000u);
     }
 
+    // ------------------------------------------------------------------ HOME9A: per-character furniture stock + rarity
+    // Housing.Acquire.Inventory = 1: a piece must be in the player's stock to be placed (placing takes one, removing gives it back).
+    // The stock lives in the characters database (table reborn_housing_stock), so deleting a character deletes it.
+    bool InventoryOn() { return sConfigMgr->GetOption<bool>("Housing.Acquire.Inventory", false); }
+    // HOME9B: GMs are exempt from stock only if Housing.Inventory.GmBypass = 1 (default 0: a GM also uses up stock, so it can be tested)
+    bool GmBypass() { return sConfigMgr->GetOption<bool>("Housing.Inventory.GmBypass", false); }
+
+    // item `index` (0-based) of a comma list in the config, or `fallback`
+    uint32 ListConfig(char const* key, char const* def, uint32 index, uint32 fallback)
+    {
+        std::string text = sConfigMgr->GetOption<std::string>(key, def);
+        uint32 i = 0;
+        size_t pos = 0;
+        for (;;)
+        {
+            size_t e = text.find(',', pos);
+            std::string item = text.substr(pos, e == std::string::npos ? std::string::npos : e - pos);
+            if (i == index)
+                return item.empty() ? fallback : static_cast<uint32>(std::min<unsigned long long>(std::strtoull(item.c_str(), nullptr, 10), 2000000000ull));
+            if (e == std::string::npos)
+                break;
+            pos = e + 1;
+            ++i;
+        }
+        return fallback;
+    }
+
+    uint32 ClampRarity(uint32 r) { return r < 1 ? 1 : (r > 5 ? 5 : r); }
+    // price of the recipe in percent per rarity (0 = this rarity cannot be bought)
+    uint32 RarityPriceMult(uint32 r) { return ListConfig("Housing.Rarity.PriceMultiplier", "100,200,400,800,0", ClampRarity(r) - 1, 100); }
+    // ways bits: 1 buy, 2 craft, 4 drop / pickup
+    uint32 RarityDefaultWays(uint32 r) { return ListConfig("Housing.Rarity.DefaultWays", "3,3,7,4,4", ClampRarity(r) - 1, 3) & 7u; }
+    uint32 RarityMaxOwned(uint32 r) { return std::max<uint32>(1u, ListConfig("Housing.Rarity.MaxOwned", "99,99,99,99,1", ClampRarity(r) - 1, 99)); }
+
+    uint32 StockOf(uint32 guid, uint32 catalogId)
+    {
+        QueryResult r = CharacterDatabase.Query("SELECT `count` FROM `reborn_housing_stock` WHERE `guid` = {} AND `catalog_id` = {}", guid, catalogId);
+        return r ? r->Fetch()[0].Get<uint32>() : 0;
+    }
+
+    // synchronous writes, so the very next read (placing twice in a row) sees them
+    void StockAdd(uint32 guid, uint32 catalogId, uint32 n)
+    {
+        CharacterDatabase.DirectExecute("INSERT INTO `reborn_housing_stock` (`guid`,`catalog_id`,`count`) VALUES ({},{},{}) "
+            "ON DUPLICATE KEY UPDATE `count` = `count` + {}", guid, catalogId, n, n);
+    }
+
+    bool StockTake(uint32 guid, uint32 catalogId)
+    {
+        if (StockOf(guid, catalogId) < 1)
+            return false;
+        CharacterDatabase.DirectExecute("UPDATE `reborn_housing_stock` SET `count` = `count` - 1 WHERE `guid` = {} AND `catalog_id` = {} AND `count` > 0",
+            guid, catalogId);
+        return true;
+    }
+
+    // creates what the inventory needs; plain statements, so it does not depend on an SQL import
+    void EnsureInventory()
+    {
+        CharacterDatabase.DirectExecute("CREATE TABLE IF NOT EXISTS `reborn_housing_stock` ("
+            "`guid` INT UNSIGNED NOT NULL, `catalog_id` INT UNSIGNED NOT NULL, `count` INT UNSIGNED NOT NULL DEFAULT 0, "
+            "PRIMARY KEY (`guid`, `catalog_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        auto hasColumn = [](char const* table, char const* column)
+        {
+            QueryResult r = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() "
+                "AND table_name = '{}' AND column_name = '{}'", table, column);
+            return r && r->Fetch()[0].Get<uint64>() > 0;
+        };
+        auto hasTable = [](char const* table)
+        {
+            QueryResult r = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = '{}'", table);
+            return r && r->Fetch()[0].Get<uint64>() > 0;
+        };
+        if (hasTable("reborn_housing_object") && !hasColumn("reborn_housing_object", "stocked"))
+        {
+            WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_object` ADD COLUMN `stocked` TINYINT UNSIGNED NOT NULL DEFAULT 1");
+            LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_object.stocked was missing and has been added.");
+        }
+        if (hasTable("reborn_housing_recipe"))
+        {
+            if (!hasColumn("reborn_housing_recipe", "rarity"))
+            {
+                WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_recipe` ADD COLUMN `rarity` TINYINT UNSIGNED NOT NULL DEFAULT 1");
+                LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_recipe.rarity was missing and has been added.");
+            }
+            if (!hasColumn("reborn_housing_recipe", "ways"))
+            {
+                WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_recipe` ADD COLUMN `ways` TINYINT UNSIGNED NULL DEFAULT NULL");
+                LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_recipe.ways was missing and has been added.");
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ H3C: per-piece scale
     // The core keeps no scale per spawn (only the template's `size`), so ours lives in reborn_housing_object.scale
     // and is applied when a piece is spawned and again whenever the core loads it into the world.
@@ -672,7 +767,12 @@ public:
             { "list",    HandleList,    SEC_PLAYER, Console::No },
             { "move",    HandleMove,    SEC_PLAYER, Console::No },
             { "rotate",  HandleRotate,  SEC_PLAYER, Console::No },
-            { "remove",  HandleRemove,  SEC_PLAYER, Console::No }
+            { "remove",  HandleRemove,  SEC_PLAYER, Console::No },
+            { "buy",     HandleBuy,     SEC_PLAYER, Console::No },
+            { "craft",   HandleCraft,   SEC_PLAYER, Console::No },
+            { "grant",   HandleGrant,   SEC_GAMEMASTER, Console::No },
+            { "rarity",  HandleRarity,  SEC_GAMEMASTER, Console::No },
+            { "recipe",  HandleRecipe,  SEC_GAMEMASTER, Console::No }
         };
 
         static ChatCommandTable rootCommands =
@@ -1108,6 +1208,14 @@ public:
             WorldDatabase.Execute("DELETE o FROM reborn_housing_object o LEFT JOIN gameobject g ON g.guid = o.spawn_id WHERE o.plot_id = {} AND g.guid IS NULL", plotId);
             return true;
         }
+        if (InventoryOn())
+        {
+            QueryResult sr = WorldDatabase.Query("SELECT catalog_id FROM reborn_housing_object WHERE plot_id = {} AND stocked <> 0", plotId);
+            if (sr)
+                do
+                    StockAdd(plot.ownerGuid, sr->Fetch()[0].Get<uint32>(), 1);
+                while (sr->NextRow());
+        }
         WorldDatabase.Execute("DELETE FROM reborn_housing_object WHERE plot_id = {}", plotId);
         WorldDatabase.Execute("DELETE FROM reborn_housing_plot WHERE plot_id = {}", plotId);
         handler->PSendSysMessage("地块 {} 已删除，清掉 {} 件物件。", plotId, removed);
@@ -1331,6 +1439,293 @@ public:
     //   (no argument)  H line + one P line per plot of yours + Z
     //   <plot_id>      T, then J lines (one per piece on that plot), then Y   (own plot, or any plot for a GM)
     //   all            GM only: Q line per plot of other players, then X
+    // ------------------------------------------------------------------ HOME8B: how a piece is acquired
+    // Housing.Acquire.Mode: 0 = free (default), 1 = gold, 2 = materials. A GM never pays.
+    // reborn_housing_recipe holds, per catalog piece, a gold price (copper) and up to three materials.
+    struct Recipe
+    {
+        uint32 gold = 0;
+        uint32 item[3] = { 0, 0, 0 };
+        uint32 count[3] = { 0, 0, 0 };
+        std::string source;
+        uint32 rarity = 1;
+        uint32 ways = 0;   // 1 buy, 2 craft, 4 drop / pickup (0 when the piece has no recipe row)
+        bool found = false;
+    };
+
+    static uint32 AcquireMode()
+    {
+        return std::min<uint32>(2u, sConfigMgr->GetOption<uint32>("Housing.Acquire.Mode", 0u));
+    }
+
+    static bool LoadRecipe(uint32 catalogId, Recipe& r)
+    {
+        QueryResult q = WorldDatabase.Query(
+            "SELECT gold_copper, m1_item, m1_count, m2_item, m2_count, m3_item, m3_count, source_zh, rarity, ways FROM reborn_housing_recipe WHERE catalog_id = {}",
+            catalogId);
+        if (!q)
+            return false;
+        Field* f = q->Fetch();
+        uint32 percent = std::min<uint32>(sConfigMgr->GetOption<uint32>("Housing.Acquire.GoldPercent", 100u), 1000u);
+        r.gold = static_cast<uint32>(std::min<uint64>(static_cast<uint64>(f[0].Get<uint32>()) * percent / 100u, 2000000000u));
+        for (int i = 0; i < 3; ++i)
+        {
+            r.item[i] = f[1 + i * 2].Get<uint32>();
+            r.count[i] = f[2 + i * 2].Get<uint32>();
+            if (!r.item[i])
+                r.count[i] = 0;
+        }
+        r.source = f[7].Get<std::string>();
+        r.rarity = ClampRarity(f[8].Get<uint32>());
+        r.ways = f[9].IsNull() ? RarityDefaultWays(r.rarity) : (f[9].Get<uint32>() & 7u);
+        r.found = true;
+        return true;
+    }
+
+    // price of ONE copy in copper under the stock model (0 = cannot be bought)
+    static uint32 UnitPrice(Recipe const& r)
+    {
+        uint32 mult = RarityPriceMult(r.rarity);
+        if (!(r.ways & 1u) || mult == 0)
+            return 0;
+        return static_cast<uint32>(std::min<uint64>(static_cast<uint64>(r.gold) * mult / 100u, 2000000000u));
+    }
+
+    static bool CatalogExists(uint32 catalogId)
+    {
+        return WorldDatabase.Query("SELECT 1 FROM reborn_housing_catalog WHERE catalog_id = {} AND enabled = 1", catalogId) != nullptr;
+    }
+
+    // .home buy <catalog_id> [count]    puts copies into YOUR stock for gold (Housing.Acquire.Inventory = 1)
+    static bool HandleBuy(ChatHandler* handler, uint32 catalogId, Optional<uint32> countArg)
+    {
+        Player* player = handler->GetPlayer();
+        if (!player || !Enabled())
+            return false;
+        auto fail = [&](std::string const& text)
+        {
+            handler->SendErrorMessage("{}", text);
+            UiReply(player, false, text);
+            return false;
+        };
+        if (!InventoryOn())
+            return fail("家具库存还没开启，现在摆放不需要先购买。");
+        if (!CatalogExists(catalogId))
+            return fail("目录里没有这件家具。");
+        Recipe r;
+        if (!LoadRecipe(catalogId, r))
+            return fail("这件家具暂时不能购买。");
+        uint32 unit = UnitPrice(r);
+        if (!(r.ways & 1u) || RarityPriceMult(r.rarity) == 0)
+            return fail("这件家具不能直接购买，请通过制作或探索获得。");
+        uint32 count = std::min<uint32>(std::max<uint32>(countArg ? *countArg : 1u, 1u), 99u);
+        uint32 guid = player->GetGUID().GetCounter();
+        uint32 have = StockOf(guid, catalogId);
+        if (have + count > RarityMaxOwned(r.rarity))
+            return fail("库存里已经有足够的这件家具了（上限 " + std::to_string(RarityMaxOwned(r.rarity)) + " 件）。");
+        uint64 total = static_cast<uint64>(unit) * count;
+        if (total > 2000000000ull || player->GetMoney() < total)
+            return fail("钱不够：购买 " + std::to_string(count) + " 件家具需要 " + MoneyText(static_cast<uint32>(std::min<uint64>(total, 2000000000ull))) + "。");
+        if (total)
+            player->ModifyMoney(-static_cast<int32>(total));
+        StockAdd(guid, catalogId, count);
+        std::string text = "已购买 " + std::to_string(count) + " 件家具：" + CatalogName(catalogId) + (total ? "，花费 " + MoneyText(static_cast<uint32>(total)) : std::string()) + "。";
+        handler->SendSysMessage(text);
+        UiReply(player, true, text);
+        return true;
+    }
+
+    // .home craft <catalog_id>    makes ONE copy from the listed materials into YOUR stock
+    static bool HandleCraft(ChatHandler* handler, uint32 catalogId)
+    {
+        Player* player = handler->GetPlayer();
+        if (!player || !Enabled())
+            return false;
+        auto fail = [&](std::string const& text)
+        {
+            handler->SendErrorMessage("{}", text);
+            UiReply(player, false, text);
+            return false;
+        };
+        if (!InventoryOn())
+            return fail("家具库存还没开启，现在摆放不需要先制作。");
+        if (!CatalogExists(catalogId))
+            return fail("目录里没有这件家具。");
+        Recipe r;
+        if (!LoadRecipe(catalogId, r) || !(r.ways & 2u))
+            return fail("这件家具不能制作，请通过购买或探索获得。");
+        uint32 guid = player->GetGUID().GetCounter();
+        if (StockOf(guid, catalogId) + 1 > RarityMaxOwned(r.rarity))
+            return fail("库存里已经有足够的这件家具了（上限 " + std::to_string(RarityMaxOwned(r.rarity)) + " 件）。");
+        std::string missing;
+        bool any = false;
+        for (int i = 0; i < 3; ++i)
+            if (r.item[i] && r.count[i])
+            {
+                any = true;
+                if (!player->HasItemCount(r.item[i], r.count[i]))
+                    missing += (missing.empty() ? "" : "、") + std::to_string(r.count[i]) + " 个" + ItemNameFor(player, r.item[i]);
+            }
+        if (!any)
+            return fail("这件家具没有配方，不能制作。");
+        if (!missing.empty())
+            return fail("材料不够，不能制作这件家具，还需要：" + missing + "。");
+        for (int i = 0; i < 3; ++i)
+            if (r.item[i] && r.count[i])
+                player->DestroyItemCount(r.item[i], r.count[i], true);
+        StockAdd(guid, catalogId, 1);
+        std::string text = "已制作 1 件家具：" + CatalogName(catalogId) + "。";
+        handler->SendSysMessage(text);
+        UiReply(player, true, text);
+        return true;
+    }
+
+    // .home grant <catalog_id> [count]   (GM) puts copies into the stock of the selected player (or yourself)
+    static bool HandleGrant(ChatHandler* handler, uint32 catalogId, Optional<uint32> countArg)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled())
+            return false;
+        if (!CatalogExists(catalogId))
+        {
+            handler->SendErrorMessage("目录里没有这件家具。");
+            return false;
+        }
+        Player* target = handler->getSelectedPlayerOrSelf();
+        if (!target)
+            return false;
+        uint32 count = std::min<uint32>(std::max<uint32>(countArg ? *countArg : 1u, 1u), 99u);
+        StockAdd(target->GetGUID().GetCounter(), catalogId, count);
+        handler->PSendSysMessage("已给 {} 的库存加 {} 件家具：{}。", target->GetName(), count, CatalogName(catalogId));
+        return true;
+    }
+
+    // .home rarity <catalog_id> <rarity 1-5> [ways 0-7]   (GM) rarity and the allowed ways (1 buy, 2 craft, 4 drop/pickup); no ways = the rarity default
+    static bool HandleRarity(ChatHandler* handler, uint32 catalogId, uint32 rarity, Optional<uint32> waysArg)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled())
+            return false;
+        if (!CatalogExists(catalogId))
+        {
+            UiReply(gm, false, "目录里没有这件家具。");
+            return false;
+        }
+        rarity = ClampRarity(rarity);
+        if (waysArg)
+            WorldDatabase.DirectExecute("INSERT INTO reborn_housing_recipe (catalog_id, rarity, ways) VALUES ({}, {}, {}) "
+                "ON DUPLICATE KEY UPDATE rarity = VALUES(rarity), ways = VALUES(ways)", catalogId, rarity, *waysArg & 7u);
+        else
+            WorldDatabase.DirectExecute("INSERT INTO reborn_housing_recipe (catalog_id, rarity, ways) VALUES ({}, {}, NULL) "
+                "ON DUPLICATE KEY UPDATE rarity = VALUES(rarity), ways = NULL", catalogId, rarity);
+        UiReply(gm, true, "已保存家具稀有度：" + CatalogName(catalogId) + "。");
+        return true;
+    }
+
+    // .home recipe <catalog_id> <gold_copper> <item1> <count1> <item2> <count2> <item3> <count3>   (GM, WEAPDECOR2A)
+    // price (copper, before the rarity / GoldPercent factors) and up to three materials; item 0 = unused slot
+    static bool HandleRecipe(ChatHandler* handler, uint32 catalogId, uint32 gold, uint32 i1, uint32 c1, uint32 i2, uint32 c2, uint32 i3, uint32 c3)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled())
+            return false;
+        if (!CatalogExists(catalogId))
+        {
+            UiReply(gm, false, "目录里没有这件家具。");
+            return false;
+        }
+        uint32 items[3] = { i1, i2, i3 };
+        uint32 counts[3] = { c1, c2, c3 };
+        for (int i = 0; i < 3; ++i)
+        {
+            if (items[i] && !sObjectMgr->GetItemTemplate(items[i]))
+            {
+                UiReply(gm, false, "材料物品ID " + std::to_string(items[i]) + " 不存在。");
+                return false;
+            }
+            if (!items[i])
+                counts[i] = 0;
+            else
+                counts[i] = std::min<uint32>(std::max<uint32>(counts[i], 1u), 200u);
+        }
+        gold = std::min<uint32>(gold, 2000000000u);
+        WorldDatabase.DirectExecute("INSERT INTO reborn_housing_recipe (catalog_id, gold_copper, m1_item, m1_count, m2_item, m2_count, m3_item, m3_count, source_zh, rarity) "
+            "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, '', 1) ON DUPLICATE KEY UPDATE gold_copper = VALUES(gold_copper), "
+            "m1_item = VALUES(m1_item), m1_count = VALUES(m1_count), m2_item = VALUES(m2_item), m2_count = VALUES(m2_count), "
+            "m3_item = VALUES(m3_item), m3_count = VALUES(m3_count)",
+            catalogId, gold, items[0], counts[0], items[1], counts[1], items[2], counts[2]);
+        UiReply(gm, true, "已保存价格与材料：" + CatalogName(catalogId) + "。");
+        return true;
+    }
+
+    static std::string ItemNameFor(Player* player, uint32 item)
+    {
+        ItemTemplate const* tpl = sObjectMgr->GetItemTemplate(item);
+        if (!tpl)
+            return "#" + std::to_string(item);
+        std::string name = tpl->Name1;
+        if (player && player->GetSession())
+            if (ItemLocale const* il = sObjectMgr->GetItemLocale(item))
+                ObjectMgr::GetLocaleString(il->Name, player->GetSession()->GetSessionDbLocaleIndex(), name);
+        return name;
+    }
+
+    // Can this player place the piece? false + a reason when the price or the materials are missing.
+    static bool AcquireCheck(Player* player, uint32 catalogId, std::string& why)
+    {
+        uint32 mode = AcquireMode();
+        if (mode == 0 || IsGM(player))
+            return true;
+        Recipe r;
+        if (!LoadRecipe(catalogId, r))
+            return true; // no recipe row: free
+        if (mode == 1)
+        {
+            if (r.gold && player->GetMoney() < r.gold)
+            {
+                why = "钱不够：摆放这件家具需要 " + MoneyText(r.gold) + "。";
+                return false;
+            }
+            return true;
+        }
+        std::string missing;
+        for (int i = 0; i < 3; ++i)
+            if (r.item[i] && r.count[i] && !player->HasItemCount(r.item[i], r.count[i]))
+                missing += (missing.empty() ? "" : "、") + std::to_string(r.count[i]) + " 个" + ItemNameFor(player, r.item[i]);
+        if (!missing.empty())
+        {
+            why = "材料不够，不能摆放这件家具，还需要：" + missing + "。";
+            return false;
+        }
+        return true;
+    }
+
+    // Takes the price after the piece was placed. Returns a short text for the player ("" when it was free).
+    static std::string AcquireCharge(Player* player, uint32 catalogId)
+    {
+        uint32 mode = AcquireMode();
+        if (mode == 0 || IsGM(player))
+            return "";
+        Recipe r;
+        if (!LoadRecipe(catalogId, r))
+            return "";
+        if (mode == 1)
+        {
+            if (!r.gold)
+                return "";
+            player->ModifyMoney(-static_cast<int32>(r.gold));
+            return "花费 " + MoneyText(r.gold);
+        }
+        std::string used;
+        for (int i = 0; i < 3; ++i)
+            if (r.item[i] && r.count[i])
+            {
+                player->DestroyItemCount(r.item[i], r.count[i], true);
+                used += (used.empty() ? "" : "、") + std::to_string(r.count[i]) + " 个" + ItemNameFor(player, r.item[i]);
+            }
+        return used.empty() ? "" : "用掉 " + used;
+    }
+
     static bool HandleUi(ChatHandler* handler, Optional<std::string> arg)
     {
         Player* player = handler->GetPlayer();
@@ -1346,11 +1741,11 @@ public:
             uint32 price = ConfigCopper("Housing.Plot.Price", 10000000u);
             if (count == 0 && sConfigMgr->GetOption<bool>("Housing.Plot.FirstFree", false))
                 price = 0;
-            out.Line(Acore::StringFormat("H|{}|{}|{}|{}|{}|{}|{}|{}|{}|{:.1f}|{:.1f}|{}",
+            out.Line(Acore::StringFormat("H|{}|{}|{}|{}|{}|{}|{}|{}|{}|{:.1f}|{:.1f}|{}|{}",
                 guid, gm ? 1 : 0, sConfigMgr->GetOption<uint32>("Housing.Plot.MaxPerPlayer", 5), price,
                 sConfigMgr->GetOption<uint32>("Housing.Tp.Cooldown", 60), ConfigCopper("Housing.Tp.SkipCost", 100000u),
                 gm ? 0u : TpRemainSeconds(guid), player->GetMoney(), player->GetMapId(), player->GetPositionX(), player->GetPositionY(),
-                sConfigMgr->GetOption<bool>("Housing.Plot.BuyEnabled", true) ? 1 : 0));
+                sConfigMgr->GetOption<bool>("Housing.Plot.BuyEnabled", true) ? 1 : 0, InventoryOn() ? (GmBypass() ? 2 : 1) : 0));
             QueryResult r = WorldDatabase.Query(
                 "SELECT plot_id, owner_guid, map_id, x, y, z, radius, DATE_FORMAT(created, '%Y-%m-%d'), name FROM reborn_housing_plot "
                 "WHERE owner_guid = {} ORDER BY plot_id LIMIT 50", guid);
@@ -1372,6 +1767,28 @@ public:
             // HOME5C: the sizes on sale: B|radius|circle price|square price (what THIS player pays, copper)
             for (PlotTier const& t : PlotTiers())
                 out.Line(Acore::StringFormat("B|{:.0f}|{}|{}", t.radius, TierPrice(t, 0, gm, count), TierPrice(t, 1, gm, count)));
+            // HOME9A: what is in this character's stock: O|id:count;id:count (only pieces with count > 0)
+            if (InventoryOn())
+            {
+                QueryResult sr = CharacterDatabase.Query("SELECT `catalog_id`, `count` FROM `reborn_housing_stock` WHERE `guid` = {} AND `count` > 0 ORDER BY `catalog_id`", guid);
+                if (sr)
+                {
+                    std::string chunk;
+                    do
+                    {
+                        Field* sf = sr->Fetch();
+                        std::string item = std::to_string(sf[0].Get<uint32>()) + ":" + std::to_string(sf[1].Get<uint32>());
+                        if (!chunk.empty() && chunk.size() + 1 + item.size() > 200)
+                        {
+                            out.Line("O|" + chunk);
+                            chunk.clear();
+                        }
+                        chunk += (chunk.empty() ? "" : ";") + item;
+                    } while (sr->NextRow());
+                    if (!chunk.empty())
+                        out.Line("O|" + chunk);
+                }
+            }
             out.Line("Z");
             return true;
         }
@@ -1393,6 +1810,61 @@ public:
                 } while (r->NextRow());
             }
             out.Line("X");
+            return true;
+        }
+
+        if (*arg == "k")
+        {
+            // HOME9A: rarity and ways of every piece, K|id:rarity:ways;... (static, the client asks once)
+            QueryResult kr = WorldDatabase.Query("SELECT catalog_id, rarity, ways FROM reborn_housing_recipe ORDER BY catalog_id");
+            if (kr)
+            {
+                std::string chunk;
+                do
+                {
+                    Field* kf = kr->Fetch();
+                    uint32 rar = ClampRarity(kf[1].Get<uint32>());
+                    uint32 wy = kf[2].IsNull() ? RarityDefaultWays(rar) : (kf[2].Get<uint32>() & 7u);
+                    std::string item = std::to_string(kf[0].Get<uint32>()) + ":" + std::to_string(rar) + ":" + std::to_string(wy);
+                    if (!chunk.empty() && chunk.size() + 1 + item.size() > 200)
+                    {
+                        out.Line("K|" + chunk);
+                        chunk.clear();
+                    }
+                    chunk += (chunk.empty() ? "" : ";") + item;
+                } while (kr->NextRow());
+                if (!chunk.empty())
+                    out.Line("K|" + chunk);
+            }
+            return true;
+        }
+
+        if (arg->size() > 1 && (*arg)[0] == 'r')
+        {
+            // HOME8B: R|catalog_id|mode|gold|source|name~count~have;name~count~have
+            uint32 catalogId = static_cast<uint32>(std::strtoul(arg->c_str() + 1, nullptr, 10));
+            Recipe rec;
+            bool found = catalogId && LoadRecipe(catalogId, rec);
+            std::string mats;
+            if (found)
+                for (int i = 0; i < 3; ++i)
+                    if (rec.item[i] && rec.count[i])
+                        mats += (mats.empty() ? "" : ";") + UiText(ItemNameFor(player, rec.item[i]), 40) + "~" + std::to_string(rec.count[i]) + "~" +
+                            std::to_string(player->GetItemCount(rec.item[i]));
+            // WEAPDECOR2A: fields 10/11 = item ids and counts "id~count;id~count;id~count" and the unscaled gold, for the GM editor
+            std::string ids;
+            if (found && gm)
+                for (int i = 0; i < 3; ++i)
+                    ids += (i ? ";" : "") + std::to_string(rec.item[i]) + "~" + std::to_string(rec.count[i]);
+            uint32 rawGold = 0;
+            if (found && gm)
+                if (QueryResult rq = WorldDatabase.Query("SELECT gold_copper FROM reborn_housing_recipe WHERE catalog_id = {}", catalogId))
+                    rawGold = rq->Fetch()[0].Get<uint32>();
+            out.Line(Acore::StringFormat("R|{}|{}|{}|{}|{}|{}|{}|{}|{}", catalogId, AcquireMode(), found ? rec.gold : 0u,
+                found ? UiText(rec.source, 120) : std::string(), mats, found ? rec.rarity : 1u, found ? rec.ways : 0u,
+                catalogId ? StockOf(guid, catalogId) : 0u, found ? UnitPrice(rec) : 0u));
+            if (gm && catalogId)
+                out.Line(Acore::StringFormat("V|{}|{}|{}", catalogId, rawGold, ids));
             return true;
         }
 
@@ -1504,6 +1976,25 @@ public:
             return false;
         }
         uint32 entry = cr->Fetch()[0].Get<uint32>();
+        bool useStock = InventoryOn() && !(IsGM(player) && GmBypass());
+        uint32 placerGuid = player->GetGUID().GetCounter();
+        if (useStock)
+        {
+            if (StockOf(placerGuid, catalogId) < 1)
+            {
+                handler->SendErrorMessage("你的库存里没有这件家具，请先购买或制作。");
+                return false;
+            }
+        }
+        else if (!InventoryOn())
+        {
+            std::string why;
+            if (!AcquireCheck(player, catalogId, why))
+            {
+                handler->SendErrorMessage("{}", why);
+                return false;
+            }
+        }
 
         float x = player->GetPositionX(), y = player->GetPositionY(), z = player->GetPositionZ(), o = player->GetOrientation();
         uint32 spawnId = 0;
@@ -1512,10 +2003,14 @@ public:
             handler->SendErrorMessage("摆放失败（模板 {} 不可用）。", entry);
             return false;
         }
+        if (useStock)
+            StockTake(placerGuid, catalogId);
+        else if (!InventoryOn())
+            AcquireCharge(player, catalogId);
 
         WorldDatabase.Execute(
-            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {})",
-            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o);
+            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, stocked) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
+            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, (IsGM(player) && InventoryOn() && GmBypass()) ? 0 : 1);
         QueryResult idr = WorldDatabase.Query("SELECT MAX(object_id) FROM reborn_housing_object WHERE spawn_id = {}", spawnId);
         handler->PSendSysMessage("已摆放 {}（物件编号 {}）。", CatalogName(catalogId), idr ? idr->Fetch()[0].Get<uint32>() : 0);
         return true;
@@ -1587,8 +2082,18 @@ public:
             handler->SendErrorMessage("物件离得太远，没加载。请走近一些再试。");
             return false;
         }
+        bool returned = false;
+        if (InventoryOn())
+        {
+            QueryResult sr = WorldDatabase.Query("SELECT stocked, catalog_id FROM reborn_housing_object WHERE object_id = {}", objectId);
+            if (sr && sr->Fetch()[0].Get<uint32>() != 0)
+            {
+                StockAdd(plot.ownerGuid, sr->Fetch()[1].Get<uint32>(), 1);
+                returned = true;
+            }
+        }
         WorldDatabase.Execute("DELETE FROM reborn_housing_object WHERE object_id = {}", objectId);
-        handler->PSendSysMessage("已收起物件 {}。", objectId);
+        handler->PSendSysMessage(returned ? "已收起物件 {}，家具回到了库存。" : "已收起物件 {}。", objectId);
         return true;
     }
 
@@ -1718,6 +2223,27 @@ public:
             return false;
         }
         uint32 entry = cr->Fetch()[0].Get<uint32>();
+        bool useStock = InventoryOn() && !(IsGM(player) && GmBypass());
+        uint32 placerGuid = player->GetGUID().GetCounter();
+        if (useStock)
+        {
+            if (StockOf(placerGuid, catalogId) < 1)
+            {
+                handler->SendErrorMessage("你的库存里没有这件家具，请先购买或制作。");
+                UiReply(player, false, "库存里没有这件家具，请先购买或制作。");
+                return false;
+            }
+        }
+        else if (!InventoryOn())
+        {
+            std::string why;
+            if (!AcquireCheck(player, catalogId, why))
+            {
+                handler->SendErrorMessage("{}", why);
+                UiReply(player, false, why);
+                return false;
+            }
+        }
         uint32 spawnId = 0;
         if (!SpawnDecor(player, entry, x, y, z, o, spawnId, scale, pitch, roll))
         {
@@ -1725,12 +2251,17 @@ public:
             UiReply(player, false, "摆放失败，模板不可用。");
             return false;
         }
+        std::string paid;
+        if (useStock)
+            StockTake(placerGuid, catalogId);
+        else if (!InventoryOn())
+            paid = AcquireCharge(player, catalogId);
         WorldDatabase.Execute(
-            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
-            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, scale, pitch, roll);
+            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll, stocked) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
+            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, scale, pitch, roll, (IsGM(player) && InventoryOn() && GmBypass()) ? 0 : 1);
         QueryResult idr = WorldDatabase.Query("SELECT MAX(object_id) FROM reborn_housing_object WHERE spawn_id = {}", spawnId);
         uint32 objectId = idr ? idr->Fetch()[0].Get<uint32>() : 0;
-        handler->PSendSysMessage("已摆放 {}（物件编号 {}，大小 {:.2f}）。", CatalogName(catalogId), objectId, scale);
+        handler->PSendSysMessage("已摆放 {}（物件编号 {}，大小 {:.2f}）{}", CatalogName(catalogId), objectId, scale, paid.empty() ? "。" : "，" + paid + "。");
         UiReply(player, true, Acore::StringFormat("{}|{}", objectId, CatalogName(catalogId)));
         return true;
     }
@@ -1813,6 +2344,30 @@ public:
     }
 };
 
+// SEAT1E: players lying on a bed (gravity disabled so they stay on the mattress).
+static std::unordered_set<uint64>& LyingPlayers() { static std::unordered_set<uint64> s; return s; }
+
+class RebornHousingBedPlayerScript : public PlayerScript
+{
+public:
+    RebornHousingBedPlayerScript() : PlayerScript("RebornHousingBedPlayerScript", { PLAYERHOOK_ON_UPDATE }) { }
+
+    void OnPlayerUpdate(Player* player, uint32 /*diff*/) override
+    {
+        auto& lying = LyingPlayers();
+        if (lying.empty() || !player)
+            return;
+        auto it = lying.find(player->GetGUID().GetRawValue());
+        if (it == lying.end())
+            return;
+        if (player->GetStandState() == UNIT_STAND_STATE_SLEEP && player->IsAlive())
+            return;
+        // The player stood up (moving resets the stand state), gravity comes back.
+        player->SetDisableGravity(false);
+        lying.erase(it);
+    }
+};
+
 class RebornHousingGameObjectScript : public AllGameObjectScript
 {
 public:
@@ -1826,6 +2381,49 @@ public:
         if (scale != 1.0f && go->GetGOInfo())
             go->SetObjectScale(go->GetGOInfo()->size * scale);
     }
+
+    // SEAT1B: chair templates with Data2 = 1 are beds (the core resets a chair height above 2 to 0 on load, so Data1 cannot carry the flag). Lie down on them (the same state the /sleep emote uses) instead of the core's
+    // sitting pose. Data0 = places, Data3 = height offset in centimetres (lifts the player onto the mattress). Needs no core change.
+    bool CanGameObjectGossipHello(Player* player, GameObject* go) override
+    {
+        if (!player || !go)
+            return false;
+        GameObjectTemplate const* info = go->GetGOInfo();
+        // SEAT1D: a bed keeps Data0-Data4 exactly like a stool (the client reads them for the interact gear); Data5 = 1 flags a bed, Data6 = height offset in cm.
+        if (!info || info->type != GAMEOBJECT_TYPE_CHAIR || info->raw.data[5] != 1 || !IsHousingEntry(go->GetEntry()))
+            return false;
+        uint32 slots = info->chair.slots > 0 ? info->chair.slots : 1;
+        float const orth = go->GetOrientation() + kPi * 0.5f;
+        float bestX = go->GetPositionX(), bestY = go->GetPositionY(), bestDist = 1.0e9f;
+        for (uint32 i = 0; i < slots; ++i)
+        {
+            float const rel = info->size * float(i) - info->size * float(slots - 1) / 2.0f;
+            float const x = go->GetPositionX() + rel * std::cos(orth);
+            float const y = go->GetPositionY() + rel * std::sin(orth);
+            float const d = player->GetDistance2d(x, y);
+            if (d < bestDist) { bestDist = d; bestX = x; bestY = y; }
+        }
+        float const z = go->GetPositionZ() + float(info->raw.data[6]) * 0.01f;
+        // SEAT1E: the client dropped the lying player through the bed to the floor; gravity is off while lying (RebornHousingBedPlayerScript turns it back on when the player gets up).
+        player->SetDisableGravity(true);
+        LyingPlayers().insert(player->GetGUID().GetRawValue());
+        player->TeleportTo(go->GetMapId(), bestX, bestY, z, go->GetOrientation(),
+                           TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET);
+        // The teleport (and the client's own chair handling) can overwrite the pose right after it, so the sleep state is set now
+        // and again after the teleport has settled. Moving resets it, the player gets up.
+        // /sleep works through the stand state (the server ignores the sleep text emote, the client sends CMSG_STAND_STATE_CHANGE),
+        // so the same stand state is set here.
+        player->SetStandState(UNIT_STAND_STATE_SLEEP);
+        player->m_Events.AddEventAtOffset([player]()
+        {
+            if (player && player->IsInWorld() && player->IsAlive())
+                player->SetStandState(UNIT_STAND_STATE_SLEEP);
+        }, Milliseconds(700));
+        LOG_INFO("server.loading", "mod-reborn-housing SEAT1B: {} lies down on bed entry {} (slots {}, +{} cm)",
+                 player->GetName(), go->GetEntry(), slots, info->raw.data[6]);
+        ChatHandler(player->GetSession()).PSendSysMessage("[SEAT1B] 躺下了（走动即起身）。");   // proof for testers that this build runs
+        return true;
+    }
 };
 
 // The database pool is not up yet while scripts register, so the column check runs at world startup.
@@ -1833,12 +2431,17 @@ class RebornHousingWorldScript : public WorldScript
 {
 public:
     RebornHousingWorldScript() : WorldScript("RebornHousingWorldScript", { WORLDHOOK_ON_STARTUP }) { }
-    void OnStartup() override { EnsureScaleColumn(); EnsureTiltColumns(); EnsureShapeColumn(); }
+    void OnStartup() override
+    {
+        EnsureScaleColumn(); EnsureTiltColumns(); EnsureShapeColumn(); EnsureInventory();
+        LOG_INFO("server.loading", ">> mod-reborn-housing build: HOME9B + SEAT1E (beds lie down, GM stock).");
+    }
 };
 
 void AddSC_mod_reborn_housing()
 {
     new RebornHousingCommandScript();
     new RebornHousingGameObjectScript();
+    new RebornHousingBedPlayerScript();
     new RebornHousingWorldScript();
 }
