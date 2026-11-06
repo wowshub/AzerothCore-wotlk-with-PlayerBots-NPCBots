@@ -1,4 +1,4 @@
-// WHTAL8A: two owned common talents. Browsing a spec never activates it.
+// WHTAL9A: two owned common talents. Browsing a spec never activates it.
 #include "ScriptMgr.h"
 #include "Player.h"
 #include "WorldSession.h"
@@ -27,8 +27,8 @@
 using namespace Acore::ChatCommands;
 namespace
 {
-constexpr uint32 Night = 9005067, Survival = 9005068, Training1 = 9005069, Training2 = 9005070, Hatred = 9005071, Restore = 9005072, Sleepless = 9005073, NightHunter = 9005074, DayHunter = 9005075, Night2 = 9005076, Witchblood = 9005077, Vault = 9005078, NightWalker = 9005079, Strategist = 9005080, StrategistRestore = 9005081, ResetCopper = 100000;
-constexpr char Key[] = "Reborn.WHTAL8A";
+constexpr uint32 Night = 9005067, Survival = 9005068, Training1 = 9005069, Training2 = 9005070, Hatred = 9005071, Restore = 9005072, Sleepless = 9005073, NightHunter = 9005074, DayHunter = 9005075, Night2 = 9005076, Witchblood = 9005077, Vault = 9005078, NightWalker = 9005079, Strategist = 9005080, StrategistRestore = 9005081, DarkSouls = 9005082, ResetCopper = 100000;
+constexpr char Key[] = "Reborn.WHTAL9A";
 bool storageReady = false;
 std::atomic<uint32> serial{1};
 struct State : DataMap::Base
@@ -123,7 +123,13 @@ bool Contract()
         strategist->Effects[EFFECT_0].TriggerSpell == 0 && strategist->GetDuration() == -1 &&
         replenish->SpellFamilyName == 21 && replenish->Effects[EFFECT_0].Effect == SPELL_EFFECT_ENERGIZE_PCT &&
         replenish->Effects[EFFECT_0].BasePoints == 4 && replenish->Effects[EFFECT_0].MiscValue == POWER_MANA;
-    return strategy && mobility && witchblood && n2 && n2->IsPassive() && n2->SpellFamilyName == 21 && n2->Effects[EFFECT_1].IsAura(SPELL_AURA_MOD_CRIT_PCT) && n2->Effects[EFFECT_1].BasePoints == 5 && BookContract() && clock && hatred && training && n && s && n->SpellFamilyName == 21 && s->SpellFamilyName == 21 &&
+    auto souls = sSpellMgr->GetSpellInfo(DarkSouls);
+    bool duration = souls && souls->IsPassive() && souls->SpellFamilyName == 21 && souls->SpellLevel == 10 &&
+        souls->GetDuration() == -1 && souls->Effects[EFFECT_0].IsAura(SPELL_AURA_ADD_FLAT_MODIFIER) &&
+        souls->Effects[EFFECT_0].BasePoints == -1 && souls->Effects[EFFECT_1].IsAura(SPELL_AURA_ADD_FLAT_MODIFIER) &&
+        souls->Effects[EFFECT_1].BasePoints == 4999 && souls->Effects[EFFECT_1].MiscValue == 1 &&
+        souls->Effects[EFFECT_1].SpellClassMask == flag96(0, 0, 512);
+    return duration && strategy && mobility && witchblood && n2 && n2->IsPassive() && n2->SpellFamilyName == 21 && n2->Effects[EFFECT_1].IsAura(SPELL_AURA_MOD_CRIT_PCT) && n2->Effects[EFFECT_1].BasePoints == 5 && BookContract() && clock && hatred && training && n && s && n->SpellFamilyName == 21 && s->SpellFamilyName == 21 &&
         n->IsPassive() && s->IsPassive() &&
         n->Effects[EFFECT_1].IsAura(SPELL_AURA_MOD_CRIT_PCT) && n->Effects[EFFECT_1].BasePoints == 2 &&
         s->Effects[EFFECT_0].IsAura(SPELL_AURA_MOD_AURA_DURATION_BY_DISPEL) &&
@@ -132,7 +138,7 @@ bool Contract()
 void Reply(Player* p, uint32 nonce, char const* status, uint32 token = 0)
 {
     auto s = p->CustomData.GetDefault<State>(Key);
-    ChatHandler(p->GetSession()).PSendSysMessage("WHT8|{}|{}|{}|{}|{}|{}|{}|{}|{}|10|{}|{}",
+    ChatHandler(p->GetSession()).PSendSysMessage("WHT9|{}|{}|{}|{}|{}|{}|{}|{}|{}|10|{}|{}",
         nonce, p->GetGUID().GetCounter(), s->revision, s->mask, p->GetLevel(),
         WHT1::AE(p->GetLevel()), WHT1::TE(p->GetLevel()),
         s->loaded && WHT1::Valid(s->mask, p->GetLevel()) ? 1 : 0, s->loaded ? 1 : 0, token, status);
@@ -153,19 +159,19 @@ bool Load(Player* p)
 {
     auto s = p->CustomData.GetDefault<State>(Key);
     auto q = CharacterDatabase.Query(
-        "SELECT COUNT(*),COALESCE(MAX(account),0),COALESCE(MAX(revision),0),COALESCE(MAX(schema_version),8),"
-        "(SELECT COALESCE(SUM(IF(node_id=34538,IF(`rank`=2,65,1),IF(node_id=7451,2,IF(node_id=6415,`rank`*4,IF(node_id=6457,16,IF(node_id=7424,32,IF(node_id=6413,128,IF(node_id=29150,256,IF(node_id=34592,512,IF(node_id=7588,1024,0)))))))))),0) FROM reborn_wh_t1_nodes WHERE guid={}),"
-        "(SELECT COUNT(*) FROM reborn_wh_t1_nodes WHERE guid={} AND (node_id NOT IN(34538,7451,6415,6457,7424,6413,29150,34592,7588) OR (node_id IN(7451,6457,7424,6413,29150,34592,7588) AND `rank`<>1) OR (node_id IN(34538,6415) AND `rank` NOT IN(1,2)))),"
+        "SELECT COUNT(*),COALESCE(MAX(account),0),COALESCE(MAX(revision),0),COALESCE(MAX(schema_version),9),"
+        "(SELECT COALESCE(SUM(IF(node_id=34538,IF(`rank`=2,65,1),IF(node_id=7451,2,IF(node_id=6415,`rank`*4,IF(node_id=6457,16,IF(node_id=7424,32,IF(node_id=6413,128,IF(node_id=29150,256,IF(node_id=34592,512,IF(node_id=7588,1024,IF(node_id=11218,2048,0))))))))))),0) FROM reborn_wh_t1_nodes WHERE guid={}),"
+        "(SELECT COUNT(*) FROM reborn_wh_t1_nodes WHERE guid={} AND (node_id NOT IN(34538,7451,6415,6457,7424,6413,29150,34592,7588,11218) OR (node_id IN(7451,6457,7424,6413,29150,34592,7588,11218) AND `rank`<>1) OR (node_id IN(34538,6415) AND `rank` NOT IN(1,2)))),"
         "(SELECT COUNT(*) FROM reborn_wh_t1_nodes WHERE guid={}) FROM reborn_wh_t1_state WHERE guid={}",
         p->GetGUID().GetCounter(), p->GetGUID().GetCounter(), p->GetGUID().GetCounter(), p->GetGUID().GetCounter());
     s->loaded = false;
     if (!q) return false;
     auto f = q->Fetch();
-    if (f[0].Get<uint32>() > 1 || f[3].Get<uint32>() != 8 || f[5].Get<uint32>() ||
-        f[6].Get<uint32>() > 9 || f[4].Get<uint32>() > 2043 || f[2].Get<uint32>() >= 2000000000 ||
+    if (f[0].Get<uint32>() > 1 || f[3].Get<uint32>() != 9 || f[5].Get<uint32>() ||
+        f[6].Get<uint32>() > 10 || f[4].Get<uint32>() > 4091 || f[2].Get<uint32>() >= 2000000000 ||
         (f[0].Get<uint32>() && f[1].Get<uint32>() != p->GetSession()->GetAccountId())) return false;
     s->stored = f[0].Get<uint32>() == 1;
-    if (!s->stored && (f[6].Get<uint32>() || p->HasSpell(Night) || p->HasSpell(Survival) || p->HasSpell(Training1) || p->HasSpell(Training2) || p->HasSpell(Hatred) || p->HasSpell(Sleepless) || p->HasSpell(Night2) || p->HasSpell(Witchblood) || p->HasSpell(Vault) || p->HasSpell(NightWalker) || p->HasSpell(Strategist))) return false;
+    if (!s->stored && (f[6].Get<uint32>() || p->HasSpell(Night) || p->HasSpell(Survival) || p->HasSpell(Training1) || p->HasSpell(Training2) || p->HasSpell(Hatred) || p->HasSpell(Sleepless) || p->HasSpell(Night2) || p->HasSpell(Witchblood) || p->HasSpell(Vault) || p->HasSpell(NightWalker) || p->HasSpell(Strategist) || p->HasSpell(DarkSouls))) return false;
     s->revision = f[2].Get<uint32>(); s->mask = f[4].Get<uint32>();
     s->loaded = Contract();
     return s->loaded;
@@ -199,18 +205,18 @@ void Sync(Player* p)
     auto s = p->CustomData.GetDefault<State>(Key);
     if (!s->loaded || !Contract()) return;
     bool eligible = WHT1::Valid(s->mask, p->GetLevel());
-    uint32 ids[] = {Night, Night2, Survival, Training1, Training2, Hatred, Sleepless, Witchblood, Vault, NightWalker, Strategist};
-    bool selected[] = {bool(s->mask & 1u) && !(s->mask & 64u), bool(s->mask & 64u), bool(s->mask & 2u), ((s->mask >> 2u) & 3u) == 1u, ((s->mask >> 2u) & 3u) == 2u, bool(s->mask & 16u), bool(s->mask & 32u), bool(s->mask & 128u), bool(s->mask & 256u), bool(s->mask & 512u), bool(s->mask & 1024u)};
+    uint32 ids[] = {Night, Night2, Survival, Training1, Training2, Hatred, Sleepless, Witchblood, Vault, NightWalker, Strategist, DarkSouls};
+    bool selected[] = {bool(s->mask & 1u) && !(s->mask & 64u), bool(s->mask & 64u), bool(s->mask & 2u), ((s->mask >> 2u) & 3u) == 1u, ((s->mask >> 2u) & 3u) == 2u, bool(s->mask & 16u), bool(s->mask & 32u), bool(s->mask & 128u), bool(s->mask & 256u), bool(s->mask & 512u), bool(s->mask & 1024u), bool(s->mask & 2048u)};
     // Remove all inactive ranks first, then grant; neither upgrade nor downgrade stacks ranks.
     if (s->stored)
-        for (uint32 i = 0; i < 11; ++i)
+        for (uint32 i = 0; i < 12; ++i)
             if (!selected[i] || !eligible)
             {
                 if (p->HasSpell(ids[i])) p->removeSpell(ids[i], 255, false);
                 p->RemoveAurasDueToSpell(ids[i]);
             }
     if (eligible && p->IsAlive())
-        for (uint32 i = 0; i < 11; ++i)
+        for (uint32 i = 0; i < 12; ++i)
             if (selected[i])
             {
                 if (!p->HasSpell(ids[i])) p->learnSpell(ids[i]);
@@ -239,7 +245,7 @@ bool Write(Player* p, uint32 nonce, uint32 revision, uint32 mask, bool reset)
     if (!Ready(p, nonce, true)) return true;
     auto s = p->CustomData.GetDefault<State>(Key);
     if (revision != s->revision) { Reply(p, nonce, "stale"); return true; }
-    if (!reset && (!WHT1::Valid(mask, p->GetLevel()) || (mask & (s->mask & 2035u)) != (s->mask & 2035u) || ((mask >> 2u) & 3u) < ((s->mask >> 2u) & 3u)))
+    if (!reset && (!WHT1::Valid(mask, p->GetLevel()) || (mask & (s->mask & 4083u)) != (s->mask & 4083u) || ((mask >> 2u) & 3u) < ((s->mask >> 2u) & 3u)))
     { Reply(p, nonce, "invalid"); return true; }
     if (reset && (!s->mask || mask)) { Reply(p, nonce, "invalid"); return true; }
     if (!reset && mask == s->mask) { Reply(p, nonce, "ok"); return true; }
@@ -256,7 +262,7 @@ bool Write(Player* p, uint32 nonce, uint32 revision, uint32 mask, bool reset)
     {
         bool ignored = false;
         if (!Recover(p, "", ignored))
-        { s->loaded = false; p->GetSession()->KickPlayer("WHTAL8A database recovery required"); }
+        { s->loaded = false; p->GetSession()->KickPlayer("WHTAL9A database recovery required"); }
         s->busy = false; Load(p); Reply(p, nonce, "database"); return true;
     }
     // Never call a worker with a retained Player*. Native SaveGoldToDB appends values.
@@ -267,7 +273,7 @@ bool Write(Player* p, uint32 nonce, uint32 revision, uint32 mask, bool reset)
         if (!Recover(p, operation, ignored))
         {
             s->loaded = false; s->busy = false; Reply(p, nonce, "uncertain");
-            p->GetSession()->KickPlayer("WHTAL8A gold recovery unavailable"); return true;
+            p->GetSession()->KickPlayer("WHTAL9A gold recovery unavailable"); return true;
         }
         s->busy = false;
         Reply(p, nonce, "money"); return true;
@@ -284,14 +290,14 @@ bool Write(Player* p, uint32 nonce, uint32 revision, uint32 mask, bool reset)
         s->loaded = false; s->busy = false;
         // An unresolved durable intent is repaired before the next successful login.
         Reply(p, nonce, "uncertain");
-        p->GetSession()->KickPlayer("WHTAL8A unresolved database operation; receipt recovery on login");
+        p->GetSession()->KickPlayer("WHTAL9A unresolved database operation; receipt recovery on login");
         return true;
     }
     s->busy = false;
     if (!Load(p)) { Reply(p, nonce, "database"); return true; }
     Sync(p);
     if (!acknowledged && committed)
-        LOG_WARN("module", "WHTAL8A receipt confirmed a committed operation after missing acknowledgement: {}", operation);
+        LOG_WARN("module", "WHTAL9A receipt confirmed a committed operation after missing acknowledgement: {}", operation);
     Reply(p, nonce, committed ? (reset ? "reset" : "saved") : "database");
     return true;
 }
@@ -524,7 +530,7 @@ public:
     {
         auto q = CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN('reborn_wh_t1_state','reborn_wh_t1_nodes','reborn_wh_t1_intents') AND ENGINE='InnoDB'");
         auto r = CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA=DATABASE() AND ROUTINE_TYPE='PROCEDURE' AND ROUTINE_NAME IN('reborn_wht1_prepare','reborn_wht1_apply','reborn_wht1_recover')");
-        auto version = CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='reborn_wh_t1_state' AND COLUMN_NAME='schema_version' AND COLUMN_DEFAULT='8'");
+        auto version = CharacterDatabase.Query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='reborn_wh_t1_state' AND COLUMN_NAME='schema_version' AND COLUMN_DEFAULT='9'");
         auto bindings = WorldDatabase.Query("SELECT COUNT(DISTINCT spell_id) FROM spell_script_names WHERE spell_id IN(9005069,9005070) AND ScriptName='aura_reborn_whtraining2a'");
         auto hatredBinding = WorldDatabase.Query("SELECT COUNT(*) FROM spell_script_names WHERE spell_id=9005071 AND ScriptName='aura_reborn_whhatred3a'");
         auto clockBinding = WorldDatabase.Query("SELECT COUNT(*) FROM spell_script_names WHERE spell_id=9005073 AND ScriptName='aura_reborn_whsleepless4a'");
@@ -533,7 +539,7 @@ public:
         storageReady = wide && wide->Fetch()[0].Get<uint32>() == 2 && activeBindings && activeBindings->Fetch()[0].Get<uint32>() == 2 && clockBinding && clockBinding->Fetch()[0].Get<uint32>() == 1 && hatredBinding && hatredBinding->Fetch()[0].Get<uint32>() == 1 && q && r && version && bindings && q->Fetch()[0].Get<uint32>() == 3 &&
             r->Fetch()[0].Get<uint32>() == 3 && version->Fetch()[0].Get<uint32>() == 1 &&
             bindings->Fetch()[0].Get<uint32>() == 2;
-        if (!storageReady || !Contract()) LOG_ERROR("module", "WHTAL8A storage/data incomplete; talent purchases disabled");
+        if (!storageReady || !Contract()) LOG_ERROR("module", "WHTAL9A storage/data incomplete; talent purchases disabled");
     }
 };
 class Lifecycle final : public PlayerScript
@@ -547,7 +553,7 @@ public:
         if (!Hunter(p) || !storageReady) return;
         bool ignored = false;
         if (!Recover(p, "", ignored))
-        { p->GetSession()->KickPlayer("WHTAL8A receipt recovery unavailable"); return; }
+        { p->GetSession()->KickPlayer("WHTAL9A receipt recovery unavailable"); return; }
         if (Load(p)) Sync(p);
     }
     void OnPlayerLevelChanged(Player* p, uint8) override { if (Hunter(p)) Sync(p); }

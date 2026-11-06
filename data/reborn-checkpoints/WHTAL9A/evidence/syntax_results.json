@@ -1,0 +1,17 @@
+{
+  "compiler": "MSVC /Zs x64 C++20, actual project headers; not linked",
+  "results": {
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunter.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterBoon.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterCombat.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterCounter.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterDefense.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterRanks.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterShadowblast.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterStarting.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterStrike.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterSupport.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp": 0,
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterUtility.cpp": 0
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "0a21f533da055f1e2b7b7fad2affdf919b4c6c59733b773af079d1b1b2675d5d",
+    "repository_sha256": "157bf993b8cc09dad70e3fb85771950c372736cbd269842420faf3e1da31fe24",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalentData.h",
+    "source_sha256": "ac4af7c87a18636afcac5500dab03c0b6d9d52353be0f06a13bb60fbffe0fcdd",
+    "repository_sha256": "ce09fd27ea5bb2cb6746da4fbfefcd249e8aa9da164a7a82d378a4cb121093bc",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/talents_loader.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\talents_loader.h",
+    "source_sha256": "cfc24118bfa666980c57b69b94c29145daca635dbd3cd2c225c66290160d2fa5",
+    "repository_sha256": "cfc24118bfa666980c57b69b94c29145daca635dbd3cd2c225c66290160d2fa5",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "052f0c6a23fad5f9fa3661bdac27b0c48d0c25203528fdd97b26a00bd53ee47d",
+    "repository_sha256": "6eb96cb529d86323719472c4b5e71e20104f37f92cb14f263caa919a6c80adba",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL9A/02_CHARACTERS_WHALL6A_天赋累计存档schema9.sql",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchhunter\\WHALL6A\\02_CHARACTERS_WHALL6A_天赋累计存档schema9.sql",
+    "source_sha256": "5430776f7ad6a1a401525487f614aa5c97c1947469ba69085958b90408b249a7",
+    "repository_sha256": "ee49a6c1eaa7f389e2507aebe17a768eb810bdeb99ea10fe21574d2c4a18374d",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL9A/evidence/lua_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\checks\\lua_validation.json",
+    "source_sha256": "4f9121dac255e3d0e2fbdb1a406306e17869d50602efd6b964a2e24f7583cd92",
+    "repository_sha256": "b6e7a611122b970292b109543117253303848b4b0459a45be0f7f046ca4dd0b4",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL9A/evidence/native_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\checks\\native_validation.json",
+    "source_sha256": "f0691435deaff96cc719a6f94eb8fbc9b65f2d3cc3ea0075d2cea17320c060b5",
+    "repository_sha256": "5314d8fe8f5f11ccde8d8d4b9f3fa36c8b509971a57d68f7763c7c676de40e7a",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL9A/evidence/syntax_results.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHALL6A_猎巫者累计测试包\\checks\\syntax_results.json",
+    "source_sha256": "6b076f5289dae7d16cae22dba580cd9f288d7d8c1e55cb1186ecf5bc4380a4da",
+    "repository_sha256": "c2d38077ed8bfa96214012779c5f2bfb95660b47af442700afa3b6d6176d7a8a",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
