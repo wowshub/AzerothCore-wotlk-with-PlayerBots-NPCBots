@@ -1,0 +1,65 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "c6c1474eb21136f7c15abcacfeb25f703fe6a2a2e76a7927a32da466df2614d8",
+    "repository_sha256": "c6c1474eb21136f7c15abcacfeb25f703fe6a2a2e76a7927a32da466df2614d8",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalentData.h",
+    "source_sha256": "4c380bfab416edf9781d8831a49f40e96138b7e522996f628e0b4914b9f14096",
+    "repository_sha256": "4c380bfab416edf9781d8831a49f40e96138b7e522996f628e0b4914b9f14096",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "03834d2eba097cd50be4f81f71eb1e038a8483e43ad5a5084e002e52d85befd2",
+    "repository_sha256": "03834d2eba097cd50be4f81f71eb1e038a8483e43ad5a5084e002e52d85befd2",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL5A/02_CHARACTERS_WHTAL5A_累计存档升级至5.sql",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchhunter\\WHTAL5A\\02_CHARACTERS_WHTAL5A_累计存档升级至5.sql",
+    "source_sha256": "60f470869baeb17b4ad284348404e9ef3f080b9d83ff4d5e485c80324634bf93",
+    "repository_sha256": "60f470869baeb17b4ad284348404e9ef3f080b9d83ff4d5e485c80324634bf93",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL5A/evidence/lua_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\checks\\lua_validation.json",
+    "source_sha256": "8a8f96290db86983e952960297f6046324ceada9ce23cd28ad2b50aaba18ce02",
+    "repository_sha256": "52ce7a5a474e1c29d671c1fa04f671f4c5ec01d5aea66c47ac3daa358dabbed1",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL5A/evidence/sql_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\checks\\sql_validation.json",
+    "source_sha256": "9e6a8b2a20f2b034c8310f2935e92ee0a1899c2f8880fecad5db488c3bb9be68",
+    "repository_sha256": "82e9114dffc56e3d172b8ff699c2286e3a3f5ad67b4c55f0cd094393d2e5fee2",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL5A/evidence/data_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\checks\\data_validation.json",
+    "source_sha256": "bba7f655a13f6b19f11ceb5ce8f93e923001881d03e61fd741f80ef70b597864",
+    "repository_sha256": "e333d65ea54e49ad2e280ca4ae961381ed1534df1d2721c623de86c2623f4fd0",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL5A/evidence/native_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\checks\\native_validation.json",
+    "source_sha256": "d069b9b3a03ee80990f3aca2999e723ee19f662c0937737f739551d845d3e201",
+    "repository_sha256": "af1ba758f360fe22593c3ef40e31b8f7c4148dcb29ec8170d231d01bec9c7cf3",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL5A/evidence/syntax_results.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL5A_夜行猎手二级\\checks\\syntax_results.json",
+    "source_sha256": "00880e10bfd0aaec58f11b4bf2276e64aad261adbc8339194e8b96daa551439e",
+    "repository_sha256": "56e62aad462ca0cf531e958e25bdfe5e265dc29916fa18b82e74ec7629882a1b",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
