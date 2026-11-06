@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "Lua5.1 syntax Panel.lua",
+    "Lua5.1 syntax CharacterCreate.lua",
+    "Lua5.1 syntax GlueParent.lua",
+    "enumeration index policy: only managed races / Warrior; paid path closed",
+    "native Warrior selection canonicalizes stale class, leaves Human unchanged",
+    "all-submit wrapper rejects stale class/race, preserves native return/classic path",
+    "NameGen fallback: both races / both sexes / empty & repeated native / classic unchanged",
+    "actual class enumeration: Warrior enabled and grey overlay cleared for both sexes/races",
+    "actual background function: two scene aliases, other tokens unchanged"
+  ],
+  "boundary": "Actual Lua5.1 functions with native API substitutes; game/rendering not tested"
+}

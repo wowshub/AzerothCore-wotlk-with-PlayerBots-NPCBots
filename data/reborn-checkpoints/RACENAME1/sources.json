@@ -1,0 +1,9 @@
+[
+  {
+    "path": "data/reborn-checkpoints/RACENAME1/evidence/race_ui_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1A_WHUI2A_创建状态与猎巫布局修复包\\checks\\race_ui_validation.json",
+    "source_sha256": "3fbaab57eca780698e5a072f11a205c51a4388f86a71e2666e2d6f4eb8b432cd",
+    "repository_sha256": "b07376fe5ba04250ee83124e5feada59d0283aaaf5b83837cf272aa673658c85",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
