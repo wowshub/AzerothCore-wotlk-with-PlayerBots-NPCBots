@@ -1,0 +1,13 @@
+###################################################################################################
+# mod-reborn-pickups (WPICK1A)
+###################################################################################################
+
+# Pickups.Enable
+#     Description: Switches the world pickups on (GM command .pickup, once-per-character pickups).
+#     Default:     1
+Pickups.Enable = 1
+
+# Pickups.Sparkle
+#     Description: Pickups a character may still take sparkle like a gatherable. 0 = no sparkle.
+#     Default:     1
+Pickups.Sparkle = 1
