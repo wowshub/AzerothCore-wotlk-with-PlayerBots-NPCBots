@@ -1,0 +1,30 @@
+{
+  "checks": 22,
+  "legacy_mask_cases": 576,
+  "mask_roundtrip_cases": 2048,
+  "passed": [
+    "all576 legacy masks preserve characters",
+    "all576 legacy masks preserve reborn_wh_t1_nodes",
+    "all576 legacy masks preserve reborn_wh_t1_intents",
+    "schema7 records upgraded to8",
+    "both mask fields expanded to unsigned SMALLINT",
+    "schema8 reinstall preserves all576 histories",
+    "all2048 masks actual SQL roundtrip/rejection, including values above255",
+    "Vault and NightWalker saved over255",
+    "cannot remove Vault point for free",
+    "all eight nodes tenAE at28",
+    "one full10gold reset clears old and new nodes",
+    "future9 rejected",
+    "unresolved intent stops schema changes",
+    "actual C++ Load SQL reads wide saved mask exactly",
+    "Strategist requires9 other commonAE",
+    "all9 nodes11AE saved at30",
+    "11AE cannot save at28",
+    "new Strategist reset removes all9 nodes for10gold",
+    "actual Load query defaults new characters to schema8",
+    "World preflight idempotent adds no bindings",
+    "foreign override rejected without mutation",
+    "negative helper proc rejected"
+  ],
+  "scope": "actual private MySQL8 port43358; unsigned16bit upgrade, all old histories, exact production Load SELECT, purchases/fees and world guards; no production writes"
+}

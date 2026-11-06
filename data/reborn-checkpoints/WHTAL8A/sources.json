@@ -1,0 +1,65 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "8b058e353da8a240148abd631c454fc171fb9b6b5604bc09d0a8b23b676e3b6e",
+    "repository_sha256": "abe7fb0df552f6a703f3086db05ef6d0ee8784b33ef11295bf7da99bdae4ead5",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalentData.h",
+    "source_sha256": "d053f812ffadab2307cf0ee154d298c4a19c3bcc69bb9a420beedddf5695353a",
+    "repository_sha256": "3fad91a68be903b7d9fcdae783cd3a30aeae01e1c7eeb1d35ce27a1a1f5cafa6",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "44e35797807666e4d785293a825e4f98b611fc45923e8f76539e47444d19ef4c",
+    "repository_sha256": "6af1d917750ea1cf6e6dddb7549a4719549ce1b189fee730b22992b7bbcf8f35",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL8A/02_CHARACTERS_WHTAL8A_累计存档与9点前置.sql",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchhunter\\WHTAL8A\\02_CHARACTERS_WHTAL8A_累计存档与9点前置.sql",
+    "source_sha256": "a04bfc9008e042c4f3017907ee2d1735c2548337b0c437c9111f6112b047179d",
+    "repository_sha256": "e30fa87eb85b02459a936502997f881e0f0769e9eb545e206b4432f2c5cc61d6",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL8A/evidence/lua_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\checks\\lua_validation.json",
+    "source_sha256": "5a49dda155bd00744735b6f429f86f5fd02f98340c176968bfbcb34aa8166161",
+    "repository_sha256": "e406dcbe8618425690bf81c63e010acbfa754a0cedf6c303fe56fce2027ba8ee",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL8A/evidence/sql_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\checks\\sql_validation.json",
+    "source_sha256": "a25b4012adf387236cdca202db30f2c830e0712bc965a5fad25ba7eb3a3945ac",
+    "repository_sha256": "678ff0a7fec2cbfd95948e87b7449df8007cd3372500dac28f94319ad1a57671",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL8A/evidence/data_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\checks\\data_validation.json",
+    "source_sha256": "d04ed99d981afb8c929bf27b4c28c5de0cfec0d1c968c4f9409b3e1550e53dd4",
+    "repository_sha256": "e9fa95dd403392b2bed7e77ebaf15589049d1c649fbc009861590bb333f9ade6",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL8A/evidence/native_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\checks\\native_validation.json",
+    "source_sha256": "587056e601fca05cf1f134978170992336ef31b8af42b70bf2e9e203fbc319d0",
+    "repository_sha256": "f9c3f3fb798c2a22752ecb1a6c8d87afd42c4d910605b1e7214934f5d03bef6c",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL8A/evidence/syntax_results.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL8A_谋略家腾跃回蓝\\checks\\syntax_results.json",
+    "source_sha256": "00880e10bfd0aaec58f11b4bf2276e64aad261adbc8339194e8b96daa551439e",
+    "repository_sha256": "56e62aad462ca0cf531e958e25bdfe5e265dc29916fa18b82e74ec7629882a1b",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
