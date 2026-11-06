@@ -1,0 +1,15 @@
+{
+  "stage": "RACEUI1C",
+  "files": [
+    {
+      "path": "02_覆盖到客户端根目录/导入Patch-YB.mpq/Interface/GlueXML/CharacterCreate.lua",
+      "input": "91b5740abb4a9e480fceee33a1e7ce92ea52cb40ec975793c96aa6a4f1c0c70f",
+      "output": "d66f34e1e759890288391bd78a47da3097c0362d9db68445a02032aa12b839cc"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/导入Patch-YB.mpq/Interface/GlueXML/RebornRacePreview.lua",
+      "input": "6c07cbbff89b91bb5ca7ccec04bdd9212e1a017b50a7ad868fcd8d967230ca45",
+      "output": "5b844c7279e254eb08cd427fc2511112798f3c541426de6f35eff950bdb9a53d"
+    }
+  ]
+}

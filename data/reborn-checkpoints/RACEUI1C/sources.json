@@ -1,0 +1,37 @@
+[
+  {
+    "path": "data/reborn-checkpoints/RACEUI1C/source_snapshot/Interface/GlueXML/CharacterCreate.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\CharacterCreate.lua",
+    "source_sha256": "d66f34e1e759890288391bd78a47da3097c0362d9db68445a02032aa12b839cc",
+    "repository_sha256": "61e64496d03e5ec2a45e245ec997b88485c94be07d7cd1390550a6fe90845193",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/RACEUI1C/source_snapshot/Interface/GlueXML/RebornRacePreview.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\RebornRacePreview.lua",
+    "source_sha256": "5b844c7279e254eb08cd427fc2511112798f3c541426de6f35eff950bdb9a53d",
+    "repository_sha256": "a362c9717081e96ffeb8fdc19d4b3557f91fcf8905e8a9ef33bd6917ce9ca356",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/RACEUI1C/evidence/validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\checks\\validation.json",
+    "source_sha256": "b4c78928d2f973117c493892f319b987e28c6a5aab2502269e0908b3bad147a5",
+    "repository_sha256": "19da5b72721ca1310ce0b0fe75de3166f61a5da91d4b813e4316d40fe93dd4ad",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/RACEUI1C/evidence/baseline.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\checks\\baseline.json",
+    "source_sha256": "0ef4722e39dc4bfd70219879dac040de8e63fc4bc52dfee70a1988a157f2c1e7",
+    "repository_sha256": "b1b4ea0a45747cf6ed109f6f816c28c7cc9b271bf5ae6593f19a4fe33f726fed",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/RACEUI1C/DIFF.md",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\源文件与新文件对比.md",
+    "source_sha256": "63fc1a9829565d1027960bdbf50682423402fb4935fe703e860ff155fa00192d",
+    "repository_sha256": "3f58d8a956a19056d8811e8b0de85c6f898f1957c27eae122d851bb646a3a925",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]

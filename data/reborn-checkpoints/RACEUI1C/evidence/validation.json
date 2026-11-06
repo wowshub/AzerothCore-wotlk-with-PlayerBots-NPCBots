@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "Lua5.1 syntax Panel.lua",
+    "Lua5.1 syntax CharacterCreate.lua",
+    "Lua5.1 syntax GlueParent.lua",
+    "enumeration index policy: only managed races / Warrior; paid path closed",
+    "native Warrior selection canonicalizes stale class, leaves Human unchanged",
+    "all-submit wrapper rejects stale class/race, preserves native return/classic path",
+    "NameGen fallback: both races / both sexes / empty & repeated native / classic unchanged",
+    "actual class enumeration: Warrior enabled and grey overlay cleared for both sexes/races",
+    "reproduced B stale-class failure using the real unpatched custom Open body",
+    "1500 real custom Open race/sex transitions; only Warrior for new races, original policies restored",
+    "oversized XML selection remains hidden for new and old races",
+    "actual custom Open preserves paid-service rejection",
+    "oversized selection dimensions traced to actual client XML"
+  ],
+  "game": "未测",
+  "boundary": "Real custom Open body, enumerator and final refresh under Lua5.1; native API/widgets substituted. Does not render engine."
+}
