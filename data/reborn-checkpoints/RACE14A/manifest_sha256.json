@@ -1,0 +1,3218 @@
+{
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CharacterFacialHairStyles.dbc": [
+174325,
+"1253568080f7f993128cbadfa80a4fc780775f0f33a1f20fe0b696bfda27db7e"
+],
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CharBaseInfo.dbc": [
+1327,
+"d7ad6e04e4ee71cfc8839883adeb9ccfe3b40aa87ce56d65282c8b90262af959"
+],
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CharHairGeosets.dbc": [
+41301,
+"bfc330d01f2122215213195c0da77ff3bb69557e1f7e035230683da8d41514cd"
+],
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CharSections.dbc": [
+32369897,
+"b968155c058c0605cbf188d01454b3761346693e763c08442bf2bbd6ee11716d"
+],
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/ChrRaces.dbc": [
+25188,
+"203e3cd371c20d7fde7bd8c64268e97198b814fa8a188c527273bc8f98153fae"
+],
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CreatureDisplayInfo.dbc": [
+1810395,
+"3f223e0509e1c289a003e1725af353fd20eff357bce1f3967d12238a02a254f5"
+],
+"02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CreatureModelData.dbc": [
+824445,
+"6a3476a6768323f358bd5be34f5a1cd6bacbaad7d990f12e495f95350fc32afc"
+],
+"02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/CharacterCreate.lua": [
+239209,
+"0df4e7e1c57be07688f5549509e43909f8feb4afb17a7ccc36141a047c49271b"
+],
+"02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/CharacterCreate.xml": [
+96521,
+"e3b3643810d3abe999cc9a2b57b8c4329fcffe7058f034b4a7bf2c40fbd215dc"
+],
+"02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/RebornRacePreview.lua": [
+13013,
+"667a4102f7ac43da0667bb3dff8c77406679e17e6ccdb76ff1adf31987a34d44"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/armorreflect4.blp": [
+3916,
+"10347b0a7502f994e7b556e279dc8709a8755c6536163b57a3b388151c48fb1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_black.blp": [
+700260,
+"3b5b31fffc00df5d711dfc00cf5cc2ac2b79ab6dd817d8a7cd545877d9c020d5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_blue.blp": [
+700260,
+"9edbfa309c2b031b74430b098d34bea853e08bce6d45fac26c99346e5346b719"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_ivory.blp": [
+700260,
+"fd61e885ad9f47049b580251454eeff7c36d871d7b41213d1dc7ff3f4a194fa2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_leather.blp": [
+700260,
+"502e3065d7e229cc24eb6aefc9ed237cab28c6882d9b476a6e2c8c4b5684c983"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_moss.blp": [
+700260,
+"bdc4728c40d6c8140cc51139f7a4bc56aa689f6d1ec88cfec3598d11d425c38b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_red.blp": [
+700260,
+"1ed97617d5c905f6c1cbd4ab193da2b572555ee5dfe5170b4c7cacbb65ae8a9a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_shadow.blp": [
+700260,
+"8e72c83823617ec60086dc7f7927353af9c9fb3fab9f44a70802ba57a4d6be94"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_armor_white.blp": [
+700260,
+"fcb4a338134ed24a0e4538b2cdd1439f8907854816b401e4ade988c13269e42c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_hair.blp": [
+88572,
+"8baea63c92ed3c076cff5ead463282d01a0b445033cfce2c0ac12946db1e071d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_black.blp": [
+350716,
+"e2179bb3bfa66c8867dfa240486ffb946735a91fd93ecad97db1140bc058477d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_blue.blp": [
+350716,
+"f0082adf340afafd9eba023856fe82742dee7df0825689b54076d5ba3590d51a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_ivory.blp": [
+700260,
+"2342063d071790f91883fe9962dcb55142624dbfa0ff4c32ae8fba39a80768ec"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_leather.blp": [
+700260,
+"2a2e4ea0d9a664674a62d5cd94c3bbebcc3ae620edce061a00848c38c1b278dd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_moss.blp": [
+700260,
+"84b6600800dfcc0ffa26bc96fee6c308c8cc27cb4c79b48997b20e1fdc6b7ca1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_red.blp": [
+350716,
+"c3d12f4aaa5dd2b9bf6e46b6ce55daad98c2e91e17cefd28f86998d2a259e2d5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_shadow.blp": [
+700260,
+"8719a92332844894fa101f81b5fa070bf7b22f7996a6956f3b5a1d25bf75b28c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/crackelf2_female_skin_white.blp": [
+350716,
+"901a7603c58a6f49d695c7aa6a89cf540c0f76ee199fc76d4203744ec5d9e003"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/SLIMEBLOBTAILLESS.BLP": [
+2596,
+"71a63e7ba06d9b1da69b82e186f808ee0d3f2c793747bb7439ddb5020a9b75a7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale.m2": [
+5257790,
+"9e611ad01bb376682b5b338d7ca3b813535d46b17a4566cba0d5bb7a2055ba0d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale00.skin": [
+90510,
+"d64790e62588070519dbad83e44938e2ac5674a8fdc685fc95fede016e52e839"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0060-00.anim": [
+110752,
+"3b3e9c49719304d41d994a601997a6688aa03e84c7871a3ce2aa62c4454d570a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0061-00.anim": [
+74928,
+"5bced32ff4b857f5cf07ca092f0c2053c55779bb7cac21f392be6a2f0c506265"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0062-00.anim": [
+20608,
+"24d573560c94441dcdf392a9bfb1ac76f39605145ecae75521eb5070e3d38359"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0064-00.anim": [
+89120,
+"a921f19b90270a2d248e9631e6ffae7c839fd2950e456592ac501204dbc06bdf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0065-00.anim": [
+89024,
+"499036d0a9b20854d5d91c22f5c739ae954476e96b0d5a00c3707c84e9d64b27"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0066-00.anim": [
+85888,
+"daa0f71515108619c5a91bfe4cea6882cfba9e98d54ca64a788608e26b353193"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0067-00.anim": [
+54640,
+"6057299494a7c960d347162d6c55b61fd8f38d3bedf05a2e1ef5c03aafefad93"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0068-00.anim": [
+80688,
+"46b8496dc967103a55eee434e1e0e9aa2ca92ca755ac50869d7ca32025e4addf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0069-00.anim": [
+84320,
+"b3ee23607e5df28d53b947860cda6973901cbfe5a7e6e5feecc2dc02a17eb7ae"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0070-00.anim": [
+120688,
+"dc5d39f50d149793ecce64bbdad49d6f00bae1ef093131035beb89a8afe7bc28"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0073-00.anim": [
+133936,
+"f9117ae13354805dd1e0d275f0ce40bfd8e86db8d098118961a03aade285b970"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0074-00.anim": [
+86464,
+"da56d2060a8aeddd8509177be343a203fd6671959f06676c740b5a769c3b6c59"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0075-00.anim": [
+92848,
+"b904f517868d069e50ef18f28b28f941654f52297ba45620e5de932a4c5ba9ab"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0076-00.anim": [
+65712,
+"97edae2da0dc6c304ea02beed956db775726e36d43be3f5aec620ea2e2073efb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0077-00.anim": [
+70064,
+"1e98a33612a20314d4abc7513b7e62f0aceba198cb0cf251cfa4be12791b2bec"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0078-00.anim": [
+67808,
+"b4dd63f3508e75fa86c9f4c0eeda7f44d0f6fe5416c817ec161b826f8d732cb4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0079-00.anim": [
+115552,
+"fcac170da376a86ff883ce77ca2722a24a2f51d887e021fdb9da2057860c90d7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0080-00.anim": [
+20288,
+"471fd8ebe9b936717fe3b1cf8fb6e2d9a7f7fac8525c9cc139759f3efcd32926"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0081-00.anim": [
+87936,
+"cf659e680595c5c3c67a26058e47f54b5f571d8ac7026546879025657175c9c8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0082-00.anim": [
+76448,
+"433774a4c1dc787d3ef0d887ef9d20bd20f17398129ddfdc97eb5277fc95a3f1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0083-00.anim": [
+29328,
+"9fb16ab7645d39d558eafd6c1d69bbee91d38a154eee66f30f8a678b78ca97eb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0084-00.anim": [
+79728,
+"76660b6e26889e8820d43847cb170390407527291ff91b1542544f2f023f0d15"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0096-00.anim": [
+76048,
+"485bf63d923926b00d1265280f0d4f980436e87fb44ce2b2b3307e9dbbe06d12"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0097-00.anim": [
+43584,
+"aa401d35caabd7a1f71ec15d0cbac669121845dd3c370d4e3275dc2e147dff2e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0097-01.anim": [
+48336,
+"0c5c4e7262d658155f0c031ad67cb91706034b96e115bc0ced9df9bb1c6aeaa9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0098-00.anim": [
+84336,
+"04284c1e2381205a74a15e1678369bd6299e173754ed312e5e4f6f5f7d170d89"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0099-00.anim": [
+68800,
+"4ef60e7787a9ed2fce32209b08846b73eb41aa4b9447283d231beeb807885ad2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0100-00.anim": [
+15600,
+"0c48642924014d064426eeeab96654538e4c36d4dff60c0b22df3397a198e67f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0101-00.anim": [
+94256,
+"1dfc7ca3c976b1a305f0428b637feb1b3e26fe9f94166606a3b86ee3fec20bf0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0102-00.anim": [
+29536,
+"95461ea5052d7e1db5c35dc8ecea1daa5ee71adcae9481a0756ff4fe3b387be3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0103-00.anim": [
+29696,
+"a8f8490ee631d6850c5a23c8d7df07dba2ff50e0c6463fd1ab612b84bc42ec97"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0104-00.anim": [
+29376,
+"5de2f18d0ade94b6f208891528eacc09f76203c93a1fe158a03405099c6d8f94"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0113-00.anim": [
+65792,
+"4ca4b0286ba336023fc0d5af9d6ad83c97950b797a445529dc3577ec6c1ce901"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0119-00.anim": [
+18528,
+"8cbdfffc8f0503d2df71577ed69a1b0bad3720451307a0ff003e5ff497d59d72"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0120-00.anim": [
+50576,
+"dc60a6e983534bbd99d41ac9c598d90c74d1b746a1976ee9b90be2068fda7fa5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0123-00.anim": [
+9968,
+"301d95f61a6433d96c16c84792a9d93e34081fd687cc9f6f98b380887feeac05"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0128-00.anim": [
+34384,
+"5f31f1f86349c2390d3091298b73de72dc482627f98df8e7aaf77ada1acb5dfe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0129-00.anim": [
+26880,
+"6ef62abe7c5628692df4cfea962a2a7e1e06f9672250a564338727e557eed1fb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0133-00.anim": [
+21040,
+"52188abf3202cc8de08e8a628f561de6e7f5050d721caab66c3a647b629df700"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0134-00.anim": [
+19648,
+"7e0b68eea70dce901e554fde7c57642f90d3506caa42d0dc2f06795d0b0e04fc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0134-01.anim": [
+16192,
+"224906f399b36cbe748723e4156f84ec65d15bbaca985c0ac534513203368465"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0185-00.anim": [
+76512,
+"f9ca8d0919e18a3a3cde5260c99dcab3da6144524f898f39f33484d9680a0499"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0186-00.anim": [
+73712,
+"c7a226f005ac2b59f8d921b74f6c0e3e11472b209765a87985bdae1b206d120e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0195-00.anim": [
+91040,
+"2ba19dd88067d6207e7d3117d298fe85380aa62818368fc88d89ee17a93ce22b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfFemale2/WretchedPlayerFemale0223-00.anim": [
+19184,
+"f23245712e8f62cd8c9f2071a7448378887e0c06daaa63c832c445893c5f4cef"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/armorreflect4.blp": [
+3916,
+"10347b0a7502f994e7b556e279dc8709a8755c6536163b57a3b388151c48fb1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_black.blp": [
+350740,
+"6196e4e8e69af01e1081a742777388a94d14fe9f66c88d9dab4bdfa3e402ca4e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_blue.blp": [
+350740,
+"b2a78059c1f5d436eb25eec1833d2fba66812f35bba5f3e22681b11724bacf11"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_ivory.blp": [
+350724,
+"eadde7b2644c03a0a98028677137aa2904f77b149fa42a6e3bec8c864c4c7307"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_leather.blp": [
+350724,
+"bf332d7fa53a8db51afa5d99af437f93d0a960e323af12f8cdbea1871119add1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_moss.blp": [
+350724,
+"61b33094815f971dbecf98c14d2efc3ad10a28a51477a188a9bc45fd619c8bd7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_red.blp": [
+350740,
+"465799713287d32f1b7b431dd119d8241ee7352423fc2e806bd86d0f8bf1524f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_shadow.blp": [
+350724,
+"2b9e9633df672cb5351e171c52796bbb8c63656fb19071514dc9353d44ebfc52"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_armor_white.blp": [
+350740,
+"476f6c99a1e68270cd67df449344e27e4949c4514bc7e1c9d6dc762e017aeb26"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_hair.blp": [
+44876,
+"f4b1197e71b086f4810e1b450c49ca3e2e1e8a3b2adf231aa236018357c7caf3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_black.blp": [
+350716,
+"ef52335f71149a2496b343ee60f1bf37e60c37d584705b6fac458b78f038372b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_blue.blp": [
+350716,
+"622a655a5f8d9c65f91cf18bc3a9aa4a57c464a976b102dff6f3adaec5044a85"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_ivory.blp": [
+700260,
+"c756337b903c39e9bf463fc616bd564eb3d1feb00884ee947c376df86e20face"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_leather.blp": [
+700260,
+"6e9e138f263feee32dde253538ed5931d224515e9ecb7ec82180fdf7784d7edd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_moss.blp": [
+700260,
+"39918cb0b3696e366d5b47b4de540ed879588e6c71a47e3db158aa96d0570e5d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_red.blp": [
+350716,
+"4253221d10a396ec33556ceb1bd6b86bdd077aceff186b4351b4444803d7565b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_shadow.blp": [
+700260,
+"13665c2c8b9a20f8e1ce5855a491065c3fa312cb8b5297777b17a3c95b7baed8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_white.blp": [
+350716,
+"5fb9797c49b960e045d1cef165e7f7cd246f32883c55c8e2c1e2b969e800db91"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/crackelf2_male_skin_white2.blp": [
+350716,
+"e2738382ed5137ebe85581e7887c33d46729c515b9d672fd80874b57dd726f24"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/slimeblobtailless.BLP": [
+2596,
+"71a63e7ba06d9b1da69b82e186f808ee0d3f2c793747bb7439ddb5020a9b75a7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale.m2": [
+7327702,
+"d5284924bc82b7223d4fc4820358758d178c15612a541814ea937b698a1c4a42"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale00.skin": [
+98556,
+"213a8b544575fa7ea1aaab6e6e00c6726dea4e72dc2f56404c48db0ace6bb1ee"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0060-00.anim": [
+178160,
+"fce256755f7c3d0f78c5f4e53ced99f2813457f8c1474a4ea6556cdf2440b4f2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0061-00.anim": [
+192848,
+"8d2797efdb71c62b6e3623052fcb8f27096f9daf0d4f27023ad4944d4640aff5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0062-00.anim": [
+110288,
+"b3535633bf13288b0ce33e1bdf0c789f19b7b82634713edece14262b36c48e4f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0064-00.anim": [
+162720,
+"6095cb9108c3ec80ce32dd3fb6098fa901e1f05b1723c1c2f07443f34778924c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0065-00.anim": [
+167344,
+"aff1faa2ac748800f162374cbc5678bc60008c91dd5da3975ed55cf0226115fc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0066-00.anim": [
+84544,
+"11458b2ba1081bab8dd27c343759d9b93ac2a8805ca3c2a2ad33c111b6f65625"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0067-00.anim": [
+107856,
+"4d9c227418b87ad9f06ca78c77c89501c2cb0874567f72111b8a03fbba56faca"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0068-00.anim": [
+157168,
+"5c4c849494521be8872a16f70940fddb6159d56c5447cde408b5dfa8fcd1858e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0069-00.anim": [
+33584,
+"5ea3822e7f94b1202520144d1b4e09df42baee008b694320706132288f4b3a19"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0069-01.anim": [
+35072,
+"dfcb5103539d9380e3eaa97d82a2072d223a9effb1b65da51f6701ee4401c38d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0069-02.anim": [
+33904,
+"de7311041543973d0a57f1815858022bd7342935700249435f49c216a30e3ab9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0069-03.anim": [
+66944,
+"05522ace6fde49fe0b87c14edb1257c6b851bcac331f3281f98a340e05260197"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0070-00.anim": [
+217968,
+"b8458b494b0a6e864005f37e9ee0ab4482fb2da41ddf56c2c780a8f8a2d82655"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0073-00.anim": [
+175760,
+"e8663306ebb56cac58279268f562515d621c3269360ff88819d8213051e1ac0c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0074-00.anim": [
+189664,
+"f24ad1916ea398050530d7a0dd44a29a9c83fddafc13ca597bf1cceee1d89b57"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0075-00.anim": [
+136624,
+"f55f2f9889acb6338ff1a95736f5e8ca7265528f6a30271deca2663c566f5c04"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0076-00.anim": [
+176560,
+"d672e0743b879c0efbb6b96c7714c8c46dfe5715897567cc4ac61578eeeee1be"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0077-00.anim": [
+27040,
+"f302a0756112e94a8f4c89adec8c1f49a00973b0e8957c680bf138e62cf04111"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0078-00.anim": [
+90352,
+"330bd000fe6f2a87ba02dc7828686429f408af9e4cd0f86b7538cf5aab87a8ac"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0079-00.anim": [
+281744,
+"cb8be4f83781f483a83bdbfd7a81daeaa331e3a2c9931ec3fb47db25669c2f0a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0080-00.anim": [
+19504,
+"6565b1c8eb6fe4448ff33fa6d01380f4939a4635ab27e085406c9b866246c081"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0081-00.anim": [
+193680,
+"f7d322ddba4b9297fe221951f29fd6f505c7cf7bd9a30e81f95ba3a378592a39"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0082-00.anim": [
+216784,
+"9fe89782b100b885782323dbf4c8c1d6e28ed647d2e6e5e1d7d6debdeac5d517"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0083-00.anim": [
+169120,
+"3027d63c3ea263b5468e223ad8f15ec09acf8f03258663595bf1adca6c36ca28"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0084-00.anim": [
+148848,
+"a34fa1aec553c32fe3207e451e8ae134dcfe9f246dfe5bf058890e09405e80da"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0096-00.anim": [
+97216,
+"7f43c07fad1a184984233ccab7e49f092e4cfb0bc60c6dc29ef315bff628cc17"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0097-00.anim": [
+35856,
+"bcbe8238f67b938fad89afaa1ed0d4a3b37b84a74dca59776e4e2a80326969c5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0097-01.anim": [
+40160,
+"644ab5e501465cedb122187c2a41b557d4ed156c5cf7f2aa02b56b1dc716d9af"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0098-00.anim": [
+122368,
+"bbaa0b31003af984371de18db77bc4c2f9df21a080cd17ad01bdb4ff8114e30a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0099-00.anim": [
+132400,
+"33c2f9803a5087161058b08bec6589864617e5e66d4c0ab554df04a832fcc58b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0100-00.anim": [
+71760,
+"6f8d77a8b67137ddbcb48e18bfa4525b40a709a28e2b84e1dc0e7e5d12c92adb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0101-00.anim": [
+184992,
+"acdd6d55ad19ca49dcbadbe1c7d0a3655a38b2787f375a5ae36b3d7ee50e5669"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0102-00.anim": [
+29648,
+"3827007952098ade56befb712770bbf154af21d7e57fa9895a96f2bea30f494c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0103-00.anim": [
+29792,
+"293566e6be4cb86428410dd3baed9335905c6b05f80434d984c773be720fb619"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0104-00.anim": [
+30432,
+"e2b03b630f6f5154f3fe3c8292bad4defc4278c2f3c32715cf46d3a1da5006b9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0113-00.anim": [
+108720,
+"4d8776c44d2d02b4108a5cb20887e3ecaafaf60e61cad9f74ca39f089a656dcd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0119-00.anim": [
+37056,
+"39a26ca435875a58fd8724abf0bea3dadf838b361850b2af64db70a1ae844ef9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0120-00.anim": [
+46688,
+"6c29844227591f763c96a1fcba475042c22f00bcd4aac92615cfcbc216a1b5e9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0123-00.anim": [
+79504,
+"33b4415a5a3ce72f8ee8ef94632da045393a50dc146726a218158dbf6de24d29"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0128-00.anim": [
+29824,
+"6b9fd7d09e51a642b0a3440d6c1f4fee5ee6cf80dc4c914f2519e3472450ef1b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0129-00.anim": [
+34352,
+"29977fef82616f2243475081ab12765640f230130fc09b59d95ed7c4bc7e056f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0133-00.anim": [
+35760,
+"b6ffa5de10771aa8fb2ca9835e84f3e15064348e276fb72ecf39f3eefbed4a11"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0134-00.anim": [
+39552,
+"efc2788fde406ff6b7fe1e971f82b52cc6012d5a591e064f63209b31d1182a73"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0185-00.anim": [
+130944,
+"6507563fd5ab1898f3dfb25450fa644546a4c35e47c02f8b17a715a27297dbd8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0186-00.anim": [
+124752,
+"dda885365741d65bff4c4ae6f2f343b0136f4fdc1dc2852e525ea11eee229a67"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0195-00.anim": [
+127456,
+"898846aee17acbcb603481852af748e0b9c7c081b459e62aca7f6e34f146a9ea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/CrackElfMale2/WretchedPlayerMale0223-00.anim": [
+37392,
+"a53655fcf2cb8f272976e6a0fdfa76d4d3ea0dd646889f8a8ad833203ff0f36e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemale.m2": [
+990881,
+"9207ff958294a18e02b2b166a6b27f55674fbac7706a342b191bf576e137a7ba"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemale00.skin": [
+94134,
+"3bfd33f66777139966aa48d874467081668099c24b5ae6b22961d573ac6e7677"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemale0060-00.anim": [
+23152,
+"bae1fed09929fc8c36161e831d6825971e9a6bc640957d5611c4c8ca32d4c884"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemale0084-00.anim": [
+21728,
+"b8e65b6ceef1f2778ec3850670e118e5ec0ad6f8ea092b221f86e757fbedc9e7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemale01.skin": [
+94758,
+"fd284c316bc371978d3d2f17f5dd7d4719c72a220859d9d34a8460a870b77e40"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemale0113-00.anim": [
+16640,
+"ab207a7d49485966b67df6aee868e480ebb4c333dbad4fa5dfc1684740e313ca"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemaleF.m2": [
+990923,
+"dcda96b3d9c5e85fb74e48c67b88ad550112eb75a3ffeb729fc1e3ba8a1dce52"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemaleF00.skin": [
+94134,
+"3bfd33f66777139966aa48d874467081668099c24b5ae6b22961d573ac6e7677"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemaleF0060-00.anim": [
+23152,
+"bae1fed09929fc8c36161e831d6825971e9a6bc640957d5611c4c8ca32d4c884"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemaleF0084-00.anim": [
+21728,
+"b8e65b6ceef1f2778ec3850670e118e5ec0ad6f8ea092b221f86e757fbedc9e7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemaleF01.skin": [
+94758,
+"fd284c316bc371978d3d2f17f5dd7d4719c72a220859d9d34a8460a870b77e40"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordPlayerFemaleF0113-00.anim": [
+16640,
+"ab207a7d49485966b67df6aee868e480ebb4c333dbad4fa5dfc1684740e313ca"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadLordSkin.blp": [
+700260,
+"a374768ff857d59a00369d8011f16bf1f8a50c9dde85e9f9be6d32640c56ab16"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadLordSkinGreen.blp": [
+700260,
+"a4b0e265f657743f983a6a6c9180fb3e419d95a1e7aa1ccdd4db593e24a92090"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordSkin_Anetheron.blp": [
+700260,
+"cfbe55cfe1961f5613368343c6b09c44d9586c2c3f61947e0338d06fb4f3ec97"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordSkin_Balnazzar.blp": [
+700260,
+"2314aafa5309908ca1dce59f04fa80f935e5c783d63615f3f9433eaa471a4770"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordSkin_Detheroc.blp": [
+700260,
+"cc670f39455e447e218cb7b4d3cdcd090ba5c672b0993f97895f2ad1d656abd5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/DreadlordSkin_Varimathras.blp": [
+700260,
+"a51a39de6a5dd93b3894def814d6dee9e4c59913702049c33f3e58110ebdba5f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/R_DreadLordSkin_bone.blp": [
+700260,
+"7d6ae66df23010c95eefabe16c6cd17ae78cda80a944677ce227f8702d860daf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/R_DreadLordSkin_bronze.blp": [
+700260,
+"d0f4a1def5c46e578e9141a7d2ff062d54c1d698dd05ddc27e373eb36bba3f3f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/R_DreadLordSkin_moss.blp": [
+700260,
+"30291ec38d9ee9d32a0bf5817353183446cc788bcf13238a98a73420b33746c6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord/R_DreadLordSkin_shadow.blp": [
+700260,
+"25801789bab0133c56114d0b2cafd020eb4cb7652397df151032382aabf34aca"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Dreadlord2/ArmorReflect4.blp": [
+3916,
+"10347b0a7502f994e7b556e279dc8709a8755c6536163b57a3b388151c48fb1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/armorreflect_organic01.blp": [
+3916,
+"0aad0d448218992ba7468a49969a459bd4910b09c1797c0c7558d4ef6c794a35"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_blood.blp": [
+350698,
+"282ac9aa876889ec85bf3edf25d536ff892effdf061f1b2060e2eae4c3f66110"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_blue.blp": [
+350698,
+"b4a802cf84b1535395fccd29245a6176b54a3ef50b7d32f8a38248a6b9f531e6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_dark.blp": [
+350698,
+"310d6bbb4463e30a02d894bd5d42040e8dee906e9b47d537a1c35f6b05d6506f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_green.blp": [
+350698,
+"7dc6ae09b0b2d1f91247f50b74b58cc782b96d219fe2faa86737a1acbb251348"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_purple.blp": [
+350698,
+"e46b54c30cabc59ddc6e667936d30fc64be2c840f1f1e906ff17191a1addf21b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_red.blp": [
+350698,
+"175b0f91a71547ba648fb0e1a0c6bcd6676de0b471ca5c53621f6578ce383e58"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_fungarian_white.blp": [
+350698,
+"e3ae27e7e2837aeeeccb59bdbfe3b702b045991d1500da2c8ee12bb299b11ef8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_R_fungarian_green_bone.blp": [
+350698,
+"a34a1f172cf6b8c5283283c6ee56e6da64306c81beac3e6ecd056772d44d1a8b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_R_fungarian_green_bronze.blp": [
+350698,
+"eb9ac7b3ed29276ef1f95ecb1da1b67b3919b43e970b77a46d22d418ee9f587b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_R_fungarian_green_moss.blp": [
+350698,
+"2cd49565b1fa2493b6c74a89d9eb4748b8884a10f8bb4532b878d9da88239594"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E0_R_fungarian_green_shadow.blp": [
+350698,
+"47ecca7a0527fd1cd4062fd6cd05ab0e2bff59d31c72151fa0161247fea97e67"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_blood.blp": [
+350698,
+"9a0cbe896437f8abadad437727e9aa522d96f7b357d2520ed3d40afe9bb1c68a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_blue.blp": [
+350698,
+"fb6037a0d1c5386c303a9fc70dc48c25d3b14e2abf4e065728a162316462eda8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_dark.blp": [
+350698,
+"a5f505dab9794fc90fc6c4e7b2975d35229426a4887afdc4fec05283d9cd4525"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_green.blp": [
+350698,
+"c2ac64065fb88c73fba37e0a05b98b7db2db6fde55035b1f7bded2897d37b280"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_purple.blp": [
+350698,
+"eb1dae374392c98445685bb70a5e7d93f1e90c14e9aec6632b7692d614516fd6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_red.blp": [
+350698,
+"9a17abcf2712fe40d5855fb9985194b62a7f440a6c0b68621fab50819fc0471f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_fungarian_white.blp": [
+350698,
+"c0b02da338636635d3343dd5463751ab7dfe0479b803fdd5323e8bb5bd8c6305"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_R_fungarian_green_bone.blp": [
+350698,
+"16d9168d5fd80bae096215396f088b166e353b6d05b2fe0a839389ab0987fbf8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_R_fungarian_green_bronze.blp": [
+350698,
+"f711d5b21b9154c4ec6cf49458b5d02ecdb768b92f64aafc54f4a4dcb8a54f03"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_R_fungarian_green_moss.blp": [
+350698,
+"43bf3591b51eea6b0750da515b68e5e7c3027c6a2cef6ba06ea14a6737178d6b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E1_R_fungarian_green_shadow.blp": [
+350698,
+"2a3941fb654845a3158f400c4fb2e9b9b47460847e53549040e34e429e2648ed"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_blood.blp": [
+350698,
+"686e32d46906aa7967013e9e9bdea2fb1f76b1887e0e3fed2a84b445f5cb5fe7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_blue.blp": [
+350698,
+"5c13324a1e7bee417fe157d9a6dd38e480eda1bc268fba64eb7a7d7df1ea54d7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_dark.blp": [
+350698,
+"d26699c5aef7dac25d27a37bb750dbcb711291187a1c74c41670a6973f4aabcf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_green.blp": [
+350698,
+"3a2bfcd483f3bbbc8d22e954945835303d6e0d7d417b2b6ef633b57431153f42"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_purple.blp": [
+350698,
+"40ea3614205b55102b40bf7e92130d375bc5b395103adfdc39ee9bf02becaf71"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_red.blp": [
+350698,
+"7013044fb1414ca39f5be7fe1b31afb3e47ff444d343bafb43531d6060165fb8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_fungarian_white.blp": [
+350698,
+"14e30c26aa18a840761b46a3d7ee0cf5f854137740febcfa291914ef923f24b2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_R_fungarian_green_bone.blp": [
+350698,
+"24d981702fa613dbdbfd7a488c676cdd6040a8a3fd4134f4e988f76b1f6ab0f6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_R_fungarian_green_bronze.blp": [
+350698,
+"753882bc72be5ae0c25389d3c6a44a8f6bea412d819ba1df37224c1457e1430a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_R_fungarian_green_moss.blp": [
+350698,
+"fe71fd6c74b12c86b67e92e054908f42312cf58bc38611a63432121a72bd548e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E2_R_fungarian_green_shadow.blp": [
+350698,
+"160bc11ba0875afb96de121a7268113d4eb58616c7400cb77396f008a1a1b03d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_blood.blp": [
+350698,
+"9e2568f3da87811655883f38fa5c66b014cffaa73636bc4cbf30de8aaf5f43ea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_blue.blp": [
+350698,
+"a5bfec6ff0f636053dd9a32f54a3dc9d0c4a01a25a1b02c100b0dcb1d0311dc2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_dark.blp": [
+350698,
+"d4a6b88915c7161e834962d523721a6aaca59f41c62ba6749f49287a225e3b40"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_green.blp": [
+350698,
+"8564fac0df47d2b07b8c71fdd94f88fcabbd501644a28427ad546368401894ff"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_purple.blp": [
+350698,
+"79c33848407d86ecf3cf5a2e44acf550be0333e5a5807b8c54b70a85026df92a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_red.blp": [
+350698,
+"b339c2b4943cf0b7f3fe0c5f7134f957eb304d7021ac005389e21ffc87566c6f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_fungarian_white.blp": [
+350698,
+"2262711ad5918e5c29dfc3ee3a857301e6fa77802d89f08378e3069d70f98a5a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_R_fungarian_green_bone.blp": [
+350698,
+"2665089ede7fd8320de1eb247b0b70501b9c9527d5400fbb50c98f93f4a6f3d8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_R_fungarian_green_bronze.blp": [
+350698,
+"dac7ed9cf214b03c0397ae0be269d9471f634068a526d45b7ba26bf3299e1864"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_R_fungarian_green_moss.blp": [
+350698,
+"b46dcb84bd4917d13db4e31c8cab98a631c56ce12fc4849f1d4af8b3d93c0fa1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E3_R_fungarian_green_shadow.blp": [
+350698,
+"8a10743c1ec5e658562360c236c78bfd8200f6974a364918685a0bb2d5f07e0a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_blood.blp": [
+350698,
+"71e057382efc535ab7726d80d08e7f76e3fb2914fe6eb9dc944be37a2aff9126"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_blue.blp": [
+350698,
+"de05f70322fbb07892b8100a554adee0bc78e8fc96023e6c7c9f6a3cc84aff6b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_dark.blp": [
+350698,
+"9dcf0f1565f54fabe47bd26ca3a9c08522513128152626f466096b8a2a30989e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_green.blp": [
+350698,
+"c30d11417affb8514c48bdcf8d52f6cedfd263de403612a8d527898dcf17f234"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_purple.blp": [
+350698,
+"9df5d4d1d3cd17620a5cd0f90444e2a640d841b658fd6ecd5f9782d385350398"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_red.blp": [
+350698,
+"3332af59b53c6d0cd2738b3195bccab14a0194c2ba285c8dba060ebc0d86d60d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_fungarian_white.blp": [
+350698,
+"b62a75edda0e0d110518da578cae2f68ef9886f0942c668bea4c976bf4302ddc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_R_fungarian_green_bone.blp": [
+350698,
+"ea584f38bbcb0380ec0d2f848bf4ab1669358a564a4b40c199ff10f2def4ed97"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_R_fungarian_green_bronze.blp": [
+350698,
+"cbcb91946de0165cc64ec132c91472b8949136ad8e1f79dbed1d1618e099fa9a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_R_fungarian_green_moss.blp": [
+350698,
+"fe1a7cc5d467728299272d351d9155be192c3a36137b83b8c5ebfa27ff3ca6a6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E4_R_fungarian_green_shadow.blp": [
+350698,
+"bd128bba71d77b578820626ca9464a75480f793d562c4d462504443191f22f9b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_blood.blp": [
+350698,
+"914997606e3193157b19385b9526a6b302705561bf9cefb5f7ab30e4b1b3289d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_blue.blp": [
+350698,
+"c411c7c090cfe8f4966879e863d5f34fe1849fccbbf152f89b9ad82aa00b2506"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_dark.blp": [
+350698,
+"a31126c8410727bdcfbbdef8a0817ed860aa73ad26a7eebf717110bae2fe4332"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_green.blp": [
+350698,
+"27a923c7e8844518ece96df66b265f95f10fe1c39fe6450667a09ff01d7e0e2f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_purple.blp": [
+350698,
+"1165f590d16a4971242bf9f223d161baa873ae281c07494a000b3f5786e2e083"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_red.blp": [
+350698,
+"6482d4e7c8b84b2973961b2a5f752420d5328ad336ea19d7cefa39a01459ef44"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_fungarian_white.blp": [
+350698,
+"d3b775eaf3184ed557caeb3db4f768f0b84403905a3ecdad6bf3710989696f93"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_R_fungarian_green_bone.blp": [
+350698,
+"0e73d1d1679ea4fa8d6fcfe0a3270ad514e4a6376be5bc2448be3f7e183ad35f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_R_fungarian_green_bronze.blp": [
+350698,
+"5f090831a24f64db33ee154b7bc4fe32f458705204f1ef1a1a5786e2303ef321"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_R_fungarian_green_moss.blp": [
+350698,
+"5c52e4308dcce118c224c4f6d2f34f5e77895fef8f3208d9861eb0155106a0e3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E5_R_fungarian_green_shadow.blp": [
+350698,
+"e6afbf3b6f999ce3fd4069c9cc2ec7380161912a6f6295f250731bc9490786d8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_blood.blp": [
+350698,
+"82c5a9f12f3cf0394c706cf9b077e6d6b4fa473adea8805b87839acb03826a4e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_blue.blp": [
+350698,
+"cb666c993044d25690bd7cfb61d1bf3b4697a51c14aba4448b3c2274fb871b82"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_dark.blp": [
+350698,
+"6e220e0fec8f3859be4375e7ba40f30ae0b82efc1b42325427387753932a2a1a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_green.blp": [
+350698,
+"5e2ad95c10f679a75871ef685aa9cb3cbd81615f1799b7361c65e18632dbb514"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_purple.blp": [
+350698,
+"bb3cf8d203b4097f43aa66eab04f8cfd9cf91b806e2241c71faa4874b0eb3f8e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_red.blp": [
+350698,
+"63c982c760ba679b419bead06b486cbd24c9f4895c25c488bd370460308c9aa8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_fungarian_white.blp": [
+350698,
+"fad0c22e60273015b03cd5fe7357573c071ff33e4da376344b6acf160e7e9572"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_R_fungarian_green_bone.blp": [
+350698,
+"eeabfd092c6bf3830b83b947f86e8ba253220b1098bee3eaef6772b9e9b2ba3d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_R_fungarian_green_bronze.blp": [
+350698,
+"b62c2e2f2ec70cd3925cf0e22a19485b66e63533f5e7169b564b4997e6be7f7b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_R_fungarian_green_moss.blp": [
+350698,
+"8ce5a9d0891ad497bda837bdecd25753e420779d786e6f06ef62bdaa311afd6a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E6_R_fungarian_green_shadow.blp": [
+350698,
+"443fa44efd09563bc12a99d260435b4733c3aa3f77b5e1fa454bce5c25b53e60"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_blood.blp": [
+350698,
+"ecd641397a9b5745a0a1543694576e572579d77c283c9d4c4aa724531d4b0c75"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_blue.blp": [
+350698,
+"b828fbca0844b84cd2acd53340f92383b3b0599cdf3f22af1a684106f1fdd481"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_dark.blp": [
+350698,
+"c0bcab27eaa3826db14a9afb9d181a74d67c2d7f8ba2e410f0c056fe20ed906d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_green.blp": [
+350698,
+"d0ce72154d4d9f2465fe53e576cc9c26b2b314b33a87b81de3acef5c3d0a541a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_purple.blp": [
+350698,
+"a06dcc38e9188d797525d5609d5854a8db536cb47e702a652847487d1dffe738"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_red.blp": [
+350698,
+"c8b88cb0838032498e535eab1c58182263dc201fc9f13aed97bd04a957c83043"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_fungarian_white.blp": [
+350698,
+"af95acffe1cbfa821b0ab135f35fa7619f5af939c95d8d71beb60434f12c4623"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_R_fungarian_green_bone.blp": [
+350698,
+"221340cef45332a30e686ad2bec5344046c9030ba9aefa41a559535dd94ec24a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_R_fungarian_green_bronze.blp": [
+350698,
+"f786a769f90d0cfb39b855a9c84aa26a17ad63b810e498c9e642e10adddd4aa9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_R_fungarian_green_moss.blp": [
+350698,
+"9c4d019fd51125dd89a99fa8b6be94c9b5bbafee30d708063832b4d7db4175cd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/E7_R_fungarian_green_shadow.blp": [
+350698,
+"2134e3017045af9869c03a0fd49c78b49c4e8335d15fdb9ee6194c18175d92e4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer.m2": [
+2529939,
+"1699d28339a2447c657222b5cedb9c31492e87aee993c6f6311c1bf00eb9b0c0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer00.skin": [
+83850,
+"9bb9ec46bc468bfd202bbebd96713ae9480435d40e8315bbd780f31a696556d1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer0060-00.anim": [
+74720,
+"5e99ac29aab5da960ca17ad85008fc66b42318ae4ccdc682d3e7e32d15ef3c2e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer0096-00.anim": [
+23504,
+"03df659004825121ff9a6b87f41a6bbaefc48ec37783734c09fef154bdc63f1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer0097-00.anim": [
+24736,
+"70dd3dcc8256cbad61090a99177bb759754cee4cdf9463fe54fa91b725551bd7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer0097-01.anim": [
+25696,
+"8ebe45f1e2057e354668422297c3f1eed7fc8c9701b4f3145a5f41595a53421c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayer0098-00.anim": [
+32144,
+"e19f9eecd5afe61935bb7b63d512f5c4a507994951b8a4b9b38ec9668556c5ed"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF.m2": [
+2529979,
+"5e340e37136e6cf0df8cba633b76c03f335076a9d6b235413f7bc4547c272b22"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF00.skin": [
+83850,
+"9bb9ec46bc468bfd202bbebd96713ae9480435d40e8315bbd780f31a696556d1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF0060-00.anim": [
+74720,
+"5e99ac29aab5da960ca17ad85008fc66b42318ae4ccdc682d3e7e32d15ef3c2e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF0096-00.anim": [
+23504,
+"03df659004825121ff9a6b87f41a6bbaefc48ec37783734c09fef154bdc63f1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF0097-00.anim": [
+24736,
+"70dd3dcc8256cbad61090a99177bb759754cee4cdf9463fe54fa91b725551bd7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF0097-01.anim": [
+25696,
+"8ebe45f1e2057e354668422297c3f1eed7fc8c9701b4f3145a5f41595a53421c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/FungarianPlayerF0098-00.anim": [
+32144,
+"e19f9eecd5afe61935bb7b63d512f5c4a507994951b8a4b9b38ec9668556c5ed"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_blood.blp": [
+175972,
+"e355895cb356f93da1df14dd0c78b85f14238b062de328a35bc516454583b732"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_blue.blp": [
+175972,
+"be28d69e2578d55b2cf24397366e8c2e6ef9c97ff103dd676475fa327261180e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_dark.blp": [
+175972,
+"2b53dd51138ca8c96a6a601427078dc7fee36f6ed35ad1dfb9719c09b3200095"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_green.blp": [
+175972,
+"aa5fa3b77030066d01e72dff1e60f3a8838565a4a82ca757cc5d5c1e24bdfcd6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_purple.blp": [
+175972,
+"bbcba5c9f0b03aff20fdb06187482457086b7547732ab4f1c98391e019a990dd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_red.blp": [
+175972,
+"34b77bf63dd5ff1f05eda2e07e9fd99a36b76ef1ac8902b95f128a0ea8a4216a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/fungarian_white.blp": [
+175972,
+"a9aaf87d63ee02b1f81a271af41aad176537094be0c59104d1af04c595824ffe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/R_fungarian_green_bone.blp": [
+175972,
+"2ea72278fe5cbe592f06cc3ff42ab153d0b162ef9b6c626186585470cec2c3de"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/R_fungarian_green_bronze.blp": [
+175972,
+"dc10d9a97d1a35d7653d76476515cfe94a1391ff874ef7361c6f65b47d75d88a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/R_fungarian_green_moss.blp": [
+175972,
+"4f673f065225d65e44bf6c0c99eacb5674774f38cdb392c6066a5a2e663b61da"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Fungarian/R_fungarian_green_shadow.blp": [
+175972,
+"4e4d4d3a17c0db8704bbf898e42229c84fbdcceb4f8c91d7605c74d88d018b18"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/armorreflect4.blp": [
+3916,
+"10347b0a7502f994e7b556e279dc8709a8755c6536163b57a3b388151c48fb1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/ironvrykulfemale_armor.blp": [
+350724,
+"67f7f749c5b93fa666384c9e92b7d3a4e63b42474576be85cf5beea775a6647c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_armor_dark.blp": [
+350724,
+"46cf38977642225d3267a744e5520948dfd94717b8d86f6ccee9c9f145aa51a1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_armor_gold.blp": [
+350724,
+"f554d2ac9afcb1fb6e1c506a34bd9ded53b315ebfe3e2917559a41e789ac14ec"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_armor_silver.blp": [
+350724,
+"102eda694e72d9e26f390fc14797ea81123417647f696bc8770780b39de5eb5d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/ironvrykulfemale_eyes.blp": [
+44900,
+"ae595cce28ac23f2955d959e95abf8cb9ca428105584fc4d2f51964ab06ecc91"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/ironvrykulfemale_hair.blp": [
+700260,
+"a330dbd607ef857ab55d190ca3887c2f9d0106cc713a1db0d5d9cebdde16d39e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_hair_dark.blp": [
+700260,
+"8be48720e24139703fce7f79655dd8fb4229e3665309b1f640177a150675c8b5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_hair_gold.blp": [
+700260,
+"f99f0859086d334afa9f2b6a55dc469d6a28a7079c1644c5d0c07e9ea9f52ab3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_hair_silver.blp": [
+700260,
+"97ea5ba91957c1386520d55d2f107c3e29b4c22bee5f7e4df253e9e6650638a2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/ironvrykulfemale_skin.blp": [
+700260,
+"8d226e24dbb27ef3e73a083e3a3a8cf791d6ef47342581ab71d285992caea1b7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_skin_dark.blp": [
+700260,
+"dcc5e8be2cb3405acca33375f0a58f7cf19c822fb283cb7aee5b423a03bc01ec"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_skin_gold.blp": [
+700260,
+"ef0de7f79fde5c440b445213f51d4756a3c2e3cd43e5ab33da8b00ad79b9158b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/IronVrykulFemale_skin_silver.blp": [
+700260,
+"f534fb053bb2c744e2b6eba56c871b7ca4f69f2797bfa1c72a9a8d97b09c7f91"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_bone.blp": [
+350724,
+"e67dc4cb3b0ae0134b40588e423bdd75be404b0c515ad3c844ec02b1e4ad78e8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_bronze.blp": [
+350724,
+"806be38f9f4cb69b7b3f59fe89b63c874f9827133c28abea2d20e61317a1746b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_moss.blp": [
+350724,
+"814c2c10b53c5a214c6cc1b403fdf06b33b0f11a7d988fdf6a24df3640e85bbc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_shadow.blp": [
+350724,
+"f2f40fdc4aafbac31d177eb15c021c3e420c5d1dece3bb2e27240bebbfb24afc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_bone.blp": [
+700260,
+"901567527e67adb6ef44420daadc1fae638760d79eadce3666a4a86e9e8fd827"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_bronze.blp": [
+700260,
+"7e0adbc4122bdb8f1f1db2b8f774129307eb3904ccbafefb1d8f2442f085a506"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_moss.blp": [
+700260,
+"4ec7d8e9ee37d554fa01e9554f035c60c5463863c4c37b47224ce9bc1c7ba11e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_shadow.blp": [
+700260,
+"d042acf2e2c651c36ff1bd9dd6a344ba9a8b0d93bbbbc585c0b3727219cdcb2f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale.m2": [
+2314195,
+"d13e6b2a4bb8afe9e9e1a8cdbf0ab86a02806c3d44ba00b6e224199007a658aa"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale00.skin": [
+124884,
+"1bc559feed7b17d0ac53e08813d0ff212b2e20db0c3d66ca548fb659c7741af3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0060-00.anim": [
+39216,
+"7a63aa5563549847d5c165d9f008c6d35f46bf2c8043fefbd2ccb8ba691d4e39"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0061-00.anim": [
+15936,
+"a03fb6c94b7121f873713d6e91f30e5b41cd0b48a0adcaac2fa7b3f1f684dae6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0075-00.anim": [
+46624,
+"f5ef1039d1d4aeca30912c36066a86e731fdca433f003d4c4014b7bed5784ea8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0096-00.anim": [
+25456,
+"86412089b4421439ae76d77be75287526ab1a8a552302fdb13a100902bd349c8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0097-00.anim": [
+13840,
+"bf39049b91a22a65f68afa21810ad3f5703913e63d5e5e32e7c4f19c5582155f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0098-00.anim": [
+31776,
+"755fa6dad789aa02eb50c24a27e24857ef3fa6694ef8af0f3b70613f12cea529"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0120-00.anim": [
+10560,
+"1ed247cb5d57ce0464a83e621f32a5166c4b4c3a9513ff0fc4edca233ee76026"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0123-00.anim": [
+10560,
+"f1867c634ecd318242a4c80d9808f6199c8cca6ccc803446cae31dcd263f1e84"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0128-00.anim": [
+6168,
+"1bf24a896adfac1c1903eb19fbf51b1765446a8f618ad3df7a08967dedfcb0bd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0129-00.anim": [
+9648,
+"6aab51c609942d97d1d7a6a3f84c5b5fdf5f6a6b5935f2d650b1db88d27c9a33"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/IronVrykulFemale2/StormforgedPlayerFemale0289-00.anim": [
+34304,
+"35c0e59688210f8de00b7fdf547a2129b384f43e5b62228613826939883137b7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/armorreflect4.blp": [
+3916,
+"10347b0a7502f994e7b556e279dc8709a8755c6536163b57a3b388151c48fb1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_3482573.blp": [
+6660,
+"6190d0c09b42892809f513cd5983d34e76c4f1e7182cf1a3fcbb685cc03cf0ce"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_3482577.blp": [
+2564,
+"2174b74478a84cdb2663627a18d1f9043931c0368b1df0d4de808b127a713f79"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_3584496.blp": [
+350724,
+"d01ac0542cb362851960e271873d8329f48c3a52dffd1254d227b72437c2ac76"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_584498.blp": [
+23076,
+"302ef681f68fd10ba6004d77efee95295a7e106d602bdaebf53e65dda33531b5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_bronze.blp": [
+700260,
+"79336af4ea4f07a31efe65f6619d3d99e76ab07b8ce4c6595a367399b116b4c2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_gold.blp": [
+700260,
+"0addb1bf5a8561b99713a2b0f037520b83d0d80899145668a1a54f5e68fc1558"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/lich2_silver.blp": [
+700260,
+"ac6627f2d3be804c572845bbb759fae44609f5078598a90bdd184891747ffed5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/LichPlayerMale.m2": [
+2150224,
+"df6225f3cab1d6672135839f4f1bdc0b8c8e667648abe55812ac1cd8aef6f7a2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/LichPlayerMale00.skin": [
+228708,
+"d4b235c3e946083f4e4a120d9911c0797defa8923153e40e06d1b3bd01b41d59"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/LichPlayerMale0060-00.anim": [
+77824,
+"f95a3606b748d1ea9b3e0a5a5ecdbfebf84891eea482e16eef7af529f69b66d4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/R_lich2_silver_bone.blp": [
+700260,
+"96b95e195cba44140c548e2e20a26de0667c4925bc682aae97bde56760b9f7b6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/R_lich2_silver_bronze.blp": [
+700260,
+"6edf77c7ca8805e42fdc9a350fc40bcf1bec2bfc2d727a608ce695bef381a4bf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/R_lich2_silver_moss.blp": [
+700260,
+"0d342063edd41ce7b52247d1010126f0f7425a56ca4c5dbda231e1993b805d3e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/R_lich2_silver_shadow.blp": [
+700260,
+"a0c3da124f294a26287078c0550c63df72a01aaf8d9db0d00baf63e40e31f0b8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Lich2/smoke_loose_02_256_blend_contrast.blp": [
+88580,
+"7505fcbad4349fad0d60cb87f79a8dd332464cfb2aa1aaf70551a7ee07ce4b00"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/DarkBlue_Glow2.blp": [
+1868,
+"4211644109673d5a86dc3cddbf8a1d93ae8b263fcb4df61f03da04fafe64be23"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/Green_Glow2.blp": [
+2564,
+"5f82e7eaaf8bf3d0548f25df84ba45f2e5187d2cd0e5443ab78350b7d1322440"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayer.m2": [
+495154,
+"5b577066437aeba96aea9acd001bb6c70f93def871dad58a6fb40d3606a52dc2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayer00.skin": [
+10688,
+"95da1111395a580d192073dcb4da1ab4cbdefb5243d26d329164e28c448403b0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayer01.skin": [
+10688,
+"05ae6e584946edaf62ab066e73c6d123527fb47d190ed4a986edc9523502ddf8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayer02.skin": [
+10752,
+"bb323fa820377c369ace280227b101a04dc8a2afd24cb9487f03a25442366380"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayer03.skin": [
+10976,
+"c8113b8a521fa054dd57a7903c5f63ee8dea20dc2d76ef03c054d4b9b8230dfd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayerF.m2": [
+495242,
+"467c8dbf0a0b4dbfe03244275f6e14ccd3687acffb20f1756dfaa0bf64260e79"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayerF00.skin": [
+10688,
+"95da1111395a580d192073dcb4da1ab4cbdefb5243d26d329164e28c448403b0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayerF01.skin": [
+10688,
+"05ae6e584946edaf62ab066e73c6d123527fb47d190ed4a986edc9523502ddf8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayerF02.skin": [
+10752,
+"bb323fa820377c369ace280227b101a04dc8a2afd24cb9487f03a25442366380"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOnePlayerF03.skin": [
+10976,
+"c8113b8a521fa054dd57a7903c5f63ee8dea20dc2d76ef03c054d4b9b8230dfd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_Skin.blp": [
+44876,
+"0efd0c0bef12b518e7f33dc9001f2ef4a11c58c97317024e5ebf609c3a8c00ab"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkinOutland1.blp": [
+44876,
+"a65e0214c2074f93297a60cd14b0e641532db212f3b3ee068e48115e36e93651"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkinOutland2.blp": [
+44876,
+"bee68b4f9e4049dac6b5b60d755d8f7d5766f3106c15f79d6bd5555906ba4c3e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkinOutland3.blp": [
+44876,
+"e8a11e669a18aa8d97fbd47db1c84c720b0ca7bc4c67d9a082ef9d38864bc6be"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkinOutland4.blp": [
+44876,
+"5d63ababd6bdf640ee6fd5fa376bfcfd4007d6d6837e030267611e129e1cdd74"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_Skullbag.blp": [
+12108,
+"bebaaf46b4bce2a4a0b78f7793b66523226c7572b47c6e90c485a2b83483fbb4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkullbagOutland1.blp": [
+23044,
+"2ec01f53c929881a7be33f39836628b1d32eaf1e3cc0be3db213e50d2a61a52f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkullbagOutland2.blp": [
+23044,
+"28d387c9cc924846d87c3adc041a502ce52b4d7f90ddad3a6e9f50f163dba542"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/LostOne_SkullbagOutland3.blp": [
+23044,
+"9b52e482d94fb1aec8d68fc64ba1b66491588b84be94744d62b991395c938255"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/Purple_Glow2.blp": [
+2564,
+"32baa36ad6f6f8b39e71141ba62a7916c2ac84c26bdb6ae7add9ff9e6aaf93e7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/Red_Glow2.blp": [
+2564,
+"4af18abb466af2296dd5b6327c4cfdacd34321d068356ea90da9f586a4939ebe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skin_bone.blp": [
+88580,
+"e5db9f2a0e057bb97d7c7b67393f6591fb1f4ab3ca851157f62133bf62ca5560"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skin_bronze.blp": [
+88580,
+"05b806d27dc012bdc64d107ddd01db56f9af3370206292ee49e7781ea5347105"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skin_moss.blp": [
+88580,
+"a90242a96ad2ec41f40e971802db169352ffe2c1d1320a819422db59311e22bd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skin_shadow.blp": [
+88580,
+"3528cc0f6ee63a712c8cc59294d24d466081475acdbb169876835bfaa320875f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skullbag_bone.blp": [
+23044,
+"da341e803808928ca3a917325fe6545f41330e4689c482f0c61452a77f61b370"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skullbag_bronze.blp": [
+23044,
+"3b1f2ffd8139fe12c005fc5de69dcfa25dd2a1b3e985b807d2b5b72147918455"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skullbag_moss.blp": [
+23044,
+"00388db93bd0ce3f3172652d8160c6a963b4619801cf96a04c0658e548602974"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/R_LostOne_Skullbag_shadow.blp": [
+23044,
+"bfb3b1ee037f81a09afd163d349e67f45354b01058a9d6e04e25ececc4255773"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/LostOne/Yellow_Glow2.blp": [
+1868,
+"e9665d09bcdd073b815df5db92f0d5edd58b0b61bc30be85b04a7d21a5de2e1a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg.blp": [
+350724,
+"705996c3c207b77de8d86cd93e5e46f61679ca913a48dc7ad1edaaa1ce545ceb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargArmor.blp": [
+88580,
+"ab2c214706d7b15ecd4b87752d142553c08f930caefc7f1b14ed587ce09c7782"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale.m2": [
+624899,
+"d4e25080d223b8398f425eab726a7e539cdd97e055db4f0dc5f2fc4c633db506"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale00.skin": [
+21684,
+"f5d8f5872df306c0850d255980a10c1f76577a652e3d28ab168ab56beb8ced25"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale0060-00.anim": [
+24208,
+"a07e1f39b8cd00ab9aa7606e75498f103d43f718d4cded326ead1eb12509f81c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale0062-00.anim": [
+47216,
+"5003db4b54fc6bd69900f12f7e7bce7781d589d94c9d95d73a51f7f94b74e204"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale0074-00.anim": [
+19792,
+"5e5c861384cb21651f96833c14f52b91cd5c36b237535652146db7f344ef5fe8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale0084-00.anim": [
+15088,
+"ec02166cc4d23f00b7b5540e9b95ee70ee73f13f6f6362cea31e91c181758a65"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale01.skin": [
+21798,
+"b9c383b9a30325ad322f6bc76a6c0e82a3f2305af42d7c1465ea0c1a647dd767"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/MoargPlayerMale0113-00.anim": [
+15648,
+"8c4c54351ff67091796033c7c3c7a5ade42904e153e60faad47f1a461d5f3453"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg_Armor_Brass.blp": [
+88580,
+"042b510af26f008fe86bccca4e40e6c24a88bf4231c814e4962fe9e0c1cb831f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg_Armor_Iron.blp": [
+88580,
+"fbf2dad3dbfb81574c03d68c9fc09ba87ea7d4e593de12adc2bb4dfc1a440408"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg_Armor_Verdigris.blp": [
+88580,
+"465c077c8ff4fdfd0bf8277c447ca0cda1a5dd850d76d4655d6ee50e672bda89"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg_Skin_Ashen.blp": [
+350724,
+"fd21e18f6baf2d56adc125bf9105f0c2a9e3cce12e5d006bb51b2d62630fc06d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg_Skin_Crimson.blp": [
+350724,
+"87ab3e2399c105f0e7d1d62e6bad23e5fd8bb4782c9e27c1aefb0d9a8dac6e1e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargEngineer/Moarg_Skin_Felscorched.blp": [
+350724,
+"7e5863599f2af6d75799395ac9abed32cba8f0562e024e55ef87469de16699a5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargF_bone.blp": [
+88580,
+"4141b6b5ed2a0821cc63b01a1218a0c6711523afb020d08ff204cf94810ff8ee"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargF_leather.blp": [
+88580,
+"c4f9449a862e7897090b5811c9789356aafa8c3208a81f384c0b59b5cc4e4aea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargF_shadow.blp": [
+88580,
+"e53a5956466c8d8d3dc94b92afafb6f6a9bdd11d165c97f32618aa42f1ff2f81"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargF_slate.blp": [
+88580,
+"8cd8c1b55bf2bc5e5e449fff828dfee889c8bf3787e6c70d4e085ffe6042796e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargMinion2.blp": [
+44876,
+"1710a94e586720986a09e0382f96256882ba68f6c919fe6f3f5f672548651b3f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargMinion3.blp": [
+44876,
+"74379b56ff5119126eb0a86d3c5cfea69a98cb4d232c2a4f4c1249e60a73baf8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargMinion4.blp": [
+44876,
+"af2ac880eab68e3a11370025afa6267580419bd4f37c3a75edc6e54cf14904c6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargMinion5.blp": [
+44876,
+"145715f16cf1419844e6cc3eedf7de56c6e55c64a9c79af9ce6d6d40127d628e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale.m2": [
+368055,
+"60d4702af26d814e0494257f708fc863048adb8203afa16b27e419aa348324af"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale00.skin": [
+16638,
+"5243a3093ad0b53a5482ff29764a1aa5dd59f671a2c97f2925adbf4a7b16dc25"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale0060-00.anim": [
+13744,
+"094e8821c3ca9a13a8c6dd42a2bb058639749ac31eddd716cf44f67811845f53"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale0062-00.anim": [
+43136,
+"3ddc6cb8c6e231d22b3e572b2bbe90a1d9c581384b009870441ef0ebdd253714"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale0074-00.anim": [
+10976,
+"c87dfa1be91ed4ea395d09b2a220b4b94a208a9fc86659fd222f52423cec84d6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale0084-00.anim": [
+8400,
+"bb5026f86975812b9d3116bea9143f3ba3a04230cf61b894b47339b8cc14bc07"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale01.skin": [
+16974,
+"76c5e5b8415cafc87326b924672a815cf79790ed55f3f78727a2b29c452dd8f3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoargMinion2/MoargPlayerFemale0113-00.anim": [
+15552,
+"6c6692161dcdfa1012b2f6d69ce9b72e88ddcaf83c6f40cdb686be391de65907"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/jade.blp": [
+3916,
+"5a871d7fe1256c8bc1f73599799c230a1fe0dbda057122d9126339ad15f5fb64"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/mogu1blue.blp": [
+350724,
+"386f99053d11ea890b8366a5986621b4160ea91bbe08559614d3b9429847470c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/mogu2green.blp": [
+350724,
+"07cb1e6a70bbf6c55dd598cd41f59e30aa145084ff2f258aed02ae06735bef4f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/mogu3green.blp": [
+88580,
+"753fab44b9cf6a29e52371e3e75ba615c42d3ddfb4eef924e400aeb92c3765a6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale.m2": [
+4084180,
+"4c9da1e165f31590e899e0937d825b85a1a6dc8cc2e132653590b72495c49377"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale00.skin": [
+236608,
+"66d4f903eb788556074b8b0cdca68e9f6267438fe85003180f7bcdd8b572e2c6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0060-00.anim": [
+29600,
+"933e06b58224ff5195d4290546c0b9fe2b477cb51c805f5eb7b9c4468f6cc362"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0061-00.anim": [
+46496,
+"5775c87eeab114009f8283c838ef6d89c86fdcc4c23443caee32d64733b7f9a6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0062-00.anim": [
+20320,
+"01ea2596bb405e66ab7f547999edc33dae4762a502dd71c1b1b6fd6b6c0309af"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0064-00.anim": [
+22288,
+"05040d5a05291f99d1dea0b7c7c4cfc1f1758ad149bcf64bef4240c609e0cd14"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0065-00.anim": [
+19456,
+"633f7b15bcab23e78d9d1a6e29f2eac57b74fe92235f62308f6954e72f9142d3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0066-00.anim": [
+22400,
+"483fd95767e59aecf1724e813bd9f0ab3fdc7b95424fb7758b4fad7ada9277c2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0067-00.anim": [
+25008,
+"f5331269ecf1b90c81cf9952f5a4564009cd591c2ed15a9b0ef66808baae7554"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0068-00.anim": [
+20672,
+"3e8bebcdb13d7a7799416516d51a667702c3a72c7c3d7b2f1b81b24ece2f42c0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0069-00.anim": [
+43984,
+"79040311087dc30ef5827f3b8441b35e7ca3bbb02c7685b135cdd520b5babfc9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0069-01.anim": [
+73680,
+"a1e0d5961fec2733ede1699a5db73c98d8e726330b4cf8690dcccebe852a7d6a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0069-02.anim": [
+40192,
+"81441f92a88e6bf378f9eaa95cf941fc3409a0a6a848d25ee7a6aa70a3958078"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0070-00.anim": [
+27072,
+"259db274abebae6e24e61dbdd4ac7c040360317558ae581ad64e141c7a06cfaa"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0073-00.anim": [
+22848,
+"86da1d6d1dee58805b01719a80610f256019042eac43af433c3a4c4faf2e0c84"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0074-00.anim": [
+37248,
+"4b6936b00a9fdac7720c625ad1184d9e4c30f984e7d86c0a72c35f6d2a108468"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0075-00.anim": [
+25504,
+"371aa31ad3dd9017d48d475bcc40bc5bca286145f00c649f8a39c1e6588ff00a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0076-00.anim": [
+26624,
+"12a9ff87614f82209631153c62fb3a0b72381f5207726169b2db526857ee7d8f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0077-00.anim": [
+26704,
+"4639f397321f954e8b690bf5d966fc60790ea9207a51517f96498bd9345257ff"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0078-00.anim": [
+16896,
+"849d279b9f8afba1746015da376305f874c4fa0440564fa0388763e5b1264564"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0079-00.anim": [
+30800,
+"3275f1ce9ee3b8be547609af5d4064de18fbf4598e0ae34ae0b1133ae41e1bdc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0080-00.anim": [
+22800,
+"634da763cbb366e45867d0233c0a0dd6a9bab60fe6549981033495f98c6f759c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0081-00.anim": [
+20336,
+"1734a595c60170eba3e749231b3d6acccc9d8df5829c551d1c772e4a169a46b0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0082-00.anim": [
+30016,
+"a1d13a323a11e2107eafde7e32aebe2893d9ae1453da35380312d2135129a53b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0083-00.anim": [
+26768,
+"b56305538495cce7c67a6923d48bd96c43ac9088a4dc0aeda7828c09998f4dd6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0084-00.anim": [
+16080,
+"fcbd1b96c360b1214940a07e93b3128b0f5b00619e192835d631584348e7961a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0096-00.anim": [
+18320,
+"30b7df72904a46e266f3fb273dfdaa2305256b4c78883fedd455c3b148e5e550"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0097-00.anim": [
+9680,
+"d1140c92fef4e71181c82516a75de3e8ffdbafd7391a817520e09f5bc3de559a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0098-00.anim": [
+20560,
+"4d890cb2cbb90fe5263e4566a96e2ad08f1c03c9f40d679fb425dbe635db7a8c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale01.skin": [
+236608,
+"0b7a3178bd84e33644ba2a1e4efdc7dc190511400b44de5ece078c2c834a452f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0100-00.anim": [
+9088,
+"5853f29d0701153773391f9708bfbd8eaa119e240971b88e4d67e7860335792f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0101-00.anim": [
+20032,
+"93a15f63ce9d59da72756d6b48df038205e49fd9dca0b76a59067404618d3efe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0102-00.anim": [
+4320,
+"7fa12f18f33750a66b447e8e5078ed767f53d7a5615a20c6a7386dccb735f4e1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0103-00.anim": [
+4240,
+"38139d6cf618853442b1518deebbb15919fd20198124dad579821d494f91313b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0104-00.anim": [
+5104,
+"9c80a1fe5d1bf9b89a849ac9cf7a98cfbc3739a34a9f3fe92a3b871ed015b287"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0113-00.anim": [
+43328,
+"9e1129c1a6f0a21a0dffb72a1168fc6e8b3c1edaf87351c46c8c7c7088f35dfb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0119-00.anim": [
+18592,
+"62df1030b76e9c1269b895ea2804789f2d52dab29787a3d6dded12d05aad822f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0120-00.anim": [
+14256,
+"d1a473dc6bf32a62b48b172639f596278131bdc81e3da0604a4b138a83b0e1cc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0123-00.anim": [
+43680,
+"d658116ced01ad36e291be7f076ad996851add30f40fdb3fcd4e7e3522262687"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0128-00.anim": [
+8672,
+"8391bfb5cd834833835cc3ca7f855d07ffb34070e089d6b391e9b9f32548552a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0129-00.anim": [
+8512,
+"b1e9c2a6dd6bdbe811461200664f74660b5a253d7736716983cde142ddaed8e0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0133-00.anim": [
+11600,
+"c95c8a67a8c466cb257a3798a0c1bcd2ef83f0a5a5f3c3cb029c4c663326853f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0134-00.anim": [
+8256,
+"57bb028a42194ac7ba4772138c866c90e168be2d0be92dced1db5687eaf86bdf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0185-00.anim": [
+15632,
+"4964393218dddd5a6da39f4644467405b57bd160389db5542e9a21ae13731323"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0186-00.anim": [
+12960,
+"75f56157e4ff10a04292e24bb6ec2679989e3a0a763be894feba26cbf6349ec9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0195-00.anim": [
+26512,
+"2fa645499148be9b8ab123102ba4198d2db075ecbdb6c06e043b2130392cb468"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale02.skin": [
+236816,
+"714149fb73f6482db8f94998d82478142bb97ddb4d86642413982f8fc552968b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0223-00.anim": [
+18320,
+"7f537693456beecf0f4d5ab626de58b4ae4ed00cf1a71a21e023216e5440cb3c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0518-00.anim": [
+12624,
+"ca25f8f31498c4b4901c5152366ca09092aaace3db45adadba3e130432247286"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0520-00.anim": [
+9024,
+"6acc67b2a4d336b536faf5e20e5c0b96ba7e5067e6d9af38d0dd2026810b3c29"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0522-00.anim": [
+12384,
+"ff49d162b2c2e8e8910b50b1a51a4887f32a62a9098a449eb45c1f1b72f44e98"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/MoguPlayerMale0732-00.anim": [
+17920,
+"81d8792c7a6e631091bf949bd2dedf96ba745cba14af43a1e404d4476c8f486c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_bone.blp": [
+350724,
+"b4f6757295113698ee1b47e9456df05314f7f78cf1c712e24152c47b1a102aa7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_bronze.blp": [
+350724,
+"b5dc17dc65c9e09cf751e61d6f45c0803c6969f4ff6a01d919283550e880b5c6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_jade.blp": [
+350724,
+"068a8461920d66e17dbf5aca9207ccc9fddd9a0fa966c98a12b51a4d8b584a2b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_moss.blp": [
+350724,
+"b69ad72877e791656cbe74390249d31b325ae3c2e0775df59c79de89b3620996"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_obsidian.blp": [
+350724,
+"af8c00bd8af3468758306b22e3da48e8b4fa1b9f7c9eea8d7d08ba0dba42a9b6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_pearl.blp": [
+350724,
+"001af3d0171328c091680108758e4981f6c42ac89aafc80a085122a87577ffde"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_shadow.blp": [
+350724,
+"bf21e26b6f845b15fae527b1de59388129f9bc9fda110780ce1edc605fe10141"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu1blue_stone.blp": [
+350724,
+"f69aaa783f0589d6287de4f550553ffbffce71e16ccdbbb6e4945a921bdcd25d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu2green_bone.blp": [
+350724,
+"50726dd38c6c88ade7c1dd08375aeaf21e8af8a4fce1bdfef9e4211826598442"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu2green_bronze.blp": [
+350724,
+"b252281fa628588cf65d622cd7768b5474dc6ccc5f9c20beeb2aa4eb17f0bb1c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu2green_moss.blp": [
+350724,
+"f031799462e71a6e2825f9e3026f40df788cae4f9fd8b6d34494cc3d16bffd7a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu2green_shadow.blp": [
+350724,
+"52481f7a4bfcc1f08a1cd37260720a202f18a9015ca01967ea4f4af77956edea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu3green_bone.blp": [
+88580,
+"e2d8c4572dafe779b900381eea2ebfba62414cbe1dd009a97f3e1f7016c3bf71"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu3green_bronze.blp": [
+88580,
+"e5caf0a76bb6cd635ba1b706e2d4c137fc91bc4a8b1ce581796c3c2dd9af5556"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu3green_moss.blp": [
+88580,
+"bff37c3590d058f547682d525f156dae8b85b3a31bf1ef181ca42539fbc5ce8a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/R_mogu3green_shadow.blp": [
+88580,
+"234397ead53674e4758a886e34df7f32e768c69f69ec7c1ef8e3417b7c49956d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/thunderking_caster.blp": [
+350724,
+"9a47c09eef8f250e14c19936499790d77a8cafafef382a5dc29e891577ccba99"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Mogu/thunderking_guard_armor.blp": [
+350724,
+"f606fee45fd2d54e13d4ebe54495f38222c87588a5e39d3f7df5c2752f36284f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/mogufemale_moonarmor.blp": [
+88580,
+"d5d47e37badc8fc456ff4aff0b73ecaa6dd566a8da0fd88e69c8dfd9e773dc19"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/mogufemale_moonbody.blp": [
+350724,
+"e4ed11cab9a6d1dd4f65a9a5064dbdfaafd9b98dbfb4e5d52d608a0409aa202f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/mogufemale_sunarmor.blp": [
+88580,
+"a6bf1184159c807fba26fbf2d09c966c42b3061d4b5783fe00536450b1c4e61f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/mogufemale_sunbody.blp": [
+350724,
+"4055d677595b962584e05ed4f6894dd01b864b9a3f73a4eb41749d854fa386c9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/MoguPlayerFemale.m2": [
+886428,
+"ce827df6bc9cb7e2159f5f4b7493fa5aa212588b015e4709dfd6cc14e1e08d6d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/MoguPlayerFemale00.skin": [
+100144,
+"8e901134ad1a4abfa15217365d0fd979de503502957c529a5d0798b53e169081"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/MoguPlayerFemale01.skin": [
+100144,
+"bfead3ce2816423c76f5925cb4664e8a853fb3a0f324297738f8321041a50e85"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/MoguPlayerFemale02.skin": [
+100704,
+"9be736b0935c7edea92f035f855d4c59a0bd098639162ade63750f515620a54b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunarmor_bone.blp": [
+88580,
+"d8ae05033ea5fbb1d45ae0f5819e21fe9e982ab0db597a3363224b74e25562d4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunarmor_bronze.blp": [
+88580,
+"d99aff0765bf214323f7985b8602aa8272ac548b2f4f39985a3e50f9d6633e4a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunarmor_moss.blp": [
+88580,
+"40d55f6959a74ec98af9f3ac2ed21dd66891a47602135423ef89a40b792af7a2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunarmor_shadow.blp": [
+88580,
+"df65079f9ad01e1965cedd40771f1dbfab45136c9dc0708dc04d2823981bdd08"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunbody_bone.blp": [
+350724,
+"658871940b03caaf2bf559e883baa671611733bae48b0b4af77d8932dc71b74c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunbody_bronze.blp": [
+350724,
+"5d5a7bfd6bc6a87d5975438a8d3262971377f5cd22ebdb4031d28d0bac0021c6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunbody_moss.blp": [
+350724,
+"79b9babf282c9e77d6c9a2815ea4e2a52e1228e53c8cf928d970b9c3b9379c83"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/MoguFemale/R_mogufemale_sunbody_shadow.blp": [
+350724,
+"7b8c93596f11bcec37efce81a00f0c0b9b96ebe43c8cdcb84d359253a9005823"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubianPlayerMale.m2": [
+902781,
+"87a217977132ab6b67bb83f86a471839b1db9316ae6d135a3feef1eebc0a1506"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubianPlayerMale00.skin": [
+16144,
+"63a3acdfcf304d122fbe2800b4a2104f0b8bcb1cfdb021564908fd16e0608ffb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubianPlayerMale0060-00.anim": [
+20272,
+"8d684f761f3cad63b32d59ffc6f3111b39d46d9f883ec08d59a30788eb0395c1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubianPlayerMale0062-00.anim": [
+169968,
+"ee49b86061cd0c40ae1c19610d2a91dcebe2bb94ba4cec80aa0c11cd454c57aa"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubianPlayerMale01.skin": [
+16752,
+"45d4cc4413376c82cb92dca9961843d626c377e50f6de27815d0517687bbdf9d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/Nerubian_Albino.blp": [
+350724,
+"8a3d7cc219a632a3f854e0e1a8218b465c7d267327a73c2588a525390ff1940b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/Nerubian_Black.blp": [
+350724,
+"a3a4629b82e7bccad5086f682fb639adcd0ed3409a13998cc4576e90e40a8702"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/Nerubian_Orange.blp": [
+350724,
+"919e8ca812ffca523d98dd0b2009bc59fb948facf98701444e70385e16c96330"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/Nerubian_Undead.blp": [
+350724,
+"db2b10f3745e9b7ee47b164f55d539d9db2684563596f2989a79e9fab5e2434b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubM_ashen.blp": [
+350724,
+"15e85547bdf5bc001998eda287932aa9234c3cf123f659a1f98d4cd5bb791a66"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubM_bronze.blp": [
+350724,
+"913aac089ea9b2acc92a16502363e849f1b991904e3d02f0df2df21816ffbd1a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubM_dusk.blp": [
+350724,
+"500a459c18e38e41d5d154f42108f406bc5275c08748fd6ea4a248a5583d5fa5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Nerubian/NerubM_venom.blp": [
+350724,
+"6f47ee4cb9a60230a8698b81746afc0305b122bcda436bed942e70dcca8a1170"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/dragonarmorspec.blp": [
+12108,
+"0aa118845251629df1b3cb17677dbdf2fff5ad6f50b0fd21f828e86f4bd901ce"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/nerubianevolved_5306026.blp": [
+23044,
+"ed2cbe5e695ba751ec080d873b9dc9a253a1f21ac066ca73913ab2890790b4ad"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/nerubianevolved_5306027.blp": [
+350724,
+"c1ce47df7c8d3586197b4efbb5719fd0bb3e0512abb36da687bca2f09c4550e6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/nerubianevolved_5559087.blp": [
+88580,
+"e8bc63dd8bcfd2ba1de27bc47b8c3cf24b9d12e91dd5f38c585ab25003a63ad1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/nerubianevolved_5559089.blp": [
+88580,
+"622e626300361d74a0d5d865d7006a3d999ba859bcb98682cd3f65fd8c75485c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_armor_bone.blp": [
+350724,
+"9c868608cb25fb4012120857f8892b2f5496d1716a88d0a4ae9c5f6fb8b25e8c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_armor_bronze.blp": [
+350724,
+"d2b1ff67245c00e945efddf5935e3cfe18b4e2d86cb922286303497eeaf1634b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_armor_gold.blp": [
+350724,
+"689675cdd3af520f1af8ec0c7e8ff069900c0df5a0f9c4514aab8e4de50720c2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_armor_red.blp": [
+350724,
+"563d3d0f59f16fef56b6ad93c52ed484b121d1438ee42d05b7f4040f26c800b1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_armor_teal.blp": [
+350724,
+"0b9c3a18583694f572be1a3531affab5951f676832c5110cb9d52efd36f3c3b4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_armor_violet.blp": [
+350724,
+"b6f565b869de43dd3f3d98e14e3f3572cd9142de3b6bb474cc61992ee5ae12a7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_body_dusk.blp": [
+350724,
+"eec23dd71b00d1eeea0a960a49d097cd33cea95d33e773a0afda408ce70ca546"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_body_obsidian.blp": [
+350724,
+"a137ed77746e3fb254ec8aa8a674dcc4084395b05976575c1e9d4ee84b9f5a31"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_body_white.blp": [
+350724,
+"405959a75e4e877bb8b83b686587300eee3c1d980e7468700604ca9645f3b941"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_hair_blue.blp": [
+350724,
+"61f723eb4a96bdcaf86cb12963008f58e3d175d31ebecbd89e810a4662dc4508"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_hair_crimson.blp": [
+350724,
+"ec5c665dea7323303ab2ba92d1bfc42383acc5e144eb676d339f69080c494ba4"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_hair_violet.blp": [
+350724,
+"c8c4f2296dae08c6cbdff1202430bfa461fd10c4eb5c9f59caf1af0cb0690eea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiF_hair_white.blp": [
+350724,
+"12ff9314cf825756b51d341a02fb4a7cde8f7610fe24240bec051974e05afacb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale.m2": [
+5715258,
+"7723f5195a44267d9e62f45121308afe0fed86032bdfc8440eb923ed62f87b8a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale00.skin": [
+197010,
+"bc29165eb9206d5e64d76ca3cc9d04209081948c50abfc1640a10b1aca550a47"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0060-00.anim": [
+206752,
+"2c02f258d7fc714fe345640231bbefc08bb264a9da5f5239f3810159370aca2e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0061-00.anim": [
+127808,
+"742921c2904468e3c3e12578f79a28e6e9eb58dc44f48c2692d7502761956a1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0061-01.anim": [
+149952,
+"3e154c6995285fc2eabbccb08b804d1944798871936bf15dfe8f85837c10271b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0062-00.anim": [
+35584,
+"14e151fbfdd004dd695b79cb2add1122580f4812cf142b3dc81cc70cffc85abe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0064-00.anim": [
+159968,
+"5357595a533b78b0d6310afa00a9e35198c21e0e429364e8614425655305cd63"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0067-00.anim": [
+122512,
+"bc9da1186501d7fb38b0c6d323edb112556025e5e5a6fdb941aad6da9decc02c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0070-00.anim": [
+152928,
+"821d4a8c98361d891880471b1da40569f14603be69ee23dbeda6096494e89b18"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0074-00.anim": [
+113152,
+"bbfe06dff4d7a98cec4f70d9aed4dc38e1453639903bed5cd89a4830dfc6ed13"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0075-00.anim": [
+116016,
+"e1b32d4d42755d705a10f8d2e4a75661797fbac12ab908630b89e157bc329f79"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0084-00.anim": [
+66000,
+"5f0f226351b3b39375fed1928c2c733e12ddb24debe2367fdaeadf172d676bd0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0096-00.anim": [
+88304,
+"9228cf52ebc7d74f6c9db6bcaa1b2e4b675f9b00ad5eb28760b91db3b2c6cf5b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0097-00.anim": [
+42224,
+"9ed3f0e7887f5ef9eb20563fb29279fa788e609ecf8d9d728aa7479a01ff14b7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0098-00.anim": [
+80992,
+"cf5542297c681f4a2afe04fea3a9255553451c20b1dffa32dfb7a72a9ee83155"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0099-00.anim": [
+89360,
+"02071fa3b713291b81f7da8d68462d164e52d2f002f3cb6fc6f5e79c2edace76"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0100-00.anim": [
+19248,
+"39ea5f251d46899e47096ddbd25cbbfa97fca0874d80e1593e14483d08f27686"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0101-00.anim": [
+111056,
+"782314de9ce286921c2851ccab55b7e84635dccb496f1727b4969afb4a3e2deb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0102-00.anim": [
+82512,
+"87c219cc3c12bc2f5389d48108e38217760a72df578b65f57e4c967877e2d4c7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0103-00.anim": [
+82016,
+"aece848726d392e2fe21f93c23ffac68517bbeb545ef92197be683945afd74f3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0104-00.anim": [
+83184,
+"c95333af944c83f87e026e4c0a927d6b0832a22c95b68bce69b16ae44531da54"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0113-00.anim": [
+62416,
+"1ddbc5f6a2c28c84e438f1d97c1d865d3c4f20247b7b42781ccd2855bd90b0a0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0119-00.anim": [
+43248,
+"df658c0a75b295eccf47e3a88601e40b4b75e605febb923ea9fcc7d2c8b04af8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0120-00.anim": [
+129712,
+"ca01e7df15b589405d0517f9d49a076b15ebc299506845bbf5b894d698140149"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0123-00.anim": [
+102912,
+"319655036c685fd1b1e6b1d2698533c1667e7a013fc4ee95b2a3444dfe4e27b5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0123-01.anim": [
+89072,
+"2d30193b544455f8e39a55f4cd9b9bed9ebbfca508dba7c38af02c7b9b1065e3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0128-00.anim": [
+42544,
+"e69cd151ac49243e30c16198d00c5775e01c1ee6e983d94648e67f01f99c9288"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0129-00.anim": [
+38816,
+"4005605db02d7cbe1e505e292e21c838f8c45c8cc6b23bc2bd461f8487c7f793"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0185-00.anim": [
+98480,
+"c9145db664ab1fa9fa72425e0bc171a394aca98bed7fb79035159ced29e26d94"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolved/SurekiPlayerFemale0186-00.anim": [
+100048,
+"5bacd93e4e522aed56385aeadbe22ea97b31687c46bb079577e1da81bafb6ddd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/dragonarmorspec.blp": [
+12108,
+"0aa118845251629df1b3cb17677dbdf2fff5ad6f50b0fd21f828e86f4bd901ce"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/nerubianevolvedboss_5547580.blp": [
+350724,
+"c1ce47df7c8d3586197b4efbb5719fd0bb3e0512abb36da687bca2f09c4550e6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/nerubianevolvedboss_5547583.blp": [
+23044,
+"ed2cbe5e695ba751ec080d873b9dc9a253a1f21ac066ca73913ab2890790b4ad"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/nerubianevolvedboss_5547585.blp": [
+175972,
+"45a7e035c6ff26f3069126990ffd80658dde0fb8f2fb4458226702f61659feb2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/nerubianevolvedboss_armor.blp": [
+350724,
+"8021d89ab5117abc5fc7f4156140a656d6f620019cb6aa13cbb076529f20e3a5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/nerubianevolvedboss_body.blp": [
+350724,
+"fce5a33f87e935059a7f74794b5ebc47e167afb4c8424c6efb8f9f1af0ac21e6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_armor_bone.blp": [
+350724,
+"229c26a72119672920ae7e7d7610a0651f49553a956f95170fa394732d7214b8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_armor_bronze.blp": [
+350724,
+"89b2eddc13eccc04e1b8409be2589977be6397d79de3c43d94005e8231eafba6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_armor_crimson.blp": [
+350724,
+"15f42e8a304d24143508d43e699c2109b7bf8dbe9cc008b6736675a15c01238b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_armor_silver.blp": [
+350724,
+"ae686bc3616f94044d11e582407dd269e4b20dd2ec1ef2b976d70e211a8830dd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_armor_teal.blp": [
+350724,
+"5dee47d7468ffeae6482a9c16a68fa00f87c9fa3fce2ad13c0ae927eb4e4601f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_body_dusk.blp": [
+350724,
+"ac380be87c3fb966fcce0716b9c153ce5f3fa917bc35cd0fbc49f2167686faa8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiM_body_obsidian.blp": [
+350724,
+"9954efc395eda6cdfb653c50418c530e317fb84db1504d57f7ed34116c28a965"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale.m2": [
+5047951,
+"da3ca7c1ff6b2d3bc81ae1f1c003d9bd90f5849de45275f82b5add3214eb6d51"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale00.skin": [
+212466,
+"82250b03d6bbf116043bf73726b0f715bc48c40098af7fc2afbae78581a1aabe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0060-00.anim": [
+180240,
+"9f8f0884aeb60f98d55d7d73c0707c82069c9569a6a374d47a52208da9d713ef"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0061-00.anim": [
+105152,
+"d8bafb0650b71d8476a8df36df4a2f4b7fac6489b2fbe5ba9998e91148fb4c85"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0061-01.anim": [
+215712,
+"27617e459af10ae0ab5f1a781ccfbb61b0f4aa5cc30b58f4c9b79d358cf982d3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0062-00.anim": [
+28560,
+"b5625f4e3669b49363f726cacfda168a63d3ea03fdbde17470aa6f9539f79469"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0064-00.anim": [
+139216,
+"db706b7448279ae20be6e5c97314cca5827b625388b20ad6c712ca773f1d7420"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0067-00.anim": [
+99088,
+"5970c99048b1de21c1598ef389ba4c9ae6a04b13c2916a9b21465bec0d0ab04d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0070-00.anim": [
+122528,
+"7df43a2c08dd109bfdbed1e1cdc23f47f6cb888439aa0286b6bd0711346e7a3d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0074-00.anim": [
+92560,
+"97c26d4a3dbd23bb4b5594771be7ec84299b86ec931096775100d8ae71189606"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0075-00.anim": [
+89424,
+"215ae607aa0af19d9bf55105233a5e187868ddcff21ed5e97e7b3f2c48757d3f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0084-00.anim": [
+57136,
+"2ea6f7d2b5ecb1d5bb1b7cf395a6a041b58ce5af614936b1788c1c36ce49bb2c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0096-00.anim": [
+71984,
+"65137f3e8a24b2f7db3af73de126a2e2ee14f7d833edad438f063e92e1a9f371"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0097-00.anim": [
+24128,
+"ce495eee8811450dfa28aef1d62932d69f0340197167facb80270a8017433d12"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0098-00.anim": [
+66736,
+"e93811f3d7d076a43e593379053724b957285a5a8b5d9f0c20a9c49b1018db00"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0099-00.anim": [
+73056,
+"078c93b8bf34d31a1e9e0fda546d57b99825fbfb953bd74c6f49b790a4404399"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0100-00.anim": [
+19024,
+"f516bf6b5f6fcc0cd89b419b052e490519464ffc659f656ef4bbd11ac1940827"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0101-00.anim": [
+91920,
+"5d0444e01a6b7852cd6983c88b9d5f1e208496591ce748dfa3338908b811938b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0102-00.anim": [
+53488,
+"56c619eecb968cc715342da91b5bca3cd30811e9d6ebcfd208ea0fdacec70762"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0103-00.anim": [
+52944,
+"0cde85b5187993296553576d288c004b520ff0c54bc6a1aabf5b8f8d8ecaf752"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0104-00.anim": [
+50736,
+"b5513cc7f363f230514c7dd34e493a378fac07a0501a33988d877acf632f31fb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0113-00.anim": [
+51760,
+"1ef9250f3780f95b5afca859205831e3d24fce7627650005893f076e1f02b432"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0119-00.anim": [
+32176,
+"b20620fe7bfe51840141fd3b363a49ab79e63266957b8b9a8b1c7b2ee9336da8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0120-00.anim": [
+96480,
+"ae57911aedafb6f0936c72387f06e5436b4636558dba2eec1af83cb0352cc825"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0123-00.anim": [
+84112,
+"299a6744db7fee489910534a5f4fdb45e9af745d93aaab58f7cccbda2b980714"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0123-01.anim": [
+70176,
+"0f311bfb490b55d5434ab4e067d03070d176edada08c15e1944d9c15c30574f9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0128-00.anim": [
+34976,
+"aaf4ad35356cbf9ff98414adc571a7abce86db299d2a6868233ebd5e018f7bef"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0129-00.anim": [
+32160,
+"8faf8120a53edb2f943c44a971512c6328a81b50ae7c6654219ab65d9818dcf1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0185-00.anim": [
+79872,
+"c503efe3c7c6593da4f07c00b73776afd6c8dd527c851a8acf1fe97e711c2bc0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianEvolvedBoss/SurekiPlayerMale0186-00.anim": [
+80912,
+"9b4bc346bf50ab1c899029ca22a9c2ffa0be8fc0b1df77dcbcf3f2375c6c1eac"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubF_armor_bone.blp": [
+175972,
+"c45a0623f3683f69e925d75ff166600a28c71bd581ced359291a8e33ca5d899b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubF_armor_bronze.blp": [
+175972,
+"e9dac3749a7123b849b768dad22f0ca79587db6d2623403fe839c648f6c80060"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPlayerFemale.m2": [
+1788040,
+"8732d9bc82207584057ab7359dba401fc6f8e0eb8b8bb591678e621336b42c0b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPlayerFemale00.skin": [
+204462,
+"f1059d8b82903a2a8c5f6b8639c0b065bea3f818663bcf8ace01dea898eefdd6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPlayerFemale0060-00.anim": [
+40992,
+"4d5e384b1aae19ae08ff6b53f6fa6bd0e53f757fd915157b96e14c1c4cec4e12"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPlayerFemale0064-00.anim": [
+91648,
+"255e3c4b687bc94964e422375b7c0fce2a62690df938c5021bc033fc663af226"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPlayerFemale0065-00.anim": [
+46480,
+"be40b6e9716b9f2477e6cfdb41b1a80c2ca631c74c2569d85ca1d79217d2f699"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPlayerFemale0084-00.anim": [
+34192,
+"2369e94965e01ee389bf19f118d27b655ab7bad4ba64adcf12551cf03393777b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPriest2_5344800.blp": [
+3916,
+"02e32f676dfe650784e76f99579f988052b1316ab469ad6bd9043e614d9309b8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/NerubianPriest2_5344801.blp": [
+23044,
+"5316decf83d9da27b00aa729424c7b628ff379200bd6089d62b919477f423375"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_armor_purple.blp": [
+700260,
+"02c3265a07368dde082b950f60d7ebe3f47fd20e374ef69c64dabbb805ed8dbd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_armor_red.blp": [
+700260,
+"1707ec72fae535cbdecd811e34437643510642e38cd08cf1e87ff420b371d15d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_armor_teal.blp": [
+700260,
+"f553f6339bce7fcac484010227092dad1867692f979b25f8f0e36e1af5ea97c5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_brown.blp": [
+700260,
+"6eec8c11ccce98a00b9af2c29496769b24ea1c76764dea16f203e44b6eb5b6fb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_dark.blp": [
+700260,
+"f2dedc19da87c883a6b75367865be5c4c8d47c6c0a8c58b058cb4574a76c4486"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_green.blp": [
+700260,
+"9be442a7ac48630ab4299c81c70312b3ca0889e9bf2732e6ca447286e869ca75"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/NerubianPriest2/nerubianpriest2_white.blp": [
+700260,
+"19a8f8017d9dfa08c61e3accfa55719c625bec97c7267a9a88ea4ef573371bf1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/BattleguardSkin.blp": [
+88580,
+"6a8cb490438d6857a8f8d1b3b49a3fa786aa46bb8c57a8bcce4dd38763ef0228"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/BattleguardSkin_Blue.blp": [
+88580,
+"c652a46edf60b03d724abdb55430773a2a8862f0122effa4c91de0c60c9e1dc0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/BattleguardSkin_White.blp": [
+88580,
+"b09e5ca03f92a795384a4ae62196c875d21b2700b3fc2910f9e16c82e7e3677f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiFemale.m2": [
+350664,
+"5858b9a5c60250ba1dadf00683c52c2c732990a815996cd30f70c50cf306d79d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiFemale00.skin": [
+12320,
+"020f6b68c0d1119911808437b95d5ae2dd55c498bb1390fe32e32f82165cea4e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiFemale01.skin": [
+12528,
+"a0a6866476969c630a6a065d6451dc7a232fd11f891643b085b49e32bd1b7d0c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiMale.m2": [
+358740,
+"516229de0988dda2e8601a1ed93e3e643e93e4a5a58de928f5304d573b84cecc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiMale00.skin": [
+12320,
+"f5b576199834a5e769c099ce31a81b175d22d708843b20ec9ce5b1db6bd98656"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiMale01.skin": [
+12528,
+"c4f48ce704ce2359e3c8fc086f56208723be4756370da96d9795765cd634b5d5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_DesertSentinel.blp": [
+88580,
+"dfbd5d274f0b132d39cd4b7996a1f801b0573cda8036d5d2c3f53caac3114ed8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_HiveBronze.blp": [
+88580,
+"836df29ca67a11e1973b68d7d5eebb687592ed8b4e8ba978228badea13b2126a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_IvorySand.blp": [
+88580,
+"0c207f1119dd8a41b027a275889e726244e39f0f57fdb4d472c8006f0fd2401f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_Obsidian.blp": [
+88580,
+"757178aeed814b0bdb21f04e634c0975078b53900c4450b8f939cb87629b368e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_SwarmAzure.blp": [
+88580,
+"719545f4e7d06c9e26684db92a866665342fd7e6433eb745408a961a40c5b380"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_TempleVerdigris.blp": [
+88580,
+"a21e39a3e668a6ce6a706d66b8e2f240c30fb5f0829693cc7706e0d8692a71bd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/QirajiSwarm_TwilightPlum.blp": [
+88580,
+"85ba059dec94c9fad51aea03a1519f67bc2f6f5c43a36342cdd8508e6bc96851"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_HiveBronze_bone.blp": [
+88580,
+"47df42837c8dbcf5b04486193d0165af061786f810f617bfbb042ac80e53c2ad"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_HiveBronze_bronze.blp": [
+88580,
+"4d0cf3767151921cb298d6c7b94d3bef756d66b9219ea4a9f058408a43b312b6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_HiveBronze_moss.blp": [
+88580,
+"27b2b58a73f71c6c956d540bb12aa372b439ddc96ad321cd47f30ea5cb7df06c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_HiveBronze_shadow.blp": [
+88580,
+"4f988f2875aaf3d9825dd84863394478d03c4b7f492676911f0c7a1d5fb970a5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_SwarmAzure_bone.blp": [
+88580,
+"d280f147d82d77b1a5b36005e84ff2ad554eda3b5fe87d2db4de7b45c5f91a1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_SwarmAzure_bronze.blp": [
+88580,
+"2082b922a077cda144b50cc9354ff1694df247e219127407a66fa60d4c294996"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_SwarmAzure_moss.blp": [
+88580,
+"5d0a34137f0102ff157e2c9cdb7af0fc1a9589fa2c0d898c56aad6d7067ce801"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/QuirajBattleguard/R_QirajiSwarm_SwarmAzure_shadow.blp": [
+88580,
+"08170bbbe3f26ac77ea8b63b0fd44fec036462c9cc6bdd2f463cc0e8232f15c0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/spells/lightningundertile.blp": [
+44876,
+"2131664b389aa7f0bf162b211c1a5646f94fcb2bd656f114eb965211720667c0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/R_SporelingSkinBlue_bone.blp": [
+88580,
+"2d4af5d94d98fcb58b88c86ad9813aefa94e5ee3dd90ac2dccdf2248f9b0b93e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/R_SporelingSkinBlue_bronze.blp": [
+88580,
+"587c8dcb9972b299a90ca84933167999d15088903be2a0e8c767eea9507c8343"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/R_SporelingSkinBlue_moss.blp": [
+88580,
+"0f5b32df3ec53e6abef37ec6e1511280a6f6f646ab42e9ebbe26cd7906f153b0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/R_SporelingSkinBlue_shadow.blp": [
+88580,
+"e543ac35ba8af049ad7505ec674ebd0283cad03f89ffd13d1f05d1e299255f8a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayer.m2": [
+409309,
+"e7e8c5c7159ffb5cad6b5b0923c6ea4c5f3716acea52371580ca17e006283b77"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayer00.skin": [
+19680,
+"069d909d570259585067dc863fddb2e3106e19688c6f200b14440ec5ca0e8f82"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayer0062-00.anim": [
+9312,
+"4e474a7e07c8306f5da085a8a1c022f2fe735cd80e4d1a59d830bc04e6838442"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayer01.skin": [
+19840,
+"f1501f5ebc739ab20ac4c437856e5d338cf821449b91fd57cfb5c31f08d2f1c5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayerF.m2": [
+409352,
+"e2521da72ad7fa026c49a6a1307c9daadb6bff1c27c089c66e4b1040558b93ea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayerF00.skin": [
+19680,
+"069d909d570259585067dc863fddb2e3106e19688c6f200b14440ec5ca0e8f82"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayerF0062-00.anim": [
+9312,
+"4e474a7e07c8306f5da085a8a1c022f2fe735cd80e4d1a59d830bc04e6838442"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingPlayerF01.skin": [
+19840,
+"f1501f5ebc739ab20ac4c437856e5d338cf821449b91fd57cfb5c31f08d2f1c5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkinBlue.blp": [
+88580,
+"4fa2c633248d8a1028f8c0f4533212bfc22e941a038c5c43e14a299ecb06631a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkinOrange.blp": [
+88580,
+"143f6db38f24cd80a98d9b23fc3097adee791a2ae4bb702d9d3d088bd5ac8c2f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkinPurple.blp": [
+88580,
+"272e42c4355aefb7410a16ac88a383e7a772571f2e221db5df43e1bdb2d6ce84"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkinRed.blp": [
+88580,
+"6a28854ee869d88022e4783c39792003e30740290f70fbe318465e082aa2b0c1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkin_Ashcap.blp": [
+88580,
+"2725d9fedd70c4c272ebda32f1ace3839eaa017e26e87d89d72d65da0f052d62"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkin_Bogmoss.blp": [
+88580,
+"72875f424e761ff04974d94af48f1f87ae03512a93ff056c01415530ae455769"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/Sporeling/SporelingSkin_Glowcap.blp": [
+88580,
+"906b97bcae3c24a025b99e442f63a3098f72f16bf8f0fef7350d737553f09acc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/ArmorReflect4.blp": [
+3916,
+"10347b0a7502f994e7b556e279dc8709a8755c6536163b57a3b388151c48fb1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/Helm_Plate_RaidWarrior_D_01_Ponytail.blp": [
+44876,
+"16c2e9823b16bf0722f4a841253b9bc306c96bf1172b884f3eded2372335dc50"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_bone.blp": [
+700260,
+"47425c698655dbdb8b2b807926630a8d984412c49911e0fc3946542eb6a3ee56"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_bronze.blp": [
+700260,
+"d5b33f467ca3eee5719d514d40d29a735945ff2e1f2f50d78e93ce37111a1c3c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_moss.blp": [
+700260,
+"02d8d9e3cbfb3e2df1fbd7603523bd06a1f18c139152625165fc2ce5a5f86e82"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_shadow.blp": [
+700260,
+"7e65ebfc8d6a445071efa8caf73918b12c7326b73afb2ae1cc791dc229b75cb8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_bone.blp": [
+350724,
+"363f4750ee8e0f23d9a21efdaba590498db329d19a8294161a565e107b4a8d15"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_bronze.blp": [
+350724,
+"14933761ed823a7871e1e53b098eb2199d9088c268ed0c9783cbf5239423d350"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_moss.blp": [
+350724,
+"95509c4dfee0df3f8ad80d5991495ffafd5f6e274f746de584b5d4e1899dae99"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_shadow.blp": [
+350724,
+"214b171f843d50a3a4802ac90a2306e32762c803eb3e0c7bf005d61eb13e2a53"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StomrforgedVrykulReflect.blp": [
+12108,
+"8b3dae8aa54be1a62369732bca5f190ed679ea24330efc38d842b2c0ea8e147d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale.m2": [
+2601883,
+"8f7fb5027b2790fb5d3e8135c1ad0d7c9c254287812f0807f247edde8f278257"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale00.skin": [
+137100,
+"3d900a939027fa7a50535931b4ad6e12fa1d848713e920b00cff048b3813b7fe"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0060-00.anim": [
+36080,
+"9e52b927a86c0ecac2c8813d931418b920f18718647c5cdaae8f8433ed897836"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0061-00.anim": [
+57056,
+"cbcaed519ae8b67548adb7206bfe35cab37509cb75b975beb84b016ac746115b"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0062-00.anim": [
+36608,
+"ba9e4578ad5a3395cc5cf945cab004cf46a24a517995f308a7b7c83e287db1e0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0062-01.anim": [
+50560,
+"8e5eb1512e2165f3e5930023db7c0b6a4f347ad29a277bf7ed099dc6eec53aea"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0068-00.anim": [
+30368,
+"d5b0a46a1a850bec265187682ba8163c5715aed82aa5337f031a7beea62c6222"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0074-00.anim": [
+17680,
+"72c171a8f1133192f95bb5ad27261ea4f19c4dc587830a5a469afda95b57e124"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0075-00.anim": [
+43136,
+"6af3b7129c9758aecb153dbf5fc6535ac85f6a8e757820c353242ba3902fa4d8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0081-00.anim": [
+22000,
+"2636aa0379f096f23bee69f1f3798f90446e39034f57718fbe4c32505dde9a08"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0084-00.anim": [
+23968,
+"e91846f51c6ae51d04437393b47d2dd09eb68a94812fd95033737c6421e96630"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0096-00.anim": [
+20256,
+"41c8b1b003e37204ded27863a789e6fad29603e2d53ba045e49af9bf19e55dfd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0097-00.anim": [
+15648,
+"16627de59c53385b1a93dfc7fc1c81e6de11711fc4c5cebbb52b956af0c33daf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0098-00.anim": [
+20656,
+"2488fec4804846ee4df4ed381383ac8d9ebd3267468a2d32620c7631ea0c3528"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale01.skin": [
+137100,
+"25d18f5f0c50eef977a4a2cf500b1620f498262ecbef8d24c31abf2e8cde92a9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0104-00.anim": [
+14368,
+"f52345900fbac60d16cfdcaf19832ff7ce14e6e5204a666271fb7199eb4b3135"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0113-00.anim": [
+47968,
+"94931f60e9873ea5de491164e105aca3ff210b7666f3fd1d032e6e4caf3432f5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0123-00.anim": [
+30000,
+"4231bf07e6ed396f45e58b3d36abfe2cc14fb206034e5ed4d7a72b861b220c7e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0128-00.anim": [
+8176,
+"ef578e7800ea5745e7fa7b6ed02166823d07e84cfcca8c5408ab67270a4a560e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0129-00.anim": [
+7984,
+"001819cb04d89c63d6049840c9911abc43c529bf74fd0cc781b47cda5d4831bb"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale0186-00.anim": [
+23392,
+"bc148cfb465c2995d7f405bbf420460fd9ba40aab2301d0241a75ccedd40ab47"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale02.skin": [
+137100,
+"094659d97e7f14e58b6af130bec8ff0978b6f662ff28aa8ed4674b6d96878da0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/StormforgedPlayerMale03.skin": [
+137880,
+"64128e5b0fed4e38e0ca78ab7b2a04eb84435a61e2497b0cc326ad04cae945af"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykularmor_dark.blp": [
+700260,
+"4c339ce8a01d256223b3272e34ae1793337ddfb3cacd24faebe32cc681018c75"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykularmor_gold.blp": [
+700260,
+"ec0a1785b94f24560c895d1fe911e54b5a4ba10158bc6d2927601f8d80871cc8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykularmor_silver.blp": [
+700260,
+"57d38c0181d6a46c35b3cd74f544981039f731941bc9df37865fb3d891581fe3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykulbody_dark.blp": [
+350724,
+"8fd81311a5c77a5a64ef7f406f01fc86259c5333267b2079aeaa534370cab60c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykulbody_gold.blp": [
+350724,
+"7d4b9930bb5cbe311d502eb4b4670727589cd1c082d7909f64d04b68e973c98a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykulbody_silver.blp": [
+350724,
+"9f9127e96c273a9beb53924ae3c9bdc9d5a7560d1af17d36cf458154fadcd48e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykulhair_dark.blp": [
+88580,
+"be41988569353686ac8da011ccdf9b236c607cc5a114324dff26d85de83e72f1"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykulhair_gold.blp": [
+88580,
+"99a94b0ee04a8a7fcfa3a3351ebd8e661d9cc09f0434f701b790ef00a522de4d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/StormforgedVrykul/stormforgedvrykulhair_silver.blp": [
+88580,
+"f73ecf71ee1a4b426cf902da620fc75b099d1448f806117d0d36d20b9b9acaf7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/ThunderKing/moguthunderking02.blp": [
+350724,
+"84269dd389d758e34667f6193e85511fc6bf07b5a0e97c1fd1cb2ed31a3cfa4a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/ThunderKing/moguthunderking02_glow.blp": [
+88580,
+"da4f873dcdf2f7e3cb6edf6b1eeac5c47f842d953cebc3085cc79ef6b2fcbbaf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/R_TitanFemaleSkin_01_bone.blp": [
+700222,
+"712b9adf6e8fd570a25856da2c4092e89dd6464643e7c88ae1a54d3c62689aed"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/R_TitanFemaleSkin_01_bronze.blp": [
+700222,
+"312ba621cbed0acd958ccb4b4a48c9abc5a0303e0f91d9129c20a300569ffd3e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/R_TitanFemaleSkin_01_moss.blp": [
+700222,
+"cadd9c745ebb01ac3deb946d89de5340c8cc6246f09d7fd8622c22fa86d951d6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/R_TitanFemaleSkin_01_shadow.blp": [
+700222,
+"9a43403c251111fe5c95c5c7cd7a09bbcd1fc6ed81977979458a7f0fc45bf41c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanFemaleSkinBronze1.blp": [
+700222,
+"142b5e8ae9a67d8138800b68ff2178438ef32c772865ba4fcd8b584d9683aa85"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanFemaleSkinGold1.blp": [
+700222,
+"50f35e485c2d7287bdfc296566d630053a16451f1bab5d442a4befc8a8ca5417"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanFemaleSkinIvory1.blp": [
+700222,
+"e3a9bc4b35e53507d54353223b36ab8a04c60ef57aa1a75573f8d5d3ccd6466a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanFemaleSkinSilver1.blp": [
+700222,
+"f7c0cb7030b30a015243feb6b5f6f86f7701059a84ef994a1b9cd33d641841d8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanFemaleSkin_01.blp": [
+700222,
+"c711c175acb82f6abfc16c560d9e7393e5ff5c07208172f0597d20abfba9a34e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanPlayerFemale.m2": [
+1479480,
+"b51d83f829cec4d9f0e23487535bd9e14a20d439fd956ad83585154cb82f2662"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanPlayerFemale00.skin": [
+41136,
+"1218a6eccd122f1b1d494636e52cfb6dd3cfe82c23194f1441ab0fa696dba088"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanPlayerFemale01.skin": [
+41262,
+"e19f015967da46034c38c8aacbef7b716bb0193b4b1d7eece0885bbccdca96f0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale/TitanPlayerFemale02.skin": [
+41616,
+"83b519dcb49c62f6a2fa063dccf9b65b681a70ec602c85ff5dc4e73f0390c63e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanFemale2/Nex_EnvMap01t.blp": [
+44876,
+"b5ce38f1cf6592a3551384f9f3266efe0f22dabd3c7f4073aef9eddd5582d484"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_head01_bone.blp": [
+350724,
+"e9cde8a5f6952d0a2eb4d2e367e52f4334e8aa3c615499a356c8251750b2b579"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_head01_bronze.blp": [
+350724,
+"385da0f3db631079fe46dce90d1478cf2d2575e851940ca51f40910af08f3409"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_head01_moss.blp": [
+350724,
+"a74644faccb2c6728720659badaea90727cda98f74348b6586205744bdc4af66"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_head01_shadow.blp": [
+350724,
+"4f0b4e0d96e95a5ad777cf87963fed9cd128beeaa8295b84f4e23d2dd53ad21e"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_skin01_bone.blp": [
+700260,
+"8cd65fa595f365a0558d11ce3a71f28c247a276967d0536cab64cd96b8d6e29c"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_skin01_bronze.blp": [
+700260,
+"f72a9b4cfa44b9856a3bff79d015e6e067017e4451d5dda9d75ec3890acc21b9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_skin01_moss.blp": [
+700260,
+"3a47a51ceba27c7a5399a18f0b03f0092178afcb643f21d1f2c2786b2c2d59cd"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/R_titanmale2_skin01_shadow.blp": [
+700260,
+"c924b0c2151810abb86da6825eec5f5a5cc29199f273b3046462e745ab3037a0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_armor01.blp": [
+350724,
+"83bd5d4428da3b7aa05f4adcdacae80a702f4163ff9356e84d8e68f57af25be6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_armor02.blp": [
+350724,
+"0d727c72c3b9282dc7a619f9fa22819088f6028cadfad1df05c8a30a5b3b774f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_armor03.blp": [
+350724,
+"d905027563cd26fe841031496e83c87774a2be38f8f3308873667ba988734743"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_armor04.blp": [
+350724,
+"702ec333ee91bc1751c24015299546956060640e0567c2fc13ca1985bb6c6bb8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_head01.blp": [
+350740,
+"6c96b30e0dcb32d61f629f8b53465547cf83ae304aac889b3dbfc56651115ea2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_head02.blp": [
+350740,
+"7f15d3f84d71cf78e29bc802ff49d7042df1d7f16a7ac31e43eda2805dc901f6"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_head03.blp": [
+350740,
+"cfc19a333b523dba3ce6f93154629b442f249ac409ce565fc78deca810cf9919"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_head04.blp": [
+350740,
+"7369b9349e98e60c1bf69d97c8a9287e9b8d886b8ab1c54aa1dc272d098d7fa3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_head04_stonekeeper.blp": [
+350740,
+"9b3aff45042223aa6242dc382a33b37ddcd533c031c0f1354d28a91099f05bc9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_hood04_stonekeeper.blp": [
+175948,
+"cbfc6c40ca8720c2e93386a04e0e3ac42b186e11f088411ce10dffb886a8ec27"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_skin01.blp": [
+700260,
+"48125e219bbfcd7468626125e009156d89add6286615811af1962b62b3961293"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_skin02.blp": [
+700260,
+"99f2794ee7f921cbc180d77894109a6461274923853e7fc1ada3a071217f12d0"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_skin03.blp": [
+700260,
+"5b23ce10cf71e2d4ed3a90b2fa3b7312e374398aa271d05d41c84b5838716d55"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/titanmale2_skin04.blp": [
+700260,
+"f8aebf92dcda6e0f4ac0cbc89ec62cf580a4a8522349eb6db09c658ce5d4e91f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale.m2": [
+2487271,
+"0d69a20cfbd762adff48896f5590c411ffd0a4cb93d91e6703bcb943adc15822"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale00.skin": [
+208068,
+"2358728a544df153303b2c668f00e2e300e68ad88a1daa20e9aae5c5b79e4a70"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0060-00.anim": [
+49056,
+"242c4bdbfbe087dfb8445379e27bc298e86530fa063359fe96f44d018fb6af81"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0074-00.anim": [
+49584,
+"d39d6e8d3912b0210bba59fbd147947915ab4163bfe2074a8497ac4e8b5c49d5"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0075-00.anim": [
+80064,
+"06346df8e35ecf4faa8c840e7e5155255c2deb1ebccb6e9b13d04f3c055ce609"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0084-00.anim": [
+45040,
+"deb6cb44cd4a624ce5d9c4eec411a9b0183de7ee551668566e199a425bdeb5d2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0096-00.anim": [
+29264,
+"febf1bb7d4dbeaec04cf146950c9b7696b5ef5fac7861abe64c9a9480838be98"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0097-00.anim": [
+15552,
+"5ffe9e8393467b5c349cbaa7bca98b329baa88a1d5283f520d711de1daf099b7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TitanMale2/TitanPlayerMale0098-00.anim": [
+30368,
+"47edd792273d83091e9df54acff4952341ae75f11be0f03f4e73aafa3edd38d7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/LichPlayerFemale.m2": [
+697582,
+"a1bae15ef08a7b0ce59d867e836ce91434c3e9d1e5b98f54a73945774bb004d3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/LichPlayerFemale00.skin": [
+106092,
+"d527f6897b1036558cbb53a756fce92d0d3a3407b5bd0bdce11d0061f8f0da46"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/R_trolllich_blue_bone.blp": [
+700260,
+"243b9037d3143bc1ed3c06943bda4893bac4c61f097b94c9308f0b5ae0c73f9a"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/R_trolllich_blue_bronze.blp": [
+700260,
+"fdb22e86af2911fb83738b68a18141926ec5fcb0b5afc46cd9d553c7864505a9"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/R_trolllich_blue_moss.blp": [
+700260,
+"f7eafe20f0cba37d847f1cc238cd6b57f87fc2f603cec8cf0e527f5dd3cee300"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/R_trolllich_blue_shadow.blp": [
+700260,
+"52fba836aa7fdaa2466b6ad443ba8389573a2c5498247006fb6acac91aa9ab18"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/trolllich_blue.blp": [
+700260,
+"6d722c416c066c56e1c6e5487638d6545f0d0eab0f4030e64877de54b02618ad"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/trolllich_green.blp": [
+700260,
+"ffc0c91b46ca73f63b8cfd9160a517791b3223291d990764f2a89ea7010b5d48"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/trolllich_red.blp": [
+700260,
+"730c7af6e6214794c652a740ea887db26ff69467cc6a31aa453eec25b82b27cf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Creature/TrollLich/zandalarigold.blp": [
+3916,
+"3d6ff7ddad361d658e5a59b9dd91e1d5d599350e1f97a3ec1109ea271512600f"
+],
+"02_MPQ导入目录/导入PATCH-YJ/item/objectcomponents/shield/armorreflect4.blp": [
+3916,
+"9b162b40844cf0d5427cfe8b864da8e12eecd13e1f10ccec8dcdcc9466c606ca"
+],
+"02_MPQ导入目录/导入PATCH-YJ/item/objectcomponents/SHOULDER/ORBREFLECT02.BLP": [
+1868,
+"8f8516a16527f0676b4dfc74372d476220bfa054c3a681a74a68085558088ba3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/item/objectcomponents/weapon/armorreflect_rainbow.blp": [
+3916,
+"9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Centaur/icon-round.blp": [
+23016,
+"c4df25166b18004ae3d401ecbc9916db46068d95f066956fe9b39903a7600746"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Dreadlord/icon-round.blp": [
+23016,
+"d7a51553620d0286a49c2f3eb01a58fddb3c655837befb7c6cad2f94652886fc"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Fungarian/icon-round.blp": [
+23016,
+"b24a158478fe32375d97ae691a37bb1125651d4ad70f984fc42dff5bb7f876c8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Lich/icon-round.blp": [
+23016,
+"b676727ce4621430db8b7c6101d7f2935b215743e17eae8941150a0d5f204ded"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/LostOne/icon-round.blp": [
+23016,
+"017ac4c7dfaa994758f76ba1085a80b4c6229a5286772a79da6260dbd6f5cec7"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Moarg/icon-round.blp": [
+23016,
+"ac26eea91122ed2b4ed4fb566909a9c2b1bcc457c3d0bfe2f7d8a68a7a637c1d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Mogu/icon-round.blp": [
+23016,
+"4fdf0373dee86af88d93ea91030498f333aa34ecd52f5b816e1752ae9c37cc06"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Nerubian/icon-round.blp": [
+23016,
+"cdb704bb1d830273508fadde5f7d4158da484357887c6dc6cd5ea64c20e68acf"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Qiraji/icon-round.blp": [
+23016,
+"53a641c2e89c703fb38b07b75ec5d7a04b590a3d1c9214dbaedcc1acd431477d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Sporeling/icon-round.blp": [
+23016,
+"10e76762fd42eab3c998049814cbc4a8475760d1c7308ed1832d794cf56df7b8"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Stormforged/icon-round.blp": [
+23016,
+"53cea974dd841e576b97a46707a1e0eda352b1279b8691d2c135b6a3a4e76362"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Sureki/icon-round.blp": [
+23016,
+"b6a44bae25f644a19b16453f240c632dcb9f1cf51c1ceca73e45c2f88bc7cf92"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Titan/icon-round.blp": [
+23016,
+"729e6a70efb3885956c716f97ee860c8835bd6212d5f07a50a2f1d13a053be86"
+],
+"02_MPQ导入目录/导入PATCH-YJ/Reborn/Preview/RACE14/Wretched/icon-round.blp": [
+23016,
+"3e6aaf37bdbbe45dc404f0862a3f5621f98887bd94b75192dc46856b4011f981"
+],
+"02_MPQ导入目录/导入PATCH-YJ/spells/godrays.blp": [
+23044,
+"59a25ebccf7ebbe798a2dde800779a18fb22c4fa03fafabfbcc01598a81959f2"
+],
+"02_MPQ导入目录/导入PATCH-YJ/spells/star4.blp": [
+12108,
+"c934dae6248d73e18f2b4d9d86d61a74521fe6b67542a7ce55c6021b27ac3648"
+],
+"02_MPQ导入目录/导入PATCH-YJ/spells/TOONSMOKE16.BLP": [
+350724,
+"6116de3f1b1dfc28e2e7d15a62ca32419c3e98aaff1f383da6d963f544fcfc9d"
+],
+"02_MPQ导入目录/导入PATCH-YJ/WORLD/KALIMDOR/MAURADON/PASSIVEDOODADS/CORRUPTEDPLANTS/SLIMEBLOBTAILLESS.BLP": [
+2596,
+"71a63e7ba06d9b1da69b82e186f808ee0d3f2c793747bb7439ddb5020a9b75a7"
+],
+"03_覆盖到客户端根目录_必需/EsteriaDreadlord.bin": [
+6564,
+"658c358c76abd6e767ceae622f154d0659953e0bfa107543fccb46a541b5ad9f"
+],
+"03_覆盖到客户端根目录_必需/EsteriaDreadlordTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaFungarian.bin": [
+38076,
+"9cfdc8c00d17b6113550917818b1a297bc81c5f07f0aa264076d65c9331d80e4"
+],
+"03_覆盖到客户端根目录_必需/EsteriaFungarianTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaLich.bin": [
+4692,
+"bcbb4393d3d7627a08553f5c287a95c5047148987312dd3be8f4df6f690c586a"
+],
+"03_覆盖到客户端根目录_必需/EsteriaLichTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaLostOne.bin": [
+7188,
+"587e079d5b0ca29eb8f726734d4229422c751b176e54e9f53153483251cb8b4c"
+],
+"03_覆盖到客户端根目录_必需/EsteriaLostOneTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaMoarg.bin": [
+5316,
+"a3b13ab08d8ab42c5a70ec16e59749b071bb06f3ca0b1bd6536ed6f63c41f0ca"
+],
+"03_覆盖到客户端根目录_必需/EsteriaMoargTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaMogu.bin": [
+7812,
+"5113192aa91dae901eaca2623fb0bb951a0dafd0326d082e0dc5f49813d6ce08"
+],
+"03_覆盖到客户端根目录_必需/EsteriaMoguTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaNerubian.bin": [
+5316,
+"fb21ceedfaaebcd21eb925151e400efc2213a243e5485f66e762de040f89009b"
+],
+"03_覆盖到客户端根目录_必需/EsteriaNerubianTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaPackSkins.bin": [
+138311495,
+"f96c0e63c762de939632ece82217a0e88f4e97fe8e8c8a33d85992ae1ad0901f"
+],
+"03_覆盖到客户端根目录_必需/EsteriaQiraji.bin": [
+5316,
+"f1c41c1ac5eda3bb0da761623854a8608c94353a91aaf217ecb3a407848a8c77"
+],
+"03_覆盖到客户端根目录_必需/EsteriaQirajiTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaSporeling.bin": [
+7188,
+"b6ae22df1f6c9329c338dfe5047a5d6dd01c42dec8d16a28bff7c58f6ace3c8f"
+],
+"03_覆盖到客户端根目录_必需/EsteriaSporelingTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaStormforged.bin": [
+9060,
+"3e44bc2dc41d53b3531d15c3a55852baf5656bf2e15cde6d2a68ebc6e4575a78"
+],
+"03_覆盖到客户端根目录_必需/EsteriaStormforgedTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaSureki.bin": [
+12024,
+"2b6a01fbf756b3c2d54a56212ded676c3edeaaaea5405b321d051ba2ee4faffd"
+],
+"03_覆盖到客户端根目录_必需/EsteriaSurekiTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaTitan.bin": [
+6408,
+"3b508e4ca7b25df07ea9e4319075b972b5078995a14c737cfc3c1f418fb284f0"
+],
+"03_覆盖到客户端根目录_必需/EsteriaTitanTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"03_覆盖到客户端根目录_必需/EsteriaWretched.bin": [
+40260,
+"a407b49ef55e6d76411bee2f522a2087b3571e8ec5d12b630a859cdbcdbde890"
+],
+"03_覆盖到客户端根目录_必需/EsteriaWretchedTextures.bin": [
+16,
+"837774377ca055e6a5c79c1a4cfd8151e7c1f7ce2c16990b00fd445281137433"
+],
+"04_可选_1.9.9更新的共享skin库_有风险先不装/EsteriaAppearanceGeometry.bin": [
+11333392,
+"cacd2086eabf43391bca07b622e17444de91b30593827e9e1e54758fe4dcd8e7"
+],
+"04_可选_1.9.9更新的共享skin库_有风险先不装/EsteriaKvSkins.bin": [
+284498665,
+"216b279414e64dd8c7815526c8376bd4215615620cd9e04780e73cde4f29077a"
+],
+"04_可选_1.9.9更新的共享skin库_有风险先不装/EsteriaKyrian.bin": [
+26064,
+"9aec8590776ddac62e99c33b5e39db31ccffb8928a1131b5242e286fdab66a5c"
+],
+"04_可选_1.9.9更新的共享skin库_有风险先不装/EsteriaVenthyr.bin": [
+15456,
+"c0ec17f7a0074c4e47c42f9c8f40943653cd15a4666d5d4d752fd5c4cdefd35c"
+]
+}

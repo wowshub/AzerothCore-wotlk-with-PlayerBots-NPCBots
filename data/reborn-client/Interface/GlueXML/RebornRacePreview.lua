@@ -5,12 +5,16 @@ local nudge
 local posStore = {}
 -- each race keeps a far view and a near (close-up) view; the mouse wheel switches between them, the panel edits the current one
 function NudgeGet(e)
-    local s = posStore[e.k]
+    local fem = type(GetSelectedSex) == "function" and SEX_FEMALE and GetSelectedSex() == SEX_FEMALE   -- RACE14A: separate camera for female
+    local key = e.k .. (fem and "F" or "M")
+    local s = posStore[key]
     if not s then
-        local far = { e.pos and e.pos[1] or 0, e.pos and e.pos[2] or 0, e.pos and e.pos[3] or 0 }
-        local near = e.near and { e.near[1], e.near[2], e.near[3] } or { far[1] + 24, far[2], far[3] }
+        local fp = (fem and e.posF) or e.pos
+        local far = { fp and fp[1] or 0, fp and fp[2] or 0, fp and fp[3] or 0 }
+        local fn = (fem and e.nearF) or e.near
+        local near = fn and { fn[1], fn[2], fn[3] } or { far[1] + 24, far[2], far[3] }
         s = { far = far, near = near, mode = "far" }
-        posStore[e.k] = s
+        posStore[key] = s
     end
     return s[s.mode], s
 end
@@ -66,6 +70,21 @@ local E = {
     { k="HighmtnHD", sc=14,   f="HIGHMOUNTAINHD",      ic="R:HighmtnHD", n="高山牛头人", horde=true },
     { k="DrakkariTroll", sc=15, zmax=3, f="DRAKKARITROLL",     ic="R:DrakkariTroll", n="达卡莱巨魔", horde=true },
     { k="Sylvari",     f="SYLVARIALLIANCE",     ic="R:Sylvari",     n="希尔瓦里", horde=true },
+    -- RACE14A: CoA 1.9.9 AllRaces v12, 7 Alliance + 7 Horde (preview only). Icons: Reborn\Preview\RACE14\<k>\icon-round.blp
+    { k="Titan", zmax=3, f="TITANALLIANCE", ic="S:Titan", n="泰坦" },
+    { k="Mogu", zmax=3, f="MOGUALLIANCE", ic="S:Mogu", n="魔古族" },
+    { k="Sureki", zmax=3, f="SUREKIALLIANCE", ic="S:Sureki", n="苏雷基" },
+    { k="Centaur", sc=20, zmax=1, f="CENTAURALLIANCE", ic="S:Centaur", n="半人马" },
+    { k="Fungarian", sc=2, zmax=3, f="FUNGARIANALLIANCE", ic="S:Fungarian", n="蘑菇人" },
+    { k="LostOne", f="LOSTONEALLIANCE", ic="S:LostOne", n="失落者", horde=true },
+    { k="Stormforged", zmax=3, f="STORMFORGEDALLIANCE", ic="S:Stormforged", n="风暴铸造者" },
+    { k="Qiraji", zmax=3, f="QIRAJIHORDE", ic="S:Qiraji", n="其拉人", horde=true },
+    { k="Nerubian", f="NERUBIANHORDE", ic="S:Nerubian", n="蛛魔", horde=true },
+    { k="Dreadlord", sc=15, zmax=3, f="DREADLORDHORDE", ic="S:Dreadlord", n="恐惧魔王", horde=true },
+    { k="Wretched", f="WRETCHEDHORDE", ic="S:Wretched", n="邪裔", horde=true },
+    { k="Moarg", sc=15, zmax=3, zmaxF=2, f="MOARGHORDE", ic="S:Moarg", n="莫阿格", horde=true },
+    { k="Sporeling", sc=4, f="SPORELINGALLIANCE", ic="S:Sporeling", n="孢子人" },
+    { k="Lich", sc=18, f="LICHHORDE", ic="S:Lich", n="巫妖", horde=true },
 }
 local bs, A, B = {}, nil, nil
 local function Open(e, sex)
@@ -160,7 +179,7 @@ do
     end
     function CharacterCreate_SetWheelZoomLevel(level, ...)
         local a = Active()
-        if a and a.zmax and level and level > a.zmax then level = a.zmax end
+        local zm = a and ((type(GetSelectedSex) == "function" and SEX_FEMALE and GetSelectedSex() == SEX_FEMALE and a.zmaxF) or a.zmax); if zm and level and level > zm then level = zm end   -- RACE14A zmaxF
         return origLevel(level, ...)
     end
 end
@@ -186,7 +205,7 @@ function CharacterCreate_OnShow(...)
             b:SetFrameStrata("HIGH")
             if CharCreateRaceButtonsFrame then b:SetFrameLevel(CharCreateRaceButtonsFrame:GetFrameLevel() + 20) end
             local kind, name = string.match(e.ic, "^(%a):(.+)$")
-            local icon = kind == "R" and ("Reborn\\Preview\\UIR1B\\"..name.."\\icon-round.blp") or ("Interface\\Icons\\"..name)
+            local icon = kind == "R" and ("Reborn\\Preview\\UIR1B\\"..name.."\\icon-round.blp") or kind == "S" and ("Reborn\\Preview\\RACE14\\"..name.."\\icon-round.blp") or ("Interface\\Icons\\"..name)
             b:SetNormalTexture(icon) b:SetPushedTexture(icon)
             b.borderfaction:SetTexture("Interface\\Glues\\CharacterCreate\\"..(e.horde and "HordeRoundRaceOk" or "AlliRoundRaceOk"))
             b.borderfaction:SetAlpha(1) b.borderfaction:Show()
