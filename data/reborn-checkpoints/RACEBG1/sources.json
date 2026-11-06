@@ -1,0 +1,9 @@
+[
+  {
+    "path": "data/reborn-checkpoints/RACEBG1/evidence/input_output.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1A_WHUI2A_创建状态与猎巫布局修复包\\checks\\baseline.json",
+    "source_sha256": "0ffdbbc6293f1a9bad114a63e1f72b8c73d5ffb0bad3102f50c2b8a194e75af0",
+    "repository_sha256": "dc37aa7519a20e36104f46e50c3d228af5c86062ee982c6e4d1f705c2350eb24",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]

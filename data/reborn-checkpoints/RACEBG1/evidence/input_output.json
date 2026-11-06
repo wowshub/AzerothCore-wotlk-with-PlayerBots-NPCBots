@@ -1,0 +1,63 @@
+{
+  "stage": "RACEUI1A_WHUI2A",
+  "files": [
+    {
+      "path": "02_覆盖到客户端根目录/导入Patch-YB.mpq/Interface/GlueXML/CharacterCreate.lua",
+      "input": "b8ba8c272ca24840993f033431c83d871ca2a11703034cc74681dcd6aead2139",
+      "output": "1379c6233bc4999d3f99f459b04293a5e9a6d9cb0a6d7f9cf461ca5a01e85302",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-YB.mpq"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/导入Patch-YB.mpq/Interface/GlueXML/GlueParent.lua",
+      "input": "4105fdeac4eee0d19002c9cff91c9f8a5a93d0f52bfe7bd7cfa83a6ccb22d3eb",
+      "output": "232b636a9f361c11d6926cbe69b23091f287a4b96dc17a23fb15f4ed11e4a4e0",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-YB.mpq"
+    },
+    {
+      "path": "02_覆盖到客户端根目录/Interface/AddOns/RebornWitchHunterTalents/Panel.lua",
+      "input": "516f0c80b28452ee9973c77fabb4e1cfa4d57b8316921f5f19294fc279d0d4e9",
+      "output": "1c8bc5289ee39373916245f3e6017f5e4c1df015bb5432d5cccf2e2d36f4742a",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\Panel.lua"
+    }
+  ],
+  "namegen": {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+    "blob": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEFIX1A\\blobs\\0f801ee8a57d2e7849441d9dd7326269286008ce1e65025bc593024a0b258239.dbc",
+    "sha256": "0f801ee8a57d2e7849441d9dd7326269286008ce1e65025bc593024a0b258239"
+  },
+  "scenes": {
+    "DBFilesClient/NameGen.dbc": [
+      {
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\enUS\\locale-enUS.MPQ",
+        "blob": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEFIX1A\\blobs\\75ed0c16830addd7d3aedc73fc4c72d250cf2de33519020a112708f18a060b96.dbc",
+        "sha256": "75ed0c16830addd7d3aedc73fc4c72d250cf2de33519020a112708f18a060b96"
+      },
+      {
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\enUS\\patch-enUS.MPQ",
+        "blob": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEFIX1A\\blobs\\01b0bcbd0aafe8a51527739fc77dfa9c385a30b54a0b7d03d5dbb503b8a30652.dbc",
+        "sha256": "01b0bcbd0aafe8a51527739fc77dfa9c385a30b54a0b7d03d5dbb503b8a30652"
+      },
+      {
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+        "blob": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEFIX1A\\blobs\\0f801ee8a57d2e7849441d9dd7326269286008ce1e65025bc593024a0b258239.dbc",
+        "sha256": "0f801ee8a57d2e7849441d9dd7326269286008ce1e65025bc593024a0b258239"
+      }
+    ],
+    "Interface/Glues/Models/UI_REBORNSETHRAK/UI_REBORNSETHRAK.m2": [],
+    "Interface/Glues/Models/UI_REBORNOGRE/UI_REBORNOGRE.m2": [],
+    "Interface/Glues/Models/ui_kultiran/ui_kultiran.m2": [
+      {
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+        "blob": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEFIX1A\\blobs\\1d905486fd96b681bbfd9741a387c2d176fa91c4c79fddf4607ff8080cade109.m2",
+        "sha256": "1d905486fd96b681bbfd9741a387c2d176fa91c4c79fddf4607ff8080cade109"
+      }
+    ],
+    "Interface/Glues/Models/UI_Troll/UI_Troll.m2": [
+      {
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Data\\Patch-X.mpq",
+        "blob": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEFIX1A\\blobs\\f71c42dc2d72a48b4e41f7ff49a3fbfba9fa93e65fbe4d91f31b8bf6698e4a24.m2",
+        "sha256": "f71c42dc2d72a48b4e41f7ff49a3fbfba9fa93e65fbe4d91f31b8bf6698e4a24"
+      }
+    ]
+  }
+}
