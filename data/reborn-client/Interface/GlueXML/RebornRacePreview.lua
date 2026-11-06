@@ -1,211 +1,202 @@
--- UIR1A: preview only. No race/class selection, DBC mutation or creation eligibility.
-local preview, launcher, active
-local entries = {
-    { key="Sethrak", title="联盟 · 蛇人", detail="Sethrak / 蛇人\n固定男性外观 · 预览 / 开发中\n本项目指定联盟归属，尚未开放创建。", scale=0.65, z=-0.75 },
-    { key="Ogre", title="部落 · 双头食人魔", detail="Ogre / 双头食人魔\n仅双头外观 · 预览 / 开发中\n源文件在 Female 目录，不代表已提供女性款。", scale=0.75, z=-0.65 },
+-- 17 preview buttons: 9 Alliance (left) and 8 Horde (right). Ours keep REBORN* file strings, the new ones use the CoA 1.9.2 rows.
+
+-- live nudge panel for races with a pos={x,y,z} (the camera cannot be set; x = up/down, z = near/far as measured in tests)
+local nudge
+local posStore = {}
+-- each race keeps a far view and a near (close-up) view; the mouse wheel switches between them, the panel edits the current one
+function NudgeGet(e)
+    local s = posStore[e.k]
+    if not s then
+        local far = { e.pos and e.pos[1] or 0, e.pos and e.pos[2] or 0, e.pos and e.pos[3] or 0 }
+        local near = e.near and { e.near[1], e.near[2], e.near[3] } or { far[1] + 24, far[2], far[3] }
+        s = { far = far, near = near, mode = "far" }
+        posStore[e.k] = s
+    end
+    return s[s.mode], s
+end
+function NudgeUpdate(e, p)
+    if not nudge then
+        nudge = CreateFrame("Frame", "RebornPreviewNudge", CharacterCreate)
+        nudge:SetSize(250, 60) nudge:SetPoint("BOTTOMLEFT", CharacterCreate, "BOTTOMLEFT", 20, 120)
+        nudge:SetFrameStrata("FULLSCREEN_DIALOG")
+        nudge.text = nudge:CreateFontString(nil, "ARTWORK", "GlueFontNormalSmall")
+        nudge.text:SetPoint("TOPLEFT", 0, 0)
+        local defs = { {"远", -4, 0, 0}, {"近", 4, 0, 0}, {"左", 0, 1, 0}, {"右", 0, -1, 0}, {"上", 0, 0, 1}, {"下", 0, 0, -1}, {"重置", 0, 0, 0, true} }
+        for i, d in ipairs(defs) do
+            local b = CreateFrame("Button", nil, nudge)
+            b:SetSize(34, 22) b:SetPoint("TOPLEFT", (i - 1) * 37, -22)
+            local bg = b:CreateTexture(nil, "BACKGROUND") bg:SetAllPoints() bg:SetTexture(0.1, 0.1, 0.1, 0.9)
+            local fs = b:CreateFontString(nil, "ARTWORK", "GlueFontNormalSmall") fs:SetPoint("CENTER") fs:SetText(d[1])
+            b:SetScript("OnClick", function()
+                local c = nudge.cur
+                if not c then return end
+                if d[5] then
+                    local base = nudge.base or { 0, 0, 0 }
+                    c[1], c[2], c[3] = base[1], base[2], base[3]
+                else
+                    c[1], c[2], c[3] = c[1] + d[2], c[2] + d[3], c[3] + d[4]
+                end
+                pcall(CharacterCreate.SetPosition, CharacterCreate, c[1], c[2], c[3])
+                nudge.text:SetText((nudge.name or "") .. (nudge.mode == "near" and " 近景" or " 远景") .. "  pos " .. c[1] .. ", " .. c[2] .. ", " .. c[3])
+            end)
+        end
+    end
+    nudge.cur = NudgeGet(e)
+    nudge.mode = posStore[e.k].mode
+    nudge.base = e.pos or { 0, 0, 0 }
+    nudge.name = e.n
+    nudge.text:SetText(e.n .. (nudge.mode == "near" and " 近景" or " 远景") .. "  pos " .. nudge.cur[1] .. ", " .. nudge.cur[2] .. ", " .. nudge.cur[3])
+    nudge:Show()
+end
+
+local E = {
+    { k="Sethrak",     f="REBORNSETHRAK",       ic="R:Sethrak",     n="蛇人" },
+    { k="KulTiran",    f="REBORNKULTIRAN",      ic="R:KulTiran",    n="库尔提拉斯人" },
+    { k="Drakkin", sc=1, scF=4, zmax=2, f="DRAKKINALLIANCE",     ic="R:Drakkin",     n="德拉金" },
+    { k="Arakkoa", sc=5, zmax=3,     f="ARAKKOA",             ic="R:Arakkoa",    n="鸦人" },
+    { k="Earthen", sc=2, zmax=3,     f="EARTHEN",             ic="R:Earthen",    n="土灵" },
+    { k="Mechagnome", sc=4,  f="MECHAGNOME",          ic="R:Mechagnome",  n="机械侏儒" },
+    { k="Jinyu",       f="JINYU",               ic="R:Jinyu",       n="津鱼人" },
+    { k="Broken",      f="COABROKEN",            ic="R:Broken",      n="破碎者" },
+    { k="Ogre", sc=15, zmax=3,        f="REBORNOGRE",          ic="R:Ogre",        n="双头食人魔", horde=true },
+    { k="MagHar",      f="MAGHAR",              ic="R:MagHar",      n="玛格汉兽人", horde=true },
+    { k="Furbolg", sc=14,     f="REFORGEDFURBOLG",     ic="R:Furbolg",    n="熊怪", horde=true },
+    { k="UndeadGnome", sc=18, f="GNOMEUNDEAD",         ic="R:UndeadGnome", n="亡灵侏儒", horde=true },
+    { k="Venthyr", sc=15, zmax=3,     f="VENTHYRHORDE",        ic="R:Venthyr",    n="温西尔", horde=true },
+    { k="HighmtnHD", sc=14,   f="HIGHMOUNTAINHD",      ic="R:HighmtnHD", n="高山牛头人", horde=true },
+    { k="DrakkariTroll", sc=15, zmax=3, f="DRAKKARITROLL",     ic="R:DrakkariTroll", n="达卡莱巨魔", horde=true },
+    { k="Sylvari",     f="SYLVARIALLIANCE",     ic="R:Sylvari",     n="希尔瓦里", horde=true },
 }
--- UIR1C: localized racial descriptions supplied by the user; display text only.
-local racialDescriptions = {
-    Sethrak = table.concat({
-        "静电盘绕：对8码内的敌人造成自然伤害，并使其移动速度降低40%，持续6秒。冷却：2分钟。",
-        "鳞甲：装备提供的护甲提高2%。",
-        "蛇形反射：躲闪几率提高1%。",
-        "风暴之血：自然伤害和治疗效果提高1%。",
-        "抗毒体质：中毒效果持续时间缩短15%。",
-    }, "\n\n"),
-    Ogre = table.concat({
-        "头槌：使附近一名敌人昏迷2秒。冷却：2分钟。",
-        "蛮力：力量提高2%。",
-        "厚皮：装备提供的护甲提高2%。",
-        "重手：使用锤类和拳套武器时，精准提高3点。",
-        "食人魔烹饪：烹饪技能提高5点。",
-    }, "\n\n"),
-}
--- UIR1D: white heading, yellow race introduction, white racial traits.
-local raceTooltipNames = { Sethrak = "蛇人", Ogre = "双头食人魔" }
-local raceIntroductions = {
-    Sethrak = "蛇人拥有坚韧的鳞甲与敏捷的身姿，善于运用风暴和自然之力。灵巧的反应与抗毒体质，让他们能从容应对危险。",
-    Ogre = "双头食人魔体格魁梧，拥有强大的力量与厚实的皮肤。两颗头颅共同观察战场，以沉重的打击压制敌人。",
-}
-local function RaceTooltip(entry)
-    return "|cffffffff"..raceTooltipNames[entry.key].."|r\n\n"
-        .."|cffffd200"..raceIntroductions[entry.key].."|r\n\n"
-        .."|cffffffff- "..racialDescriptions[entry.key]:gsub("\n\n", "\n\n- ").."|r"
-end
-local prefix = "Reborn\\Preview\\UIR1A\\"
-local function Call(model, method, ...)
-    if model and type(model[method]) == "function" then
-        return pcall(model[method], model, ...)
+local bs, A, B = {}, nil, nil
+local function Open(e, sex)
+    if PAID_SERVICE_TYPE then return end
+    local v = { GetAvailableRaces() }
+    local s
+    for p = 1, #v, 3 do
+        if string.upper(v[p + 1] or "") == e.f then s = (p + 2) / 3 break end
     end
-    return false
-end
-local function Label(parent, text, size, x, y)
-    local f = parent:CreateFontString(nil, "OVERLAY", "GlueFontNormal")
-    f:SetPoint("TOP", parent, "TOP", x or 0, y or 0)
-    f:SetWidth(size)
-    f:SetText(text)
-    return f
-end
-local function Button(parent, text, width, x, y, callback)
-    local b = CreateFrame("Button", nil, parent, "GlueButtonSmallTemplate")
-    b:SetSize(width, 25)
-    b:SetPoint("TOP", parent, "TOP", x, y)
-    b:SetText(text)
-    b:SetScript("OnClick", callback)
-    return b
-end
-local function ResetCamera()
-    if not preview or not preview.entry then return end
-    preview.facing = 0
-    preview.zoom = preview.entry.scale
-    Call(preview.model, "SetFacing", preview.facing)
-    Call(preview.model, "SetModelScale", preview.zoom)
-    Call(preview.model, "SetPosition", 0, 0, preview.entry.z)
-end
-local function Select(index)
-    local e = entries[index]
-    preview.entry = e
-    preview.description:SetText(e.detail)
-    for i,b in ipairs(preview.tabs) do b:SetChecked(i == index) end
-    if preview.model then
-        preview.model:Hide()
-        Call(preview.model, "ClearModel")
-    end
-    -- Model is present in the current Glue XML. Runtime method checks remain mandatory.
-    local ok = Call(preview.model, "SetModel", prefix..e.key.."\\"..e.key..".m2")
-    if ok then
-        Call(preview.model, "SetCamera", 0)
-        Call(preview.model, "SetSequence", 0)
-        ResetCamera()
-        preview.model:Show()
-        preview.status:SetText("拖动旋转 · 滚轮缩放 · 待实机核验纹理和待机")
-    else
-        preview.status:SetText("UIR1A：当前 Glue 模型接口不可用，请记录此提示。")
-    end
-end
-local function Close()
-    active = false
-    if RebornSethrakPreviewButton then RebornSethrakPreviewButton:SetChecked(false) end
-    if RebornOgrePreviewButton then RebornOgrePreviewButton:SetChecked(false) end
-    if preview then preview:Hide() end
-end
-local function Build()
-    if preview then return end
-    preview = CreateFrame("Frame", "RebornRacePreviewUIR1A", CharacterCreate)
-    preview:Hide()
-    preview:SetSize(660, 570)
-    preview:SetPoint("CENTER", CharacterCreate, "CENTER", 0, 0)
-    preview:SetFrameStrata("DIALOG")
-    preview:EnableMouse(true)
-    preview:SetMovable(true)
-    preview:SetClampedToScreen(true)
-    preview:SetBackdrop({ bgFile="Interface\\Tooltips\\UI-Tooltip-Background", edgeFile="Interface\\Tooltips\\UI-Tooltip-Border", tile=true, tileSize=16, edgeSize=16, insets={left=4,right=4,top=4,bottom=4} })
-    preview:SetBackdropColor(0.025, 0.035, 0.055, 1)
-    preview:RegisterForDrag("LeftButton")
-    preview:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    preview:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-    preview:SetScript("OnHide", function(self)
-        active = false
-        if self.model then self.model:Hide(); Call(self.model, "ClearModel") end
-    end)
-    Label(preview, "新种族预览 · UIR1B · 暂不开放创建", 570, 0, -18)
-    preview.tabs = {}
-    for i,e in ipairs(entries) do
-        local b = CreateFrame("CheckButton", nil, preview)
-        b:SetSize(38, 38)
-        b:SetPoint("TOP", preview, "TOP", i == 1 and -160 or 160, -64)
-        b:SetNormalTexture("Reborn\\Preview\\UIR1B\\"..e.key.."\\icon-round.blp")
-        b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
-        b:SetCheckedTexture("Interface\\Buttons\\CheckButtonHilight", "ADD")
-        local idx = i
-        b:SetScript("OnClick", function() Select(idx) end)
-        Label(b, e.title, 220, 0, 20)
-        preview.tabs[i] = b
-    end
-    preview.description = Label(preview, "", 610, 0, -110)
-    local ok, model = pcall(CreateFrame, "Model", "RebornRacePreviewModelUIR1A", preview)
-    if ok and model then
-        preview.model = model
-        model:SetSize(580, 300)
-        model:SetPoint("TOP", preview, "TOP", 0, -170)
-        model:EnableMouse(true)
-        model:EnableMouseWheel(true)
-        model:SetScript("OnMouseDown", function(self, button)
-            if button == "LeftButton" then self.dragX = GetCursorPosition() end
-        end)
-        model:SetScript("OnMouseUp", function(self) self.dragX = nil end)
-        model:SetScript("OnHide", function(self) self.dragX = nil end)
-        model:SetScript("OnUpdate", function(self)
-            if self.dragX then
-                local x = GetCursorPosition()
-                preview.facing = (preview.facing or 0) + (x-self.dragX)*0.012
-                self.dragX = x
-                Call(self, "SetFacing", preview.facing)
-            end
-        end)
-        model:SetScript("OnMouseWheel", function(self, delta)
-            preview.zoom = math.max(0.2, math.min(1.8, (preview.zoom or 0.7)+delta*0.05))
-            Call(self, "SetModelScale", preview.zoom)
-        end)
-    end
-    preview.status = Label(preview, "", 620, 0, -480)
-    Button(preview, "重置镜头", 100, -220, -520, ResetCamera)
-    Button(preview, "缩小面板", 100, -110, -520, function() preview:SetScale(math.max(0.65, preview:GetScale()-0.05)) end)
-    Button(preview, "放大面板", 100, 0, -520, function() preview:SetScale(math.min(1.1, preview:GetScale()+0.05)) end)
-    Button(preview, "重置布局", 100, 110, -520, function()
-        preview:SetScale(1); preview:ClearAllPoints(); preview:SetPoint("CENTER", CharacterCreate, "CENTER", 0, 0)
-    end)
-    Button(preview, "返回创建页", 110, 225, -520, Close)
-end
-local function Open(index)
-    Build()
-    active = true
-    preview:Show()
-    Select(index)
-end
-local originalOnShow = CharacterCreate_OnShow
-function CharacterCreate_OnShow(...)
-    if originalOnShow then originalOnShow(...) end
-    -- UIR1B: XML-owned buttons reuse the exact native circular race template.
-    local buttons = { RebornSethrakPreviewButton, RebornOgrePreviewButton }
-    local neighbours = { CharCreateRaceButton23, CharCreateRaceButton25 }
-    for i,b in ipairs(buttons) do
-        local e=entries[i]
-        local anchor=neighbours[i]
-        local index=i
-        b:ClearAllPoints()
-        b:SetSize(62,62)
-        b:SetScale(0.78)
-        -- Existing top-row centers are +/-185, separated by 70 units.
-        -- A relative center step follows the current anchor even after resizing.
-        b:SetPoint("CENTER", anchor, "CENTER", i==1 and -70 or 70, 0)
-        b:SetFrameStrata("HIGH")
-        if CharCreateRaceButtonsFrame then b:SetFrameLevel(CharCreateRaceButtonsFrame:GetFrameLevel()+20) end
-        b:SetNormalTexture("Reborn\\Preview\\UIR1B\\"..e.key.."\\icon-round.blp")
-        b:SetPushedTexture("Reborn\\Preview\\UIR1B\\"..e.key.."\\icon-round.blp")
-        b.borderfaction:SetTexture("Interface\\Glues\\CharacterCreate\\"..(i==1 and "AlliRoundRaceOk" or "HordeRoundRaceOk"))
-        b.borderfaction:SetAlpha(1)
-        b.borderfaction:Show()
-        b.nameFrame.text:SetText(i==1 and "蛇人" or "双头食人魔")
-        b.tooltip=RaceTooltip(e)
-        b:SetScript("OnClick", function()
-            Open(index)
-            for j,other in ipairs(buttons) do other:SetChecked(j==index) end
-        end)
-        if PAID_SERVICE_TYPE then b:Hide() else b:Show() end
-    end
-end
-local originalOnHide = CharacterCreate_OnHide
-function CharacterCreate_OnHide(...)
-    Close()
-    if originalOnHide then return originalOnHide(...) end
-end
--- Catch native-button, Enter and deferred quote-confirmation calls while preview is open.
-local originalCreate = CreateCharacter
-function CreateCharacter(...)
-    if active then
-        if preview then preview.status:SetText("预览尚未开放创建。请返回创建页选择已开放种族。") end
+    if not s then
+        message("未读取到该种族的数据（可玩种族列表里没有它）："..e.f)
         return
     end
-    return originalCreate(...)
+    if CharacterCreate_RegisterSafeRaceId then CharacterCreate_RegisterSafeRaceId(s, false) end
+    local scene = ((sex == 3 or sex == 1) and e.scF) or e.sc or (e.horde and 12 or 5)   -- borrowed creation scene: background + camera + close-up
+    if CharacterCreate and CharacterCreate.backgroundRaceByListId then CharacterCreate.backgroundRaceByListId[s] = scene end
+    A, B = e, s
+    SetSelectedRace(s) SetSelectedSex(sex or 0) SetCharacterRace(s) SetCharacterCreateFacing(-15)
+    -- RACEUI1C: this custom button bypasses CharacterRace_OnClick; refresh the real class UI here.
+    if type(CharacterCreate_RefreshRaceClassState) == "function" then
+        CharacterCreate_RefreshRaceClassState(s)
+    end
+
+    if CharacterCreate_UpdateModel then CharacterCreate_UpdateModel(CharacterCreate) end
+    if e.drac and CharacterCreate_SetDracthyrBackground then pcall(CharacterCreate_SetDracthyrBackground, 1) CharacterCreate.r27WheelZoomLevel = 1 end
+    -- experimental per-race model offset (the preview camera cannot be set); other races go back to 0,0,0
+    if CharacterCreate and CharacterCreate.SetPosition then
+        local p = NudgeGet(e)
+        local ok, err = pcall(CharacterCreate.SetPosition, CharacterCreate, p[1], p[2], p[3])
+        if not ok and e.pos and not PreviewPosWarned then PreviewPosWarned = true message("SetPosition: "..tostring(err)) end
+    end
+    local n = _G["CharCreateRaceButton"..scene]
+    if n then n:SetChecked(0) end
+    for _, b in ipairs(bs) do b:SetChecked(b.e == e) end
+end
+local function Hook()
+    if RebornPreviewGenderHooked or type(SetCharacterGender) ~= "function" then return end
+    RebornPreviewGenderHooked = true
+    local o = SetCharacterGender
+    SetCharacterGender = function(sex, ...)
+        local was = A and B and GetSelectedRace() == B
+        local r1, r2 = o(sex, ...)
+        if was then pcall(Open, A, sex) end
+        return r1, r2
+    end
+end
+
+-- mouse wheel on a preview race: move the model along the depth axis (camera dolly) instead of the scene's zoom swap
+local function WheelHook()
+    if PreviewWheelHooked or not CharacterCreate or not CharacterCreate.GetScript then return end
+    PreviewWheelHooked = true
+    local old = CharacterCreate:GetScript("OnMouseWheel")
+    CharacterCreate:EnableMouseWheel(true)
+    CharacterCreate:SetScript("OnMouseWheel", function(self, delta, ...)
+        if A and B and GetSelectedRace() == B and CharacterCreate.SetPosition then
+            local _, s = NudgeGet(A)
+            s.mode = delta > 0 and "near" or "far"
+            local c = s[s.mode]
+            pcall(CharacterCreate.SetPosition, CharacterCreate, c[1], c[2], c[3])
+            if nudge then
+                nudge.cur = c nudge.mode = s.mode
+                nudge.text:SetText(A.n .. (s.mode == "near" and " 近景" or " 远景") .. "  pos " .. c[1] .. ", " .. c[2] .. ", " .. c[3])
+            end
+        elseif old then
+            return old(self, delta, ...)
+        end
+    end)
+end
+
+-- Drakkin borrows the Dracthyr creation background + its wheel-zoom models; some races cap the wheel at level `zmax`
+-- (the last level drops tall or short models out of frame)
+do
+    local origBG, origZoom, origLevel = CharacterCreate_SetCurrentBackground, CharacterCreate_GetWheelZoomModel, CharacterCreate_SetWheelZoomLevel
+    local function Active() return A and B and GetSelectedRace() == B and A end
+    function CharacterCreate_SetCurrentBackground(zoom, ...)
+        local a = Active()
+        if a and a.drac and CharacterCreate_SetDracthyrBackground and CharacterCreate_SetDracthyrBackground(zoom) then
+            CharacterCreate.r27WheelZoomLevel = (zoom == 1) and 1 or 4
+            return
+        end
+        return origBG(zoom, ...)
+    end
+    function CharacterCreate_GetWheelZoomModel(level, ...)
+        local a = Active()
+        if a and a.drac and EXTRA_RACE_DRACTHYR_KEY and CHARACTER_CREATE_WHEEL_ZOOM_PREFIX_BY_BACKGROUND then
+            local prefix = CHARACTER_CREATE_WHEEL_ZOOM_PREFIX_BY_BACKGROUND[EXTRA_RACE_DRACTHYR_KEY]
+            if prefix then
+                return prefix .. level .. (GetSelectedSex() == SEX_FEMALE and "f" or "m") .. ".m2", EXTRA_RACE_DRACTHYR_KEY
+            end
+        end
+        return origZoom(level, ...)
+    end
+    function CharacterCreate_SetWheelZoomLevel(level, ...)
+        local a = Active()
+        if a and a.zmax and level and level > a.zmax then level = a.zmax end
+        return origLevel(level, ...)
+    end
+end
+local old = CharacterCreate_OnShow
+function CharacterCreate_OnShow(...)
+    if old then old(...) end
+    Hook()
+    local l, r = 0, 0
+    for i, e in ipairs(E) do
+        local b = _G["Reborn"..e.k.."PreviewButton"]
+        if b then
+            bs[i] = b
+            b.e = e
+            if CharCreateRaceButtonsFrame and b.SetParent then b:SetParent(CharCreateRaceButtonsFrame) end
+            b:ClearAllPoints() b:SetSize(62, 62) b:SetScale(0.78)
+            if e.horde then
+                b:SetPoint("CENTER", CharCreateRaceButton25, "CENTER", 70 * (r % 5 + 1) - (r >= 5 and 55 or 0), -75 * math.floor(r / 5))
+                r = r + 1
+            else
+                b:SetPoint("CENTER", CharCreateRaceButton23, "CENTER", -70 * (l % 5 + 1) + (l >= 5 and 55 or 0), -75 * math.floor(l / 5))
+                l = l + 1
+            end
+            b:SetFrameStrata("HIGH")
+            if CharCreateRaceButtonsFrame then b:SetFrameLevel(CharCreateRaceButtonsFrame:GetFrameLevel() + 20) end
+            local kind, name = string.match(e.ic, "^(%a):(.+)$")
+            local icon = kind == "R" and ("Reborn\\Preview\\UIR1B\\"..name.."\\icon-round.blp") or ("Interface\\Icons\\"..name)
+            b:SetNormalTexture(icon) b:SetPushedTexture(icon)
+            b.borderfaction:SetTexture("Interface\\Glues\\CharacterCreate\\"..(e.horde and "HordeRoundRaceOk" or "AlliRoundRaceOk"))
+            b.borderfaction:SetAlpha(1) b.borderfaction:Show()
+            b.nameFrame.text:SetText(e.n)
+            b.tooltip = e.n
+            b:SetScript("OnClick", function()
+                local ok, err = pcall(Open, e)
+                if not ok then b:SetChecked(false) message("预览失败："..tostring(err)) end
+            end)
+            if PAID_SERVICE_TYPE then b:Hide() else b:Show() end
+        end
+    end
 end
