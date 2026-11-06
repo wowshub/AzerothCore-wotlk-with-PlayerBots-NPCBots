@@ -1,0 +1,6 @@
+{
+  "compiler": "MSVC /Zs x64 C++20, actual project headers; not linked",
+  "results": {
+    "modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp": 0
+  }
+}

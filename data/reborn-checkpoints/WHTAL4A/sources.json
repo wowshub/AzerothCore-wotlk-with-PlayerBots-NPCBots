@@ -1,0 +1,58 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "ebd282c956e6a380af10d4c14c9aaf66fdc60b28784ad425640db669e83d59fe",
+    "repository_sha256": "ebd282c956e6a380af10d4c14c9aaf66fdc60b28784ad425640db669e83d59fe",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalentData.h",
+    "source_sha256": "6e31c8e3d8f9d31356f39b64993a2eba76c635379b8782285d325fa6473c5a43",
+    "repository_sha256": "6e31c8e3d8f9d31356f39b64993a2eba76c635379b8782285d325fa6473c5a43",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/talents_loader.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\talents_loader.h",
+    "source_sha256": "cfc24118bfa666980c57b69b94c29145daca635dbd3cd2c225c66290160d2fa5",
+    "repository_sha256": "cfc24118bfa666980c57b69b94c29145daca635dbd3cd2c225c66290160d2fa5",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "459e6a599a5d2d91f1326820de9248bd481b655760e199edb8240fde88ce2432",
+    "repository_sha256": "459e6a599a5d2d91f1326820de9248bd481b655760e199edb8240fde88ce2432",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL4A/01_CHARACTERS_WHTAL4A_保留旧点扩展.sql",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchhunter\\WHTAL4A\\01_CHARACTERS_WHTAL4A_保留旧点扩展.sql",
+    "source_sha256": "5f4ceb3a02fc7371ce2b370cbc7e857b6f81bdf9e341f8c9a6488a3e0dc357a2",
+    "repository_sha256": "5f4ceb3a02fc7371ce2b370cbc7e857b6f81bdf9e341f8c9a6488a3e0dc357a2",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL4A/evidence/sql_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\checks\\sql_validation.json",
+    "source_sha256": "ef2a5f1f89f4298553bca9ae160a121c3b577cc00f606994c78a437660199d33",
+    "repository_sha256": "a63747a7346b78a67fdacbcedaa212fbdaff3d6c018f8e7fd74ecd3bcfd9868f",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL4A/evidence/native_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\checks\\native_validation.json",
+    "source_sha256": "0655dd9c67b1155ff02cc3c078897d176ecb1c7df9a98ccc7887d2bdb17bc761",
+    "repository_sha256": "8465be41dd6c65806a133dcb5fdd5bfb9433c1ba1fb80b3b73a496f289394cd5",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL4A/evidence/syntax_results.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261102\\codexfix_20261102_阶段WHTAL4A_邪恶永不眠\\checks\\syntax_results.json",
+    "source_sha256": "00880e10bfd0aaec58f11b4bf2276e64aad261adbc8339194e8b96daa551439e",
+    "repository_sha256": "56e62aad462ca0cf531e958e25bdfe5e265dc29916fa18b82e74ec7629882a1b",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]

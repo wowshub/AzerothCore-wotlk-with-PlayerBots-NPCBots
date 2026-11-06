@@ -85,6 +85,6 @@ namespace WHT1 { inline constexpr unsigned Budget[81][2]={
 };
 inline unsigned AE(unsigned level){return Budget[level>80?80:level][0];}
 inline unsigned TE(unsigned level){return Budget[level>80?80:level][1];}
-inline unsigned Spent(unsigned mask){return(mask&1u)+((mask>>1u)&1u)+((mask>>2u)&3u)+((mask>>4u)&1u);}
-inline bool Valid(unsigned mask,unsigned level){return mask<=27 && ((mask>>2u)&3u)<=2 && (!mask || level>=10) && Spent(mask)<=AE(level);}
+inline unsigned Spent(unsigned mask){return(mask&1u)+((mask>>1u)&1u)+((mask>>2u)&3u)+((mask>>4u)&1u)+((mask>>5u)&1u);}
+inline bool Valid(unsigned mask,unsigned level){return mask<=59 && ((mask>>2u)&3u)<=2 && (!mask || level>=10) && Spent(mask)<=AE(level);}
 }
