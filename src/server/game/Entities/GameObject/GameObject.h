@@ -124,6 +124,11 @@ public:
 
     void BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* target) override;
 
+    // WPICK1A: per-viewer client flags (sparkle / not selectable) for modules, e.g. once-per-character world pickups.
+    using PerViewerFlagsFn = void (*)(GameObject const*, Player const*, uint16& dynFlags, uint32& goFlags);
+    static void SetPerViewerFlagsHook(PerViewerFlagsFn fn) { s_perViewerFlagsHook = fn; }
+    void SetPerViewerFlags(bool on) { m_perViewerFlags = on; }
+
     void AddToWorld() override;
     void RemoveFromWorld() override;
     void CleanupsBeforeDelete(bool finalCleanup = true) override;
@@ -410,6 +415,8 @@ protected:
     ObjectGuid _lootStateUnitGUID;
 
 private:
+    static inline PerViewerFlagsFn s_perViewerFlagsHook = nullptr;
+    bool m_perViewerFlags = false;
     void CheckRitualList();
     void ClearRitualList();
     void RemoveFromOwner();

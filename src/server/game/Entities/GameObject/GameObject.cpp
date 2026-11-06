@@ -2891,7 +2891,8 @@ void GameObject::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* t
     {
         if (_fieldNotifyFlags & flags[index] ||
                 ((updateType == UPDATETYPE_VALUES ? _changesMask.GetBit(index) : m_uint32Values[index]) && (flags[index] & visibleFlag)) ||
-                (index == GAMEOBJECT_FLAGS && forcedFlags))
+                (index == GAMEOBJECT_FLAGS && forcedFlags) ||
+                (m_perViewerFlags && s_perViewerFlagsHook && updateType != UPDATETYPE_VALUES && (index == GAMEOBJECT_FLAGS || index == GAMEOBJECT_DYNAMIC)))
         {
             updateMask.SetBit(index);
 
@@ -2947,6 +2948,11 @@ void GameObject::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* t
                         break;
                 }
 
+                if (m_perViewerFlags && s_perViewerFlagsHook)
+                {
+                    uint32 unusedGoFlags = 0;
+                    s_perViewerFlagsHook(this, target, dynFlags, unusedGoFlags);
+                }
                 fieldBuffer << uint16(dynFlags);
                 fieldBuffer << int16(pathProgress);
             }
@@ -2958,6 +2964,11 @@ void GameObject::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* t
                     goFlags |= GO_FLAG_LOCKED | GO_FLAG_NOT_SELECTABLE;
                 }
 
+                if (m_perViewerFlags && s_perViewerFlagsHook)
+                {
+                    uint16 unusedDyn = 0;
+                    s_perViewerFlagsHook(this, target, unusedDyn, goFlags);
+                }
                 fieldBuffer << goFlags;
             }
             else
