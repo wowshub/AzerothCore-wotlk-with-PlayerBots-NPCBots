@@ -1,0 +1,65 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "cf82ed6a6da0a92e22e5dc4049889276d5dcf64478cb9fa376832f2ff2dc9c56",
+    "repository_sha256": "cf82ed6a6da0a92e22e5dc4049889276d5dcf64478cb9fa376832f2ff2dc9c56",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalentData.h",
+    "source_sha256": "0ac386b3d5a8b45eba424eea96bc0bd5f156dc18904476fa2314b553eefc73ea",
+    "repository_sha256": "0ac386b3d5a8b45eba424eea96bc0bd5f156dc18904476fa2314b553eefc73ea",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "238ee1968a710acfb89b3fea902bd482a2a8b65efcd84bfa2e2793877e79d5af",
+    "repository_sha256": "238ee1968a710acfb89b3fea902bd482a2a8b65efcd84bfa2e2793877e79d5af",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL7A/02_CHARACTERS_WHTAL7A_累计存档与16位扩容.sql",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchhunter\\WHTAL7A\\02_CHARACTERS_WHTAL7A_累计存档与16位扩容.sql",
+    "source_sha256": "29d72bc4221da209673cf43af295579b88ecb294a977e654009bb115b8ecdb4a",
+    "repository_sha256": "29d72bc4221da209673cf43af295579b88ecb294a977e654009bb115b8ecdb4a",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL7A/evidence/lua_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\checks\\lua_validation.json",
+    "source_sha256": "92bd987a95ff73d0adfe60d05cb8c1df4db2d46849b4d18c4174fe700e5926b3",
+    "repository_sha256": "ec065fb85f5677ff7761d8d02ed5d1107dd8e440e3d51302ae3a900d1509adb5",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL7A/evidence/sql_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\checks\\sql_validation.json",
+    "source_sha256": "5ddca5c162ac04eed2432563af426b229a0d3f6e2df8f77a2f564ddccd03090b",
+    "repository_sha256": "b4879414c3a97ab4555c98898d0d9964dc0505d54af127c6dd7f3c94ac97f9ce",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL7A/evidence/data_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\checks\\data_validation.json",
+    "source_sha256": "6536e2e5633a8451d0d89ab30d6a360b023714a62b612b9f2bd429f4e7c53677",
+    "repository_sha256": "638aad8d74b9a9293fcc19eaecf8810143b71b58e2d64f409d1631084d9b6310",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL7A/evidence/native_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\checks\\native_validation.json",
+    "source_sha256": "ed2a1a18b2cb27460d5fc305283f4b3e4e9ba06925c26d7f98b831bfe4ee8fb3",
+    "repository_sha256": "4a4fb96da32ddcf670e4a9d3e4c548bd7fd8d1e2c6e6558d4b3889f63f138101",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL7A/evidence/syntax_results.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL7A_腾跃与夜行步伐\\checks\\syntax_results.json",
+    "source_sha256": "00880e10bfd0aaec58f11b4bf2276e64aad261adbc8339194e8b96daa551439e",
+    "repository_sha256": "56e62aad462ca0cf531e958e25bdfe5e265dc29916fa18b82e74ec7629882a1b",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
