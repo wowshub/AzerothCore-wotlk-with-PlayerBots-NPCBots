@@ -1,0 +1,3 @@
+来源：D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261103\codexfix_20261103_阶段WHTAL6A_巫血药剂
+
+最终用户验收是WHALL6A十通用节点/12AE，并非重新认可本历史阶段曾有的旧UI或所有候选技能。参考组件快照路径data/reborn-checkpoints/WHTALENT/source_snapshot；按Git提交查看此阶段差异，最终使用9A+WHFIX1A。

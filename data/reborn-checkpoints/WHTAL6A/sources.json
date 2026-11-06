@@ -1,0 +1,65 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "4d895dfa30f6126bc13e29c4c4be5d58229fc3d8c068b58374d4e11c4c311280",
+    "repository_sha256": "4d895dfa30f6126bc13e29c4c4be5d58229fc3d8c068b58374d4e11c4c311280",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalentData.h",
+    "source_sha256": "3a8f3cbbfcea85d16b07c2ec6a038ea187b35132308e4dc9c775547696a2e9ee",
+    "repository_sha256": "3a8f3cbbfcea85d16b07c2ec6a038ea187b35132308e4dc9c775547696a2e9ee",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "9f366e443893d38a746c4532710a5453892a50da1e5baa032891eaa5b3710baf",
+    "repository_sha256": "9f366e443893d38a746c4532710a5453892a50da1e5baa032891eaa5b3710baf",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL6A/02_CHARACTERS_WHTAL6A_累计存档升级至6.sql",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\01_覆盖到源代码根目录\\data\\customfixsql\\characters\\witchhunter\\WHTAL6A\\02_CHARACTERS_WHTAL6A_累计存档升级至6.sql",
+    "source_sha256": "16c95d4867843818075abbd7baffda629bf226285b61465af24323de8af46fe2",
+    "repository_sha256": "16c95d4867843818075abbd7baffda629bf226285b61465af24323de8af46fe2",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL6A/evidence/lua_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\checks\\lua_validation.json",
+    "source_sha256": "357e98ce05489e4af1a350f8d44af23879edc1dee48cf4d5062a1313736eb6a5",
+    "repository_sha256": "d602a934899e7c5e514a2db52e7458d0e709aceaaac74b67e82346acbd4650b0",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL6A/evidence/sql_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\checks\\sql_validation.json",
+    "source_sha256": "bdf52c558fd1a3eae183a33c6e899c13bed51bace4ddbdcd19c7a4eccc8cec1d",
+    "repository_sha256": "309161226d1db88d71bbc29d0811c68d598ba2eea0e05e54512492f9e3c16925",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL6A/evidence/data_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\checks\\data_validation.json",
+    "source_sha256": "59654c8c24d34fdfa6e63d1dbc604a7cc1c6a24cb35bf29a62b5f9b74f420ab7",
+    "repository_sha256": "8d10593ed76e223bbc0ba19b4a958e2480f612037b045adf2e1c447a986b3c89",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL6A/evidence/native_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\checks\\native_validation.json",
+    "source_sha256": "f49b52053c5d1352ada49568bf88547cb3f6eb5e8a792c9616aecabd543d4569",
+    "repository_sha256": "c2deb200ede15081ef7d589c71d1e665cc75783378b3197d409ad7ac2c14ac14",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTAL6A/evidence/syntax_results.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261103\\codexfix_20261103_阶段WHTAL6A_巫血药剂\\checks\\syntax_results.json",
+    "source_sha256": "00880e10bfd0aaec58f11b4bf2276e64aad261adbc8339194e8b96daa551439e",
+    "repository_sha256": "56e62aad462ca0cf531e958e25bdfe5e265dc29916fa18b82e74ec7629882a1b",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
