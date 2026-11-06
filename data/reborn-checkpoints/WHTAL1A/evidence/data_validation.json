@@ -1,0 +1,14 @@
+{
+  "checks": 625,
+  "result": "pass",
+  "old_rows_and_string_blocks": "byte-identical prefix, exactly two appended rows per table",
+  "four_spec_node_counts": {
+    "39": 39,
+    "40": 39,
+    "41": 40,
+    "94": 38,
+    "87": 36
+  },
+  "private_icons": 189,
+  "unreadable_archive_count": 1
+}

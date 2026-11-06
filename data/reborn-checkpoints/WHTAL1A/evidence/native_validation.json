@@ -1,0 +1,5 @@
+{
+  "checks": 2054,
+  "result": "pass",
+  "scope": "compiled actual candidate Contract/Sync/Reply functions and budget header with explicit Player/Chat formatter API fixtures; not linked worldserver and not actual combat stats"
+}
