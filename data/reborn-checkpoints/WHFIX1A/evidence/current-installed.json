@@ -1,0 +1,38 @@
+[
+  {
+    "file": "CharacterCreate.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\CharacterCreate.lua",
+    "sha256": "d66f34e1e759890288391bd78a47da3097c0362d9db68445a02032aa12b839cc",
+    "match": true
+  },
+  {
+    "file": "RebornRacePreview.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\RebornRacePreview.lua",
+    "sha256": "5b844c7279e254eb08cd427fc2511112798f3c541426de6f35eff950bdb9a53d",
+    "match": true
+  },
+  {
+    "file": "GlueParent.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1A_WHUI2A_创建状态与猎巫布局修复包\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\GlueParent.lua",
+    "sha256": "232b636a9f361c11d6926cbe69b23091f287a4b96dc17a23fb15f4ed11e4a4e0",
+    "match": true
+  },
+  {
+    "file": "Interface/AddOns/RebornWitchHunterTalents/Panel.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1A_WHUI2A_创建状态与猎巫布局修复包\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornWitchHunterTalents\\Panel.lua",
+    "sha256": "1c8bc5289ee39373916245f3e6017f5e4c1df015bb5432d5cccf2e2d36f4742a",
+    "match_normalized": true
+  },
+  {
+    "file": "modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_025554_阶段WHFIX1A_天赋旧OBJ止回退与巫医式布局\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "sha256": "65de5a003233e66b134d406ec2a3bc5dc37b913d4305d9c8bda4bb2796b83f14",
+    "match_normalized": true
+  },
+  {
+    "file": "modules/mod-reborn-witchhunter/mod-reborn-witchhunter.cmake",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_025554_阶段WHFIX1A_天赋旧OBJ止回退与巫医式布局\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\mod-reborn-witchhunter.cmake",
+    "sha256": "d28511d05b5dbbd957e29b992a4178d32e65e7856a9fb530467c1fe3dd20647a",
+    "match_normalized": true
+  }
+]

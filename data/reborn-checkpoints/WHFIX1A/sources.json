@@ -1,0 +1,23 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_025554_阶段WHFIX1A_天赋旧OBJ止回退与巫医式布局\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\src\\RebornWitchHunterTalents.cpp",
+    "source_sha256": "65de5a003233e66b134d406ec2a3bc5dc37b913d4305d9c8bda4bb2796b83f14",
+    "repository_sha256": "6fe1cac63a83a8ecf19fb338d1ba8af7e5e6d56ae5737dbb8058ff48f49f7ef1",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/mod-reborn-witchhunter.cmake",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_025554_阶段WHFIX1A_天赋旧OBJ止回退与巫医式布局\\01_覆盖到源代码根目录\\modules\\mod-reborn-witchhunter\\mod-reborn-witchhunter.cmake",
+    "source_sha256": "d28511d05b5dbbd957e29b992a4178d32e65e7856a9fb530467c1fe3dd20647a",
+    "repository_sha256": "d28511d05b5dbbd957e29b992a4178d32e65e7856a9fb530467c1fe3dd20647a",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHFIX1A/evidence/current-installed.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\release_ACCEPTED_20261105\\installed_sources.json",
+    "source_sha256": "b9238447b64cc95e7f4de6c30b6608a7d63edc627a4eb105472efbabcc210bb9",
+    "repository_sha256": "e7a4c0d78e23a025aa5abc7c03f782a1da6d6fdd3d3805dfa0c7b3ba02afcd11",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]

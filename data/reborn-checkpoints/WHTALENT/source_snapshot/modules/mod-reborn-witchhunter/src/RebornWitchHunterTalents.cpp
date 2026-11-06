@@ -1,3 +1,7 @@
+// WHFIX1A: fail visibly if the matching CMake configuration was not regenerated.
+#if !defined(REBORN_WH_TALENT_BUILD) || REBORN_WH_TALENT_BUILD != 20261105
+#error WHFIX1A requires CMake Configure/Generate before rebuilding modules and worldserver
+#endif
 // WHTAL9A: two owned common talents. Browsing a spec never activates it.
 #include "ScriptMgr.h"
 #include "Player.h"
@@ -539,6 +543,8 @@ public:
         storageReady = wide && wide->Fetch()[0].Get<uint32>() == 2 && activeBindings && activeBindings->Fetch()[0].Get<uint32>() == 2 && clockBinding && clockBinding->Fetch()[0].Get<uint32>() == 1 && hatredBinding && hatredBinding->Fetch()[0].Get<uint32>() == 1 && q && r && version && bindings && q->Fetch()[0].Get<uint32>() == 3 &&
             r->Fetch()[0].Get<uint32>() == 3 && version->Fetch()[0].Get<uint32>() == 1 &&
             bindings->Fetch()[0].Get<uint32>() == 2;
+        LOG_INFO("module", "WHFIX1A: WHTAL9A loaded build={} storage_ready={} data_contract={}",
+            REBORN_WH_TALENT_BUILD, storageReady, Contract());
         if (!storageReady || !Contract()) LOG_ERROR("module", "WHTAL9A storage/data incomplete; talent purchases disabled");
     }
 };
