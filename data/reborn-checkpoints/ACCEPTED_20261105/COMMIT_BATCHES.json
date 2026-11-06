@@ -1,0 +1,260 @@
+[
+  {
+    "id": "RACENAME1",
+    "commit": "d08d789cd5cd134e3ce02cf1662155cfba20f1f7",
+    "title": "fix(client): preserve native names and supply custom-race NameGen fallback",
+    "paths": [
+      "data/reborn-checkpoints/RACENAME1/ACCEPTANCE.md",
+      "data/reborn-checkpoints/RACENAME1/evidence/race_ui_validation.json",
+      "data/reborn-checkpoints/RACENAME1/source_snapshot/Interface/GlueXML/NameGen_component.lua",
+      "data/reborn-checkpoints/RACENAME1/sources.json"
+    ],
+    "stat": "data/reborn-checkpoints/RACENAME1/ACCEPTANCE.md    | 13 +++++++\n .../RACENAME1/evidence/race_ui_validation.json     | 14 ++++++++\n .../Interface/GlueXML/NameGen_component.lua        | 42 ++++++++++++++++++++++\n data/reborn-checkpoints/RACENAME1/sources.json     |  9 +++++\n 4 files changed, 78 insertions(+)",
+    "scope": "用户明确“随机名字 测试通过”。仅名字输入框的空/重复回退，保留有效原生结果；不是服务器名字可用性或所有种族词库验收。"
+  },
+  {
+    "id": "RACEBG1",
+    "commit": "7ea1c4f447e1a37c8c5eb0b2f330127b5754ca2b",
+    "title": "fix(client): map Sethrak and Ogre selection scenes to existing backgrounds",
+    "paths": [
+      "data/reborn-checkpoints/RACEBG1/ACCEPTANCE.md",
+      "data/reborn-checkpoints/RACEBG1/evidence/input_output.json",
+      "data/reborn-checkpoints/RACEBG1/source_snapshot/Interface/GlueXML/Background_component.lua",
+      "data/reborn-checkpoints/RACEBG1/sources.json"
+    ],
+    "stat": "data/reborn-checkpoints/RACEBG1/ACCEPTANCE.md      |  13 +\n .../RACEBG1/evidence/input_output.json             |  63 +++++\n .../Interface/GlueXML/Background_component.lua     | 293 +++++++++++++++++++++\n data/reborn-checkpoints/RACEBG1/sources.json       |   9 +\n 4 files changed, 378 insertions(+)",
+    "scope": "用户明确“现在界面也没有蓝白方块了”。仅角色选择背景映射通过；世界模型正常是定位证据，不等于所有模型动作已验收。"
+  },
+  {
+    "id": "RACEUI1C",
+    "commit": "e1a8056e7481f4be6b9e9e6d8ad8ada409dc0b93",
+    "title": "fix(client): refresh custom race classes from the real Open entry and remove list highlight",
+    "paths": [
+      "data/reborn-checkpoints/RACEUI1C/ACCEPTANCE.md",
+      "data/reborn-checkpoints/RACEUI1C/DIFF.md",
+      "data/reborn-checkpoints/RACEUI1C/evidence/baseline.json",
+      "data/reborn-checkpoints/RACEUI1C/evidence/validation.json",
+      "data/reborn-checkpoints/RACEUI1C/source_snapshot/Interface/GlueXML/CharacterCreate.lua",
+      "data/reborn-checkpoints/RACEUI1C/source_snapshot/Interface/GlueXML/RebornRacePreview.lua",
+      "data/reborn-checkpoints/RACEUI1C/sources.json"
+    ],
+    "stat": "data/reborn-checkpoints/RACEUI1C/ACCEPTANCE.md     |   13 +\n data/reborn-checkpoints/RACEUI1C/DIFF.md           |   97 +\n .../RACEUI1C/evidence/baseline.json                |   15 +\n .../RACEUI1C/evidence/validation.json              |   19 +\n .../Interface/GlueXML/CharacterCreate.lua          | 6233 ++++++++++++++++++++\n .../Interface/GlueXML/RebornRacePreview.lua        |  202 +\n data/reborn-checkpoints/RACEUI1C/sources.json      |   37 +\n 7 files changed, 6616 insertions(+)",
+    "scope": "用户现确认C正常：两新族仅战士/其它灰、旧种族往返、独立职业禁用及无黄色长框。A/B失败历史保留；C实际Open13组/1500路径离线检查与用户反馈分开记录。"
+  },
+  {
+    "id": "WHTAL1A",
+    "commit": "2994407dd58fa6239f5eb6a282c401c50b78546c",
+    "title": "feat(witchhunter): archive tested talent step 1 - 夜行猎手与瘟疫之地生存者",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL1A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL1A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL1A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL1A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL1A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL1A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL1A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL1A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL1A/01_CHARACTERS_WHTAL1A_天赋存档与回执.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/talents_loader.h"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL1A/ACCEPTANCE.md      |  13 ++\n data/reborn-checkpoints/WHTAL1A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL1A/evidence/data_validation.json          |  14 ++\n .../WHTAL1A/evidence/lua_validation.json           |  34 +++\n .../WHTAL1A/evidence/native_validation.json        |   5 +\n .../WHTAL1A/evidence/sql_validation.json           |  80 +++++++\n .../WHTAL1A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL1A/sources.json       |  72 ++++++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  81 +++++++\n .../01_CHARACTERS_WHTAL1A_天赋存档与回执.sql       | 142 ++++++++++++\n .../src/RebornWitchHunterTalentData.h              |  90 ++++++++\n .../src/RebornWitchHunterTalents.cpp               | 252 +++++++++++++++++++++\n .../mod-reborn-witchhunter/src/talents_loader.h    |   2 +\n 13 files changed, 794 insertions(+)",
+    "scope": "夜行猎手与瘟疫之地生存者属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL2A",
+    "commit": "2071e867ad7e05d4df962ea7c8d892fde3b17013",
+    "title": "feat(witchhunter): archive tested talent step 2 - 战斗训练两级",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL2A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL2A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL2A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL2A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL2A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL2A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL2A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL2A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL2A/01_CHARACTERS_WHTAL2A_保留旧点扩展.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL2A/ACCEPTANCE.md      |  13 +\n data/reborn-checkpoints/WHTAL2A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL2A/evidence/data_validation.json          |  14 +\n .../WHTAL2A/evidence/lua_validation.json           |  29 ++\n .../WHTAL2A/evidence/native_validation.json        |   5 +\n .../WHTAL2A/evidence/sql_validation.json           | 293 +++++++++++++++++++++\n .../WHTAL2A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL2A/sources.json       |  72 +++++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  31 ++-\n .../WHTAL2A/01_CHARACTERS_WHTAL2A_保留旧点扩展.sql | 137 ++++++++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               | 112 ++++++--\n 12 files changed, 683 insertions(+), 36 deletions(-)",
+    "scope": "战斗训练两级属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL3A",
+    "commit": "6e37b6c3a2202a0e95071f905a7b35965e47992a",
+    "title": "feat(witchhunter): archive tested talent step 3 - 满溢憎恨暴击资源",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL3A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL3A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL3A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL3A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL3A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL3A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL3A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL3A/01_CHARACTERS_WHTAL3A_保留旧点扩展.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL3A/ACCEPTANCE.md      |  13 +\n data/reborn-checkpoints/WHTAL3A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL3A/evidence/data_validation.json          | 720 +++++++++++++++++++++\n .../WHTAL3A/evidence/native_validation.json        |   5 +\n .../WHTAL3A/evidence/sql_validation.json           | 577 +++++++++++++++++\n .../WHTAL3A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL3A/sources.json       |  65 ++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  20 +-\n .../WHTAL3A/01_CHARACTERS_WHTAL3A_保留旧点扩展.sql | 141 ++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               |  86 ++-\n 11 files changed, 1604 insertions(+), 36 deletions(-)",
+    "scope": "满溢憎恨暴击资源属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL4A",
+    "commit": "5cd95bf71e3a41c650d04e49216d5d835d669f8c",
+    "title": "feat(witchhunter): archive tested talent step 4 - 邪恶永不眠昼夜联动",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL4A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL4A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL4A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL4A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL4A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL4A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL4A/01_CHARACTERS_WHTAL4A_保留旧点扩展.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL4A/ACCEPTANCE.md      |   13 +\n data/reborn-checkpoints/WHTAL4A/SOURCE_PACKAGE.md  |    3 +\n .../WHTAL4A/evidence/native_validation.json        |    5 +\n .../WHTAL4A/evidence/sql_validation.json           | 1152 ++++++++++++++++++++\n .../WHTAL4A/evidence/syntax_results.json           |    6 +\n data/reborn-checkpoints/WHTAL4A/sources.json       |   58 +\n .../AddOns/RebornWitchHunterTalents/Model.lua      |   20 +-\n .../WHTAL4A/01_CHARACTERS_WHTAL4A_保留旧点扩展.sql |  145 +++\n .../src/RebornWitchHunterTalentData.h              |    4 +-\n .../src/RebornWitchHunterTalents.cpp               |  126 ++-\n 10 files changed, 1496 insertions(+), 36 deletions(-)",
+    "scope": "邪恶永不眠昼夜联动属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL5A",
+    "commit": "21a6f9dd7a3525f18e48e2a34d46d49403659d2e",
+    "title": "feat(witchhunter): archive tested talent step 5 - 夜行猎手二级替换",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL5A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL5A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL5A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL5A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL5A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL5A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL5A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL5A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL5A/02_CHARACTERS_WHTAL5A_累计存档升级至5.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL5A/ACCEPTANCE.md      |  13 +\n data/reborn-checkpoints/WHTAL5A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL5A/evidence/data_validation.json          |  65 +++\n .../WHTAL5A/evidence/lua_validation.json           |  54 +++\n .../WHTAL5A/evidence/native_validation.json        |   5 +\n .../WHTAL5A/evidence/sql_validation.json           | 504 +++++++++++++++++++++\n .../WHTAL5A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL5A/sources.json       |  65 +++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  25 +-\n .../02_CHARACTERS_WHTAL5A_累计存档升级至5.sql      | 172 +++++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               |  75 ++-\n 12 files changed, 939 insertions(+), 52 deletions(-)",
+    "scope": "夜行猎手二级替换属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL6A",
+    "commit": "46aff40193355623755913ec8e9cc75b72d5dada",
+    "title": "feat(witchhunter): archive tested talent step 6 - 巫血药剂主动与互斥",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL6A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL6A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL6A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL6A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL6A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL6A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL6A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL6A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL6A/02_CHARACTERS_WHTAL6A_累计存档升级至6.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL6A/ACCEPTANCE.md      |  13 +\n data/reborn-checkpoints/WHTAL6A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL6A/evidence/data_validation.json          | 450 +++++++++++\n .../WHTAL6A/evidence/lua_validation.json           |  58 ++\n .../WHTAL6A/evidence/native_validation.json        |   5 +\n .../WHTAL6A/evidence/sql_validation.json           | 857 +++++++++++++++++++++\n .../WHTAL6A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL6A/sources.json       |  65 ++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  20 +-\n .../02_CHARACTERS_WHTAL6A_累计存档升级至6.sql      | 176 +++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               |  75 +-\n 12 files changed, 1695 insertions(+), 37 deletions(-)",
+    "scope": "巫血药剂主动与互斥属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL7A",
+    "commit": "af980c11028d793e05af66872b2705576f12f8f9",
+    "title": "feat(witchhunter): archive tested talent step 7 - 腾跃与夜行步伐",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL7A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL7A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL7A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL7A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL7A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL7A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL7A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL7A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL7A/02_CHARACTERS_WHTAL7A_累计存档与16位扩容.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL7A/ACCEPTANCE.md      |  13 +\n data/reborn-checkpoints/WHTAL7A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL7A/evidence/data_validation.json          | 461 +++++++++++++++++++++\n .../WHTAL7A/evidence/lua_validation.json           |  63 +++\n .../WHTAL7A/evidence/native_validation.json        |   5 +\n .../WHTAL7A/evidence/sql_validation.json           |  26 ++\n .../WHTAL7A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL7A/sources.json       |  65 +++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  20 +-\n .../02_CHARACTERS_WHTAL7A_累计存档与16位扩容.sql   | 183 ++++++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               | 142 +++++--\n 12 files changed, 953 insertions(+), 38 deletions(-)",
+    "scope": "腾跃与夜行步伐属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL8A",
+    "commit": "97729980a98779bfd7267931644a812897b50e8d",
+    "title": "feat(witchhunter): archive tested talent step 8 - 谋略家成功腾跃回蓝",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL8A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL8A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL8A/evidence/data_validation.json",
+      "data/reborn-checkpoints/WHTAL8A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL8A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL8A/evidence/sql_validation.json",
+      "data/reborn-checkpoints/WHTAL8A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL8A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL8A/02_CHARACTERS_WHTAL8A_累计存档与9点前置.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL8A/ACCEPTANCE.md      |  13 ++\n data/reborn-checkpoints/WHTAL8A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL8A/evidence/data_validation.json          | 137 +++++++++++++++\n .../WHTAL8A/evidence/lua_validation.json           |  67 ++++++++\n .../WHTAL8A/evidence/native_validation.json        |   5 +\n .../WHTAL8A/evidence/sql_validation.json           |  30 ++++\n .../WHTAL8A/evidence/syntax_results.json           |   6 +\n data/reborn-checkpoints/WHTAL8A/sources.json       |  65 +++++++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  22 +--\n .../02_CHARACTERS_WHTAL8A_累计存档与9点前置.sql    | 187 +++++++++++++++++++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               |  62 ++++---\n 12 files changed, 566 insertions(+), 35 deletions(-)",
+    "scope": "谋略家成功腾跃回蓝属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHTAL9A",
+    "commit": "1098e428b7bfb799d5fcad400af43b0bfe80b802",
+    "title": "feat(witchhunter): archive tested talent step 9 - 黑暗之魂药剂持续时间",
+    "paths": [
+      "data/reborn-checkpoints/WHTAL9A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHTAL9A/SOURCE_PACKAGE.md",
+      "data/reborn-checkpoints/WHTAL9A/evidence/lua_validation.json",
+      "data/reborn-checkpoints/WHTAL9A/evidence/native_validation.json",
+      "data/reborn-checkpoints/WHTAL9A/evidence/syntax_results.json",
+      "data/reborn-checkpoints/WHTAL9A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/data/customfixsql/characters/witchhunter/WHTAL9A/02_CHARACTERS_WHALL6A_天赋累计存档schema9.sql",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalentData.h",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHTAL9A/ACCEPTANCE.md      |  13 ++\n data/reborn-checkpoints/WHTAL9A/SOURCE_PACKAGE.md  |   3 +\n .../WHTAL9A/evidence/lua_validation.json           |  70 ++++++++\n .../WHTAL9A/evidence/native_validation.json        |   5 +\n .../WHTAL9A/evidence/syntax_results.json           |  17 ++\n data/reborn-checkpoints/WHTAL9A/sources.json       |  58 +++++++\n .../AddOns/RebornWitchHunterTalents/Model.lua      |  22 +--\n .../02_CHARACTERS_WHALL6A_天赋累计存档schema9.sql  | 191 +++++++++++++++++++++\n .../src/RebornWitchHunterTalentData.h              |   4 +-\n .../src/RebornWitchHunterTalents.cpp               |  52 +++---\n 10 files changed, 400 insertions(+), 35 deletions(-)",
+    "scope": "黑暗之魂药剂持续时间属于用户确认的最终十通用节点基本使用范围；两级节点共计12AE。"
+  },
+  {
+    "id": "WHFIX1A",
+    "commit": "06e6a80f6af7500c5f7007c6683f33bb85a5b9a0",
+    "title": "fix(build): record matched CMake guard and WHT9 startup version marker",
+    "paths": [
+      "data/reborn-checkpoints/WHFIX1A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHFIX1A/evidence/current-installed.json",
+      "data/reborn-checkpoints/WHFIX1A/sources.json",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/mod-reborn-witchhunter.cmake",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/modules/mod-reborn-witchhunter/src/RebornWitchHunterTalents.cpp"
+    ],
+    "stat": "data/reborn-checkpoints/WHFIX1A/ACCEPTANCE.md      | 13 ++++++++\n .../WHFIX1A/evidence/current-installed.json        | 38 ++++++++++++++++++++++\n data/reborn-checkpoints/WHFIX1A/sources.json       | 23 +++++++++++++\n .../mod-reborn-witchhunter.cmake                   |  3 ++\n .../src/RebornWitchHunterTalents.cpp               |  6 ++++\n 5 files changed, 83 insertions(+)",
+    "scope": "用户从旧WHT1无可购节点到现60级能保存十节点，当前CPP及hook已核对匹配；此项只保留单CPP编译标记/启动诊断，不扩大四专精或数据库故障验收。"
+  },
+  {
+    "id": "WHUI2A",
+    "commit": "f8c9867f775868ef1bcc67ecbd0a3eadf340b655",
+    "title": "fix(ui): record tested Witch Hunter panel and Witch Doctor style layout",
+    "paths": [
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Data.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/OriginalArt.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/OriginalLogic.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Panel.lua",
+      "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/RebornWitchHunterTalents.toc",
+      "data/reborn-checkpoints/WHUI2A/ACCEPTANCE.md",
+      "data/reborn-checkpoints/WHUI2A/evidence/ui_validation.json",
+      "data/reborn-checkpoints/WHUI2A/sources.json"
+    ],
+    "stat": ".../AddOns/RebornWitchHunterTalents/Data.lua       |   7 +\n .../RebornWitchHunterTalents/OriginalArt.lua       |   1 +\n .../RebornWitchHunterTalents/OriginalLogic.lua     |  84 +++++\n .../AddOns/RebornWitchHunterTalents/Panel.lua      | 350 +++++++++++++++++++++\n .../RebornWitchHunterTalents.toc                   |   9 +\n data/reborn-checkpoints/WHUI2A/ACCEPTANCE.md       |  13 +\n .../WHUI2A/evidence/ui_validation.json             |  12 +\n data/reborn-checkpoints/WHUI2A/sources.json        |  51 +++\n 8 files changed, 527 insertions(+)",
+    "scope": "猎巫现用面板及十节点截图按用户整体确认归档；侧栏/底栏/原图保留，未实现多方案、收藏、关联和专精激活仍禁用，不声称这些功能完成。"
+  }
+]

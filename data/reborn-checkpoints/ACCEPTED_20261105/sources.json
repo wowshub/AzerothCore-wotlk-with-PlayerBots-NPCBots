@@ -1,0 +1,30 @@
+[
+  {
+    "path": "data/reborn-knowledge/accepted-20261105/beascendskills/port-wotlk-custom-race-creation-flow/SKILL.md",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\port-wotlk-custom-race-creation-flow\\SKILL.md",
+    "source_sha256": "534fbc9afe9d9d78322e26c851022e181b4ef3ce7f8b16488757e7cbba08bc82",
+    "repository_sha256": "e8d5a3448b9a35ee4888b57f2d2dfe34da156d15e722ef16ebe87d18b7b920d4",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-knowledge/accepted-20261105/beascendskills/port-wotlk-custom-race-creation-flow/references/acceptance-20261105.md",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\port-wotlk-custom-race-creation-flow\\references\\acceptance-20261105.md",
+    "source_sha256": "101a99357dedcc7050258d23b52e168b15c12a625698269abd3cdc3619f00e2e",
+    "repository_sha256": "2bd1bee91715b6838bbc2c66f13fccc27937285f07cec6d7ad092ce0374ae38e",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-knowledge/accepted-20261105/beascendtutor/port-wotlk-custom-race-creation-flow/TUTOR.md",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendtutor\\port-wotlk-custom-race-creation-flow\\TUTOR.md",
+    "source_sha256": "5420e3ce8c38e58856c729b59a08fce6d3a9b21b54a8fd16a777ae1f0e14728b",
+    "repository_sha256": "dbe1c2137e870f432e7396ff1975335c1bd57297872ed8adf8551a01d4c629e6",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/ACCEPTED_20261105/installed_sources.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\release_ACCEPTED_20261105\\installed_sources.json",
+    "source_sha256": "b9238447b64cc95e7f4de6c30b6608a7d63edc627a4eb105472efbabcc210bb9",
+    "repository_sha256": "e7a4c0d78e23a025aa5abc7c03f782a1da6d6fdd3d3805dfa0c7b3ba02afcd11",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]
