@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "actual addon constructs and opens",
+    "original tree browsing survives",
+    "WD sidepanel dimensions, two-line rows, and truthful unsupported actions",
+    "WHT9 protocol and common-node save remain authoritative",
+    "WD right-bottom action geometry and left-bottom wardrobe",
+    "unsupported collection, recommendation and spec binding stay disabled",
+    "repeat opens do not create widgets or alter saved talents"
+  ],
+  "boundary": "actual Lua5.1 addon and protocol with explicit frame/API substitutes; game rendering untested"
+}

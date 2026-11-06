@@ -1,0 +1,51 @@
+[
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Data.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\Data.lua",
+    "source_sha256": "9b00faf87f9d35a5080318aef03e4fbff6696fee196baa3d50b454f61f02c22d",
+    "repository_sha256": "9b00faf87f9d35a5080318aef03e4fbff6696fee196baa3d50b454f61f02c22d",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Model.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\Model.lua",
+    "source_sha256": "052f0c6a23fad5f9fa3661bdac27b0c48d0c25203528fdd97b26a00bd53ee47d",
+    "repository_sha256": "6eb96cb529d86323719472c4b5e71e20104f37f92cb14f263caa919a6c80adba",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/OriginalArt.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\OriginalArt.lua",
+    "source_sha256": "a7ed25e8bff934b42a0d34f31175d6c67bf978b8496b2304b97e086847a97d55",
+    "repository_sha256": "a7ed25e8bff934b42a0d34f31175d6c67bf978b8496b2304b97e086847a97d55",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/OriginalLogic.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\OriginalLogic.lua",
+    "source_sha256": "aead245a835daf5df8282fc4fb835dafeec768cf8452a24af639e2269c20cba2",
+    "repository_sha256": "89c7aa6e0c24fe1ebbd2712c1f9d8a1028cc48ce5e9e9fd3c21502e135fe8ada",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/Panel.lua",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\Panel.lua",
+    "source_sha256": "1c8bc5289ee39373916245f3e6017f5e4c1df015bb5432d5cccf2e2d36f4742a",
+    "repository_sha256": "1c8bc5289ee39373916245f3e6017f5e4c1df015bb5432d5cccf2e2d36f4742a",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHTALENT/source_snapshot/Interface/AddOns/RebornWitchHunterTalents/RebornWitchHunterTalents.toc",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261031beAscend\\Interface\\AddOns\\RebornWitchHunterTalents\\RebornWitchHunterTalents.toc",
+    "source_sha256": "c6b40f70a0a6a7aee8e23a17e21df7e1f955cc01b2896ce345b35e50322a7611",
+    "repository_sha256": "c6b40f70a0a6a7aee8e23a17e21df7e1f955cc01b2896ce345b35e50322a7611",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  },
+  {
+    "path": "data/reborn-checkpoints/WHUI2A/evidence/ui_validation.json",
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1A_WHUI2A_创建状态与猎巫布局修复包\\checks\\wh_ui_validation.json",
+    "source_sha256": "590bab181fb96288fcd64aabd34c6e485c5bac6edb4831cb728707ed68d6cf93",
+    "repository_sha256": "a88ab07de71551d1f00971b835bdf4e2bafaba992686b595db3d7ff31cd0a5e8",
+    "normalization": "UTF8/LF/trailing whitespace only"
+  }
+]

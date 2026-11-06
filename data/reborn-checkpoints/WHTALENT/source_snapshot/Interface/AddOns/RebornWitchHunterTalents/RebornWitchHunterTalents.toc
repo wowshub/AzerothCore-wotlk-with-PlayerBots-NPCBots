@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: Reborn Witch Hunter Talents
+## Version: WHTAL4A
+## SavedVariables: RebornWHTalentUI
+Data.lua
+OriginalArt.lua
+OriginalLogic.lua
+Model.lua
+Panel.lua
