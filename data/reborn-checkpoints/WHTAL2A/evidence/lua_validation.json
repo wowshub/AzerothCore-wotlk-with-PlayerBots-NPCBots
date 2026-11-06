@@ -1,0 +1,29 @@
+{
+  "runtime": "Lua5.1 actual Data/OriginalArt/OriginalLogic/Model/Panel; explicit WoW API fixtures; not game rendering",
+  "groups": 22,
+  "passed": [
+    "original layout 192 nodes with valid source coordinates/shapes",
+    "home uses four exact original CoA card functions, no global API replacement",
+    "protocol schema2 sync rejects wrong GUID and nonce",
+    "four-card browsing sends no activation or allocation commands",
+    "all four preview trees route to original source IDs without granting",
+    "source positions preserved, not alphabetic grid; common node6415 at7,1",
+    "draft ranks have no learned effect, right click cancels one draft rank",
+    "four-point budget supports two old nodes and both Training ranks",
+    "save is server confirmed once; saved points cannot be right-click refunded",
+    "unported nodes cannot send purchases or alter draft",
+    "search dims without rearranging original node positions",
+    "reset confirmation shown above panel, cancel does not charge or clear",
+    "stale quote cannot send reset; matching quote single use",
+    "timeout disables purchases and stale response cannot grant a rank",
+    "English/Chinese refresh original cards and tree, no extra RPC",
+    "drag and resize/scale controls persist with screen bounds",
+    "repeat reopen/query reuses original card/tree widgets",
+    "non-WitchHunter cannot send or open; login resets character state",
+    "actual compiled Reply reaches real model and original-art UI",
+    "UI-only installation accepts actual old WHTAL1A Reply without new server SQL",
+    "old server two-node save/reset protocol remains unchanged",
+    "old protocol cannot smuggle a new Training rank"
+  ],
+  "replaces": "previous 31 grid-UI tests are not the final UI validation"
+}
