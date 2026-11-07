@@ -131,11 +131,20 @@ Housing.Acquire.GoldPercent = 100
 #        Description: Furniture stock per character. 1 = a piece must be in the character's stock to be placed
 #                     (buy it with .home buy, make it with .home craft, or get it by drop / pickup / GM grant);
 #                     placing takes one copy, removing a piece gives the copy back to the plot owner.
-#                     0 = the old behaviour (Housing.Acquire.Mode decides what placing costs). GMs never use stock.
+#                     0 = the old behaviour (Housing.Acquire.Mode decides what placing costs). GMs use stock too unless Housing.Inventory.GmBypass = 1.
 #        Default:     0
 #
 
 Housing.Acquire.Inventory = 0
+
+#
+#    Housing.Inventory.GmBypass
+#        Description: Only matters when Housing.Acquire.Inventory = 1. 1 = a GM can place furniture without having it in stock
+#                     (and removing it gives no copy back). 0 = a GM also uses up stock, so the stock system can be tested with a GM account.
+#        Default:     0
+#
+
+Housing.Inventory.GmBypass = 0
 
 #
 #    Housing.Rarity.PriceMultiplier

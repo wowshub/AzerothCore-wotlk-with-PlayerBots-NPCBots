@@ -598,6 +598,11 @@ namespace
         guidLow = object->GetSpawnId();
         delete object;
 
+        // HOME2B: the size must be known BEFORE the object enters the world: OnGameObjectAddWorld applies it from this cache,
+        // and the 3.3.5 client takes a gameobject's scale from its creation packet (a later update is not shown until relog).
+        if (scale != 1.0f)
+            RememberScale(static_cast<uint32>(guidLow), scale);
+
         object = new GameObject();
         if (!object->LoadGameObjectFromDB(guidLow, map, true))
         {
