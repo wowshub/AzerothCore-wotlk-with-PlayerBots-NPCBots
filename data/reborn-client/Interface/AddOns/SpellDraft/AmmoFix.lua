@@ -64,18 +64,23 @@ UpdateAmmoSlotVisibility = function()
     local ammo, ranged = ResolveSlots()
     if not ammo or not ranged or not PaperDollFrame then return end
     local _, token, classID = UnitClass("player")
-    local custom = classID == 13 or classID == 14
-        or token == "WITCHDOCTOR" or token == "MONK"
-    if not custom and not UnitHasRelicSlot("player") then return end
+    local custom = classID == 13 or classID == 14 or classID == 15
+        or token == "WITCHDOCTOR" or token == "MONK" or token == "WITCHHUNTER"
+    -- HUNTERAMMO1A: ordinary Hunters need the same real-slot refresh in this
+    -- custom PaperDoll UI. Class eligibility must not depend on the race.
+    local hunter = classID == 3 or token == "HUNTER"
+    if not custom and not hunter and not UnitHasRelicSlot("player") then return end
     updating = true
     ammo.shouldBeShown = UsesAmmo(GetInventoryItemID("player", 18))
     if ammo.shouldBeShown then
         ammo:SetFrameStrata(ranged:GetFrameStrata())
         ammo:SetFrameLevel(ranged:GetFrameLevel() + 1)
-        ammo:Show()
         if PaperDollItemSlotButton_Update then
             PaperDollItemSlotButton_Update(ammo)
         end
+        -- Native refreshes or late HD hooks may hide the button. The final
+        -- visible state belongs to the actual equipped weapon decision.
+        ammo:Show()
     else
         ammo:Hide()
     end
@@ -143,4 +148,17 @@ SlashCmdList["REBORNGearCheck"] = function()
             print(name.." "..slot:GetWidth().."x"..slot:GetHeight().." "..tostring(point).." -> "..tostring(relative and relative:GetName()).." "..tostring(x)..","..tostring(y))
         end
     end
+end
+
+-- Read-only state report plus the same queued UI refresh; never equips ammo.
+_G.RebornHunterAmmoBuild = "HUNTERAMMO1A"
+SLASH_REBORNHunterAmmo1 = "/ammocheck"
+SlashCmdList["REBORNHunterAmmo"] = function()
+    local _, token, classID = UnitClass("player")
+    local ammo = ResolveSlots()
+    print("HUNTERAMMO1A class=" .. tostring(classID) .. "/" .. tostring(token)
+        .. " ranged=" .. tostring(GetInventoryItemID("player", 18))
+        .. " ammo=" .. tostring(ammo and ammo:IsShown())
+        .. " should=" .. tostring(ammo and ammo.shouldBeShown))
+    RequestLayout()
 end

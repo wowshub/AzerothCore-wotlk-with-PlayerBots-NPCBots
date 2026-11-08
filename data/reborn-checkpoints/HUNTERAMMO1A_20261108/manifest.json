@@ -1,0 +1,9 @@
+[
+  {
+    "path": "01_覆盖到客户端根目录/Interface/AddOns/SpellDraft/AmmoFix.lua",
+    "baseline_input": "e89d4dcb7766551c03128e999777415b60b2c77b209bdb0960a1390a60d47bb0",
+    "output": "bdcd5959d0032601ecb94ce294aac66351e25b6c80eb9b2b345114cf67838a55",
+    "installed_sha256": "bdcd5959d0032601ecb94ce294aac66351e25b6c80eb9b2b345114cf67838a55",
+    "source": "codexfix_20261108_阶段HUNTERAMMO1A_全种族猎人原生弹药槽显示候选"
+  }
+]

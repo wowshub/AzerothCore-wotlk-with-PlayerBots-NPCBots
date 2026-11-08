@@ -1,0 +1,10 @@
+{
+  "tag": "reborn-hunterammo1a-20261108",
+  "title": "普通猎人原生弹药槽显示修复（已测）",
+  "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-ammo-20261108-resources.zip",
+  "sha256": "87c5dd0f135056d83776940a07963f4bff0efb76233c9e2506713fbb68a8a019",
+  "bytes": 7017,
+  "payload_files": 1,
+  "baseline": "235ca8631cbda99b5b52eb338dc745ef5af88d75",
+  "all_readback": true
+}
