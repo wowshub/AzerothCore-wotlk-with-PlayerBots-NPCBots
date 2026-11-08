@@ -1,0 +1,1 @@
+本轮接续已读：AGENTS/rule/ref；协作说明最近事件、共享哈希台账；release-tested-reborn-features及daily-sync；coordinate及规范v2；appearance/creation-flow/integrate-ui/overlay Skill与同名Tutor；最近全部RACECLASS/RACECOMBO/K1/HELM与Claude男女v8、头盔交接；Claude SETHANIM实时事件与实际模型5项lookup差异；各冻结manifest/ZIP与逐文件指纹。锁定Housing/9未读，不称完整MPQ扫描。

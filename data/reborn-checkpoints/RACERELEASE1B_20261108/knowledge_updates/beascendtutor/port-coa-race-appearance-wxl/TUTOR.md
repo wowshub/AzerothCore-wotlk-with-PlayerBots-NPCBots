@@ -1,0 +1,4 @@
+## 2026-11-08 RACERELEASE1B：外观组件分项验收发布
+用户确认背盾NPC对话不再放大、预览不再双臂闪烁，头盔与最终四族图腾通过。G以Claude v8为底，helper158恒定global0 TRS避免Talk外部.anim错误基址；OVERLAY INTACT、UV2和其它顶点差异均0。只带男性一M2，不带Claude skin/底图/女性。当前后续SETHANIM1A仅5项动画lookup候选，不随本次发布；不可用G反盖后续候选。
+图腾16M2/16skin/64BLP闭包匹配当前YJ；库尔用海潮祭柱原资源，scale0.60，最终name attachment18解决悬字。K1B边界改动单独没有解决名字；原始静态概念/网格图不代表游戏动态结果。六表各自正式基线仅追加16图腾记录，不带暂缓的CLASS1A飞行记录。已测当前累计表不可整表反盖。
+HELMKT1A=27ade201d4f7afe64a85039e8d07fb483cca3ace；PREVIEW1F=235ca8631cbda99b5b52eb338dc745ef5af88d75；SETHSHIELD1G=2d02b70cc30e61c5d112f3c00582f263142240fe；RACETOTEM1C=b847488239a57324ae19295f0a27bd8c961a6fe4。对应tag/附件全哈希见当日release_RACERELEASE1B_20261108/publication.json。未逐项全装备/动画/男女/PvP，不扩大验收。

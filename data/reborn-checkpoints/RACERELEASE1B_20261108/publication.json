@@ -1,0 +1,124 @@
+{
+  "repository": "wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots",
+  "branch": "threemodelcardpro",
+  "base": "7612c6f9e54030b6c59d76419e0554e7f2302b5b",
+  "feature_head": "b847488239a57324ae19295f0a27bd8c961a6fe4",
+  "features": [
+    {
+      "stage": "helmet",
+      "commit": "27ade201d4f7afe64a85039e8d07fb483cca3ace",
+      "tag": "reborn-helmkt1a-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-helmkt1a-20261108",
+      "release_id": 438404470,
+      "draft": false,
+      "asset": {
+        "name": "reborn-helmkt1a-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 8433196,
+        "digest": "sha256:02cf4ec0065a7e37c6d86ca06717a5e0a3c760609098df0659b55bdb643106dd",
+        "sha256": "02cf4ec0065a7e37c6d86ca06717a5e0a3c760609098df0659b55bdb643106dd"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-helmkt1a-20261108-resources.zip"
+    },
+    {
+      "stage": "mode",
+      "commit": "9f0833f7b4d48c7d940ca2f74a572a859632cdf8",
+      "tag": "reborn-modegate1i-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-modegate1i-20261108",
+      "release_id": 438410250,
+      "draft": false,
+      "asset": {
+        "name": "reborn-mode-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 72798,
+        "digest": "sha256:5e085e4ee56480ea2b65836bca5de15b3e145a19c2834e741461b530a3da9f7a",
+        "sha256": "5e085e4ee56480ea2b65836bca5de15b3e145a19c2834e741461b530a3da9f7a"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-mode-20261108-resources.zip"
+    },
+    {
+      "stage": "preview",
+      "commit": "235ca8631cbda99b5b52eb338dc745ef5af88d75",
+      "tag": "reborn-preview1f-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-preview1f-20261108",
+      "release_id": 438415944,
+      "draft": false,
+      "asset": {
+        "name": "reborn-preview-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 85452,
+        "digest": "sha256:09ed385c507bb029c57997555080fc33cecb1c931115f2d666b8aafd2fff0ff7",
+        "sha256": "09ed385c507bb029c57997555080fc33cecb1c931115f2d666b8aafd2fff0ff7"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-preview-20261108-resources.zip"
+    },
+    {
+      "stage": "ammo",
+      "commit": "556095cc33a2dcaa98ca549790dda7da1bb8d6aa",
+      "tag": "reborn-hunterammo1a-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-hunterammo1a-20261108",
+      "release_id": 438417850,
+      "draft": false,
+      "asset": {
+        "name": "reborn-ammo-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 7017,
+        "digest": "sha256:87c5dd0f135056d83776940a07963f4bff0efb76233c9e2506713fbb68a8a019",
+        "sha256": "87c5dd0f135056d83776940a07963f4bff0efb76233c9e2506713fbb68a8a019"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-ammo-20261108-resources.zip"
+    },
+    {
+      "stage": "backshield",
+      "commit": "2d02b70cc30e61c5d112f3c00582f263142240fe",
+      "tag": "reborn-sethrak-shield-g-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-sethrak-shield-g-20261108",
+      "release_id": 438417944,
+      "draft": false,
+      "asset": {
+        "name": "reborn-sethrak-shield-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 4368527,
+        "digest": "sha256:460643ee497261d01b1337bad4b0104932b65d98eabcd9c575d48cac6e0a1148",
+        "sha256": "460643ee497261d01b1337bad4b0104932b65d98eabcd9c575d48cac6e0a1148"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-sethrak-shield-20261108-resources.zip"
+    },
+    {
+      "stage": "hunter",
+      "commit": "e84ef372f4390444d1e18277bafc127f98064659",
+      "tag": "reborn-hunter-ranged1c-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-hunter-ranged1c-20261108",
+      "release_id": 438419849,
+      "draft": false,
+      "asset": {
+        "name": "reborn-hunter-ranged-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 293658,
+        "digest": "sha256:1df2bcc81e6dc323d29d189af16d48ce0de8f64d9611abae5ace9c9975dd84df",
+        "sha256": "1df2bcc81e6dc323d29d189af16d48ce0de8f64d9611abae5ace9c9975dd84df"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-hunter-ranged-20261108-resources.zip"
+    },
+    {
+      "stage": "totem",
+      "commit": "b847488239a57324ae19295f0a27bd8c961a6fe4",
+      "tag": "reborn-racetotem1c-20261108",
+      "url": "https://github.com/wowshub/AzerothCore-wotlk-with-PlayerBots-NPCBots/releases/tag/reborn-racetotem1c-20261108",
+      "release_id": 438420362,
+      "draft": false,
+      "asset": {
+        "name": "reborn-racetotem1c-20261108-resources.zip",
+        "state": "uploaded",
+        "size": 6221015,
+        "digest": "sha256:0dcfc01a5580c67271230b0c21f213d7811ef7b2fa10060fe82dbd715c9554e0",
+        "sha256": "0dcfc01a5580c67271230b0c21f213d7811ef7b2fa10060fe82dbd715c9554e0"
+      },
+      "resource_package": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-racetotem1c-20261108-resources.zip"
+    }
+  ],
+  "creation_base_published": false,
+  "production_sql_executed": false,
+  "runtime_deployed": false,
+  "playerbots_gitlink": "e85232a489d0f54efccc96a8ec33b063e0a4794b"
+}
