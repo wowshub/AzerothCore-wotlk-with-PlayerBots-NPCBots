@@ -20,7 +20,9 @@
 // anywhere inside any plot and ignore the cap.
 
 #include "Chat.h"
+#include "CharacterCache.h"
 #include "CommandScript.h"
+#include "MapMgr.h"
 #include "Config.h"
 #include "DatabaseEnv.h"
 #include "GameObject.h"
@@ -189,6 +191,15 @@ namespace
     {
         QueryResult r = WorldDatabase.Query("SELECT COUNT(*) FROM reborn_housing_object WHERE plot_id = {}", plotId);
         return r ? r->Fetch()[0].Get<uint32>() : 0;
+    }
+
+    // WORLDHIST1A: one history row for a world piece. action: 1 placed, 2 changed (moved/turned/resized), 3 taken back, 4 restored
+    void LogWorld(uint32 actor, uint32 action, ObjectRow const& r)
+    {
+        WorldDatabase.Execute(
+            "INSERT INTO reborn_housing_world_log (`at`, actor, `action`, object_id, catalog_id, gobject_entry, map_id, x, y, z, o, scale, pitch, roll) "
+            "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
+            static_cast<uint32>(time(nullptr)), actor, action, r.id, r.catalogId, r.entry, r.mapId, r.x, r.y, r.z, r.o, r.scale, r.pitch, r.roll);
     }
 
     bool IsGM(Player* player)
@@ -426,6 +437,13 @@ namespace
             "`guid` INT UNSIGNED NOT NULL, `catalog_id` INT UNSIGNED NOT NULL, `count` INT UNSIGNED NOT NULL DEFAULT 0, "
             "PRIMARY KEY (`guid`, `catalog_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+        // WORLDHIST1A: history of the GM world pieces (place / change / take back / restore); `at` unix time, state is the piece AFTER the action
+        WorldDatabase.DirectExecute("CREATE TABLE IF NOT EXISTS `reborn_housing_world_log` ("
+            "`log_id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `at` INT UNSIGNED NOT NULL, `actor` INT UNSIGNED NOT NULL, `action` TINYINT UNSIGNED NOT NULL, "
+            "`object_id` INT UNSIGNED NOT NULL, `catalog_id` INT UNSIGNED NOT NULL, `gobject_entry` INT UNSIGNED NOT NULL, `map_id` INT UNSIGNED NOT NULL, "
+            "`x` FLOAT NOT NULL, `y` FLOAT NOT NULL, `z` FLOAT NOT NULL, `o` FLOAT NOT NULL, `scale` FLOAT NOT NULL DEFAULT 1, `pitch` FLOAT NOT NULL DEFAULT 0, `roll` FLOAT NOT NULL DEFAULT 0, "
+            "PRIMARY KEY (`log_id`), KEY `idx_object` (`object_id`), KEY `idx_at` (`at`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
         auto hasColumn = [](char const* table, char const* column)
         {
             QueryResult r = WorldDatabase.Query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() "
@@ -441,6 +459,17 @@ namespace
         {
             WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_object` ADD COLUMN `stocked` TINYINT UNSIGNED NOT NULL DEFAULT 1");
             LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_object.stocked was missing and has been added.");
+        }
+        // WORLDLIST1A: who placed a piece and when (shown in the GM "world plot" window; old pieces keep 0 = unknown)
+        if (hasTable("reborn_housing_object") && !hasColumn("reborn_housing_object", "placed_by"))
+        {
+            WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_object` ADD COLUMN `placed_by` INT UNSIGNED NOT NULL DEFAULT 0");
+            LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_object.placed_by was missing and has been added.");
+        }
+        if (hasTable("reborn_housing_object") && !hasColumn("reborn_housing_object", "placed_at"))
+        {
+            WorldDatabase.DirectExecute("ALTER TABLE `reborn_housing_object` ADD COLUMN `placed_at` INT UNSIGNED NOT NULL DEFAULT 0");
+            LOG_WARN("server.loading", ">> mod-reborn-housing: column reborn_housing_object.placed_at was missing and has been added.");
         }
         if (hasTable("reborn_housing_recipe"))
         {
@@ -634,6 +663,27 @@ namespace
         return true;
     }
 
+    // WORLDLIST1A: removes a spawn wherever it is: loaded on its map (despawned and deleted) or not loaded (its stored spawn is dropped).
+    // Always succeeds; used for the GM world pieces, which can be far away from the GM.
+    void DespawnAnywhere(uint32 mapId, uint32 spawnId)
+    {
+        if (Map* map = sMapMgr->FindBaseNonInstanceMap(mapId))
+        {
+            auto bounds = map->GetGameObjectBySpawnIdStore().equal_range(spawnId);
+            if (bounds.first != bounds.second)
+            {
+                GameObject* object = bounds.first->second;
+                object->SetRespawnTime(0);
+                object->Delete();
+                object->DeleteFromDB();
+                return;
+            }
+        }
+        sObjectMgr->DeleteGOData(spawnId);
+        WorldDatabase.Execute("DELETE FROM gameobject WHERE guid = {}", spawnId);
+        WorldDatabase.Execute("DELETE FROM game_event_gameobject WHERE guid = {}", spawnId);
+    }
+
     // ------------------------------------------------------------------ HOME1B: plot markers
     float GroundZ(Map* map, uint32 phase, float x, float y, float refZ)
     {
@@ -757,12 +807,23 @@ public:
             { "preview", HandlePlotPreview, SEC_PLAYER,   Console::No },
             { "mylist", HandlePlotMyList, SEC_PLAYER,     Console::No },
             { "buy",    HandlePlotBuy,    SEC_PLAYER,     Console::No },
+            { "resize", HandlePlotResize, SEC_PLAYER,     Console::No },   // PLOTUP1A
             { "rename", HandlePlotRename, SEC_PLAYER,     Console::No }
+        };
+
+        static ChatCommandTable worldCommands =   // WORLDLIST1A
+        {
+            { "tp",        HandleWorldTp,        SEC_GAMEMASTER, Console::No },
+            { "remove",    HandleWorldRemove,    SEC_GAMEMASTER, Console::No },
+            { "removeall", HandleWorldRemoveAll, SEC_GAMEMASTER, Console::No },
+            { "tplog",     HandleWorldTpLog,     SEC_GAMEMASTER, Console::No },
+            { "restore",   HandleWorldRestore,   SEC_GAMEMASTER, Console::No }
         };
 
         static ChatCommandTable homeCommands =
         {
             { "plot",    plotCommands },
+            { "world",   worldCommands },
             { "tp",      HandleTp,      SEC_PLAYER, Console::No },
             { "ui",      HandleUi,      SEC_PLAYER, Console::No },
             { "put",     HandlePut,     SEC_PLAYER, Console::No },
@@ -997,6 +1058,136 @@ public:
         if (shape == 0)
             price = price * sConfigMgr->GetOption<uint32>("Housing.Plot.CirclePercent", 120u) / 100u;
         return static_cast<uint32>(std::min<uint64>(price, 2000000000u));
+    }
+
+    // PLOTUP1A: does a plot (shape ns, radius nr) cover the whole of an older plot (shape os, radius or) with the same centre?
+    // Circle inside circle: nr >= or. Square inside square: nr >= or. Circle inside a square: nr >= or (the square's half side
+    // reaches the circle). Square inside a circle: the corners reach or * sqrt(2). Used so an upgrade can never leave furniture outside.
+    static bool PlotCovers(uint32 ns, float nr, uint32 os, float orad)
+    {
+        if (ns == 0 && os == 1)
+            return nr + 0.01f >= orad * 1.41422f;
+        return nr + 0.01f >= orad;
+    }
+
+    // PLOTUP1A: the price of the tier the old plot sits on (a GM-made plot may be between tiers: the largest tier not above it counts,
+    // none = 0). Never free: the "first plot is free" rule does not apply to an upgrade, so the owned count is passed as 1.
+    static uint32 OldPlotValue(float radius, uint32 shape)
+    {
+        PlotTier const* best = nullptr;
+        std::vector<PlotTier> tiers = PlotTiers();
+        for (PlotTier const& t : tiers)
+            if (t.radius <= radius + 0.5f && (!best || t.radius > best->radius))
+                best = &t;
+        return best ? TierPrice(*best, shape, false, 1) : 0u;
+    }
+
+    // .home plot resize <plot_id> <radius> [shape 0=circle 1=square]   PLOTUP1A: make one of your plots bigger (or change its shape)
+    // keeping its centre. You pay the difference between the new and the old tier price (never a refund). The new area must cover
+    // the old one (no shrinking, so no furniture ends up outside) and must not touch another plot: otherwise NOTHING changes.
+    // You must stand inside the plot so the edge markers can be rebuilt. A GM may use any radius and pays nothing.
+    static bool HandlePlotResize(ChatHandler* handler, uint32 plotId, float radius, Optional<uint32> shapeArg)
+    {
+        Player* player = handler->GetPlayer();
+        if (!player || !Enabled())
+            return false;
+        bool gm = IsGM(player);
+        auto fail = [&](std::string const& text)
+        {
+            handler->SendErrorMessage("{}", text);
+            UiReply(player, false, text);
+            return false;
+        };
+
+        Plot plot;
+        if (!LoadPlotWhere("plot_id = " + std::to_string(plotId), plot) || (plot.ownerGuid != player->GetGUID().GetCounter() && !gm))
+            return fail("没有这块地，或者它不是你的。");
+        if (!gm && (player->IsInCombat() || !player->IsAlive()))
+            return fail("战斗中或死亡时不能升级地块。");
+        if (!InsidePlot(plot, player->GetMapId(), player->GetPositionX(), player->GetPositionY()))
+            return fail("请站在这块地里面再升级（升级后要重立边界标记）。");
+
+        uint32 shape = shapeArg ? *shapeArg : plot.shape;
+        if (shape > 1)
+            return fail("形状只能是 0（圆形）或 1（方形）。");
+        if (!std::isfinite(radius) || radius < 5.0f)
+            return fail("半径太小。");
+        float maxRadius = sConfigMgr->GetOption<float>("Housing.MaxPlotRadius", 80.0f);
+        if (gm && radius > maxRadius)
+            return fail("半径必须在 5 到 " + std::to_string(static_cast<int>(maxRadius)) + " 码之间。");
+
+        PlotTier tierCopy{ 0.0f, 0u };
+        bool haveTier = false;
+        std::vector<PlotTier> tiers = PlotTiers();
+        for (PlotTier const& t : tiers)
+            if (std::fabs(t.radius - radius) < 0.5f)
+            {
+                tierCopy = t;
+                haveTier = true;
+            }
+        if (!gm && !haveTier)
+            return fail("没有这个大小的地块。");
+        if (haveTier && !gm)
+            radius = tierCopy.radius;
+
+        if (shape == plot.shape && std::fabs(radius - plot.radius) < 0.5f)
+            return fail("这块地已经是这个大小和形状了。");
+        if (!PlotCovers(shape, radius, plot.shape, plot.radius))
+            return fail("只能扩大，不能缩小：新地块必须完全包住原来的范围。");
+
+        // touching another plot (not this one) cancels the whole upgrade
+        QueryResult others = WorldDatabase.Query("SELECT plot_id, x, y, radius FROM reborn_housing_plot WHERE map_id = {} AND plot_id <> {}",
+            plot.mapId, plot.id);
+        if (others)
+        {
+            do
+            {
+                Field* f = others->Fetch();
+                uint32 otherId = f[0].Get<uint32>();
+                if (ShapesOverlap(shape, plot.x, plot.y, radius, ShapeOf(otherId), f[1].Get<float>(), f[2].Get<float>(), f[3].Get<float>()))
+                    return fail("不能扩这么大：会和地块 " + std::to_string(otherId) + " 重叠，有冲突的危险。这次升级什么都没改，也没有扣钱。");
+            } while (others->NextRow());
+        }
+
+        uint32 price = 0;
+        if (!gm && haveTier)
+        {
+            uint32 now = TierPrice(tierCopy, shape, false, 1);
+            uint32 was = OldPlotValue(plot.radius, plot.shape);
+            price = now > was ? now - was : 0u;
+        }
+        if (player->GetMoney() < price)
+            return fail("钱不够：升级这块地需要补 " + MoneyText(price) + "。");
+
+        WorldDatabase.DirectExecute("UPDATE reborn_housing_plot SET radius = {}, shape = {} WHERE plot_id = {}", radius, shape, plot.id);
+        ShapeCache()[plot.id] = shape;
+        float oldRadius = plot.radius;
+        uint32 oldShape = plot.shape;
+        plot.radius = radius;
+        plot.shape = shape;
+        if (price)
+            player->ModifyMoney(-static_cast<int32>(price));
+
+        // the edge posts sit on the old border: rebuild them (only if this plot had markers)
+        std::string markerNote;
+        QueryResult mk = WorldDatabase.Query("SELECT COUNT(*) FROM reborn_housing_marker WHERE plot_id = {}", plot.id);
+        if (mk && mk->Fetch()[0].Get<uint32>() > 0)
+        {
+            uint32 removed = 0, missing = 0, flags = 0, posts = 0;
+            std::string err;
+            RemoveMarkers(player, plot.id, removed, missing);
+            if (!SpawnMarkers(player, plot, flags, posts, err))
+                markerNote = "（边界标记没能重立：" + err + "）";
+            else if (missing > 0)
+                markerNote = "（还有 " + std::to_string(missing) + " 个旧标记离得太远没清掉，走到地块中心附近让它们加载后请 GM 用 .home plot mark 重立）";
+        }
+
+        std::string done = "地块 " + std::to_string(plot.id) + " 已升级：" + (oldShape == 1 ? "方形 边长 " : "圆形 半径 ") +
+            std::to_string(static_cast<int>(oldShape == 1 ? oldRadius * 2.0f : oldRadius)) + " 码 → " + (shape == 1 ? "方形 边长 " : "圆形 半径 ") +
+            std::to_string(static_cast<int>(shape == 1 ? radius * 2.0f : radius)) + " 码，补差价 " + MoneyText(price) + "。" + markerNote;
+        handler->SendSysMessage(done);
+        UiReply(player, true, done);
+        return true;
     }
 
     // .home plot buy [radius] [shape 0=circle 1=square] [name...]   buy another plot centred where you stand
@@ -1803,18 +1994,76 @@ public:
             if (!gm)
                 return true;
             QueryResult r = WorldDatabase.Query(
-                "SELECT p.plot_id, p.name, p.map_id, p.radius, (SELECT COUNT(*) FROM reborn_housing_object o WHERE o.plot_id = p.plot_id) "
-                "FROM reborn_housing_plot p WHERE p.owner_guid <> {} ORDER BY p.plot_id LIMIT 150", guid);
+                "SELECT p.plot_id, p.name, p.map_id, p.radius, (SELECT COUNT(*) FROM reborn_housing_object o WHERE o.plot_id = p.plot_id), p.owner_guid "
+                "FROM reborn_housing_plot p ORDER BY (p.owner_guid = {}) DESC, p.plot_id LIMIT 300", guid);   // OTHERSEL1A: your own plots first, then everybody else's
             if (r)
             {
                 do
                 {
                     Field* f = r->Fetch();
-                    out.Line(Acore::StringFormat("Q|{}|{}|{}|{:.0f}|{}", f[0].Get<uint32>(), UiText(f[1].Get<std::string>(), 24),
-                        f[2].Get<uint32>(), f[3].Get<float>(), f[4].Get<uint32>()));
+                    uint32 ownerGuid = f[5].Get<uint32>();
+                    std::string ownerName;
+                    if (ownerGuid)
+                        sCharacterCache->GetCharacterNameByGuid(ObjectGuid::Create<HighGuid::Player>(ownerGuid), ownerName);
+                    out.Line(Acore::StringFormat("Q|{}|{}|{}|{:.0f}|{}|{}|{}", f[0].Get<uint32>(), UiText(f[1].Get<std::string>(), 24),
+                        f[2].Get<uint32>(), f[3].Get<float>(), f[4].Get<uint32>(), ownerGuid == guid ? 1 : 0, UiText(ownerName, 16)));
                 } while (r->NextRow());
             }
             out.Line("X");
+            return true;
+        }
+
+        if (*arg == "world")
+        {
+            // WORLDLIST1A: every GM piece placed outside the plots. M = start (the client clears its list), N|id|catalog|name|map|x|y|z|placer|time|o|scale|pitch|roll, G = end
+            if (!gm)
+                return true;
+            out.Line("M");
+            QueryResult r = WorldDatabase.Query(
+                "SELECT o.object_id, o.catalog_id, IFNULL(c.name_zh, '?'), o.map_id, o.x, o.y, o.z, o.placed_by, o.placed_at, o.o, o.scale, o.pitch, o.roll FROM reborn_housing_object o "
+                "LEFT JOIN reborn_housing_catalog c ON c.catalog_id = o.catalog_id WHERE o.plot_id = 0 ORDER BY o.object_id LIMIT 300");
+            if (r)
+            {
+                do
+                {
+                    Field* f = r->Fetch();
+                    uint32 placer = f[7].Get<uint32>();
+                    std::string placerName;
+                    if (placer)
+                        sCharacterCache->GetCharacterNameByGuid(ObjectGuid::Create<HighGuid::Player>(placer), placerName);
+                    out.Line(Acore::StringFormat("N|{}|{}|{}|{}|{:.1f}|{:.1f}|{:.1f}|{}|{}|{:.4f}|{:.3f}|{:.4f}|{:.4f}", f[0].Get<uint32>(), f[1].Get<uint32>(),
+                        UiText(f[2].Get<std::string>(), 30), f[3].Get<uint32>(), f[4].Get<float>(), f[5].Get<float>(), f[6].Get<float>(),
+                        UiText(placerName, 16), f[8].Get<uint32>(), f[9].Get<float>(), f[10].Get<float>(), f[11].Get<float>(), f[12].Get<float>()));
+                } while (r->NextRow());
+            }
+            out.Line("G");
+            return true;
+        }
+
+        if (*arg == "worldlog")
+        {
+            // WORLDHIST1A: the history of the world pieces, newest first. C = start, L|log|time|actor|action|object|name|map|x|y|z, D = end
+            if (!gm)
+                return true;
+            out.Line("C");
+            QueryResult r = WorldDatabase.Query(
+                "SELECT l.log_id, l.at, l.actor, l.action, l.object_id, IFNULL(c.name_zh, '?'), l.map_id, l.x, l.y, l.z FROM reborn_housing_world_log l "
+                "LEFT JOIN reborn_housing_catalog c ON c.catalog_id = l.catalog_id ORDER BY l.log_id DESC LIMIT 300");
+            if (r)
+            {
+                do
+                {
+                    Field* f = r->Fetch();
+                    uint32 actor = f[2].Get<uint32>();
+                    std::string actorName;
+                    if (actor)
+                        sCharacterCache->GetCharacterNameByGuid(ObjectGuid::Create<HighGuid::Player>(actor), actorName);
+                    out.Line(Acore::StringFormat("L|{}|{}|{}|{}|{}|{}|{}|{:.1f}|{:.1f}|{:.1f}", f[0].Get<uint32>(), f[1].Get<uint32>(), UiText(actorName, 16),
+                        f[3].Get<uint32>(), f[4].Get<uint32>(), UiText(f[5].Get<std::string>(), 30), f[6].Get<uint32>(),
+                        f[7].Get<float>(), f[8].Get<float>(), f[9].Get<float>()));
+                } while (r->NextRow());
+            }
+            out.Line("D");
             return true;
         }
 
@@ -1950,10 +2199,7 @@ public:
                 } while (pr->NextRow());
             }
             if (!found)
-            {
-                handler->SendErrorMessage("你不在任何地块里。");
-                return false;
-            }
+                plot = WorldPlot(player->GetMapId());   // WORLDPUT1A: outside every plot a GM places a world piece
         }
         else if (!FindMyPlot(player->GetGUID().GetCounter(), player->GetMapId(), player->GetPositionX(), player->GetPositionY(), plot))
         {
@@ -2014,10 +2260,19 @@ public:
             AcquireCharge(player, catalogId);
 
         WorldDatabase.Execute(
-            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, stocked) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
-            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, (IsGM(player) && InventoryOn() && GmBypass()) ? 0 : 1);
+            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, stocked, placed_by, placed_at) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
+            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, (IsGM(player) && InventoryOn() && GmBypass()) ? 0 : 1,
+            placerGuid, static_cast<uint32>(time(nullptr)));
         QueryResult idr = WorldDatabase.Query("SELECT MAX(object_id) FROM reborn_housing_object WHERE spawn_id = {}", spawnId);
-        handler->PSendSysMessage("已摆放 {}（物件编号 {}）。", CatalogName(catalogId), idr ? idr->Fetch()[0].Get<uint32>() : 0);
+        uint32 newId = idr ? idr->Fetch()[0].Get<uint32>() : 0;
+        if (plot.id == 0)
+        {
+            ObjectRow lr;
+            lr.id = newId; lr.catalogId = catalogId; lr.entry = entry; lr.spawnId = spawnId; lr.mapId = player->GetMapId();
+            lr.x = x; lr.y = y; lr.z = z; lr.o = o;
+            LogWorld(placerGuid, 1, lr);
+        }
+        handler->PSendSysMessage("已摆放 {}（物件编号 {}）。", CatalogName(catalogId), newId);
         return true;
     }
 
@@ -2054,12 +2309,27 @@ public:
     // Common checks for move / rotate / remove: the row exists and its plot belongs to the player (or a GM).
     static bool OwnedObject(ChatHandler* handler, Player* player, uint32 objectId, ObjectRow& row, Plot& plot)
     {
-        if (!LoadObject(objectId, row) || !LoadPlotWhere("plot_id = " + std::to_string(row.plotId), plot))
+        if (!LoadObject(objectId, row))
         {
             handler->SendErrorMessage("没有这件物件。");
             return false;
         }
-        if (plot.ownerGuid != player->GetGUID().GetCounter() && !IsGM(player))
+        if (row.plotId == 0)
+        {
+            // WORLDPUT1A: a world piece (outside every plot): GM only
+            if (!IsGM(player))
+            {
+                handler->SendErrorMessage("这件物件不是你的。");
+                return false;
+            }
+            plot = WorldPlot(row.mapId);
+        }
+        else if (!LoadPlotWhere("plot_id = " + std::to_string(row.plotId), plot))
+        {
+            handler->SendErrorMessage("没有这件物件。");
+            return false;
+        }
+        if (row.plotId != 0 && plot.ownerGuid != player->GetGUID().GetCounter() && !IsGM(player))
         {
             handler->SendErrorMessage("这件物件不是你的。");
             return false;
@@ -2093,10 +2363,12 @@ public:
             QueryResult sr = WorldDatabase.Query("SELECT stocked, catalog_id FROM reborn_housing_object WHERE object_id = {}", objectId);
             if (sr && sr->Fetch()[0].Get<uint32>() != 0)
             {
-                StockAdd(plot.ownerGuid, sr->Fetch()[1].Get<uint32>(), 1);
+                StockAdd(plot.id == 0 ? player->GetGUID().GetCounter() : plot.ownerGuid, sr->Fetch()[1].Get<uint32>(), 1);
                 returned = true;
             }
         }
+        if (row.plotId == 0)
+            LogWorld(player->GetGUID().GetCounter(), 3, row);
         WorldDatabase.Execute("DELETE FROM reborn_housing_object WHERE object_id = {}", objectId);
         handler->PSendSysMessage(returned ? "已收起物件 {}，家具回到了库存。" : "已收起物件 {}。", objectId);
         return true;
@@ -2124,6 +2396,12 @@ public:
         }
         WorldDatabase.Execute("UPDATE reborn_housing_object SET spawn_id = {}, x = {}, y = {}, z = {}, o = {}, scale = {}, pitch = {}, roll = {} WHERE object_id = {}",
             newSpawn, x, y, z, o, scale, pitch, roll, row.id);
+        if (row.plotId == 0)
+        {
+            ObjectRow nr = row;
+            nr.spawnId = newSpawn; nr.x = x; nr.y = y; nr.z = z; nr.o = o; nr.scale = scale; nr.pitch = pitch; nr.roll = roll;
+            LogWorld(player->GetGUID().GetCounter(), 2, nr);
+        }
         return true;
     }
 
@@ -2134,6 +2412,18 @@ public:
     {
         UiBatch out(player);
         out.Line(Acore::StringFormat("U|{}|{}", ok ? "ok" : "err", UiText(text, 150)));
+    }
+
+    // WORLDPUT1A: GM pieces placed outside every plot belong to the "world plot" (plot_id 0): no owner, no size limit, GM only
+    static Plot WorldPlot(uint32 mapId)
+    {
+        Plot p;
+        p.id = 0;
+        p.ownerGuid = 0;
+        p.mapId = mapId;
+        p.radius = 1.0e9f;
+        p.shape = 1;
+        return p;
     }
 
     // the plot (yours, or any for a GM) that contains the point; false when there is none
@@ -2180,12 +2470,26 @@ public:
         if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(z) || !std::isfinite(o))
             return fail("坐标不对。");
         if (!PlotAtPoint(player, player->GetMapId(), x, y, plot))
-            return fail("那个位置不在你的地块里。");
-        if (std::fabs(z - plot.z) > 150.0f)
-            return fail("高度离地块太远。");
+        {
+            if (!IsGM(player))
+                return fail("那个位置不在你的地块里。");
+            plot = WorldPlot(player->GetMapId());   // WORLDPUT1A: a GM may place anywhere
+        }
         float dx = x - player->GetPositionX(), dy = y - player->GetPositionY();
-        if (std::sqrt(dx * dx + dy * dy) > plot.radius + 100.0f)
-            return fail("你离那个位置太远，请走近一些。");
+        if (plot.id == 0)
+        {
+            if (std::fabs(z - player->GetPositionZ()) > 300.0f)
+                return fail("高度离你太远。");
+            if (std::sqrt(dx * dx + dy * dy) > 300.0f)
+                return fail("你离那个位置太远，请走近一些。");
+        }
+        else
+        {
+            if (std::fabs(z - plot.z) > 150.0f)
+                return fail("高度离地块太远。");
+            if (std::sqrt(dx * dx + dy * dy) > plot.radius + 100.0f)
+                return fail("你离那个位置太远，请走近一些。");
+        }
         o = std::fmod(o, 2.0f * kPi);
         if (o < 0.0f)
             o += 2.0f * kPi;
@@ -2262,10 +2566,18 @@ public:
         else if (!InventoryOn())
             paid = AcquireCharge(player, catalogId);
         WorldDatabase.Execute(
-            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll, stocked) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
-            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, scale, pitch, roll, (IsGM(player) && InventoryOn() && GmBypass()) ? 0 : 1);
+            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll, stocked, placed_by, placed_at) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",
+            plot.id, catalogId, entry, spawnId, player->GetMapId(), x, y, z, o, scale, pitch, roll, (IsGM(player) && InventoryOn() && GmBypass()) ? 0 : 1,
+            placerGuid, static_cast<uint32>(time(nullptr)));
         QueryResult idr = WorldDatabase.Query("SELECT MAX(object_id) FROM reborn_housing_object WHERE spawn_id = {}", spawnId);
         uint32 objectId = idr ? idr->Fetch()[0].Get<uint32>() : 0;
+        if (plot.id == 0)
+        {
+            ObjectRow lr;
+            lr.id = objectId; lr.catalogId = catalogId; lr.entry = entry; lr.spawnId = spawnId; lr.mapId = player->GetMapId();
+            lr.x = x; lr.y = y; lr.z = z; lr.o = o; lr.scale = scale; lr.pitch = pitch; lr.roll = roll;
+            LogWorld(placerGuid, 1, lr);
+        }
         handler->PSendSysMessage("已摆放 {}（物件编号 {}，大小 {:.2f}）{}", CatalogName(catalogId), objectId, scale, paid.empty() ? "。" : "，" + paid + "。");
         UiReply(player, true, Acore::StringFormat("{}|{}", objectId, CatalogName(catalogId)));
         return true;
@@ -2289,7 +2601,7 @@ public:
         float scale = 1.0f;
         if (!CheckPutArgs(handler, player, x, y, z, o, scaleArg, scale, plot))
             return false;
-        if (plot.id != row.plotId)
+        if (row.plotId != 0 && plot.id != row.plotId)
         {
             handler->SendErrorMessage("不能把物件挪到另一块地。");
             UiReply(player, false, "不能把物件挪到另一块地。");
@@ -2326,6 +2638,175 @@ public:
         if (!Respawn(handler, player, row, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), row.o, -1.0f, row.pitch, row.roll))
             return false;
         handler->PSendSysMessage("物件 {} 已挪到你脚下。", objectId);
+        return true;
+    }
+
+    // ------------------------------------------------------------------ WORLDLIST1A: GM world pieces (plot_id 0)
+    // Takes one world piece out (works for pieces far away that are not loaded). The piece goes back to the remover's stock when it was taken from stock.
+    static void RemoveWorldPiece(Player* gm, uint32 objectId, uint32 spawnId, uint32 mapId, uint32 catalogId)
+    {
+        ObjectRow lr;
+        if (LoadObject(objectId, lr))
+            LogWorld(gm->GetGUID().GetCounter(), 3, lr);
+        DespawnAnywhere(mapId, spawnId);
+        if (InventoryOn())
+        {
+            QueryResult sr = WorldDatabase.Query("SELECT stocked FROM reborn_housing_object WHERE object_id = {}", objectId);
+            if (sr && sr->Fetch()[0].Get<uint32>() != 0)
+                StockAdd(gm->GetGUID().GetCounter(), catalogId, 1);
+        }
+        WorldDatabase.Execute("DELETE FROM reborn_housing_object WHERE object_id = {}", objectId);
+    }
+
+    // .home world tp <object_id>    (GM) teleports you next to a world piece
+    static bool HandleWorldTp(ChatHandler* handler, uint32 objectId)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled() || !IsGM(gm))
+            return false;
+        ObjectRow row;
+        if (!LoadObject(objectId, row) || row.plotId != 0)
+        {
+            handler->SendErrorMessage("没有这件世界摆件。");
+            return false;
+        }
+        if (gm->IsInCombat() || !gm->IsAlive())
+        {
+            handler->SendErrorMessage("现在不能传送（战斗中或已死亡）。");
+            return false;
+        }
+        gm->TeleportTo(row.mapId, row.x, row.y, row.z + 1.0f, row.o);
+        handler->PSendSysMessage("已传送到世界摆件 {}。", objectId);
+        return true;
+    }
+
+    // .home world remove <object_id>    (GM) takes one world piece away, wherever it is
+    static bool HandleWorldRemove(ChatHandler* handler, uint32 objectId)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled() || !IsGM(gm))
+            return false;
+        ObjectRow row;
+        if (!LoadObject(objectId, row) || row.plotId != 0)
+        {
+            handler->SendErrorMessage("没有这件世界摆件。");
+            return false;
+        }
+        RemoveWorldPiece(gm, row.id, row.spawnId, row.mapId, row.catalogId);
+        handler->PSendSysMessage("已收回世界摆件 {}。", objectId);
+        return true;
+    }
+
+    // .home world removeall    (GM) takes EVERY world piece away. Plots and the pieces on them are not touched.
+    static bool HandleWorldRemoveAll(ChatHandler* handler)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled() || !IsGM(gm))
+            return false;
+        QueryResult r = WorldDatabase.Query("SELECT object_id, spawn_id, map_id, catalog_id FROM reborn_housing_object WHERE plot_id = 0");
+        uint32 count = 0;
+        if (r)
+        {
+            do
+            {
+                Field* f = r->Fetch();
+                RemoveWorldPiece(gm, f[0].Get<uint32>(), f[1].Get<uint32>(), f[2].Get<uint32>(), f[3].Get<uint32>());
+                ++count;
+            } while (r->NextRow());
+        }
+        handler->PSendSysMessage("已收回全部世界摆件，共 {} 件。", count);
+        return true;
+    }
+
+    // WORLDHIST1A: the state stored in one history row
+    static bool LoadWorldLog(uint32 logId, ObjectRow& st)
+    {
+        QueryResult r = WorldDatabase.Query(
+            "SELECT object_id, catalog_id, gobject_entry, map_id, x, y, z, o, scale, pitch, roll FROM reborn_housing_world_log WHERE log_id = {}", logId);
+        if (!r)
+            return false;
+        Field* f = r->Fetch();
+        st.id = f[0].Get<uint32>(); st.catalogId = f[1].Get<uint32>(); st.entry = f[2].Get<uint32>(); st.mapId = f[3].Get<uint32>();
+        st.x = f[4].Get<float>(); st.y = f[5].Get<float>(); st.z = f[6].Get<float>(); st.o = f[7].Get<float>();
+        st.scale = f[8].Get<float>(); st.pitch = f[9].Get<float>(); st.roll = f[10].Get<float>();
+        st.plotId = 0;
+        return true;
+    }
+
+    // .home world tplog <log_id>    (GM) teleports you to where the piece stood in that history entry
+    static bool HandleWorldTpLog(ChatHandler* handler, uint32 logId)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled() || !IsGM(gm))
+            return false;
+        ObjectRow st;
+        if (!LoadWorldLog(logId, st))
+        {
+            handler->SendErrorMessage("没有这条历史记录。");
+            return false;
+        }
+        if (gm->IsInCombat() || !gm->IsAlive())
+        {
+            handler->SendErrorMessage("现在不能传送（战斗中或已死亡）。");
+            return false;
+        }
+        gm->TeleportTo(st.mapId, st.x, st.y, st.z + 1.0f, st.o);
+        handler->PSendSysMessage("已传送到历史记录 {} 的位置。", logId);
+        return true;
+    }
+
+    // .home world restore <log_id>    (GM) brings that piece back to the state in the history entry: still there = moved/turned/resized back;
+    // taken back = put out again (it gets a new object number). You must stand on the same map, within 300 yards (use the history Teleport first).
+    static bool HandleWorldRestore(ChatHandler* handler, uint32 logId)
+    {
+        Player* gm = handler->GetPlayer();
+        if (!gm || !Enabled() || !IsGM(gm))
+            return false;
+        ObjectRow st;
+        if (!LoadWorldLog(logId, st))
+        {
+            handler->SendErrorMessage("没有这条历史记录。");
+            return false;
+        }
+        if (gm->GetMapId() != st.mapId)
+        {
+            handler->SendErrorMessage("请先站到那个位置所在的地图（历史窗口里点\"传送\"）。");
+            return false;
+        }
+        float dx = st.x - gm->GetPositionX(), dy = st.y - gm->GetPositionY();
+        if (std::sqrt(dx * dx + dy * dy) > 300.0f)
+        {
+            handler->SendErrorMessage("离那个位置太远（超过 300 码）。请先在历史窗口里点\"传送\"过去。");
+            return false;
+        }
+        uint32 actor = gm->GetGUID().GetCounter();
+        uint32 newSpawn = 0;
+        if (!SpawnDecor(gm, st.entry, st.x, st.y, st.z, st.o, newSpawn, st.scale, st.pitch, st.roll))
+        {
+            handler->SendErrorMessage("恢复失败（模板 {} 不可用）。", st.entry);
+            return false;
+        }
+        ObjectRow cur;
+        if (LoadObject(st.id, cur) && cur.plotId == 0)
+        {
+            // still there: replace it by the stored state
+            DespawnAnywhere(cur.mapId, cur.spawnId);
+            WorldDatabase.Execute("UPDATE reborn_housing_object SET spawn_id = {}, map_id = {}, x = {}, y = {}, z = {}, o = {}, scale = {}, pitch = {}, roll = {} WHERE object_id = {}",
+                newSpawn, st.mapId, st.x, st.y, st.z, st.o, st.scale, st.pitch, st.roll, st.id);
+            st.spawnId = newSpawn;
+            LogWorld(actor, 4, st);
+            handler->PSendSysMessage("物件 {} 已恢复到历史记录 {} 的状态。", st.id, logId);
+            return true;
+        }
+        // gone: put it out again as a new row
+        WorldDatabase.Execute(
+            "INSERT INTO reborn_housing_object (plot_id, catalog_id, gobject_entry, spawn_id, map_id, x, y, z, o, scale, pitch, roll, stocked, placed_by, placed_at) VALUES (0, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, 0, {}, {})",
+            st.catalogId, st.entry, newSpawn, st.mapId, st.x, st.y, st.z, st.o, st.scale, st.pitch, st.roll, actor, static_cast<uint32>(time(nullptr)));
+        QueryResult idr = WorldDatabase.Query("SELECT MAX(object_id) FROM reborn_housing_object WHERE spawn_id = {}", newSpawn);
+        st.id = idr ? idr->Fetch()[0].Get<uint32>() : 0;
+        st.spawnId = newSpawn;
+        LogWorld(actor, 4, st);
+        handler->PSendSysMessage("已把它重新摆出来，新的物件编号是 {}。", st.id);
         return true;
     }
 
