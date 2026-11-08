@@ -1,0 +1,14 @@
+{
+  "chr39_only_prefix_field": true,
+  "all_other_race_fields_masks_and_strings_preserved": true,
+  "native_KT_families": 927,
+  "fallback_original_bytes": true,
+  "wardrobe_full_source_syntax": true,
+  "four_custom_player_idle_once_in_180_frames": true,
+  "classic_and_weapon_preview_paths_preserved": true,
+  "asynchronous_model_wait": true,
+  "model_reload_rearms_idle": true,
+  "large_transmog_preview": true,
+  "test_native_UI_and_model_rendering_are_doubles": true,
+  "game_test": false
+}

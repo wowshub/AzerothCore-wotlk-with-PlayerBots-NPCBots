@@ -1,0 +1,9 @@
+[
+  {
+    "path": "01_覆盖到客户端根目录/Interface/AddOns/ezCollections/Interface/AddOns/Blizzard_Collections/Blizzard_Wardrobe.lua",
+    "baseline_input": "caa84dfe922ba2f25a0a8f3ba0111eedf13ca1485561c46ae4f194b5260fcc99",
+    "output": "1bfaa478ccc0da6a0eac7ad67f34520969f89d4b8939a9305495ef94cf13a948",
+    "installed_sha256": "1bfaa478ccc0da6a0eac7ad67f34520969f89d4b8939a9305495ef94cf13a948",
+    "source": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  }
+]
