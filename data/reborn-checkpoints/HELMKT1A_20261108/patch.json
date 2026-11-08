@@ -1,0 +1,93 @@
+{
+  "input_sha256": "80e7ae1f66e38b2e586b818d80ee01a2d1b302470250f54b4df34d75f33a133e",
+  "output_sha256": "6cb910b7f38b2e5769478483879252b312250797e711a48e523a1a99ddc32392",
+  "attachment": 11,
+  "bone": 175,
+  "attachment_record": 11,
+  "position_offset": 4823505,
+  "old_position": [
+    0.10000000149011612,
+    0.0,
+    2.6004700660705566
+  ],
+  "new_position": [
+    -0.06632218509912491,
+    0.0,
+    2.390470266342163
+  ],
+  "model_space_delta": [
+    -0.16632218658924103,
+    0.0,
+    -0.20999979972839355
+  ],
+  "helper_rotation_raw": [
+    32767,
+    -31963,
+    32767,
+    -11
+  ],
+  "helper_rotation_unchanged": true,
+  "only_attachment_position_12byte_range_changed": true,
+  "all_geometry_UVs_bones_animations_skin_unchanged": true,
+  "reference_helmets": [
+    {
+      "helmet": "Helm_Robe_RaidShaman_C_01_KTM.m2",
+      "source_sha256": "d65fb06adaa8b5cb7aaa997d246e9ccb0f7720744f406ac688be40beb2c867af",
+      "before_bounds": [
+        [
+          -0.14557992677126075,
+          -0.2512594759464264,
+          2.394137179728977
+        ],
+        [
+          0.3951610358996088,
+          0.23599359393119812,
+          3.113836737748273
+        ]
+      ],
+      "after_bounds": [
+        [
+          -0.32201656066178713,
+          -0.2512594759464264,
+          2.1925606437453165
+        ],
+        [
+          0.21872440200908239,
+          0.23599359393119812,
+          2.9122602017646124
+        ]
+      ]
+    },
+    {
+      "helmet": "Helm_Mail_Northrend_D_01_KTM.m2",
+      "source_sha256": "cebab77faec14b1f8540dc563c8e71eb3d8780cf55e250aa3626ade85b40ab64",
+      "before_bounds": [
+        [
+          -0.1250533173182923,
+          -0.18364445865154266,
+          2.4193668638649375
+        ],
+        [
+          0.33985477837386663,
+          0.1836443841457367,
+          2.850827045288585
+        ]
+      ],
+      "after_bounds": [
+        [
+          -0.30148995120881866,
+          -0.18364445865154266,
+          2.2177903278812767
+        ],
+        [
+          0.16341814448334024,
+          0.1836443841457367,
+          2.6492505093049243
+        ]
+      ]
+    }
+  ],
+  "native_runtime_transform_not_instrumented": true,
+  "bind_space_comparison_not_game_test": true,
+  "game_test": false
+}

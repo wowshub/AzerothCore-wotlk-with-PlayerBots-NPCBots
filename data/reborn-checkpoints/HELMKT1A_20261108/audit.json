@@ -1,0 +1,445 @@
+{
+  "race39_prefix": "KT",
+  "ChrRaces_source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+  "ChrRaces_sha256": "6d98cdd06d9a3ba28be88fc6b2f1bc67d6b7cf54c294d1caf015d94855154c89",
+  "skipped": [
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-Housing.MPQ",
+      "error": "PermissionError"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-9.MPQ",
+      "error": "PermissionError"
+    }
+  ],
+  "models": [
+    {
+      "path": "Character/RebornUIR3A/KulTiran/Male/kultiranmale.m2",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+      "sha256": "80e7ae1f66e38b2e586b818d80ee01a2d1b302470250f54b4df34d75f33a133e",
+      "bytes": 10071234,
+      "vertex_count": 15170,
+      "vertex_bounds": [
+        [
+          -0.6293020248413086,
+          -1.0517185926437378,
+          -0.006386816501617432
+        ],
+        [
+          0.4090193808078766,
+          1.0517183542251587,
+          2.653883457183838
+        ]
+      ],
+      "render_box": [
+        -4.547064781188965,
+        -2.9451441764831543,
+        -3.7020435333251953,
+        3.484192371368408,
+        2.5716733932495117,
+        5.7310099601745605,
+        6.520261764526367
+      ],
+      "lods": 1,
+      "attachments": [
+        {
+          "id": 0,
+          "bone": 179,
+          "position": [
+            -0.0022756829857826233,
+            0.036799609661102295,
+            -0.008001942187547684
+          ],
+          "pivot": [
+            -0.0022756815887987614,
+            0.036799609661102295,
+            -0.008001942187547684
+          ]
+        },
+        {
+          "id": 1,
+          "bone": 184,
+          "position": [
+            -1.4901161415892261e-09,
+            0.0,
+            0.0
+          ],
+          "pivot": [
+            -0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 2,
+          "bone": 185,
+          "position": [
+            -1.4901161415892261e-09,
+            0.0,
+            0.0
+          ],
+          "pivot": [
+            -0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 5,
+          "bone": 167,
+          "position": [
+            -0.16473351418972015,
+            -0.31229734420776367,
+            2.2366185188293457
+          ],
+          "pivot": [
+            -0.16473351418972015,
+            -0.31229734420776367,
+            2.2366185188293457
+          ]
+        },
+        {
+          "id": 6,
+          "bone": 168,
+          "position": [
+            -0.16473087668418884,
+            0.31229671835899353,
+            2.23661732673645
+          ],
+          "pivot": [
+            -0.16473087668418884,
+            0.31229671835899353,
+            2.23661732673645
+          ]
+        },
+        {
+          "id": 11,
+          "bone": 175,
+          "position": [
+            0.10000000149011612,
+            0.0,
+            2.6004700660705566
+          ],
+          "pivot": [
+            -0.06632218509912491,
+            0.0,
+            2.390470266342163
+          ]
+        },
+        {
+          "id": 12,
+          "bone": 156,
+          "position": [
+            -0.2564244866371155,
+            4.261461981514003e-06,
+            2.0523736476898193
+          ],
+          "pivot": [
+            -0.2564244866371155,
+            4.261461981514003e-06,
+            2.0523736476898193
+          ]
+        },
+        {
+          "id": 28,
+          "bone": 161,
+          "position": [
+            -0.43626827001571655,
+            4.3485601963766385e-06,
+            1.88984215259552
+          ],
+          "pivot": [
+            -0.43626827001571655,
+            4.3485601963766385e-06,
+            1.88984215259552
+          ]
+        }
+      ],
+      "skins": [
+        {
+          "path": "Character/RebornUIR3A/KulTiran/Male/kultiranmale00.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+          "sha256": "b788ba7d110f67a6e87c2d4b5b0fa0e8f6ce204446c52933c98f9024d716e89e",
+          "bytes": 225456
+        }
+      ]
+    },
+    {
+      "path": "Character/Human/Male/HumanMale.m2",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+      "sha256": "957575ba2ff08f412cbf41096af8be3c223ec880ab1887e7b0b01d2253117594",
+      "bytes": 1593104,
+      "vertex_count": 5265,
+      "vertex_bounds": [
+        [
+          -0.49025699496269226,
+          -0.6228092312812805,
+          -0.0006938276928849518
+        ],
+        [
+          0.2857080101966858,
+          0.6228087544441223,
+          2.127354860305786
+        ]
+      ],
+      "render_box": [
+        -1.7265138626098633,
+        -1.5910698175430298,
+        -0.8647708892822266,
+        2.217881679534912,
+        1.3313530683517456,
+        3.389225959777832,
+        3.278381586074829
+      ],
+      "lods": 3,
+      "attachments": [
+        {
+          "id": 0,
+          "bone": 123,
+          "position": [
+            -0.07385239005088806,
+            0.5750762224197388,
+            1.0361831188201904
+          ],
+          "pivot": [
+            -0.07385239005088806,
+            0.5750762224197388,
+            1.0361831188201904
+          ]
+        },
+        {
+          "id": 1,
+          "bone": 125,
+          "position": [
+            -0.05852954462170601,
+            -0.4757474362850189,
+            0.9041114449501038
+          ],
+          "pivot": [
+            -0.05852954462170601,
+            -0.4757474362850189,
+            0.9041114449501038
+          ]
+        },
+        {
+          "id": 2,
+          "bone": 126,
+          "position": [
+            -0.05854155123233795,
+            0.4709544777870178,
+            0.9041128158569336
+          ],
+          "pivot": [
+            -0.05854155123233795,
+            0.4709544777870178,
+            0.9041128158569336
+          ]
+        },
+        {
+          "id": 5,
+          "bone": 111,
+          "position": [
+            -0.06015529856085777,
+            -0.2109166979789734,
+            1.7253611087799072
+          ],
+          "pivot": [
+            -0.06015529856085777,
+            -0.2109166979789734,
+            1.7253611087799072
+          ]
+        },
+        {
+          "id": 6,
+          "bone": 112,
+          "position": [
+            -0.050858475267887115,
+            0.21091653406620026,
+            1.7253577709197998
+          ],
+          "pivot": [
+            -0.050858475267887115,
+            0.21091653406620026,
+            1.7253577709197998
+          ]
+        },
+        {
+          "id": 11,
+          "bone": 115,
+          "position": [
+            0.052005160599946976,
+            0.0,
+            2.0271542072296143
+          ],
+          "pivot": [
+            0.052005160599946976,
+            0.0,
+            2.0271542072296143
+          ]
+        },
+        {
+          "id": 12,
+          "bone": 97,
+          "position": [
+            -0.22230249643325806,
+            0.0,
+            1.6164966821670532
+          ],
+          "pivot": [
+            -0.22230249643325806,
+            0.0,
+            1.6164966821670532
+          ]
+        },
+        {
+          "id": 28,
+          "bone": 102,
+          "position": [
+            -0.30747607350349426,
+            0.0,
+            1.3856755495071411
+          ],
+          "pivot": [
+            -0.30747607350349426,
+            0.0,
+            1.3856755495071411
+          ]
+        }
+      ],
+      "skins": [
+        {
+          "path": "Character/Human/Male/HumanMale00.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+          "sha256": "0d10c00aa9fa829201c79f37aae71bc26d8bdae97a634c4ffbcc924f94d4eb2d",
+          "bytes": 74272
+        },
+        {
+          "path": "Character/Human/Male/HumanMale01.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+          "sha256": "fcf3fad8757b1f2a8653443112fbd19c38af8735a4224be000cfed91720a3cf2",
+          "bytes": 74272
+        },
+        {
+          "path": "Character/Human/Male/HumanMale02.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+          "sha256": "930bba42919c502f44867ffdbf78708c8265cfc8097b42288a43bfdac6552e01",
+          "bytes": 74432
+        }
+      ]
+    },
+    {
+      "path": "Item/ObjectComponents/Head/Helm_Robe_RaidShaman_C_01_HuM.m2",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+      "sha256": "ccab3ed4922b304e78261deccda227af651bc9caa8957e4b2767e452e99c0ad2",
+      "bytes": 20048,
+      "vertex_count": 337,
+      "vertex_bounds": [
+        [
+          -0.1693749874830246,
+          -0.15692247450351715,
+          -0.336570143699646
+        ],
+        [
+          0.13926738500595093,
+          0.1464955359697342,
+          0.21831989288330078
+        ]
+      ],
+      "render_box": [
+        -0.1693749874830246,
+        -0.15692247450351715,
+        -0.336570143699646,
+        0.1697216033935547,
+        0.1464955359697342,
+        0.21831989288330078,
+        0.3169006109237671
+      ],
+      "lods": 1,
+      "attachments": [],
+      "skins": [
+        {
+          "path": "Item/ObjectComponents/Head/Helm_Robe_RaidShaman_C_01_HuM00.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+          "sha256": "51c7684e50f817c50e25619a7bb1e2a02c7a238ca5f909de19678841dc4be178",
+          "bytes": 4880
+        }
+      ]
+    },
+    {
+      "path": "Item/ObjectComponents/Head/Helm_Robe_RaidShaman_C_01_KTM.m2",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-6.mpq",
+      "sha256": "d65fb06adaa8b5cb7aaa997d246e9ccb0f7720744f406ac688be40beb2c867af",
+      "bytes": 19835,
+      "vertex_count": 337,
+      "vertex_bounds": [
+        [
+          -0.25335121154785156,
+          -0.2512594759464264,
+          -0.18366919457912445
+        ],
+        [
+          0.2944238483905792,
+          0.23599359393119812,
+          0.524455189704895
+        ]
+      ],
+      "render_box": [
+        -0.25335121154785156,
+        -0.2512594759464264,
+        -0.18366919457912445,
+        0.2944238483905792,
+        0.23599359393119812,
+        0.524455189704895,
+        0.4488919973373413
+      ],
+      "lods": 1,
+      "attachments": [],
+      "skins": [
+        {
+          "path": "Item/ObjectComponents/Head/Helm_Robe_RaidShaman_C_01_KTM00.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-6.mpq",
+          "sha256": "67ad17b087d5835e9f70db18502f04bbf37dcc9b8000157e3c324b0c3694ac43",
+          "bytes": 4912
+        }
+      ]
+    },
+    {
+      "path": "Item/ObjectComponents/Head/Helm_Mail_Northrend_D_01_KTM.m2",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-6.mpq",
+      "sha256": "cebab77faec14b1f8540dc563c8e71eb3d8780cf55e250aa3626ade85b40ab64",
+      "bytes": 26817,
+      "vertex_count": 512,
+      "vertex_bounds": [
+        [
+          -0.2358972281217575,
+          -0.18364445865154266,
+          -0.16699033975601196
+        ],
+        [
+          0.22857666015625,
+          0.1836443841457367,
+          0.25880712270736694
+        ]
+      ],
+      "render_box": [
+        -0.2358972281217575,
+        -0.20620666444301605,
+        -0.18166430294513702,
+        0.22857666015625,
+        0.20498058199882507,
+        0.2638408839702606,
+        0.3253955543041229
+      ],
+      "lods": 1,
+      "attachments": [],
+      "skins": [
+        {
+          "path": "Item/ObjectComponents/Head/Helm_Mail_Northrend_D_01_KTM00.skin",
+          "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-6.mpq",
+          "sha256": "10cccf9d27ea2e5bf93486d94c4a58403470ab9ca423a97a0277b88f1062dc82",
+          "bytes": 6216
+        }
+      ]
+    }
+  ]
+}

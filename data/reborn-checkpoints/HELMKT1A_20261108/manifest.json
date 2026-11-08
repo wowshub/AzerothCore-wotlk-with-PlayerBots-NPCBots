@@ -1,0 +1,422 @@
+[
+  {
+    "path": "01_导入Patch-YB.mpq/DBFilesClient/ChrRaces.dbc",
+    "baseline_input": "dfce7d88f29f0c2079dc453fddba308563da94b117a7acf770721239dfd91f74",
+    "output": "6d98cdd06d9a3ba28be88fc6b2f1bc67d6b7cf54c294d1caf015d94855154c89",
+    "installed_sha256": "6d98cdd06d9a3ba28be88fc6b2f1bc67d6b7cf54c294d1caf015d94855154c89",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/RWHG1_Hat_KTF.m2",
+    "baseline_input": null,
+    "output": "f4a1990ed72d822c06c3e6774d0a2c88690da8e4a87a5f61ea398f10ea05753b",
+    "installed_sha256": "f4a1990ed72d822c06c3e6774d0a2c88690da8e4a87a5f61ea398f10ea05753b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/RWHG1_Hat_KTF00.skin",
+    "baseline_input": null,
+    "output": "bf39d17871a604dd8aad7ade8916aa7beba8ebe2f3990df4cbaa27ee76aa3c66",
+    "installed_sha256": "bf39d17871a604dd8aad7ade8916aa7beba8ebe2f3990df4cbaa27ee76aa3c66",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/WD2A_Helm_Mask_A_01Troll_KTF.m2",
+    "baseline_input": null,
+    "output": "b66537427aaf6998d3fd9a911ac609bc276d0652b71caa7d743cc102fb3554d6",
+    "installed_sha256": "b66537427aaf6998d3fd9a911ac609bc276d0652b71caa7d743cc102fb3554d6",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/WD2A_Helm_Mask_A_01Troll_KTF00.skin",
+    "baseline_input": null,
+    "output": "ad04378a1925bfb2486bf29ba5831a3d821ee2d4670d250be2bd5661bcbbdd50",
+    "installed_sha256": "ad04378a1925bfb2486bf29ba5831a3d821ee2d4670d250be2bd5661bcbbdd50",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_darkirondwarf_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "1bcd2e661e56a3f90c608f8b037ff8b1fd681f4c173a646d2dae0fedf4ee0518",
+    "installed_sha256": "1bcd2e661e56a3f90c608f8b037ff8b1fd681f4c173a646d2dae0fedf4ee0518",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_darkirondwarf_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "362249ffef7070f50c24c5bf0ecd8e6b80ffa7408966fb017a117e134db640f0",
+    "installed_sha256": "362249ffef7070f50c24c5bf0ecd8e6b80ffa7408966fb017a117e134db640f0",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_highmountaintauren_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "043134f2848dc69a56251592e9126aaa2b75bb85cbffbd40b897af08f24d0c27",
+    "installed_sha256": "043134f2848dc69a56251592e9126aaa2b75bb85cbffbd40b897af08f24d0c27",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_highmountaintauren_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "2b543c74574cc206adb81af9678bd775a27fb7c30bef94e9adea13bd7681915c",
+    "installed_sha256": "2b543c74574cc206adb81af9678bd775a27fb7c30bef94e9adea13bd7681915c",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_lightforgeddraenei_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "5c2ecd0660cd349e6d39f04e427c38b0c3e5c8931967fc5bfe6200c21c74634f",
+    "installed_sha256": "5c2ecd0660cd349e6d39f04e427c38b0c3e5c8931967fc5bfe6200c21c74634f",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_lightforgeddraenei_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "e0b3af0adff5a36c42e3a2d11ec4c3ed587170a2468a946e471c4129dda5c6fa",
+    "installed_sha256": "e0b3af0adff5a36c42e3a2d11ec4c3ed587170a2468a946e471c4129dda5c6fa",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_nightborne_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "4faf683a2664336f30e236293a0987da359eb305a975f83be7cf7e0d0e0e3b7d",
+    "installed_sha256": "4faf683a2664336f30e236293a0987da359eb305a975f83be7cf7e0d0e0e3b7d",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_nightborne_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "5475b9219593334c2cf69b04afca8d8a850d73e35e69c923b13e3f862d029042",
+    "installed_sha256": "5475b9219593334c2cf69b04afca8d8a850d73e35e69c923b13e3f862d029042",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_voidelf_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "b6cd28cb6de40b8e43b82af2ebd4982feedce4db9b30043e0b56351b49cdbc2a",
+    "installed_sha256": "b6cd28cb6de40b8e43b82af2ebd4982feedce4db9b30043e0b56351b49cdbc2a",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_voidelf_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "56d2381820414637ddbd9afe61bd86ad2bb3f71ee47945f26d7e575fde882f3b",
+    "installed_sha256": "56d2381820414637ddbd9afe61bd86ad2bb3f71ee47945f26d7e575fde882f3b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_worgen_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "c3c90c0a5558e425cc6094eaf7b949cdd09f11e9acb005d1f816629f753f822f",
+    "installed_sha256": "c3c90c0a5558e425cc6094eaf7b949cdd09f11e9acb005d1f816629f753f822f",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_worgen_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "e45c20e9587128c02bc039d7b19c6e83ab0756b30895258873019cfdedc2ad29",
+    "installed_sha256": "e45c20e9587128c02bc039d7b19c6e83ab0756b30895258873019cfdedc2ad29",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_zandalaritroll_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "195c95981637a3ed785e58a683ec4ee64e7b2b1d92fb59ec153f8c31f61c10ab",
+    "installed_sha256": "195c95981637a3ed785e58a683ec4ee64e7b2b1d92fb59ec153f8c31f61c10ab",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_zandalaritroll_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "7b50a408c0cce809f4d6f47ccdc2ed57c5d672d9260fc7781437a4931978cefc",
+    "installed_sha256": "7b50a408c0cce809f4d6f47ccdc2ed57c5d672d9260fc7781437a4931978cefc",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_b_01_KTF.m2",
+    "baseline_input": null,
+    "output": "ed28939c1505e31085302229210496dfafe954cf03ffa8ee07a5415412659f56",
+    "installed_sha256": "ed28939c1505e31085302229210496dfafe954cf03ffa8ee07a5415412659f56",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_b_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "7bb5646903d93261242f0384492051bd329a693fa376b8ff6b05018be0e8b72b",
+    "installed_sha256": "7bb5646903d93261242f0384492051bd329a693fa376b8ff6b05018be0e8b72b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_d_01_KTF.m2",
+    "baseline_input": null,
+    "output": "0ed6e3d5b1aa28404b503f2c7da94c811e00a23c92135bec4c19fd99b8521d65",
+    "installed_sha256": "0ed6e3d5b1aa28404b503f2c7da94c811e00a23c92135bec4c19fd99b8521d65",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_d_01_KTF00.skin",
+    "baseline_input": null,
+    "output": "b93d2f5ffe9addf1a3d38003be9bd09340dfc0a6367f09d009fe7db0951ac386",
+    "installed_sha256": "b93d2f5ffe9addf1a3d38003be9bd09340dfc0a6367f09d009fe7db0951ac386",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_testalign_KTF.m2",
+    "baseline_input": null,
+    "output": "ce3513ccfa626a70d03d3f36434b0d0eb2e0d4728e8adcec1c82bc2e1115bb3f",
+    "installed_sha256": "ce3513ccfa626a70d03d3f36434b0d0eb2e0d4728e8adcec1c82bc2e1115bb3f",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_testalign_KTF00.skin",
+    "baseline_input": null,
+    "output": "6a379f95267b23291031e3ea0ec6083cd42b4fb6b1e56166d168c07f17a2bc0d",
+    "installed_sha256": "6a379f95267b23291031e3ea0ec6083cd42b4fb6b1e56166d168c07f17a2bc0d",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/Helm_Plate_PVPDeathknight_B_02_KTM.m2",
+    "baseline_input": null,
+    "output": "4a791bf50abc1a05a6ae4fcdce0639b9435009ed4b4f9e6a6c1f2c7b5cd6c00b",
+    "installed_sha256": "4a791bf50abc1a05a6ae4fcdce0639b9435009ed4b4f9e6a6c1f2c7b5cd6c00b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/Helm_Plate_PVPDeathknight_B_02_KTM00.skin",
+    "baseline_input": null,
+    "output": "5f63a95edd12e1c64552d72b6b5c388c6eb87e24984969258f1f9ec2a20e4060",
+    "installed_sha256": "5f63a95edd12e1c64552d72b6b5c388c6eb87e24984969258f1f9ec2a20e4060",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/RWHG1_Hat_KTM.m2",
+    "baseline_input": null,
+    "output": "5e4d8e015ef5bf8d649b5244f16b3523ae2197e6cdc186dbc46da55543682d14",
+    "installed_sha256": "5e4d8e015ef5bf8d649b5244f16b3523ae2197e6cdc186dbc46da55543682d14",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/RWHG1_Hat_KTM00.skin",
+    "baseline_input": null,
+    "output": "d23222b7429fd40637f0f43109831c2dd755c9dc72f15982e47d41b8c7d05cce",
+    "installed_sha256": "d23222b7429fd40637f0f43109831c2dd755c9dc72f15982e47d41b8c7d05cce",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/WD2A_Helm_Mask_A_01Troll_KTM.m2",
+    "baseline_input": null,
+    "output": "ce13a49a47cc38ab02ba304574b2e5cb5a11bec8b4e9f275af660a1d7cca6b9b",
+    "installed_sha256": "ce13a49a47cc38ab02ba304574b2e5cb5a11bec8b4e9f275af660a1d7cca6b9b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/WD2A_Helm_Mask_A_01Troll_KTM00.skin",
+    "baseline_input": null,
+    "output": "d012846337b890ae53d7d7f15755f17ad95a98606ae0db9b12b3acea5ced0191",
+    "installed_sha256": "d012846337b890ae53d7d7f15755f17ad95a98606ae0db9b12b3acea5ced0191",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_darkirondwarf_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "0fc43438bd649d94591010ade15aebc2e640d9d1dd950104d7a9822b0ce6d2f1",
+    "installed_sha256": "0fc43438bd649d94591010ade15aebc2e640d9d1dd950104d7a9822b0ce6d2f1",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_darkirondwarf_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "a7145a30f8624a49fe2dc18e667d265d700c260625b83e3ebc5269043a0a1bd7",
+    "installed_sha256": "a7145a30f8624a49fe2dc18e667d265d700c260625b83e3ebc5269043a0a1bd7",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_highmountaintauren_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "2bebce513bc403261208d5b972a422583c652c0dab9b122dcfde2861bea2d777",
+    "installed_sha256": "2bebce513bc403261208d5b972a422583c652c0dab9b122dcfde2861bea2d777",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_highmountaintauren_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "d1a4fc605a8846fc7073a51db3f3742372d39e902967d8a77c0fa0857599fb95",
+    "installed_sha256": "d1a4fc605a8846fc7073a51db3f3742372d39e902967d8a77c0fa0857599fb95",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_lightforgeddraenei_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "832fce5de7df80942ac31a6e006cd2d4bf25f3bb5d5287c59dd330acf7981738",
+    "installed_sha256": "832fce5de7df80942ac31a6e006cd2d4bf25f3bb5d5287c59dd330acf7981738",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_lightforgeddraenei_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "04abdf9eef6a238024bf10d9168c9ec5797c569712a00bc589334e31c8e04324",
+    "installed_sha256": "04abdf9eef6a238024bf10d9168c9ec5797c569712a00bc589334e31c8e04324",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_nightborne_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "5711be3ab0e85f506e8dd4ae3cb9856edbb3327b83871aeaed45613af0d2e099",
+    "installed_sha256": "5711be3ab0e85f506e8dd4ae3cb9856edbb3327b83871aeaed45613af0d2e099",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_nightborne_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "afe6c0487a4d840a9b13be15498a29e9e2169ba7b4a684e4bcda189bba70fe2d",
+    "installed_sha256": "afe6c0487a4d840a9b13be15498a29e9e2169ba7b4a684e4bcda189bba70fe2d",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_voidelf_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "c3335ebae9d859ebfc12507a8e9be4ac813c7139ed3ab41e4ce10c9fbe85ee58",
+    "installed_sha256": "c3335ebae9d859ebfc12507a8e9be4ac813c7139ed3ab41e4ce10c9fbe85ee58",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_voidelf_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "d44920e68662086d3f792cb92e8012e436a213bd8022d52a89048c0bd51292d0",
+    "installed_sha256": "d44920e68662086d3f792cb92e8012e436a213bd8022d52a89048c0bd51292d0",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_worgen_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "83511c1bef899f6cb46b328f0da049c6b95bf0e90dcfd99775bece11fc0ca61a",
+    "installed_sha256": "83511c1bef899f6cb46b328f0da049c6b95bf0e90dcfd99775bece11fc0ca61a",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_worgen_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "cc5408b5c2db5bb9d63647694050e4364eed16fe1832a474ba60ab494e5ac517",
+    "installed_sha256": "cc5408b5c2db5bb9d63647694050e4364eed16fe1832a474ba60ab494e5ac517",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_zandalaritroll_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "56ac882511cd5844308a9a2a57c22cb8da42b426e275c8113b962dde7cece4fb",
+    "installed_sha256": "56ac882511cd5844308a9a2a57c22cb8da42b426e275c8113b962dde7cece4fb",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_armor_zandalaritroll_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "00300788eef78ef89291723d05e9657ff2413494a82f86b5391b82f8572be810",
+    "installed_sha256": "00300788eef78ef89291723d05e9657ff2413494a82f86b5391b82f8572be810",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_cloth_pandabow_a_02_KTM.m2",
+    "baseline_input": null,
+    "output": "31d9da1650e5b70ecc505dc9f57b4129f431562c03b626fe41bf0f6d26915676",
+    "installed_sha256": "31d9da1650e5b70ecc505dc9f57b4129f431562c03b626fe41bf0f6d26915676",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_cloth_pandabow_a_02_KTM00.skin",
+    "baseline_input": null,
+    "output": "22af0086f8da6e4d3075029f767b30ee5b49767403c0ed2a3001b90e8d85052b",
+    "installed_sha256": "22af0086f8da6e4d3075029f767b30ee5b49767403c0ed2a3001b90e8d85052b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_leather_warfrontsforsakenmythic_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "bf92460d24e50abb6fc900f7d8dfe2228abb10752f3af6f2b0ed312e0feb54db",
+    "installed_sha256": "bf92460d24e50abb6fc900f7d8dfe2228abb10752f3af6f2b0ed312e0feb54db",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_leather_warfrontsforsakenmythic_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "cbd669e115a5bd1bc96ca37a182fe05b7128eaf7a6d28287a4805bc70e9adfa8",
+    "installed_sha256": "cbd669e115a5bd1bc96ca37a182fe05b7128eaf7a6d28287a4805bc70e9adfa8",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_misc_pinkpartyhat_a_01_KTM.m2",
+    "baseline_input": null,
+    "output": "257d4550edf1e0a8de6c3502483a1e5b2c2d163cd97f2c5027e251529759d6d2",
+    "installed_sha256": "257d4550edf1e0a8de6c3502483a1e5b2c2d163cd97f2c5027e251529759d6d2",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_misc_pinkpartyhat_a_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "f3a1ded17aad142c7075739f88e5db051634727250c40ff2366b9bdb66ac2887",
+    "installed_sha256": "f3a1ded17aad142c7075739f88e5db051634727250c40ff2366b9bdb66ac2887",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontsforsakenmythic_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "bbf9abe3789c154c2be2c9923af04a4505e1cb85be5cb287452377fa68585696",
+    "installed_sha256": "bbf9abe3789c154c2be2c9923af04a4505e1cb85be5cb287452377fa68585696",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontsforsakenmythic_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "56b516ccb2e95c02655de5e66cf78d452de3c530e2ff2d6bee53cef0e20ebd17",
+    "installed_sha256": "56b516ccb2e95c02655de5e66cf78d452de3c530e2ff2d6bee53cef0e20ebd17",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_b_01_KTM.m2",
+    "baseline_input": null,
+    "output": "dcd89d9e396940d41bf00c2fee5e2fedaa0f343e63581a4e2801b0134b65b282",
+    "installed_sha256": "dcd89d9e396940d41bf00c2fee5e2fedaa0f343e63581a4e2801b0134b65b282",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_b_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "5a98b0edc34d607e99197f1d3cfb5d02dff29002e23c6702b426e8b14f545c6b",
+    "installed_sha256": "5a98b0edc34d607e99197f1d3cfb5d02dff29002e23c6702b426e8b14f545c6b",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_d_01_KTM.m2",
+    "baseline_input": null,
+    "output": "599a2208b43ea95f1aeaab3de01f3316ae5ead450d73e8259b8cd55e0979bfe6",
+    "installed_sha256": "599a2208b43ea95f1aeaab3de01f3316ae5ead450d73e8259b8cd55e0979bfe6",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_plate_warfrontshorde_d_01_KTM00.skin",
+    "baseline_input": null,
+    "output": "b4df8fafdda9fd210c5732f53d3426b15d1d0a11904ae3594f11cd0aa3093831",
+    "installed_sha256": "b4df8fafdda9fd210c5732f53d3426b15d1d0a11904ae3594f11cd0aa3093831",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_testalign_KTM.m2",
+    "baseline_input": null,
+    "output": "03a8475bf8f3f80f36e8b4dae476c2e253b660e26c98c3e1a93927eb42caea4a",
+    "installed_sha256": "03a8475bf8f3f80f36e8b4dae476c2e253b660e26c98c3e1a93927eb42caea4a",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_导入Patch-YJ.mpq/Item/ObjectComponents/Head/helm_testalign_KTM00.skin",
+    "baseline_input": null,
+    "output": "9e1de35dae5c06a0fd009d5bbfba3a93e82ccc7a9131e8065f8eef7990b6db40",
+    "installed_sha256": "9e1de35dae5c06a0fd009d5bbfba3a93e82ccc7a9131e8065f8eef7990b6db40",
+    "source_package": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "01_导入Patch-YB.mpq/Character/RebornUIR3A/KulTiran/Male/kultiranmale.m2",
+    "baseline_input": "80e7ae1f66e38b2e586b818d80ee01a2d1b302470250f54b4df34d75f33a133e",
+    "output": "6cb910b7f38b2e5769478483879252b312250797e711a48e523a1a99ddc32392",
+    "installed_sha256": "6cb910b7f38b2e5769478483879252b312250797e711a48e523a1a99ddc32392",
+    "source_package": "codexfix_20261108_阶段HELMKT1A_库尔男性头盔挂点基准修正候选"
+  }
+]

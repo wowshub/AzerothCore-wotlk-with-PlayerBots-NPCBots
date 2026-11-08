@@ -1,0 +1,21 @@
+{
+  "only_attachment11_position_changed": true,
+  "head_bone_chain": [
+    175,
+    38,
+    32,
+    22,
+    13,
+    4,
+    2,
+    1,
+    0
+  ],
+  "vertices_bones_animations_and_lookups_bit_identical": true,
+  "all_other_attachments_preserved": true,
+  "negative_geometry_corruption_rejected": true,
+  "current_male_and_KT_prefix_verified": true,
+  "display57061_model": "Helm_Robe_RaidShaman_C_01.mdx",
+  "ItemDisplayInfo_SHA256": "d17c26b586ee92b4f5bc50ffa715ebb13011f658b62370d9c90ac4879618d1a5",
+  "game_test": false
+}
