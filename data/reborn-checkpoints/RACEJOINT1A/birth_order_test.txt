@@ -1,0 +1,1 @@
+PASS actual Player.cpp alias initialization block: 4 race/world combinations, 400 repeated calls, no parent racials or other language, old 36/37 unaffected; mask static_asserts

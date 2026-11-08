@@ -1,0 +1,27 @@
+{
+  "review_date": "2026-11-06—07",
+  "read_paths": [
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\AGENTS.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\ruleAscend.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\refResourceAscend.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\规范_交叉并行开发.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\协作说明_并行开发.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\skillsAscend.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\coordinate-ai-team-parallel-development\\SKILL.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\audit-and-port-upstream-features\\SKILL.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\port-wotlk-custom-race-creation-flow\\SKILL.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendskills\\port-coa-race-appearance-wxl\\SKILL.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\交接_Claude_RACENEXT3B_核心与客户端前置回交_给Codex_20261105.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\交接_Claude_RACENEXT3A_联合测试包分工与前置清单_20261105.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\交接_Claude_NEUTRAL1_疑难问题_请Codex评审_20261106.md",
+    "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\claudefix_20261106_阶段NEUTRAL1_V56_小补丁_点原版种族图标时新种族图标熄灭_Claude\\V56说明_先看这个.txt"
+  ],
+  "scope": "User explicitly appointed Codex joint integrator; frozen Claude originals remain unchanged. No DLL or fourteen-race changes.",
+  "daily_source_head": "43eb71d68c8a856e4e28c2f465b14fc682aaa9cc",
+  "fetched_wowshub_head": "c3f09de9adebee4dce889ad440a08facbab8fa92",
+  "playerbots_head": "b0f62dc67aebd5899e4eb44adb73449b0ffc9481",
+  "not_verified": [
+    "Current production character/reference occupancy; run delivered read-only query first",
+    "Actual server startup, game and runtime DLL handling above race 32"
+  ]
+}

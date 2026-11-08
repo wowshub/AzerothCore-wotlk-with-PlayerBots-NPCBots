@@ -95,23 +95,78 @@ enum Races
     RACE_NAGA               = 25, // TITLE 娜迦 Naga
     RACE_DARK_IRON_DWARF    = 26, // TITLE 黑铁矮人 Dark Iron Dwarf
     RACE_DRACTHYR           = 27, // TITLE 龙希尔 Dracthyr
-    RACE_TUSKARR            = 28
+    RACE_TUSKARR            = 28,
+    RACE_SETHRAK            = 36, // Alliance, first CoA post-creation test
+    RACE_TWO_HEADED_OGRE    = 37, // Horde; never alias the stored race ID
+    RACE_KUL_TIRAN          = 39, // RACENEXT3A: Alliance, mask-alias of race 7 (bit 6), human template
+    RACE_MAGHAR_ORC         = 49  // RACENEXT3A: Horde, mask-alias of race 17 (bit 16), orc template
 };
 
 // max+1 for player race
-#define MAX_RACES         36
+#define MAX_RACES         50
 
 // 3.3.5-era race masks are uint32. Only race IDs 1..32 can be represented
 // safely as 1 << (race - 1). Dracthyr now uses Race27, so it follows the
 // normal mask path; the helper still protects any future high custom race.
+//
+// RACENEXT3A (CoA "mod 32" rule): race ids >= 38 reuse the bit of (id - 1) & 31, so 39 shares bit 6 with
+// Gnome (7) and 49 shares bit 16 with Eredar (17). Races sharing a bit MUST be the same faction (RaceMgr checks it).
+// Ids 33..37 stay mask 0: 36 / 37 run on the RACEFLOW2A template path and must not be migrated.
+// A shared bit is NOT a shared identity: racial rows keyed to one race bit are not inherited (IsRaceMaskAlias).
+inline constexpr bool IsRaceMaskAlias(uint8 race)
+{
+    return race >= 38;
+}
+
 inline constexpr bool IsRaceMaskable(uint8 race)
 {
-    return race > RACE_NONE && race <= 32;
+    return race > RACE_NONE && (race <= 32 || IsRaceMaskAlias(race));
 }
 
 inline constexpr uint32 GetRaceMaskForRace(uint8 race)
 {
-    return IsRaceMaskable(race) ? (uint32(1) << (race - 1)) : 0;
+    return IsRaceMaskable(race) ? (uint32(1) << ((race - 1) & 31)) : 0;
+}
+
+// Parent race whose class/skill template an alias race borrows (0 = none).
+inline constexpr uint8 GetRaceAliasTemplateRace(uint8 race)
+{
+    return race == RACE_KUL_TIRAN ? uint8(RACE_HUMAN) : race == RACE_MAGHAR_ORC ? uint8(RACE_ORC) : uint8(0);
+}
+
+// Races that may only be created as Warrior (enforced in HandleCharCreateOpcode, not by a greyed button).
+inline constexpr bool IsWarriorOnlyNewRace(uint8 race)
+{
+    return race == RACE_KUL_TIRAN || race == RACE_MAGHAR_ORC;
+}
+
+// RACEFLOW2A: keep identity separate from 32-bit eligibility masks.
+// GetRaceMaskForRace(36/37) deliberately stays zero; never wrap a shift.
+inline constexpr bool IsFirstCoaPostCreationRace(uint8 race)
+{
+    return race == RACE_SETHRAK || race == RACE_TWO_HEADED_OGRE;
+}
+
+inline constexpr uint32 GetFirstCoaParentMask(uint8 race)
+{
+    return race == RACE_SETHRAK ? GetRaceMaskForRace(RACE_HUMAN) :
+        race == RACE_TWO_HEADED_OGRE ? GetRaceMaskForRace(RACE_ORC) : 0;
+}
+
+inline constexpr bool IsFirstCoaLanguageSkill(uint8 race, uint32 skill)
+{
+    return (race == RACE_SETHRAK && skill == 98) ||
+        (race == RACE_TWO_HEADED_OGRE && skill == 109);
+}
+
+inline constexpr bool IsFirstCoaSkillMaskAllowed(uint8 race, uint32 skill, uint32 mask)
+{
+    if (!IsFirstCoaPostCreationRace(race))
+        return false;
+    // Only the assigned faction language may use a single-race row.
+    // Other skills require a shared row containing the faction template bit.
+    return !mask || (IsFirstCoaLanguageSkill(race, skill) && (mask & GetFirstCoaParentMask(race))) ||
+        ((mask & (mask - 1)) && (mask & GetFirstCoaParentMask(race)));
 }
 
 // Custom races do not have usable WotLK reputation bits of their own.
@@ -124,8 +179,12 @@ inline constexpr uint32 GetReputationRaceMaskForRace(uint8 race)
         // Faction.dbc. Reuse Human only for reputation initialization/checks.
         // Other custom races keep their own working DBC reputation masks.
         case RACE_PANDAREN_ALLIANCE:
+        case RACE_SETHRAK:
+        case RACE_KUL_TIRAN:
             return GetRaceMaskForRace(RACE_HUMAN);
         case RACE_NAGA:
+        case RACE_TWO_HEADED_OGRE:
+        case RACE_MAGHAR_ORC:
             return GetRaceMaskForRace(RACE_ORC);
         case RACE_DRACTHYR:
             return GetRaceMaskForRace(RACE_HUMAN);

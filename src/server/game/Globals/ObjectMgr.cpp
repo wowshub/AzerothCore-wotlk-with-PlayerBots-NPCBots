@@ -4597,7 +4597,7 @@ void ObjectMgr::LoadPlayerInfo()
                 for (uint32 raceIndex = RACE_HUMAN; raceIndex < sRaceMgr->GetMaxRaces(); ++raceIndex)
                 {
                     uint32 raceBit = GetRaceMaskForRace(raceIndex);
-                    if (raceMask == 0 || (raceBit && (raceBit & raceMask)))
+                    if (raceMask == 0 || (raceBit && !IsRaceMaskAlias(raceIndex) && (raceBit & raceMask))) // RACENEXT3A: alias races take only race-agnostic rows (templates: Player::LearnDefaultSkills)
                     {
                         for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)
                         {
@@ -4659,7 +4659,7 @@ void ObjectMgr::LoadPlayerInfo()
                 for (uint32 raceIndex = RACE_HUMAN; raceIndex < sRaceMgr->GetMaxRaces(); ++raceIndex)
                 {
                     uint32 raceBit = GetRaceMaskForRace(raceIndex);
-                    if (raceMask == 0 || (raceBit && (raceBit & raceMask)))
+                    if (raceMask == 0 || (raceBit && !IsRaceMaskAlias(raceIndex) && (raceBit & raceMask))) // RACENEXT3A: alias races take only race-agnostic rows (templates: Player::LearnDefaultSkills)
                     {
                         for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)
                         {
@@ -4718,7 +4718,7 @@ void ObjectMgr::LoadPlayerInfo()
                 for (uint32 raceIndex = RACE_HUMAN; raceIndex < sRaceMgr->GetMaxRaces(); ++raceIndex)
                 {
                     uint32 raceBit = GetRaceMaskForRace(raceIndex);
-                    if (raceMask == 0 || (raceBit && (raceBit & raceMask)))
+                    if (raceMask == 0 || (raceBit && !IsRaceMaskAlias(raceIndex) && (raceBit & raceMask))) // RACENEXT3A: alias races take only race-agnostic rows (templates: Player::LearnDefaultSkills)
                     {
                         for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)
                         {

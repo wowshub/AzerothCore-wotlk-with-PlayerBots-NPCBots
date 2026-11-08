@@ -1,0 +1,28 @@
+{
+  "stage": "RACEJOINT1A",
+  "result": "full worldserver compile and link succeeded",
+  "exit_code": 0,
+  "binary": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\build\\bin\\worldserver.exe",
+  "binary_sha256": "52e515a8fb56e2f1c9aef8d111d0293fe1a28c4f3d62eaa1ee09623cb94e1fc0",
+  "binary_bytes": 66219520,
+  "source_snapshot": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\source",
+  "build_dir": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\build",
+  "commands": [
+    "@echo off",
+    "call D:\\soft\\vs2022\\enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat >nul",
+    "cd /d D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A",
+    "D:\\soft\\cmake\\bin\\cmake.exe -S source -B build -G Ninja -DCMAKE_MAKE_PROGRAM=D:/soft/vs2022/enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_POLICY_DEFAULT_CMP0141=NEW -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded -DSCRIPTS=static -DMODULES=static -DCMAKE_NINJA_FORCE_RESPONSE_FILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=D:/000rebornWOW/000RebornWOWHighForkPRO/000Ascendupdate/000Ascendupdate20261106/codexwork_RACEJOINT1A/build_pdb.cmake -DTOOLS=0 -DFETCHCONTENT_SOURCE_DIR_LUA52=D:/000rebornWOW/000RebornWOWHighForkPRO/000Ascendupdate/000Ascendupdate20261106/codexwork_RACEJOINT1A/lua52 -DUSE_COREPCH=ON -DUSE_SCRIPTPCH=ON -DBOOST_ROOT=D:/boost_1_83_0 -DBoost_NO_BOOST_CMAKE=ON -DMYSQL_INCLUDE_DIR=D:/soft/MYSQL8.0.42/include -DMYSQL_LIBRARY=D:/soft/MYSQL8.0.42/lib/libmysql.lib -DOPENSSL_ROOT_DIR=D:/OpenSSL-Win64 -DCMAKE_INSTALL_PREFIX=D:/000rebornWOW/000RebornWOWHighForkPRO/000Ascendupdate/000Ascendupdate20261106/codexwork_RACEJOINT1A/install > configure.log 2>&1",
+    "if errorlevel 1 exit /b 1",
+    "D:\\soft\\cmake\\bin\\cmake.exe --build build --target worldserver --parallel 6 > build.log 2>&1",
+    "exit /b %errorlevel%"
+  ],
+  "build_only_hook": "cmake_language(DEFER CALL set_property TARGET modules PROPERTY MSVC_DEBUG_INFORMATION_FORMAT ProgramDatabase)\n",
+  "notes": [
+    "Fresh independent build; initial game/scripts/modules compiled; initial Embedded modules.lib exceeded 4GB. Rebuilt all module objects with standard PDB, then linked worldserver.",
+    "CMAKE_PROJECT_TOP_LEVEL_INCLUDES hook changes build debug format only; not shipped as product code.",
+    "Lua52 source dependency reused from existing local build; no network donor content substituted.",
+    "Static scripts and all existing modules including Playerbots/NPCBots enabled.",
+    "Archived source snapshot intentionally has no .git; program version is Archived/unknown, actual daily HEAD and file hashes are recorded separately.",
+    "No startup, game test, installation, deployment or production SQL was run."
+  ]
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/ChrRaces.dbc",
+    "current": "ae2b3c9c6f4576695c2e8c0703517fa6e324dbf12cb798ecb0744445b933aeb9",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/CharBaseInfo.dbc",
+    "current": "0825416d40c29154a2a1796e54162d1dd4be53a95ac3df95a84a3f7fe7e38481",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/CharSections.dbc",
+    "current": "f42692ae23dd8158658f20459ee02615696dd1b51477ab81551591a45282a5a7",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/CreatureDisplayInfo.dbc",
+    "current": "182b595cf3bf6a09de2f614b871f118a099d821773dfe26346dfbf854a756615",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/CreatureModelData.dbc",
+    "current": "e6b3174f194edba8a0144e8ac597cd25c83889a892b4bbedb4ecb52e8e32752b",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/CharStartOutfit.dbc",
+    "current": "5d8d556be1406867bc9d84ae784a7ff183d43d2dd493b99386cc0e46cb56ee00",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/zhCN/ChrRaces.dbc",
+    "current": "f6413630899c39d4927a39e1095b584c23465a5a06e24aebbf7b9bfb928d6643",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/zhCN/CharBaseInfo.dbc",
+    "current": "0825416d40c29154a2a1796e54162d1dd4be53a95ac3df95a84a3f7fe7e38481",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/zhCN/CharSections.dbc",
+    "current": "528d7ceb9eed0bcf5323998c189e0d25c5f8e6bad8b69b324358a086d0572898",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/zhCN/CreatureDisplayInfo.dbc",
+    "current": "55dc1335409889bc3ca89d0460663ee2c18e9453935ad406b7bb97122bea59b3",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/zhCN/CreatureModelData.dbc",
+    "current": "4a252b83a8f0c3558fbb11b2a806979b4bf11e8474dd6a63d981172cdc9fc763",
+    "matches": true
+  },
+  {
+    "path": "03_覆盖到服务端根目录/Data/dbc/zhCN/CharStartOutfit.dbc",
+    "current": "5d8d556be1406867bc9d84ae784a7ff183d43d2dd493b99386cc0e46cb56ee00",
+    "matches": true
+  },
+  {
+    "path": "02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/CharacterCreate.lua",
+    "current": "0df4e7e1c57be07688f5549509e43909f8feb4afb17a7ccc36141a047c49271b",
+    "matches": true
+  },
+  {
+    "path": "02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/GlueParent.lua",
+    "current": "232b636a9f361c11d6926cbe69b23091f287a4b96dc17a23fb15f4ed11e4a4e0",
+    "matches": true
+  },
+  {
+    "path": "02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/RebornRacePreview.lua",
+    "current": "0e31cda75f41ed7129868f33f3fe6825afe21b3772786d4f0f08128901c5b53a",
+    "matches": true
+  },
+  {
+    "path": "02_MPQ导入目录/导入PATCH-YB/DBFilesClient/CharBaseInfo.dbc",
+    "current": "07ca36ccbea7d4e1ae3dbb1ff0cf2267bbefb6997b2065ffa04b3c02bf797881",
+    "matches": true
+  },
+  {
+    "path": "02_MPQ导入目录/导入PATCH-YB/DBFilesClient/ChrRaces.dbc",
+    "current": "4759e0a6d5abe4afa5055b037a1ba33556dbd5a696f2da72926c9f7fa6d3100b",
+    "matches": true
+  },
+  {
+    "path": "02_MPQ导入目录/导入PATCH-XA/DBFilesClient/CharStartOutfit.dbc",
+    "current": "5d8d556be1406867bc9d84ae784a7ff183d43d2dd493b99386cc0e46cb56ee00",
+    "matches": true
+  }
+]

@@ -321,6 +321,21 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
         return;
     }
 
+    // RACEFLOW2A: first post-creation test is Warrior only.
+    // Keep all existing custom-class whitelists and saved characters intact.
+    if (IsFirstCoaPostCreationRace(createInfo->Race) && createInfo->Class != CLASS_WARRIOR)
+    {
+        SendCharCreate(CHAR_CREATE_DISABLED);
+        return;
+    }
+
+    // RACENEXT3A: Kul Tiran (39) / Mag'har Orc (49) are Warrior only - enforced here, not by a greyed button.
+    if (IsWarriorOnlyNewRace(createInfo->Race) && createInfo->Class != CLASS_WARRIOR)
+    {
+        SendCharCreate(CHAR_CREATE_DISABLED);
+        return;
+    }
+
     // MONKRACE2: creation-only policy; existing characters and login stay intact.
     if (createInfo->Class == CLASS_MONK)
     {
@@ -2198,6 +2213,13 @@ void WorldSession::HandleCharFactionOrRaceChangeCallback(std::shared_ptr<Charact
     std::vector<std::string_view> tokens = Acore::Tokenize(knownTitlesStr, ' ', false);
 
     if (factionChangeInfo->FactionChange && tokens.size() != ktcount)
+    {
+        SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo.get());
+        return;
+    }
+
+    // RACENEXT3A: no race / faction change into the Warrior-only new races (the class is not checked here).
+    if (IsWarriorOnlyNewRace(factionChangeInfo->Race))
     {
         SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo.get());
         return;

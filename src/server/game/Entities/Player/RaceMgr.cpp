@@ -21,6 +21,7 @@
 #include "DatabaseEnv.h"
 #include "ObjectMgr.h"
 #include "Player.h"
+#include "Log.h"
 #include "Util.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
@@ -79,11 +80,33 @@ void RaceMgr::LoadRaces()
             continue;
 
 
+        // RACENEXT3A: a race id >= 38 shares its bit with id-32; both must be the same faction.
+        if (IsRaceMaskAlias(raceId))
+        {
+            uint8 baseRace = uint8(((raceId - 1) & 31) + 1);
+            bool sameFaction = false;
+            if (ChrRacesEntry const* baseEntry = sChrRacesStore.LookupEntry(baseRace))
+                sameFaction = baseEntry->alliance == alliance;
+            if (!sameFaction)
+            {
+                LOG_ERROR("server.loading", "RaceMgr: race {} shares mask bit {} with race {} but they are different factions or the base race is missing - race {} is NOT enabled.",
+                    uint32(raceId), uint32((raceId - 1) & 31), uint32(baseRace), uint32(raceId));
+                continue;
+            }
+        }
+
         _playableRaceMask |= raceBit;
 
         if (alliance == ALLIANCE_HORDE)
             _hordeRaceMask |= raceBit;
         else if (alliance == ALLIANCE_ALLIANCE)
             _allianceRaceMask |= raceBit;
+
+        if (IsRaceMaskAlias(raceId))
+            LOG_INFO("server.loading", "RaceMgr: alias race {} enabled, faction {}, shared mask bit {} (mask 0x{:08X}), template race {}",
+                uint32(raceId), uint32(alliance), uint32((raceId - 1) & 31), raceBit, uint32(GetRaceAliasTemplateRace(raceId)));
     }
+
+    LOG_INFO("server.loading", "RaceMgr: capacity max race id+1 = {}, playable mask 0x{:08X}, alliance 0x{:08X}, horde 0x{:08X}",
+        uint32(GetMaxRaces()), _playableRaceMask, _allianceRaceMask, _hordeRaceMask);
 }

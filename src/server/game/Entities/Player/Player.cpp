@@ -117,8 +117,20 @@ namespace
 {
 bool IsSkillLineAbilityRaceAllowedForPlayer(Player const* player, SkillLineAbilityEntry const* ability)
 {
+    // RACENEXT3A: alias races (39 / 49) share a mask bit with another race but do not inherit its racials.
+    if (IsRaceMaskAlias(player->getRace()))
+    {
+        if (!ability->RaceMask)
+            return true;
+        return (ability->RaceMask & (ability->RaceMask - 1)) && (ability->RaceMask & player->getRaceMask());
+    }
+
     if (!ability->RaceMask || (ability->RaceMask & player->getRaceMask()))
         return true;
+
+    if (IsFirstCoaPostCreationRace(player->getRace()))
+        return IsFirstCoaSkillMaskAllowed(player->getRace(), ability->SkillLine, ability->RaceMask) &&
+            GetSkillRaceClassInfo(ability->SkillLine, player->getRace(), player->getClass()) != nullptr;
 
     if (player->getRace() != RACE_DRACTHYR)
         return false;
@@ -12259,6 +12271,55 @@ void Player::LearnDefaultSkills()
     };
 
     learnInfoSkills(info);
+
+    // RACEFLOW2A: exact language grant, without copying parent racial spells.
+    if (IsFirstCoaPostCreationRace(getRace()))
+    {
+        uint32 language = getRace() == RACE_SETHRAK ? SKILL_LANG_COMMON : SKILL_LANG_ORCISH;
+        if (!HasSkill(language))
+            SetSkill(language, 0, 300, 300);
+    }
+
+    // RACENEXT3A: 39 learns the human warrior base skills, 49 the orc ones. GetSkillRaceClassInfo rejects
+    // single-race rows for alias races, so racials are never inherited; plus the faction language and its spell.
+    // This runs from Player::Create BEFORE the starting outfit is distributed, so weapons/armour can be equipped.
+    if (uint8 templateRace = GetRaceAliasTemplateRace(getRace()))
+    {
+        // RACEJOINT1A: copy only existing parent Warrior starter skills.
+        // Never copy parent language/racial/profession lines through the shared mask.
+        if (getClass() == CLASS_WARRIOR)
+            if (PlayerInfo const* templateInfo = sObjectMgr->GetPlayerInfo(templateRace, getClass()))
+                for (auto const& skill : templateInfo->skills)
+                {
+                    bool basic = false;
+                    switch (skill.SkillId)
+                    {
+                        case 26: case 256: case 257: case 95: case 162:
+                        case 43: case 44: case 54: case 55: case 160:
+                        case 172: case 173: case 176:
+                        case 413: case 414: case 415: case 433:
+                            basic = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (basic && !HasSkill(skill.SkillId))
+                        LearnDefaultSkill(skill.SkillId, skill.Rank);
+                }
+
+        uint32 languageSkill = (templateRace == RACE_ORC) ? SKILL_LANG_ORCISH : SKILL_LANG_COMMON;
+        if (!HasSkill(languageSkill))
+            SetSkill(languageSkill, 0, 300, 300);
+
+        uint32 languageSpell = (templateRace == RACE_ORC) ? 669 : 668;
+        if (!HasSpell(languageSpell))
+        {
+            if (!IsInWorld())
+                addSpell(languageSpell, SPEC_MASK_ALL, true);
+            else
+                learnSpell(languageSpell);
+        }
+    }
 
     if (getRace() == RACE_DRACTHYR)
     {

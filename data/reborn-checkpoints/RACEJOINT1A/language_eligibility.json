@@ -1,0 +1,194 @@
+[
+  {
+    "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc",
+    "race": 39,
+    "language_first_matching_row": [
+      40,
+      98,
+      124562509,
+      28671,
+      128,
+      0,
+      0,
+      0
+    ],
+    "spell_rows": [
+      [
+        590,
+        98,
+        668,
+        120368205,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  {
+    "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc",
+    "race": 49,
+    "language_first_matching_row": [
+      48,
+      109,
+      124998582,
+      24575,
+      128,
+      0,
+      0,
+      0
+    ],
+    "spell_rows": [
+      [
+        592,
+        109,
+        669,
+        89346998,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  {
+    "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN",
+    "race": 39,
+    "language_first_matching_row": [
+      40,
+      98,
+      124562509,
+      28671,
+      128,
+      0,
+      0,
+      0
+    ],
+    "spell_rows": [
+      [
+        590,
+        98,
+        668,
+        120368205,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  {
+    "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN",
+    "race": 49,
+    "language_first_matching_row": [
+      48,
+      109,
+      124998582,
+      24575,
+      128,
+      0,
+      0,
+      0
+    ],
+    "spell_rows": [
+      [
+        592,
+        109,
+        669,
+        89346998,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  {
+    "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\client_inputs\\Patch-XA.mpq\\DBFilesClient",
+    "race": 39,
+    "language_first_matching_row": [
+      40,
+      98,
+      124562509,
+      28671,
+      128,
+      0,
+      0,
+      0
+    ],
+    "spell_rows": [
+      [
+        590,
+        98,
+        668,
+        120368205,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  {
+    "base": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\client_inputs\\Patch-XA.mpq\\DBFilesClient",
+    "race": 49,
+    "language_first_matching_row": [
+      48,
+      109,
+      124998582,
+      24575,
+      128,
+      0,
+      0,
+      0
+    ],
+    "spell_rows": [
+      [
+        592,
+        109,
+        669,
+        89346998,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  }
+]

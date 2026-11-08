@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/server/shared/SharedDefines.h",
+    "codex_input": "d9de7b3ce9b5c8d9019caa0eb4f0bcc5aea150053c711fb40266598b83af65fc",
+    "claude_input": "d9de7b3ce9b5c8d9019caa0eb4f0bcc5aea150053c711fb40266598b83af65fc",
+    "input_match": true,
+    "claude_output": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053",
+    "daily_now": "d9de7b3ce9b5c8d9019caa0eb4f0bcc5aea150053c711fb40266598b83af65fc"
+  },
+  {
+    "path": "src/server/game/DataStores/DBCStores.cpp",
+    "codex_input": "d5f94a72f6ffa316707d9f5c8e792e7298c7bf832096f88404e09b357d50bf51",
+    "claude_input": "d5f94a72f6ffa316707d9f5c8e792e7298c7bf832096f88404e09b357d50bf51",
+    "input_match": true,
+    "claude_output": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058",
+    "daily_now": "d5f94a72f6ffa316707d9f5c8e792e7298c7bf832096f88404e09b357d50bf51"
+  },
+  {
+    "path": "src/server/game/Entities/Player/Player.cpp",
+    "codex_input": "e9939a57f470003b14bec7b65b9dad2adfb9d4e64a71d55ca44998ab61c4736c",
+    "claude_input": "e9939a57f470003b14bec7b65b9dad2adfb9d4e64a71d55ca44998ab61c4736c",
+    "input_match": true,
+    "claude_output": "71ed39e452a6903c9c58b32619566ed26a19388fe526bc5142aeddcb02860f73",
+    "daily_now": "e9939a57f470003b14bec7b65b9dad2adfb9d4e64a71d55ca44998ab61c4736c"
+  },
+  {
+    "path": "src/server/game/Globals/ObjectMgr.cpp",
+    "codex_input": "7784aab71e8a981d9255a339887a3b40abc18bf0649b62b64f014225304047a9",
+    "claude_input": "7784aab71e8a981d9255a339887a3b40abc18bf0649b62b64f014225304047a9",
+    "input_match": true,
+    "claude_output": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4",
+    "daily_now": "7784aab71e8a981d9255a339887a3b40abc18bf0649b62b64f014225304047a9"
+  },
+  {
+    "path": "src/server/game/Entities/Player/RaceMgr.cpp",
+    "codex_input": "fb8e54d6636c4721b8df3a485fb8b96d8cc5d9310e356c315bd0e3f3b73ae8cd",
+    "claude_input": "fb8e54d6636c4721b8df3a485fb8b96d8cc5d9310e356c315bd0e3f3b73ae8cd",
+    "input_match": true,
+    "claude_output": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940",
+    "daily_now": "fb8e54d6636c4721b8df3a485fb8b96d8cc5d9310e356c315bd0e3f3b73ae8cd"
+  },
+  {
+    "path": "src/server/game/Handlers/CharacterHandler.cpp",
+    "codex_input": "42ee6c7a91cfc0fae1f4c54d7f24aedbce7deaef7b97cd12eb4a743d359cbce5",
+    "claude_input": "42ee6c7a91cfc0fae1f4c54d7f24aedbce7deaef7b97cd12eb4a743d359cbce5",
+    "input_match": true,
+    "claude_output": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23",
+    "daily_now": "42ee6c7a91cfc0fae1f4c54d7f24aedbce7deaef7b97cd12eb4a743d359cbce5"
+  }
+]

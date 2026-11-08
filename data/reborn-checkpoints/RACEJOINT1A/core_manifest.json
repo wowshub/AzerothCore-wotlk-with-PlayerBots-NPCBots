@@ -1,0 +1,32 @@
+{
+  "src/server/shared/SharedDefines.h": {
+    "daily_input": "d9de7b3ce9b5c8d9019caa0eb4f0bcc5aea150053c711fb40266598b83af65fc",
+    "claude_output": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053",
+    "joint_output": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053"
+  },
+  "src/server/game/DataStores/DBCStores.cpp": {
+    "daily_input": "d5f94a72f6ffa316707d9f5c8e792e7298c7bf832096f88404e09b357d50bf51",
+    "claude_output": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058",
+    "joint_output": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058"
+  },
+  "src/server/game/Entities/Player/Player.cpp": {
+    "daily_input": "e9939a57f470003b14bec7b65b9dad2adfb9d4e64a71d55ca44998ab61c4736c",
+    "claude_output": "71ed39e452a6903c9c58b32619566ed26a19388fe526bc5142aeddcb02860f73",
+    "joint_output": "716b5328ca3093dc8df1f0fe144c2639f8d3a816b6ee031b3baf8a35881906bf"
+  },
+  "src/server/game/Globals/ObjectMgr.cpp": {
+    "daily_input": "7784aab71e8a981d9255a339887a3b40abc18bf0649b62b64f014225304047a9",
+    "claude_output": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4",
+    "joint_output": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4"
+  },
+  "src/server/game/Entities/Player/RaceMgr.cpp": {
+    "daily_input": "fb8e54d6636c4721b8df3a485fb8b96d8cc5d9310e356c315bd0e3f3b73ae8cd",
+    "claude_output": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940",
+    "joint_output": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940"
+  },
+  "src/server/game/Handlers/CharacterHandler.cpp": {
+    "daily_input": "42ee6c7a91cfc0fae1f4c54d7f24aedbce7deaef7b97cd12eb4a743d359cbce5",
+    "claude_output": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23",
+    "joint_output": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "method": "independent MySQL8.0 on localhost:43369; historical DDL snapshot, not current production DB; binary DBC assertions",
+  "checks": [
+    "missing integration confirmation refuses before birth writes",
+    "fresh install adds exactly 12 birth rows",
+    "all original parent rows preserved",
+    "identical reinstall idempotent",
+    "known partial installation repaired",
+    "playercreateinfo conflict refuses before all birth writes",
+    "playercreateinfo_action conflict refuses before all birth writes",
+    "playercreateinfo_item conflict refuses before all birth writes",
+    "player_race_stats conflict refuses before all birth writes",
+    "incompatible item refuses before birth writes",
+    "missing hearthstone refuses before birth writes"
+  ],
+  "count": 11,
+  "full_build": "recorded separately",
+  "game": "not run"
+}

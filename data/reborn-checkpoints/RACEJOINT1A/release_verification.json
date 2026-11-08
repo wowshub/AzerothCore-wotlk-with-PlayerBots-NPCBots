@@ -1,0 +1,155 @@
+{
+  "checks": [
+    "tested function identical: inline constexpr bool IsRaceMaskAlias",
+    "tested function identical: inline constexpr bool IsRaceMaskable",
+    "tested function identical: inline constexpr uint32 GetRaceMaskForRace",
+    "tested function identical: inline constexpr uint8 GetRaceAliasTemplateRace",
+    "tested function identical: inline constexpr bool IsWarriorOnlyNewRace",
+    "tested function identical: inline constexpr bool IsFirstCoaPostCreationRace",
+    "tested function identical: inline constexpr uint32 GetFirstCoaParentMask",
+    "tested function identical: inline constexpr bool IsFirstCoaLanguageSkill",
+    "tested function identical: inline constexpr bool IsFirstCoaSkillMaskAllowed",
+    "tested function identical: inline constexpr uint32 GetReputationRaceMaskForRace",
+    "tested function identical: bool IsSkillLineAbilityRaceAllowedForPlayer",
+    "tested function identical: void Player::LearnDefaultSkills()",
+    "tested function identical: SkillRaceClassInfoEntry const* GetSkillRaceClassInfo",
+    "tested function identical: void RaceMgr::LoadRaces()",
+    "no unrelated class changes in core delta",
+    "prepared source hash src/server/game/DataStores/DBCStores.cpp",
+    "prepared source hash src/server/game/Entities/Player/Player.cpp",
+    "prepared source hash src/server/game/Entities/Player/RaceMgr.cpp",
+    "prepared source hash src/server/game/Globals/ObjectMgr.cpp",
+    "prepared source hash src/server/game/Handlers/CharacterHandler.cpp",
+    "prepared source hash src/server/shared/SharedDefines.h"
+  ],
+  "count": 21,
+  "installed_snapshot": [
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\ChrRaces.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "e1bffb19a5d10bc137d5a4657d6804d28e5f2eb7474aec1bbb5e6464fcbc0803",
+      "expected": "e1bffb19a5d10bc137d5a4657d6804d28e5f2eb7474aec1bbb5e6464fcbc0803"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\CharBaseInfo.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "6ad7b3b8e59ec81c229830519740228d4d0d7d1b04ce521b3a9f5b9018114a97",
+      "expected": "6ad7b3b8e59ec81c229830519740228d4d0d7d1b04ce521b3a9f5b9018114a97"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\CharSections.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "67cae5469d1eb26a962b91dd7d4821c87b887a1711285c10927399356a3b048d",
+      "expected": "67cae5469d1eb26a962b91dd7d4821c87b887a1711285c10927399356a3b048d"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\CreatureDisplayInfo.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "a5f90a59ff5b0fe78678d02a9b359297977019417962887a4816f03ff829ce50",
+      "expected": "a5f90a59ff5b0fe78678d02a9b359297977019417962887a4816f03ff829ce50"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\CreatureModelData.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "64e0cd0bf6d55b923e5b68b81c80292515d19d5ed1b46dac012ddbb83e5058e7",
+      "expected": "64e0cd0bf6d55b923e5b68b81c80292515d19d5ed1b46dac012ddbb83e5058e7"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\CharStartOutfit.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "b20775dcca149e828f8652a09324c6dd2f4a87c90514389ccaf3ad704c4b0c1e",
+      "expected": "b20775dcca149e828f8652a09324c6dd2f4a87c90514389ccaf3ad704c4b0c1e"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN\\ChrRaces.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "e6aab1f53665ea59abd0d8c7d40895cb0c232ac37971bf58e7dbec25a80c1b3e",
+      "expected": "e6aab1f53665ea59abd0d8c7d40895cb0c232ac37971bf58e7dbec25a80c1b3e"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN\\CharBaseInfo.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "6ad7b3b8e59ec81c229830519740228d4d0d7d1b04ce521b3a9f5b9018114a97",
+      "expected": "6ad7b3b8e59ec81c229830519740228d4d0d7d1b04ce521b3a9f5b9018114a97"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN\\CharSections.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "20e5f11a40c1f335c6af40e4461db4837a4873839173e46ff2cbdd4103aab713",
+      "expected": "20e5f11a40c1f335c6af40e4461db4837a4873839173e46ff2cbdd4103aab713"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN\\CreatureDisplayInfo.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "cec954ae84628b06dbe8ca93ee19d1615f937e0fd4646107ac1a65e6f71f68d0",
+      "expected": "cec954ae84628b06dbe8ca93ee19d1615f937e0fd4646107ac1a65e6f71f68d0"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN\\CreatureModelData.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "fd94b00b52b7dacc46620eb1c6b43d72861a791d8ec2df377f4faa1a1d065b68",
+      "expected": "fd94b00b52b7dacc46620eb1c6b43d72861a791d8ec2df377f4faa1a1d065b68"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendserver\\wowshub_playerbot_npcbot_newrace20261107Ascend\\Data\\dbc\\zhCN\\CharStartOutfit.dbc",
+      "present": true,
+      "matches_tested": true,
+      "actual": "b20775dcca149e828f8652a09324c6dd2f4a87c90514389ccaf3ad704c4b0c1e",
+      "expected": "b20775dcca149e828f8652a09324c6dd2f4a87c90514389ccaf3ad704c4b0c1e"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\DataStores\\DBCStores.cpp",
+      "present": true,
+      "matches_tested": true,
+      "actual": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058",
+      "expected": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Player\\Player.cpp",
+      "present": true,
+      "matches_tested": true,
+      "actual": "716b5328ca3093dc8df1f0fe144c2639f8d3a816b6ee031b3baf8a35881906bf",
+      "expected": "716b5328ca3093dc8df1f0fe144c2639f8d3a816b6ee031b3baf8a35881906bf"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Entities\\Player\\RaceMgr.cpp",
+      "present": true,
+      "matches_tested": true,
+      "actual": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940",
+      "expected": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Globals\\ObjectMgr.cpp",
+      "present": true,
+      "matches_tested": true,
+      "actual": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4",
+      "expected": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\game\\Handlers\\CharacterHandler.cpp",
+      "present": true,
+      "matches_tested": true,
+      "actual": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23",
+      "expected": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23"
+    },
+    {
+      "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendcode\\AzerothCore-wotlk-with-PlayerBots-NPCBots\\src\\server\\shared\\SharedDefines.h",
+      "present": true,
+      "matches_tested": true,
+      "actual": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053",
+      "expected": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053"
+    }
+  ],
+  "scope": "Function equivalence and scoped delta checks. Prior frozen candidate full-build evidence is separate; formal merged tree full link not rerun."
+}

@@ -999,13 +999,23 @@ SkillRaceClassInfoEntry const* GetSkillRaceClassInfo(uint32 skill, uint8 race, u
             {
                 if (!(itr->second->RaceMask & raceMask))
                     continue;
+
+                // RACENEXT3A: an alias race shares a mask bit with another race but not its racial rows;
+                // only multi-race rows (languages, class skills) match.
+                if (IsRaceMaskAlias(race) && !HasMultipleRaceBits(itr->second->RaceMask))
+                    continue;
             }
             else
             {
                 // Race35 Dracthyr is above the 32-bit DBC race-mask range.
                 // Let it use broad class/profession rows, while keeping
                 // single-race racial rows gated.
-                if (race != RACE_DRACTHYR || !IsDracthyrAllowedBySkillRaceMask(itr->second->SkillID, itr->second->RaceMask))
+                if (IsFirstCoaPostCreationRace(race))
+                {
+                    if (!IsFirstCoaSkillMaskAllowed(race, itr->second->SkillID, itr->second->RaceMask))
+                        continue;
+                }
+                else if (race != RACE_DRACTHYR || !IsDracthyrAllowedBySkillRaceMask(itr->second->SkillID, itr->second->RaceMask))
                     continue;
             }
         }

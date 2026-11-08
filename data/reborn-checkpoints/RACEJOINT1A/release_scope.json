@@ -1,0 +1,128 @@
+{
+  "core": [
+    {
+      "path": "src/server/game/DataStores/DBCStores.cpp",
+      "published_base": "1e3c3107a3ec038ebe043ae84124b502bc6fc37b24d6046e9adab43b4d438b44",
+      "tested_output": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058",
+      "excluded_hunks": 0,
+      "release_output": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058"
+    },
+    {
+      "path": "src/server/game/Entities/Player/Player.cpp",
+      "published_base": "b6e5f10f2422a803b9fa71ab486748e74f56ce2cbeefb1c108536132e91fd6d7",
+      "tested_output": "716b5328ca3093dc8df1f0fe144c2639f8d3a816b6ee031b3baf8a35881906bf",
+      "excluded_hunks": 1,
+      "release_output": "ea3cc6ba08d4aaf94c71acd3c6c4f484d22bc16d4b16c5f3c5d6cbd7507a2248"
+    },
+    {
+      "path": "src/server/game/Entities/Player/RaceMgr.cpp",
+      "published_base": "fb8e54d6636c4721b8df3a485fb8b96d8cc5d9310e356c315bd0e3f3b73ae8cd",
+      "tested_output": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940",
+      "excluded_hunks": 0,
+      "release_output": "73538d0145240c37a6519507b8eb47e3733ac42593b529a14663e72801a8166f"
+    },
+    {
+      "path": "src/server/game/Globals/ObjectMgr.cpp",
+      "published_base": "7784aab71e8a981d9255a339887a3b40abc18bf0649b62b64f014225304047a9",
+      "tested_output": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4",
+      "excluded_hunks": 0,
+      "release_output": "4fe1889abd36c5f8976c2f219c50b7c30de1d48d408df6d19e8a3679e2a31e13"
+    },
+    {
+      "path": "src/server/game/Handlers/CharacterHandler.cpp",
+      "published_base": "967695510bde14c09daa5ae55f52feb8ab60a89e6e423a3306326e0ca0595976",
+      "tested_output": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23",
+      "excluded_hunks": 1,
+      "release_output": "0db6e686300d11be7c042860422e46512b423a13d4628194cd0031b0a1b04c47"
+    },
+    {
+      "path": "src/server/shared/SharedDefines.h",
+      "published_base": "1a9088886adc9339bc7c32375db13c58aee27b8603c15396db815c4e36f70b90",
+      "tested_output": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053",
+      "excluded_hunks": 2,
+      "release_output": "fc550675d00b2b2e4ed90c8eda16e95e7613c1f7a6a5ac134feaab4386f143db"
+    }
+  ],
+  "client": [
+    {
+      "file": "data\\reborn-client\\Interface\\GlueXML\\CharacterCreate.lua",
+      "method": "unique context incremental merge",
+      "release_output": "6dac8a87765782926d274e0956645d7e3feeb6a441bae91e1d8d1bc8c6af335c",
+      "tested_output": "2445d916b892f310a5a5fa8b818dfb445c29558fc97bde62099f39529bdd2527"
+    },
+    {
+      "file": "data\\reborn-client\\Interface\\GlueXML\\GlueParent.lua",
+      "method": "unique context incremental merge",
+      "release_output": "a7eabe4fc53f46b9793a08effafa59525381ad7308d591b27ed34d7789bc880d",
+      "tested_output": "dd9b1e16d9ed8e4011df5895a167acc5003393a42b8a0a2f4ff17bcb98f831fd"
+    }
+  ],
+  "excluded_unrelated_hunks": [
+    {
+      "path": "src/server/game/Entities/Player/Player.cpp",
+      "hunk": "@@ -5367,9 +5379,12 @@\n     float base_agility = GetCreateStat(STAT_AGILITY) * GetPctModifierValue(UnitMods(UNIT_MOD_STAT_START + AsUnderlyingType(STAT_AGILITY)), BASE_PCT);\n     float bonus_agility = GetStat(STAT_AGILITY) - base_agility;\n \n+    // WHBASE1A: use the Hunter fixed formula constants; retain the class-15 GT ratio.\n+    uint32 const formulaClass = pclass == CLASS_WITCH_HUNTER ? uint32(CLASS_HUNTER) : pclass;\n+\n     // calculate diminishing (green in char screen) and non-diminishing (white) contribution\n-    diminishing = 100.0f * bonus_agility * dodgeRatio->ratio * crit_to_dodge[pclass - 1];\n-    nondiminishing = 100.0f * (dodge_base[pclass - 1] + base_agility * dodgeRatio->ratio * crit_to_dodge[pclass - 1]);\n+    diminishing = 100.0f * bonus_agility * dodgeRatio->ratio * crit_to_dodge[formulaClass - 1];\n+    nondiminishing = 100.0f * (dodge_base[formulaClass - 1] + base_agility * dodgeRatio->ratio * crit_to_dodge[formulaClass - 1]);\n }\n \n float Player::GetSpellCritFromIntellect()\n"
+    },
+    {
+      "path": "src/server/game/Handlers/CharacterHandler.cpp",
+      "hunk": "@@ -341,8 +356,18 @@\n         }\n     }\n \n-    // WD2: new-character policy only. Do not alter existing-character login.\n-    if (createInfo->Class == CLASS_WITCH_DOCTOR && createInfo->Race != RACE_HUMAN)\n+    // WDCRACE1A: Human/Orc/Troll creation only; existing-character login is unchanged.\n+    if (createInfo->Class == CLASS_WITCH_DOCTOR &&\n+        createInfo->Race != RACE_HUMAN && createInfo->Race != RACE_ORC && createInfo->Race != RACE_TROLL)\n+    {\n+        SendCharCreate(CHAR_CREATE_DISABLED);\n+        return;\n+    }\n+\n+    // WHBASE1B: official three-race whitelist, checked against true race IDs.\n+    // Client enumeration indexes never authorize a server race/class pair.\n+    if (createInfo->Class == CLASS_WITCH_HUNTER &&\n+        createInfo->Race != RACE_HUMAN && createInfo->Race != RACE_NIGHTELF && createInfo->Race != RACE_UNDEAD_PLAYER)\n     {\n         SendCharCreate(CHAR_CREATE_DISABLED);\n         return;\n"
+    },
+    {
+      "path": "src/server/shared/SharedDefines.h",
+      "hunk": "@@ -197,7 +256,8 @@\n     //CLASS_UNK          = 10,\n     CLASS_DRUID         = 11, // TITLE Druid\n     CLASS_WITCH_DOCTOR  = 13, // TITLE Witch Doctor\n-    CLASS_MONK          = 14  // TITLE Monk\n+    CLASS_MONK          = 14, // TITLE Monk\n+    CLASS_WITCH_HUNTER  = 15  // TITLE Witch Hunter (player identity, not BotClasses)\n };\n \n // Exclusive upper bound for player class IDs.  The custom-class client data\n"
+    },
+    {
+      "path": "src/server/shared/SharedDefines.h",
+      "hunk": "@@ -210,10 +270,15 @@\n     ((uint32(1)<<(CLASS_WARRIOR-1))|(uint32(1)<<(CLASS_PALADIN-1))|(uint32(1)<<(CLASS_HUNTER-1))| \\\n     (uint32(1)<<(CLASS_ROGUE-1))  |(uint32(1)<<(CLASS_PRIEST-1)) |(uint32(1)<<(CLASS_SHAMAN-1))| \\\n     (uint32(1)<<(CLASS_MAGE-1))   |(uint32(1)<<(CLASS_WARLOCK-1))|(uint32(1)<<(CLASS_DRUID-1)) | \\\n-    (uint32(1)<<(CLASS_DEATH_KNIGHT-1))|(uint32(1)<<(CLASS_MONK-1))|(uint32(1)<<(CLASS_WITCH_DOCTOR-1)))\n+    (uint32(1)<<(CLASS_DEATH_KNIGHT-1))|(uint32(1)<<(CLASS_MONK-1))|(uint32(1)<<(CLASS_WITCH_DOCTOR-1))| \\\n+    (uint32(1)<<(CLASS_WITCH_HUNTER-1)))\n \n // valid classes for creature_template.unit_class\n-#define CLASSMASK_ALL_CREATURES (CLASSMASK_ALL_PLAYABLE & ~(uint32(1) << (CLASS_WITCH_DOCTOR - 1)))\n+// WHBASE1A: adding a player class must not add a creature unit_class.\n+#define CLASSMASK_ALL_CREATURES (CLASSMASK_ALL_PLAYABLE & ~((uint32(1) << (CLASS_WITCH_DOCTOR - 1)) | (uint32(1) << (CLASS_WITCH_HUNTER - 1))))\n+\n+static_assert(CLASS_WITCH_HUNTER < MAX_CLASSES);\n+static_assert((CLASSMASK_ALL_CREATURES & (uint32(1) << (CLASS_WITCH_HUNTER - 1))) == 0);\n \n #define CLASSMASK_WAND_USERS ((1<<(CLASS_PRIEST-1))|(1<<(CLASS_MAGE-1))|(1<<(CLASS_WARLOCK-1)))\n \n"
+    }
+  ],
+  "accepted_hunks": [
+    {
+      "path": "src/server/game/DataStores/DBCStores.cpp",
+      "hunk": "@@ -999,13 +999,23 @@\n             {\n                 if (!(itr->second->RaceMask & raceMask))\n                     continue;\n+\n+                // RACENEXT3A: an alias race shares a mask bit with another race but not its racial rows;\n+                // only multi-race rows (languages, class skills) match.\n+                if (IsRaceMaskAlias(race) && !HasMultipleRaceBits(itr->second->RaceMask))\n+                    continue;\n             }\n             else\n             {\n                 // Race35 Dracthyr is above the 32-bit DBC race-mask range.\n                 // Let it use broad class/profession rows, while keeping\n                 // single-race racial rows gated.\n-                if (race != RACE_DRACTHYR || !IsDracthyrAllowedBySkillRaceMask(itr->second->SkillID, itr->second->RaceMask))\n+                if (IsFirstCoaPostCreationRace(race))\n+                {\n+                    if (!IsFirstCoaSkillMaskAllowed(race, itr->second->SkillID, itr->second->RaceMask))\n+                        continue;\n+                }\n+                else if (race != RACE_DRACTHYR || !IsDracthyrAllowedBySkillRaceMask(itr->second->SkillID, itr->second->RaceMask))\n                     continue;\n             }\n         }\n"
+    },
+    {
+      "path": "src/server/game/Entities/Player/Player.cpp",
+      "hunk": "@@ -117,8 +117,20 @@\n {\n bool IsSkillLineAbilityRaceAllowedForPlayer(Player const* player, SkillLineAbilityEntry const* ability)\n {\n+    // RACENEXT3A: alias races (39 / 49) share a mask bit with another race but do not inherit its racials.\n+    if (IsRaceMaskAlias(player->getRace()))\n+    {\n+        if (!ability->RaceMask)\n+            return true;\n+        return (ability->RaceMask & (ability->RaceMask - 1)) && (ability->RaceMask & player->getRaceMask());\n+    }\n+\n     if (!ability->RaceMask || (ability->RaceMask & player->getRaceMask()))\n         return true;\n+\n+    if (IsFirstCoaPostCreationRace(player->getRace()))\n+        return IsFirstCoaSkillMaskAllowed(player->getRace(), ability->SkillLine, ability->RaceMask) &&\n+            GetSkillRaceClassInfo(ability->SkillLine, player->getRace(), player->getClass()) != nullptr;\n \n     if (player->getRace() != RACE_DRACTHYR)\n         return false;\n"
+    },
+    {
+      "path": "src/server/game/Entities/Player/Player.cpp",
+      "hunk": "@@ -12260,6 +12275,55 @@\n \n     learnInfoSkills(info);\n \n+    // RACEFLOW2A: exact language grant, without copying parent racial spells.\n+    if (IsFirstCoaPostCreationRace(getRace()))\n+    {\n+        uint32 language = getRace() == RACE_SETHRAK ? SKILL_LANG_COMMON : SKILL_LANG_ORCISH;\n+        if (!HasSkill(language))\n+            SetSkill(language, 0, 300, 300);\n+    }\n+\n+    // RACENEXT3A: 39 learns the human warrior base skills, 49 the orc ones. GetSkillRaceClassInfo rejects\n+    // single-race rows for alias races, so racials are never inherited; plus the faction language and its spell.\n+    // This runs from Player::Create BEFORE the starting outfit is distributed, so weapons/armour can be equipped.\n+    if (uint8 templateRace = GetRaceAliasTemplateRace(getRace()))\n+    {\n+        // RACEJOINT1A: copy only existing parent Warrior starter skills.\n+        // Never copy parent language/racial/profession lines through the shared mask.\n+        if (getClass() == CLASS_WARRIOR)\n+            if (PlayerInfo const* templateInfo = sObjectMgr->GetPlayerInfo(templateRace, getClass()))\n+                for (auto const& skill : templateInfo->skills)\n+                {\n+                    bool basic = false;\n+                    switch (skill.SkillId)\n+                    {\n+                        case 26: case 256: case 257: case 95: case 162:\n+                        case 43: case 44: case 54: case 55: case 160:\n+                        case 172: case 173: case 176:\n+                        case 413: case 414: case 415: case 433:\n+                            basic = true;\n+                            break;\n+                        default:\n+                            break;\n+                    }\n+                    if (basic && !HasSkill(skill.SkillId))\n+                        LearnDefaultSkill(skill.SkillId, skill.Rank);\n+                }\n+\n+        uint32 languageSkill = (templateRace == RACE_ORC) ? SKILL_LANG_ORCISH : SKILL_LANG_COMMON;\n+        if (!HasSkill(languageSkill))\n+            SetSkill(languageSkill, 0, 300, 300);\n+\n+        uint32 languageSpell = (templateRace == RACE_ORC) ? 669 : 668;\n+        if (!HasSpell(languageSpell))\n+        {\n+            if (!IsInWorld())\n+                addSpell(languageSpell, SPEC_MASK_ALL, true);\n+            else\n+                learnSpell(languageSpell);\n+        }\n+    }\n+\n     if (getRace() == RACE_DRACTHYR)\n     {\n         learnInfoSkills(sObjectMgr->GetPlayerInfo(GetDracthyrAllianceSkillTemplateRace(getClass()), getClass()));\n"
+    },
+    {
+      "path": "src/server/game/Entities/Player/RaceMgr.cpp",
+      "hunk": "@@ -21,6 +21,7 @@\n #include \"DatabaseEnv.h\"\n #include \"ObjectMgr.h\"\n #include \"Player.h\"\n+#include \"Log.h\"\n #include \"Util.h\"\n #include \"WorldPacket.h\"\n #include \"WorldSession.h\"\n"
+    },
+    {
+      "path": "src/server/game/Entities/Player/RaceMgr.cpp",
+      "hunk": "@@ -79,11 +80,33 @@\n             continue;\n \n \n+        // RACENEXT3A: a race id >= 38 shares its bit with id-32; both must be the same faction.\n+        if (IsRaceMaskAlias(raceId))\n+        {\n+            uint8 baseRace = uint8(((raceId - 1) & 31) + 1);\n+            bool sameFaction = false;\n+            if (ChrRacesEntry const* baseEntry = sChrRacesStore.LookupEntry(baseRace))\n+                sameFaction = baseEntry->alliance == alliance;\n+            if (!sameFaction)\n+            {\n+                LOG_ERROR(\"server.loading\", \"RaceMgr: race {} shares mask bit {} with race {} but they are different factions or the base race is missing - race {} is NOT enabled.\",\n+                    uint32(raceId), uint32((raceId - 1) & 31), uint32(baseRace), uint32(raceId));\n+                continue;\n+            }\n+        }\n+\n         _playableRaceMask |= raceBit;\n \n         if (alliance == ALLIANCE_HORDE)\n             _hordeRaceMask |= raceBit;\n         else if (alliance == ALLIANCE_ALLIANCE)\n             _allianceRaceMask |= raceBit;\n+\n+        if (IsRaceMaskAlias(raceId))\n+            LOG_INFO(\"server.loading\", \"RaceMgr: alias race {} enabled, faction {}, shared mask bit {} (mask 0x{:08X}), template race {}\",\n+                uint32(raceId), uint32(alliance), uint32((raceId - 1) & 31), raceBit, uint32(GetRaceAliasTemplateRace(raceId)));\n     }\n+\n+    LOG_INFO(\"server.loading\", \"RaceMgr: capacity max race id+1 = {}, playable mask 0x{:08X}, alliance 0x{:08X}, horde 0x{:08X}\",\n+        uint32(GetMaxRaces()), _playableRaceMask, _allianceRaceMask, _hordeRaceMask);\n }\n"
+    },
+    {
+      "path": "src/server/game/Globals/ObjectMgr.cpp",
+      "hunk": "@@ -4597,7 +4597,7 @@\n                 for (uint32 raceIndex = RACE_HUMAN; raceIndex < sRaceMgr->GetMaxRaces(); ++raceIndex)\n                 {\n                     uint32 raceBit = GetRaceMaskForRace(raceIndex);\n-                    if (raceMask == 0 || (raceBit && (raceBit & raceMask)))\n+                    if (raceMask == 0 || (raceBit && !IsRaceMaskAlias(raceIndex) && (raceBit & raceMask))) // RACENEXT3A: alias races take only race-agnostic rows (templates: Player::LearnDefaultSkills)\n                     {\n                         for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)\n                         {\n"
+    },
+    {
+      "path": "src/server/game/Globals/ObjectMgr.cpp",
+      "hunk": "@@ -4659,7 +4659,7 @@\n                 for (uint32 raceIndex = RACE_HUMAN; raceIndex < sRaceMgr->GetMaxRaces(); ++raceIndex)\n                 {\n                     uint32 raceBit = GetRaceMaskForRace(raceIndex);\n-                    if (raceMask == 0 || (raceBit && (raceBit & raceMask)))\n+                    if (raceMask == 0 || (raceBit && !IsRaceMaskAlias(raceIndex) && (raceBit & raceMask))) // RACENEXT3A: alias races take only race-agnostic rows (templates: Player::LearnDefaultSkills)\n                     {\n                         for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)\n                         {\n"
+    },
+    {
+      "path": "src/server/game/Globals/ObjectMgr.cpp",
+      "hunk": "@@ -4718,7 +4718,7 @@\n                 for (uint32 raceIndex = RACE_HUMAN; raceIndex < sRaceMgr->GetMaxRaces(); ++raceIndex)\n                 {\n                     uint32 raceBit = GetRaceMaskForRace(raceIndex);\n-                    if (raceMask == 0 || (raceBit && (raceBit & raceMask)))\n+                    if (raceMask == 0 || (raceBit && !IsRaceMaskAlias(raceIndex) && (raceBit & raceMask))) // RACENEXT3A: alias races take only race-agnostic rows (templates: Player::LearnDefaultSkills)\n                     {\n                         for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)\n                         {\n"
+    },
+    {
+      "path": "src/server/game/Handlers/CharacterHandler.cpp",
+      "hunk": "@@ -321,6 +321,21 @@\n         return;\n     }\n \n+    // RACEFLOW2A: first post-creation test is Warrior only.\n+    // Keep all existing custom-class whitelists and saved characters intact.\n+    if (IsFirstCoaPostCreationRace(createInfo->Race) && createInfo->Class != CLASS_WARRIOR)\n+    {\n+        SendCharCreate(CHAR_CREATE_DISABLED);\n+        return;\n+    }\n+\n+    // RACENEXT3A: Kul Tiran (39) / Mag'har Orc (49) are Warrior only - enforced here, not by a greyed button.\n+    if (IsWarriorOnlyNewRace(createInfo->Race) && createInfo->Class != CLASS_WARRIOR)\n+    {\n+        SendCharCreate(CHAR_CREATE_DISABLED);\n+        return;\n+    }\n+\n     // MONKRACE2: creation-only policy; existing characters and login stay intact.\n     if (createInfo->Class == CLASS_MONK)\n     {\n"
+    },
+    {
+      "path": "src/server/game/Handlers/CharacterHandler.cpp",
+      "hunk": "@@ -2198,6 +2223,13 @@\n     std::vector<std::string_view> tokens = Acore::Tokenize(knownTitlesStr, ' ', false);\n \n     if (factionChangeInfo->FactionChange && tokens.size() != ktcount)\n+    {\n+        SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo.get());\n+        return;\n+    }\n+\n+    // RACENEXT3A: no race / faction change into the Warrior-only new races (the class is not checked here).\n+    if (IsWarriorOnlyNewRace(factionChangeInfo->Race))\n     {\n         SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo.get());\n         return;\n"
+    },
+    {
+      "path": "src/server/shared/SharedDefines.h",
+      "hunk": "@@ -95,23 +95,78 @@\n     RACE_NAGA               = 25, // TITLE 娜迦 Naga\n     RACE_DARK_IRON_DWARF    = 26, // TITLE 黑铁矮人 Dark Iron Dwarf\n     RACE_DRACTHYR           = 27, // TITLE 龙希尔 Dracthyr\n-    RACE_TUSKARR            = 28\n+    RACE_TUSKARR            = 28,\n+    RACE_SETHRAK            = 36, // Alliance, first CoA post-creation test\n+    RACE_TWO_HEADED_OGRE    = 37, // Horde; never alias the stored race ID\n+    RACE_KUL_TIRAN          = 39, // RACENEXT3A: Alliance, mask-alias of race 7 (bit 6), human template\n+    RACE_MAGHAR_ORC         = 49  // RACENEXT3A: Horde, mask-alias of race 17 (bit 16), orc template\n };\n \n // max+1 for player race\n-#define MAX_RACES         36\n+#define MAX_RACES         50\n \n // 3.3.5-era race masks are uint32. Only race IDs 1..32 can be represented\n // safely as 1 << (race - 1). Dracthyr now uses Race27, so it follows the\n // normal mask path; the helper still protects any future high custom race.\n+//\n+// RACENEXT3A (CoA \"mod 32\" rule): race ids >= 38 reuse the bit of (id - 1) & 31, so 39 shares bit 6 with\n+// Gnome (7) and 49 shares bit 16 with Eredar (17). Races sharing a bit MUST be the same faction (RaceMgr checks it).\n+// Ids 33..37 stay mask 0: 36 / 37 run on the RACEFLOW2A template path and must not be migrated.\n+// A shared bit is NOT a shared identity: racial rows keyed to one race bit are not inherited (IsRaceMaskAlias).\n+inline constexpr bool IsRaceMaskAlias(uint8 race)\n+{\n+    return race >= 38;\n+}\n+\n inline constexpr bool IsRaceMaskable(uint8 race)\n {\n-    return race > RACE_NONE && race <= 32;\n+    return race > RACE_NONE && (race <= 32 || IsRaceMaskAlias(race));\n }\n \n inline constexpr uint32 GetRaceMaskForRace(uint8 race)\n {\n-    return IsRaceMaskable(race) ? (uint32(1) << (race - 1)) : 0;\n+    return IsRaceMaskable(race) ? (uint32(1) << ((race - 1) & 31)) : 0;\n+}\n+\n+// Parent race whose class/skill template an alias race borrows (0 = none).\n+inline constexpr uint8 GetRaceAliasTemplateRace(uint8 race)\n+{\n+    return race == RACE_KUL_TIRAN ? uint8(RACE_HUMAN) : race == RACE_MAGHAR_ORC ? uint8(RACE_ORC) : uint8(0);\n+}\n+\n+// Races that may only be created as Warrior (enforced in HandleCharCreateOpcode, not by a greyed button).\n+inline constexpr bool IsWarriorOnlyNewRace(uint8 race)\n+{\n+    return race == RACE_KUL_TIRAN || race == RACE_MAGHAR_ORC;\n+}\n+\n+// RACEFLOW2A: keep identity separate from 32-bit eligibility masks.\n+// GetRaceMaskForRace(36/37) deliberately stays zero; never wrap a shift.\n+inline constexpr bool IsFirstCoaPostCreationRace(uint8 race)\n+{\n+    return race == RACE_SETHRAK || race == RACE_TWO_HEADED_OGRE;\n+}\n+\n+inline constexpr uint32 GetFirstCoaParentMask(uint8 race)\n+{\n+    return race == RACE_SETHRAK ? GetRaceMaskForRace(RACE_HUMAN) :\n+        race == RACE_TWO_HEADED_OGRE ? GetRaceMaskForRace(RACE_ORC) : 0;\n+}\n+\n+inline constexpr bool IsFirstCoaLanguageSkill(uint8 race, uint32 skill)\n+{\n+    return (race == RACE_SETHRAK && skill == 98) ||\n+        (race == RACE_TWO_HEADED_OGRE && skill == 109);\n+}\n+\n+inline constexpr bool IsFirstCoaSkillMaskAllowed(uint8 race, uint32 skill, uint32 mask)\n+{\n+    if (!IsFirstCoaPostCreationRace(race))\n+        return false;\n+    // Only the assigned faction language may use a single-race row.\n+    // Other skills require a shared row containing the faction template bit.\n+    return !mask || (IsFirstCoaLanguageSkill(race, skill) && (mask & GetFirstCoaParentMask(race))) ||\n+        ((mask & (mask - 1)) && (mask & GetFirstCoaParentMask(race)));\n }\n \n // Custom races do not have usable WotLK reputation bits of their own.\n"
+    },
+    {
+      "path": "src/server/shared/SharedDefines.h",
+      "hunk": "@@ -124,8 +179,12 @@\n         // Faction.dbc. Reuse Human only for reputation initialization/checks.\n         // Other custom races keep their own working DBC reputation masks.\n         case RACE_PANDAREN_ALLIANCE:\n+        case RACE_SETHRAK:\n+        case RACE_KUL_TIRAN:\n             return GetRaceMaskForRace(RACE_HUMAN);\n         case RACE_NAGA:\n+        case RACE_TWO_HEADED_OGRE:\n+        case RACE_MAGHAR_ORC:\n             return GetRaceMaskForRace(RACE_ORC);\n         case RACE_DRACTHYR:\n             return GetRaceMaskForRace(RACE_HUMAN);\n"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+    "path": "DBFilesClient/CharBaseInfo.dbc",
+    "actual": "e39a2c9c1f6c79d5a05f23d05f88dfdc511ecd971c539f09b6169d1224ed710f",
+    "tested": "e39a2c9c1f6c79d5a05f23d05f88dfdc511ecd971c539f09b6169d1224ed710f",
+    "matches": true
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+    "path": "DBFilesClient/ChrRaces.dbc",
+    "actual": "dfce7d88f29f0c2079dc453fddba308563da94b117a7acf770721239dfd91f74",
+    "tested": "dfce7d88f29f0c2079dc453fddba308563da94b117a7acf770721239dfd91f74",
+    "matches": true
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+    "path": "Interface/GlueXML/CharacterCreate.lua",
+    "actual": "2445d916b892f310a5a5fa8b818dfb445c29558fc97bde62099f39529bdd2527",
+    "tested": "2445d916b892f310a5a5fa8b818dfb445c29558fc97bde62099f39529bdd2527",
+    "matches": true
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+    "path": "Interface/GlueXML/GlueParent.lua",
+    "actual": "dd9b1e16d9ed8e4011df5895a167acc5003393a42b8a0a2f4ff17bcb98f831fd",
+    "tested": "dd9b1e16d9ed8e4011df5895a167acc5003393a42b8a0a2f4ff17bcb98f831fd",
+    "matches": true
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-YB.mpq",
+    "path": "Interface/GlueXML/RebornRacePreview.lua",
+    "actual": "0e31cda75f41ed7129868f33f3fe6825afe21b3772786d4f0f08128901c5b53a",
+    "tested": "0e31cda75f41ed7129868f33f3fe6825afe21b3772786d4f0f08128901c5b53a",
+    "matches": true
+  },
+  {
+    "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-XA.mpq",
+    "path": "DBFilesClient/CharStartOutfit.dbc",
+    "actual": "b20775dcca149e828f8652a09324c6dd2f4a87c90514389ccaf3ad704c4b0c1e",
+    "tested": "b20775dcca149e828f8652a09324c6dd2f4a87c90514389ccaf3ad704c4b0c1e",
+    "matches": true
+  }
+]
