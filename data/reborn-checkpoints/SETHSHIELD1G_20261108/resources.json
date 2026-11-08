@@ -1,0 +1,10 @@
+{
+  "tag": "reborn-sethrak-shield-g-20261108",
+  "title": "蛇人男性背盾对话缩放修复（保留Claude装备层，已测）",
+  "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\release_RACERELEASE1B_20261108\\reborn-sethrak-shield-20261108-resources.zip",
+  "sha256": "460643ee497261d01b1337bad4b0104932b65d98eabcd9c575d48cac6e0a1148",
+  "bytes": 4368527,
+  "payload_files": 1,
+  "baseline": "556095cc33a2dcaa98ca549790dda7da1bb8d6aa",
+  "all_readback": true
+}

@@ -1,0 +1,85 @@
+{
+  "input_sha256": "1d60976f096f81e3cd3af6819789ad64f00b9e641bbe2e9803843f87bfa4893d",
+  "output_sha256": "830671adaeb94ec2c7834db6f2a572d1f3028e73351c267f4abb8b4a1b9be103",
+  "installed_input_rechecked": true,
+  "old_talk_external_index": 54,
+  "old_talk_key_interpreted_with_wrong_base": true,
+  "all_83_sequences_use_model_relative_helper_keys": true,
+  "embedded_sequences": 66,
+  "external_sequences": 17,
+  "global_loop_table_unchanged": true,
+  "original_158_bone_records_and_attachment_placement_and_geometry_unchanged": true,
+  "strict_original_byte_whitelist": true,
+  "helper_TRS": [
+    {
+      "channel": 16,
+      "global_sequence": 0,
+      "keys": 2,
+      "values": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "channel": 36,
+      "global_sequence": 0,
+      "keys": 2,
+      "values": [
+        [
+          32767,
+          32767,
+          -9598,
+          -9598
+        ],
+        [
+          32767,
+          32767,
+          -9598,
+          -9598
+        ]
+      ]
+    },
+    {
+      "channel": 56,
+      "global_sequence": 0,
+      "keys": 2,
+      "values": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "rotation_matrix_stretch": [
+    1.0000200351034119,
+    1.0000200351034119,
+    1.0
+  ],
+  "loader_authority": {
+    "path": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000beascendDLL\\02WarcraftXLDLL\\source\\extensions\\wxl-modern-m2\\src\\load\\M2WalkOwned.cpp",
+    "sha256": "ec93d5a5ff709aeb5325073e8d40c7d1b819ac36a85123d2d8c433a1941af5d0"
+  },
+  "validation_is_offline_not_native_game": true,
+  "game_test": false,
+  "overlay_tables_byte_identical": true,
+  "all_vertex_bytes_identical": true,
+  "Claude_guard_intact": true,
+  "guard_negative_control_rejected": true,
+  "accepted_Claude_70_live_assets_verified": true,
+  "only_one_Sethrak_payload": true
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "path": "01_导入Patch-YJ.mpq/Character/RebornUIR3A/Sethrak/Male/Sethrak.m2",
+    "input": "1d60976f096f81e3cd3af6819789ad64f00b9e641bbe2e9803843f87bfa4893d",
+    "output": "830671adaeb94ec2c7834db6f2a572d1f3028e73351c267f4abb8b4a1b9be103",
+    "current_sha256": "9e37a39b47e70399aa447b08640116a4e69a7edae5481088e5f0534fabc12a6c",
+    "current_later_candidate_changes": {
+      "49": [
+        -1,
+        43
+      ],
+      "107": [
+        -1,
+        5
+      ],
+      "108": [
+        -1,
+        0
+      ],
+      "110": [
+        -1,
+        47
+      ],
+      "111": [
+        -1,
+        47
+      ]
+    },
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261108\\codexfix_20261108_阶段RACECOMBO1G_保留蛇人v8装备层与背盾首登累计候选"
+  }
+]

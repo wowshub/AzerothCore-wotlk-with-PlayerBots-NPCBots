@@ -1,0 +1,10 @@
+PASS MD20 version 264
+PASS textures are [8,0,0,1] (the 4th is the character-skin overlay slot): [8, 0, 0, 1]
+PASS texture lookup entry 4 -> texture 3 (the skins use lookup index 4): (0, 1, 0, 1, 3)
+PASS UV-set lookup entry 2 = second UV set (skins use coordinate index 2): (0, 65535, 1)
+PASS replaceable texture 1 -> texture 3: (65535, 3, 65535, 65535, 65535, 65535, 65535, 65535, 0, 65535, 65535, 65535, 65535)
+PASS vertex count 27292 (27292 expected: the overlay only changes UV2, never the vertex count)
+PASS UV2 of every vertex equals the reference overlay M2 (0 differ)
+INFO vertices whose position/weights/normals/UV1 differ from the reference: 0 (a bone/attachment edit should leave this at 0)
+OVERLAY INTACT
+sha256 prefix 830671adaeb94ec2
