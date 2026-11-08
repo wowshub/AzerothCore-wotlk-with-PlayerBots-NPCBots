@@ -1,0 +1,426 @@
+[
+  {
+    "race": 36,
+    "prefix": "REBORNSETHRAK",
+    "sex": "Male",
+    "donor": "Human",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanMaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "053337c1273e734e7bfd41f2e569f002d5256463f7d3997d6ac9979c8a9f7ad9",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNSETHRAKMaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNSETHRAKMaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanMaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "486a349a785d4dd666114c760a8398e25bbfa60d2b188b81cf783c4a57d99c0b"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/be159d46c035ed10f315ea61.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/HumanSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "be159d46c035ed10f315ea61ed03321377c80dae6fd74ad0168256312f4ed742",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        70280,
+        70288
+      ],
+      [
+        70296,
+        70304
+      ]
+    ],
+    "output_sha256": "c7c431bcc39a8a1046cbc400a21428619c8a2735a598f04187b087549cc6fd15"
+  },
+  {
+    "race": 36,
+    "prefix": "REBORNSETHRAK",
+    "sex": "Female",
+    "donor": "Human",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanFemaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "14d6d88a73b0e05e706a9c2fe486e3010818daf3a4c8ab5963dd7afce9be7a5a",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNSETHRAKFemaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNSETHRAKFemaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanFemaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "0c083b561da1d8025ca1fa19c7ab52fda7b4292a1046f20bf1d503d0979befcb"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/be159d46c035ed10f315ea61.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/HumanSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "be159d46c035ed10f315ea61ed03321377c80dae6fd74ad0168256312f4ed742",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        70712,
+        70720
+      ],
+      [
+        70728,
+        70736
+      ]
+    ],
+    "output_sha256": "4af6288190254a2ada746aeaec70c563f21499fa2472a16d241d278d534e3f07"
+  },
+  {
+    "race": 37,
+    "prefix": "REBORNOGRE",
+    "sex": "Male",
+    "donor": "Orc",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcMaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "f7ebe9447195ef775c767b0756940a5c75763675e2dbcc70b0275c77719cfc1d",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNOGREMaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNOGREMaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcMaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "4d316551855420c3b3247faeeaa083b877e66f74aa26398ec83225efdfa8ea34"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/236f9344342bff055ba45e73.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/OrcSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "236f9344342bff055ba45e7391dcb69387cf7f319f1b2f59d19d5279129514bb",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        72408,
+        72416
+      ],
+      [
+        72424,
+        72432
+      ]
+    ],
+    "output_sha256": "a51eb1974b0c4e3459180d41b3a8ea4c1f61ceeefd3dcd55bafc3d1ab35e10bb"
+  },
+  {
+    "race": 37,
+    "prefix": "REBORNOGRE",
+    "sex": "Female",
+    "donor": "Orc",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcFemaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "60171fdd64fc3c394f40675ac8075d75c87bc7210f59ea5a28a8915d051bf8b5",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNOGREFemaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNOGREFemaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcFemaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "0befb8a620bb8b67da94bacca90bc59e8f702d2a0ea1f1d6607224b8f732210d"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/ddeca2cf952a1ef6a05aed82.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/DwarfSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "ddeca2cf952a1ef6a05aed82295037ce9fd1960c8de469259a517e133edc85f1",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        71848,
+        71856
+      ],
+      [
+        71864,
+        71872
+      ]
+    ],
+    "output_sha256": "66ec28ee7cb95d1a2ac8c3953c07708a56cb9d25c72a619316d2857309d8d648"
+  },
+  {
+    "race": 39,
+    "prefix": "REBORNKULTIRAN",
+    "sex": "Male",
+    "donor": "Human",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanMaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "053337c1273e734e7bfd41f2e569f002d5256463f7d3997d6ac9979c8a9f7ad9",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNKULTIRANMaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNKULTIRANMaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanMaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "486a349a785d4dd666114c760a8398e25bbfa60d2b188b81cf783c4a57d99c0b"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/be159d46c035ed10f315ea61.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/HumanSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "be159d46c035ed10f315ea61ed03321377c80dae6fd74ad0168256312f4ed742",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        70280,
+        70288
+      ],
+      [
+        70296,
+        70304
+      ]
+    ],
+    "output_sha256": "c7c431bcc39a8a1046cbc400a21428619c8a2735a598f04187b087549cc6fd15"
+  },
+  {
+    "race": 39,
+    "prefix": "REBORNKULTIRAN",
+    "sex": "Female",
+    "donor": "Human",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanFemaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "14d6d88a73b0e05e706a9c2fe486e3010818daf3a4c8ab5963dd7afce9be7a5a",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNKULTIRANFemaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/REBORNKULTIRANFemaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/HumanFemaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "0c083b561da1d8025ca1fa19c7ab52fda7b4292a1046f20bf1d503d0979befcb"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/be159d46c035ed10f315ea61.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/HumanSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "be159d46c035ed10f315ea61ed03321377c80dae6fd74ad0168256312f4ed742",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        70712,
+        70720
+      ],
+      [
+        70728,
+        70736
+      ]
+    ],
+    "output_sha256": "4af6288190254a2ada746aeaec70c563f21499fa2472a16d241d278d534e3f07"
+  },
+  {
+    "race": 49,
+    "prefix": "Maghar",
+    "sex": "Male",
+    "donor": "Orc",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcMaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "f7ebe9447195ef775c767b0756940a5c75763675e2dbcc70b0275c77719cfc1d",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/MagharMaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/MagharMaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcMaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "4d316551855420c3b3247faeeaa083b877e66f74aa26398ec83225efdfa8ea34"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/236f9344342bff055ba45e73.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/OrcSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "236f9344342bff055ba45e7391dcb69387cf7f319f1b2f59d19d5279129514bb",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        72408,
+        72416
+      ],
+      [
+        72424,
+        72432
+      ]
+    ],
+    "output_sha256": "a51eb1974b0c4e3459180d41b3a8ea4c1f61ceeefd3dcd55bafc3d1ab35e10bb"
+  },
+  {
+    "race": 49,
+    "prefix": "Maghar",
+    "sex": "Female",
+    "donor": "Orc",
+    "compatibility": true,
+    "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcFemaleDeathSkeleton.m2",
+    "source_archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+    "source_sha256": "60171fdd64fc3c394f40675ac8075d75c87bc7210f59ea5a28a8915d051bf8b5",
+    "target": "World/Generic/PassiveDoodads/DeathSkeletons/MagharFemaleDeathSkeleton.m2",
+    "skins": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/MagharFemaleDeathSkeleton00.skin",
+        "source": "World/Generic/PassiveDoodads/DeathSkeletons/OrcFemaleDeathSkeleton00.skin",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "0befb8a620bb8b67da94bacca90bc59e8f702d2a0ea1f1d6607224b8f732210d"
+      }
+    ],
+    "textures": [
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/1d49ff778a513a54709ccff4.blp",
+        "source": "WORLD/GENERIC/PASSIVEDOODADS/DEATHSKELETONS/DEATHSKELETONSKIN.BLP",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\patch.MPQ",
+        "sha256": "1d49ff778a513a54709ccff442bb06f1e2ce982e0187ce6c8f619d331d3aab09",
+        "dimensions": [
+          256,
+          128
+        ]
+      },
+      {
+        "path": "World/Generic/PassiveDoodads/DeathSkeletons/BONES2A/ddeca2cf952a1ef6a05aed82.blp",
+        "source": "world/generic/passivedoodads/deathskeletons/DwarfSkelett.blp",
+        "archive": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\beascendclient\\newrebornWOWli20261107beAscend\\Data\\Patch-T.mpq",
+        "sha256": "ddeca2cf952a1ef6a05aed82295037ce9fd1960c8de469259a517e133edc85f1",
+        "dimensions": [
+          512,
+          512
+        ]
+      }
+    ],
+    "external_animations": [],
+    "changed_ranges": [
+      [
+        71848,
+        71856
+      ],
+      [
+        71864,
+        71872
+      ]
+    ],
+    "output_sha256": "66ec28ee7cb95d1a2ac8c3953c07708a56cb9d25c72a619316d2857309d8d648"
+  }
+]

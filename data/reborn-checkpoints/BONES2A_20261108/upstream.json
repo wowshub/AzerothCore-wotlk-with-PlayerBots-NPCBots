@@ -1,0 +1,174 @@
+{
+  "repository": "Conquest-of-AzerothCore/azerothcore-wotlk-coa",
+  "commit": "00ba053a91b878b0c48e8796d0ab535a2d769953",
+  "files": [
+    {
+      "path": "src/server/game/Entities/Corpse/Corpse.cpp",
+      "blob_sha": "b5344bda30df36668558977e431cff5ce2d7c7a6",
+      "bytes": 9920
+    },
+    {
+      "path": "src/server/game/Globals/ObjectAccessor.cpp",
+      "blob_sha": "f0557ca075532c68d3437767627dbfd78d488f7d",
+      "bytes": 11142
+    },
+    {
+      "path": "src/server/game/Maps/Map.cpp",
+      "blob_sha": "89ce3a392a2bf62f00fc448a83f6341f8870971f",
+      "bytes": 124533
+    }
+  ],
+  "searches": [
+    {
+      "query": "repo:Conquest-of-AzerothCore/azerothcore-wotlk-coa DeathSkeleton",
+      "total": 0,
+      "items": []
+    },
+    {
+      "query": "repo:Conquest-of-AzerothCore/azerothcore-wotlk-coa \"corpse\" \"model\"",
+      "total": 40,
+      "items": [
+        {
+          "number": 8627,
+          "title": "fix(CoA): Flay Corpse turns the corpse into a pile of flesh",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/8627",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 10700,
+          "title": "fix(CoA): correct Necromancer and corpse mechanics",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/10700",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 9583,
+          "title": "feat(DB/CoA): restore Hillsbrad Foothills quests from Ascension captures",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/9583",
+          "state": "open",
+          "is_pr": true
+        },
+        {
+          "number": 9383,
+          "title": "Ealdmaine Caverns quest causes venomancer Character models to disappear",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/issues/9383",
+          "state": "closed",
+          "is_pr": false
+        },
+        {
+          "number": 6136,
+          "title": "fix(Core): clear exhausted rolled corpse loot",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/6136",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 8077,
+          "title": "fix(DB/CoA): Pale Reach quest fixes from bug reports",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/8077",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 6857,
+          "title": "fix(CoA/Necromancer): six minion and form fixes",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/6857",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 11423,
+          "title": "fix(CoA): open-issue batch 6 (32 issues)",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/11423",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 6822,
+          "title": "fix(CoA): repair corpse harvesting, pet abandonment, and class commands",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/6822",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 11365,
+          "title": "fix(CoA/Scaling): classic dungeons scale only for Dungeon Finder groups",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/11365",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 5014,
+          "title": "fix(Core/Auras): removing a health aura does not revive a corpse",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/5014",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 8376,
+          "title": "fix(CoA/PaleReach): Ealdmaine Caverns and Cresthairn quest playtest fixes",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/8376",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 7047,
+          "title": "feat(DB/CoA): Pale Reach zone [UNTESTED, DO NOT MERGE]",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/7047",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 8498,
+          "title": "fix(CoA): RDF / LFG / Mythic+ batch - keystone start, bricking, overtime, caches, boons, Edrim, gear-gated random dungeons",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/8498",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 9758,
+          "title": "feat(CoA/Quests): ship the apex boss scripts and shared scaling module",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/9758",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 9068,
+          "title": "feat(CoA/Quests): add Skin Peeler Quest + Apex Mini Bosses (Stormfang)",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/9068",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 5750,
+          "title": "feat(Boss): add custom Basalthane encounter (Onyxia's Lair)",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/5750",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 9139,
+          "title": "feat(CoA/ZulGurub): restore Zul'Gurub to live CoA",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/9139",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 8690,
+          "title": "feat(CoA/Stranglethorn): earn Lootbot 3000 through the Goblin Salvage Project",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/8690",
+          "state": "closed",
+          "is_pr": true
+        },
+        {
+          "number": 6820,
+          "title": "fix(CoA): apply Shadowhound appearances and fix swimming Sunder",
+          "url": "https://github.com/Conquest-of-AzerothCore/azerothcore-wotlk-coa/pull/6820",
+          "state": "closed",
+          "is_pr": true
+        }
+      ]
+    }
+  ]
+}
