@@ -1,0 +1,52 @@
+[
+  {
+    "assets": 96,
+    "m2": 16,
+    "skin": 16,
+    "blp": 64,
+    "all_installed_match": true,
+    "all_model_type0_texture_dependencies_closed": true
+  },
+  {
+    "surface": "client",
+    "table": "CreatureDisplayInfo",
+    "added_only_16_records": true,
+    "original_rows_and_string_prefix_preserved": true,
+    "current_non_totem_rows_equal_CLASS1A_not_published": true
+  },
+  {
+    "surface": "client",
+    "table": "CreatureModelData",
+    "added_only_16_records": true,
+    "original_rows_and_string_prefix_preserved": true,
+    "current_non_totem_rows_equal_CLASS1A_not_published": true
+  },
+  {
+    "surface": "server_root",
+    "table": "CreatureDisplayInfo",
+    "added_only_16_records": true,
+    "original_rows_and_string_prefix_preserved": true,
+    "current_non_totem_rows_equal_CLASS1A_not_published": true
+  },
+  {
+    "surface": "server_root",
+    "table": "CreatureModelData",
+    "added_only_16_records": true,
+    "original_rows_and_string_prefix_preserved": true,
+    "current_non_totem_rows_equal_CLASS1A_not_published": true
+  },
+  {
+    "surface": "server_zhCN",
+    "table": "CreatureDisplayInfo",
+    "added_only_16_records": true,
+    "original_rows_and_string_prefix_preserved": true,
+    "current_non_totem_rows_equal_CLASS1A_not_published": true
+  },
+  {
+    "surface": "server_zhCN",
+    "table": "CreatureModelData",
+    "added_only_16_records": true,
+    "original_rows_and_string_prefix_preserved": true,
+    "current_non_totem_rows_equal_CLASS1A_not_published": true
+  }
+]

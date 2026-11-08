@@ -1,0 +1,842 @@
+[
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Air/KulTiran_Air.m2",
+    "input": null,
+    "output": "16101fac8c077fa4eadfaa7de365fb9a5cdb421ed37a0ece5a1d4f12208415a5",
+    "source_stage": "RACETOTEMK1C",
+    "installed_sha256": "16101fac8c077fa4eadfaa7de365fb9a5cdb421ed37a0ece5a1d4f12208415a5"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Air/KulTiran_Air00.skin",
+    "input": null,
+    "output": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Earth/KulTiran_Earth.m2",
+    "input": null,
+    "output": "e0ea550ecc5f23eb949ab29718e9d3364e4ecf7a1c9f9cb42e97a2dc93db7b8a",
+    "source_stage": "RACETOTEMK1C",
+    "installed_sha256": "e0ea550ecc5f23eb949ab29718e9d3364e4ecf7a1c9f9cb42e97a2dc93db7b8a"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Earth/KulTiran_Earth00.skin",
+    "input": null,
+    "output": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Fire/KulTiran_Fire.m2",
+    "input": null,
+    "output": "3996a4d59d000498b7a3648a53e2e0d3c073230672858bc1c85ec0d1b79b13e9",
+    "source_stage": "RACETOTEMK1C",
+    "installed_sha256": "3996a4d59d000498b7a3648a53e2e0d3c073230672858bc1c85ec0d1b79b13e9"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Fire/KulTiran_Fire00.skin",
+    "input": null,
+    "output": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Water/KulTiran_Water.m2",
+    "input": null,
+    "output": "d7e44cd3db597badd2218e18c0577fc3a3977a96b910fc7703496d41c51d1e97",
+    "source_stage": "RACETOTEMK1C",
+    "installed_sha256": "d7e44cd3db597badd2218e18c0577fc3a3977a96b910fc7703496d41c51d1e97"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/KulTiran/Water/KulTiran_Water00.skin",
+    "input": null,
+    "output": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "8e372397182e8bea5124fbf54bb5ceaf1fcda53f7502e2450e8c4f2929730a0b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Air/Maghar_Air.m2",
+    "input": null,
+    "output": "9af0cc95f3de46d2baaab79f3dbe62fac980f538f90b160f9275ba660261d0c0",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "9af0cc95f3de46d2baaab79f3dbe62fac980f538f90b160f9275ba660261d0c0"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Air/Maghar_Air00.skin",
+    "input": null,
+    "output": "3e24c7ba9a0fa9a5c685dc365327e42875ee882df66e24f867c0045f9919f4b6",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "3e24c7ba9a0fa9a5c685dc365327e42875ee882df66e24f867c0045f9919f4b6"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Earth/Maghar_Earth.m2",
+    "input": null,
+    "output": "de77481edf6eaa67988117641534a4525b9d28cdd5e9c908766a90526a9db247",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "de77481edf6eaa67988117641534a4525b9d28cdd5e9c908766a90526a9db247"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Earth/Maghar_Earth00.skin",
+    "input": null,
+    "output": "2e3c0c1388cb5e8e0608752b6ad0deef7eecc44b05e0ed57d75b9a33c1ad9934",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "2e3c0c1388cb5e8e0608752b6ad0deef7eecc44b05e0ed57d75b9a33c1ad9934"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Fire/Maghar_Fire.m2",
+    "input": null,
+    "output": "c5f73740823701e7138e175dab46259f44a2643edb04341cd82ac3e22c99545c",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "c5f73740823701e7138e175dab46259f44a2643edb04341cd82ac3e22c99545c"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Fire/Maghar_Fire00.skin",
+    "input": null,
+    "output": "f74df09c192b24588414902443ac10be1eb0587a757713302f6c76a2330d39fa",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "f74df09c192b24588414902443ac10be1eb0587a757713302f6c76a2330d39fa"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Water/Maghar_Water.m2",
+    "input": null,
+    "output": "8c3fe24c7911d997aa040ed8ab99462d18b76e6639fcd82c6aa77b6b86afcd71",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8c3fe24c7911d997aa040ed8ab99462d18b76e6639fcd82c6aa77b6b86afcd71"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Maghar/Water/Maghar_Water00.skin",
+    "input": null,
+    "output": "e899b3d1e9162cfc3e15970e93ea755d71d5ffcfe6209947292e03c93b586a9e",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "e899b3d1e9162cfc3e15970e93ea755d71d5ffcfe6209947292e03c93b586a9e"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Air/Sethrak_Air.m2",
+    "input": null,
+    "output": "6852f5c67ed4eaac9443d0d7c03a69caa03934f4610ef6c49fdb4729c6ed194b",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "6852f5c67ed4eaac9443d0d7c03a69caa03934f4610ef6c49fdb4729c6ed194b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Air/Sethrak_Air00.skin",
+    "input": null,
+    "output": "559b664df3d3abc152443d3884e4a41750aa8dc9e9508d79b8b1f22ad5263e63",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "559b664df3d3abc152443d3884e4a41750aa8dc9e9508d79b8b1f22ad5263e63"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Earth/Sethrak_Earth.m2",
+    "input": null,
+    "output": "d0c03dc4b1b53a3ca38d845d002deeeb7cb9d048a99c94d6c5182d704cde24d4",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "d0c03dc4b1b53a3ca38d845d002deeeb7cb9d048a99c94d6c5182d704cde24d4"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Earth/Sethrak_Earth00.skin",
+    "input": null,
+    "output": "eb331d4172fc908b1a7196f42a207e92b7ab7411b3ac08f3d32cbdf9f73ea0f1",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "eb331d4172fc908b1a7196f42a207e92b7ab7411b3ac08f3d32cbdf9f73ea0f1"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Fire/Sethrak_Fire.m2",
+    "input": null,
+    "output": "bba275852f77ac2a774b50704d126f6ac61462ece7a0b6ad48eacf3815f2b53f",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "bba275852f77ac2a774b50704d126f6ac61462ece7a0b6ad48eacf3815f2b53f"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Fire/Sethrak_Fire00.skin",
+    "input": null,
+    "output": "09de086260956e3abe1903a1482fb806015c26153a89a5e3de3e53f679bfdf82",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "09de086260956e3abe1903a1482fb806015c26153a89a5e3de3e53f679bfdf82"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Water/Sethrak_Water.m2",
+    "input": null,
+    "output": "92783e97721a699e017ebb332ecae0872421c84c176b70f735ee45186d41b72b",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "92783e97721a699e017ebb332ecae0872421c84c176b70f735ee45186d41b72b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/Sethrak/Water/Sethrak_Water00.skin",
+    "input": null,
+    "output": "706b56d02fb7653614e5739e5fae9254a1b8c5685f1025606990be5880967261",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "706b56d02fb7653614e5739e5fae9254a1b8c5685f1025606990be5880967261"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Air/TwinOgre_Air.m2",
+    "input": null,
+    "output": "94f1c3c8a74f239d60f34c671432e0afc90316353e5e35a0a4e3f0e9ac560acc",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "94f1c3c8a74f239d60f34c671432e0afc90316353e5e35a0a4e3f0e9ac560acc"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Air/TwinOgre_Air00.skin",
+    "input": null,
+    "output": "730faf5b38fbf1c23328b7af0912f384aa5a2ce6bfe4474a45a1d5c63b4968a7",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "730faf5b38fbf1c23328b7af0912f384aa5a2ce6bfe4474a45a1d5c63b4968a7"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Earth/TwinOgre_Earth.m2",
+    "input": null,
+    "output": "dee46e599c81c35d1c6422e3007973e5f03bf7f931ebca8d60f42e33c2a3eaf4",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "dee46e599c81c35d1c6422e3007973e5f03bf7f931ebca8d60f42e33c2a3eaf4"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Earth/TwinOgre_Earth00.skin",
+    "input": null,
+    "output": "f872fc23fe32b956ad537e0a8a1378aae88a164cc678e45921b8b7b468457721",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "f872fc23fe32b956ad537e0a8a1378aae88a164cc678e45921b8b7b468457721"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Fire/TwinOgre_Fire.m2",
+    "input": null,
+    "output": "993dc3eab1e572116ef66ac86330c410bd1e0d8ea64c51d237c52aeed80f1f61",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "993dc3eab1e572116ef66ac86330c410bd1e0d8ea64c51d237c52aeed80f1f61"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Fire/TwinOgre_Fire00.skin",
+    "input": null,
+    "output": "f9ce14d840092f4e3c0ca03826e8ba5f74e178095856e414669163ab16df9236",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "f9ce14d840092f4e3c0ca03826e8ba5f74e178095856e414669163ab16df9236"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Water/TwinOgre_Water.m2",
+    "input": null,
+    "output": "e87b91f71c18d5c26b99858ce9855d819f4f745ce44853e4c1fa0e5bcae9d9fc",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "e87b91f71c18d5c26b99858ce9855d819f4f745ce44853e4c1fa0e5bcae9d9fc"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1A/Totems/TwinOgre/Water/TwinOgre_Water00.skin",
+    "input": null,
+    "output": "7a31723e3247a15dc20c3ff500608d2643bab50ede419b883aa7b26012a1d7b7",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "7a31723e3247a15dc20c3ff500608d2643bab50ede419b883aa7b26012a1d7b7"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/0900fea7b2f23232644d.blp",
+    "input": null,
+    "output": "0900fea7b2f23232644da79709543e127f383653b586af723939e5f19618aad0",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "0900fea7b2f23232644da79709543e127f383653b586af723939e5f19618aad0"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/1f6046c18216808ce316.blp",
+    "input": null,
+    "output": "1f6046c18216808ce3164577dfa9ca08879a5fd921db13a0fd71bee7b94897f5",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "1f6046c18216808ce3164577dfa9ca08879a5fd921db13a0fd71bee7b94897f5"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/38d15865b6fb8ce0693e.blp",
+    "input": null,
+    "output": "38d15865b6fb8ce0693e205939b685da1086e388fd215b07f74a75cc9da949c7",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "38d15865b6fb8ce0693e205939b685da1086e388fd215b07f74a75cc9da949c7"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/495ca1dce4020a6ac1cc.blp",
+    "input": null,
+    "output": "495ca1dce4020a6ac1cc5e82af145baa2142fd57f78e4fcff7a0d1302f953a01",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "495ca1dce4020a6ac1cc5e82af145baa2142fd57f78e4fcff7a0d1302f953a01"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/4dc7dc37f8aa75146be7.blp",
+    "input": null,
+    "output": "4dc7dc37f8aa75146be75dffb6f4906dc2eb8a8fa35c21815025cec0978bd5a8",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "4dc7dc37f8aa75146be75dffb6f4906dc2eb8a8fa35c21815025cec0978bd5a8"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/5a6b5bb93ff71c8e78ea.blp",
+    "input": null,
+    "output": "5a6b5bb93ff71c8e78ea61f8612978ab552fa77d54e58443116b0f7de5e4a199",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "5a6b5bb93ff71c8e78ea61f8612978ab552fa77d54e58443116b0f7de5e4a199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/5c41985dc6142aaa3eb3.blp",
+    "input": null,
+    "output": "5c41985dc6142aaa3eb367a137ed1f76acee6e4ee2e21f509a63a941109ea8fc",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "5c41985dc6142aaa3eb367a137ed1f76acee6e4ee2e21f509a63a941109ea8fc"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/619a78d92d1d07d851d6.blp",
+    "input": null,
+    "output": "619a78d92d1d07d851d6e2bddbd8c30627f2956686ddf6aecc187f1c14610a9e",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "619a78d92d1d07d851d6e2bddbd8c30627f2956686ddf6aecc187f1c14610a9e"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/67e2ae55d5c797768776.blp",
+    "input": null,
+    "output": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/7d166d4753e168499e3d.blp",
+    "input": null,
+    "output": "7d166d4753e168499e3d10ceef4334955649295c3157f4e9654fb7e60cb0bf58",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "7d166d4753e168499e3d10ceef4334955649295c3157f4e9654fb7e60cb0bf58"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/8388aa8e42ad6728664e.blp",
+    "input": null,
+    "output": "8388aa8e42ad6728664e5618a8c87c89bab6a5f08ff84ef3d00745e0dad12ed1",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8388aa8e42ad6728664e5618a8c87c89bab6a5f08ff84ef3d00745e0dad12ed1"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/85519ba8eff440ace02a.blp",
+    "input": null,
+    "output": "85519ba8eff440ace02a6ada4962aadae5da74c493e5541683a43eccac126f4b",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "85519ba8eff440ace02a6ada4962aadae5da74c493e5541683a43eccac126f4b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/8961bec66954ddec96a3.blp",
+    "input": null,
+    "output": "8961bec66954ddec96a32dfcb4221b701e2806bdf6f04307b4b46c934fcbc40c",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8961bec66954ddec96a32dfcb4221b701e2806bdf6f04307b4b46c934fcbc40c"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/9f8b36fc892ecf257c02.blp",
+    "input": null,
+    "output": "9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/b147782124d534de2aea.blp",
+    "input": null,
+    "output": "b147782124d534de2aeaa3021aabc0a257ebf6b963f828dcb8ed072c071d15ec",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "b147782124d534de2aeaa3021aabc0a257ebf6b963f828dcb8ed072c071d15ec"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/b8b74b69c4b3aa506eb6.blp",
+    "input": null,
+    "output": "b8b74b69c4b3aa506eb6079666b9243ec3cc9e577a230382c6f301edc3b7a56d",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "b8b74b69c4b3aa506eb6079666b9243ec3cc9e577a230382c6f301edc3b7a56d"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/bc44e548f3db453be6f6.blp",
+    "input": null,
+    "output": "bc44e548f3db453be6f650a5a70202440d123bc2582f3f0863ec0eabdc7552fb",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "bc44e548f3db453be6f650a5a70202440d123bc2582f3f0863ec0eabdc7552fb"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/d5cbdc8c757d1180bc58.blp",
+    "input": null,
+    "output": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/dcaca51d001ef8c0b349.blp",
+    "input": null,
+    "output": "dcaca51d001ef8c0b34988c5206bbb637d25f1471c45a23e6fb28f0bc8a1eefd",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "dcaca51d001ef8c0b34988c5206bbb637d25f1471c45a23e6fb28f0bc8a1eefd"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Maghar/Materials/ffad816b8c2a8d3ee073.blp",
+    "input": null,
+    "output": "ffad816b8c2a8d3ee0730e86013d1ff5ba24344087ab56c68eb7c4b6de810d95",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "ffad816b8c2a8d3ee0730e86013d1ff5ba24344087ab56c68eb7c4b6de810d95"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/0900fea7b2f23232644d.blp",
+    "input": null,
+    "output": "0900fea7b2f23232644da79709543e127f383653b586af723939e5f19618aad0",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "0900fea7b2f23232644da79709543e127f383653b586af723939e5f19618aad0"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/1b21be01ee16488f1d30.blp",
+    "input": null,
+    "output": "1b21be01ee16488f1d3075078a84f901e69b2845b00c284e713e6753597a0770",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "1b21be01ee16488f1d3075078a84f901e69b2845b00c284e713e6753597a0770"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/318b58aa85bdcea0a16f.blp",
+    "input": null,
+    "output": "318b58aa85bdcea0a16f4c6d7e0733ebfe2c21fac01947a71b662792394da4fb",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "318b58aa85bdcea0a16f4c6d7e0733ebfe2c21fac01947a71b662792394da4fb"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/38d15865b6fb8ce0693e.blp",
+    "input": null,
+    "output": "38d15865b6fb8ce0693e205939b685da1086e388fd215b07f74a75cc9da949c7",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "38d15865b6fb8ce0693e205939b685da1086e388fd215b07f74a75cc9da949c7"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/495ca1dce4020a6ac1cc.blp",
+    "input": null,
+    "output": "495ca1dce4020a6ac1cc5e82af145baa2142fd57f78e4fcff7a0d1302f953a01",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "495ca1dce4020a6ac1cc5e82af145baa2142fd57f78e4fcff7a0d1302f953a01"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/5a6b5bb93ff71c8e78ea.blp",
+    "input": null,
+    "output": "5a6b5bb93ff71c8e78ea61f8612978ab552fa77d54e58443116b0f7de5e4a199",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "5a6b5bb93ff71c8e78ea61f8612978ab552fa77d54e58443116b0f7de5e4a199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/5c41985dc6142aaa3eb3.blp",
+    "input": null,
+    "output": "5c41985dc6142aaa3eb367a137ed1f76acee6e4ee2e21f509a63a941109ea8fc",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "5c41985dc6142aaa3eb367a137ed1f76acee6e4ee2e21f509a63a941109ea8fc"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/61941af10dd0d068703f.blp",
+    "input": null,
+    "output": "61941af10dd0d068703f4df1e78f762145ceee14060c220cd5704c684259be9c",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "61941af10dd0d068703f4df1e78f762145ceee14060c220cd5704c684259be9c"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/67e2ae55d5c797768776.blp",
+    "input": null,
+    "output": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/7d166d4753e168499e3d.blp",
+    "input": null,
+    "output": "7d166d4753e168499e3d10ceef4334955649295c3157f4e9654fb7e60cb0bf58",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "7d166d4753e168499e3d10ceef4334955649295c3157f4e9654fb7e60cb0bf58"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/8388aa8e42ad6728664e.blp",
+    "input": null,
+    "output": "8388aa8e42ad6728664e5618a8c87c89bab6a5f08ff84ef3d00745e0dad12ed1",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8388aa8e42ad6728664e5618a8c87c89bab6a5f08ff84ef3d00745e0dad12ed1"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/85519ba8eff440ace02a.blp",
+    "input": null,
+    "output": "85519ba8eff440ace02a6ada4962aadae5da74c493e5541683a43eccac126f4b",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "85519ba8eff440ace02a6ada4962aadae5da74c493e5541683a43eccac126f4b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/8961bec66954ddec96a3.blp",
+    "input": null,
+    "output": "8961bec66954ddec96a32dfcb4221b701e2806bdf6f04307b4b46c934fcbc40c",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8961bec66954ddec96a32dfcb4221b701e2806bdf6f04307b4b46c934fcbc40c"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/9f8b36fc892ecf257c02.blp",
+    "input": null,
+    "output": "9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/a525aada4c8c26e33d3a.blp",
+    "input": null,
+    "output": "a525aada4c8c26e33d3a34482cd050fffe26e809c5e16b7d3fc9cc3776d17132",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "a525aada4c8c26e33d3a34482cd050fffe26e809c5e16b7d3fc9cc3776d17132"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/b147782124d534de2aea.blp",
+    "input": null,
+    "output": "b147782124d534de2aeaa3021aabc0a257ebf6b963f828dcb8ed072c071d15ec",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "b147782124d534de2aeaa3021aabc0a257ebf6b963f828dcb8ed072c071d15ec"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/bc44e548f3db453be6f6.blp",
+    "input": null,
+    "output": "bc44e548f3db453be6f650a5a70202440d123bc2582f3f0863ec0eabdc7552fb",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "bc44e548f3db453be6f650a5a70202440d123bc2582f3f0863ec0eabdc7552fb"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/d5cbdc8c757d1180bc58.blp",
+    "input": null,
+    "output": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/Sethrak/Materials/ffad816b8c2a8d3ee073.blp",
+    "input": null,
+    "output": "ffad816b8c2a8d3ee0730e86013d1ff5ba24344087ab56c68eb7c4b6de810d95",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "ffad816b8c2a8d3ee0730e86013d1ff5ba24344087ab56c68eb7c4b6de810d95"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/0900fea7b2f23232644d.blp",
+    "input": null,
+    "output": "0900fea7b2f23232644da79709543e127f383653b586af723939e5f19618aad0",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "0900fea7b2f23232644da79709543e127f383653b586af723939e5f19618aad0"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/38d15865b6fb8ce0693e.blp",
+    "input": null,
+    "output": "38d15865b6fb8ce0693e205939b685da1086e388fd215b07f74a75cc9da949c7",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "38d15865b6fb8ce0693e205939b685da1086e388fd215b07f74a75cc9da949c7"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/495ca1dce4020a6ac1cc.blp",
+    "input": null,
+    "output": "495ca1dce4020a6ac1cc5e82af145baa2142fd57f78e4fcff7a0d1302f953a01",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "495ca1dce4020a6ac1cc5e82af145baa2142fd57f78e4fcff7a0d1302f953a01"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/5a6b5bb93ff71c8e78ea.blp",
+    "input": null,
+    "output": "5a6b5bb93ff71c8e78ea61f8612978ab552fa77d54e58443116b0f7de5e4a199",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "5a6b5bb93ff71c8e78ea61f8612978ab552fa77d54e58443116b0f7de5e4a199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/5c41985dc6142aaa3eb3.blp",
+    "input": null,
+    "output": "5c41985dc6142aaa3eb367a137ed1f76acee6e4ee2e21f509a63a941109ea8fc",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "5c41985dc6142aaa3eb367a137ed1f76acee6e4ee2e21f509a63a941109ea8fc"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/67e2ae55d5c797768776.blp",
+    "input": null,
+    "output": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/7d166d4753e168499e3d.blp",
+    "input": null,
+    "output": "7d166d4753e168499e3d10ceef4334955649295c3157f4e9654fb7e60cb0bf58",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "7d166d4753e168499e3d10ceef4334955649295c3157f4e9654fb7e60cb0bf58"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/8388aa8e42ad6728664e.blp",
+    "input": null,
+    "output": "8388aa8e42ad6728664e5618a8c87c89bab6a5f08ff84ef3d00745e0dad12ed1",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8388aa8e42ad6728664e5618a8c87c89bab6a5f08ff84ef3d00745e0dad12ed1"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/85519ba8eff440ace02a.blp",
+    "input": null,
+    "output": "85519ba8eff440ace02a6ada4962aadae5da74c493e5541683a43eccac126f4b",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "85519ba8eff440ace02a6ada4962aadae5da74c493e5541683a43eccac126f4b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/8961bec66954ddec96a3.blp",
+    "input": null,
+    "output": "8961bec66954ddec96a32dfcb4221b701e2806bdf6f04307b4b46c934fcbc40c",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "8961bec66954ddec96a32dfcb4221b701e2806bdf6f04307b4b46c934fcbc40c"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/b147782124d534de2aea.blp",
+    "input": null,
+    "output": "b147782124d534de2aeaa3021aabc0a257ebf6b963f828dcb8ed072c071d15ec",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "b147782124d534de2aeaa3021aabc0a257ebf6b963f828dcb8ed072c071d15ec"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/bc44e548f3db453be6f6.blp",
+    "input": null,
+    "output": "bc44e548f3db453be6f650a5a70202440d123bc2582f3f0863ec0eabdc7552fb",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "bc44e548f3db453be6f650a5a70202440d123bc2582f3f0863ec0eabdc7552fb"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/d5cbdc8c757d1180bc58.blp",
+    "input": null,
+    "output": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "d5cbdc8c757d1180bc5865e6cb0978211c41ab39ef86cfa1866bf2919b7a3ab6"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/de80bfc77f2c2282913b.blp",
+    "input": null,
+    "output": "de80bfc77f2c2282913b24f248d07c43364bab639028b77701dc823037b97f70",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "de80bfc77f2c2282913b24f248d07c43364bab639028b77701dc823037b97f70"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceCombo1C/HD/TwinOgre/Materials/ffad816b8c2a8d3ee073.blp",
+    "input": null,
+    "output": "ffad816b8c2a8d3ee0730e86013d1ff5ba24344087ab56c68eb7c4b6de810d95",
+    "source_stage": "RACECOMBO1C",
+    "installed_sha256": "ffad816b8c2a8d3ee0730e86013d1ff5ba24344087ab56c68eb7c4b6de810d95"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/1d0c5f627ce13e4f2577.blp",
+    "input": null,
+    "output": "1d0c5f627ce13e4f257774fe9c5973a511b3847740bd3170db5bbb44079e967a",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "1d0c5f627ce13e4f257774fe9c5973a511b3847740bd3170db5bbb44079e967a"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/51c6c23f057dc7a3cf9b.blp",
+    "input": null,
+    "output": "51c6c23f057dc7a3cf9bafae4ed301a3c050c3a643f924535cd705d82fa2ba80",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "51c6c23f057dc7a3cf9bafae4ed301a3c050c3a643f924535cd705d82fa2ba80"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/5b4e7e25a186fab51797.blp",
+    "input": null,
+    "output": "5b4e7e25a186fab517976e29f14344201c92330226ef0e13aaf23abe026add94",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "5b4e7e25a186fab517976e29f14344201c92330226ef0e13aaf23abe026add94"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/67e2ae55d5c797768776.blp",
+    "input": null,
+    "output": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "67e2ae55d5c797768776b097c986f4122c177db6cb44571fe6c9f1c4dcf44199"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/7505fcbad4349fad0d60.blp",
+    "input": null,
+    "output": "7505fcbad4349fad0d60cb87f79a8dd332464cfb2aa1aaf70551a7ee07ce4b00",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "7505fcbad4349fad0d60cb87f79a8dd332464cfb2aa1aaf70551a7ee07ce4b00"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/9f8b36fc892ecf257c02.blp",
+    "input": null,
+    "output": "9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "9f8b36fc892ecf257c021f7f25b8d9a2093a8c9d19847d1a19e006fd012facf3"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/b6e8bd95924cca4094d5.blp",
+    "input": null,
+    "output": "b6e8bd95924cca4094d51162b392f6ccbb32183f104d6afaf0047ddf5dd15ee3",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "b6e8bd95924cca4094d51162b392f6ccbb32183f104d6afaf0047ddf5dd15ee3"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/bd3450c338f2bb29c152.blp",
+    "input": null,
+    "output": "bd3450c338f2bb29c15266f14e1ead6167cbe16b0427626edc6030aac352c874",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "bd3450c338f2bb29c15266f14e1ead6167cbe16b0427626edc6030aac352c874"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/edba8747a99d69aacbef.blp",
+    "input": null,
+    "output": "edba8747a99d69aacbef0f5e21690b768e1af1cf98a28894a9aa9be3a590021b",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "edba8747a99d69aacbef0f5e21690b768e1af1cf98a28894a9aa9be3a590021b"
+  },
+  {
+    "path": "01_导入Patch-YJ.mpq/Reborn/RaceTotemK1A/Textures/fbe840ff835426740919.blp",
+    "input": null,
+    "output": "fbe840ff8354267409197ce251f028556830ff5d8e573c4945d13806e81697c2",
+    "source_stage": "RACETOTEMK1A",
+    "installed_sha256": "fbe840ff8354267409197ce251f028556830ff5d8e573c4945d13806e81697c2"
+  },
+  {
+    "path": "02_仅正式基线可用_导入Patch-YB.mpq/DBFilesClient/CreatureDisplayInfo.dbc",
+    "input": "8d6d7724ab615dd0326ba5a35019e7c2d1c3f0e7e25d442d5c13538962ac8985",
+    "output": "4ffc3624463a5011d42eda9d9b4f03676c708111784fbe7386c21afdba84744a",
+    "installed_combination_sha256": "686df7746812341feed1618c6959c3aff2f905390c12acba92e91749a01e688e",
+    "installed_combination_retained": true,
+    "private_records": [
+      61100,
+      61101,
+      61102,
+      61103,
+      61104,
+      61105,
+      61106,
+      61107,
+      61108,
+      61109,
+      61110,
+      61111,
+      61112,
+      61113,
+      61114,
+      61115
+    ]
+  },
+  {
+    "path": "02_仅正式基线可用_导入Patch-YB.mpq/DBFilesClient/CreatureModelData.dbc",
+    "input": "874e360ff81eb21b382a087476b4054f6f4616c23a780883fd1cdeb624be62bf",
+    "output": "60e78325ac756c41e4de2aeb623d15bbfcaa6e6bb265cce47f232fcc3f46e8f0",
+    "installed_combination_sha256": "4e76b75670999852be059fc4b90e268eb39d3054ec1559395b88db89d7a647d2",
+    "installed_combination_retained": true,
+    "private_records": [
+      61100,
+      61101,
+      61102,
+      61103,
+      61104,
+      61105,
+      61106,
+      61107,
+      61108,
+      61109,
+      61110,
+      61111,
+      61112,
+      61113,
+      61114,
+      61115
+    ]
+  },
+  {
+    "path": "03_仅正式基线可用_覆盖服务端/Data/dbc/CreatureDisplayInfo.dbc",
+    "input": "a5f90a59ff5b0fe78678d02a9b359297977019417962887a4816f03ff829ce50",
+    "output": "dab0cbabfdec94e54a0096e95cfeb13fa254bd2358f9a310b28b5bcc38411c49",
+    "installed_combination_sha256": "0a51be46b3c935b812f3a3601bdddcde08903d36e6f526bc97603854419f0a2a",
+    "installed_combination_retained": true,
+    "private_records": [
+      61100,
+      61101,
+      61102,
+      61103,
+      61104,
+      61105,
+      61106,
+      61107,
+      61108,
+      61109,
+      61110,
+      61111,
+      61112,
+      61113,
+      61114,
+      61115
+    ]
+  },
+  {
+    "path": "03_仅正式基线可用_覆盖服务端/Data/dbc/CreatureModelData.dbc",
+    "input": "64e0cd0bf6d55b923e5b68b81c80292515d19d5ed1b46dac012ddbb83e5058e7",
+    "output": "ca3a067fcda612699204771ecc1b099da7f9ab3513af8334242b0787086346ce",
+    "installed_combination_sha256": "a49bd66257ab044fd3d94245de9fb9a53a5d5fc43672d726c832dad20a6e22c8",
+    "installed_combination_retained": true,
+    "private_records": [
+      61100,
+      61101,
+      61102,
+      61103,
+      61104,
+      61105,
+      61106,
+      61107,
+      61108,
+      61109,
+      61110,
+      61111,
+      61112,
+      61113,
+      61114,
+      61115
+    ]
+  },
+  {
+    "path": "03_仅正式基线可用_覆盖服务端/Data/dbc/zhCN/CreatureDisplayInfo.dbc",
+    "input": "cec954ae84628b06dbe8ca93ee19d1615f937e0fd4646107ac1a65e6f71f68d0",
+    "output": "784f6c07a9955ee0f4d734fb5db83919edbbd5efe1305c79f20761656721de7f",
+    "installed_combination_sha256": "fbade4ff3b338d6e0e54c339859aa7cce88a8fde9dbe332b36cbac22e06794b9",
+    "installed_combination_retained": true,
+    "private_records": [
+      61100,
+      61101,
+      61102,
+      61103,
+      61104,
+      61105,
+      61106,
+      61107,
+      61108,
+      61109,
+      61110,
+      61111,
+      61112,
+      61113,
+      61114,
+      61115
+    ]
+  },
+  {
+    "path": "03_仅正式基线可用_覆盖服务端/Data/dbc/zhCN/CreatureModelData.dbc",
+    "input": "fd94b00b52b7dacc46620eb1c6b43d72861a791d8ec2df377f4faa1a1d065b68",
+    "output": "ac9b7dfeafb43330d7405e6b173b5983c9d75648403095286773bc1dc81b6df5",
+    "installed_combination_sha256": "0d362bf087f188bb07a7b0721ce3d524ce94f7f4755df5807c736aeaf7c0a573",
+    "installed_combination_retained": true,
+    "private_records": [
+      61100,
+      61101,
+      61102,
+      61103,
+      61104,
+      61105,
+      61106,
+      61107,
+      61108,
+      61109,
+      61110,
+      61111,
+      61112,
+      61113,
+      61114,
+      61115
+    ]
+  },
+  {
+    "path": "05_SQL仅WORLD/data/customfixsql/world/racial_totems/RACECOMBO1A/01_WORLD_安装四族图腾.sql",
+    "input": null,
+    "output": "6ae4f1f2ed9f6e1fef0e452afb8b84ab10dac17410824c9dc037d066fd7ebfa6",
+    "source_stage": "original guarded RACECOMBO1A"
+  },
+  {
+    "path": "05_SQL仅WORLD/data/customfixsql/world/racial_totems/RACECOMBO1A/02_WORLD_仅需回退时执行.sql",
+    "input": null,
+    "output": "45564d0cb4026860167b2e6f47c65f907abb51ab492c8840b6ed3cb2049924d1",
+    "source_stage": "original guarded RACECOMBO1A"
+  },
+  {
+    "path": "04_覆盖到正式源码根目录/src/server/game/Globals/ObjectMgr.cpp",
+    "input": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4",
+    "output": "146c9e4f60109444757ee45c41312137f422aabac760407ae5282e11a96215e8",
+    "change_scope": "GetModelForTotem only; four enum cases; exact mapping still wins"
+  }
+]

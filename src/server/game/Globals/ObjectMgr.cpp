@@ -1862,6 +1862,8 @@ uint32 ObjectMgr::GetModelForTotem(SummonSlot totemSlot, Races race) const
         case RACE_DH_A:         // 20
         case RACE_PANDAREN_ALLIANCE: // 22
         case RACE_DARK_IRON_DWARF:   // 26
+        case RACE_SETHRAK:         // 36
+        case RACE_KUL_TIRAN:       // 39
         case RACE_DRACTHYR:        // 27
             fallbackRace = RACE_DRAENEI;
             break;
@@ -1873,6 +1875,8 @@ uint32 ObjectMgr::GetModelForTotem(SummonSlot totemSlot, Races race) const
         case RACE_FOREST_TROLL: // 18
         case RACE_DH_H:         // 21
         case RACE_NIGHTBORNE: // 23
+        case RACE_TWO_HEADED_OGRE: // 37
+        case RACE_MAGHAR_ORC:      // 49
         case RACE_NAGA:            // 25
             fallbackRace = RACE_ORC;
             break;
