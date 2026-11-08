@@ -1,0 +1,353 @@
+{
+  "files": [
+    {
+      "path": "代码原件/RACEJOINT1A/src/server/game/DataStores/DBCStores.cpp",
+      "sha256": "5a94374dceb4dbfafdb5299f1cb6342e8bb4502ff4a25557e5d3c9c770c2e058",
+      "source": "冻结联合ZIP/C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/DataStores/DBCStores.cpp"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/src/server/game/Entities/Player/Player.cpp",
+      "sha256": "716b5328ca3093dc8df1f0fe144c2639f8d3a816b6ee031b3baf8a35881906bf",
+      "source": "冻结联合ZIP/C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/src/server/game/Entities/Player/RaceMgr.cpp",
+      "sha256": "4ef22ebdabdc6ad8df897dff54d53513b56cdce49493d1241290fa75be675940",
+      "source": "冻结联合ZIP/C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Entities/Player/RaceMgr.cpp"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/src/server/game/Globals/ObjectMgr.cpp",
+      "sha256": "255c881f7f80dd6e03efaeafd3c972b5b47138632dab30563450236a337bcda4",
+      "source": "冻结联合ZIP/C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Globals/ObjectMgr.cpp"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/src/server/game/Handlers/CharacterHandler.cpp",
+      "sha256": "f63aba927809294373a5ae10b1942c9fafb77ab590f7b32405e63d7196c81a23",
+      "source": "冻结联合ZIP/C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Handlers/CharacterHandler.cpp"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/src/server/shared/SharedDefines.h",
+      "sha256": "de00772dcb3c01780c4f126550345ba63dc270322e550e6aa623f50f3d964053",
+      "source": "冻结联合ZIP/C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/shared/SharedDefines.h"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/modules/mod-reborn-coa-birth/CMakeLists.txt",
+      "sha256": "920e271f500cc4da2dd8b5d9b28eb677852d8471d416bd6c9a4a3617102d8b87",
+      "source": "冻结联合ZIP/A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/CMakeLists.txt"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/modules/mod-reborn-coa-birth/conf/mod-reborn-coa-birth.conf.dist",
+      "sha256": "24bb2c3ad5a1e2e1ec80c4cc2ed884b4af5243c66c010cb1793310e2e7f86b98",
+      "source": "冻结联合ZIP/A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/conf/mod-reborn-coa-birth.conf.dist"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/modules/mod-reborn-coa-birth/src/BirthPolicy.h",
+      "sha256": "0bcdbac9c6782f5c35663ad8ca0c7e77af0883612c20721fbdcd47cbf17dc05c",
+      "source": "冻结联合ZIP/A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/src/BirthPolicy.h"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/modules/mod-reborn-coa-birth/src/loader.h",
+      "sha256": "8ded8c4211455e1a043e1bf7697d4c69265ea8a4b3827f3cf2f9a5ad1b23948c",
+      "source": "冻结联合ZIP/A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/src/loader.h"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/modules/mod-reborn-coa-birth/src/RebornCoaBirth.cpp",
+      "sha256": "2b73ffee330e79ce0a43fc2de26f191791323c97bd9ec3e1ef7b6a773c62f244",
+      "source": "冻结联合ZIP/A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/src/RebornCoaBirth.cpp"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/出生.sql",
+      "sha256": "f84a7a61676d103c6cc30fc5262372bda7b599dd6fdbd18572c46c53f33ab380",
+      "source": "冻结原ZIP/A_服务端_Codex/交付/data/customfixsql/world/coa_birth/RACEJOINT1A/01_WORLD_RACENEXT1A_战士出生.sql"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/客户端/CharacterCreate.lua",
+      "sha256": "2445d916b892f310a5a5fa8b818dfb445c29558fc97bde62099f39529bdd2527",
+      "source": "冻结原ZIP"
+    },
+    {
+      "path": "代码原件/RACEJOINT1A/客户端/GlueParent.lua",
+      "sha256": "dd9b1e16d9ed8e4011df5895a167acc5003393a42b8a0a2f4ff17bcb98f831fd",
+      "source": "冻结原ZIP"
+    },
+    {
+      "path": "代码原件/RACEUI1C/CharacterCreate.lua",
+      "sha256": "d66f34e1e759890288391bd78a47da3097c0362d9db68445a02032aa12b839cc",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\CharacterCreate.lua"
+    },
+    {
+      "path": "代码原件/RACEUI1C/RebornRacePreview.lua",
+      "sha256": "5b844c7279e254eb08cd427fc2511112798f3c541426de6f35eff950bdb9a53d",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\RebornRacePreview.lua"
+    },
+    {
+      "path": "代码原件/TGFIX1B/TalentCenter.lua",
+      "sha256": "de670884353ea908a811534dcedbfdd6ef6357b03142b810486bf69794ed04b2",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenter.lua"
+    },
+    {
+      "path": "代码原件/TGFIX1B/RebornTalentGuide.toc",
+      "sha256": "6f5e71f062adecaa05b68d0c644dc49d1da34160d7cad1b2c539e5b061cf99ed",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\RebornTalentGuide.toc"
+    },
+    {
+      "path": "代码原件/TGFIX1B/ClassicSpecHome.lua",
+      "sha256": "f3a79c967c02c045a0d543daf3f2a510201886f89ba1ca194260253d693b4caa",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicSpecHome.lua"
+    },
+    {
+      "path": "代码原件/TGFIX1B/ClassicTalentLive.lua",
+      "sha256": "e3d35a4c73efddbda645f026d3127eb253d8188f9d5cf253294f49755c984ca0",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicTalentLive.lua"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/test_joint.py",
+      "sha256": "398931693749a1406a8a91dd1906659f621d93bc0dfedfa1b70c6201cac2dbca",
+      "source": "冻结ZIP/checks/test_joint.py"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/test_birth_order.py",
+      "sha256": "b488a6ccc4cacfd6580b98fea67f9f04a5cd613a337e3ee291386d0cacf354b0",
+      "source": "冻结ZIP/checks/test_birth_order.py"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/birth_order_fixture.cpp",
+      "sha256": "656adcc1a065a033a2a7cd44b927bfaa3b73c4322376bd5a93b05c7a0d3545e6",
+      "source": "冻结ZIP/checks/birth_order_fixture.cpp"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/module_fixture.cpp",
+      "sha256": "f436e6f6b61bb85b1ad0a5bb2df6627656864ac92ee51a4c05df9ce74d6e6a0d",
+      "source": "冻结ZIP/checks/module_fixture.cpp"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/test_private_sql.py",
+      "sha256": "f3fe6b2d413718a6491b79ae64c73c5c6354eb64e034dd64a569b55fcc4f3682",
+      "source": "冻结ZIP/checks/test_private_sql.py"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/check_languages.py",
+      "sha256": "b9d30a2b5c32e63d623ea2fa99728739600fd82a54aa7df4cbf36f0e4e129cb8",
+      "source": "冻结ZIP/checks/check_languages.py"
+    },
+    {
+      "path": "代码原件/实际测试/codexwork_TGFIX1A/test.py",
+      "sha256": "a8c3081b99ba1f320126d1858c9301ebbc3d6fd015dc5175531132d9f0ba25e6",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexwork_TGFIX1A\\test.py"
+    },
+    {
+      "path": "代码原件/实际测试/codexwork_RACEUI1C/test.py",
+      "sha256": "b8fa2db328cff978850fee46dd69f1e7c73fc04ae8099ac77c8804fad5628e57",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEUI1C\\test.py"
+    },
+    {
+      "path": "代码原件/实际测试/codexwork_RACEJOINT1A/test_module.py",
+      "sha256": "09446def8a774c33456ee86d5d82b015ce4f8d6bfccf1e96684c60a576b3761a",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\test_module.py"
+    },
+    {
+      "path": "代码原件/实际测试/codexwork_RACERELEASE1A/verify_release.py",
+      "sha256": "71fd237d5892a225bca1d9c087c253d9e01a3e56bd278e8b84fa1cf479970b85",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexwork_RACERELEASE1A\\verify_release.py"
+    },
+    {
+      "path": "代码原件/实际测试/codexwork_RACERELEASE1A/verify_frozen_archive.py",
+      "sha256": "46b5913aeee4511929e6c62569cf404f1551ecfab3ac4591cdb94566732988f0",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexwork_RACERELEASE1A\\verify_frozen_archive.py"
+    },
+    {
+      "path": "代码原件/实际测试/RACEJOINT1A/test_module_旧生成器.py",
+      "sha256": "09446def8a774c33456ee86d5d82b015ce4f8d6bfccf1e96684c60a576b3761a",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\test_module.py"
+    }
+  ],
+  "chapters": [
+    {
+      "name": "种族核心_DBCStores.cpp",
+      "chapter": "01_种族核心_DBCStores.cpp.md",
+      "source": "C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/DataStores/DBCStores.cpp",
+      "lines_explained": 9
+    },
+    {
+      "name": "种族核心_Player.cpp",
+      "chapter": "02_种族核心_Player.cpp.md",
+      "source": "C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Entities/Player/Player.cpp",
+      "lines_explained": 57
+    },
+    {
+      "name": "种族核心_RaceMgr.cpp",
+      "chapter": "03_种族核心_RaceMgr.cpp.md",
+      "source": "C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Entities/Player/RaceMgr.cpp",
+      "lines_explained": 35
+    },
+    {
+      "name": "种族核心_ObjectMgr.cpp",
+      "chapter": "04_种族核心_ObjectMgr.cpp.md",
+      "source": "C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Globals/ObjectMgr.cpp",
+      "lines_explained": 15
+    },
+    {
+      "name": "种族核心_CharacterHandler.cpp",
+      "chapter": "05_种族核心_CharacterHandler.cpp.md",
+      "source": "C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/game/Handlers/CharacterHandler.cpp",
+      "lines_explained": 22
+    },
+    {
+      "name": "种族核心_SharedDefines.h",
+      "chapter": "06_种族核心_SharedDefines.h.md",
+      "source": "C_核心前置_联合增量/交付/01_覆盖到源代码根目录/src/server/shared/SharedDefines.h",
+      "lines_explained": 54
+    },
+    {
+      "name": "出生模块_CMakeLists.txt",
+      "chapter": "07_出生模块_CMakeLists.txt.md",
+      "source": "A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/CMakeLists.txt",
+      "lines_explained": 3
+    },
+    {
+      "name": "出生模块_mod-reborn-coa-birth.conf.dist",
+      "chapter": "08_出生模块_mod-reborn-coa-birth.conf.dist.md",
+      "source": "A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/conf/mod-reborn-coa-birth.conf.dist",
+      "lines_explained": 2
+    },
+    {
+      "name": "出生模块_BirthPolicy.h",
+      "chapter": "09_出生模块_BirthPolicy.h.md",
+      "source": "A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/src/BirthPolicy.h",
+      "lines_explained": 51
+    },
+    {
+      "name": "出生模块_loader.h",
+      "chapter": "10_出生模块_loader.h.md",
+      "source": "A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/src/loader.h",
+      "lines_explained": 1
+    },
+    {
+      "name": "出生模块_RebornCoaBirth.cpp",
+      "chapter": "11_出生模块_RebornCoaBirth.cpp.md",
+      "source": "A_服务端_Codex/交付/01_覆盖到源代码根目录/modules/mod-reborn-coa-birth/src/RebornCoaBirth.cpp",
+      "lines_explained": 112
+    },
+    {
+      "name": "出生SQL",
+      "chapter": "12_出生SQL.md",
+      "source": "A_服务端_Codex/交付/data/customfixsql/world/coa_birth/RACEJOINT1A/01_WORLD_RACENEXT1A_战士出生.sql",
+      "lines_explained": 36
+    },
+    {
+      "name": "新族客户端_CharacterCreate.lua",
+      "chapter": "13_新族客户端_CharacterCreate.lua.md",
+      "source": "B_客户端_整合候选/交付/02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/CharacterCreate.lua",
+      "lines_explained": 13
+    },
+    {
+      "name": "新族客户端_GlueParent.lua",
+      "chapter": "14_新族客户端_GlueParent.lua.md",
+      "source": "B_客户端_整合候选/交付/02_MPQ导入目录/导入PATCH-YB/Interface/GlueXML/GlueParent.lua",
+      "lines_explained": 7
+    },
+    {
+      "name": "旧族切换成功经验_CharacterCreate.lua",
+      "chapter": "15_旧族切换成功经验_CharacterCreate.lua.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\CharacterCreate.lua",
+      "lines_explained": 53
+    },
+    {
+      "name": "旧族切换成功经验_RebornRacePreview.lua",
+      "chapter": "16_旧族切换成功经验_RebornRacePreview.lua.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexfix_20261105_阶段RACEUI1C_真实种族按钮刷新与长框修复\\02_覆盖到客户端根目录\\导入Patch-YB.mpq\\Interface\\GlueXML\\RebornRacePreview.lua",
+      "lines_explained": 9
+    },
+    {
+      "name": "天赋_TalentCenter.lua",
+      "chapter": "17_天赋_TalentCenter.lua.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\TalentCenter.lua",
+      "lines_explained": 61
+    },
+    {
+      "name": "天赋_RebornTalentGuide.toc",
+      "chapter": "18_天赋_RebornTalentGuide.toc.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\RebornTalentGuide.toc",
+      "lines_explained": 9
+    },
+    {
+      "name": "天赋_ClassicSpecHome.lua",
+      "chapter": "19_天赋_ClassicSpecHome.lua.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicSpecHome.lua",
+      "lines_explained": 10
+    },
+    {
+      "name": "天赋_ClassicTalentLive.lua",
+      "chapter": "20_天赋_ClassicTalentLive.lua.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexfix_20261107_072718_阶段TGFIX1B_当前已学绿色醒目与经典天赋累计修复\\02_覆盖到客户端根目录\\Interface\\AddOns\\RebornTalentGuide\\ClassicTalentLive.lua",
+      "lines_explained": 130
+    },
+    {
+      "name": "测试_test_joint.py",
+      "chapter": "21_测试_test_joint.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\test_joint.py",
+      "lines_explained": 93
+    },
+    {
+      "name": "测试_test_birth_order.py",
+      "chapter": "22_测试_test_birth_order.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\test_birth_order.py",
+      "lines_explained": 68
+    },
+    {
+      "name": "测试_birth_order_fixture.cpp",
+      "chapter": "23_测试_birth_order_fixture.cpp.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\birth_order_fixture.cpp",
+      "lines_explained": 93
+    },
+    {
+      "name": "测试_module_fixture.cpp",
+      "chapter": "24_测试_module_fixture.cpp.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\module_fixture.cpp",
+      "lines_explained": 186
+    },
+    {
+      "name": "测试_test_private_sql.py",
+      "chapter": "25_测试_test_private_sql.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\test_private_sql.py",
+      "lines_explained": 57
+    },
+    {
+      "name": "测试_check_languages.py",
+      "chapter": "26_测试_check_languages.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\check_languages.py",
+      "lines_explained": 22
+    },
+    {
+      "name": "测试_codexwork_TGFIX1A_test.py",
+      "chapter": "27_测试_codexwork_TGFIX1A_test.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexwork_TGFIX1A\\test.py",
+      "lines_explained": 112
+    },
+    {
+      "name": "测试_codexwork_RACEUI1C_test.py",
+      "chapter": "28_测试_codexwork_RACEUI1C_test.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261105\\codexwork_RACEUI1C\\test.py",
+      "lines_explained": 70
+    },
+    {
+      "name": "测试_codexwork_RACEJOINT1A_test_module.py",
+      "chapter": "29_测试_codexwork_RACEJOINT1A_test_module.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261106\\codexwork_RACEJOINT1A\\test_module.py",
+      "lines_explained": 98
+    },
+    {
+      "name": "测试_codexwork_RACERELEASE1A_verify_release.py",
+      "chapter": "30_测试_codexwork_RACERELEASE1A_verify_release.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexwork_RACERELEASE1A\\verify_release.py",
+      "lines_explained": 58
+    },
+    {
+      "name": "测试_codexwork_RACERELEASE1A_verify_frozen_archive.py",
+      "chapter": "31_测试_codexwork_RACERELEASE1A_verify_frozen_archive.py.md",
+      "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261107\\codexwork_RACERELEASE1A\\verify_frozen_archive.py",
+      "lines_explained": 16
+    }
+  ],
+  "explained_lines": 1562
+}
