@@ -19,7 +19,7 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS codex_racenext1a_install$$
 CREATE PROCEDURE codex_racenext1a_install()
 BEGIN
-IF COALESCE(@RACENEXT1A_INTEGRATION_VERIFIED,1)<>1 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='RACENEXT1A: core/client integration must be verified first'; END IF;
+IF COALESCE(@RACENEXT1A_INTEGRATION_VERIFIED,0)<>1 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='RACENEXT1A: core/client integration must be verified first'; END IF;
 IF EXISTS(SELECT 1 FROM `playercreateinfo` t LEFT JOIN rn1_expected_0 e ON t.`race` <=> e.`race` AND t.`class` <=> e.`class` AND t.`map` <=> e.`map` AND t.`zone` <=> e.`zone` AND t.`position_x` <=> e.`position_x` AND t.`position_y` <=> e.`position_y` AND t.`position_z` <=> e.`position_z` AND t.`orientation` <=> e.`orientation` WHERE t.`race` IN(39,49) AND e.`race` IS NULL) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='RACENEXT1A: conflicting playercreateinfo; no birth writes'; END IF;
 IF EXISTS(SELECT 1 FROM `playercreateinfo_action` t LEFT JOIN rn1_expected_1 e ON t.`race` <=> e.`race` AND t.`class` <=> e.`class` AND t.`button` <=> e.`button` AND t.`action` <=> e.`action` AND t.`type` <=> e.`type` WHERE t.`race` IN(39,49) AND e.`race` IS NULL) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='RACENEXT1A: conflicting playercreateinfo_action; no birth writes'; END IF;
 IF EXISTS(SELECT 1 FROM `playercreateinfo_item` t LEFT JOIN rn1_expected_2 e ON t.`race` <=> e.`race` AND t.`class` <=> e.`class` AND t.`itemid` <=> e.`itemid` AND t.`amount` <=> e.`amount` AND t.`Note` <=> e.`Note` WHERE t.`race` IN(39,49) AND e.`race` IS NULL) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='RACENEXT1A: conflicting playercreateinfo_item; no birth writes'; END IF;

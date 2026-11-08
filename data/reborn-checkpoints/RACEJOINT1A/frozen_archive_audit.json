@@ -1,0 +1,12 @@
+{
+  "files": 93,
+  "unpacked_differences": [
+    {
+      "path": "A_服务端_Codex/交付/data/customfixsql/world/coa_birth/RACEJOINT1A/01_WORLD_RACENEXT1A_战士出生.sql",
+      "frozen": "f84a7a61676d103c6cc30fc5262372bda7b599dd6fdbd18572c46c53f33ab380",
+      "unpacked": "f2c72a01ce8ce1f73e8c9ad42e7a2cc260dbdb82920720310db3febe7d1de71a"
+    }
+  ],
+  "action": "Published SQL restored from immutable original ZIP, default integration confirmation remains 0. Unpacked directory was not changed. No SQL executed.",
+  "archive_sha256": "0a5068bece8d688831d662e0eaf15e8a3e842c49660c68639a2bbba6f4dd4da4"
+}
