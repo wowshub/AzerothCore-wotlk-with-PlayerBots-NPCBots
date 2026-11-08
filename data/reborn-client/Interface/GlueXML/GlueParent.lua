@@ -630,7 +630,9 @@ function SetBackgroundModel(model, name, raza, zoom, gender)
  if model==CharacterSelect and type(name)=="string" then
   local token=string.upper(name)
   if token=="REBORNSETHRAK" then name="Human"
-  elseif token=="REBORNOGRE" then name="Orc" end
+  elseif token=="REBORNOGRE" then name="Orc"
+  elseif token=="REBORNKULTIRAN" then name="Human"   -- RACENEXT3A
+  elseif token=="MAGHAR" then name="Orc" end
  end
 
 
