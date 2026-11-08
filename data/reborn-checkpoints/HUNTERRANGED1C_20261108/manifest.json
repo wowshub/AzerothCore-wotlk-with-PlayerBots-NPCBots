@@ -1,0 +1,14 @@
+[
+  {
+    "path": "01_覆盖到源码根目录/modules/mod-reborn-coa-birth/src/RebornCoaBirth.cpp",
+    "input": "2b73ffee330e79ce0a43fc2de26f191791323c97bd9ec3e1ef7b6a773c62f244",
+    "output": "1bc0191928307860c006de2b4e5e59d7bec32a7904dab5ab093c98329fc97476",
+    "source_stage": "RACECLASS1C Hunter-only semantic extraction"
+  },
+  {
+    "path": "01_覆盖到源码根目录/src/server/game/Entities/Player/Player.cpp",
+    "input": "76bbae1dca2bfb79319a8896fba15996d5df2890f490ddd186bdefdcd7c974cc",
+    "output": "f5e524542bea84f45b9f8b29d58c2f4558b2a6a42708fc4b167d2ec01ea3b66f",
+    "source_stage": "RACECLASS1C Hunter-only semantic extraction"
+  }
+]

@@ -41,8 +41,39 @@ char const* CheckPrerequisites(Profile const& profile)
     return "language spell is not linked to its language skill";
 }
 
+// RACECLASS1C: old Hunters also need an idempotent repair after installation.
+void RepairHunterRangedSkills(Player* player)
+{
+    if (!player || (player->getRace(true) != 36 && player->getRace(true) != 37 &&
+        player->getRace(true) != 39 && player->getRace(true) != 49) || player->getClass() != CLASS_HUNTER)
+        return;
+
+    static constexpr uint32 skills[] = {45, 46, 226};
+    static constexpr uint32 spells[] = {264, 266, 5011, 75};
+    for (uint32 skill : skills)
+        if (!GetSkillRaceClassInfo(skill, player->getRace(true), player->getClass()))
+        {
+            LOG_ERROR("module", "RACECLASS1C: Hunter skill {} has no eligible DBC row; repair skipped", skill);
+            return;
+        }
+    for (uint32 spell : spells)
+        if (!sSpellMgr->GetSpellInfo(spell) || !player->IsSpellFitByClassAndRace(spell))
+        {
+            LOG_ERROR("module", "RACECLASS1C: Hunter spell {} missing/ineligible; repair skipped", spell);
+            return;
+        }
+    for (uint32 skill : skills)
+        if (!player->HasSkill(skill))
+            player->LearnDefaultSkill(skill, 0);
+    for (uint32 spell : spells)
+        if (!player->HasSpell(spell))
+            player->learnSpell(spell);
+}
+
+
 void Synchronize(Player* player)
 {
+    RepairHunterRangedSkills(player);
     if (!player)
         return;
     Profile const* profile = FindProfile(player->getRace(true), player->getClass());

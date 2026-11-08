@@ -12272,6 +12272,14 @@ void Player::LearnDefaultSkills()
 
     learnInfoSkills(info);
 
+    // RACECLASS1C: grant reviewed Hunter ranged skills before starting items.
+    // Exact IDs only; this does not open any race/class creation combination.
+    if (getClass() == CLASS_HUNTER &&
+        (getRace() == 36 || getRace() == 37 || getRace() == 39 || getRace() == 49))
+        for (uint32 skill : {uint32(45), uint32(46), uint32(226)})
+            if (!HasSkill(skill))
+                LearnDefaultSkill(skill, 0);
+
     // RACEFLOW2A: exact language grant, without copying parent racial spells.
     if (IsFirstCoaPostCreationRace(getRace()))
     {
