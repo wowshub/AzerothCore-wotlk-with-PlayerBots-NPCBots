@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: Reborn Mode Gate
+## Notes: First-login progression selection and introduction
+## Version: RACECOMBO1I
+## RequiredDeps: AIO_Client
+## OptionalDeps: SpellDraft
+## SavedVariablesPerCharacter: RebornModeGateDiagnostic
+RebornModeGate.lua

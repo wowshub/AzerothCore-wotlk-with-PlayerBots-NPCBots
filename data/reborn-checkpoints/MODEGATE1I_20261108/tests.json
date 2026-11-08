@@ -1,0 +1,12 @@
+{
+  "world_hidden_45s_replay": true,
+  "world_event_before_UIParent_show": true,
+  "preworld_picker_receipt_old_E_reproduced": true,
+  "H_no_preworld_receipt": true,
+  "selection_survives_parent_visibility_toggle": true,
+  "intro_replay_and_completion": true,
+  "old_completed_character_no_stale_replay": true,
+  "full_selection_server_completion_fixture": true,
+  "native_WoW_GPU_AIO_network_not_executed": true,
+  "game_test": false
+}

@@ -1,0 +1,15 @@
+{
+  "lua": "Lua5.1",
+  "full_client_source_executed": true,
+  "real_CreatePicker_and_button_callbacks": true,
+  "local_prepare_visible_before_network": true,
+  "begin_disabled_until_ready": true,
+  "lost_initial_reply_recovered_without_relog": true,
+  "render_receipt_stops_server_delivery": true,
+  "reload_requests_new_visibility_receipt": true,
+  "completion_ack_and_persistence_retained": true,
+  "completed_not_reopened": true,
+  "rejected_selection_restores_choice": true,
+  "native_UI_transport_and_DB_are_doubles": true,
+  "game_test": false
+}

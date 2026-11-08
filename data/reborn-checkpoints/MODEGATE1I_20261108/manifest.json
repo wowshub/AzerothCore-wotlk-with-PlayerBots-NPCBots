@@ -1,0 +1,44 @@
+[
+  {
+    "path": "01_覆盖到客户端根目录/Interface/AddOns/RebornModeGate/RebornModeGate.lua",
+    "baseline_input": "0c3ec1420a50c93224a846dacd6873351d47b6c680dbee4660a3474fa92f4e41",
+    "output": "a9d1e02d8b26aca024fd813e06c3d2a42b7f1d2eca2aad769328b5880d74636f",
+    "installed_sha256": "a9d1e02d8b26aca024fd813e06c3d2a42b7f1d2eca2aad769328b5880d74636f",
+    "source": "codexfix_20261108_阶段RACECOMBO1I_经典介绍页坐标失效修正候选"
+  },
+  {
+    "path": "01_覆盖到客户端根目录/Interface/AddOns/RebornModeGate/RebornModeGate.toc",
+    "baseline_input": "bbb5804590915b047cd47ddcca7de9085ac38c1b5ad0d9e903fd85037e67296c",
+    "output": "4a7eb63b94a8a1080d931a0cabf9c4b96dc2e2950e042389aab6c5670a3f44bb",
+    "installed_sha256": "4a7eb63b94a8a1080d931a0cabf9c4b96dc2e2950e042389aab6c5670a3f44bb",
+    "source": "codexfix_20261108_阶段RACECOMBO1I_经典介绍页坐标失效修正候选"
+  },
+  {
+    "path": "02_覆盖到服务端根目录/lua_scripts/AIO_Server/SpellDraftModeServer.lua",
+    "baseline_input": "76b387661c1e54599be902e6bd53b06ca1eeb8e017ae46305db6e505b65c3000",
+    "output": "c89acfa325f07701ad296a900dbf8e45587760eb651deedf3eb5c6c14b05bb6a",
+    "installed_sha256": "c89acfa325f07701ad296a900dbf8e45587760eb651deedf3eb5c6c14b05bb6a",
+    "source": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "03_覆盖到源码根目录/modules/mod-spelldraft/lua/AIO_Server/SpellDraftModeServer.lua",
+    "baseline_input": "76b387661c1e54599be902e6bd53b06ca1eeb8e017ae46305db6e505b65c3000",
+    "output": "c89acfa325f07701ad296a900dbf8e45587760eb651deedf3eb5c6c14b05bb6a",
+    "installed_sha256": "c89acfa325f07701ad296a900dbf8e45587760eb651deedf3eb5c6c14b05bb6a",
+    "source": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "02_覆盖到服务端根目录/lua_scripts/AIO_Server/SpellDraftModeClient.lua",
+    "baseline_input": "60e1ebfb3f2483e51dd47b56a2da6eea75745570e0a935035f77c0e78b14a0c4",
+    "output": "412ec55da648f9d137f94e375e1d3c0dc8e9aec717b6d561e01d4e09c34d0769",
+    "installed_sha256": "412ec55da648f9d137f94e375e1d3c0dc8e9aec717b6d561e01d4e09c34d0769",
+    "source": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  },
+  {
+    "path": "03_覆盖到源码根目录/modules/mod-spelldraft/lua/AIO_Server/SpellDraftModeClient.lua",
+    "baseline_input": "60e1ebfb3f2483e51dd47b56a2da6eea75745570e0a935035f77c0e78b14a0c4",
+    "output": "412ec55da648f9d137f94e375e1d3c0dc8e9aec717b6d561e01d4e09c34d0769",
+    "installed_sha256": "412ec55da648f9d137f94e375e1d3c0dc8e9aec717b6d561e01d4e09c34d0769",
+    "source": "codexfix_20261108_阶段RACECOMBO1E_首登模式与装备预览累计候选"
+  }
+]
