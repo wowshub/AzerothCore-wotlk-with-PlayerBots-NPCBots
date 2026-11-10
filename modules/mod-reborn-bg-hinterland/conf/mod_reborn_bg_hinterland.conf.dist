@@ -1,0 +1,45 @@
+[worldserver]
+
+###################################################################################################
+# mod-reborn-bg-hinterland (HLBG1A)  -  Hinterland battleground
+###################################################################################################
+
+# Match length in seconds (default 3600 = 60 minutes). Use a small value (e.g. 300) when testing.
+HinterlandBG.MatchDuration = 600
+
+# AFK handling (seconds without moving): warning, then teleport back to the start point.
+HinterlandBG.AFK.WarnSeconds = 0
+HinterlandBG.AFK.TeleportSeconds = 0
+
+# Keep players inside the map tiles that exist (invisible wall). Margin = yards kept from the tile edge.
+HinterlandBG.Bounds.Enable = 1
+HinterlandBG.Bounds.Margin = 40
+
+# Starting resources of each team; a team loses when its pool reaches 0.
+HinterlandBG.Resources.Alliance = 450
+HinterlandBG.Resources.Horde = 450
+
+# Resource loss per kill.
+HinterlandBG.ResourcesLoss.PlayerKill = 5
+HinterlandBG.ResourcesLoss.NpcNormal = 5
+HinterlandBG.ResourcesLoss.NpcBoss = 200
+
+# Rewards: honor per match result, token item per kill / win (item 40752 = Emblem of Heroism).
+HinterlandBG.Reward.MatchHonorDepletion = 1500
+HinterlandBG.Reward.MatchHonorTiebreaker = 750
+HinterlandBG.Reward.MatchHonorLoser = 0
+# Item given for every player kill (0 = none). 40752 is the Emblem of Heroism (DarkChaos default).
+HinterlandBG.Reward.KillItemId = 0
+HinterlandBG.Reward.KillItemCount = 1
+# Item given for every guard / boss kill and to the winners at the end (0 = none).
+HinterlandBG.Reward.NPCTokenItemId = 0
+HinterlandBG.Reward.NPCTokenItemCount = 1
+
+# Affixes (random weather + buff for the whole match). The affix spells (910010-910022) are DarkChaos custom spells:
+# they do NOT exist in this project, so keep affixes off until they are created.
+HinterlandBG.Affix.Enabled = 0
+HinterlandBG.Affix.Weather.Enabled = 0
+HinterlandBG.Affix.Worldstate = 1
+HinterlandBG.Affix.Announce = 0
+HinterlandBG.Affix.RandomOnStart = 1
+HinterlandBG.Affix.ConcurrentCount = 1
