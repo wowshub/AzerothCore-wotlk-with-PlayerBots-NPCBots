@@ -1,0 +1,23 @@
+--- a/WoW/Source/Ui/MinimapFrame.cpp
++++ b/WoW/Source/Ui/MinimapFrame.cpp
+@@ -2698,7 +2698,10 @@
+         for (uint32_t list = 0; list < 2; list++) {
+             for (uint32_t i = 0; i < s_objInfo[list].m_count; i++) {
+                 OBJINFO* info = &s_objInfo[list].m_data[i];
+-                bool generic = info->m_icon < 1 || info->m_icon > 11;
++                // WOW64MAP1A: classes without a stock icon (custom classes) used to be drawn from the add-on blip atlas
++                // (DragonUI keeps solid colour blocks in its first cells). Draw them as the plain white dot of
++                // PartyRaidBlips instead, so every group member is a round dot whatever the add-on skin is.
++                bool generic = false;
+                 if (generic != (pass != 0)) {
+                     continue;
+                 }
+@@ -2735,7 +2738,7 @@
+                 indices[5] = base + 3;
+                 s_blipIndices.Add(6, indices);
+ 
+-                int32_t icon = info->m_icon - 1;
++                int32_t icon = (info->m_icon >= 1 && info->m_icon <= 11) ? info->m_icon - 1 : 4;
+ 
+                 if (!list) {
+                     icon += 16;
