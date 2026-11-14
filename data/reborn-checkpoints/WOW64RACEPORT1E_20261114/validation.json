@@ -1,0 +1,146 @@
+{
+  "selection_records_changed": [
+    [
+      17,
+      0,
+      10,
+      1001,
+      31,
+      3101
+    ],
+    [
+      18,
+      0,
+      5,
+      501,
+      30,
+      3001
+    ],
+    [
+      19,
+      0,
+      10,
+      1002,
+      31,
+      3102
+    ],
+    [
+      20,
+      0,
+      5,
+      502,
+      30,
+      3002
+    ],
+    [
+      160,
+      1,
+      10,
+      1001,
+      31,
+      3101
+    ],
+    [
+      161,
+      1,
+      5,
+      501,
+      30,
+      3001
+    ],
+    [
+      162,
+      1,
+      10,
+      1002,
+      31,
+      3102
+    ],
+    [
+      163,
+      1,
+      5,
+      502,
+      30,
+      3002
+    ]
+  ],
+  "skins": [
+    {
+      "sex": "male",
+      "section_id_only_changes": [
+        [
+          37,
+          501,
+          3000
+        ],
+        [
+          57,
+          501,
+          3001
+        ],
+        [
+          58,
+          502,
+          3002
+        ],
+        [
+          59,
+          1001,
+          3101
+        ],
+        [
+          60,
+          1002,
+          3102
+        ]
+      ],
+      "indices_vertices_bones_UV_unchanged": true
+    },
+    {
+      "sex": "female",
+      "section_id_only_changes": [
+        [
+          36,
+          501,
+          3000
+        ],
+        [
+          56,
+          501,
+          3001
+        ],
+        [
+          57,
+          502,
+          3002
+        ],
+        [
+          58,
+          1001,
+          3101
+        ],
+        [
+          59,
+          1002,
+          3102
+        ]
+      ],
+      "indices_vertices_bones_UV_unchanged": true
+    }
+  ],
+  "catalog_rows": 26,
+  "other_24_unchanged": true,
+  "offline_equipment_state_cases": 24,
+  "status": "未实机",
+  "files": {
+    "selection-before.bin": "158922c32373a1fb38c738a61e54edaaac56792d70ff9c0ea6e767b6cf001a0a",
+    "selection-after.bin": "85c28ed53299c3d64c66894752881378f4bfb1ae91ba0ab1724abedc6da04a20",
+    "geometry-before.bin": "b1efaf956d816507d7380feb6bc4779014ff028b43553c9d8ea615b98178e545",
+    "geometry-after.bin": "9afbbdac563dae14af3a4126d664023b25b612627cf89eebed24fb6b0b857813",
+    "male-before.skin": "cd6c4592a02c64ead5981f6cb954fbfe9b2b09a576b61c0a6245ee2335f8ae30",
+    "male-after.skin": "137778c3bf99e54d684f95ebd4eb0222f051582698bc29df6a96e7fcf6c2da64",
+    "female-before.skin": "d99bcc3c0b04d8d8eb55d839b28dbbf7dc819e433ef85ada334870a6ecdf715e",
+    "female-after.skin": "0c41e99c955d86c0c6a8e414c6f61c56923727a05e4a48b5ef71f79375a000e5"
+  }
+}

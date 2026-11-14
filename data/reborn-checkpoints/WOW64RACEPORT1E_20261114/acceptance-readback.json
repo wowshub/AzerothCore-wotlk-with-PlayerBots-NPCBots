@@ -1,0 +1,22 @@
+[
+  {
+    "file": "EsteriaAppearanceGeometry.bin",
+    "sha256": "9afbbdac563dae14af3a4126d664023b25b612627cf89eebed24fb6b0b857813",
+    "matches_E": true
+  },
+  {
+    "file": "Esteria\\RebornNativeMechagnome.bin",
+    "sha256": "85c28ed53299c3d64c66894752881378f4bfb1ae91ba0ab1724abedc6da04a20",
+    "matches_E": true
+  },
+  {
+    "file": "custom\\mechagnome\\native\\male\\mechagnomemale00.skin",
+    "sha256": "137778c3bf99e54d684f95ebd4eb0222f051582698bc29df6a96e7fcf6c2da64",
+    "matches_E": true
+  },
+  {
+    "file": "custom\\mechagnome\\native\\female\\mechagnomefemale00.skin",
+    "sha256": "0c41e99c955d86c0c6a8e414c6f61c56923727a05e4a48b5ef71f79375a000e5",
+    "matches_E": true
+  }
+]
