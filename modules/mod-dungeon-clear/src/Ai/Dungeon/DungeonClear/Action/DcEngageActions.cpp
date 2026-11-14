@@ -775,6 +775,23 @@ bool DungeonClearEngageTrashAction::Execute(Event /*event*/)
     if (target && appr.engageWalkGivenUp.Has(target->GetGUID(), getMSTime()))
         target = nullptr;
 
+    // DCBOSS1A: a dungeon boss (or an add of a live boss) is never engage-trash. The corridor
+    // scans can nominate the next boss as "blocking trash" once it is in view down the route,
+    // and the pull pipeline vetoes it ("at-boss path owns it") — but this walk-in did not, so
+    // the tank walked straight at the boss from 60+ yards, off the authored route, while
+    // Advance yielded to that walk-in and the party stayed out of range (Azjol-Nerub, the
+    // doorway before Anub'arak: 170 nominations, 47 pull vetoes, then "Stuck near ..."). The
+    // route and the at-boss handoff (party-ready gate, anchor checks) own the boss instead.
+    if (target && (DcTargeting::IsDungeonBossEntry(context, target->GetEntry()) ||
+                   DcTargeting::IsBossSummon(target)))
+    {
+        LOG_DEBUG("playerbots.dungeonclear",
+                  "[DC:{}] engage trash: {} is a dungeon boss or a boss add -> left to the route "
+                  "and the at-boss path",
+                  bot->GetName(), target->GetGUID().ToString());
+        target = nullptr;
+    }
+
     if (!target)
     {
         if (!stickyGuid.IsEmpty())
