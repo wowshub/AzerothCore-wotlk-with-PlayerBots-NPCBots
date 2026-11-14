@@ -1,0 +1,66 @@
+--- a/WoW/Source/SoundInterface/SoundInterface2ZoneSounds.cpp
++++ b/WoW/Source/SoundInterface/SoundInterface2ZoneSounds.cpp
+@@ -1,4 +1,5 @@
+ #include <cstddef>
++#include <cstdio>
+ #include <cstdint>
+ #include <new>
+ #include "WoW/Source/SoundInterface/SoundInterface2ZoneSounds.h"
+@@ -449,9 +450,27 @@
+ 
+ // VERIFY: 26708b3b manual
+ // OFFSET: 0x004C9110
++extern void RebornExitStage(const char* stage); // WOW64SND1A diagnostics only
++
+ int32_t SI2::PlaySoundFile(const char* filename, int32_t group) {
+     static CVar* s_enableAllSound = CVar::Lookup("Sound_EnableAllSound");
+ 
++    // WOW64SND1A: record every music request (login screen music was silent) in RebornExitTrace.log.
++    if (group == 5) {
++        static CVar* s_dbgEnableMusic = CVar::Lookup("Sound_EnableMusic");
++        static char s_dbgMsg[512];
++        std::snprintf(s_dbgMsg, sizeof(s_dbgMsg), "SOUND PlayMusic file=%s enableAll=%d inMovie=%d enableMusic=%d",
++                      filename ? filename : "(null)", s_enableAllSound ? static_cast<int>(s_enableAllSound->m_intValue) : -1,
++                      static_cast<int>(CGGameUI::m_inMovie), s_dbgEnableMusic ? static_cast<int>(s_dbgEnableMusic->m_intValue) : -1);
++        RebornExitStage(s_dbgMsg);
++        // WOW64SND1D: state of the PREVIOUS script music right before it is replaced. A position that kept
++        // advancing means it really played; pos=0 with isPlaying=1 means the stream never started.
++        static char s_dbgMsg3[160];
++        std::snprintf(s_dbgMsg3, sizeof(s_dbgMsg3), "SOUND previous script music: isPlaying=%d pos=%u ms",
++                      s_scriptMusic.m_sound.IsPlaying() ? 1 : 0, static_cast<unsigned>(s_scriptMusic.m_sound.GetPosition()));
++        RebornExitStage(s_dbgMsg3);
++    }
++
+     if (!s_enableAllSound || !s_enableAllSound->m_intValue || CGGameUI::m_inMovie) {
+         return 17;
+     }
+@@ -467,7 +486,11 @@
+     SESound localSound;
+     SESound* sound = group == 5 ? &s_scriptMusic.m_sound : &localSound;
+ 
+-    sound->Create2D(filename, group != 4, nullptr, nullptr, false, false, 0, group != 5 ? 128 : 100, 0xFFFFFFFF);
++    // WOW64SND1E: the decode buffer size used to be 0xFFFFFFFF here. It goes straight into FMOD's
++    // exinfo.decodebuffersize; with that value the script music stream never became ready on the 64-bit
++    // client (isPlaying=1 but the position stayed 0 for 20+ seconds, so PlayMusic and the login screen
++    // music were silent). Every sound-kit sound passes 0 (= FMOD default), so do the same.
++    sound->Create2D(filename, group != 4, nullptr, nullptr, false, false, 0, group != 5 ? 128 : 100, 0);
+     sound->SetChannelGroup(SI2::s_channelGroupNames[group], true);
+ 
+     SI2SoundUserData* userData = new (SMemAlloc(sizeof(SI2SoundUserData), __FILE__, __LINE__, 0)) SI2SoundUserData();
+@@ -481,6 +504,16 @@
+     sound->SetVolume(1.0f);
+     sound->CompleteNonBlockingLoad();
+     sound->Play();
++
++    if (group == 5) {
++        static char s_dbgMsg2[256];
++        std::snprintf(s_dbgMsg2, sizeof(s_dbgMsg2),
++                      "SOUND PlayMusic result isPlaying=%d pos=%u groupVol SCRIPTMUSIC=%.2f MUSIC=%.2f SFX=%.2f",
++                      sound->IsPlaying() ? 1 : 0, static_cast<unsigned>(sound->GetPosition()),
++                      SE2::GetChannelGroupVolume("SCRIPTMUSIC"), SE2::GetChannelGroupVolume("MUSIC"),
++                      SE2::GetChannelGroupVolume("SFX"));
++        RebornExitStage(s_dbgMsg2);
++    }
+ 
+     if (sound->IsPlaying() && group == 5) {
+         SI2::sm_bLuaMusicPlaying = 1;

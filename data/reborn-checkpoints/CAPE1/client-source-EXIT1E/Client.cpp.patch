@@ -1,0 +1,72 @@
+--- a/WoW/Source/Client.cpp
++++ b/WoW/Source/Client.cpp
+@@ -514,7 +514,12 @@
+ // OFFSET: 0x00402910
+ 
+ // WOW64CREATOR1E: local shutdown stage evidence; no account data or asynchronous logging.
++static volatile LONG64 s_rebornExitProgressTick = 0;
++static const char* volatile s_rebornExitStageName = "";
+ void RebornExitStage(const char* stage) {
++    // WOW64EXIT1A: progress marker read by the exit watchdog.
++    s_rebornExitStageName = stage;
++    InterlockedExchange64(&s_rebornExitProgressTick, static_cast<LONG64>(GetTickCount64()));
+     char path[MAX_PATH] = {};
+     if (!GetModuleFileNameA(nullptr, path, MAX_PATH)) return;
+     char* slash = strrchr(path, '\\');
+@@ -527,7 +532,56 @@
+     }
+ }
+ 
++// WOW64EXIT1A: exit watchdog.
++// Some systems (seen with the SoundWire virtual audio device) make the FMOD/WinMM output close never return, so the
++// client stays "not responding" after Exit. The watchdog thread watches the shutdown stage markers; if no marker has
++// advanced for 3 seconds (15 seconds while the add-ons write their saved variables) it logs and ends the process.
++// Config.wtf is saved before the watchdog starts, so no settings are lost. It is armed only on the exit path.
++static volatile LONG s_rebornExitWatchdogStarted = 0;
++
++static void RebornExitWatchdogLog(const char* text, unsigned long long stuckMs, const char* stage) {
++    char path[MAX_PATH] = {};
++    if (!GetModuleFileNameA(nullptr, path, MAX_PATH)) return;
++    char* slash = strrchr(path, static_cast<char>(92));  // backslash
++    if (!slash) return;
++    strcpy_s(slash + 1, size_t(MAX_PATH - (slash + 1 - path)), "RebornExitTrace.log");
++    FILE* file = nullptr;
++    if (!fopen_s(&file, path, "a") && file) {
++        std::fprintf(file, "%llu thread=%lu %s (no progress for %llu ms after stage '%s')\n",
++                     static_cast<unsigned long long>(GetTickCount64()), GetCurrentThreadId(), text, stuckMs,
++                     stage ? stage : "?");
++        std::fclose(file);
++    }
++}
++
++static DWORD WINAPI RebornExitWatchdogThread(LPVOID) {
++    for (;;) {
++        Sleep(250);
++        const unsigned long long now = GetTickCount64();
++        const unsigned long long last = static_cast<unsigned long long>(s_rebornExitProgressTick);
++        const char* stage = s_rebornExitStageName;
++        const unsigned long long limit = (stage && strstr(stage, "ShutdownAddOns")) ? 15000ULL : 3000ULL;
++        if (now >= last && now - last >= limit) {
++            RebornExitWatchdogLog("EXIT WATCHDOG: shutdown is stuck, ending the process", now - last, stage);
++            TerminateProcess(GetCurrentProcess(), 0);
++            return 0;
++        }
++    }
++}
++
++static void RebornStartExitWatchdog() {
++    if (InterlockedExchange(&s_rebornExitWatchdogStarted, 1)) return;
++    InterlockedExchange64(&s_rebornExitProgressTick, static_cast<LONG64>(GetTickCount64()));
++    HANDLE thread = CreateThread(nullptr, 0, RebornExitWatchdogThread, nullptr, 0, nullptr);
++    if (thread) CloseHandle(thread);
++}
++
+ static void WowClientDestroy() {
++    // WOW64EXIT1A: save the settings first (CVar::Destroy saves them again later), then arm the watchdog.
++    RebornExitStage("before CVar::SaveAll (WOW64EXIT1A)");
++    CVar::SaveAll();
++    RebornExitStage("after CVar::SaveAll (WOW64EXIT1A)");
++    RebornStartExitWatchdog();
+     // Not in the original: mirror of OnClientInitialized, the update handler goes away here.
+     RebornExitStage("before sExtensionMgr->OnClientDestroy");
+     sExtensionMgr->OnClientDestroy();
