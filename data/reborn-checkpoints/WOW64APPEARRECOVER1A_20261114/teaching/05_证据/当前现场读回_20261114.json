@@ -1,0 +1,35 @@
+{
+  "active_disable_flag": false,
+  "files": [
+    {
+      "file": "WowClient64.exe",
+      "size": 17127936,
+      "sha256": "62965b1a506e2b2b5df9ffdcf5c0d21fc2705a485ae02fcb738e02c986ca4fce"
+    },
+    {
+      "file": "EsteriaAppearanceGeometry.bin",
+      "size": 10859286,
+      "sha256": "9afbbdac563dae14af3a4126d664023b25b612627cf89eebed24fb6b0b857813"
+    },
+    {
+      "file": "Patch-YB.mpq:Esteria\\RebornNativeMechagnome.bin",
+      "size": 168804,
+      "sha256": "85c28ed53299c3d64c66894752881378f4bfb1ae91ba0ab1724abedc6da04a20"
+    },
+    {
+      "file": "Patch-YB.mpq:Interface\\GlueXML\\CharacterSelect.lua",
+      "size": 50609,
+      "sha256": "61fae155fdc6b7de1bf3a240992e4dd4b6c6b1b4ea57f1e7504dec87feacdb00"
+    },
+    {
+      "file": "Patch-YI.mpq:custom\\mechagnome\\native\\male\\mechagnomemale00.skin",
+      "size": 720482,
+      "sha256": "137778c3bf99e54d684f95ebd4eb0222f051582698bc29df6a96e7fcf6c2da64"
+    },
+    {
+      "file": "Patch-YI.mpq:custom\\mechagnome\\native\\female\\mechagnomefemale00.skin",
+      "size": 722928,
+      "sha256": "0c41e99c955d86c0c6a8e414c6f61c56923727a05e4a48b5ef71f79375a000e5"
+    }
+  ]
+}

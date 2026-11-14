@@ -1,0 +1,19 @@
+# WOW64RACEPORT1C 候选交接（未实机）
+
+包：D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261113\codexfix_20261113_阶段WOW64RACEPORT1C_机械侏儒眼镜土灵眼睛与四步骤标题候选.zip
+SHA256：fb3f0836ab617f2ca39277fc45d2d728e1d731148a849184df875d12cf7705c6
+EXE：f9321d611474bbbef7eaa1289a98c37eb4f06e762e82e38cb95ecc8773bb1a94
+完整安装、来源、回退：D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261113\codexfix_20261113_阶段WOW64RACEPORT1C_机械侏儒眼镜土灵眼睛与四步骤标题候选\README.md
+
+用户实测B机械侏儒女性仍空白眼，新增68土灵白眼、要求恢复机械眼镜等，另报第4步数字间歇错字。这四项已纳入C候选；B眼睛方案失败，不能用165贴图可解码代替游戏效果，不继续使用单眼图硬绑定。
+实际已装EXE b71bf56f…及YI两机械M2等于B输出，YB主表等于B246f699c…，并非用户没安装。C保留B其他更改，不继承其游戏通过。
+
+找到原CoA1.92 make_mechagnome_dbc.py及上游EsteriaWoW caf12984e4b1c9144adcdf0d3aeb714ae69b7af4的preparation.json和mechagnome_race_pack.py：机械原生眼mesh为双眼UV，type5材质由EyeColor/EyeStyle/Eyesight三字段混合编码选择；B使用的128单眼图与当前256双眼UV不符。恢复当前模型B之前的type5定义和替换表，逐字节等于B真原件，不换SKIN/顶点/UV/骨/动作。把当前根目录EsteriaAppearanceMaterials.bin 47的792条转换为真实67私有EHM1目录；不改真实race、不增加网络footer。
+机械12类选项均按原混合进制解析，几何从上游语义映射到本地实际已有组。20种Modification是眼镜加机械耳部组合，不是20副不同眼镜；4臂2腿33眼色3眼型4视力3金属涂装。无选项时显式清掉旧部件。上游完整M2拓扑已变（两性顶点比本地多），本批绝不混入其模型，只复用已核对本地部件编号的元数据。
+土灵68仅接入现有Earthen目录的112条type5眼色/视力记录，保留本地stock身体；非完整16项高级外观移植、无第6外观字节。
+Creator数字/中文拆成两个字体字符串，数字独立拉丁font与固定宽度，停止每次Render把数字与中文拼写；同时翻译机械新选项并跳过EA_GET越界空名占位，避免29条假选项。未证明全局glyph cache根因，当前仅候选处理。
+
+验证：完整Release x64编译链接通过；生产头/UNDEBUG原生904眼组合、320肢体改装组合及索引容量/身份隔离；890贴图实际读取解码；Lua5.1累计生命周期/合同回归及40步切换、12个命名机械选项两页通过；ZIP每成员读回一致。上述不等于实机。C仅2CPP/H累计源、1Lua、2目录、2机械M2，无DBC/BLP/skin/土灵M2/蛇人文件/服务器SQL写入，25累计源随包。
+输入输出详见checks/input-output.json，Creator adbb4a262d7979054788cf5b9fa9fc9a50a44d7a5835d1512c0a48df9affeea3 → 97f7ae1a48f2c4c17ce2993bdcf1c4080363084be8058af24f2264db2e537165。模型备份为已装失败B，回退会回到B眼睛仍错状态。未部署运行端、未提交推送。出包前协作尾表/最近交接无新冲突；原Skill不把C登记为已通过。
+
+待用户：机械男女瞳孔/眼色/眼型/视力、20改装来回与清除、臂腿；土灵男女眼部；数字4多次切页。其他B项、理发、头盔隐藏矩阵、保存重登、退出卡死不能自动晋升成功。
