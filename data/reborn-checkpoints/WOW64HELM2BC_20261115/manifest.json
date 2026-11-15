@@ -1,0 +1,11 @@
+{
+  "ACCEPTANCE.md": "af667f2e04f7063646932ece4705bdda06c025a651f4b9d6f2238e0f00fc481a",
+  "socket_changes.json": "cf356cef745449360134d2cf8a1bd8d7af2b03037ea0e60bbaf27e7ddfbb30c7",
+  "source_hashes.json": "80b04104cef171dc625928892afcfa4189c15023b9e65fac4382dc0709b01b87",
+  "tests.json": "692e4c5356c63f82a9797daa4de9e30b434b8ee63c39a20a74a2af58b35f935e",
+  "knowledge/INDEX_ADDITIONS.md": "c77f78bf33c8755962f73200e56bf3a86c582f185160c0f864f54cfa9440ded9",
+  "knowledge/beascendskills/repair-wow64-race-helmet-fitting/SKILL.md": "5c1fe0ab14415c4e01e67c2564b67daac78c8e232940f3ef830a69f509be4a4a",
+  "knowledge/beascendskills/repair-wow64-race-helmet-fitting/references/helm2bc-20261115.md": "2f7987536eedc4053ebfcdc3cf10f2c3f1bc4cd241ea3907967bc7443e2d2b2e",
+  "knowledge/beascendtutor/repair-wow64-race-helmet-fitting/TUTOR.md": "709352e482debbf9b7d0600953bb844a9365411a4d68ae48bcd3aceff99f04ff",
+  "patches/HELM2C.patch": "514ffaa5cc6611c0b5c26a32cbb10b8f0dea90821dea4d8503d12cb0dc4b8218"
+}

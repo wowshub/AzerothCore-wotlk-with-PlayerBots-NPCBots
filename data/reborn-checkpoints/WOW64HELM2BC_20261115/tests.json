@@ -1,0 +1,6 @@
+{
+  "actual_function": "FitLargeRaceHelmet",
+  "result": "pass",
+  "cases": "four profiles; no helmet; unloaded; wrong skeleton; invalid sex; repeated call; nine unaffected races; shoulders untouched",
+  "not_tested": "live visual fit and movement"
+}

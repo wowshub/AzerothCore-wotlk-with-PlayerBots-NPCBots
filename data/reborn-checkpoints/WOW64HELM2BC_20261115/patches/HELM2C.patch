@@ -1,0 +1,42 @@
+--- a/WoW/Common/ComponentCore/EsteriaNativeEquipment.inl
++++ b/WoW/Common/ComponentCore/EsteriaNativeEquipment.inl
+@@ -290,6 +290,31 @@
+     }
+     width=map.width;height=map.height;outfit=std::move(composed);return true;
+ }
++// HELM2C: legacy Hu/Or meshes need independent crown and scale profiles.
++// Limit this to the installed Seven1A skeletons; never alter a shapeshift or another race.
++void FitLargeRaceHelmet(CCharacterComponent* c) {
++    auto const& prefs=c->m_data.m_preferences;
++    if ((prefs.m_raceID!=57&&prefs.m_raceID!=66)||prefs.m_sexID>1||!c->m_itemDisplayID[ITEMSLOT_HEAD])return;
++    auto* parent=c->m_data.m_model;
++    if(!parent||!(parent->m_fFlags&1)||!parent->m_shared||!parent->m_shared->m_data)return;
++    auto* data=parent->m_shared->m_data;
++    const bool female=prefs.m_sexID!=0, vrykul=prefs.m_raceID==57;
++    const unsigned expectedBones=vrykul?(female?163u:154u):(female?237u:109u);
++    const unsigned expectedHead=vrykul?(female?16u:39u):(female?45u:15u);
++    if(data->m_bones.m_count!=expectedBones||data->m_boneIndicesById.m_count<=6)return;
++    unsigned head=data->m_boneIndicesById[6];if(head!=expectedHead||head>=data->m_bones.m_count)return;
++    auto const& pivot=data->m_bones[head].m_pivot;
++    // Per-sex fitting candidates from native head measurements and user screenshots.
++    const float scale=vrykul?(female?1.40f:2.30f):(female?1.50f:1.35f);
++    const float dx=vrykul?(female?.08508668f:.0625562f):(female?.10806789f:.12566625f);
++    const float dz=vrykul?(female?.18511772f:.18413198f):(female?.19042838f:.19398522f);
++    C3Vector crown(pivot.x+dx*scale,pivot.y,pivot.z+dz*scale);
++    for(auto* helmet=parent->m_attachList;helmet;helmet=helmet->m_attachNext) {
++        if(helmet->m_attachmentId!=ATTACH_HELM)continue;
++        // Instance-local, animated head frame. Does not mutate shared mesh or body size.
++        helmet->SetAttachmentFrame(head,crown,scale);
++    }
++}
+ void FitNativePlayerHelmet(CCharacterComponent* c) {
+     auto const& prefs=c->m_data.m_preferences;
+     if ((prefs.m_raceID!=108&&prefs.m_raceID!=76)||prefs.m_sexID>1||!c->m_itemDisplayID[ITEMSLOT_HEAD])return;
+@@ -327,6 +352,7 @@
+     }
+ }
+ void BindSelectorOutfit(CCharacterComponent* c) {
++    FitLargeRaceHelmet(c);
+     auto race=c->m_data.m_preferences.m_raceID;
+     if(race!=108&&race!=76)return;
+     bool nativeBody=race==108||race==76;

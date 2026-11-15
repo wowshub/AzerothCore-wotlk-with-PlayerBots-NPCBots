@@ -1,0 +1,135 @@
+[
+  {
+    "race": 37,
+    "sex": 0,
+    "path": "Character/Ogre/Female/OgreMagePC.m2",
+    "donor": "Character/Orc/Male/OrcMale.m2",
+    "old": [
+      0.24542675912380219,
+      0.0,
+      2.8502354621887207
+    ],
+    "new": [
+      0.12130778096616268,
+      -0.19827736914157867,
+      2.7293553352355957
+    ],
+    "offset": 926062,
+    "before": "b6171c3938b1744bee1a45ba2258ab8135e048354b137486e30666be5c0704f7",
+    "after": "81496ecfa72bb463e9478db7b4aa8e8e7642be30379decf7957768344b7fc2ed"
+  },
+  {
+    "race": 43,
+    "sex": 0,
+    "path": "Reborn/Seven1A/character/darkfallen/male/darkfallenmale.m2",
+    "donor": "Character/VoidElf/Male/voidElfMale.M2",
+    "old": [
+      -0.048879463225603104,
+      0.0,
+      1.9009867906570435
+    ],
+    "new": [
+      0.03094452992081642,
+      0.0,
+      2.068742036819458
+    ],
+    "offset": 1943740,
+    "before": "ae6645db53a2062650cf47a387bc4bb1067e6ef8bb65148e6dfc910c3eb275d1",
+    "after": "c404cee5dc8acefe923649bfb10a0491576cf02ce48271eeaba8b220296a02f7"
+  },
+  {
+    "race": 43,
+    "sex": 1,
+    "path": "Reborn/Seven1A/character/darkfallen/female/darkfallenfemale.m2",
+    "donor": "Character/VoidElf/Female/voidElfFemale.M2",
+    "old": [
+      -0.06413532048463821,
+      0.0,
+      1.749036431312561
+    ],
+    "new": [
+      -0.06424278020858765,
+      0.0,
+      1.9539167881011963
+    ],
+    "offset": 1633416,
+    "before": "f38eb24f44cc464d28dce043b23ada655daf86c44df2e7ed695dd092b03efa85",
+    "after": "5a375d8bccdc8125c9eb5e9310f6a295f29d0ae14f6ea3b0d7b378f7cf8171a4"
+  },
+  {
+    "race": 52,
+    "sex": 0,
+    "path": "Reborn/Seven1A/custom/skyborne/expanded/male/7478487.m2",
+    "donor": "Character/VoidElf/Male/voidElfMale.M2",
+    "old": [
+      -0.048879463225603104,
+      0.0,
+      1.9009867906570435
+    ],
+    "new": [
+      0.03094452992081642,
+      0.0,
+      2.068742036819458
+    ],
+    "offset": 2954852,
+    "before": "e9ade8fdf9caf5f0e6062c743454f07d9ca6fed8ea6702c70b33d4a782b7a2b8",
+    "after": "a260db3f0611ae29a6a91194a68faeab589f4574bc08d666b4638d62af5b1f7f"
+  },
+  {
+    "race": 52,
+    "sex": 1,
+    "path": "Reborn/Seven1A/custom/skyborne/expanded/female/7478494.m2",
+    "donor": "Character/VoidElf/Female/voidElfFemale.M2",
+    "old": [
+      -0.06413532048463821,
+      0.0,
+      1.749036431312561
+    ],
+    "new": [
+      -0.06424278020858765,
+      0.0,
+      1.9539167881011963
+    ],
+    "offset": 2761592,
+    "before": "53b013458c9d9dfd02ef499f40c18aa2b525741527ab1f45d202b908907fb35b",
+    "after": "f16cfd784f3678bbf8ad6e27cd4fb0c7e9f5eec70bf3d12f497ecb212a1b72b5"
+  },
+  {
+    "race": 80,
+    "sex": 0,
+    "path": "Reborn/Seven1A/custom/haranir/native/male/harronirmale.m2",
+    "donor": "Character/NightElf/Male/NightElfMale.m2",
+    "old": [
+      -0.04496235027909279,
+      0.0,
+      2.257565975189209
+    ],
+    "new": [
+      0.040995556861162186,
+      0.0,
+      2.4320051670074463
+    ],
+    "offset": 2810148,
+    "before": "d66ed7a7a6d7153dc388b7a588c94b46f4dad9d1a37175c9ca8aaf8141b34547",
+    "after": "8a587c425d14cfa6efe6444d81cb52e48ac460decb99737e491e8447fee872dc"
+  },
+  {
+    "race": 80,
+    "sex": 1,
+    "path": "Reborn/Seven1A/custom/haranir/native/female/harronirfemale.m2",
+    "donor": "Character/NightElf/Female/NightElfFemale.m2",
+    "old": [
+      -0.053804125636816025,
+      0.0,
+      2.041548252105713
+    ],
+    "new": [
+      0.010602709837257862,
+      0.0,
+      2.2507593631744385
+    ],
+    "offset": 2679060,
+    "before": "9c42226795fb78f7aaa23960897de45c3a9e13a4d4f6736206707df96bc133bb",
+    "after": "b98fb546f9912b5f9c9a84dbdd31f94aac7059e5d2e644022e536dd6d8bc8153"
+  }
+]
