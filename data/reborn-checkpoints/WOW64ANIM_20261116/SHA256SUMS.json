@@ -1,0 +1,18 @@
+{
+  ".gitattributes": "2cacd8c5b88d28a6324a5b106d17970ce30df8e32f9b76c87d00d4ca430747a8",
+  "ACCEPTANCE.md": "eb706718f7799d5a30c637a9ddbf22025357ef1c5e6c186f512719c94de58a00",
+  "manifest.json": "404cf9396852988ba6daa2757f38253eb3603ff12ef35f3c5b27aa9e153881b8",
+  "checks/WOW64CENTAUR2B/alias_regression.cpp": "04e1cef24c55d0f55b2adecec7d0a9637ed3b1c9b398e25b00d9dec41c03e071",
+  "checks/WOW64CENTAUR2B/all_race_alias_audit.json": "2113e268f503a142aa47128407ef53ad93e86b3869203544cdd973f5fb961959",
+  "checks/WOW64CENTAUR2B/tests.log": "d559df890891d10e5c526ecd4433666fe006b35f82aadf17dbf896fee988ec3a",
+  "checks/WOW64CENTAUR2B/client-source/Engine/Source/Model2/M2SequenceAliases.h": "ce7a73ac14be20758541ba7f8d87ac6bd80632253a5ec1346bdde251d50e8021",
+  "client-source/Engine/Source/Model2/M2Model.cpp": "1bca86a8568352f6606c7f83c5d5205422a62c1fa788d15b52d5313a4b08446e",
+  "client-source/Engine/Source/Model2/M2Model.h": "14b6a2aa2f564bc79ae24b820f856a63afadc8fa8f445718d5fdb81a98d42c17",
+  "client-source/Engine/Source/Model2/M2Scene.cpp": "1f043f771ad746dc2f61c20bfab689c34538cbc0a0beb96e4827e22f4452a3c5",
+  "client-source/Engine/Source/Model2/M2SequenceAliases.h": "ce7a73ac14be20758541ba7f8d87ac6bd80632253a5ec1346bdde251d50e8021",
+  "client-source/Engine/Source/Model2/M2Shared.cpp": "24ae1b4d38b45cbc73fb49354900d6e49fbbadfd2ccea8acba9cf576be1d8686",
+  "knowledge/INDEX_ADDITIONS.md": "cf37ac0dec40c5d9edcec5bc7c85f93427ef8a81f65a595e710733233f7afb9b",
+  "knowledge/beascendskills/repair-wow64-animation-alias-streaming/SKILL.md": "873376ed970d22098c6faf8ed125ca6245e1dfef3842c3dc428ba1f73e53a52c",
+  "knowledge/beascendskills/repair-wow64-animation-alias-streaming/references/accepted-20261116.md": "eb706718f7799d5a30c637a9ddbf22025357ef1c5e6c186f512719c94de58a00",
+  "knowledge/beascendtutor/repair-wow64-animation-alias-streaming/TUTOR.md": "9ba4fae5422deec3dce6ab1170ae1a836ec5bcfc5d79c086538fe92b7a87582f"
+}

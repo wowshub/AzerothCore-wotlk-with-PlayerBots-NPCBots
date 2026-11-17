@@ -1,0 +1,17 @@
+{
+  "stage": "WOW64ANIM_20261116",
+  "feature": "动画止崩与种族恢复",
+  "source_zip_sha256": "11e46ec4d3241b7f981f606cb9585a3ca412e44c5fbc4654943946d9dfcb4c65",
+  "exe_sha256": "de4e51ba9eb62bea82aa85ba2dd437e66a3220a872c5eec186568e46b873e5db",
+  "source_files": {
+    "Engine/Source/Model2/M2SequenceAliases.h": "ce7a73ac14be20758541ba7f8d87ac6bd80632253a5ec1346bdde251d50e8021",
+    "Engine/Source/Model2/M2Shared.cpp": "24ae1b4d38b45cbc73fb49354900d6e49fbbadfd2ccea8acba9cf576be1d8686",
+    "Engine/Source/Model2/M2Model.cpp": "1bca86a8568352f6606c7f83c5d5205422a62c1fa788d15b52d5313a4b08446e",
+    "Engine/Source/Model2/M2Model.h": "14b6a2aa2f564bc79ae24b820f856a63afadc8fa8f445718d5fdb81a98d42c17",
+    "Engine/Source/Model2/M2Scene.cpp": "1f043f771ad746dc2f61c20bfab689c34538cbc0a0beb96e4827e22f4452a3c5"
+  },
+  "resources": [],
+  "archive_kind": "final cumulative source snapshots, not a standalone build or minimal patch",
+  "dependency_note": "Shared M2, native equipment and preview APIs are the final tested cumulative baseline; review all five archives together for a source merge. No untested server/SQL/DBC or housing code is added.",
+  "user_acceptance": "explicit reported scenario"
+}
