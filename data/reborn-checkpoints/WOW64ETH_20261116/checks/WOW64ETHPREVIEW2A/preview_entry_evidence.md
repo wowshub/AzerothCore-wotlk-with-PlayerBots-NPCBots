@@ -1,0 +1,1 @@
+实际客户端Interface/AddOns/ezCollections/Interface/AddOns/Blizzard_Collections/Blizzard_Wardrobe.lua：186主模型SetUnit(player)，2360 TransmogModelMixin玩家缩略模型SetUnit(player,false)，2378调用原DressUpModel SetUnit。C++ CharacterModelBase::SetUpModel调用虚函数GetDuplicateUnitCharacterModel；基类函数DuplicateModel+RetailRaceDuplicateCollections，DressUp原覆写改走nativeDisplay CreateModel。当前修正限定109接回基类。没有修改Lua或清缓存。

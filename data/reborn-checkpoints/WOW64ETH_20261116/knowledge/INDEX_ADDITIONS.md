@@ -1,0 +1,2 @@
+- repair-wow64-model-preview-lifecycle: beascendskills/repair-wow64-model-preview-lifecycle/SKILL.md ; beascendtutor/repair-wow64-model-preview-lifecycle/TUTOR.md
+- port-coa-race-appearance-wxl: beascendskills/port-coa-race-appearance-wxl/SKILL.md ; beascendtutor/port-coa-race-appearance-wxl/TUTOR.md

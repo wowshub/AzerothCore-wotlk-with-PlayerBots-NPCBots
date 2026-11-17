@@ -1,0 +1,21 @@
+{
+  "stage": "WOW64ETH_20261116",
+  "feature": "虚灵主副幻化白模",
+  "source_zip_sha256": "11e46ec4d3241b7f981f606cb9585a3ca412e44c5fbc4654943946d9dfcb4c65",
+  "exe_sha256": "de4e51ba9eb62bea82aa85ba2dd437e66a3220a872c5eec186568e46b873e5db",
+  "source_files": {
+    "WoW/Common/ComponentCore/RetailRace.cpp": "18cbcfb1f3f3dd761fbea2fdb4cdb1233ecc7b14e1754d11c6c7e9d44777890e",
+    "WoW/Common/ComponentCore/RetailRace.h": "3a949fa73fc062b07c37db507757fe520acf68469086d2dfea91b4c96fb72eee",
+    "WoW/Source/Ui/DressUpModelFrame.cpp": "dd131b443cf5801b9ad9307c49030d8bcd3fb00f202518756acfe81dc21cd407"
+  },
+  "resources": [
+    "02_导入到Patch-YB.mpq/custom/ethereal/5926159-clothing.m2",
+    "02_导入到Patch-YB.mpq/custom/ethereal/5926159-clothing00.skin",
+    "02_导入到Patch-YB.mpq/custom/ethereal/6152557-clothing.m2",
+    "02_导入到Patch-YB.mpq/custom/ethereal/6152557-clothing00.skin"
+  ],
+  "archive_kind": "final cumulative source snapshots, not a standalone build or minimal patch",
+  "dependency_note": "Shared M2, native equipment and preview APIs are the final tested cumulative baseline; review all five archives together for a source merge. No untested server/SQL/DBC or housing code is added.",
+  "user_acceptance": "explicit reported scenario",
+  "whitespace_note": "Frozen source keeps original EOF blank lines and CRLF bytes; archive attributes preserve bytes. Documentation retains whitespace checks."
+}
