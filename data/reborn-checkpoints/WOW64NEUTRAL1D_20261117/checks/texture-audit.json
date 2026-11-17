@@ -1,0 +1,1436 @@
+[
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleFaceLower00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "c657c43e9d0b98b8cc00993078d91cf847823ea2b10db7205e1f481fc017d231"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleFaceLower00_01.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "095c4b2e138e530e654a174d55de87c423d95131b291537c7c0b887d431d2f08"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleFaceLower00_02.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "592c249ff7e35c4fb4d7b923df7429f0cc0609aa6818ec349a6b275ed69837a5"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleFaceUpper00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 6635,
+    "sha256": "fc568d4a6d3d20ca3794b095bc71fdb5cceb0e8e22d6a5c995ed8ecf7b55be5b"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleFaceUpper00_01.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 6635,
+    "sha256": "dc36a5b680023ecadb68ace6fb025f0d444b9b25c751c73837b30b3611f5fa4d"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleFaceUpper00_02.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 6635,
+    "sha256": "abf396eb07fd511893edfa22b744cdf4385cd3665cf05278fae094db1e12f5bd"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleNakedPelvisSkin00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "a6324f2a07025a8ecc30b670f6409c07179aa491135e44f22f186e0194bacfa1"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleNakedPelvisSkin00_01.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "5400bce3d98c283016ca35b82be80d6ac82e43201066297fe9fad8bee9a05036"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleNakedPelvisSkin00_02.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "3a652cc46ec60b4b22138cc370c65225d0c562f8dd74d4ee23efb23fe36628f3"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleSkin00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88553,
+    "sha256": "305b52878f809daad49430128e877eec132b6711b12798393cb54b0ab9d938e8"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleSkin00_01.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88553,
+    "sha256": "196abc8a74c21a1a89e2cad133b3879f6e20e9d31eebc2864520b5291be49c52"
+  },
+  {
+    "path": "Character\\FelOrc\\Male\\FelOrcMaleSkin00_02.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88553,
+    "sha256": "281d8732f5e737782ff0a94ab6d678798a8898a1dfdd6099ea7fe917d2394838"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerFace_Blood.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12094,
+    "sha256": "656942c15624d2c967fbd4f1f894ffdce93bbf09a3ed8f076adf33c05f9ee7ee"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerFace_Ember.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12094,
+    "sha256": "d4c3def6652248f51b488098097baa5bce78dcfb7b9bb7df9e9ad45cb5f36918"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerFace_Frost.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12094,
+    "sha256": "7dcfbc5d97300d0392388348d9c5bc0fcc3808fb32c00dadcf260e4992203c7f"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerFace_Radiant.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12094,
+    "sha256": "f1ff74b0e92bede28c30f04b58d7f085b41d6aa5fbebf772aa2cdf11d9aff214"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerFace_Spectral.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12094,
+    "sha256": "07b31560fe78458c81e893718269ee7be2babf7ee97aee1572be6d90e2de76c6"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerFace_Void.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12094,
+    "sha256": "16b2ed9bd6be9251292b2df22d86b9d13764baf453de8fef6e8e78b3ec88aa5f"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_Blood.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "42970b2a7167d87f2fee99e16c9de0884cd595a50808c426709b7b5b1c2bdac9"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_Ember.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "861b3efc8ea63c2fdc27d3aee9fac4f60bd00d6a3af95cbaa94678fd0fbd1c1e"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_Frost.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "d16e33986bb65c0e45bfe997a15b137524aa4e331b7bedbaf41c791942afe571"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_GhostWhite.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "246b3ac33d77a141abb9823007882b5309db40c0d174cf44861c50c814c4d5fb"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_Radiant.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "4d3239953f33104ae65c46042ced5ecd4e900105fa2b13e85edccdce5feb0ca2"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_ShadowBlack.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "890b55456eb1855973f8f2019d1084e3d78a5d8172ae381d0d215712a874137f"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_Spectral.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "2c59618ce1298fa2070af6ceb050f429f25ddb73528a197a8795d2b565854bf2"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerHair_Void.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "8e9258c90c9bdf9ab4d26821cef68618727c94f154c65cb070e4eba4e22f6ab6"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerSkin_Blood.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "6a23f9de248d94f954599546e0e0489b2b2151697b189384d54e84e376042d2f"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerSkin_Ember.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "b4d753afddc20f9e52bfc73c016ed652f4c1497449a49c47d9212a5392b5e255"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerSkin_Frost.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "24ff83546b55ac88544e703fd3e10434851992dbbde008aa22f4ae47248602e8"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerSkin_Radiant.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "8f5aad67b070d7d1f0cfb2804032bec1a4b222014627fa7288b0e0e396e3267b"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerSkin_Spectral.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "e1a4e9fa3e506d490ab85b98ce5c6f40f0c2cadcef3f7ac327647d06399c2542"
+  },
+  {
+    "path": "Creature\\Banshee\\BansheePlayerSkin_Void.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700222,
+    "sha256": "145f9f1b90d9ea40c58c81e15716772cc0f9e17d45df5364a8c04e2891726f84"
+  },
+  {
+    "path": "Creature\\LostOne\\DarkBlue_Glow2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1868,
+    "sha256": "4211644109673d5a86dc3cddbf8a1d93ae8b263fcb4df61f03da04fafe64be23"
+  },
+  {
+    "path": "Creature\\LostOne\\Green_Glow2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 2564,
+    "sha256": "5f82e7eaaf8bf3d0548f25df84ba45f2e5187d2cd0e5443ab78350b7d1322440"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_Skin.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "fd55d59822fbe1fbd9277162ff91776e2ed1d9aae37a522cea793e6db8d806fb"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkinOutland1.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "c753f2a2abd7591f25edf23cc5bd9dc35c6c86d5270ea9499d2e15a469de16da"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkinOutland2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "785ade2af4d8eac785dc4276f970bc0ffae4c68aa8cb00398ba09d52beb99c3a"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkinOutland3.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "32b0d938bd6e5c18e8d6322d1157f039bfff4ba1c94ebf57f5df8c651f62509d"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkinOutland4.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "2d58d9868f9bd3ca7c9cee6661320afba30059768dccdfa6884b17da20c9999c"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_Skullbag.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12108,
+    "sha256": "bebaaf46b4bce2a4a0b78f7793b66523226c7572b47c6e90c485a2b83483fbb4"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkullbagOutland1.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "2ec01f53c929881a7be33f39836628b1d32eaf1e3cc0be3db213e50d2a61a52f"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkullbagOutland2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "28d387c9cc924846d87c3adc041a502ce52b4d7f90ddad3a6e9f50f163dba542"
+  },
+  {
+    "path": "Creature\\LostOne\\LostOne_SkullbagOutland3.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "9b52e482d94fb1aec8d68fc64ba1b66491588b84be94744d62b991395c938255"
+  },
+  {
+    "path": "Creature\\LostOne\\Purple_Glow2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 2564,
+    "sha256": "32baa36ad6f6f8b39e71141ba62a7916c2ac84c26bdb6ae7add9ff9e6aaf93e7"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skin_bone.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "e2be9a7d71cff980ee4133ff01d5ae48d39f7078a264c8db8412494727e06f8e"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skin_bronze.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "7a55c1431b0b5d5532df8990be500621c82739247b38a357727c9977adc6752e"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skin_moss.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "e8f8755822d1b9b2088967f61443375784b09ecf45d520cd6da8ea12f8699726"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skin_shadow.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 175934,
+    "sha256": "8c59e0e8d58fffb66689fc17de7254ba8c12cf290fa02e09b88b7cf039f33a9c"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skullbag_bone.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "da341e803808928ca3a917325fe6545f41330e4689c482f0c61452a77f61b370"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skullbag_bronze.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "3b1f2ffd8139fe12c005fc5de69dcfa25dd2a1b3e985b807d2b5b72147918455"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skullbag_moss.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "00388db93bd0ce3f3172652d8160c6a963b4619801cf96a04c0658e548602974"
+  },
+  {
+    "path": "Creature\\LostOne\\R_LostOne_Skullbag_shadow.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 23044,
+    "sha256": "bfb3b1ee037f81a09afd163d349e67f45354b01058a9d6e04e25ececc4255773"
+  },
+  {
+    "path": "Creature\\LostOne\\Red_Glow2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 2564,
+    "sha256": "4af18abb466af2296dd5b6327c4cfdacd34321d068356ea90da9f586a4939ebe"
+  },
+  {
+    "path": "Creature\\LostOne\\Yellow_Glow2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1868,
+    "sha256": "e9665d09bcdd073b815df5db92f0d5edd58b0b61bc30be85b04a7d21a5de2e1a"
+  },
+  {
+    "path": "Item\\TextureComponents\\LegUpperTexture\\leather_raidrogue_h_01blood_belt_lu_U.blp",
+    "archive": "Patch-W.mpq",
+    "bytes": 350692,
+    "sha256": "220e540154783cda46cd052faeaae693ac429c4f7863f34427d640208d6a185d"
+  },
+  {
+    "path": "Item\\TextureComponents\\LegUpperTexture\\plate_raiddeathknight_h_01red_pant_lu_U.blp",
+    "archive": "Patch-W.mpq",
+    "bytes": 350692,
+    "sha256": "c21d6db4bd69f52cfec61be0ec32429a9af4707b362c0279ae60517576111ee4"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skin_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "aad20a7aedaf6f750a282e08da76ada8a1e239a30667fb3092a669cc486ab4e4"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skin_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "ca0da1dac781e6e21f765cdf00d58fc16de765fa0aa1c8b0662e5c2664719640"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skin_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "873bb8389989df53dd1d81c82ee56a9a78bde04a76ac511db33dea1abb586fd9"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skin_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "b635914278da03e006e0af2ebc4888e1d0dc28728f0cd7722ae94d0f07a836bc"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland1_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "b1145dab9b214c89a055fc378267b88676475c6b0a2ceb73fe54e8a765091bd3"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland1_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "e9897476c60d42f9ce74037e2e4ee93e3e486b123895cbc5a06e016e0a02423e"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland1_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "154fe9f576b16f878624c4448a23c53d2de877b5f327f03626192e697a959227"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland1_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "1530daf5aaa867884a4f6d6320b2dc4190b83da826e5ed954e8f706eb8b4df26"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland2_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "ca483900da65d1de4c2f5a52af157126aeba6f8c7e0706566938cdeec64f88d1"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland2_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "1eeaa9c14cd0b68d441757db18bb73b660bd228e8ea238324e72ef0311d5571e"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland2_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "64316ec9326c9335c09bec1ffc56cc71ca4fcf5307a8966eca015238d1b651fa"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland2_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "9586184612bc07c1cd58d1ada96777b6725c005e2c2d4346f7e368772ca661b5"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland3_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "d29a5a342878257c5f5243f0697306d8e69fe76cd2e806d6bd23d44eee388422"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland3_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "ac676a12754d2413805b0f970c5888de6d8e02ae8a87f78869cec730d616c831"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland3_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "4c7e5c11a61c328973a5a7e92b0225eecee7d256cf72b69f5d44cf7ff15df226"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland3_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "22d4ebd269512eaa21da4a02fbf6d6a64cdb70253b3b1192d8564e62f622ddda"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland4_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "134d15ebb6ca226d6c8bed08761b8870d615346c6a75cb390c10804a512222a2"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland4_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "2547fbe66bfef862eb3bc2fd8fd113c357459fecd23514720e9e016f89ef9ce6"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland4_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "31799b101e78f8b29af1b6cf2a93f90fd2235682a948e99ba02bf178e8bbf213"
+  },
+  {
+    "path": "Reborn\\Bake\\lostone_skinoutland4_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "7c987e6476775e2f3e57b8365c0d695ebe10c742bbf2c1d926eaac3afec687fb"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bone_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "822ec41c7215a6061b696ed3cd1a0f6ee344fa165ed578e1484f31d7f0e07b18"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bone_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "da0c54265f24b57409a78f60612b19e0fadc5c1a5769e56fc52d66ac22c8f005"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bone_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "29382de7a1fbd51bd8d72bbb9385a8b362507245eb81fca8ff28afceb686cc02"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bone_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "3357ef6834d44e14148e13e223895eca2c6158916a29394d8e8014c183a10448"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bronze_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "190b1954728c334eecd8c9132a4b0fad904d1d49a1d3f3d7a3d7d4ce8c02a3d2"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bronze_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "053c92ea42c3e7f5df4b438da8bd92ada32ccf5deb7eabd5b8338af0387c16b9"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bronze_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "91c835e2d7f915a95de0badbeae6360e4f8f9a42eae7abf211e1ac016e154ef6"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_bronze_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "73f5cba6bdaa7f02b3d51d721b94f9d5fa10acc62eac802f7d6af48533ff6b88"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_moss_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "0fdf86041c36b5d8e5908498094936c68896429842f412e86eb7f6a75f71d38e"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_moss_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "1acaa17f93fe34426831e576f36d3a0cf020e7f699bbd12f3e3b3268b30262b4"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_moss_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "2082182df3d0ef2c2d46e09c15ae53b4ae41bf9ec93e376ce3417b04bda3d85d"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_moss_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "f0a168abfbea973d9d92deb04a93326e74a28739390654d19ca74edd1e5fab75"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_shadow_FL.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "ad65307865baec4641477fcbfe488e91fd6b9b946c9c821949197269b47e5e59"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_shadow_FU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44866,
+    "sha256": "989994c01a2f2489e990537c16f0671f9f187e0f198f59feecfb89d2be168355"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_shadow_LU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "a532fdac4ad205b0d56fbf773040a05b9b293f5fdb993324ec0389ee7e25844f"
+  },
+  {
+    "path": "Reborn\\Bake\\r_lostone_skin_shadow_TU.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88554,
+    "sha256": "fc17647706ae5769fc25b1bdc6bfee86c354e3ec361d4873d0a6667733847e09"
+  },
+  {
+    "path": "character\\FelOrc\\Male\\FelOrcMaleFaceLower00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "c657c43e9d0b98b8cc00993078d91cf847823ea2b10db7205e1f481fc017d231"
+  },
+  {
+    "path": "character\\FelOrc\\Male\\FelOrcMaleFaceUpper00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 6635,
+    "sha256": "fc568d4a6d3d20ca3794b095bc71fdb5cceb0e8e22d6a5c995ed8ecf7b55be5b"
+  },
+  {
+    "path": "character\\FelOrc\\Male\\FelOrcMaleNakedPelvisSkin00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 12095,
+    "sha256": "a6324f2a07025a8ecc30b670f6409c07179aa491135e44f22f186e0194bacfa1"
+  },
+  {
+    "path": "character\\FelOrc\\Male\\FelOrcMaleSkin00_00.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88553,
+    "sha256": "305b52878f809daad49430128e877eec132b6711b12798393cb54b0ab9d938e8"
+  },
+  {
+    "path": "character\\FelOrc\\Male\\FelOrcMaleSkin00_01.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 88553,
+    "sha256": "196abc8a74c21a1a89e2cad133b3879f6e20e9d31eebc2864520b5291be49c52"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_abyss.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "68b7abe6583472d479fbde205185fe8bd9a092c053353dd0510af55aaab70ebf"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_azure.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "40c9fa62ee694632376535dceb6c6b239b8c6055f7d0906412a4b7f04fb0bc59"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_black.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "1e9f96a6894c3fe16d192cfb154c1cc3072100c2352ed11490ad501e9b72edc7"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_blue.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "eb9d77eb72084fd65cdee2c8e9ff712e20f3c11d6dfd46862e663a7a6c405a8b"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_bronze.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "caab2010a3debaf50ec9ea435f9feaf8e636a6d8a2ab598d1185350663b8e65a"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_charcoal.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "e28f9488d53d101567498cfe3ca9c2649b11c67d09fc883716984c5a3ccefeee"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_chromatic.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "c8672e886cd15081542ee700c7af7bb29ae59f7894aa38ef2b6a6a3cbb13a94d"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_darkteal.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "3c6e489500a0b3a17a2971c0186bd80bf05c755a0d25dfda7ee5477c4ced9296"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218479.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "92614fbf97313dd07c114ae367bd4bfd1de593083abbca1ea22e24744a94f910"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218480.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "c7c50850eb75895fe7b9354f6a61507955a4a5d527d5af9aec8d8a01d3210962"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218481.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "b9b43097e9ab3ce63329b8194b6a98199b6c33b64fa050f98e2434a2cf7c37ea"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218482.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "bd520ebcd8b2d42a7311fb058d3270479dd4e0603f112b69622bcb3e3b2b6f0f"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218483.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "3d2beb27c81dfe65e3044e46b97323d6ba6065788c6ac9f654a9597a9c7cf884"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218484.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "1940a89ad7118674820678c9ca151afecc3a01764f16831ff93a30418fa56207"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218485.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "5df20f35894acc85c0397ddbfcf5ddcef81b68941c0a8a9f1295d1e0fa43b3f5"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218486.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a306e10ce96f4d5024f8e88cb98e3a79002ff03adcf775d1b42bef8efe20a93d"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218487.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "e6a36d8146725f30bb4a23e96aecde9cc75dd582478d5ea9861c6c33c2273ba4"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218488.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "de4d87f32b3c25932b659a09981500b09fd93c6fd05f12909f1d396384899432"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218489.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "83179f0c73ac3cd96bc918d6534815525871d55f81272d42bce5f98ef6ab7cb0"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218490.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "4202ec73c79495db937f823e4d01cc11f2c775725e3f42d597e14f1ff76ca489"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218492.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "0e40d9cc0b1673d4674edc4433269b8b2acb80113d08079ba9cd0b3fcdc2c0ad"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218493.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a048125e4297d73df0aa60c37c0cf6479d3660b0ccc59034569642208e829379"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218494.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "f23bab4a7b72bc4f0a58fdca4ad6e01f858a38111c2b947f7de18beee2e8b6c8"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218495.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a8af4f1f1bf24c9dcdb419571457c70a53eedb6304a41017f4cf8753968a74ab"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218496.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "7bd150c1a062978e07d8b590a1fbd5d566784668b44c6ce4897dad7b5d17d6b2"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218497.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "1d3895c6d3040abb28ca544f18a55cf717b9de1bfc41879ed06133113bd32707"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218498.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "df50ab56b44a324d5e83f9552fc7608e8d297d98eb67d43bc239d1751d3f6881"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218499.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "8d82f6d10e0c06f6baea7f4b1928b3934610c26b5e8027fa2fd187f6c08eefe6"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218500.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "8855fd6b9971bb61ef0d5f93011b390231bbd44734be602d257577a1d2849c34"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218501.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "7c6e870e8f703aa1f79c719ea37a0ccb49fc72120a4e7144ed65f3128e5d6f6b"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218502.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "12585d984d6bcf7f65280269a6b870b337337a67e2903b04cca73ba26f4f7a24"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218504.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "19ba232595235b432d7c057b70ad7a81616a9efc947a1d2a050943d6d3aa0181"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218505.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "050b4957e57f7a514c3fd0921fa5d28f36089d43dec456e128ce86bdbb38868c"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218506.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "fe40ee2090c7428fba67a55bc8f7770b2750111fe1a551f7363231839121a359"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218510.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "b31d5f500ba3e70c0917112972b38730b8732ef476d9ef784c48cc068d154b83"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218511.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a15b213386d95d84fa9e7194feb0eb72a027080f7263c633eb7bc2b797474cd7"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218512.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "288768f324bec3d817b8bd0d15edc9566e5179be15c89c7167d98fd112b5d452"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218513.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "e6e7d1cfe61c25227827c441fd310b85743037590e85c5aa0892134fc6251fd3"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218514.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "c9118b519d24dd52fbc3995ca81af678f4aaab9b96dc24a8f274020efc393810"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218515.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "b563cbf9523f80a36c9fcc2b07471aa36879e8b5901b2e7664a95aeae05371d0"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218516.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "7607a7d2e875da451de62c5b1f46f995468bbd989f81fbb511330e3386d1e2eb"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218519.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "607dadbf23784e1aae83035acd9d6870363b971fa45dbeb6e236f26ac1aaed12"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218520.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "dbfa13730f17d36773086fd35792ec315bf34dc86a0dd0ee80b93a17733e6b9e"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218522.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "775974c8ec32d0f6c3b7d035e6295a52ae0b60671fcb1128cd9288ef5cc7d681"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218523.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "0af88fbdd36718c3044bb0c53dbd8d0490e8eaf419607778944a0d20043f5b7f"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218527.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "b4309f2e3bc7a9c9527d69f4d28caf1919dd0b72b914f87df6c0b015c33b5172"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218528.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "43f99df84e8923f47477eb8537b08b9a823df8299aaf505044e995f72856a902"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218530.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "cecb4a86a164535662f9470e0e2b3dd1136630cbcbed1b780cfc46f2d1244d24"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218535.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "6bfd2329e0e1031a8c72000d1cec818cf3cb76c6b30fea7e1ffc46d09a43efcb"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218536.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "cdbffe10b7fd06111bb099973ef08e8a06e0f4b4a4e7bdc00cdbf28e744b5a33"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218538.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "6ab9f50b9f8e34ecf3a3c9c4bd423fc3931fc60d4240e810c84440ea0e6b7fd6"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218540.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "ee0b906bc2f3a3d7d860d287a48004f1220b6b189ad4872367c3bbd0ad34b308"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218542.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a531ba12c4507c2e740aee02fe7c5752527bce6a17533c041ceeae12abebf245"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218543.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "5f0fd3e04a7c5f964461f2bc2b0dc7ec0b330777adfbd58ed2c7ba4f20cb2d4f"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218544.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "58022363f46cb2d0ac16d7101d01813c60aa9aae892edbb85c5de30e8301317e"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218545.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "1acb0f3e12dd336de53967260f0e5d97cc35fd60e79849c5ef7fd4be26918b6c"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218546.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "36b748665f4d4b262b650f1db795647ef8d96e9669c96efc15ebcfce2d5b3559"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218547.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "4ee56f2c8c6d1511434e70425f6c1dfd356d4b6cd8861743b7d043e6bd738740"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218549.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "e509f5c5df1eb2eb21822fc993d1ba4a7a36d5378e576cabf44b72bdf38f9459"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218550.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "07d31d15c410dfae6ef0a94da5b95ed85c1440aa3bf675447ee50763d0773735"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218551.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "60ec9bd41afe234683c53071654f4ef5a6b4fcfa876528c151a8061c9ec3f326"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218554.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a13b14a2f5eb2aa78a7afc7d2c5c17d6e1e9acb4bc65c050f4f195aaa07b52a8"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218555.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "02edaccfaaf395b2e2e33560bede8835505dacdeaec9098a4686e29ea81b55ef"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218556.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "c3b7cbdd7ffc0fdf535578e066c2606c83eb1f2b025360a87a0937ac4c7b756b"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218559.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "8b9f6b3debeb9cd67c8a85ca0330cd59ab86d4fcd8b806dbef44b104f8c08d4b"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218561.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "20a44c0abb65e72e1b0b1f062adc97ce5b47c34ae9202f5f31d959b95c9bf310"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218563.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "f550ddfdba9f296cbb3660e0166fd97badfdda654dc5802fc83f04086ef818d4"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218565.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "4b50614e162f5325be9d127be19c9e86f54f1589d4e3a0ca03fe9b1f6bed4ff4"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218569.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "cd2eea626046627d21c2da9c8ecbea5c2bbe06eb475c8dc71fb0bb12b6564860"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218572.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "f706068180d6d92e08ad7309a4117f00e94b2e2ef80cd5cb17226cbbcb931f0e"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218573.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "2016dd184a083968ef8f8586404364fa0be25828a7521a0e8920b194517f609a"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218574.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "c7dedac227b299dcbef0715c4afd69a11b9a77d90cc5513d6fa1b09fbebb25c0"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218578.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "960d2527fafaaf530809a925601c544efef4898484d09e54444c55081487e9ea"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218583.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "8515e981dc9eacdaa87dcc8a888c3dfde6cddbdcda897831912c8a8b49b6c84e"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218585.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "063f579e07626d5965dd7a2a2ada62d7d59445fa0659293f8aafbc1d8415cbb7"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218588.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "92092e83e3335e7136c4d4fd0d9986ae8a35149d0011265b69e04afce819f3da"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218589.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "3238d4df475ae82e9e085fb3b9afeb51385de24977745f27ac045184828c6305"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218590.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "4106392ed46aa3a245ec000775ca6cb9f9b4b13be74926aff58364ffdce95c71"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218592.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "85a49fd19780fec827fa558dae42ab78edd1415218c5048ba3147c9b00eb667a"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218599.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "71c5ef6707c0b9cb0a883e0ed9c8215955bc3dc0eb197bce845601429fab7367"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218600.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "711e2de8169366abc12031953a120ba04d8803681394b67e36f81c48068e8072"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218602.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "a0dfcadad35c7f8f8aa09f31f69fa10b4ab3cec6dbb25d689006633aec929a55"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218604.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "49ef3d0f5a41d51495216f6a985cca68990fcee02fb6299fd0ca12edd09fb9e2"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_eyes_4218605.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 44900,
+    "sha256": "87a3e7b67d4b5d731a6b006eac989007e686ec6dd321ccfb99480f0cdc025a28"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_green.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "d3ca920ce9fa28d3c8b4e08bcc11d4b0a20f593a3fccf2aac508291dd0701a4f"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_indigo.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "97930260b738848e502a9a2efa7bfea9479e6391c6c12d106e6a56a0acd881d7"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_olive.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "17f38b52b65f8d124630f69024a22c8a60aa1c878b596749d57e9b7ddf5b443a"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_red.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "6317f8bf9982ef05ca89c283da6f02177be54e204d9b4c8cf9a8fde02d2bb887"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_teal.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "dba4e0f495c1f7491fb9c021fc278ae9b0a6390c9a17ca99733ba1349cdfcfe6"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_twilight.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "b075485147c59fed9df119aacb1a4088f34e47f847f7ddc2cda1a5c40805f597"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_umber.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "9fc0c824369ba5a670c87dc12e8b39491e0a811c17eaa32d304ae5e91b6b9ab4"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_void.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "790dae3ec85451da6b7e99e48d43c992cc2a08e52331896049bbf4652aadefd6"
+  },
+  {
+    "path": "custom\\drakonid\\native\\textures\\drakonid2_white.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "e97c2f64d5fc8b869e08307c2777e2cac76fdf495dcbe70fe24264da5984de22"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886643.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "55b8e598d1e2dc0a2e239117ad95e882b4bd637fcafc18607d690f209e7e0e73"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886644.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "f2e60ab7326eaf560bcabc96d7f3e851a61d35d4ae54c7fe679d49965865e153"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886645.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 700260,
+    "sha256": "d3741cd30f454c3fb9db981390edc775be87b56a8036db3f5f5477a164f9ef22"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886646.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "55af697724b4f928d185120ae436a3cb34e5927260888645992d8ce0ec639f5e"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886648.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "f947786e24d95e24cf3b21dfc2133dc4bc9f837b083973a242264005cddb24cb"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886649.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "f67d999d6cb1e50fbabe6c6fb03102a05439e3f9f89f4a3b2efbb18980038f63"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886650.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "dabe310abaecb25c148ee7bef093a973bde0336325387cb7a817045b63c8089b"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886651.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "82970e7b0f01d12560c04909bcbe636ca6cc919b91afc57bfcf486b105a0ce53"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3886652.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "556c3ccbfe415020b425c94c546946c30bd56d708b1128c631db196a15be29ef"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3887342.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "da7811a0006effc2303ba9e59f7821775aa9b52776a9b9f8a42676eac8e8637d"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3887343.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "1468766a9a087c2fbe3196e34d52575ed4bffcd4a73da9c40b03245cc4b87346"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3925236.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "6ddd30415458da9fdc7a43e7e36eca6fe958127754e05123bd3f0b52005425a2"
+  },
+  {
+    "path": "custom\\gnoll\\native\\textures\\3925237.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "71a9a914044e99376715ada004a15b15ae4852b27b4338ea1866ce50fd30953c"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_0.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "c8e2e25b04630d716ce4e0f0c1974374a20d70b32e8a5821453e9d47b1ec45ca"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_1.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "eabf04f17a65db44a1c68e362323e29fc5047c17b91a72ca0780e0b5c9ec6a75"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_10.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "47780f57369e74be28adfc5039340358534a4866a7a79c1ea24da9442fe83bfe"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_11.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "4c4b96c4a037c8052994999e7f293948fbb2caa120ed81e3b2446a52e7fbb21c"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_12.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "6b4394aadea1fa0f616b634641f030e45a8d5ece0e0c42cfe936c150a20ac520"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_13.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "0f836d269bd257e0f16bd8bdb8df675f6781ce723d60e98e9de6e76d0b4d9e1a"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_14.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "656923b918d76e4de5d83506c8161fbf3afb1929cc229cfb1b5e732a93d16347"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_15.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "bfc6d060d6734a24395866a5e0940c0a504c9fa3f1032b3aa19fd006f45fdde1"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_16.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "a0e650104b7f5959a6198705685ca4cbba2df91457929554e6698e36a5b3e30c"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_17.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "8c670d83d2dc872892abdb5f32a93e6f366aff00160088680a8ec8295a345e75"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "5202896e55195096e5259863981a5fe27cb32167d7eb7ce5b869224bd976f3f1"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_3.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "be218930f5f1f95e0da5dca9d957850e5112af5e0917d0fc1dfd340c91056368"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_4.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "6ba5cd0c73aa0c31b18fef14ece1a97d435f1849da4737b9c81e0612461de91a"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_5.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "bce9df87de147d2b506d3b71ca25d3aecd269ec9d5d70eb7cfd4252481ae39f2"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_6.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "b7b15c1fde8a4a994b3d448b11b1dbed9ea591054b4326e9d5c6baeebbacf893"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_7.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "34bd9fc3998ad3f2650dc4619369f6611f3153e12db6f580991765ef6ebe3516"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_8.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "eb96d63cfb8b31cdf23fb8c62ca6f822f82ced7fdb312cf5f7a484288f94354a"
+  },
+  {
+    "path": "custom\\hozen\\unknown\\hozen_fur_9.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 1398276,
+    "sha256": "2b02d4153767e4059e4b7f7bb963c59d5e466c388dce823cf8dfb28b030c341f"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_0.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "b746c571a7708615453c2589962ae85d89ac23a9d11f4330f17dfc14365952a7"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_1.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "76f21a832278df9ccd3870a4a2e8990ddf9c8142d69f08fce673021be0cafc02"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_2.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "a0bbc9d17201887550d6729de4fa8fcd8302ec092d6c4d92db8f0997f920f2ba"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_3.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "9d1837f687f6c916cecefab0aea34d2fb511c7bbaa393cc01087dcddfe5abae7"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_4.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "86e82babf90e5cfb4712d02a4c0c3d24c7b28c65638362a13e41450710b32935"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_5.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "f76fd9faecee561c9aa5fdd44a7a446179fb9f56adfcf6862c5d3138f5214ca3"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_6.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "5db1cc0018801179e648a6d5f6fbbfe71ae47367352cb73a14967ba5ccea8979"
+  },
+  {
+    "path": "custom\\mantid\\mt00\\fur_7.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 699236,
+    "sha256": "733616b6a01ed0fb3db6f6b7941bb8ae498ef1100fb9d7dadb0862bcd1c56bf3"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\982810.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "3ce4a509affee8821098641d38763f64cbed5ad6958328bd2d17cc8d73c4263f"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\982811.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "5ee5bfdfb01622206d1dc56ec6cdd3e3fb890033d4514dc3d55ee87c84bd0450"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\982812.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "c4b6f65fbd31d7da50cbb9a7d974e7d90e11fa8b4c262918c363e34ab5811459"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\982813.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "72236a52d004aad7a929f5d2e658eb93672eecabb12fc543083dbed0dfb03d57"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\999926.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "c17c94e5921ccb7bc13aa07a5113e86b28a3f6e9f4802b292a534ad0fd6b6efb"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\999927.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "c307d571745479ab80c2a28627b9a97a20701b5d2d83125082d0cfaf05493024"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\999928.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "3c2b4fe7fb43a25c2cb3541391de601cc051390486ea9c7facd66c84acd2c913"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\999929.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "1a0584677f8941a43a742177b55b4433354eebd2277b795f3fba7a913266e41a"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\999930.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "0ca003ba82b7eb39fe5e73acf54030f75a8a25f40e3b881a99fdcc5600753a1e"
+  },
+  {
+    "path": "custom\\saberon\\native\\textures\\999931.blp",
+    "archive": "Patch-YJ.mpq",
+    "bytes": 350724,
+    "sha256": "7ace2c3d9f943fd1cc44bf4b64760c35078beb07470fbed7659effb2cbceec31"
+  }
+]

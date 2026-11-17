@@ -1,0 +1,19 @@
+{
+  "phase": "WOW64NEUTRAL1D",
+  "native_build_exit": 0,
+  "catalog_random_samples": 9216,
+  "selector_checks": 297,
+  "prior_profile_sexes_preserved": 12,
+  "real_lua_inventory": {
+    "neutral117_hidden": true,
+    "alliance28_retained": true,
+    "banshee_sex_lock_retained": true
+  },
+  "textures_readable": 239,
+  "felorc_guard_cases": 4,
+  "identity_checks": 6,
+  "stock_collision_checks": 3,
+  "live_render": "pending",
+  "upstream": "Project remote fetch succeeded 6e555b6a6643bf4614d88085d076d9deed3311ef; local client fix using current catalogs. No claim of latest external engine upstream audit.",
+  "scope": "Client appearance only; no spell, combat, auras, stats, SQL, or server change. No production deploy."
+}
