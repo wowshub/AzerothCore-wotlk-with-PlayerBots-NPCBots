@@ -1,0 +1,17 @@
+{
+  ".gitattributes": "9ab1afc4c23b2210f0af6a7cfdbbf984b3c975a25ba1df0eafacb23677032727",
+  "ACCEPTANCE.md": "4fd4463930687421e0c651a2fcac236d9e47123e10d0dc864d9478490500cf4a",
+  "manifest.json": "dd2c423989f5eadbe9a0a1f23ff12c33d55a3f4eadece0f47533f5436da344cf",
+  "checks/WOW64CENTAUR2B/gate_test.cpp": "9716f48ae393a84017a01980cac194d5937160095a0ecc1570bb5fe3321f4b5f",
+  "checks/WOW64CENTAUR2B/gate_test.log": "204f73cdd2ba81dffec31e16ed8bc75dfc76d0f041680daeb37c193998364fe4",
+  "checks/WOW64CENTAUR3A/centaur_intro_sequences.json": "21073c1421d5fedb23c3f96ed54f9e5c79c83b12e4b01534a63011485a40667b",
+  "checks/WOW64CENTAUR3A/intro_test.cpp": "8c22c612b8beac8c468c29a35da58c9d5722e94ca17616eb69ca9f1b6aa6efbb",
+  "checks/WOW64CENTAUR3A/test.log": "960640b05354c38aa1904460fcb7dd074d486073fd135f4e2b4c5116b209a862",
+  "client-source/WoW/Source/Glue/CharacterSelection.cpp": "3d74365eff38da23263ee645b33d1df8d86d24817ba1b65ee2c7fac52f71e654",
+  "client-source/WoW/Source/Glue/CharacterSelectionDisplay.cpp": "82af7a79a8e7b67cdccac1fae4843a590907b0d4971700797802450f516ec00e",
+  "knowledge/INDEX_ADDITIONS.md": "69ce5d4ff55c736fbba151bf67fc1dca835405271a9e122dbfbd7f0e4d699c4a",
+  "knowledge/beascendskills/repair-wow64-model-preview-lifecycle/SKILL.md": "9f54a7fd0c70d351c8f699addadb4d52eeba9de2f85d75192df81ff93ca93345",
+  "knowledge/beascendskills/repair-wow64-model-preview-lifecycle/references/ethereal-20261116.md": "51f3ab9c45b6aeff8512b84a21097e6c1686117d734d4df09334da91e0787dbf",
+  "knowledge/beascendskills/repair-wow64-model-preview-lifecycle/references/selection-20261116.md": "4fd4463930687421e0c651a2fcac236d9e47123e10d0dc864d9478490500cf4a",
+  "knowledge/beascendtutor/repair-wow64-model-preview-lifecycle/TUTOR.md": "8a6926808f893ba0d932714522b970105576a114ba33689c69b4fde6c4c2e4cd"
+}

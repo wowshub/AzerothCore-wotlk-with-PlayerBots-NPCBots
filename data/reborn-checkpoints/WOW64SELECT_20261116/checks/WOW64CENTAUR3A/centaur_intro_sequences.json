@@ -1,0 +1,36 @@
+[
+  {
+    "sex": 0,
+    "chain": [
+      {
+        "index": 36,
+        "id": 113,
+        "flags": 96,
+        "duration": 1800
+      },
+      {
+        "index": 20,
+        "id": 0,
+        "flags": 32,
+        "duration": 2933
+      }
+    ]
+  },
+  {
+    "sex": 1,
+    "chain": [
+      {
+        "index": 36,
+        "id": 113,
+        "flags": 96,
+        "duration": 1800
+      },
+      {
+        "index": 20,
+        "id": 0,
+        "flags": 32,
+        "duration": 2933
+      }
+    ]
+  }
+]

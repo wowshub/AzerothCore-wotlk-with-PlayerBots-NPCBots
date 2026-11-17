@@ -1,0 +1,1 @@
+- repair-wow64-model-preview-lifecycle: beascendskills/repair-wow64-model-preview-lifecycle/SKILL.md ; beascendtutor/repair-wow64-model-preview-lifecycle/TUTOR.md
