@@ -1,0 +1,14 @@
+{
+  "stage": "WOW64HELM_20261116",
+  "feature": "男女与大头型头盔适配",
+  "source_zip_sha256": "11e46ec4d3241b7f981f606cb9585a3ca412e44c5fbc4654943946d9dfcb4c65",
+  "exe_sha256": "de4e51ba9eb62bea82aa85ba2dd437e66a3220a872c5eec186568e46b873e5db",
+  "source_files": {
+    "WoW/Common/ComponentCore/EsteriaNativeEquipment.inl": "5c46aea8c625b240568f12aa2e02c231d2005de50b54762722209d98037b23b5"
+  },
+  "resources": [],
+  "archive_kind": "final cumulative source snapshots, not a standalone build or minimal patch",
+  "dependency_note": "Shared M2, native equipment and preview APIs are the final tested cumulative baseline; review all five archives together for a source merge. No untested server/SQL/DBC or housing code is added.",
+  "user_acceptance": "basic cumulative feedback; detailed limits in ACCEPTANCE.md",
+  "whitespace_note": "Frozen source keeps original EOF blank lines and CRLF bytes; archive attributes preserve bytes. Documentation retains whitespace checks."
+}

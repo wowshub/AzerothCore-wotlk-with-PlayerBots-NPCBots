@@ -1,0 +1,4 @@
+alias_regression.cpp
+models=120 old_rejected=15 sequence_checks=26762; rings bounded, flags preserved, repeated init stable; JOY captured case passed
+fitting_regression.cpp
+shapes_test.cpp

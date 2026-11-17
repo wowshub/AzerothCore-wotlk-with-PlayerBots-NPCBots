@@ -1,0 +1,15 @@
+{
+  ".gitattributes": "9ab1afc4c23b2210f0af6a7cfdbbf984b3c975a25ba1df0eafacb23677032727",
+  "ACCEPTANCE.md": "97cee1ba7b9c9408ddd03453699016808908410193519354560d81d0d3c012e5",
+  "manifest.json": "19e86c75dae6658e585955b6c08c573d85d50c948802b609192ecc5ef860c886",
+  "checks/WOW64CENTAUR2B/fitting_regression.cpp": "4a27e92495e0263fe43fa78afa97047dda30f94e9cd3f68d90a619cda8461731",
+  "checks/WOW64CENTAUR2B/shapes_test.cpp": "0e3dea27ab0b24b55ad975990272d7a6913d98ecdd1fb4d2bd5541b63d9f6403",
+  "checks/WOW64CENTAUR2B/tests.log": "d559df890891d10e5c526ecd4433666fe006b35f82aadf17dbf896fee988ec3a",
+  "client-source/WoW/Common/ComponentCore/EsteriaNativeEquipment.inl": "5c46aea8c625b240568f12aa2e02c231d2005de50b54762722209d98037b23b5",
+  "knowledge/INDEX_ADDITIONS.md": "3329139bbb69950b4a978254022fe67285d0d2a0cbd811b701b2fd10fcbfc893",
+  "knowledge/beascendskills/repair-wow64-race-helmet-fitting/SKILL.md": "c16afc0ac1cf37227d50506a55aa0fb136f61edccd7ee19cfd1300301eaa37d4",
+  "knowledge/beascendskills/repair-wow64-race-helmet-fitting/references/drakkin-resource-20261116.md": "ccaba5eba7cabf3aa3d2e95e5a8aedd2d2f65eab5895f51a9d13947d3852fef4",
+  "knowledge/beascendskills/repair-wow64-race-helmet-fitting/references/final-fitting-20261116.md": "97cee1ba7b9c9408ddd03453699016808908410193519354560d81d0d3c012e5",
+  "knowledge/beascendskills/repair-wow64-race-helmet-fitting/references/helm2bc-20261115.md": "d8047ce7de7428d01d02853caf8d966cca5aa41d3c3ebee9de02113b0158e980",
+  "knowledge/beascendtutor/repair-wow64-race-helmet-fitting/TUTOR.md": "e61bc057e3a5807d49317cf6ae50c6f9be5db1c979f9459993251a22428489db"
+}
