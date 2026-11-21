@@ -5,7 +5,9 @@ local function RebornStablePlayerPreview(model)
     local _, token = UnitRace("player")
     token = tostring(token or ""):upper()
     if token ~= "REBORNSETHRAK" and token ~= "REBORNOGRE"
-        and token ~= "REBORNKULTIRAN" and token ~= "MAGHAR" then return false end
+        and token ~= "REBORNKULTIRAN" and token ~= "MAGHAR"
+        and token ~= "REBORNDARKFALLEN"
+        and token ~= "COABROKEN" and token ~= "LOSTONEALLIANCE" then return false end
     if model.rebornIdleApplied then return true end
     if type(model.GetModel) == "function" then
         local path = model:GetModel()
@@ -2343,10 +2345,25 @@ do
 	TransmogModelMixin.oSetUnit = model.SetUnit;
 	TransmogModelMixin.oTryOn = model.TryOn;
 end
+local wardrobeMannequinRace = {
+	Sporeling = true, SporelingAlliance = true,
+	Dreadlord = true, DreadlordHorde = true,
+	Banshee = true, BansheeHorde = true,
+	Fungarian = true, FungarianAlliance = true,
+	Centaur = true, Hozen = true, HozenAlliance = true, Skeleton = true, SKELETONNEUTRAL = true,
+};
+
 function TransmogModelMixin:SetType(type, force)
-	if self.type == type and not force then
+	local _, race = UnitRace("player");
+	local mannequin = (type == "player" and self.rebornArmorTile and wardrobeMannequinRace[race]
+		and self.SetHumanPreview and self.ClearHumanPreview) and true or false;
+	if self.type == type and self.rebornArmorMannequin == mannequin and not force then
 		return;
 	end
+	if self.rebornArmorMannequin and not mannequin then
+		self:ClearHumanPreview();
+	end
+	self.rebornArmorMannequin = mannequin;
 	self.type = type;
 	self:SetPosition(0, 0, 0);
 	self:SetRotation(0);
@@ -2355,7 +2372,11 @@ function TransmogModelMixin:SetType(type, force)
 	self.rebornIdleApplied = nil;
 	if self.type == "player" then
 		self.animID = ANIMATION_ARMOR_PREVIEW;
-		self:SetUnit("player", false);
+		if mannequin then
+			self:SetHumanPreview(UnitSex("player") == 3);
+		else
+			self:SetUnit("player", false);
+		end
 	elseif self.type == "main" then
 		self.animID = ANIMATION_WEAPON_PREVIEW_MAIN;
 		self:SetCreature(ezCollections.CreatureWeaponPreview);
@@ -2405,6 +2426,7 @@ WardrobeItemsModelMixin = { };
 
 function WardrobeItemsModelMixin:OnLoad()
 	Mixin(self, ModelMixin, TransmogModelMixin);
+	self.rebornArmorTile = true;
 	self:SetModelScale(5);
 	self:SetType("player");
 
