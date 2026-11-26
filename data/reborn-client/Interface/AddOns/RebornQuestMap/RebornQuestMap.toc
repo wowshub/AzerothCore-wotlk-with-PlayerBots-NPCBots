@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: Reborn Quest Map
+## Notes: Quest giver icons (! and ?) on the world map and minimap of Exile's Reach, fed by the server (prefix RQM).
+## Author: Claude
+## Version: 2
+
+RebornQuestMap.lua

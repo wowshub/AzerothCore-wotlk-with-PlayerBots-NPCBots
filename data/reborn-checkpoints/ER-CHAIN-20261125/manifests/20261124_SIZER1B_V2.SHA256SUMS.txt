@@ -1,0 +1,3 @@
+a6ca7772252851e64786ee752fa7d9af07b53e3c22c797edeb12a2d474611ce8 *01_导入Patch-XA.mpq/DBFilesClient/Item.dbc
+30b4061d4b5e4c0f94c9e32204ff4201ef89d6dc66a7b11f7c7cb03a773b6490 *02_服务端_SQL/world_sizer1b_displayid.sql
+49620cec7cc09f2313a78f4d1306634b1f68615d6c0b72870ea1ffa10a2a357e *03_服务端_lua_scripts/Beach1C.lua

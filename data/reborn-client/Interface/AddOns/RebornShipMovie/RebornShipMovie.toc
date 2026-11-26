@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: Reborn Ship Movie
+## Notes: Plays a cinematic when the server sends an RBSHIP addon message and tells the server when it ends or is skipped.
+## Author: Claude
+## Version: 3
+
+RebornShipMovie.lua

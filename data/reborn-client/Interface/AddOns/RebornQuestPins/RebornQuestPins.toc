@@ -1,0 +1,5 @@
+## Interface: 30300
+## Title: Reborn Quest Pins
+## Notes: Shows quest objects (signs) on the world map and minimap for Exile's Reach quests. /rqp
+## Version: 1.1
+RebornQuestPins.lua
