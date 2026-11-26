@@ -1,0 +1,35 @@
+-- MODEL2A V1: retail ogres, Darkmaul bosses and Kalecgos. Needs ALLY1F, ALLY1G and the server dbc rows of this package. Safe to run twice.
+SELECT COUNT(*) AS creatures_found_must_be_14 FROM `creature_template` WHERE `entry` IN (153239, 154103, 153581, 153582, 153583, 153580, 156814, 157300, 9159801, 9159802, 9159803, 167663, 161350, 156501);
+DELETE FROM `creature_model_info` WHERE `DisplayID` BETWEEN 710010 AND 710024;
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710010, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710011, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710012, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710013, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710014, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710015, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710016, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710017, 0.5, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710018, 0.45, 1.17, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710019, 1.9, 5.0, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710020, 0.5, 1.2, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710021, 0.5, 1.2, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710022, 0.5, 1.2, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710023, 0.3, 1.1, 0, 0);
+INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES (710024, 1.35, 13.3, 0, 0);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (153239, 154103, 153581, 153582, 153583, 153580, 156814, 157300, 9159801, 9159802, 9159803, 167663, 161350, 156501);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (153239, 0, 710010, 2.0, 1, 0), (153239, 1, 710011, 2.0, 1, 0), (153239, 2, 710012, 2.0, 1, 0), (153239, 3, 710013, 2.0, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (154103, 0, 710014, 2.0, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (153581, 0, 710015, 2.3, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (153582, 0, 710016, 2.3, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (153583, 0, 710017, 2.3, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (153580, 0, 710018, 3.0, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156814, 0, 710018, 3.0, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (157300, 0, 710019, 0.7, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (9159801, 0, 710020, 1.7, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (9159802, 0, 710021, 1.65, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (9159803, 0, 710022, 1.65, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (167663, 0, 710023, 1.4, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (161350, 0, 710023, 1.4, 1, 0);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156501, 0, 710024, 0.9, 1, 0);
+SELECT (SELECT COUNT(*) FROM `creature_template_model` WHERE `CreatureID` IN (153239, 154103, 153581, 153582, 153583, 153580, 156814, 157300, 9159801, 9159802, 9159803, 167663, 161350, 156501) AND `CreatureDisplayID` BETWEEN 710010 AND 710024) AS model_rows_must_be_17,
+       (SELECT COUNT(*) FROM `creature_model_info` WHERE `DisplayID` BETWEEN 710010 AND 710024) AS model_info_must_be_15;
