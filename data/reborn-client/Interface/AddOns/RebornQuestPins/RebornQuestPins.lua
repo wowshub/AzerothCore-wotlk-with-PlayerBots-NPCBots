@@ -1,3 +1,4 @@
+-- RebornQuestPins 1.2 (ALLY1G V1, 2026-11-26, Claude): Alliance quest 55991 added.
 -- RebornQuestPins 1.1 (DARK3F V1, 2026-11-25, Claude) - candidate, NOT user-tested.
 -- 1.1: quest 59985 - Kalecgos on the island while the quest is not complete, Wrathion in Orgrimmar once it is.
 -- The 3.3.5 client does not mark quest-giving objects on the maps, so this draws a yellow "!" for the listed ones:
@@ -8,11 +9,14 @@ local PINS = {
     { quest = 56839, show = "new", map = "ExilesReach", x = 211.542, y = -2166.91, title = "Danger Sign 危险告示牌", text = "Killclaw the Terrible / 可怕的杀爪" },
     { quest = 59985, show = "active", map = "ExilesReach", x = 709.0, y = -1884.5, title = "Kalecgos 卡雷苟斯", text = "An End to Beginnings / 终结即开始" },
     { quest = 59985, show = "complete", map = "Ogrimmar", x = 1637.0, y = -4442.0, title = "Wrathion 瑞斯拉克", text = "An End to Beginnings / 终结即开始" },
+    { quest = 55991, show = "active", map = "ExilesReach", x = 714.4, y = -1874.2, title = "Kalecgos 卡雷苟斯", text = "An End to Beginnings / 终结即开始" },
+    { quest = 55991, show = "complete", map = "Stormwind", x = -8832.9, y = 633.8, title = "Captain Garrick 加里克队长", text = "An End to Beginnings / 终结即开始" },
 }
 -- WorldMapArea.dbc bounds: island (id 20414) and Orgrimmar (id 321)
 local BOUNDS = {
     ExilesReach = { left = -518.75, right = -3900.0, top = 1433.33, bottom = -820.83 },
     Ogrimmar = { left = -3680.6, right = -5083.21, top = 2273.88, bottom = 1338.46 },
+    Stormwind = { left = 1722.92, right = -14.58, top = -7995.83, bottom = -9154.17 },
 }
 local MINI_DIAMETER = { [0] = 466.67, 400, 333.33, 266.67, 200, 133.33 }   -- outdoor minimap, yards per zoom level
 local ICON_NEW = "Interface\\GossipFrame\\AvailableQuestIcon"

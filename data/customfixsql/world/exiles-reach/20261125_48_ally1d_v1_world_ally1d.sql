@@ -1,0 +1,136 @@
+-- ALLY1D V1 (2026-11-25, Claude): Alliance 55196 -> 55763 -> 55764 -> 55881 -> 55882 (harpy roost), cloned from the tested Horde HARPY1A/1B/1C.
+-- Needs HARPY1C V4 (totem 9350803) and ALLY1C. Safe to run twice. Keep worldserver stopped.
+SET NAMES utf8mb4;
+SET @spawn_limit := 16777215;
+DELETE FROM `creature` WHERE `map` = 12175 AND `Comment` LIKE 'ALLY1D %';
+DELETE FROM `gameobject` WHERE `map` = 12175 AND `Comment` LIKE 'ALLY1D %';
+SELECT (SELECT COUNT(*) FROM `gameobject_template` WHERE `entry` = 9350803) AS horde_totem_must_be_1,
+       (SELECT COUNT(*) FROM `creature_template` WHERE `entry` IN (152843, 153964)) AS harpy_templates_must_be_2,
+       (SELECT COUNT(*) FROM `creature_model_info` WHERE `DisplayID` IN (3338, 15511, 16857, 30194, 30863)) AS model_info_must_be_5;
+DELETE FROM `creature_template` WHERE `entry` IN (156833, 156887, 156859, 156860, 156882, 156807);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (156833, 156887, 156859, 156860, 156882, 156807);
+DELETE FROM `quest_template` WHERE `ID` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `quest_template_addon` WHERE `ID` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `quest_offer_reward` WHERE `ID` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `quest_request_items` WHERE `ID` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `creature_queststarter` WHERE `quest` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `creature_questender` WHERE `quest` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `quest_poi_points` WHERE `QuestID` IN (55196, 55763, 55764, 55881, 55882);
+DELETE FROM `quest_poi` WHERE `QuestID` IN (55196, 55763, 55764, 55881, 55882);
+SELECT COALESCE(MAX(`guid`), 0) INTO @g FROM `creature` WHERE `guid` < @spawn_limit;
+SELECT COALESCE(MAX(`guid`), 0) INTO @o FROM `gameobject` WHERE `guid` < @spawn_limit;
+SELECT IF(@g + 100 + 10000 < @spawn_limit AND @o + 100 + 10000 < @spawn_limit, 'guid base OK', 'ABORT: no guid room, do not continue') AS guid_check;
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `rank`, `unit_class`, `unit_flags`, `type`, `AIName`, `HealthModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `ScriptName`) VALUES (156833, 'Henry Garrick 亨利·加里克', NULL, 1, 1, 35, 2, 1, 1.14286, 0, 1, 0, 7, '', 3, 1, 1, 0, '');
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156833, 0, 3338, 1, 1, 0);
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `rank`, `unit_class`, `unit_flags`, `type`, `AIName`, `HealthModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `ScriptName`) VALUES (156887, 'Wrathion 拉希奥', NULL, 1, 1, 35, 2, 1, 1.14286, 0, 1, 0, 7, '', 3, 1, 1, 0, '');
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156887, 0, 15511, 1, 1, 0);
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `rank`, `unit_class`, `unit_flags`, `type`, `AIName`, `HealthModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `ScriptName`) VALUES (156859, 'Wrathion 拉希奥', NULL, 1, 1, 35, 2, 1, 1.14286, 0, 1, 0, 7, '', 3, 1, 1, 0, '');
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156859, 0, 15511, 1, 1, 0);
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `rank`, `unit_class`, `unit_flags`, `type`, `AIName`, `HealthModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `ScriptName`) VALUES (156860, 'Kee-La 基拉', NULL, 1, 1, 35, 2, 1, 1.14286, 0, 1, 0, 7, '', 3, 1, 1, 0, '');
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156860, 0, 16857, 1, 1, 0);
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `rank`, `unit_class`, `unit_flags`, `type`, `AIName`, `HealthModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `ScriptName`) VALUES (156882, 'Meredy Huntswell 梅瑞迪·亨茨韦尔', NULL, 1, 1, 35, 2, 1, 1.14286, 0, 1, 0, 7, '', 3, 1, 1, 0, '');
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156882, 0, 30194, 1, 1, 0);
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `rank`, `unit_class`, `unit_flags`, `type`, `AIName`, `HealthModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `ScriptName`) VALUES (156807, 'Lady Jaina Proudmoore 吉安娜·普罗德摩尔', NULL, 1, 1, 35, 2, 1, 1.14286, 0, 1, 0, 7, '', 3, 1, 1, 0, '');
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES (156807, 0, 30863, 1, 1, 0);
+-- Alliance copy of the totem: same row as the tested Horde totem, only the quest (Data1) differs, so the sparkle works for 55881
+DELETE FROM `gameobject_template` WHERE `entry` = 9350813;
+DROP TEMPORARY TABLE IF EXISTS tmp_totem_a;
+CREATE TEMPORARY TABLE tmp_totem_a AS SELECT * FROM `gameobject_template` WHERE `entry` = 9350803;
+UPDATE tmp_totem_a SET `entry` = 9350813, `Data1` = 55881;
+INSERT INTO `gameobject_template` SELECT * FROM tmp_totem_a;
+DROP TEMPORARY TABLE tmp_totem_a;
+-- phases: Horde totem 1, Alliance totem 2, harpies and Bloodbeak shared 3
+UPDATE `gameobject` SET `phaseMask` = 1 WHERE `map` = 12175 AND `id` = 9350803;
+UPDATE `creature` SET `phaseMask` = 3 WHERE `map` = 12175 AND `id1` IN (152843, 153964);
+INSERT INTO `creature` (`guid`, `id1`, `map`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`, `Comment`) VALUES (@g + 1, 156833, 12175, 1, 2, 0, 254.181, -2328.01, 80.7614, 5.24495, 120, 0, 0, 'ALLY1D Henry camp');
+INSERT INTO `creature` (`guid`, `id1`, `map`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`, `Comment`) VALUES (@g + 2, 156887, 12175, 1, 2, 0, 187.38, -2286.43, 81.8004, 3.47889, 120, 0, 0, 'ALLY1D Wrathion camp');
+INSERT INTO `creature` (`guid`, `id1`, `map`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`, `Comment`) VALUES (@g + 3, 156859, 12175, 1, 2, 0, 392.495, -2440.42, 125.495, 5.31956, 120, 0, 0, 'ALLY1D Wrathion roost');
+INSERT INTO `creature` (`guid`, `id1`, `map`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`, `Comment`) VALUES (@g + 4, 156860, 12175, 1, 2, 0, 391.232, -2441.6, 124.933, 6.21259, 120, 0, 0, 'ALLY1D Kee-La roost');
+INSERT INTO `creature` (`guid`, `id1`, `map`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`, `Comment`) VALUES (@g + 5, 156882, 12175, 1, 2, 0, 394.458, -2441.74, 126.354, 2.85187, 120, 0, 0, 'ALLY1D Meredy roost');
+INSERT INTO `creature` (`guid`, `id1`, `map`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`, `Comment`) VALUES (@g + 6, 156807, 12175, 1, 2, 0, 185.906, -2288.93, 81.7778, 1.90876, 120, 0, 0, 'ALLY1D Jaina camp');
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `Comment`) VALUES (@o + 1, 9350813, 12175, 1, 2, 435.549, -2488.26, 142.305, 5.41296, 0, 0, -0.421513, 0.906822, 60, 255, 1, 'ALLY1D totem');
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `Comment`) VALUES (@o + 2, 9350813, 12175, 1, 2, 466.277, -2507.78, 147.457, 5.42474, 0, 0, -0.416164, 0.909289, 60, 255, 1, 'ALLY1D totem');
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `Comment`) VALUES (@o + 3, 9350813, 12175, 1, 2, 540.87, -2492.4, 153.481, 0.345569, 0, 0, -0.171926, -0.98511, 60, 255, 1, 'ALLY1D totem');
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `Comment`) VALUES (@o + 4, 9350813, 12175, 1, 2, 503.552, -2589.02, 155.422, 5.14822, 0, 0, -0.537509, 0.843258, 60, 255, 1, 'ALLY1D totem');
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `Comment`) VALUES (@o + 5, 9350813, 12175, 1, 2, 478.538, -2450.95, 152.95, 2.5751, 0, 0, -0.960153, -0.279476, 60, 255, 1, 'ALLY1D totem');
+INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `RewardXPDifficulty`, `Flags`, `LogTitle`, `LogDescription`, `QuestDescription`, `QuestCompletionLog`, `AreaDescription`) VALUES (55196, 2, 1, 1, 3, 0, 'The Harpy Problem / 鹰身人问题', 'Meet with Henry Garrick near the Harpy Roost. / 在鹰身人巢穴附近与亨利·加里克一行会合。', 'We need to find the remaining survivors of my expedition before the ogres sacrifice them for their dark ritual!$B$BI saw one of the survivors being dragged away by some harpies. They have a roost to the north.$B$BKee-La and I will meet you up there with a scouting report.$B$B我们得赶在食人魔拿他们举行黑暗仪式之前，找到远征队剩下的幸存者！$B$B我看见一个幸存者被鹰身人拖走了，它们在北边有个巢穴。$B$B基拉和我会在上面等你，带着侦察结果。', 'Meet the others at the Harpy Roost entrance. / 到鹰身人巢穴入口与同伴会合。', '');
+INSERT INTO `quest_template_addon` (`ID`, `PrevQuestID`, `NextQuestID`) VALUES (55196, 55879, 55763);
+INSERT INTO `quest_offer_reward` (`ID`, `Emote1`, `Emote2`, `EmoteDelay1`, `EmoteDelay2`, `RewardText`, `VerifiedBuild`) VALUES (55196, 1, 0, 0, 0, 'It seems the harpies are up to no good. We''ll need your help with this.$B$B看来鹰身人没安好心。这件事需要你帮忙。', 0);
+INSERT INTO `quest_request_items` (`ID`, `EmoteOnComplete`, `EmoteOnIncomplete`, `CompletionText`, `VerifiedBuild`) VALUES (55196, 0, 0, 'Over here!$B$B这边！', 0);
+INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES (156833, 55196);
+INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES (156887, 55196);
+INSERT INTO `creature_questender` (`id`, `quest`) VALUES (156859, 55196);
+INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `RewardXPDifficulty`, `Flags`, `LogTitle`, `LogDescription`, `QuestDescription`, `QuestCompletionLog`, `AreaDescription`) VALUES (55763, 2, 1, 1, 5, 0, 'The Rescue of Meredy Huntswell / 营救梅瑞迪·亨茨韦尔', 'Rescue Meredy Huntswell from the harpies'' necromantic ritual. / 从鹰身人的死灵仪式中救出梅瑞迪·亨茨韦尔。', 'Our expedition''s mage, Meredy Huntswell, is being held by the harpies!$B$BWe''ve got to stop their ritual and rescue Meredy.$B$BYou lead the charge. Kee-La and I will back you up if things look dire.$B$B远征队的法师梅瑞迪·亨茨韦尔被鹰身人抓住了！$B$B必须打断仪式，把梅瑞迪救出来。$B$B你打头阵，情况危急时基拉和我会接应你。', 'Meet Meredy Huntswell at the Harpy Roost entrance. / 在鹰身人巢穴入口与梅瑞迪会合。', '');
+UPDATE `quest_template` SET `RequiredNpcOrGo1` = 153964, `RequiredNpcOrGoCount1` = 1, `ObjectiveText1` = 'Meredy Huntswell rescued / 梅瑞迪获救' WHERE `ID` = 55763;
+INSERT INTO `quest_template_addon` (`ID`, `PrevQuestID`, `NextQuestID`) VALUES (55763, 55196, 55764);
+INSERT INTO `quest_offer_reward` (`ID`, `Emote1`, `Emote2`, `EmoteDelay1`, `EmoteDelay2`, `RewardText`, `VerifiedBuild`) VALUES (55763, 1, 0, 0, 0, 'Ye rescued me from a grim fate! Bein'' a practicin'' mage, I always figured one of me own spells would do me in, not a harpy!$B$B你把我从鬼门关拉回来了！身为法师，我一直以为要我命的会是自己的法术，可不是什么鹰身人！', 0);
+INSERT INTO `quest_request_items` (`ID`, `EmoteOnComplete`, `EmoteOnIncomplete`, `CompletionText`, `VerifiedBuild`) VALUES (55763, 0, 0, 'Is it done?$B$B完成了吗？', 0);
+INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES (156859, 55763);
+INSERT INTO `creature_questender` (`id`, `quest`) VALUES (156882, 55763);
+INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `RewardXPDifficulty`, `Flags`, `LogTitle`, `LogDescription`, `QuestDescription`, `QuestCompletionLog`, `AreaDescription`) VALUES (55764, 2, 1, 1, 5, 0, 'Harpy Culling / 猎杀鹰身人', 'Defeat 10 harpies and their allies. / 击败10只鹰身人及其同伙。', 'The harpies are preparing for a dreadful assault, $n.$B$BThey plan to attack our allies back at camp!$B$BWe have to stop them. Slay the harpies to ensure their forces are too weak to stage an assault.$B$B$n，鹰身人正在准备一场可怕的进攻。$B$B它们打算袭击营地里的同伴！$B$B必须阻止它们。消灭鹰身人，让它们弱到无力进攻。', 'Return to Kee-La. / 回到基拉那里。', '');
+UPDATE `quest_template` SET `RequiredNpcOrGo1` = 152843, `RequiredNpcOrGoCount1` = 10, `ObjectiveText1` = 'Harpies and cohorts slain / 已击杀的鹰身人及同伙' WHERE `ID` = 55764;
+INSERT INTO `quest_template_addon` (`ID`, `PrevQuestID`, `NextQuestID`) VALUES (55764, 55763, 55881);
+INSERT INTO `quest_offer_reward` (`ID`, `Emote1`, `Emote2`, `EmoteDelay1`, `EmoteDelay2`, `RewardText`, `VerifiedBuild`) VALUES (55764, 1, 0, 0, 0, 'That should keep our camp safe for now. We must hurry and stop whatever these ogres have planned.$B$B营地暂时安全了。我们得抓紧，阻止食人魔的图谋。', 0);
+INSERT INTO `quest_request_items` (`ID`, `EmoteOnComplete`, `EmoteOnIncomplete`, `CompletionText`, `VerifiedBuild`) VALUES (55764, 0, 0, 'Keep thinning the harpies.$B$B继续消灭鹰身人。', 0);
+INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES (156860, 55764);
+INSERT INTO `creature_questender` (`id`, `quest`) VALUES (156860, 55764);
+INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `RewardXPDifficulty`, `Flags`, `LogTitle`, `LogDescription`, `QuestDescription`, `QuestCompletionLog`, `AreaDescription`) VALUES (55881, 2, 1, 1, 5, 0, 'Purge the Totems / 清除图腾', 'Set fire to 5 Harpy Totems. / 点燃5个鹰身人图腾。', 'The harpies'' totems are scattered throughout the area.$B$BHarpies are known for using their magic to corrupt those nearby. Even now, I can hear foul whispers in the air...$B$BWe must destroy these totems before any of us are tainted by their dark magic!$B$B鹰身人的图腾散落在这一带。$B$B鹰身人惯用魔法腐化附近的人。就在此刻，我还能听见风中的邪恶低语……$B$B得赶在我们被黑暗魔法侵染之前毁掉这些图腾！', 'Return to Wrathion. / 回到拉希奥那里。', '');
+UPDATE `quest_template` SET `RequiredNpcOrGo1` = -9350813, `RequiredNpcOrGoCount1` = 5, `ObjectiveText1` = 'Harpy Totems burned / 已点燃的鹰身人图腾' WHERE `ID` = 55881;
+INSERT INTO `quest_template_addon` (`ID`, `PrevQuestID`, `NextQuestID`) VALUES (55881, 55764, 55882);
+INSERT INTO `quest_offer_reward` (`ID`, `Emote1`, `Emote2`, `EmoteDelay1`, `EmoteDelay2`, `RewardText`, `VerifiedBuild`) VALUES (55881, 1, 0, 0, 0, 'The foul magic in this area is dissipating. I think we''re safe for now.$B$B这一带的邪恶魔法正在消散。暂时安全了。', 0);
+INSERT INTO `quest_request_items` (`ID`, `EmoteOnComplete`, `EmoteOnIncomplete`, `CompletionText`, `VerifiedBuild`) VALUES (55881, 0, 0, 'Burn the totems.$B$B把图腾烧掉。', 0);
+INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES (156859, 55881);
+INSERT INTO `creature_questender` (`id`, `quest`) VALUES (156859, 55881);
+INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `RewardXPDifficulty`, `Flags`, `LogTitle`, `LogDescription`, `QuestDescription`, `QuestCompletionLog`, `AreaDescription`) VALUES (55882, 2, 1, 1, 3, 0, 'Message to Base / 向营地传讯', 'Return to the Alliance Camp and speak with Lady Jaina Proudmoore. / 回到联盟营地，与吉安娜·普罗德摩尔交谈。', 'We did it! We''re one step closer to getting off this island.$B$BLet''s get back to camp and inform them of our success.$B$B成功了！离开这座岛又近了一步。$B$B回营地报个喜吧。', 'Return to the Alliance Camp. / 回到联盟营地。', '');
+INSERT INTO `quest_template_addon` (`ID`, `PrevQuestID`, `NextQuestID`) VALUES (55882, 55881, 0);
+INSERT INTO `quest_offer_reward` (`ID`, `Emote1`, `Emote2`, `EmoteDelay1`, `EmoteDelay2`, `RewardText`, `VerifiedBuild`) VALUES (55882, 1, 0, 0, 0, 'I''m relieved you rescued Meredy. That''s one more life saved and one fewer sacrificed.$B$BWe''ll work with Meredy to figure out a plan of action.$B$B你救出了梅瑞迪，我松了口气。又多救下一条命，少了一个祭品。$B$B我们会和梅瑞迪商量下一步行动。', 0);
+INSERT INTO `quest_request_items` (`ID`, `EmoteOnComplete`, `EmoteOnIncomplete`, `CompletionText`, `VerifiedBuild`) VALUES (55882, 0, 0, 'Report.$B$B汇报吧。', 0);
+INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES (156859, 55882);
+INSERT INTO `creature_questender` (`id`, `quest`) VALUES (156807, 55882);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55196, 0, -1, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55196, 0, 0, 385, -2454, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55196, 0, 1, 403, -2454, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55196, 0, 2, 403, -2436, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55196, 0, 3, 385, -2436, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55763, 0, 0, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 0, 0, 485, -2364, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 0, 1, 503, -2364, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 0, 2, 503, -2346, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 0, 3, 485, -2346, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55763, 1, -1, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 1, 0, 385, -2452, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 1, 1, 403, -2452, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 1, 2, 403, -2434, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55763, 1, 3, 385, -2434, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55764, 0, 0, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 0, 0, 499, -2586, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 0, 1, 554, -2529, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 0, 2, 500, -2376, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 0, 3, 423, -2419, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55764, 1, -1, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 1, 0, 382, -2451, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 1, 1, 400, -2451, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 1, 2, 400, -2433, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55764, 1, 3, 382, -2433, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55881, 0, 0, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 0, 0, 501, -2590, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 0, 1, 552, -2514, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 0, 2, 481, -2452, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 0, 3, 430, -2487, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55881, 1, -1, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 1, 0, 383, -2449, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 1, 1, 401, -2449, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 1, 2, 401, -2431, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55881, 1, 3, 383, -2431, 0);
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`, `VerifiedBuild`) VALUES (55882, 0, -1, 12175, 20414, 0, 0, 1, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55882, 0, 0, 177, -2298, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55882, 0, 1, 195, -2298, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55882, 0, 2, 195, -2280, 0);
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES (55882, 0, 3, 177, -2280, 0);
+SELECT (SELECT COUNT(*) FROM `quest_template` WHERE `ID` IN (55196, 55763, 55764, 55881, 55882)) AS quests_5,
+       (SELECT COUNT(*) FROM `creature` WHERE `Comment` LIKE 'ALLY1D %') AS npcs_6,
+       (SELECT COUNT(*) FROM `gameobject` WHERE `Comment` LIKE 'ALLY1D %%') AS totems_5,
+       (SELECT `Data1` FROM `gameobject_template` WHERE `entry` = 9350813) AS totem_quest_55881,
+       (SELECT COUNT(*) FROM `creature_queststarter` WHERE `quest` IN (55196, 55763, 55764, 55881, 55882)) AS starters_6,
+       (SELECT COUNT(*) FROM `creature_questender` WHERE `quest` IN (55196, 55763, 55764, 55881, 55882)) AS enders_5,
+       (SELECT COUNT(*) FROM `quest_poi` WHERE `QuestID` IN (55196, 55763, 55764, 55881, 55882)) AS poi_8;
