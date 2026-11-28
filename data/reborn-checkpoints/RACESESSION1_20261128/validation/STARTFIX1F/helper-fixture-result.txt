@@ -1,0 +1,1 @@
+PASS: dragon IDs, three sheath sockets, actor-space offset/no drift, authored local matrix; held weapon/sword/visage/other race/unloaded/bounds/null guards. Fixture does not prove in-game fit or runtime detach.

@@ -1,0 +1,28 @@
+{
+  "baseline_live_exe": "72ebeca7fc09b6d42ba405d5e86d3495156c0259fe53a4a343a15934d99b1216",
+  "output_exe": "16f87cc54afd24eef7b824143b96c30d21816890bbc41684ca4ce07b190f4a0d",
+  "raw_asset_changes": 0,
+  "model_offset": [
+    0,
+    0,
+    -0.55
+  ],
+  "game_test": "pending",
+  "old_1E": "user reported wrong direction; superseded",
+  "remote": "fetch failed github.com DNS; latest remote not verified",
+  "WoWCommon_only_changed_object": [
+    [
+      "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexwork_STARTFIX1E\\RetailRace.obj",
+      "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexwork_STARTFIX1F\\RetailRace.obj"
+    ]
+  ],
+  "Model2_only_changed_object": [
+    [
+      "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\relink\\M2MODEL.OBJ",
+      "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexwork_STARTFIX1F\\M2MODEL.OBJ"
+    ]
+  ],
+  "matrix-fixture": "PASS: actual ApplyAttachmentFrame and SetAttachmentFrame with real Tempest matrices: 20 animated bone/body/view transforms x100 repetitions, model-down displacement, orientation intact, old inverted-bone up reproduced, zero-offset legacy behavior, finite/bounds guards and parent invalidation.",
+  "helper-fixture": "PASS: dragon IDs, three sheath sockets, actor-space offset/no drift, authored local matrix; held weapon/sword/visage/other race/unloaded/bounds/null guards. Fixture does not prove in-game fit or runtime detach.",
+  "class_layout": "unchanged; one new method declaration only"
+}

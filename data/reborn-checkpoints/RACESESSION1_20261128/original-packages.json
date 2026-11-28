@@ -1,0 +1,68 @@
+[
+  {
+    "stage": "FISHCLASS1B",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64FISHCLASS1B_鱼人十职业与符文熔铸",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64FISHCLASS1B_鱼人十职业与符文熔铸.zip",
+    "zip_sha256": "03a4ddf6a2889db4d4987d96e7a1ac595a40e68cd859ffe8bba26efe57eac96c"
+  },
+  {
+    "stage": "MOGU1A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选.zip",
+    "zip_sha256": "f1634bc9ff597506241328c87c51675f3a6a337996694c2fc3395320d10ed03b"
+  },
+  {
+    "stage": "MOGU1D",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260042_阶段WOW64MOGU1D_男魔古恢复V203外观",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260042_阶段WOW64MOGU1D_男魔古恢复V203外观.zip",
+    "zip_sha256": "cde9bec620534e50140ae9123087bd0512afde4c4071542e63e67161195e5984"
+  },
+  {
+    "stage": "MOGU1G",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容.zip",
+    "zip_sha256": "1500a60f23bbcd2f080e9b3a0acd77aa13ca9f2a3fe14336a9357a5862fceac7"
+  },
+  {
+    "stage": "MOGU1I",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图.zip",
+    "zip_sha256": "d48260c37381907539e215ece3243f5003828bd979d62dab57b6d1298930cf6a"
+  },
+  {
+    "stage": "MOGU1J",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复.zip",
+    "zip_sha256": "b921b4a0b0ae6ca143280f50062cee64d8ee47fa46f2d2115854848a7f17ff31"
+  },
+  {
+    "stage": "STARTFIX1A",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611261930_阶段STARTFIX1A_女魔古装备与首登流放岛",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611261930_阶段STARTFIX1A_女魔古装备与首登流放岛.zip",
+    "zip_sha256": "aded397eed70162f7f68f80e696ef9a3c7307bdad4d1d4f1d7551de670d3639e"
+  },
+  {
+    "stage": "STARTFIX1B",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270001_阶段STARTFIX1B_鱼人魔古熊人装备与熊人坐姿",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270001_阶段STARTFIX1B_鱼人魔古熊人装备与熊人坐姿.zip",
+    "zip_sha256": "0bb2caa16e00149ef28e63ca17b5f336aa419f85228e658436bef4f58adcbbd2"
+  },
+  {
+    "stage": "STARTFIX1C",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270154_阶段STARTFIX1C_全种族流放岛与熊人对话落地",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270154_阶段STARTFIX1C_全种族流放岛与熊人对话落地.zip",
+    "zip_sha256": "99eb2bdb64729c983f99afb3425e583ba473c8b98dcff72c0ba09ac272d85bb6"
+  },
+  {
+    "stage": "STARTFIX1D",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270334_阶段STARTFIX1D_熊人男女披风",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270334_阶段STARTFIX1D_熊人男女披风.zip",
+    "zip_sha256": "cb3a7038d0e1dbf70a8194e1beb9199ab0573afa44161020fa3ae067f994a4bd"
+  },
+  {
+    "stage": "STARTFIX1F",
+    "directory": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270640_阶段STARTFIX1F_龙希尔法杖按身体方向下移",
+    "zip": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270640_阶段STARTFIX1F_龙希尔法杖按身体方向下移.zip",
+    "zip_sha256": "3e3c09887f42f7edc9cbd8e72c6881f96fcd377638b5997737bfc0b29be57dd5"
+  }
+]

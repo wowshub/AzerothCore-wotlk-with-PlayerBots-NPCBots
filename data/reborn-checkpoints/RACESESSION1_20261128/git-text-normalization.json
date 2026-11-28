@@ -1,0 +1,752 @@
+[
+  {
+    "path": "data/customfixsql/characters/ExileBirth/STARTFIX1C/01_install.sql",
+    "source_sha256": "10cae26e635d09855f72fe9eaa01589aafe5ab103b06da8508bac55b4f523711",
+    "git_blob_sha256": "c2c29326833b6252cd6bc21ebfd9ccd75cb088d1c72543301be9ea69d16e84e0",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/customfixsql/characters/ExileBirth/STARTFIX1C/02_guarded_rollback.sql",
+    "source_sha256": "e7597fe4f003b4fe98ced820802cc7ee25e701d65dead0ea5a1f6cfcdd3fe6db",
+    "git_blob_sha256": "94208d5cd4e568d25327bfc42769af536f69b48e1f82d3ac9a33e958518e08c1",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/customfixsql/world/ExileBirth/STARTFIX1A/01_EXILEBIRTH1A_WORLD.sql",
+    "source_sha256": "e76f84ad34609c66d7054eb3c391b1517ff219a5d5b1954cfba508f47ec05c49",
+    "git_blob_sha256": "e76f84ad34609c66d7054eb3c391b1517ff219a5d5b1954cfba508f47ec05c49",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/customfixsql/world/Mogu/WOW64MOGU1A/01_install.sql",
+    "source_sha256": "5ca11d4f9be147edd78bb7b7aea2f348c4ed1eada65b96147f03c0bd1ea4ea45",
+    "git_blob_sha256": "a9e20b8a9fb1f60548f1b65e5fa39e64fe7883424fbfdc79656f7868705a5fcf",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/customfixsql/world/Mogu/WOW64MOGU1G/01_install.sql",
+    "source_sha256": "4c85a9e72b772591647173e8429369abe854ac998a70001856605640e8ae5011",
+    "git_blob_sha256": "4c85a9e72b772591647173e8429369abe854ac998a70001856605640e8ae5011",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/ACCEPTANCE.md",
+    "source_sha256": "5a05647f62a06f1415abb433ac60aa0400f15f67704e75bfdaa45c9c35e77715",
+    "git_blob_sha256": "be39f67e49db668787014e75d64983dcfbbcbdfebf53cfc37955b4c8d09e0ecf",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/FAILURES.md",
+    "source_sha256": "9c244a46dd205cf4a7bca683332dd83b27e667a591627c6b72c411139c3b3df9",
+    "git_blob_sha256": "50e4032d06ce088c92be4e6f27f3da1291ca221b893ed89364d53f22b694b2c2",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/NEXT-CHAT.md",
+    "source_sha256": "174278b48518a0bfd3aac1c8208cb7b3f30d84f780f43884c59c684669792083",
+    "git_blob_sha256": "fbf29829b06063e430a82cf429b67872738e9a0e3d5550449640a0a3acb7cb08",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/Engine/Source/Model2/M2Model.cpp",
+    "source_sha256": "66e010855c66a1965fa3d5cf740ec4b0c009a344dd7df620953143406d369609",
+    "git_blob_sha256": "461c195fc397d893798f67dda1b6770660bd4b0f87e6caf369ac61d0a877ca0b",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/Engine/Source/Model2/M2Model.h",
+    "source_sha256": "c84db62659e5fe229fb865d3acab6dbd5a7a5aac9bf19fb23aac6c1e041dbb8b",
+    "git_blob_sha256": "23429e6968bdd50b9de6cb770017e6f288d0bc61fc2af6f53074c62159e0d238",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/Engine/Source/Retail/RebornNeutralOrigin.h",
+    "source_sha256": "dfabdaca3a5ed4950c69434d0b3ab33d5976023619a01f369aaf59a26fb950ab",
+    "git_blob_sha256": "dfabdaca3a5ed4950c69434d0b3ab33d5976023619a01f369aaf59a26fb950ab",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/Engine/Source/Retail/StartZoneWire.h",
+    "source_sha256": "06235a416d02de9f50821658a81a3c4d57f73e0fc9f51f40124d6d3106243306",
+    "git_blob_sha256": "87c1f4f08f00676ace6892c9dd577ccb7c93cf93ffaf346063c45895154a161c",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Common/ComponentCore/CharacterComponent.cpp",
+    "source_sha256": "ba79f63f5ea8c8d78f15cf2bd20d0f9e6f478777c6d68f48683086946ea7a33f",
+    "git_blob_sha256": "f2a0657b1459942a7091eeb0ef198b36c616d7b6ba623f6713642442f9ef4b5c",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Common/ComponentCore/EsteriaAppearance.cpp",
+    "source_sha256": "1876ff924affcd2c5192563f26d327a6cb6f88500a29167a08c0f4e15d799537",
+    "git_blob_sha256": "36438b5f94583bc2c7a19be7212707432faf42a4ee939648ee51f696929ca034",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Common/ComponentCore/EsteriaNativeEquipment.inl",
+    "source_sha256": "35549bf60b6fae7af40dc5c5e0573c32d613fa3b3ec5729ecafed441f2002ebd",
+    "git_blob_sha256": "fcc08d8e37a8ae6964253591f92e7f59c899bbcbf25e60ce5f41cb14ec3a25fa",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Common/ComponentCore/RebornNeutralClothing.inl",
+    "source_sha256": "22dc1e5e2d3ca1f1bd0ad4952aa14d8ceba1abefe7a4214e7972beafa0491c68",
+    "git_blob_sha256": "dea195b5d4f8ccf76bb068237066c01b71917397fdb91750e8fe4dc98b16f615",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Common/ComponentCore/RetailRace.cpp",
+    "source_sha256": "ed185d2ac5809be1df6c49bdf10d0d41d781b00af9534086cd0b99d44ed038d2",
+    "git_blob_sha256": "ccdbc56d18ecbd7d083401d0ee4df37e2a17fd595b96435231156b6cfd45a0ef",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Source/Object/ObjectClient/Unit_C.cpp",
+    "source_sha256": "69f4bf15839b75fce9305f64e3d8fd9d5f1213195fcf1212d63a99af9dbb9b9b",
+    "git_blob_sha256": "e61ba79fc50ddeb4af6474cce9d7ddbe1936d7220c0ae4b88fefbccdeff8430c",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Source/Ui/DressUpModelFrame.cpp",
+    "source_sha256": "c182ee9c0d4a39475b9ef7c607aec73784b51c84fa1517432979dfaec484d633",
+    "git_blob_sha256": "525bdeee39811b4c368307c16af93ab523c7eb99dde53f75726750f5d9133bf2",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/client-source/src/WoW/Source/Ui/GameUI.cpp",
+    "source_sha256": "84573fdd2b6a378181d8e6f537824abd7bdef34e516aa39e607f73ac41b08320",
+    "git_blob_sha256": "043c75badabfac6f1cdd3810dc9dcbab38a0dc91651afe6117834606b7333b67",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/closeout-checks.json",
+    "source_sha256": "63515e4650eccb86c37fca8ddd01f2ba766e8de77c12ad37b1293c0e730fb9c3",
+    "git_blob_sha256": "35907e00914bebdb0a052307ec5a350ee9945b6ac2ab029db93ba1dbccc14a78",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/original-packages.json",
+    "source_sha256": "c4bf430aaa68c52319165d0465be735115b0c6642bda99c532a33a47ec8e9e0f",
+    "git_blob_sha256": "c1271a1e326893b36924c99ac0c5af3563ea60077ed60b9d669796ae0c580db2",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/resource-provenance.json",
+    "source_sha256": "04cbc638011a8089bd706cdc28422a6848734dc0db575a40b1d785d6a989579f",
+    "git_blob_sha256": "e2db834be82bb0a60a36d9b28b43d5fc4355480cabca21cf9cbe8d4d910b259f",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/resources.json",
+    "source_sha256": "dff95d5bd744364ac33727feddd6ba9481d625aa160479230c5a06eed15e6ec4",
+    "git_blob_sha256": "3441d8a92532879d88587d5c7e0402154c0e451a31e09c5d0279f8eced964f96",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/game/Entities/Player/Player.cpp",
+    "source_sha256": "69bc807ab461bae7b0611e45ac447c1c776b75bf3f6fc667cd51547f0ae03f79",
+    "git_blob_sha256": "0fe02e976bc9bfadc97f4fb9e0496554107823f84b9294af798d2538a2667166",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/game/Entities/Player/PlayerQuest.cpp",
+    "source_sha256": "b0a04e0a6ce73ec8a07ef87461c7e126b9f6cc60db68f998a45a189f53e3b31d",
+    "git_blob_sha256": "bdd6c1c578d7553b56b3b14d78ce80684947f469cfc23603645f8ed78970234b",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/game/Entities/Player/PlayerStorage.cpp",
+    "source_sha256": "97f58d5a89dab0398bd687fab1e3e58a2c7a0badabc5420dfd02f298693ec5e2",
+    "git_blob_sha256": "119859f1fafa4add78a370ec5a471d682eb03c2259d61a6cb91e63ce835fe7c0",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/game/Entities/Player/RebornBirthLocation.h",
+    "source_sha256": "985956125bb354ee7033451dbfba40a763de37383b939c0e782fab99b4a63b02",
+    "git_blob_sha256": "431787907114426118c72ea9f4234cf9e9480e6bc23ab06f95cbb544970abd30",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/game/Handlers/CharacterHandler.cpp",
+    "source_sha256": "8ce085d8e559b0ab09ec968dc999eb8274b5ce43fa5b5d9ee562c2511b3592f7",
+    "git_blob_sha256": "44d1986623e559b1cfa8e93ecf5dbd9f5dc96847bcd7b66e6513c23d108663e0",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/shared/RebornClassicRaceClasses.h",
+    "source_sha256": "eb05dcf9c0c871a5e10b9729b54124a9c1a3505e5bc261d7e49e2207c19b7460",
+    "git_blob_sha256": "88c2eda47eeb9af352bb6c7d2be8a2a2cfec11ad288b955e3167c6fc6a395f53",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/shared/RebornNeutralOrigin.h",
+    "source_sha256": "dfabdaca3a5ed4950c69434d0b3ab33d5976023619a01f369aaf59a26fb950ab",
+    "git_blob_sha256": "dfabdaca3a5ed4950c69434d0b3ab33d5976023619a01f369aaf59a26fb950ab",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/server-source/src/server/shared/StartZoneWire.h",
+    "source_sha256": "06235a416d02de9f50821658a81a3c4d57f73e0fc9f51f40124d6d3106243306",
+    "git_blob_sha256": "87c1f4f08f00676ace6892c9dd577ccb7c93cf93ffaf346063c45895154a161c",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/source-provenance.json",
+    "source_sha256": "a0e62a10b1430d62ed69f9a0ea43d9c09f2f42ebe71110ecc9ba7e8a07be94c6",
+    "git_blob_sha256": "900fb19508028b48ed340153c24b84823b1cbe53b4980a6c233a82d649a29a09",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/check_mpq.py",
+    "source_sha256": "0b34c6cbb56ebb6d273847065ab7a63c2ae47fde9828f8113766d59ab1f17b0e",
+    "git_blob_sha256": "c63f94a9cf2a49d1ccaf1975df2664be2e789a7dcd50e26501bf5f96056d62ed",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/check_regression.py",
+    "source_sha256": "7e732a409d4bca7dfd16b6b8211c73c41b0b2923879982bd588476b23e33d9ce",
+    "git_blob_sha256": "2f1a9b844fa5779a707948ca9e5cbe4c0c0c216ef814642bd7b27ab1c3ac1776",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/delivery.txt",
+    "source_sha256": "5ce6282d0abb0b5af4c760ac0dfef7fc3fe122f94e7cbb0ad1de507b1a6f6cb3",
+    "git_blob_sha256": "242f6137e0828287ad79bf35cbf9cd9895c121f48c369964e7b2a3e7f9845853",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/fix_talk.py",
+    "source_sha256": "37c93ebdf4ae03473a0a4e47556c961c991c887c43ed85c97ee28459f4f88730",
+    "git_blob_sha256": "6d60dc29d1951c464cb126deabd6a06d068046b363c474fc16f106d56fbaa7ca",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/intake.py",
+    "source_sha256": "09e79bbba2ab433626892976597f3c7d374ae5b527c48b313a79e133fbe3a720",
+    "git_blob_sha256": "bc94791b7ef9d7b602ed29d01677de78717d06bf87bc30b6e1de0603ab75f827",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/pose_tools.py",
+    "source_sha256": "c743ba7b32eecdee3262121615f81ab0f96fb9dfb570600adbe46c8e54435f83",
+    "git_blob_sha256": "d85cbb42ce77728e2c79b7835ea006073f027fee307edf807a61290704693829",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/probe.py",
+    "source_sha256": "7457f805c9b8079f7d899d7ca4577ca120e18d0595040eb9823413fcf1854a86",
+    "git_blob_sha256": "3a8e8a909c5df917ec54e69691efd5300775e267bc69f3dc4ac2356c8854286a",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/sql-test-results.json",
+    "source_sha256": "07f37ed9e82fae5be5c22a10a6404fdf87cfa4213ed1d0c63ca16032bfe12e1a",
+    "git_blob_sha256": "cb486b15004fa17fb9802b6e591dbcd4838b4fe732a493bdcd4ed04f4abed567",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/talk_scan.py",
+    "source_sha256": "1ea9a924680b07d57a778af19ee9e1de4623e0706374cf2ee1c46d1fa01cc1ac",
+    "git_blob_sha256": "2da01b085363a70f5cd33a82bca0c71e8cebbc03fe6226d77f08fd45da576fee",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1C/test_sql.py",
+    "source_sha256": "7e0da24d9b8383d9750e2c1668cbc33c54bd071b0e999ca1071baaeb73492a57",
+    "git_blob_sha256": "fae5381c32d26b1d321b40757ee2773cb91638d89b83ab6fa535c2d7d096b681",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/alpha_probe.py",
+    "source_sha256": "76a82a12260ef0d3a08c7de7d6545cce7e3bd9f87fa98000289a1dfdbe3a6350",
+    "git_blob_sha256": "37e8f97801a65a0b5143b89f559530989dd9346e2e71da9e5392a6ea754fbdef",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/back_measure.py",
+    "source_sha256": "3b013cae2ffd582fa2a2d5cd1a3a3e17714d4cd728a2ba0687f564a2a522e854",
+    "git_blob_sha256": "f92d036865eadb9f192feb79b80c7539ecc8e5b4d19a1221db73f0e36ab60191",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/build_cape.py",
+    "source_sha256": "411932960aae41e063cb2119c2b823bc300891dc06eac66b86b8dce281ec7710",
+    "git_blob_sha256": "5b9afa4d32f2bf94ddb320534e06ca9dfe212662dd2587434e84f5a68b3fb8da",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/cape-fit.json",
+    "source_sha256": "8e241b0c072c939fa756192baa2ab62ab724fb2844b7200c9169164a9700e4a5",
+    "git_blob_sha256": "f6e52bc059639eedb1569ae969458794439501daca3a7491240c52ae2f8cb84a",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/cape-pose-results.json",
+    "source_sha256": "5d8d6acfdb2cad8f14dff2462915e4dd9dc27bb56779b825de4048ca66a75f9d",
+    "git_blob_sha256": "17178f107fca05103aeb79d7f1113fcf7b24b634eee6ee204e73c10b465d7e08",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/cape.json",
+    "source_sha256": "3652095653ca9659714d960a1b86d6ddcedb1f9eb0c907a8d1356e119685062d",
+    "git_blob_sha256": "fdceaa97a5a2e663233cb088a650a678d1fcce311e71fabebc44a232dbc7f49e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/check_mpq.py",
+    "source_sha256": "c533d93f8ed24da9562bd51aa904ab19cb866bf3be71748b25ca67c63ea77280",
+    "git_blob_sha256": "390af5caf8a4968276525bd5e02252d5bce00cb7255d3c80c5025bce003849cb",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/check_pose.py",
+    "source_sha256": "b9464f95effe39b9b567bd17ed9043cbf5fde973c4fc5d91b12a913f33fb24fc",
+    "git_blob_sha256": "90e7a58673f43c10da9fe93f0a89b47c3edd742fc18674556711923123838f0e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/check_weapon.py",
+    "source_sha256": "b34ceeb07fc756791d059a156eb453d0d7bc82ee0cee854c06e36d404d6dd8b2",
+    "git_blob_sha256": "57e818ddabf9a5812b61673bd07460859f26758ba0e4964b051e891cbbd6e858",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/delivery.txt",
+    "source_sha256": "c77e0204e6fb43b17cac0bd6d1c91e9b09177452db6ac85b11a39a969ddf7134",
+    "git_blob_sha256": "e342f7452af4e14678592ac646a781954e5ff2f366a7e8d95361ad17d8415566",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/fit_cape.py",
+    "source_sha256": "103a40309c6e3ca0bd0349a1e06e93f33c37b79843fefa4189d8e067ca2d0b83",
+    "git_blob_sha256": "a698ec9b119bd3aa324e924ea4b2e077c533a866fb154fc72af51859ad5b5b74",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/intake.py",
+    "source_sha256": "66c3e8203860f7c9420c01d61590569b8aed1f22cac461c055bc75207592b7e9",
+    "git_blob_sha256": "965d4a005235c02829c7867f680ed731357d8a4f73e6c18092cf2d3e49d035fe",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/measure_rows.py",
+    "source_sha256": "aeaea9aaa652e70bcf6021a4738a3db4893302e5e25794a5465eeae12c8b1d9b",
+    "git_blob_sha256": "107feb26bc5b52327d2ce10704c91691253b538bd94074b7c186d2ec5093fb34",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/opacity.py",
+    "source_sha256": "f53aade6dbafd5f52fea9bc48ef9d473740767f22bb39080673e94e5e57a5aab",
+    "git_blob_sha256": "bf86d8348a8f234f850197cf6a28435732316f1472a7ef43ff1656c4d46eb441",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/pose_tools.py",
+    "source_sha256": "c743ba7b32eecdee3262121615f81ab0f96fb9dfb570600adbe46c8e54435f83",
+    "git_blob_sha256": "d85cbb42ce77728e2c79b7835ea006073f027fee307edf807a61290704693829",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/probe.py",
+    "source_sha256": "7457f805c9b8079f7d899d7ca4577ca120e18d0595040eb9823413fcf1854a86",
+    "git_blob_sha256": "3a8e8a909c5df917ec54e69691efd5300775e267bc69f3dc4ac2356c8854286a",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1D/validate_cape.py",
+    "source_sha256": "65e20195eca5e4b4f819ddcba7593cecd0406a5f66867b046a9b691684618493",
+    "git_blob_sha256": "40e7b7aa83b172fe1ab2cb5d6ddd3f98a9c15c8d1249d22489c2cd9baab297dd",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/checks.json",
+    "source_sha256": "5fd07ad35c7fdaa6e3c8e39bfeeb35496e64611ad7fbd23940a3ead20baf1109",
+    "git_blob_sha256": "26e1377d4180afefc3b0bd22941962289c94404376f7553eeb7ec38df89e70ce",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/delivery.json",
+    "source_sha256": "429fb72d6b00da5b2b34bbf474e25714f260175723df4b8dae03718b3f3399df",
+    "git_blob_sha256": "7bc06966a5ac8da7575dea3128534502a83eff0982467e14f4fa8e2e2ab8fd74",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/header-baseline.txt",
+    "source_sha256": "9576a718bc39474cec993985ec66840ff84e8b978420d5bb058be70c7cc48faf",
+    "git_blob_sha256": "9576a718bc39474cec993985ec66840ff84e8b978420d5bb058be70c7cc48faf",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/helper-fixture-result.txt",
+    "source_sha256": "4245af5108bc5d38206398326ad2395b64413526091f9c6185ad3d526e5db10b",
+    "git_blob_sha256": "397076e83a83455936fc49e1d2b33e4c63dfc85ad580a3d969f40d03044bed93",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/helper-fixture.cpp",
+    "source_sha256": "7f5cf26bc4214f71e1645337c7ad66e4b62b71a3e3db5cfabcb979a3dcd8dd44",
+    "git_blob_sha256": "254b3fcf559f742b9b6c123ce046e7f1ed04013ac9295f29f2c8c031a229dafb",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/make_fixture.py",
+    "source_sha256": "18e69d7876110d8d09f5dc7439b7cd62c8f56160ac1148ca4194c4ba72a39798",
+    "git_blob_sha256": "f580d1c4229d0a0a9cf33a2c24d08910255fedb7adf98311393010abba31c289",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/make_helper_fixture.py",
+    "source_sha256": "26ee08fd1a57a3d0c358b1d2bbe0d9c2c42419a5006f67b2756a59683af68cc6",
+    "git_blob_sha256": "223c0fd52a37b21a5d7575b91492fe60e5f7f1c2ce2e08cb72cd5ee1e40d21fe",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/matrix-fixture-result.txt",
+    "source_sha256": "49b206822db9bb916b411e103d95bc928b4ef30aa6380bb0e9e436790b826523",
+    "git_blob_sha256": "e0dced7f9e2d2c7e08ea55d8dbed573864d7974c5aac5731a3fb318369aba2cf",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/matrix-fixture.cpp",
+    "source_sha256": "4b25c099c47869ef3220aee174528c65c1d07966a2653a824cdcbc0c633cb559",
+    "git_blob_sha256": "14690737a4524fd8b8b60c91291d69e569a1614ff9bd08dc4e24976b8d5ab20e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/prepare.py",
+    "source_sha256": "f413a7e136517fd84b4c9022995a9451b77a7e6f96e14843a1a6e4a52400a6df",
+    "git_blob_sha256": "e256c03f030b4e5181ad50c7c19ccaac60fb885480ef7c692e858366f1bcb6e1",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/STARTFIX1F/source.diff",
+    "source_sha256": "89b452fd77c521b076e47dd54ec4106af4a570f42181125225b590248d7d8322",
+    "git_blob_sha256": "408a593dbe0e9a646d5883b112c8b681938df0daa9259d06c61da61e0ee2e498",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1G/build.py",
+    "source_sha256": "98ceaddf40ff0b70312d629ac098eeb45d705e5e6e56bd5b16428113a4f4aeb2",
+    "git_blob_sha256": "98ceaddf40ff0b70312d629ac098eeb45d705e5e6e56bd5b16428113a4f4aeb2",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1G/check_sql.py",
+    "source_sha256": "f6d13d6702974b6922a888a98debb6de724b6ae8e6a8e1e03ce38f1bf725a8d5",
+    "git_blob_sha256": "f6d13d6702974b6922a888a98debb6de724b6ae8e6a8e1e03ce38f1bf725a8d5",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1G/probe.py",
+    "source_sha256": "7457f805c9b8079f7d899d7ca4577ca120e18d0595040eb9823413fcf1854a86",
+    "git_blob_sha256": "3a8e8a909c5df917ec54e69691efd5300775e267bc69f3dc4ac2356c8854286a",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1I/build.py",
+    "source_sha256": "16674af9c15b4d1ff4b4bb27e0985b38eb4c8f03ac16bfe84d22462e257b96e6",
+    "git_blob_sha256": "16674af9c15b4d1ff4b4bb27e0985b38eb4c8f03ac16bfe84d22462e257b96e6",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1I/probe.py",
+    "source_sha256": "7457f805c9b8079f7d899d7ca4577ca120e18d0595040eb9823413fcf1854a86",
+    "git_blob_sha256": "3a8e8a909c5df917ec54e69691efd5300775e267bc69f3dc4ac2356c8854286a",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1I/titan.py",
+    "source_sha256": "0475755629c4d23b3bf7f2b47ee5f04236c3b277aae73255266c4286006d4218",
+    "git_blob_sha256": "0475755629c4d23b3bf7f2b47ee5f04236c3b277aae73255266c4286006d4218",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1J/build.py",
+    "source_sha256": "d63a160c449360e6590172699eb0d0a79841ea7619ad7d6c6f12723bcd397fa1",
+    "git_blob_sha256": "d63a160c449360e6590172699eb0d0a79841ea7619ad7d6c6f12723bcd397fa1",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-checkpoints/RACESESSION1_20261128/validation/WOW64MOGU1J/probe.py",
+    "source_sha256": "7457f805c9b8079f7d899d7ca4577ca120e18d0595040eb9823413fcf1854a86",
+    "git_blob_sha256": "3a8e8a909c5df917ec54e69691efd5300775e267bc69f3dc4ac2356c8854286a",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/INDEX.md",
+    "source_sha256": "b915bd46cbbb6e47e384247208e0a1b7678156c25e50d4369d330eb5af6a099d",
+    "git_blob_sha256": "3814fd95f3b212822810a14d852dfe996eabb77daaf63d2e2f888d1f20d6e8b7",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/add-cape-geometry-to-custom-race-m2/SKILL.md",
+    "source_sha256": "d30ff636c1a9d32685c42542f8e6702ab405d8a634d7cd0b950643f5077475db",
+    "git_blob_sha256": "2fd8dd6cb2450fa6ca1789fca37784683cf22feacde6f3b271e6d51d3896e168",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/add-cape-geometry-to-custom-race-m2/references/README.md",
+    "source_sha256": "36869cc4d6b91c5eb0a321638efe56e4440692fc4a4aadbb833ec8a2cbc874b5",
+    "git_blob_sha256": "36869cc4d6b91c5eb0a321638efe56e4440692fc4a4aadbb833ec8a2cbc874b5",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/add-cape-geometry-to-custom-race-m2/references/findm2.py",
+    "source_sha256": "3e5486719ac9c6a5b01326068ea583e75ba988522177932ea527230e53925f6c",
+    "git_blob_sha256": "c34b0d68342306d553ace9032d353251851f757634b812708ffd101b272f9feb",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/add-cape-geometry-to-custom-race-m2/references/godi_check.py",
+    "source_sha256": "dddd05b74c40007d001f65db6c89bc944ac44e5db578230e5dacf5a1f5441668",
+    "git_blob_sha256": "dddd05b74c40007d001f65db6c89bc944ac44e5db578230e5dacf5a1f5441668",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/add-cape-geometry-to-custom-race-m2/references/sethcape.py",
+    "source_sha256": "4abc6bd051510eb743b16ee5c388222601f5374a95baf3b2248af5ac37082645",
+    "git_blob_sha256": "225448f1f57d36863c9332dd0cccecbcf651f21198fbbe4a26a3f83f3bb84cea",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/SKILL.md",
+    "source_sha256": "876106475d407192ee7eb9cca05843620353c94cdde8d2c3a2ac9aeaf39cf04d",
+    "git_blob_sha256": "b7e4d0f739f86864678ad3e43ac704f50413ab37a53050b8d208d073bc12b9f2",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/centaur-venthyr-sylvari-20261116.md",
+    "source_sha256": "af8fa617439368af04df504fae597ed21b00ca015d9284e8a74c6a10400882d0",
+    "git_blob_sha256": "96d9336eea06a0a62031ba289d7ede1aad72aa06b15d718070d8d6e3070e9a6e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/private-clothing-20261121.md",
+    "source_sha256": "4e88d9c60af701ae24efae5db9261db3bda876bfd476317e77b6fcb136660ce7",
+    "git_blob_sha256": "94a3750a3d696577a8c703950ce14a72b646a3a0045d3c2e416f4175c4444358",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/README.md",
+    "source_sha256": "d0ce0bd66f322b0b9064dea3ff4bd28a93ca3ee91523236ac0a88cd85aeab25b",
+    "git_blob_sha256": "d0ce0bd66f322b0b9064dea3ff4bd28a93ca3ee91523236ac0a88cd85aeab25b",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/dr_analyze.py",
+    "source_sha256": "6d96815c2dd1951eed6553b77852a531f5e3567bc05f5face9da885b90e4126b",
+    "git_blob_sha256": "6d96815c2dd1951eed6553b77852a531f5e3567bc05f5face9da885b90e4126b",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/dr_extract.py",
+    "source_sha256": "bdd2c32e02bf12f9003923fda71ac16fd8d412d78c13238cd18e9197fd3fb759",
+    "git_blob_sha256": "bdd2c32e02bf12f9003923fda71ac16fd8d412d78c13238cd18e9197fd3fb759",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/dr_torso.py",
+    "source_sha256": "10206f90b42717becc24d6c77e5beac0243e238ddd9bff69767d771d618ad382",
+    "git_blob_sha256": "10206f90b42717becc24d6c77e5beac0243e238ddd9bff69767d771d618ad382",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/mk_v8.py",
+    "source_sha256": "a03e2490f8d135c19b8c6304389e58ede5f7c6fd7637a78ed395fcaa7e510cca",
+    "git_blob_sha256": "a03e2490f8d135c19b8c6304389e58ede5f7c6fd7637a78ed395fcaa7e510cca",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_bake8.py",
+    "source_sha256": "e64f648800578f63e64f2dca47fea19a5f24a4d303c247e49a9eaf80a6bff229",
+    "git_blob_sha256": "5480968011b009999ae88db14cd584a8975b8628f771b1a23224fecb67d5b730",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_bake_faces8.py",
+    "source_sha256": "3799949575173db5f6123791a1977daf86001955a9649c5fc6278b0f748aa199",
+    "git_blob_sha256": "c321c86cd065313eff176a82c5f4a8189fa8c4b4602e56607023339c8f3e8ad3",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_build8.py",
+    "source_sha256": "2b0ebe225be0187748d7bcfea0366e94c6f180c1b4bcba01f30062406f1a2f6b",
+    "git_blob_sha256": "06bb2db7d131cc84e0d69c42c41c5680e797264853aeab024ce42b1fc65fecdf",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_female.py",
+    "source_sha256": "30222dcd7671ea673569d28db7060e84856c41b9fb209957e76fa8f967df3fef",
+    "git_blob_sha256": "d97faf68d64f35e869d8d4a253cde9ce98d306a783cd8561986b82a489f22136",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_m2.py",
+    "source_sha256": "4ad0e9ccd1a18cd13a46b99af0b831107c9847086c0f1687d4c4c9953e12434c",
+    "git_blob_sha256": "b8b304979aa11b55d867cb8717c04ce9c711b0ec8af62aa158f4250bb0e8776b",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_overlay_guard.py",
+    "source_sha256": "4fcdc04237fdc1c36305be2b173d19c9f8415d26afd2a0ad0da508b7c6b4b442",
+    "git_blob_sha256": "4fcdc04237fdc1c36305be2b173d19c9f8415d26afd2a0ad0da508b7c6b4b442",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/overlay-armor-on-nonstandard-uv-race-models/references/scripts/seth_verify8.py",
+    "source_sha256": "9e2cb737f27798b89b8e6314c6d6c45b3974322b123fb565cc2114e1d0287472",
+    "git_blob_sha256": "2d2c566b743999433d09eff4144f9f8c3bc5944165b3ae4c2b4375584472965d",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-coa-race-appearance-wxl/SKILL.md",
+    "source_sha256": "c2ceb23d816bcfa5d8a5028e53f506c90601d90cca44190da8f8d219a265d4d1",
+    "git_blob_sha256": "1819107e3b643548c8c7c38b31f80e8e1ea605b94dea9ef61079c2b5d956919f",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-coa-race-appearance-wxl/references/acceptance-20261106.md",
+    "source_sha256": "278ea88bf19d919eb15e90d3efcc3c73e82e2a9613d0677fcc6e148145def0c1",
+    "git_blob_sha256": "278ea88bf19d919eb15e90d3efcc3c73e82e2a9613d0677fcc6e148145def0c1",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-coa-race-appearance-wxl/references/diagnostic-off-flag-20261114.md",
+    "source_sha256": "69a6a856423e55f3c79cb5e2bd476d529ecb8b869035bd1312e320cfb365f2a1",
+    "git_blob_sha256": "69a6a856423e55f3c79cb5e2bd476d529ecb8b869035bd1312e320cfb365f2a1",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-coa-race-appearance-wxl/references/mechagnome-geometry-equipment-20261113.md",
+    "source_sha256": "d42b04bb5cf3c05361d2c6f4be80fa5c23371930b10f606353720b8c8bfdbb0d",
+    "git_blob_sha256": "4b3805648a7ba4124ab3862c088c1dd3f1585b95d22eeda6312946f285cc9555",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-coa-race-appearance-wxl/references/wow64-alias-regression-20261116.md",
+    "source_sha256": "e562b011b65c26aece67ee13d52f017d0c7de9b481282e6f7c2c1324fb6dbf59",
+    "git_blob_sha256": "b10dac59f314ddcb08b4e39a86fafe44f5f0d41f10406f24dafe26289efef84d",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wotlk-custom-race-creation-flow/SKILL.md",
+    "source_sha256": "4f008e9cc43e71b84ed3a6dba225c3d5a2b5dc6d1b86be3d5c1fca9e71f76468",
+    "git_blob_sha256": "de010d5d60316a988dc85358caecd047b2a9f5574d9fadbb5f6ba05cd642ce70",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wotlk-custom-race-creation-flow/references/acceptance-20261105.md",
+    "source_sha256": "101a99357dedcc7050258d23b52e168b15c12a625698269abd3cdc3619f00e2e",
+    "git_blob_sha256": "2bd1bee91715b6838bbc2c66f13fccc27937285f07cec6d7ad092ce0374ae38e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wotlk-custom-race-creation-flow/references/acceptance-20261107.md",
+    "source_sha256": "13f83c5921dcbd013c7c7f67928e1dfbaf6414c89977a3db06b7fa38a86841cd",
+    "git_blob_sha256": "4b2249e92c49f81cc113463519c6e57ed6f7f4aef8a92a10374ec3b83ac50ca8",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wotlk-custom-race-creation-flow/references/neutral-enumeration-crash-20261117.md",
+    "source_sha256": "cb5274d9761cb00ff83f7062fdce896f58382b3f718e49bf8452b7f083557e17",
+    "git_blob_sha256": "bdb2291da28958f502bc128b8e99ce6f4a2ec2eb2fdac034bf0f52180a0afe23",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wotlk-custom-race-creation-flow/references/new-race-regression-checklist-20261108.md",
+    "source_sha256": "5e7b0b06e098a71a2d845f8de06a66731af0128f0ba8fd19b0ef984e74fb970b",
+    "git_blob_sha256": "a88c76bb07c8a5c37eb4d09842073d65c8503f1d7e8869b27d9817586a0a012b",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wow64-playable-race-end-to-end/SKILL.md",
+    "source_sha256": "21e741d864fa34145a65442cefd39a9d26cfbe843fd3f823fc62a2b911142bf6",
+    "git_blob_sha256": "2fca7274fd19761dc683eb38b5ae5f779e2220af2e66cdcec457f7244d966d3d",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wow64-playable-race-end-to-end/references/preflight.md",
+    "source_sha256": "e6c852143a74cefe38164d7f96b1bb58dbe967afb018089925fa0af8c1eca398",
+    "git_blob_sha256": "aa3bbdb62b5e81427ed9c7276064c6be991b4cf16ae54eeee6949c18c57240f5",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/port-wow64-playable-race-end-to-end/references/session-20261125-28.md",
+    "source_sha256": "9c244a46dd205cf4a7bca683332dd83b27e667a591627c6b72c411139c3b3df9",
+    "git_blob_sha256": "50e4032d06ce088c92be4e6f27f3da1291ca221b893ed89364d53f22b694b2c2",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/repair-wow64-race-helmet-fitting/SKILL.md",
+    "source_sha256": "c95c7ab2517950aac8cb84c378e431b934ee14bd738e3db410a8ee1e4542ecfc",
+    "git_blob_sha256": "9eb9d7feade15497bc8ec8d4ab2abe46929cf2f713d3d3d6283491d647f3b72e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/repair-wow64-race-helmet-fitting/references/drakkin-resource-20261116.md",
+    "source_sha256": "ccaba5eba7cabf3aa3d2e95e5a8aedd2d2f65eab5895f51a9d13947d3852fef4",
+    "git_blob_sha256": "ccaba5eba7cabf3aa3d2e95e5a8aedd2d2f65eab5895f51a9d13947d3852fef4",
+    "newline_normalization_only": false
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/repair-wow64-race-helmet-fitting/references/final-fitting-20261116.md",
+    "source_sha256": "97cee1ba7b9c9408ddd03453699016808908410193519354560d81d0d3c012e5",
+    "git_blob_sha256": "e0e3c1a5e72a24fa21072a0840c8de51f132c9606b3dff7e750576e21e4fd12d",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/repair-wow64-race-helmet-fitting/references/helm2bc-20261115.md",
+    "source_sha256": "d8047ce7de7428d01d02853caf8d966cca5aa41d3c3ebee9de02113b0158e980",
+    "git_blob_sha256": "2f7987536eedc4053ebfcdc3cf10f2c3f1bc4cd241ea3907967bc7443e2d2b2e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendskills/skillsAscend.md",
+    "source_sha256": "f38d49d91a576cb5a91621fadf0e2dccdb068f16187b025d86cd12583ea0367f",
+    "git_blob_sha256": "7ea765c265cc1519d76d3c89f5f43a7055b781ec40c158cf3b995a288fcbc043",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/add-cape-geometry-to-custom-race-m2/TUTOR.md",
+    "source_sha256": "1bf280d64f5bc188d9280b32219b25ed4aa6ee166dbadf11a3220e2dd72c085c",
+    "git_blob_sha256": "b0f6ce4220955c6faab0a4430c594d1d933cd866d14529dccb45fc74e8f472b6",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/overlay-armor-on-nonstandard-uv-race-models/TUTOR.md",
+    "source_sha256": "2b0b683eebc86a8fc240a4a500e41aa8b77b2105715f7cb336ff1325cdf19934",
+    "git_blob_sha256": "561f4f04e70890b37398a2deba8927e69558b9b8b215959f8c90ae8c5d888ddc",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/port-coa-race-appearance-wxl/TUTOR.md",
+    "source_sha256": "8b706ac6cc8a7aeb41e55deae44050e413353248ba7b96bdc92eefb71406c361",
+    "git_blob_sha256": "35b6f581603d34f2045bfee21321c3b20643d5376eebb8e0ce4eaec453e5dfdf",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/port-wotlk-custom-race-creation-flow/TUTOR.md",
+    "source_sha256": "1c00acdf6739985a9197b428a922b0fe057d2833864dd74ef5cf4c4823a6777a",
+    "git_blob_sha256": "628672b18065ffddd5710438a469e4eb8dab1bcad6697754d6fa1c01eef7c05e",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/port-wow64-playable-race-end-to-end/TUTOR.md",
+    "source_sha256": "df8201ce0ca9327a205930100e394c2a0315886d817f3f16df6500c6d7477c3e",
+    "git_blob_sha256": "ab4ae305c8917924e1b6126528aa64d91fde179b35bb9c96a70e9724f17ba2a1",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/repair-wow64-race-helmet-fitting/TUTOR.md",
+    "source_sha256": "023fea30d36ce0faf00a29a2dc71f12a682724891dc880ed2e2c1a2e204da262",
+    "git_blob_sha256": "5fa65097ce6b79c59aa58d2a9e7ee5ae79accc6b6d63839ef865fcc434d13338",
+    "newline_normalization_only": true
+  },
+  {
+    "path": "data/reborn-knowledge/race-session-20261128/beascendtutor/tutorsAscend.md",
+    "source_sha256": "e2892039572f79cf48d713bc6849d7b79f4c8a0d1907d216d97b10f025541f3e",
+    "git_blob_sha256": "1046989eb9d736667e41bec7654949c5e6f0491121a97e04ecf026833959343b",
+    "newline_normalization_only": true
+  }
+]

@@ -1,0 +1,190 @@
+{
+  "client-import/Patch-YB.mpq/DBFilesClient/CharBaseInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\01_导入现有Patch-YB.mpq\\DBFilesClient\\CharBaseInfo.dbc",
+    "sha256": "27eb691387c51e2b0d9904691f994c1ee648d51954873bc99a1faf47119eaa88"
+  },
+  "client-import/Patch-YB.mpq/Interface/GlueXML/CharacterCreate.lua": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64FISHCLASS1B_鱼人十职业与符文熔铸\\01_导入现有Patch-YB.mpq\\Interface\\GlueXML\\CharacterCreate.lua",
+    "sha256": "4d9e2b54276e9f516e9f8e0d02d156568c7feff4590e2c8448de09820c0e56d0"
+  },
+  "client-import/Patch-XA.mpq/DBFilesClient/SkillRaceClassInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64FISHCLASS1B_鱼人十职业与符文熔铸\\02_导入现有Patch-XA.mpq\\DBFilesClient\\SkillRaceClassInfo.dbc",
+    "sha256": "583a9fbb3efeed16abcc47e98187b3cf53e9c18c1e8fd14b2e7b75e90d0c5c6a"
+  },
+  "client-import/Patch-YN.mpq/custom/rebornfit/murloc/MurlocHordeFemale.m2": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64FISHCLASS1B_鱼人十职业与符文熔铸\\03_导入现有Patch-YN.mpq\\custom\\rebornfit\\murloc\\MurlocHordeFemale.m2",
+    "sha256": "ef1cdcac091d7b4deeae845301bf6f8a72da0aef59b310805cc6bd35e904b32f"
+  },
+  "client-import/Patch-XA.mpq/DBFilesClient/CharStartOutfit.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\01_导入现有Patch-XA.mpq\\DBFilesClient\\CharStartOutfit.dbc",
+    "sha256": "caac1d4157351226f655cdbba103c39015ced22567f6d575d6e4deee0618e053"
+  },
+  "client-import/Patch-YB.mpq/DBFilesClient/CharHairGeosets.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\Patch-YB.mpq\\DBFilesClient\\CharHairGeosets.dbc",
+    "sha256": "d10749f15af3445a04efc440b7b45ffb470ffe7d7188629482202ea99fa34ad0"
+  },
+  "client-import/Patch-YB.mpq/DBFilesClient/CharSections.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图\\01_导入现有Patch-YB.mpq\\DBFilesClient\\CharSections.dbc",
+    "sha256": "b9289251383fd38cfd9be8fe8b55ab4c4ce6be2ffe5f83f19204251887142db3"
+  },
+  "client-import/Patch-YB.mpq/DBFilesClient/ChrRaces.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\Patch-YB.mpq\\DBFilesClient\\ChrRaces.dbc",
+    "sha256": "12ac59480703791226f38e2233a7754bf360bff2ffa50f6fbd9886a595b8ebee"
+  },
+  "client-import/Patch-YB.mpq/DBFilesClient/CreatureDisplayInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\Patch-YB.mpq\\DBFilesClient\\CreatureDisplayInfo.dbc",
+    "sha256": "a96b0c3a8ccb80b7b5d0d0f86fa139bef26bbae5ed9402c6326273b1e77f649b"
+  },
+  "client-import/Patch-YB.mpq/DBFilesClient/CreatureModelData.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\Patch-YB.mpq\\DBFilesClient\\CreatureModelData.dbc",
+    "sha256": "6b314895fc1c1f3b1c8ae9a7829184e48b80ccb2fa8d629a929de664b9ea38ae"
+  },
+  "client-import/Patch-YB.mpq/Interface/GlueXML/CharacterSelect.lua": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\Patch-YB.mpq\\Interface\\GlueXML\\CharacterSelect.lua",
+    "sha256": "631438b02ee3c5096ef5d04405d42aadab4b00bdcd63bdccadaaaaaf4184a9dc"
+  },
+  "client-import/Patch-YB.mpq/Interface/GlueXML/RebornCreator.lua": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\Patch-YB.mpq\\Interface\\GlueXML\\RebornCreator.lua",
+    "sha256": "4d9082d211a02d8e68a1722b10ea1edd84ac6cd1b2a6fbac1525005b903517d9"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/MoguPlayerFemale.m2": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\MoguPlayerFemale.m2",
+    "sha256": "be86e956c599af3d2331cd5054e9ffe852f29a3ee6ea266e3eb59ed62b43e9a4"
+  },
+  "server-data/Data/dbc/CharBaseInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\02_覆盖服务端根目录\\Data\\dbc\\CharBaseInfo.dbc",
+    "sha256": "9ec3c60158d587600c7a2269add65c6a6844a81d458a84b06f00bde611287fdc"
+  },
+  "server-data/Data/dbc/CharHairGeosets.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\CharHairGeosets.dbc",
+    "sha256": "094f695204552c506203be04041ff53820bc5bc8c296fb90b5f8144428c9f03a"
+  },
+  "server-data/Data/dbc/CharSections.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\CharSections.dbc",
+    "sha256": "8cc3a600462f9a46a859472f1818bb033d04b75ccda0c7e71ad60bc1e247b1f1"
+  },
+  "server-data/Data/dbc/CharStartOutfit.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\02_覆盖服务端根目录\\Data\\dbc\\CharStartOutfit.dbc",
+    "sha256": "16dfd5d9192c4e979c6cf43406c437c647d08b9f1fbaf03989ec0b933310b9fe"
+  },
+  "server-data/Data/dbc/ChrRaces.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\ChrRaces.dbc",
+    "sha256": "634e4ed84fdc42aa01cbdc5ff5869c2ac90b6fad0be1f784a9448362aff07da6"
+  },
+  "server-data/Data/dbc/CreatureDisplayInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\CreatureDisplayInfo.dbc",
+    "sha256": "010cf5e9174e675577b99936dbbae33a7c7d9054fe6b1a991c96cde7f916c43e"
+  },
+  "server-data/Data/dbc/CreatureModelData.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\CreatureModelData.dbc",
+    "sha256": "8bc8ba9d722e948b776c896ede5242148baeec39816d6bdf1b7beba0e32e2bc4"
+  },
+  "server-data/Data/dbc/zhCN/CharBaseInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\02_覆盖服务端根目录\\Data\\dbc\\zhCN\\CharBaseInfo.dbc",
+    "sha256": "9ec3c60158d587600c7a2269add65c6a6844a81d458a84b06f00bde611287fdc"
+  },
+  "server-data/Data/dbc/zhCN/CharHairGeosets.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\zhCN\\CharHairGeosets.dbc",
+    "sha256": "26d6b9bb22d3c88516b1b39759d6f1e7dbe5a6b8a0734750fc7d5972acb413f8"
+  },
+  "server-data/Data/dbc/zhCN/CharSections.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\zhCN\\CharSections.dbc",
+    "sha256": "26532d79f958861ecf41accbe9ddcba3c40d7eabe7619b7b783a60f5b15a1283"
+  },
+  "server-data/Data/dbc/zhCN/CharStartOutfit.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\02_覆盖服务端根目录\\Data\\dbc\\zhCN\\CharStartOutfit.dbc",
+    "sha256": "16dfd5d9192c4e979c6cf43406c437c647d08b9f1fbaf03989ec0b933310b9fe"
+  },
+  "server-data/Data/dbc/zhCN/ChrRaces.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\zhCN\\ChrRaces.dbc",
+    "sha256": "876cee7d060fb04d9a33ae2f4effd63c93068a20e5785d9cba507da74978b4cd"
+  },
+  "server-data/Data/dbc/zhCN/CreatureDisplayInfo.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\zhCN\\CreatureDisplayInfo.dbc",
+    "sha256": "4fc0ddbdaef7aac8d7c8d7442ea0ada2c0f27d10adc4331933c1e3b06dcd15eb"
+  },
+  "server-data/Data/dbc/zhCN/CreatureModelData.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server\\Data\\dbc\\zhCN\\CreatureModelData.dbc",
+    "sha256": "57ff34f41744743138ad4076a1f884ab05454259fafa10363202e4e5ee58b805"
+  },
+  "client-import/Patch-YB.mpq/DBFilesClient/CharacterFacialHairStyles.dbc": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260042_阶段WOW64MOGU1D_男魔古恢复V203外观\\01_导入现有_Patch-YB.mpq\\DBFilesClient\\CharacterFacialHairStyles.dbc",
+    "sha256": "ab2dc0b851673f41ada72105f42e9eaf02a8cfa49659c3dd1f69bf692c1ecc4f"
+  },
+  "client-import/Patch-YJ.mpq/Creature/Mogu/MoguPlayerMale.m2": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260042_阶段WOW64MOGU1D_男魔古恢复V203外观\\01_导入现有_Patch-YJ.mpq\\Creature\\Mogu\\MoguPlayerMale.m2",
+    "sha256": "5855a8cd85f2ca9ad7e5554c2282a4fca73eb7f51bdb775ec38843d137b20915"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/MoguPlayerFemale00.skin": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\MoguPlayerFemale00.skin",
+    "sha256": "64961cc8e6a1f9dc933a116f88bd15dc382ec822b13ac5879f730aca36eb4639"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/MoguPlayerFemale01.skin": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\MoguPlayerFemale01.skin",
+    "sha256": "7c60405bef3fd2e6412342dacba4d7025b1390a950e9b687556e756edad28788"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/MoguPlayerFemale02.skin": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1I_女魔古脸与小腿贴图\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\MoguPlayerFemale02.skin",
+    "sha256": "3fc71dbc7256475be5ffcb47f96f8431b270e36a84e7998ce159571dbc8ab24d"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin00.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin00.blp",
+    "sha256": "920d7b1496549364b21371165f6e49433bebcfb8a024c1ac68c9f7381be7eca0"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin01.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin01.blp",
+    "sha256": "f0992112fac77d4b4f05b2d5292a28759d10407d10dfcccf6d4a6ccca21404cd"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin02.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin02.blp",
+    "sha256": "f100497591e744cf982a419ef9e4a08cb7d819bef933332ef3e9f8456d3a3beb"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin03.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin03.blp",
+    "sha256": "984adeb1a9eb14d496a9fe699625eb2b6e96a96e4996b07937cab8b9c27f6894"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin04.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin04.blp",
+    "sha256": "c08fbf6acaf565d873a5104671767d04f0aebad4d524b3625ca8b3d62b702a33"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin05.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin05.blp",
+    "sha256": "1f2e8dca8175c4e7f8d1ad458ff69fef307d3a25b69482e2a7c4394d338ad3e1"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin06.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin06.blp",
+    "sha256": "0cf94c4db8a0cec9548128a07500433bd84615641e1b26cc5069f2cc22326b55"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin07.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin07.blp",
+    "sha256": "7f6c3891a47c3e5d0dba0a060ef805a2ecad68b57ed5694d0633456c109141be"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin08.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin08.blp",
+    "sha256": "c9b54b8e2cd52291d08e21357b4aedd343a5ccab361472f94f4bb79879cbd892"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin09.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin09.blp",
+    "sha256": "22d76aeaf49b6e67dca8a170ffcce82f9a1e6d53077a07e262a3e728974d4774"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin10.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin10.blp",
+    "sha256": "6300e3fe0274fc4fd255ab6b9d15026637dbe737320a17744f3f12055c372021"
+  },
+  "client-import/Patch-YJ.mpq/Creature/MoguFemale/RebornFaceAtlas/skin11.blp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_20261126_WOW64MOGU1J_女魔古绿模格式修复\\01_导入现有Patch-YJ.mpq\\Creature\\MoguFemale\\RebornFaceAtlas\\skin11.blp",
+    "sha256": "6b549f1fc738ebe7e961ff850d48307e6cc9f87e4312f0809082438a9b3c1c1b"
+  },
+  "client-import/Patch-YI.mpq/Character/Furbolg/FurbolgRace.m2": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270334_阶段STARTFIX1D_熊人男女披风\\01_导入现有Patch-YI.mpq\\Character\\Furbolg\\FurbolgRace.m2",
+    "sha256": "716cc789ffa6e6dbad81095e69973f2b45de920093bc86ac942d7fec6817c9aa"
+  },
+  "client-import/Patch-YI.mpq/Character/Furbolg/FurbolgRace00.skin": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270334_阶段STARTFIX1D_熊人男女披风\\01_导入现有Patch-YI.mpq\\Character\\Furbolg\\FurbolgRace00.skin",
+    "sha256": "56f3bf7587e938d39528e2cc98f39bc45132cad3f0aa083af81bf3ba586460a4"
+  },
+  "client-root/WowClient64.exe": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270640_阶段STARTFIX1F_龙希尔法杖按身体方向下移\\01_客户端覆盖\\WowClient64.exe",
+    "sha256": "16f87cc54afd24eef7b824143b96c30d21816890bbc41684ca4ce07b190f4a0d"
+  }
+}

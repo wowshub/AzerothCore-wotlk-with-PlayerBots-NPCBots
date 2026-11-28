@@ -1,0 +1,1 @@
+PASS: actual ApplyAttachmentFrame and SetAttachmentFrame with real Tempest matrices: 20 animated bone/body/view transforms x100 repetitions, model-down displacement, orientation intact, old inverted-bone up reproduced, zero-offset legacy behavior, finite/bounds guards and parent invalidation.

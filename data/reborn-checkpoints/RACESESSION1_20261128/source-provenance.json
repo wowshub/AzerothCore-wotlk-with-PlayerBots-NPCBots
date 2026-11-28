@@ -1,0 +1,82 @@
+{
+  "client-source/src/WoW/Common/ComponentCore/EsteriaAppearance.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Common\\ComponentCore\\EsteriaAppearance.cpp",
+    "sha256": "1876ff924affcd2c5192563f26d327a6cb6f88500a29167a08c0f4e15d799537"
+  },
+  "client-source/src/WoW/Common/ComponentCore/EsteriaNativeEquipment.inl": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Common\\ComponentCore\\EsteriaNativeEquipment.inl",
+    "sha256": "35549bf60b6fae7af40dc5c5e0573c32d613fa3b3ec5729ecafed441f2002ebd"
+  },
+  "client-source/src/WoW/Common/ComponentCore/RebornNeutralClothing.inl": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Common\\ComponentCore\\RebornNeutralClothing.inl",
+    "sha256": "22dc1e5e2d3ca1f1bd0ad4952aa14d8ceba1abefe7a4214e7972beafa0491c68"
+  },
+  "client-source/src/Engine/Source/Model2/M2Model.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexwork_STARTFIX1F\\src\\Engine\\Source\\Model2\\M2Model.cpp",
+    "sha256": "66e010855c66a1965fa3d5cf740ec4b0c009a344dd7df620953143406d369609"
+  },
+  "client-source/src/Engine/Source/Retail/RebornNeutralOrigin.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\Engine\\Source\\Retail\\RebornNeutralOrigin.h",
+    "sha256": "dfabdaca3a5ed4950c69434d0b3ab33d5976023619a01f369aaf59a26fb950ab"
+  },
+  "client-source/src/Engine/Source/Retail/StartZoneWire.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\Engine\\Source\\Retail\\StartZoneWire.h",
+    "sha256": "06235a416d02de9f50821658a81a3c4d57f73e0fc9f51f40124d6d3106243306"
+  },
+  "client-source/src/WoW/Common/ComponentCore/CharacterComponent.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Common\\ComponentCore\\CharacterComponent.cpp",
+    "sha256": "ba79f63f5ea8c8d78f15cf2bd20d0f9e6f478777c6d68f48683086946ea7a33f"
+  },
+  "client-source/src/WoW/Source/Object/ObjectClient/Unit_C.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Source\\Object\\ObjectClient\\Unit_C.cpp",
+    "sha256": "69f4bf15839b75fce9305f64e3d8fd9d5f1213195fcf1212d63a99af9dbb9b9b"
+  },
+  "client-source/src/WoW/Source/Ui/DressUpModelFrame.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Source\\Ui\\DressUpModelFrame.cpp",
+    "sha256": "c182ee9c0d4a39475b9ef7c607aec73784b51c84fa1517432979dfaec484d633"
+  },
+  "client-source/src/WoW/Source/Ui/GameUI.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexwork_STARTFIX1B\\src\\WoW\\Source\\Ui\\GameUI.cpp",
+    "sha256": "84573fdd2b6a378181d8e6f537824abd7bdef34e516aa39e607f73ac41b08320"
+  },
+  "client-source/src/Engine/Source/Model2/M2Model.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexwork_STARTFIX1F\\src\\Engine\\Source\\Model2\\M2Model.h",
+    "sha256": "c84db62659e5fe229fb865d3acab6dbd5a7a5aac9bf19fb23aac6c1e041dbb8b"
+  },
+  "client-source/src/WoW/Common/ComponentCore/RetailRace.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexwork_STARTFIX1F\\src\\WoW\\Common\\ComponentCore\\RetailRace.cpp",
+    "sha256": "ed185d2ac5809be1df6c49bdf10d0d41d781b00af9534086cd0b99d44ed038d2"
+  },
+  "server-source/src/server/game/Entities/Player/PlayerStorage.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64FISHCLASS1B_鱼人十职业与符文熔铸\\05_应用到服务端源码\\src\\server\\game\\Entities\\Player\\PlayerStorage.cpp",
+    "sha256": "97f58d5a89dab0398bd687fab1e3e58a2c7a0badabc5420dfd02f298693ec5e2"
+  },
+  "server-source/src/server/game/Handlers/CharacterHandler.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270001_阶段STARTFIX1B_鱼人魔古熊人装备与熊人坐姿\\04_流放岛建角诊断_需编译服务端\\src\\server\\game\\Handlers\\CharacterHandler.cpp",
+    "sha256": "8ce085d8e559b0ab09ec968dc999eb8274b5ce43fa5b5d9ee562c2511b3592f7"
+  },
+  "server-source/src/server/game/Entities/Player/PlayerQuest.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261125\\codexfix_20261125_WOW64MOGU1A_联盟魔古首登候选\\after\\server_source\\src\\server\\game\\Entities\\Player\\PlayerQuest.cpp",
+    "sha256": "b0a04e0a6ce73ec8a07ef87461c7e126b9f6cc60db68f998a45a189f53e3b31d"
+  },
+  "server-source/src/server/shared/RebornClassicRaceClasses.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611260546_阶段WOW64MOGU1G_魔古十职业出生装WORLD兼容\\03_服务端源码_覆盖源码根目录\\src\\server\\shared\\RebornClassicRaceClasses.h",
+    "sha256": "eb05dcf9c0c871a5e10b9729b54124a9c1a3505e5bc261d7e49e2207c19b7460"
+  },
+  "server-source/src/server/game/Entities/Player/Player.cpp": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270001_阶段STARTFIX1B_鱼人魔古熊人装备与熊人坐姿\\04_流放岛建角诊断_需编译服务端\\src\\server\\game\\Entities\\Player\\Player.cpp",
+    "sha256": "69bc807ab461bae7b0611e45ac447c1c776b75bf3f6fc667cd51547f0ae03f79"
+  },
+  "server-source/src/server/game/Entities/Player/RebornBirthLocation.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261127\\codexfix_202611270001_阶段STARTFIX1B_鱼人魔古熊人装备与熊人坐姿\\04_流放岛建角诊断_需编译服务端\\src\\server\\game\\Entities\\Player\\RebornBirthLocation.h",
+    "sha256": "985956125bb354ee7033451dbfba40a763de37383b939c0e782fab99b4a63b02"
+  },
+  "server-source/src/server/shared/RebornNeutralOrigin.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611261930_阶段STARTFIX1A_女魔古装备与首登流放岛\\03_流放岛服务端配套\\01_覆盖到服务端源码根目录\\src\\server\\shared\\RebornNeutralOrigin.h",
+    "sha256": "dfabdaca3a5ed4950c69434d0b3ab33d5976023619a01f369aaf59a26fb950ab"
+  },
+  "server-source/src/server/shared/StartZoneWire.h": {
+    "source": "D:\\000rebornWOW\\000RebornWOWHighForkPRO\\000Ascendupdate\\000Ascendupdate20261126\\codexfix_202611261930_阶段STARTFIX1A_女魔古装备与首登流放岛\\03_流放岛服务端配套\\01_覆盖到服务端源码根目录\\src\\server\\shared\\StartZoneWire.h",
+    "sha256": "06235a416d02de9f50821658a81a3c4d57f73e0fc9f51f40124d6d3106243306"
+  }
+}

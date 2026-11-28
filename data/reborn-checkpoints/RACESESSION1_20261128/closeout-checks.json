@@ -1,0 +1,8 @@
+{
+  "source_records_verified": 20,
+  "skill_frontmatter_and_references": "PASS manual equivalent; bundled quick_validate needs missing yaml module",
+  "live_exe_sha256": "16f87cc54afd24eef7b824143b96c30d21816890bbc41684ca4ce07b190f4a0d",
+  "new_runtime_changes": 0,
+  "production_sql_executed": false,
+  "branch_base": "5aabe8f3a068d81d01b6a2a044a172c26bec2e17"
+}

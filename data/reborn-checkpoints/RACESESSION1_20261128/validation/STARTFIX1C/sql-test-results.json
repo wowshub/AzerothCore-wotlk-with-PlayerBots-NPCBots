@@ -1,0 +1,19 @@
+[
+  "reproduced old 3819 character_reborn_birth_route",
+  "reproduced old 3819 character_reborn_neutral_origin",
+  "repeat install preserves all legacy columns/rows and original DK0",
+  "guarded rollback with only legacy rows and reinstall",
+  "510 current/future race/faction routes accepted character_reborn_birth_route",
+  "510 current/future race/faction routes accepted character_reborn_neutral_origin",
+  "kept invalid boundary character_reborn_birth_route 0/128",
+  "kept invalid boundary character_reborn_birth_route 0/142",
+  "kept invalid boundary character_reborn_birth_route 2/141",
+  "kept invalid boundary character_reborn_neutral_origin 0/128",
+  "kept invalid boundary character_reborn_neutral_origin 0/142",
+  "kept invalid boundary character_reborn_neutral_origin 2/141",
+  "kept neutral scalar invalid 0/1/0",
+  "kept neutral scalar invalid 1/0/0",
+  "kept neutral scalar invalid 1/1/2",
+  "rollback refuses saved 141/future records",
+  "wrong database rejected before schema changes"
+]

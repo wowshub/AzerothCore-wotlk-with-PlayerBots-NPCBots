@@ -1,0 +1,77 @@
+--- 1E/RetailRace.cpp
++++ 1F/RetailRace.cpp
+@@ -1606,10 +1606,9 @@
+         const auto& socket = rig->m_attachments[child->m_attachmentIndex];
+         if (socket.m_bone >= rig->m_bones.m_count) continue;
+         auto position = socket.m_position;
+-        position.z -= 0.35f;
+-        // Keep the authored angle/scale and derive an absolute offset from the native socket.
++        // STARTFIX1F: leave socket coordinates intact; lower in actor space after bone rotation.
+         const C44Matrix local = child->m_worldTransform;
+-        if (child->SetAttachmentFrame(socket.m_bone, position, 1.0f))
++        if (child->SetAttachmentFrame(socket.m_bone, position, C3Vector(1.0f, 1.0f, 1.0f), 0.0f, C3Vector(0.0f, 0.0f, -0.55f)))
+             child->SetWorldTransform(local);
+     }
+ }
+
+--- 1B/M2Model.cpp
++++ 1F/M2Model.cpp
+@@ -74,6 +74,7 @@
+     C3Vector position;
+     C3Vector scale;
+     float yaw;
++    C3Vector modelOffset; // STARTFIX1F: actor/model-space displacement, independent of animated socket axes.
+ };
+ std::map<const CM2Model*, AttachmentFrame> s_attachmentFrames;
+ std::map<const CM2Model*, bool> s_renderSuppressed;
+@@ -116,6 +117,11 @@
+     matrix.Translate(frame.position);
+     if (frame.yaw != 0.0f) matrix.RotateAroundZ(frame.yaw);
+     matrix.Scale(frame.scale);
++    // Apply after the socket's rotated/scaled frame: model down stays model down.
++    const C3Vector offset = TransformDirection(frame.modelOffset, parent->m_matrixF4);
++    matrix.d0 += offset.x;
++    matrix.d1 += offset.y;
++    matrix.d2 += offset.z;
+ }
+ 
+ bool SameSkinPivot(const C3Vector& a, const C3Vector& b) {
+@@ -8341,7 +8347,7 @@
+         if (found == s_attachmentFrames.end()) return false;
+         frame = found->second;
+     }
+-    return this->SetAttachmentFrame(frame.bone, frame.position, frame.scale, frame.yaw);
++    return this->SetAttachmentFrame(frame.bone, frame.position, frame.scale, frame.yaw, frame.modelOffset);
+ }
+ 
+ bool CM2Model::SetAttachmentFrame(uint32_t bone, const C3Vector& position, float scale) {
+@@ -8353,10 +8359,15 @@
+ }
+ 
+ bool CM2Model::SetAttachmentFrame(uint32_t bone, const C3Vector& position, const C3Vector& scale, float yaw) {
++    return this->SetAttachmentFrame(bone, position, scale, yaw, C3Vector(0.0f, 0.0f, 0.0f));
++}
++
++bool CM2Model::SetAttachmentFrame(uint32_t bone, const C3Vector& position, const C3Vector& scale, float yaw, const C3Vector& modelOffset) {
+     CM2Model* parent = this->m_attachParent;
+     if (!parent || !(parent->m_fFlags & 1) || this->m_attachmentIndex == 0xffff ||
+         !this->m_shared || !parent->m_shared || !parent->m_shared->m_data ||
+         bone >= parent->m_shared->m_data->m_bones.m_count ||
++        !std::isfinite(modelOffset.x) || !std::isfinite(modelOffset.y) || !std::isfinite(modelOffset.z) ||
+         !std::isfinite(yaw) || !std::isfinite(position.x) || !std::isfinite(position.y) || !std::isfinite(position.z) ||
+         !std::isfinite(scale.x) || !std::isfinite(scale.y) || !std::isfinite(scale.z) || scale.x <= 0 || scale.y <= 0 || scale.z <= 0) return false;
+     std::lock_guard<std::mutex> lock(s_skinParentMutex);
+@@ -8366,9 +8377,10 @@
+         const auto& old = found->second;
+         if (old.parent == parent && old.childShared == this->m_shared && old.parentData == data &&
+             old.bone == bone && old.position.x == position.x && old.position.y == position.y &&
+-            old.position.z == position.z && old.scale.x == scale.x && old.scale.y == scale.y && old.scale.z == scale.z && old.yaw == yaw) return false;
+-    }
+-    s_attachmentFrames.insert_or_assign(this, AttachmentFrame{parent, this->m_shared, data, bone, position, scale, yaw});
++            old.position.z == position.z && old.scale.x == scale.x && old.scale.y == scale.y && old.scale.z == scale.z && old.yaw == yaw &&
++            old.modelOffset.x == modelOffset.x && old.modelOffset.y == modelOffset.y && old.modelOffset.z == modelOffset.z) return false;
++    }
++    s_attachmentFrames.insert_or_assign(this, AttachmentFrame{parent, this->m_shared, data, bone, position, scale, yaw, modelOffset});
+     // The replacement socket carries the full correction; discard a previous local socket shift.
+     this->m_worldTransform.Identity();
+     this->m_fFlags |= 0x8000;

@@ -1,0 +1,7 @@
+# NEUTRAL1A/B失败与1C限定修复证据（2026-11-17）
+
+当前64位客户端原生CCharacterCreation::Initialize只遍历g_chrRacesDB.m_records，GetModelDataRec直接查原生显示/模型表。旧32位WXL追加表中“能按ID查到文件”不能代替当前原生主表完整性。NEUTRAL1A仅改旧RebornRacePreview分类，被实际RebornCreatorData覆盖；1B只补种族主表枚举，用户女妖和其他中立点击崩溃。旧离线测试未加载实际元数据、未按实际主表枚举，属于漏测，不能复用为成功样例。
+
+两个dump及匹配.text（de0121f5ddc375add93b5971dc970011d74ebb1cce58cf9c41037ac99792f2b5）定位RVA0x3e1e53 GetModelDataRec+0x83：displayRec为空仍读modelID。34条两性别链中32条旧主表缺显示记录。1C补17既有身份的显示/模型/CharSections/发型/面部/职业组合主表配套，保留原有主记录；不新增种族ID。对锁性别种族先在旧有效种族设置性别，再切目标；给原缺失的临时性别外观补同一身体的安全行，UI单性别锁保持。缺显示/模型返回空的保护不能代替真实数据补齐。
+
+当前状态：1C最终编译、34链/22模型及skin、48查表用例、6实际Lua顺序场景通过；用户实机尚未确认，未发布Release。不能写“17族完整可玩”或继承全装备/动作/首登验收。源数据、minidump留本地，未上传。当前交付和源码哈希见本日codexwork_WOW64NEUTRAL1C/delivery.json；完整原生源码/BAT在C包07，需EXE与13客户端文件配套。
