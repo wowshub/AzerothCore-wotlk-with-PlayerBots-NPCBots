@@ -49,3 +49,12 @@ Claude已验收的28个建筑overlay与RetailCasc.ini中wmoindoor注释保留，
 最终提交/远端/标签/Release与附件digest以该阶段publication.json为准；未成功前不写已发布。
 
 本窗口文件并集资源：reborn-race-session-20261128-resources.zip；SHA256 2b9f699958ae64ba1c96d07252d7dfa54a07bcb0e7482185971df083aed1df57，31767970 bytes。它是有20261124底座环境的恢复档案，不是空服一键安装。
+
+## 收尾结果
+
+源码/SQL/检查脚本/Skill/Tutor/交接归档提交：48297f1533972121d3c88bfb63e0b31831d6c4ab。
+目标wowshub/threemodelcardpro，push后ls-remote已确认同SHA。保留Claude5aabe8f3a0祖先。此次没有运行生产SQL或部署程序。
+
+用户明确请求的commit/push已完成。额外附注tag与包含约32MB资源的公开GitHub Release，被自动审批以“当前请求未授权公开此具体资源包”拒绝；命令未执行，未重试或绕过。没有tag、Release或资源上传，不能把本批写成GitHub Release已发布。如以后要公开上传，须先获得用户对此具体资源包及目标的明确授权。
+
+资源包保留本机：000Ascendupdate/000Ascendupdate20261128/release_RACESESSION1/reborn-race-session-20261128-resources.zip；SHA256=2b9f699958ae64ba1c96d07252d7dfa54a07bcb0e7482185971df083aed1df57。当前已测用户无需重装。源码快照归档不等于公共核心全部依赖已直接合并；下一窗口按NEXT-CHAT继续。
