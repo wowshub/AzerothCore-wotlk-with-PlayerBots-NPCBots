@@ -1,0 +1,30 @@
+--- WoW/Source/Object/ObjectClient/Unit_C.cpp
++++ WoW/Source/Object/ObjectClient/Unit_C.cpp
+@@ -23196,6 +23196,27 @@
+         return 0;
+     }
+ 
++    if (spell->m_id == 75 && (this->m_obj->m_type & TYPEMASK_PLAYER)
++        && this->m_unit->m_unitFieldBytes0[0] == 86 && this->m_unit->m_unitFieldBytes0[1] == 3) {
++        const CGUnitVirtualItem* ranged = this->GetVirtualItem(2, false);
++        if (ranged && ranged->m_classID == 2 && ranged->m_subclassID == 3) {
++            CM2Model* gun = this->m_rangedWeaponModel;
++            if (gun && gun->m_attachParent == this->m_worldModel && gun->IsLoaded(0, 0)) {
++                for (int32_t attachment = 4; attachment >= 0; --attachment) {
++                    if (gun->HasAttachment(attachment)) {
++                        *position = gun->GetAttachmentPosition(attachment);
++                        return 1;
++                    }
++                }
++            }
++
++            if (this->m_worldModel->HasAttachment(1)) {
++                *position = this->m_worldModel->GetAttachmentPosition(1);
++                return 1;
++            }
++        }
++    }
++
+     const SpellVisualRec* visual = GetSpellVisual(spell);
+ 
+     if (!visual) {

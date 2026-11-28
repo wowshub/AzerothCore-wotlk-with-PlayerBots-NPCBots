@@ -1,0 +1,62 @@
+--- WoW/Common/ComponentCore/CharacterComponent.cpp
++++ WoW/Common/ComponentCore/CharacterComponent.cpp
+@@ -2278,6 +2278,43 @@
+         return ATTACH_NONE;
+     }
+ 
++    const auto fitHeldSurekiEquipment = [&] {
++        if (sheathed || (invSlot != INVSLOT_RANGED && invSlot != INVSLOT_MAINHAND && invSlot != INVSLOT_OFFHAND)
++            || !model->IsLoaded(0, 0) || !model->m_shared || !model->m_shared->m_data)
++            return;
++
++        const char* path = model->m_shared->m_fileName;
++        const bool femaleSureki = !_stricmp(path, "Creature\\NerubianEvolved\\SurekiPlayerFemale.m2")
++            || !_stricmp(path, "Creature/NerubianEvolved/SurekiPlayerFemale.m2")
++            || !_stricmp(path, "Creature\\NerubianEvolved\\SurekiPlayerFemale.mdx")
++            || !_stricmp(path, "Creature/NerubianEvolved/SurekiPlayerFemale.mdx");
++        const auto* rig = model->m_shared->m_data;
++        if (!femaleSureki || rig->m_bones.m_count != 251)
++            return;
++
++        const bool right = hand == ATTACH_HANDRIGHT;
++        for (auto* child = model->m_attachList; child; child = child->m_attachNext) {
++            if (child->m_attachmentId != link || child->m_attachmentIndex >= rig->m_attachments.m_count)
++                continue;
++            const auto& socket = rig->m_attachments[child->m_attachmentIndex];
++            if (shield) {
++                // The male shield helper's parent 82 maps to female forearm helper 79.
++                if (link == ATTACH_SHIELD && socket.m_bone == 76u
++                    && rig->m_bones[79].m_parentIndex == 59u) {
++                    child->SetAttachmentFrame(79, C3Vector(0.1014f, 0.0138f, 0.0125f), 1.0f);
++                }
++                continue;
++            }
++            if (socket.m_bone != (right ? 70u : 76u))
++                continue;
++            const uint32_t gripBone = right ? 123u : 135u;
++            if (rig->m_bones[gripBone].m_parentIndex != socket.m_bone)
++                continue;
++            // Authored weapon helpers carry the palm position and grip rotation.
++            child->SetAttachmentFrame(gripBone, C3Vector(0.0f, 0.0f, 0.0f), 1.0f);
++        }
++    };
++
+     // Keep the normal hand/sheath links, finger pose, item visuals and scale.
+     // Only the model and object-skin texture filenames come from Retail.
+ #if defined(WOWDECOMP_RETAIL_ASSETS)
+@@ -2288,6 +2325,7 @@
+             const auto modelPath = Retail::FileName(retail.modelId, ".m2");
+             const auto texturePath = Retail::FileName(retail.textureId, ".blp");
+             CCharacterComponent::AddLink(model, link, modelPath.c_str(), texturePath.c_str(), itemVisual ? itemVisual : displayRec->m_itemVisual, displayRec);
++            fitHeldSurekiEquipment();
+             return link;
+         }
+     }
+@@ -2304,6 +2342,7 @@
+ 
+     CCharacterComponent::AddLink(model, link, s_path, s_path2, itemVisual ? itemVisual : displayRec->m_itemVisual, displayRec);
+ 
++    fitHeldSurekiEquipment();
+     return link;
+ }
+ 
