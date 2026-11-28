@@ -1,0 +1,4 @@
+用户确认右手出弹并反馈猎人测试通过。
+EXE SHA256 98800f5ae99ef99edeb5c6a0f68db8f0b35cdcfc6105daa35edbc458a53c60be
+codexfix_20261127_WOW64SUREKIGUN1A_AutoShot.zip SHA256 422689af2182b94aba135cd8874b077a9bfe4749f1339b15385217e8d67964e1
+基线为 RACESESSION1 对应的 STARTFIX1B 累计源码快照。仅归档验收源码差异及来源。CREFIX1A 生物表独立。未扩大至所有武器与动作组合。
