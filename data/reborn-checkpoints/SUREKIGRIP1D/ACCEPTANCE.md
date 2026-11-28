@@ -1,0 +1,4 @@
+用户反馈这下对了，女苏雷基手持武器和盾牌基本通过。头盔另有回归报告，单独处理。
+EXE SHA256 f8058ac4e033892bc7adb4de5fc33db8041d5d3156b8c7434050c4a69bbbb284
+codexfix_20261127_WOW64SUREKIGRIP1D_FemaleAllHeldEquipment.zip SHA256 0142eeb17c62381df584e0b2a0108abe7134a3bb7471795ac3b8e19f18198af6
+基线为 RACESESSION1 对应的 STARTFIX1B 累计源码快照。仅归档验收源码差异及来源。CREFIX1A 生物表独立。未扩大至所有武器与动作组合。
