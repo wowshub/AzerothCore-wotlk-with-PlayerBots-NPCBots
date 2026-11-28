@@ -1,0 +1,4 @@
+--- Interface/GlueXML/CharacterSelect.lua
++++ Interface/GlueXML/CharacterSelect.lua
+@@ -2089,0 +2090 @@
++        if string.upper(CharacterSelect.currentModel or "") == "STORMFORGEDALLIANCE" then CharacterSelect.currentModel = "Human"; end

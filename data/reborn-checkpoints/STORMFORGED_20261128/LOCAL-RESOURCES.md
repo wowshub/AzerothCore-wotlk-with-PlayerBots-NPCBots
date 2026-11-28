@@ -1,0 +1,7 @@
+# 本机资源归档
+
+原版/第三方资源及DBC/EXE不上传公开仓库。完整本机归档：
+
+`D:\000rebornWOW\000RebornWOWHighForkPRO\000Ascendupdate\000Ascendupdate20261128\codexfix_202611280629_阶段STORMFORGEDRELEASE_验收归档\reborn-stormforged-20261128-local-resources.zip`
+
+SHA256：`74a6ec71fa7b6e96ce206d59870ae23eabc6d7c7c4e37abc515b669b924a8bc1`；38619577字节。文件逐项清单见resources-manifest.json。已装测试通过无需重复覆盖；初装SQL禁止在已创建race84的世界库重跑。

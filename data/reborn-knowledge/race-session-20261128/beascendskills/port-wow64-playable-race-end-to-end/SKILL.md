@@ -55,3 +55,7 @@ description: Port a playable race into this RebornWOW64 project from identity an
 - 最终用户集中检查：冷启动建角/选角/首登、男女NO/T7/T14、各武器类别持握与收起、披风、X坐/对话、职业技能与任务、变形恢复、死亡复活与遗骨。根据实际开放范围裁剪，未测保持未测。
 
 具体失败与最终来源：[本窗口失败台账](references/session-20261125-28.md)。新族开工复制[交付前检查表](references/preflight.md)，填完再出包。教学见同名beascendtutor目录。这个Skill是总流程，专项参数仍由现有Skill维护。
+
+
+## 2026-11-28 Stormforged基本验收
+用户确认联盟84本次移植完成；目录优先级、真实发型材质、服务端root/locale缺表、头盔及衣物披风指纹教训见[本次证据与验收边界](references/stormforged-20261128.md)。后续保留已安装BODY1A衣物层，未测试矩阵不扩大验收。

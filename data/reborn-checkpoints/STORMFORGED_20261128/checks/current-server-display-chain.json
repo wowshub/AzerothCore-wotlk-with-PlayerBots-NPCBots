@@ -1,0 +1,18 @@
+{
+  "root": {
+    "missing": [],
+    "hashes": {
+      "ChrRaces": "3fd5f38fd9461b58b97022d19ff7f024e0a0db5ca3db76bc5ce31a700a2baf6d",
+      "CreatureDisplayInfo": "e8cfe032ea0ccbebf415716ab58634d106a7d8bdff8093dceccd1697502c0c27",
+      "CreatureModelData": "f30cd8d0bc5e118e9f86fb6d54f74fb3e2d984f5c975dce5ebaafae818243080"
+    }
+  },
+  "zhCN": {
+    "missing": [],
+    "hashes": {
+      "ChrRaces": "7e15e75b38e85023c57c2cdf1443c2e109bd0b390cd98b1d43f5818d5b6aec79",
+      "CreatureDisplayInfo": "a7bd337160d9812a787fae0ed41216016fa017d77e9b4f10c0e72691e59b6d13",
+      "CreatureModelData": "6bbfe9f324e60a63e89e3534bf146554a1bc83cafa2cca016c981aa2889abc53"
+    }
+  }
+}

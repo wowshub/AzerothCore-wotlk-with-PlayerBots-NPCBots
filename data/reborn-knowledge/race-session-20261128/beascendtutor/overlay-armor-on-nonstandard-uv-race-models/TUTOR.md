@@ -140,3 +140,7 @@ EXE：8757e4d72e3ca7c4ffde3174679d79dd8cbfe246e25580731b6092393a7de384
 
 ## 2026-11-28 本窗口总体基本验收与新族总流程
 用户确认之前修复“都测试差不多了”并授权commit/push，最终累计按基本通过记录，未扩写全职业/男女/动作矩阵。已失败的魔古早期脸图、STARTFIX1A漏inl及龙希尔1E保留失败。新族开工先用[端到端流程](../../beascendskills/port-wow64-playable-race-end-to-end/SKILL.md)及其失败台账/检查表；保留本Skill专项方法和旧边界。正式提交/资源状态看RACESESSION1_20261128。
+
+
+## 2026-11-28 Stormforged实例
+头发先看运行时真正读取哪份目录，再追网格材质；衣服用UV合成层，披风需真实网格。服务端root与locale都要闭合外观链。新增衣物顶点后保留已通过挂点并更新指纹。详见[实例与范围](../../beascendskills/port-wow64-playable-race-end-to-end/references/stormforged-20261128.md)。

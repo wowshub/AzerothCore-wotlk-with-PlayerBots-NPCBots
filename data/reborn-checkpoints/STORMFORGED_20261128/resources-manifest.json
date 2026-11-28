@@ -1,0 +1,1553 @@
+{
+  "policy": "Binary resources remain local; no MPQ/M2/SKIN/BLP/DBC/EXE in Git or public attachments",
+  "files": [
+    {
+      "path": "client-mpq/Patch-XA.mpq/DBFilesClient/CharStartOutfit.dbc",
+      "sha256": "12f502f75352d9dc739d6cb1ca55933d34941796fcb7ae13f2dc04abb1a92abf",
+      "bytes": 452309,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CharBaseInfo.dbc",
+      "sha256": "8d36e8c3aada553e34d0d1f6f8207ce587e7f8dcba85616cf12fac5c69476aa4",
+      "bytes": 1567,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CharHairGeosets.dbc",
+      "sha256": "387b17b19493dfb5afc03bb3abaa82bbb4cf815b25101144ef4699849d833d51",
+      "bytes": 50445,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CharSections.dbc",
+      "sha256": "091a5527295cbc8484bf3dee606f3a3a4615f7e1b2659933407a514f8e03faa0",
+      "bytes": 39970437,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CharSections.dbc1-race14",
+      "sha256": "3168f3d1af6eafc46eb911e45cfcc0279d9c44437bfe0a06b899799a728028a6",
+      "bytes": 132930,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CharacterFacialHairStyles.dbc",
+      "sha256": "e5c42ed80859f41e02fed24e777c4ac2bcaf66d924dd337f2b8a237467add1d8",
+      "bytes": 182293,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/ChrRaces.dbc",
+      "sha256": "c52a91b38adcff4bb319994c8acfaa9c1f9725fd664d9e5000d69b13555e93b0",
+      "bytes": 35485,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CreatureDisplayInfo.dbc",
+      "sha256": "bc4ec99632e40c28353d203dd000d5abd2cf381afee448eba633f8fdd3c8847c",
+      "bytes": 1821950,
+      "origin_package": "codexfix_202611280234_阶段STORMFORGED1B_模型显示链与男女头像.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/DBFilesClient/CreatureModelData.dbc",
+      "sha256": "0c5fa5974f4d1bf2a576d6a85a0e0f1ea2e545e8b46eb421981069ab3a52ef72",
+      "bytes": 838173,
+      "origin_package": "codexfix_202611280234_阶段STORMFORGED1B_模型显示链与男女头像.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/Interface/GlueXML/CharacterSelect.lua",
+      "sha256": "7107b509b6be44097daa30aac5f65e8f887a3b4b503accd95f1d95cfd37dfd5d",
+      "bytes": 54807,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/Interface/GlueXML/RebornCreator.lua",
+      "sha256": "dda944366ff0b5a4c5196ab42ab7e6237abdefc3555118ea9ff9ddc3986fa450",
+      "bytes": 62983,
+      "origin_package": "codexfix_202611280234_阶段STORMFORGED1B_模型显示链与男女头像.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/Reborn/Preview/RaceGender/STORMFORGEDALLIANCE-female.blp",
+      "sha256": "b7b572bd5f6e7aea44283cd6419badc3b2f69c432de41d46d56d9b87871b12bc",
+      "bytes": 44862,
+      "origin_package": "codexfix_202611280234_阶段STORMFORGED1B_模型显示链与男女头像.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YB.mpq/Reborn/Preview/RaceGender/STORMFORGEDALLIANCE-male.blp",
+      "sha256": "92bc58d2c9c1d1ffd9c193123382bb60bb62242af9b311b39a8752a124d63db3",
+      "bytes": 44862,
+      "origin_package": "codexfix_202611280234_阶段STORMFORGED1B_模型显示链与男女头像.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_armor_dark.blp",
+      "sha256": "46cf38977642225d3267a744e5520948dfd94717b8d86f6ccee9c9f145aa51a1",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_armor_gold.blp",
+      "sha256": "f554d2ac9afcb1fb6e1c506a34bd9ded53b315ebfe3e2917559a41e789ac14ec",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_armor_silver.blp",
+      "sha256": "102eda694e72d9e26f390fc14797ea81123417647f696bc8770780b39de5eb5d",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_hair_dark.blp",
+      "sha256": "8be48720e24139703fce7f79655dd8fb4229e3665309b1f640177a150675c8b5",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_hair_gold.blp",
+      "sha256": "f99f0859086d334afa9f2b6a55dc469d6a28a7079c1644c5d0c07e9ea9f52ab3",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_hair_silver.blp",
+      "sha256": "97ea5ba91957c1386520d55d2f107c3e29b4c22bee5f7e4df253e9e6650638a2",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_skin_dark.blp",
+      "sha256": "dcc5e8be2cb3405acca33375f0a58f7cf19c822fb283cb7aee5b423a03bc01ec",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_skin_gold.blp",
+      "sha256": "ef0de7f79fde5c440b445213f51d4756a3c2e3cd43e5ab33da8b00ad79b9158b",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/IronVrykulFemale_skin_silver.blp",
+      "sha256": "f534fb053bb2c744e2b6eba56c871b7ca4f69f2797bfa1c72a9a8d97b09c7f91",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_bone.blp",
+      "sha256": "e67dc4cb3b0ae0134b40588e423bdd75be404b0c515ad3c844ec02b1e4ad78e8",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_bronze.blp",
+      "sha256": "806be38f9f4cb69b7b3f59fe89b63c874f9827133c28abea2d20e61317a1746b",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_moss.blp",
+      "sha256": "814c2c10b53c5a214c6cc1b403fdf06b33b0f11a7d988fdf6a24df3640e85bbc",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_armor_dark_shadow.blp",
+      "sha256": "f2f40fdc4aafbac31d177eb15c021c3e420c5d1dece3bb2e27240bebbfb24afc",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_bone.blp",
+      "sha256": "901567527e67adb6ef44420daadc1fae638760d79eadce3666a4a86e9e8fd827",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_bronze.blp",
+      "sha256": "7e0adbc4122bdb8f1f1db2b8f774129307eb3904ccbafefb1d8f2442f085a506",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_moss.blp",
+      "sha256": "4ec7d8e9ee37d554fa01e9554f035c60c5463863c4c37b47224ce9bc1c7ba11e",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/R_IronVrykulFemale_skin_dark_shadow.blp",
+      "sha256": "d042acf2e2c651c36ff1bd9dd6a344ba9a8b0d93bbbbc585c0b3727219cdcb2f",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale.m2",
+      "sha256": "95cb8e01de19abbeb6f523df97c180765a237e65e0a15cdf6fa352cfe57c8f8d",
+      "bytes": 3021776,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale00.skin",
+      "sha256": "ecd76bfac42de3f0ee43684cf9ddc9fd3bc09d0f0709d77ef76a49db5df78649",
+      "bytes": 321968,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0060-00.anim",
+      "sha256": "7a63aa5563549847d5c165d9f008c6d35f46bf2c8043fefbd2ccb8ba691d4e39",
+      "bytes": 39216,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0061-00.anim",
+      "sha256": "a03fb6c94b7121f873713d6e91f30e5b41cd0b48a0adcaac2fa7b3f1f684dae6",
+      "bytes": 15936,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0075-00.anim",
+      "sha256": "f5ef1039d1d4aeca30912c36066a86e731fdca433f003d4c4014b7bed5784ea8",
+      "bytes": 46624,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0096-00.anim",
+      "sha256": "86412089b4421439ae76d77be75287526ab1a8a552302fdb13a100902bd349c8",
+      "bytes": 25456,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0097-00.anim",
+      "sha256": "bf39049b91a22a65f68afa21810ad3f5703913e63d5e5e32e7c4f19c5582155f",
+      "bytes": 13840,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0098-00.anim",
+      "sha256": "755fa6dad789aa02eb50c24a27e24857ef3fa6694ef8af0f3b70613f12cea529",
+      "bytes": 31776,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0120-00.anim",
+      "sha256": "1ed247cb5d57ce0464a83e621f32a5166c4b4c3a9513ff0fc4edca233ee76026",
+      "bytes": 10560,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0123-00.anim",
+      "sha256": "f1867c634ecd318242a4c80d9808f6199c8cca6ccc803446cae31dcd263f1e84",
+      "bytes": 10560,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0128-00.anim",
+      "sha256": "1bf24a896adfac1c1903eb19fbf51b1765446a8f618ad3df7a08967dedfcb0bd",
+      "bytes": 6168,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0129-00.anim",
+      "sha256": "6aab51c609942d97d1d7a6a3f84c5b5fdf5f6a6b5935f2d650b1db88d27c9a33",
+      "bytes": 9648,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/IronVrykulFemale2/StormforgedPlayerFemale0289-00.anim",
+      "sha256": "35c0e59688210f8de00b7fdf547a2129b384f43e5b62228613826939883137b7",
+      "bytes": 34304,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_bone.blp",
+      "sha256": "47425c698655dbdb8b2b807926630a8d984412c49911e0fc3946542eb6a3ee56",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_bronze.blp",
+      "sha256": "d5b33f467ca3eee5719d514d40d29a735945ff2e1f2f50d78e93ce37111a1c3c",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_moss.blp",
+      "sha256": "02d8d9e3cbfb3e2df1fbd7603523bd06a1f18c139152625165fc2ce5a5f86e82",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykularmor_dark_shadow.blp",
+      "sha256": "7e65ebfc8d6a445071efa8caf73918b12c7326b73afb2ae1cc791dc229b75cb8",
+      "bytes": 700260,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_bone.blp",
+      "sha256": "363f4750ee8e0f23d9a21efdaba590498db329d19a8294161a565e107b4a8d15",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_bronze.blp",
+      "sha256": "14933761ed823a7871e1e53b098eb2199d9088c268ed0c9783cbf5239423d350",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_moss.blp",
+      "sha256": "95509c4dfee0df3f8ad80d5991495ffafd5f6e274f746de584b5d4e1899dae99",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/R_stormforgedvrykulbody_dark_shadow.blp",
+      "sha256": "214b171f843d50a3a4802ac90a2306e32762c803eb3e0c7bf005d61eb13e2a53",
+      "bytes": 350724,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale.m2",
+      "sha256": "69fff19d1dc0658043881331cfcc59cb0b68889baed018e69524d22ea2ee70f5",
+      "bytes": 3271872,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale00.skin",
+      "sha256": "c2e1fee830baffdc3669426efddd93b98d34062541e5258bd6537dd7b408e3e2",
+      "bytes": 338200,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0060-00.anim",
+      "sha256": "9e52b927a86c0ecac2c8813d931418b920f18718647c5cdaae8f8433ed897836",
+      "bytes": 36080,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0061-00.anim",
+      "sha256": "cbcaed519ae8b67548adb7206bfe35cab37509cb75b975beb84b016ac746115b",
+      "bytes": 57056,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0062-00.anim",
+      "sha256": "ba9e4578ad5a3395cc5cf945cab004cf46a24a517995f308a7b7c83e287db1e0",
+      "bytes": 36608,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0062-01.anim",
+      "sha256": "8e5eb1512e2165f3e5930023db7c0b6a4f347ad29a277bf7ed099dc6eec53aea",
+      "bytes": 50560,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0068-00.anim",
+      "sha256": "d5b0a46a1a850bec265187682ba8163c5715aed82aa5337f031a7beea62c6222",
+      "bytes": 30368,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0074-00.anim",
+      "sha256": "72c171a8f1133192f95bb5ad27261ea4f19c4dc587830a5a469afda95b57e124",
+      "bytes": 17680,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0075-00.anim",
+      "sha256": "6af3b7129c9758aecb153dbf5fc6535ac85f6a8e757820c353242ba3902fa4d8",
+      "bytes": 43136,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0081-00.anim",
+      "sha256": "2636aa0379f096f23bee69f1f3798f90446e39034f57718fbe4c32505dde9a08",
+      "bytes": 22000,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0084-00.anim",
+      "sha256": "e91846f51c6ae51d04437393b47d2dd09eb68a94812fd95033737c6421e96630",
+      "bytes": 23968,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0096-00.anim",
+      "sha256": "41c8b1b003e37204ded27863a789e6fad29603e2d53ba045e49af9bf19e55dfd",
+      "bytes": 20256,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0097-00.anim",
+      "sha256": "16627de59c53385b1a93dfc7fc1c81e6de11711fc4c5cebbb52b956af0c33daf",
+      "bytes": 15648,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0098-00.anim",
+      "sha256": "2488fec4804846ee4df4ed381383ac8d9ebd3267468a2d32620c7631ea0c3528",
+      "bytes": 20656,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale01.skin",
+      "sha256": "9026d4f19e906f9cb99f0669b6f2493f603603dfd7dd86548d9b2042968a81ed",
+      "bytes": 338200,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0104-00.anim",
+      "sha256": "f52345900fbac60d16cfdcaf19832ff7ce14e6e5204a666271fb7199eb4b3135",
+      "bytes": 14368,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0113-00.anim",
+      "sha256": "94931f60e9873ea5de491164e105aca3ff210b7666f3fd1d032e6e4caf3432f5",
+      "bytes": 47968,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0123-00.anim",
+      "sha256": "4231bf07e6ed396f45e58b3d36abfe2cc14fb206034e5ed4d7a72b861b220c7e",
+      "bytes": 30000,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0128-00.anim",
+      "sha256": "ef578e7800ea5745e7fa7b6ed02166823d07e84cfcca8c5408ab67270a4a560e",
+      "bytes": 8176,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0129-00.anim",
+      "sha256": "001819cb04d89c63d6049840c9911abc43c529bf74fd0cc781b47cda5d4831bb",
+      "bytes": 7984,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale0186-00.anim",
+      "sha256": "bc148cfb465c2995d7f405bbf420460fd9ba40aab2301d0241a75ccedd40ab47",
+      "bytes": 23392,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale02.skin",
+      "sha256": "3bd63e3100b3b69129a0866ed8f3fe2d0db03656d6b767c7dbde7227aa14df57",
+      "bytes": 338200,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Creature/StormforgedVrykul/StormforgedPlayerMale03.skin",
+      "sha256": "703d6f3b4159ec7670713c43dcb5afb60d7f638126669a5cf4eaae3787cbd953",
+      "bytes": 340792,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin00.blp",
+      "sha256": "c49a0f64f0a9e9f128860f05a3b9f7e0af38af8b119a20758563a4ce4995157e",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin00_FL.blp",
+      "sha256": "f22ea41ad2fd8d2c910130f3a4a3c0baa680c1180e1eb973bc864990d98f6cb6",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin00_FU.blp",
+      "sha256": "38f15f64d6dbd1b0162332b23f7cc7502e32128e6bb7f6f1444beb5e7341fe50",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin00_LU.blp",
+      "sha256": "0349c900f056f018f2661721648ce01bf790eba86d873fe473b5de7e6557011b",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin00_TU.blp",
+      "sha256": "c201a715d80055b3e1d9b4ddaec21ac83e8b1c37bfdb0012df0ea2231c4c9048",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin01.blp",
+      "sha256": "c49a0f64f0a9e9f128860f05a3b9f7e0af38af8b119a20758563a4ce4995157e",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin01_FL.blp",
+      "sha256": "f22ea41ad2fd8d2c910130f3a4a3c0baa680c1180e1eb973bc864990d98f6cb6",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin01_FU.blp",
+      "sha256": "38f15f64d6dbd1b0162332b23f7cc7502e32128e6bb7f6f1444beb5e7341fe50",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin01_LU.blp",
+      "sha256": "0349c900f056f018f2661721648ce01bf790eba86d873fe473b5de7e6557011b",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin01_TU.blp",
+      "sha256": "c201a715d80055b3e1d9b4ddaec21ac83e8b1c37bfdb0012df0ea2231c4c9048",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin02.blp",
+      "sha256": "c49a0f64f0a9e9f128860f05a3b9f7e0af38af8b119a20758563a4ce4995157e",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin02_FL.blp",
+      "sha256": "f22ea41ad2fd8d2c910130f3a4a3c0baa680c1180e1eb973bc864990d98f6cb6",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin02_FU.blp",
+      "sha256": "38f15f64d6dbd1b0162332b23f7cc7502e32128e6bb7f6f1444beb5e7341fe50",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin02_LU.blp",
+      "sha256": "0349c900f056f018f2661721648ce01bf790eba86d873fe473b5de7e6557011b",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin02_TU.blp",
+      "sha256": "c201a715d80055b3e1d9b4ddaec21ac83e8b1c37bfdb0012df0ea2231c4c9048",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin03.blp",
+      "sha256": "94e80918855434d1c1596e6b6063ba6e32aefa2468fdbd63502d30cedfc3ca57",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin03_FL.blp",
+      "sha256": "3f406781974ec2803a45c718bed37005d2c816732b9558740b88053437cb4bc1",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin03_FU.blp",
+      "sha256": "957e5cf914d2fa225edce680a5b6978586c4e4da46709c0d7530d24bd07179cc",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin03_LU.blp",
+      "sha256": "133ecdae71ae6584e879ed30674073082a73a9bdd928262030c774beffea24f8",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin03_TU.blp",
+      "sha256": "98ee72c9cdd32050fe1cef6544c85f5d7b58ef0d3212904e15b4933d80a15034",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin04.blp",
+      "sha256": "94e80918855434d1c1596e6b6063ba6e32aefa2468fdbd63502d30cedfc3ca57",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin04_FL.blp",
+      "sha256": "3f406781974ec2803a45c718bed37005d2c816732b9558740b88053437cb4bc1",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin04_FU.blp",
+      "sha256": "957e5cf914d2fa225edce680a5b6978586c4e4da46709c0d7530d24bd07179cc",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin04_LU.blp",
+      "sha256": "133ecdae71ae6584e879ed30674073082a73a9bdd928262030c774beffea24f8",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin04_TU.blp",
+      "sha256": "98ee72c9cdd32050fe1cef6544c85f5d7b58ef0d3212904e15b4933d80a15034",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin05.blp",
+      "sha256": "94e80918855434d1c1596e6b6063ba6e32aefa2468fdbd63502d30cedfc3ca57",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin05_FL.blp",
+      "sha256": "3f406781974ec2803a45c718bed37005d2c816732b9558740b88053437cb4bc1",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin05_FU.blp",
+      "sha256": "957e5cf914d2fa225edce680a5b6978586c4e4da46709c0d7530d24bd07179cc",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin05_LU.blp",
+      "sha256": "133ecdae71ae6584e879ed30674073082a73a9bdd928262030c774beffea24f8",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin05_TU.blp",
+      "sha256": "98ee72c9cdd32050fe1cef6544c85f5d7b58ef0d3212904e15b4933d80a15034",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin06.blp",
+      "sha256": "a133f17f3616d0ca2ef8eac6236ff09085537875400953c214c3a729c72f96db",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin06_FL.blp",
+      "sha256": "c9d672f53ddeb14397ab56fd3ecd718112199ff1dce111dd994626734d21c577",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin06_FU.blp",
+      "sha256": "5709472bbbd5b7c19f0e8781c069c8326694511b8673a442bde8478f508f3292",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin06_LU.blp",
+      "sha256": "1fe04f58d7c0cc6bf607d27e743bc6fa97b278f702466159ea430ae0582df779",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin06_TU.blp",
+      "sha256": "a718a07682db40057bd248726ba3f989fe922f889d7d04bd482fc69044fb786c",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin07.blp",
+      "sha256": "a133f17f3616d0ca2ef8eac6236ff09085537875400953c214c3a729c72f96db",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin07_FL.blp",
+      "sha256": "c9d672f53ddeb14397ab56fd3ecd718112199ff1dce111dd994626734d21c577",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin07_FU.blp",
+      "sha256": "5709472bbbd5b7c19f0e8781c069c8326694511b8673a442bde8478f508f3292",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin07_LU.blp",
+      "sha256": "1fe04f58d7c0cc6bf607d27e743bc6fa97b278f702466159ea430ae0582df779",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin07_TU.blp",
+      "sha256": "a718a07682db40057bd248726ba3f989fe922f889d7d04bd482fc69044fb786c",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin08.blp",
+      "sha256": "a133f17f3616d0ca2ef8eac6236ff09085537875400953c214c3a729c72f96db",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin08_FL.blp",
+      "sha256": "c9d672f53ddeb14397ab56fd3ecd718112199ff1dce111dd994626734d21c577",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin08_FU.blp",
+      "sha256": "5709472bbbd5b7c19f0e8781c069c8326694511b8673a442bde8478f508f3292",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin08_LU.blp",
+      "sha256": "1fe04f58d7c0cc6bf607d27e743bc6fa97b278f702466159ea430ae0582df779",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin08_TU.blp",
+      "sha256": "a718a07682db40057bd248726ba3f989fe922f889d7d04bd482fc69044fb786c",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin09.blp",
+      "sha256": "252157be2791a9d172399f8752c57e100ebf194babf7b5fda7e71f0928b02d48",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin09_FL.blp",
+      "sha256": "8eaaf71d2b432865d4f772c461168fb066fbe3409ece5b30669d94494107b312",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin09_FU.blp",
+      "sha256": "3cbfa29d30fa917c3dda45bb962a8bc08378b4b8835fbe46d2bc23485e35b750",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin09_LU.blp",
+      "sha256": "217bea90de92a88532803cee3ed36420f3b7bd5eb6b1831e08d15723ae69b885",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin09_TU.blp",
+      "sha256": "2134370e25d5d3d96d45309000ad5f5b4ced85167aed3c56d74c62e4ea9a3836",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin10.blp",
+      "sha256": "181f3c57c68adec5f51a4f156bc8e51e5208027d50e9dc27da97ac8fa6d59510",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin10_FL.blp",
+      "sha256": "666966e1f50de0ede15fa7061b37ebd8a76280eed5e58b630a33d5419fabe9cc",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin10_FU.blp",
+      "sha256": "4a560e95b081b815c8a764ff0ceefd34adb9b01da21d7f57cabc94f85c0bda2b",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin10_LU.blp",
+      "sha256": "15fc49f98aa9d7d50ca3ab39e63750b1cbb6b0905b342c8df6e2c743dc8c5103",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin10_TU.blp",
+      "sha256": "e3603e41a1831a6db8c798947da8c2cdee2ea926c0a64917296c4a71335865c2",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin11.blp",
+      "sha256": "50e15898f3fb8127a102e0d53cde478d2c19139c3be3d4000977b45d1f9fb559",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin11_FL.blp",
+      "sha256": "e6a1dc32ad9d28ff3ef2f51fb9bb477a7e4a66339723b7e333673e74126b728e",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin11_FU.blp",
+      "sha256": "85159df8b1866081608dc9f639be2b0727d238f37c00c26155756ae01219c75d",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin11_LU.blp",
+      "sha256": "489a9a408b28fa4e0ef0fcbb0fda0a909a6c10f258161a6b6101e84bee90e335",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin11_TU.blp",
+      "sha256": "e31e1e52ff129f89cc1482f0c75bd8917f4f608286133890fa352e7a892144ee",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin12.blp",
+      "sha256": "46b01a1c06aa23352f01244e7baa065c1a1269f320392817fb82455c2bc51c57",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin12_FL.blp",
+      "sha256": "6231e76527af13174c49dc747dedb59ae559cd412fe549a597dfba4aa2f10aa4",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin12_FU.blp",
+      "sha256": "0ba7507328d4b2b76aa7601fbe63b35682779916e8b47c70409a608dd8c2977d",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin12_LU.blp",
+      "sha256": "b94862a134e2e3e48b16bca7137404796442126c1d0bd2814ad4ae0374d1ea98",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Female/Skin12_TU.blp",
+      "sha256": "2c1673b997fd62166d17e3369c6056b7bc9c9e406d8bd3e01ef19d47222bc406",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin00.blp",
+      "sha256": "f5fe618de0b85ff7af86c590c79ccd773aeb5c6e855b4614f1a2afea9be07f77",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin00_FL.blp",
+      "sha256": "728f9307a2ef02cc2c499f8fad2e20d37f0ba45649920cc5117c87dce03eb274",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin00_FU.blp",
+      "sha256": "2fde91d585ebeef6b2e6d225275309354f2d9ab58fda893f7e261bd39bf057ac",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin00_LU.blp",
+      "sha256": "1442d0ee00e20a8dff6fda20fc6f63cee19df64a4d59d8d379b57d281b44f5d8",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin00_TU.blp",
+      "sha256": "3e1320f92fb266f4550c161fd0d77b046324de10933776d133a156b9232fa4e1",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin01.blp",
+      "sha256": "f5fe618de0b85ff7af86c590c79ccd773aeb5c6e855b4614f1a2afea9be07f77",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin01_FL.blp",
+      "sha256": "728f9307a2ef02cc2c499f8fad2e20d37f0ba45649920cc5117c87dce03eb274",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin01_FU.blp",
+      "sha256": "2fde91d585ebeef6b2e6d225275309354f2d9ab58fda893f7e261bd39bf057ac",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin01_LU.blp",
+      "sha256": "1442d0ee00e20a8dff6fda20fc6f63cee19df64a4d59d8d379b57d281b44f5d8",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin01_TU.blp",
+      "sha256": "3e1320f92fb266f4550c161fd0d77b046324de10933776d133a156b9232fa4e1",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin02.blp",
+      "sha256": "f5fe618de0b85ff7af86c590c79ccd773aeb5c6e855b4614f1a2afea9be07f77",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin02_FL.blp",
+      "sha256": "728f9307a2ef02cc2c499f8fad2e20d37f0ba45649920cc5117c87dce03eb274",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin02_FU.blp",
+      "sha256": "2fde91d585ebeef6b2e6d225275309354f2d9ab58fda893f7e261bd39bf057ac",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin02_LU.blp",
+      "sha256": "1442d0ee00e20a8dff6fda20fc6f63cee19df64a4d59d8d379b57d281b44f5d8",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin02_TU.blp",
+      "sha256": "3e1320f92fb266f4550c161fd0d77b046324de10933776d133a156b9232fa4e1",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin03.blp",
+      "sha256": "7d54ce40b75d384805bfb756b7b8ba6227db9a711ee29a3897e1af75c6ecbb7f",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin03_FL.blp",
+      "sha256": "dc2da41676c984ccb0d5b81a918227536c9a2eb6ee3331fb45c40b338a26f199",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin03_FU.blp",
+      "sha256": "7c8ffb5f6cbed8c9762a22ebf4b83d01d983d416033c6cbab0c5e22c7524f3de",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin03_LU.blp",
+      "sha256": "948f6558ba26e24bc9a07f0f2ee6bb2cb13c1e07391771e67620521ae2107c74",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin03_TU.blp",
+      "sha256": "39230aaefec4b01396708a6617e57dcb62b0dad41a5e3ed0da879c6b0e971fde",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin04.blp",
+      "sha256": "7d54ce40b75d384805bfb756b7b8ba6227db9a711ee29a3897e1af75c6ecbb7f",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin04_FL.blp",
+      "sha256": "dc2da41676c984ccb0d5b81a918227536c9a2eb6ee3331fb45c40b338a26f199",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin04_FU.blp",
+      "sha256": "7c8ffb5f6cbed8c9762a22ebf4b83d01d983d416033c6cbab0c5e22c7524f3de",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin04_LU.blp",
+      "sha256": "948f6558ba26e24bc9a07f0f2ee6bb2cb13c1e07391771e67620521ae2107c74",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin04_TU.blp",
+      "sha256": "39230aaefec4b01396708a6617e57dcb62b0dad41a5e3ed0da879c6b0e971fde",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin05.blp",
+      "sha256": "7d54ce40b75d384805bfb756b7b8ba6227db9a711ee29a3897e1af75c6ecbb7f",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin05_FL.blp",
+      "sha256": "dc2da41676c984ccb0d5b81a918227536c9a2eb6ee3331fb45c40b338a26f199",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin05_FU.blp",
+      "sha256": "7c8ffb5f6cbed8c9762a22ebf4b83d01d983d416033c6cbab0c5e22c7524f3de",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin05_LU.blp",
+      "sha256": "948f6558ba26e24bc9a07f0f2ee6bb2cb13c1e07391771e67620521ae2107c74",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin05_TU.blp",
+      "sha256": "39230aaefec4b01396708a6617e57dcb62b0dad41a5e3ed0da879c6b0e971fde",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin06.blp",
+      "sha256": "9e42e3ace22afbf6a050e5e76b378e31c69fe733d6f54de530bd882792f054e4",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin06_FL.blp",
+      "sha256": "9666972a2c868e5ef5f09f84dbaf647db84e4761652212c8769a910375a63681",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin06_FU.blp",
+      "sha256": "77b1d4cdd603c677738fedb36ab01ada36f7ef6cbcbf8d0aaad9aa87069166ab",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin06_LU.blp",
+      "sha256": "1d9505c7049c0d6d5917d17c7bc8fade14499efd864d64a106d857b0b1119cdb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin06_TU.blp",
+      "sha256": "c0dd3ebb448430f5fa298873029ce8e73eace657da3a61d201ebe1bb099fa4fb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin07.blp",
+      "sha256": "9e42e3ace22afbf6a050e5e76b378e31c69fe733d6f54de530bd882792f054e4",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin07_FL.blp",
+      "sha256": "9666972a2c868e5ef5f09f84dbaf647db84e4761652212c8769a910375a63681",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin07_FU.blp",
+      "sha256": "77b1d4cdd603c677738fedb36ab01ada36f7ef6cbcbf8d0aaad9aa87069166ab",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin07_LU.blp",
+      "sha256": "1d9505c7049c0d6d5917d17c7bc8fade14499efd864d64a106d857b0b1119cdb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin07_TU.blp",
+      "sha256": "c0dd3ebb448430f5fa298873029ce8e73eace657da3a61d201ebe1bb099fa4fb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin08.blp",
+      "sha256": "9e42e3ace22afbf6a050e5e76b378e31c69fe733d6f54de530bd882792f054e4",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin08_FL.blp",
+      "sha256": "9666972a2c868e5ef5f09f84dbaf647db84e4761652212c8769a910375a63681",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin08_FU.blp",
+      "sha256": "77b1d4cdd603c677738fedb36ab01ada36f7ef6cbcbf8d0aaad9aa87069166ab",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin08_LU.blp",
+      "sha256": "1d9505c7049c0d6d5917d17c7bc8fade14499efd864d64a106d857b0b1119cdb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin08_TU.blp",
+      "sha256": "c0dd3ebb448430f5fa298873029ce8e73eace657da3a61d201ebe1bb099fa4fb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin09.blp",
+      "sha256": "6b77fe2e7257165853a3cb1719efbcef356919291bab1d71cb65caa9b879375c",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin09_FL.blp",
+      "sha256": "ee5b97dae6c7ad45a1941c8ccdfe5b4cb8e1fc88ef3a137654531ce92775f2a4",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin09_FU.blp",
+      "sha256": "99d3fc33f73a104bc3a579979cf809daa84eb014f9575f014c2a178a859d89b9",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin09_LU.blp",
+      "sha256": "b6d972a859b31dcb0b10047cdd36bd3b29ee68218c1afb3c54a26f4380f71b9c",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin09_TU.blp",
+      "sha256": "4ddd391ad1b8ed78a5294324480976d584e877630e47768b76732bd0f8af8188",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin10.blp",
+      "sha256": "00959d4013d21dc487a722dcaeca769d5fcbbdea7d091cb260d6adc43b4f5424",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin10_FL.blp",
+      "sha256": "7025a0b99d8eb8aeb325d20f2f85ff081cfa5273bfa2293e82cb70755134179d",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin10_FU.blp",
+      "sha256": "abf1b4536c3c96ae16717501d4e272657c72fe6fbd9b44e3019ca7b77a505fd4",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin10_LU.blp",
+      "sha256": "0697402d792613627a736306c348f1337201895f796014b85441e2464b0f47a3",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin10_TU.blp",
+      "sha256": "bb024eed5fca7c148708b519a28cc2f444e62531cf6e4c0b38043d24ba36f77f",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin11.blp",
+      "sha256": "6cae3725be57836f6bac77eeb5490659b4b327b7a270802e94dc878c799ba413",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin11_FL.blp",
+      "sha256": "89cbd3be22b648da31f8a00c4bb2e874f920d959d71357c4b49d0ffcee69dd1a",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin11_FU.blp",
+      "sha256": "a6db87807806238c3391412949b7a609c75dc0297992214e0ce52d3b5083cae0",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin11_LU.blp",
+      "sha256": "f9d1d353dcdf4143f42d406c74123e48a7eb322b737a19e3cb27535a8c243fe0",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin11_TU.blp",
+      "sha256": "99a4586cbdf484e31ada5f2efd6222ff5f189f96fe01c4c84aaf34720b72bf45",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin12.blp",
+      "sha256": "69dde1c94fb5388fa52686ef059fa6a63d7c0e0c6fba0749993c411489901ee3",
+      "bytes": 700222,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin12_FL.blp",
+      "sha256": "16ae73d81a97f58bda7bbfbc1c272dc7b62304f433a273d2266f28878ff870fb",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin12_FU.blp",
+      "sha256": "70433062f6113fe67a545edbe97a7aaedcd384730c03a4cd773313d59b288ec5",
+      "bytes": 44866,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin12_LU.blp",
+      "sha256": "7344197c557655b87a070eca357aa815945c6acceccdadd1b7110af4af9cf5d5",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-mpq/Patch-YJ.mpq/Reborn/StormforgedBody1A/Male/Skin12_TU.blp",
+      "sha256": "7b1ac0d9242c51d899791e1b6c71f53839e3f2182aee71349004dde369bac939",
+      "bytes": 88554,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-root/EsteriaRebornStormforged84.bin",
+      "sha256": "62e930f09849c25c438cb46cf8ae5e28a8caddd90304913b7bb1ba195cca392d",
+      "bytes": 11088,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "client-root/WowClient64.exe",
+      "sha256": "4c2193e1cda1d3995a7c9b0fa3e689e98b9906133a43937f3c21e1abe7ee4231",
+      "bytes": 19172864,
+      "origin_package": "codexfix_202611280614_阶段STORMFORGEDBODY1A_男女全身衣物与披风.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/CharBaseInfo.dbc",
+      "sha256": "b3a25c784a00c310b721ca9bab73b891dba044249658614a2c49ba3c2c1730a8",
+      "bytes": 1551,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/CharHairGeosets.dbc",
+      "sha256": "6da7db6ec71378f9c75d50178ec58f6032ed0d4187a4aaab10ea33bb1fb4556b",
+      "bytes": 47781,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/CharSections.dbc",
+      "sha256": "ffe4395c394f8cc80a996d77d10577dc08ab7634575875dbc656b632ef00f763",
+      "bytes": 38848551,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/CharStartOutfit.dbc",
+      "sha256": "4a8e5b01ed319559492be6dd54635113bc03f04f91a8f66e3d06b2024945017e",
+      "bytes": 452901,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/ChrRaces.dbc",
+      "sha256": "3fd5f38fd9461b58b97022d19ff7f024e0a0db5ca3db76bc5ce31a700a2baf6d",
+      "bytes": 33424,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/CreatureDisplayInfo.dbc",
+      "sha256": "e8cfe032ea0ccbebf415716ab58634d106a7d8bdff8093dceccd1697502c0c27",
+      "bytes": 1820432,
+      "origin_package": "codexfix_202611280436_阶段STORMFORGED1F_DK登录补表与女头盔位置.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/CreatureModelData.dbc",
+      "sha256": "f30cd8d0bc5e118e9f86fb6d54f74fb3e2d984f5c975dce5ebaafae818243080",
+      "bytes": 835827,
+      "origin_package": "codexfix_202611280436_阶段STORMFORGED1F_DK登录补表与女头盔位置.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/CharBaseInfo.dbc",
+      "sha256": "b3a25c784a00c310b721ca9bab73b891dba044249658614a2c49ba3c2c1730a8",
+      "bytes": 1551,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/CharHairGeosets.dbc",
+      "sha256": "b9a57336b083d8cfe03224d66d47d02b3f8df4e200e36fe896b5223ab3983055",
+      "bytes": 37317,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/CharSections.dbc",
+      "sha256": "678f8ec5d398f22b0d9a013c452b17e20c32637176b2e3b8294ff01619263b89",
+      "bytes": 23727144,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/CharStartOutfit.dbc",
+      "sha256": "4a8e5b01ed319559492be6dd54635113bc03f04f91a8f66e3d06b2024945017e",
+      "bytes": 452901,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/ChrRaces.dbc",
+      "sha256": "7e15e75b38e85023c57c2cdf1443c2e109bd0b390cd98b1d43f5818d5b6aec79",
+      "bytes": 32180,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/CreatureDisplayInfo.dbc",
+      "sha256": "a7bd337160d9812a787fae0ed41216016fa017d77e9b4f10c0e72691e59b6d13",
+      "bytes": 1792296,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "server-root/Data/dbc/zhCN/CreatureModelData.dbc",
+      "sha256": "6bbfe9f324e60a63e89e3534bf146554a1bc83cafa2cca016c981aa2889abc53",
+      "bytes": 822591,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    },
+    {
+      "path": "world-sql/01_STORMFORGED1A_WORLD.sql",
+      "sha256": "2cea5f9808774befedb2330f5edd53a1cf495fae1ead17fa9b571ea34058ddc3",
+      "bytes": 2274,
+      "origin_package": "codexfix_202611280154_阶段STORMFORGED1A_LOSTONEFACE1A_男女十职业与失落者面部.zip",
+      "scope": "local only; do not upload original assets or DBC/EXE"
+    }
+  ],
+  "shared_baseline_refreshes": []
+}

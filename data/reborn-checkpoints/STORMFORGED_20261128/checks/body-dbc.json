@@ -1,0 +1,20 @@
+{
+  "CharSections.dbc": {
+    "added": 0,
+    "updated_target_rows": 130,
+    "old_non84_rows_unchanged": true
+  },
+  "CharSections.dbc1-race14": {
+    "added": 0,
+    "updated_target_rows": 130,
+    "old_non84_rows_unchanged": true
+  },
+  "server/CharSections": {
+    "added_faces": 0,
+    "old_rows_unchanged": true
+  },
+  "server/zhCN/CharSections": {
+    "added_faces": 0,
+    "old_rows_unchanged": true
+  }
+}

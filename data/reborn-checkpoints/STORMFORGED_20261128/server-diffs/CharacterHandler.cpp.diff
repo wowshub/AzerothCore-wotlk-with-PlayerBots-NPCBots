@@ -1,0 +1,11 @@
+--- before/src/server/game/Handlers/CharacterHandler.cpp
++++ after/src/server/game/Handlers/CharacterHandler.cpp
+@@ -464,7 +464,7 @@
+     }
+ 
+     // RACENEXT3A: Kul Tiran (39) / Mag'har Orc (49) are Warrior only - enforced here, not by a greyed button.
+-    if (((createInfo->Race == RebornMoguAllianceRace || createInfo->Race == RebornSurekiAllianceRace) && !GetClassicExpansionDonor(createInfo->Race, createInfo->Class)) ||
++    if (((createInfo->Race == RebornMoguAllianceRace || createInfo->Race == RebornSurekiAllianceRace || createInfo->Race == RebornStormforgedAllianceRace) && !GetClassicExpansionDonor(createInfo->Race, createInfo->Class)) ||
+         (createInfo->Race == RebornMurlocHordeRace && !IsClassicExpansionClass(createInfo->Class)) ||
+         (createInfo->Race == 91 && !IsClassicExpansionClass(createInfo->Class)) ||
+         (IsWarriorOnlyNewRace(createInfo->Race) && !IsClassicExpansionClass(createInfo->Class)))

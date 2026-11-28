@@ -1750,3 +1750,5 @@ WOW64MOGU1D 获用户确认男法师 NO 装备建角预览。CoA V2.03 Client-11
 - 2026-11-27：STARTFIX1C 用户确认本批流放岛建角/进入与熊人坐下/对话落地通过；披风另案未验。见新种族流程Skill/Tutor的限定验收。
 
 - 2026-11-28 [端到端新种族移植流程](port-wow64-playable-race-end-to-end/SKILL.md)：覆盖按钮→职业→男女模型/UV→装备/动作→出生/首登与累计编译；含本窗口失败台账与交付前检查表。总体基本通过不外推全矩阵。
+
+- 2026-11-28：[Stormforged男女全身衣物/披风与root登录链验收](port-wow64-playable-race-end-to-end/references/stormforged-20261128.md)，目录遮挡、材质识别、复制UV层与新增顶点指纹。

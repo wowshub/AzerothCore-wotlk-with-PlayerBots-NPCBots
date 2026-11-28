@@ -1,0 +1,11 @@
+--- before/src/server/game/Entities/Player/PlayerQuest.cpp
++++ after/src/server/game/Entities/Player/PlayerQuest.cpp
+@@ -1155,7 +1155,7 @@
+     uint32 reqraces = qInfo->GetAllowableRaces();
+     // Use the Orc version of A Special Surprise on the Murloc DK route.
+     uint32 const questId = qInfo->GetQuestId();
+-    if ((getRace() == RebornMurlocHordeRace || getRace() == RebornMoguAllianceRace || getRace() == RebornSurekiAllianceRace || getRace() == 91) && getClass() == CLASS_DEATH_KNIGHT
++    if ((getRace() == RebornMurlocHordeRace || getRace() == RebornMoguAllianceRace || getRace() == RebornSurekiAllianceRace || getRace() == RebornStormforgedAllianceRace || getRace() == 91) && getClass() == CLASS_DEATH_KNIGHT
+         && (questId == 12739 || (questId >= 12742 && questId <= 12750)))
+     {
+         if (questId == (getRace() == RebornMurlocHordeRace ? 12748u : 12742u))

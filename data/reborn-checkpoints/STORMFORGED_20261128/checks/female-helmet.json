@@ -1,0 +1,69 @@
+{
+  "target_hash": "1002c755288201367d3b2a0bf382ec6c4fd3ed16ec806881eeb91187d54296d5",
+  "reference_helmet_sha256": "60609e5cb75f48629add3309b921d666618b517d9c693ed4630be2a20cfc0f01",
+  "target_skull_bounds": [
+    [
+      -0.08722802996635437,
+      -0.12561312317848206,
+      1.9786198139190674
+    ],
+    [
+      0.2138536423444748,
+      0.12561312317848206,
+      2.2714829444885254
+    ]
+  ],
+  "old_helmet_bounds": [
+    [
+      0.025972113013267517,
+      -0.19320007762871683,
+      1.7478056252002716
+    ],
+    [
+      0.4255579262971878,
+      0.19530204334296286,
+      2.252599500119686
+    ]
+  ],
+  "candidate_helmet_bounds": [
+    [
+      -0.09327941842377185,
+      -0.1524870824813843,
+      1.8887099101841447
+    ],
+    [
+      0.22039544500410557,
+      0.1524870824813843,
+      2.284973101995885
+    ]
+  ],
+  "candidate_bone": 18,
+  "candidate_crown": [
+    0.065,
+    0,
+    2.272
+  ],
+  "candidate_scale": 0.785,
+  "forward_shift": -0.16260194540023803,
+  "height_shift": 0.03592674446105937,
+  "other_source_unchanged": true,
+  "old_failure_reproduced": true,
+  "game_visual_validation": "pending; bbox enclosure is not proof of hollow helmet interior fit",
+  "newer_helmet_archives": [
+    "Patch-6.mpq",
+    "patch-H.mpq"
+  ],
+  "newer_helmet_sha256": "e010224a8f98864a89688cb05922edff5e62ba68a0e6f94576d425c36c61812b",
+  "newer_candidate_bounds": [
+    [
+      -0.09793230950832368,
+      -0.161338946595788,
+      1.8747099099755284
+    ],
+    [
+      0.23395135298371317,
+      0.161338946595788,
+      2.293976207792759
+    ]
+  ]
+}

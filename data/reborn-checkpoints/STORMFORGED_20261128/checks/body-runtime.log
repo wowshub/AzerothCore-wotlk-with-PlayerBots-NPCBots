@@ -1,0 +1,2 @@
+runtime-tests.cpp
+PASS: production clothing function; both sexes; equip/unequip; pending/ready; all cloak groups; all robe groups; wrong rig; 500 repeated refreshes without visibility churn

@@ -1,0 +1,61 @@
+{
+  "Male": {
+    "lods": [
+      {
+        "vertices": 13941,
+        "skin_vertices": 13941,
+        "indices": 56661,
+        "sections": 53,
+        "batches": 65
+      },
+      {
+        "vertices": 13941,
+        "skin_vertices": 13941,
+        "indices": 56661,
+        "sections": 53,
+        "batches": 65
+      },
+      {
+        "vertices": 13941,
+        "skin_vertices": 13941,
+        "indices": 56661,
+        "sections": 53,
+        "batches": 65
+      },
+      {
+        "vertices": 13941,
+        "skin_vertices": 14137,
+        "indices": 56661,
+        "sections": 61,
+        "batches": 75
+      }
+    ],
+    "original_geometry_animation_sockets_preserved": true,
+    "opacity_poison_rejected": true,
+    "head_excluded": true
+  },
+  "Female": {
+    "lods": [
+      {
+        "vertices": 14733,
+        "skin_vertices": 14733,
+        "indices": 52815,
+        "sections": 39,
+        "batches": 48
+      }
+    ],
+    "original_geometry_animation_sockets_preserved": true,
+    "opacity_poison_rejected": true,
+    "head_excluded": true
+  },
+  "textures": {
+    "opaque_palette_BLPs_checked": 130
+  },
+  "shared_tables": {
+    "non84_records_preserved": true,
+    "row_ids_and_counts_unchanged": true,
+    "client_creature_tables": "not included",
+    "server_tables": "not included"
+  },
+  "accepted_female_helmet": "1F frame preserved exactly"
+}

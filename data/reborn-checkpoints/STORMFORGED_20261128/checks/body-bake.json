@@ -1,0 +1,14 @@
+{
+  "Male": {
+    "mapped_pixels": 187636,
+    "skipped_seam_triangles": 0,
+    "textures": 65,
+    "base_resolution": 512
+  },
+  "Female": {
+    "mapped_pixels": 184334,
+    "skipped_seam_triangles": 0,
+    "textures": 65,
+    "base_resolution": 512
+  }
+}

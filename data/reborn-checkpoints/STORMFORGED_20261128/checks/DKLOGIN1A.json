@@ -1,0 +1,36 @@
+{
+  "CreatureDisplayInfo": {
+    "added": 2,
+    "ids": [
+      977660,
+      977661
+    ],
+    "old_records_preserved": 26455,
+    "input_sha256": "26db149d858e9c1f00b0210a5d7c56ed2d5ec5f7a46ff325a234f627df4a1151",
+    "output_sha256": "e8cfe032ea0ccbebf415716ab58634d106a7d8bdff8093dceccd1697502c0c27"
+  },
+  "CreatureModelData": {
+    "added": 2,
+    "ids": [
+      901408,
+      901409
+    ],
+    "old_records_preserved": 5512,
+    "input_sha256": "11a57d71315399d0f37aa7b246f2bbae5215f6e97b8f6b50900d99ef4f3cb5e1",
+    "output_sha256": "f30cd8d0bc5e118e9f86fb6d54f74fb3e2d984f5c975dce5ebaafae818243080"
+  },
+  "root": {
+    "race_gender_links_checked": 162,
+    "missing_links": 0
+  },
+  "zhCN": {
+    "race_gender_links_checked": 162,
+    "missing_links": 0
+  },
+  "client_display_chain": "both existing and model M2 files readable",
+  "root_before_missing_native_display_ids": [
+    977660,
+    977661
+  ],
+  "game_DK_login": "not tested after installation"
+}

@@ -1,0 +1,13 @@
+--- before/src/server/shared/RebornClassicRaceClasses.h
++++ after/src/server/shared/RebornClassicRaceClasses.h
+@@ -10,8 +10,9 @@
+ inline constexpr bool IsSevenNewRace(std::uint8_t race) { return IsSevenAllianceRace(race) || IsSevenHordeRace(race); }
+ inline constexpr std::uint8_t RebornMoguAllianceRace = 123;
+ inline constexpr std::uint8_t RebornSurekiAllianceRace = 86;
++inline constexpr std::uint8_t RebornStormforgedAllianceRace = 84;
+ // WOW64RACE12A: explicit identities; faction never comes from a filename suffix.
+-inline constexpr bool IsRace12Alliance(std::uint8_t race) { return race == 28 || race == 68 || race == 67 || race == 78 || race == 50 || race == 99 || race == 79 || race == RebornMoguAllianceRace || race == RebornSurekiAllianceRace; }
++inline constexpr bool IsRace12Alliance(std::uint8_t race) { return race == 28 || race == 68 || race == 67 || race == 78 || race == 50 || race == 99 || race == 79 || race == RebornMoguAllianceRace || race == RebornSurekiAllianceRace || race == RebornStormforgedAllianceRace; }
+ inline constexpr bool IsRace12Horde(std::uint8_t race) { return race == 51 || race == 101 || race == 41 || race == 102 || race == 110 || race == 125; }
+ inline constexpr bool IsRace12(std::uint8_t race) { return IsRace12Alliance(race) || IsRace12Horde(race); }
+ inline constexpr std::uint8_t RebornMurlocHordeRace = 121;
